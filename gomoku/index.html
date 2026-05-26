@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <title>五目並べ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <nav class="topbar" aria-label="サイトナビゲーション">
+      <a class="back-link" href="../index.html">← ゲーム一覧へ戻る</a>
+    </nav>
+
+    <section class="hero">
+      <p class="eyebrow">Browser Game</p>
+      <h1>五目並べ</h1>
+      <p class="lead">
+        15x15 の盤面で先に 5 つ並べた方が勝ちです。
+        2人対戦と CPU 対戦を切り替えて遊べます。
+      </p>
+
+      <div class="controls" aria-label="ゲーム設定">
+        <label class="mode-picker">
+          <span>対戦モード</span>
+          <select id="mode">
+            <option value="pvp">2人対戦</option>
+            <option value="cpu">CPU 対戦</option>
+          </select>
+        </label>
+        <button id="resetButton" type="button">新しく始める</button>
+      </div>
+
+      <div class="status-card">
+        <p class="status-label">現在の状態</p>
+        <p id="status" class="status-text">黒の手番です</p>
+      </div>
+    </section>
+
+    <section class="board-panel">
+      <div class="board-frame">
+        <div id="board" class="board" role="grid" aria-label="五目並べの盤面"></div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="stone stone-black"></span>
+          <span>先手: 黒</span>
+        </div>
+        <div class="legend-item">
+          <span class="stone stone-white"></span>
+          <span>後手: 白</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
