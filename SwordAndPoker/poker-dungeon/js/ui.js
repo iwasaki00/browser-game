@@ -11,6 +11,7 @@ const playerHpElement = document.querySelector("#player-hp");
 const enemyHandElement = document.querySelector("#enemy-hand");
 const playerHandElement = document.querySelector("#player-hand");
 const logListElement = document.querySelector("#log-list");
+const mobileLogListElement = document.querySelector("#mobile-log-list");
 const deckCountElement = document.querySelector("#deck-count");
 const boardCountElement = document.querySelector("#board-count");
 const turnOwnerElement = document.querySelector("#turn-owner");
@@ -198,6 +199,10 @@ function renderStatus() {
 
 function renderLogs() {
   logListElement.innerHTML = "";
+  if (mobileLogListElement) {
+    mobileLogListElement.innerHTML = "";
+  }
+
   state.logs.forEach((message, index) => {
     const item = document.createElement("li");
     item.textContent = message;
@@ -208,6 +213,10 @@ function renderLogs() {
       item.classList.add("loser");
     }
     logListElement.appendChild(item);
+
+    if (mobileLogListElement && index < 2) {
+      mobileLogListElement.appendChild(item.cloneNode(true));
+    }
   });
 }
 
