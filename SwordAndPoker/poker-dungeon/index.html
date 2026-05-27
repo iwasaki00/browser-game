@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Rune Grid Duel</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <section id="settings-screen" class="screen settings-screen">
+      <div class="settings-card panel">
+        <div class="settings-header">
+          <p class="label">Setup</p>
+          <h1>Rune Grid Duel</h1>
+          <p class="settings-lead">設定を保存してからゲームを開始します。</p>
+        </div>
+
+        <label class="setting-field">
+          <span>PLAYER</span>
+          <select id="setting-player-order">
+            <option value="first">先攻</option>
+            <option value="second">後攻</option>
+          </select>
+        </label>
+
+        <label class="setting-field">
+          <span>開始HP</span>
+          <input id="setting-start-hp" type="number" min="1" max="99" value="24" />
+        </label>
+
+        <label class="setting-field">
+          <span>ジョーカー枚数</span>
+          <input id="setting-joker-count" type="number" min="0" value="0" />
+        </label>
+
+        <div class="settings-actions">
+          <button id="save-settings-button" type="button">保存</button>
+          <button id="start-game-button" type="button">ゲーム開始</button>
+          <button id="close-settings-button" type="button">戻る</button>
+        </div>
+
+        <p id="settings-status" class="settings-status"></p>
+      </div>
+    </section>
+
+    <div id="game-screen" class="app-shell screen hidden">
+      <header class="panel combatant-panel enemy-panel">
+        <div class="combatant-meta">
+          <p class="label">Enemy</p>
+          <h1>Rune Grid Duel</h1>
+          <h2 id="enemy-name">Obsidian Warden</h2>
+        </div>
+        <div class="hp-block">
+          <span>HP</span>
+          <strong id="enemy-hp">24</strong>
+        </div>
+        <div id="enemy-battle-banner" class="combat-result" aria-live="polite"></div>
+        <div id="enemy-hand" class="hand enemy-hand" aria-label="敵の手札"></div>
+      </header>
+
+      <main class="board-section">
+        <aside class="side-column left-column">
+          <div class="status-bar panel">
+            <div>
+              <span class="label">Turn</span>
+              <strong id="turn-owner">Player</strong>
+            </div>
+            <div>
+              <span class="label">Deck</span>
+              <strong id="deck-count">0</strong>
+            </div>
+            <div>
+              <span class="label">Board</span>
+              <strong id="board-count">0 / 25</strong>
+            </div>
+          </div>
+
+          <section class="panel log-panel">
+            <div class="log-header">
+              <h3>Battle Log</h3>
+            </div>
+            <ul id="log-list" class="log-list" aria-live="polite"></ul>
+          </section>
+        </aside>
+
+        <section class="board-stage panel">
+          <section id="board" class="board" aria-label="5x5盤面"></section>
+        </section>
+
+        <aside class="side-column right-column">
+          <section class="panel selection-panel">
+            <p class="label">Selection</p>
+            <p id="selection-summary" class="selection-summary">手札から2枚、空きマスを2つ選択</p>
+          </section>
+
+          <div class="controls panel">
+            <button id="confirm-button" disabled>決定</button>
+            <button id="clear-button">選択解除</button>
+            <button id="pass-button">パス</button>
+            <button id="new-game-button">新規ゲーム</button>
+            <button id="open-settings-button" type="button">設定</button>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="panel combatant-panel player-panel">
+        <div class="combatant-meta">
+          <p class="label">Player</p>
+          <h2>Arcane Voyager</h2>
+        </div>
+        <div class="hp-block">
+          <span>HP</span>
+          <strong id="player-hp">24</strong>
+        </div>
+        <div id="player-battle-banner" class="combat-result" aria-live="polite"></div>
+        <div id="player-hand" class="hand player-hand" aria-label="プレイヤー手札"></div>
+      </footer>
+    </div>
+
+    <script src="./js/deck.js"></script>
+    <script src="./js/board.js"></script>
+    <script src="./js/poker.js"></script>
+    <script src="./js/battle.js"></script>
+    <script src="./js/ai.js"></script>
+    <script src="./js/state.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
