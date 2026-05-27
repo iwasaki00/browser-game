@@ -8,8 +8,10 @@ const { evaluatePlacements } = window.RuneGridDuel.battle;
 const boardElement = document.querySelector("#board");
 const enemyHpElement = document.querySelector("#enemy-hp");
 const playerHpElement = document.querySelector("#player-hp");
+const mobilePlayerHpElement = document.querySelector("#mobile-player-hp");
 const enemyHandElement = document.querySelector("#enemy-hand");
 const playerHandElement = document.querySelector("#player-hand");
+const mobilePlayerHandElement = document.querySelector("#mobile-player-hand");
 const logListElement = document.querySelector("#log-list");
 const mobileLogListElement = document.querySelector("#mobile-log-list");
 const deckCountElement = document.querySelector("#deck-count");
@@ -132,13 +134,16 @@ function renderBoard(handlers) {
 function renderHands(handlers) {
   enemyHandElement.innerHTML = "";
   playerHandElement.innerHTML = "";
+  if (mobilePlayerHandElement) {
+    mobilePlayerHandElement.innerHTML = "";
+  }
 
   state.enemyHand.forEach((card) => {
     const cardElement = createCardElement(card, { hidden: false });
     enemyHandElement.appendChild(cardElement);
   });
 
-  state.playerHand.forEach((card) => {
+  function appendPlayerCard(container, card) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "hand-card-button";
@@ -159,7 +164,14 @@ function renderHands(handlers) {
       }
     });
     button.addEventListener("dragend", () => handlers.onDragEnd());
-    playerHandElement.appendChild(button);
+    container.appendChild(button);
+  }
+
+  state.playerHand.forEach((card) => {
+    appendPlayerCard(playerHandElement, card);
+    if (mobilePlayerHandElement) {
+      appendPlayerCard(mobilePlayerHandElement, card);
+    }
   });
 }
 
@@ -168,6 +180,9 @@ function renderStatus() {
   enemyNameElement.textContent = "Obsidian Warden";
   enemyHpElement.textContent = String(state.enemyHp);
   playerHpElement.textContent = String(state.playerHp);
+  if (mobilePlayerHpElement) {
+    mobilePlayerHpElement.textContent = String(state.playerHp);
+  }
   deckCountElement.textContent = String(state.deck.length);
   boardCountElement.textContent = `${countOccupiedCells(state.board)} / 25`;
   turnOwnerElement.textContent =

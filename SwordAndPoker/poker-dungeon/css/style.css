@@ -417,6 +417,19 @@ button:disabled {
   padding: 10px 12px;
 }
 
+.mobile-player-panel {
+  display: none;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.mobile-player-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .combat-result {
   min-height: 112px;
   padding: 10px 12px;
@@ -532,6 +545,39 @@ button:disabled {
   overflow: hidden;
 }
 
+.enemy-panel .card,
+.player-panel .card,
+.mobile-player-panel .card {
+  width: clamp(46px, 5.8vw, 64px);
+  min-height: clamp(66px, 8.6vw, 92px);
+  padding: 5px;
+  gap: 2px;
+}
+
+.enemy-panel .card-rank,
+.player-panel .card-rank,
+.mobile-player-panel .card-rank {
+  font-size: 1.45rem;
+}
+
+.enemy-panel .card-suit,
+.player-panel .card-suit,
+.mobile-player-panel .card-suit {
+  font-size: 1.2rem;
+}
+
+.enemy-panel .card-joker-mark,
+.player-panel .card-joker-mark,
+.mobile-player-panel .card-joker-mark {
+  font-size: 1.4rem;
+}
+
+.enemy-panel .card-joker-text,
+.player-panel .card-joker-text,
+.mobile-player-panel .card-joker-text {
+  font-size: 0.62rem;
+}
+
 .enemy-panel .combatant-meta,
 .player-panel .combatant-meta {
   min-width: 120px;
@@ -620,9 +666,9 @@ button:disabled {
 
 @media (max-width: 640px) {
   :root {
-    --grid-size: min(13.4vw, 52px);
-    --card-width: min(16.8vw, 62px);
-    --card-height: min(24vw, 86px);
+    --grid-size: min(12.2vw, 48px);
+    --card-width: min(13.6vw, 50px);
+    --card-height: min(19.6vw, 72px);
   }
 
   body {
@@ -632,8 +678,8 @@ button:disabled {
   .app-shell {
     width: 100%;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
-    gap: 8px;
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 6px;
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .combatant-panel,
@@ -702,14 +748,14 @@ button:disabled {
   .player-panel .hand {
     grid-column: 1 / -1;
     justify-content: flex-start;
-    gap: 4px;
+    gap: 3px;
     overflow: visible;
   }
 
   .board-section {
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 8px;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 6px;
     min-height: 0;
   }
 
@@ -722,14 +768,18 @@ button:disabled {
     display: none;
   }
 
-  .mobile-log-panel {
+  .mobile-player-panel {
     display: grid;
-    gap: 6px;
+  }
+
+  .player-panel,
+  .mobile-log-panel {
+    display: none;
   }
 
   .status-bar,
   .selection-panel {
-    padding: 8px 10px;
+    padding: 6px 8px;
   }
 
   .status-bar {
@@ -742,29 +792,29 @@ button:disabled {
   }
 
   .selection-summary {
-    font-size: 0.84rem;
-    line-height: 1.35;
+    font-size: 0.78rem;
+    line-height: 1.25;
   }
 
   .board {
-    gap: 4px;
+    gap: 3px;
   }
 
   .board-stage {
-    padding: 8px;
+    padding: 6px;
     align-self: center;
   }
 
   .controls {
-    padding: 8px;
+    padding: 6px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    gap: 5px;
   }
 
   button {
-    min-height: 38px;
-    padding: 8px 6px;
-    font-size: 0.84rem;
+    min-height: 34px;
+    padding: 6px 4px;
+    font-size: 0.76rem;
     border-radius: 12px;
   }
 
@@ -775,8 +825,8 @@ button:disabled {
   .card {
     min-height: var(--card-height);
     border-radius: 12px;
-    padding: 5px;
-    gap: 2px;
+    padding: 4px;
+    gap: 1px;
   }
 
   .settings-actions {
@@ -784,40 +834,67 @@ button:disabled {
   }
 
   .card-rank {
-    font-size: 1.45rem;
+    font-size: 1.1rem;
   }
 
   .card-suit {
-    font-size: 1.6rem;
-  }
-
-  .card-joker-mark {
-    font-size: 1.75rem;
-  }
-
-  .card-joker-text {
-    font-size: 0.76rem;
-  }
-
-  .small .card-rank {
     font-size: 0.9rem;
   }
 
-  .small .card-suit {
-    font-size: 1rem;
-  }
-
-  .small .card-joker-mark {
+  .card-joker-mark {
     font-size: 1.05rem;
   }
 
+  .card-joker-text {
+    font-size: 0.5rem;
+  }
+
+  .small .card-rank {
+    font-size: 0.78rem;
+  }
+
+  .small .card-suit {
+    font-size: 0.64rem;
+  }
+
+  .small .card-joker-mark {
+    font-size: 0.78rem;
+  }
+
   .small .card-joker-text {
-    font-size: 0.54rem;
+    font-size: 0.4rem;
+  }
+
+  .enemy-panel .card,
+  .mobile-player-panel .card {
+    width: var(--card-width);
+    min-height: var(--card-height);
+    padding: 4px 3px;
+  }
+
+  .enemy-panel .card-rank,
+  .mobile-player-panel .card-rank {
+    font-size: 1rem;
+  }
+
+  .enemy-panel .card-suit,
+  .mobile-player-panel .card-suit {
+    font-size: 0.78rem;
+  }
+
+  .enemy-panel .card-joker-mark,
+  .mobile-player-panel .card-joker-mark {
+    font-size: 0.9rem;
+  }
+
+  .enemy-panel .card-joker-text,
+  .mobile-player-panel .card-joker-text {
+    font-size: 0.44rem;
   }
 
   .board-cell {
     border-radius: 12px;
-    padding: 2px;
+    padding: 1px;
   }
 
   .log-list {
