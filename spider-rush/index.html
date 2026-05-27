@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Spider Rush</title>
+  <style>
+    :root {
+      --bg-top: #041833;
+      --bg-mid: #0e3565;
+      --bg-bottom: #f57644;
+      --panel: rgba(7, 14, 28, 0.58);
+      --panel-strong: rgba(7, 14, 28, 0.82);
+      --line: rgba(255, 255, 255, 0.14);
+      --text: #f6fbff;
+      --subtle: rgba(246, 251, 255, 0.72);
+      --accent: #7df0ff;
+      --accent-2: #ffd166;
+      --danger: #ff6b6b;
+      --ok: #7dffb3;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(125, 240, 255, 0.18), transparent 30%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 52%, var(--bg-bottom) 100%);
+      font-family: "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      color: var(--text);
+    }
+
+    body {
+      position: fixed;
+      inset: 0;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #gameCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      padding:
+        max(12px, env(safe-area-inset-top))
+        14px
+        max(14px, env(safe-area-inset-bottom))
+        14px;
+    }
+
+    .hud-top,
+    .hud-bottom {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .hud-bottom {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      align-items: flex-end;
+    }
+
+    .stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .chip,
+    .hint {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .chip strong {
+      display: block;
+      font-size: 1.04rem;
+      letter-spacing: 0.02em;
+    }
+
+    .chip span,
+    .hint {
+      color: var(--subtle);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .combo-live {
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .center-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(2, 6, 15, 0.24);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+    }
+
+    .center-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .panel {
+      width: min(100%, 360px);
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 40%),
+        var(--panel-strong);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 10vw, 3.4rem);
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .lead,
+    .small {
+      margin-top: 12px;
+      color: var(--subtle);
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .button-row,
+    .ability-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button,
+    .link-button {
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: #07111d;
+      background: linear-gradient(180deg, #fff1a8, #ffd166);
+      font: inherit;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      box-shadow: 0 10px 24px rgba(255, 209, 102, 0.24);
+    }
+
+    .secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .ability-button {
+      text-align: left;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(125, 240, 255, 0.24);
+      box-shadow: none;
+    }
+
+    .ability-button strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .ability-button span {
+      color: var(--subtle);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .status-line {
+      margin-top: 10px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .inline-accent {
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="gameCanvas" aria-label="Spider Rush game canvas"></canvas>
+
+    <div class="hud">
+      <div class="hud-top">
+        <div class="stack">
+          <div class="chip"><span>Distance</span><strong id="distanceText">0 m</strong></div>
+          <div class="chip"><span>Score</span><strong id="scoreText">0</strong></div>
+        </div>
+        <div class="stack" style="justify-items:end;">
+          <div class="chip"><span>Combo</span><strong id="comboText">x1.0</strong></div>
+          <div class="chip"><span>Status</span><strong id="statusText">BARRIER 5.0s</strong></div>
+        </div>
+      </div>
+      <div class="hud-bottom">
+        <div class="hint" id="hintText">タップ中にワイヤー接続。離すと解除。障害物をかすめるとコンボ上昇。</div>
+        <div class="chip"><span>Next Ability</span><strong id="abilityText">12.0s</strong></div>
+      </div>
+    </div>
+
+    <div class="center-overlay show" id="titleOverlay">
+      <div class="panel">
+        <p class="eyebrow">Spider Rush</p>
+        <h1>SWING<br>FAST</h1>
+        <p class="lead">自動で走るプレイヤーを、タップ位置のワイヤーフックで振り子移動させる爽快アクションです。iPhone縦持ちでそのまま遊べます。</p>
+        <p class="small">開始5秒は保護バリアあり。良い角度でワイヤーを離すと <span class="inline-accent">Perfect Swing</span> で加速します。</p>
+        <div class="button-row">
+          <button id="startButton" type="button">Start Run</button>
+          <a class="link-button secondary" href="../index.html">ゲーム一覧へ</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-overlay" id="abilityOverlay">
+      <div class="panel">
+        <p class="eyebrow">Ability Choice</p>
+        <h2>3つから1つ選択</h2>
+        <p class="small">約12秒ごとに一時停止します。次の区間をどう伸ばすか選んでください。</p>
+        <div class="ability-list" id="abilityList"></div>
+      </div>
+    </div>
+
+    <div class="center-overlay" id="gameOverOverlay">
+      <div class="panel">
+        <p class="eyebrow">Game Over</p>
+        <h2 id="gameOverTitle">Crash</h2>
+        <p class="lead" id="gameOverScore">Score 0</p>
+        <p class="small" id="gameOverDetail">0.5秒後に即リトライできます。</p>
+        <p class="status-line" id="gameOverStatus">Retry Ready In 0.5s</p>
+        <div class="button-row">
+          <button id="retryButton" type="button" disabled>Retry</button>
+          <button id="titleButton" class="secondary" type="button">Title</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const VIEW = { width: 390, height: 844 };
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const titleOverlay = document.getElementById("titleOverlay");
+      const abilityOverlay = document.getElementById("abilityOverlay");
+      const gameOverOverlay = document.getElementById("gameOverOverlay");
+      const abilityList = document.getElementById("abilityList");
+
+      const startButton = document.getElementById("startButton");
+      const retryButton = document.getElementById("retryButton");
+      const titleButton = document.getElementById("titleButton");
+
+      const distanceText = document.getElementById("distanceText");
+      const scoreText = document.getElementById("scoreText");
+      const comboText = document.getElementById("comboText");
+      const statusText = document.getElementById("statusText");
+      const hintText = document.getElementById("hintText");
+      const abilityText = document.getElementById("abilityText");
+      const gameOverTitle = document.getElementById("gameOverTitle");
+      const gameOverScore = document.getElementById("gameOverScore");
+      const gameOverDetail = document.getElementById("gameOverDetail");
+      const gameOverStatus = document.getElementById("gameOverStatus");
+
+      const palette = {
+        skyTop: "#041833",
+        skyMid: "#0e3565",
+        skyBottom: "#f57644",
+        cityFar: "#0d2144",
+        cityNear: "#132f5c",
+        accent: "#7df0ff",
+        rope: "#7df0ff",
+        ropeGlow: "rgba(125, 240, 255, 0.24)",
+        player: "#ff4f64",
+        playerEye: "#fefefe",
+        obstacle: "#17355f",
+        obstacleEdge: "#86d2ff",
+        danger: "#ff6b6b",
+        barrier: "#7dffb3",
+        perfect: "#ffd166"
+      };
+
+      const physics = {
+        gravity: 1750,
+        baseSpeed: 255,
+        maxSpeed: 980,
+        airDrag: 0.0007,
+        swingPull: 0.08
+      };
+
+      const state = {
+        mode: "title",
+        time: 0,
+        cameraX: 0,
+        distance: 0,
+        score: 0,
+        bestDistance: 0,
+        gameOverClock: 0,
+        nextAbilityAt: 12,
+        shake: 0,
+        statusClock: 0,
+        statusMessage: "BARRIER 5.0s",
+        combo: 0,
+        comboTimer: 0,
+        comboWindow: 2.2,
+        comboMultiplier: 1,
+        protectionTimer: 5,
+        shieldHits: 0,
+        perfectWindow: 18,
+        speedBonus: 0,
+        wireLengthFactor: 1,
+        swingBoostFactor: 1,
+        pendingAbilities: [],
+        particles: [],
+        obstacles: [],
+        skylineFar: [],
+        skylineNear: [],
+        nextObstacleX: 520,
+        pointer: {
+          active: false,
+          x: VIEW.width * 0.7,
+          y: VIEW.height * 0.25
+        },
+        player: null,
+        hook: null
+      };
+
+      const abilityPool = [
+        {
+          name: "Wire Length +15%",
+          desc: "Longer rope range for safer distant hooks.",
+          apply() {
+            state.wireLengthFactor *= 1.15;
+            showStatus("Wire Length Up", 2.2);
+          }
+        },
+        {
+          name: "Perfect Window Up",
+          desc: "Wider angle window for Perfect Swing.",
+          apply() {
+            state.perfectWindow += 8;
+            showStatus("Perfect Window Up", 2.2);
+          }
+        },
+        {
+          name: "One Free Hit",
+          desc: "Ignore one obstacle hit with a shield.",
+          apply() {
+            state.shieldHits += 1;
+            showStatus("Emergency Shield", 2.2);
+          }
+        },
+        {
+          name: "Combo Time +20%",
+          desc: "Keep near-miss combo alive for longer.",
+          apply() {
+            state.comboWindow *= 1.2;
+            showStatus("Combo Window Up", 2.2);
+          }
+        },
+        {
+          name: "Swing Speed Up",
+          desc: "More forward power from swing momentum.",
+          apply() {
+            state.swingBoostFactor *= 1.12;
+            state.speedBonus += 14;
+            showStatus("Swing Speed Up", 2.2);
+          }
+        }
+      ];
+
+      function resizeCanvas() {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(VIEW.width * ratio);
+        canvas.height = Math.floor(VIEW.height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function randInt(min, max) {
+        return Math.floor(rand(min, max + 1));
+      }
+
+      function setOverlay(overlay, visible) {
+        overlay.classList.toggle("show", visible);
+      }
+
+      function showStatus(text, duration) {
+        state.statusMessage = text;
+        state.statusClock = duration;
+      }
+
+      function makePlayer() {
+        return {
+          x: 90,
+          y: 520,
+          vx: physics.baseSpeed,
+          vy: 0,
+          radius: 16,
+          angle: 0
+        };
+      }
+
+      function resetRun() {
+        state.mode = "playing";
+        state.time = 0;
+        state.cameraX = 0;
+        state.distance = 0;
+        state.score = 0;
+        state.gameOverClock = 0;
+        state.nextAbilityAt = 12;
+        state.shake = 0;
+        state.statusClock = 0;
+        state.statusMessage = "BARRIER 5.0s";
+        state.combo = 0;
+        state.comboTimer = 0;
+        state.comboWindow = 2.2;
+        state.comboMultiplier = 1;
+        state.protectionTimer = 5;
+        state.shieldHits = 0;
+        state.perfectWindow = 18;
+        state.speedBonus = 0;
+        state.wireLengthFactor = 1;
+        state.swingBoostFactor = 1;
+        state.pendingAbilities = [];
+        state.particles = [];
+        state.obstacles = [];
+        state.nextObstacleX = 520;
+        state.player = makePlayer();
+        state.hook = null;
+        buildSkyline();
+        generateObstaclesUntil(state.cameraX + VIEW.width + 1200);
+        updateHud();
+      }
+
+      function buildSkyline() {
+        state.skylineFar = [];
+        state.skylineNear = [];
+        let x = 0;
+        while (x < 8000) {
+          const w1 = rand(34, 70);
+          const h1 = rand(180, 360);
+          state.skylineFar.push({ x, w: w1, h: h1 });
+          x += w1 + rand(8, 18);
+        }
+        x = 0;
+        while (x < 8000) {
+          const w2 = rand(38, 84);
+          const h2 = rand(120, 300);
+          state.skylineNear.push({ x, w: w2, h: h2 });
+          x += w2 + rand(6, 14);
+        }
+      }
+
+      function generateObstaclesUntil(limitX) {
+        while (state.nextObstacleX < limitX) {
+          const pattern = randInt(0, 3);
+          if (pattern === 0) {
+            addGatePair(state.nextObstacleX);
+          } else if (pattern === 1) {
+            addSingleTower(state.nextObstacleX, "bottom");
+          } else if (pattern === 2) {
+            addSingleTower(state.nextObstacleX, "top");
+          } else {
+            addSplitPattern(state.nextObstacleX);
+          }
+          state.nextObstacleX += rand(180, 280);
+        }
+      }
+
+      function makeObstacle(x, y, w, h) {
+        return {
+          x,
+          y,
+          w,
+          h,
+          checked: false,
+          grazed: false,
+          minDist: Infinity
+        };
+      }
+
+      function addGatePair(x) {
+        const width = rand(34, 52);
+        const gapY = rand(280, 520);
+        const gapH = rand(220, 290);
+        const topH = Math.max(80, gapY - gapH * 0.5);
+        const bottomY = gapY + gapH * 0.5;
+        const bottomH = Math.max(80, VIEW.height - bottomY);
+        state.obstacles.push(makeObstacle(x, 0, width, topH));
+        state.obstacles.push(makeObstacle(x, bottomY, width, bottomH));
+      }
+
+      function addSingleTower(x, side) {
+        const width = rand(40, 62);
+        const height = rand(180, 360);
+        if (side === "bottom") {
+          state.obstacles.push(makeObstacle(x, VIEW.height - height, width, height));
+        } else {
+          state.obstacles.push(makeObstacle(x, 0, width, height));
+        }
+      }
+
+      function addSplitPattern(x) {
+        const width = rand(28, 42);
+        const midY = rand(250, 520);
+        const topH = rand(120, 220);
+        const bottomH = rand(120, 220);
+        state.obstacles.push(makeObstacle(x, midY - topH - 70, width, topH));
+        state.obstacles.push(makeObstacle(x + rand(56, 92), midY + 70, width, bottomH));
+      }
+
+      function getPointerPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+        const source = event.touches ? event.touches[0] : event;
+        return {
+          x: ((source.clientX - rect.left) / rect.width) * VIEW.width,
+          y: ((source.clientY - rect.top) / rect.height) * VIEW.height
+        };
+      }
+
+      function engageHook(point) {
+        if (state.mode !== "playing") return;
+        const player = state.player;
+        const worldPoint = { x: state.cameraX + point.x, y: point.y };
+        const dx = worldPoint.x - player.x;
+        const dy = worldPoint.y - player.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 24) return;
+        const maxLength = 250 * state.wireLengthFactor;
+        state.hook = {
+          active: true,
+          anchorX: worldPoint.x,
+          anchorY: clamp(worldPoint.y, 50, VIEW.height - 80),
+          length: Math.min(dist, maxLength),
+          maxLength
+        };
+      }
+
+      function releaseHook() {
+        if (!state.hook || !state.hook.active || state.mode !== "playing") {
+          state.hook = null;
+          return;
+        }
+        tryPerfectSwing();
+        state.hook = null;
+      }
+
+      function tryPerfectSwing() {
+        const hook = state.hook;
+        const player = state.player;
+        if (!hook) return;
+        const dx = player.x - hook.anchorX;
+        const dy = player.y - hook.anchorY;
+        const dist = Math.max(1, Math.hypot(dx, dy));
+        const radialX = dx / dist;
+        const radialY = dy / dist;
+        let tanX = -radialY;
+        let tanY = radialX;
+        if (tanX < 0) {
+          tanX *= -1;
+          tanY *= -1;
+        }
+        const tangentSpeed = player.vx * tanX + player.vy * tanY;
+        const angleDeg = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
+        const ideal = 62;
+        const diff = Math.abs(angleDeg - ideal);
+        const withinWindow = diff <= state.perfectWindow;
+        const fastEnough = tangentSpeed > 240;
+        if (withinWindow && fastEnough) {
+          const boost = (120 + (state.perfectWindow - diff) * 3.2) * state.swingBoostFactor;
+          player.vx = clamp(player.vx + tanX * boost + 38, physics.baseSpeed, physics.maxSpeed);
+          player.vy += tanY * boost * 0.55;
+          addBurst(player.x, player.y, palette.perfect, 12);
+          showStatus("Perfect Swing!", 1.4);
+        }
+      }
+
+      function addBurst(x, y, color, count) {
+        for (let i = 0; i < count; i += 1) {
+          const angle = rand(0, Math.PI * 2);
+          const speed = rand(50, 240);
+          state.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: rand(0.4, 0.9),
+            maxLife: 0.9,
+            size: rand(2, 4),
+            color
+          });
+        }
+      }
+
+      function addTextParticle(x, y, text, color) {
+        state.particles.push({
+          x,
+          y,
+          vx: 0,
+          vy: -45,
+          life: 0.8,
+          maxLife: 0.8,
+          size: 12,
+          color,
+          text
+        });
+      }
+
+      function collideCircleRect(player, obstacle) {
+        const nearestX = clamp(player.x, obstacle.x, obstacle.x + obstacle.w);
+        const nearestY = clamp(player.y, obstacle.y, obstacle.y + obstacle.h);
+        const dx = player.x - nearestX;
+        const dy = player.y - nearestY;
+        return Math.hypot(dx, dy) <= player.radius;
+      }
+
+      function distanceToRect(player, obstacle) {
+        const nearestX = clamp(player.x, obstacle.x, obstacle.x + obstacle.w);
+        const nearestY = clamp(player.y, obstacle.y, obstacle.y + obstacle.h);
+        return Math.hypot(player.x - nearestX, player.y - nearestY);
+      }
+
+      function consumeHitProtection() {
+        if (state.protectionTimer > 0) {
+          state.shake = 6;
+          addBurst(state.player.x, state.player.y, palette.barrier, 10);
+          showStatus("Barrier Saved You", 1.2);
+          return true;
+        }
+        if (state.shieldHits > 0) {
+          state.shieldHits -= 1;
+          state.shake = 6;
+          addBurst(state.player.x, state.player.y, palette.barrier, 10);
+          showStatus("Shield Used", 1.2);
+          return true;
+        }
+        return false;
+      }
+
+      function triggerGameOver(reason) {
+        state.mode = "gameover";
+        state.hook = null;
+        state.gameOverClock = 0.5;
+        gameOverTitle.textContent = reason;
+        gameOverScore.textContent = `Score ${Math.floor(state.score)}`;
+        gameOverDetail.textContent = `Distance ${Math.floor(state.distance)}m / Combo x${state.comboMultiplier.toFixed(1)}`;
+        gameOverStatus.textContent = "Retry Ready In 0.5s";
+        retryButton.disabled = true;
+        setOverlay(gameOverOverlay, true);
+      }
+
+      function awardNearMiss() {
+        state.combo += 1;
+        state.comboTimer = state.comboWindow;
+        state.comboMultiplier = 1 + state.combo * 0.35;
+        addTextParticle(state.player.x, state.player.y - 28, `Near x${state.comboMultiplier.toFixed(1)}`, palette.accent);
+        addBurst(state.player.x, state.player.y, palette.accent, 8);
+        showStatus("Close Call Combo", 1.2);
+      }
+
+      function openAbilityChoice() {
+        state.mode = "ability";
+        state.hook = null;
+        const picks = [];
+        const used = new Set();
+        while (picks.length < 3) {
+          const index = randInt(0, abilityPool.length - 1);
+          if (used.has(index)) continue;
+          used.add(index);
+          picks.push(abilityPool[index]);
+        }
+        state.pendingAbilities = picks;
+        abilityList.innerHTML = "";
+        picks.forEach((ability, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "ability-button";
+          button.innerHTML = `<strong>${index + 1}. ${ability.name}</strong><span>${ability.desc}</span>`;
+          button.addEventListener("click", () => {
+            ability.apply();
+            state.nextAbilityAt = state.time + rand(10, 15);
+            state.mode = "playing";
+            setOverlay(abilityOverlay, false);
+          });
+          abilityList.appendChild(button);
+        });
+        setOverlay(abilityOverlay, true);
+      }
+
+      function startGame() {
+        resetRun();
+        setOverlay(titleOverlay, false);
+        setOverlay(gameOverOverlay, false);
+        setOverlay(abilityOverlay, false);
+      }
+
+      function backToTitle() {
+        state.mode = "title";
+        state.hook = null;
+        setOverlay(titleOverlay, true);
+        setOverlay(gameOverOverlay, false);
+        setOverlay(abilityOverlay, false);
+      }
+
+      function updatePlayer(dt) {
+        const player = state.player;
+        const hook = state.hook;
+
+        player.vy += physics.gravity * dt;
+        player.vx *= 1 - physics.airDrag * 60;
+        player.vy *= 1 - physics.airDrag * 40;
+
+        if (hook && hook.active) {
+          const dx = player.x - hook.anchorX;
+          const dy = player.y - hook.anchorY;
+          const dist = Math.max(1, Math.hypot(dx, dy));
+          const radialX = dx / dist;
+          const radialY = dy / dist;
+          const pull = Math.max(0, dist - hook.length);
+          if (pull > 0) {
+            player.vx -= radialX * pull * physics.swingPull;
+            player.vy -= radialY * pull * physics.swingPull;
+          }
+        } else {
+          const targetSpeed = physics.baseSpeed + state.speedBonus;
+          player.vx += (targetSpeed - player.vx) * dt * 1.6;
+        }
+
+        player.x += player.vx * dt;
+        player.y += player.vy * dt;
+
+        if (hook && hook.active) {
+          const dx = player.x - hook.anchorX;
+          const dy = player.y - hook.anchorY;
+          const dist = Math.max(1, Math.hypot(dx, dy));
+          if (dist > hook.length) {
+            const radialX = dx / dist;
+            const radialY = dy / dist;
+            player.x = hook.anchorX + radialX * hook.length;
+            player.y = hook.anchorY + radialY * hook.length;
+            const radialSpeed = player.vx * radialX + player.vy * radialY;
+            if (radialSpeed > 0) {
+              player.vx -= radialX * radialSpeed;
+              player.vy -= radialY * radialSpeed;
+            }
+          }
+        }
+
+        player.vx = clamp(player.vx, 120, physics.maxSpeed);
+        player.vy = clamp(player.vy, -1000, 1200);
+        player.angle = Math.atan2(player.vy, Math.max(120, player.vx));
+
+        if (player.y < 24 || player.y > VIEW.height - 24) {
+          if (consumeHitProtection()) {
+            player.y = clamp(player.y, 40, VIEW.height - 40);
+            player.vy *= -0.25;
+          } else {
+            triggerGameOver("Out of Bounds");
+          }
+        }
+      }
+
+      function updateObstacles() {
+        const player = state.player;
+        generateObstaclesUntil(state.cameraX + VIEW.width + 1400);
+        state.obstacles = state.obstacles.filter((obstacle) => obstacle.x + obstacle.w > state.cameraX - 180);
+
+        for (const obstacle of state.obstacles) {
+          const dist = distanceToRect(player, obstacle);
+          obstacle.minDist = Math.min(obstacle.minDist, dist);
+
+          if (!obstacle.checked && player.x > obstacle.x + obstacle.w + player.radius) {
+            obstacle.checked = true;
+            if (!obstacle.grazed && obstacle.minDist < player.radius + 16) {
+              obstacle.grazed = true;
+              awardNearMiss();
+            }
+          }
+
+          if (collideCircleRect(player, obstacle)) {
+            if (consumeHitProtection()) {
+              obstacle.checked = true;
+              obstacle.grazed = true;
+              player.vx *= 0.92;
+              player.vy *= -0.3;
+              continue;
+            }
+            triggerGameOver("Hit Obstacle");
+            return;
+          }
+        }
+      }
+
+      function updateParticles(dt) {
+        state.particles = state.particles.filter((particle) => {
+          particle.life -= dt;
+          if (particle.life <= 0) return false;
+          particle.x += particle.vx * dt;
+          particle.y += particle.vy * dt;
+          if (!particle.text) particle.vy += 30 * dt;
+          return true;
+        });
+      }
+
+      function updatePlaying(dt) {
+        state.time += dt;
+        state.protectionTimer = Math.max(0, state.protectionTimer - dt);
+        if (state.statusClock > 0) {
+          state.statusClock = Math.max(0, state.statusClock - dt);
+        }
+        if (state.comboTimer > 0) {
+          state.comboTimer -= dt;
+          if (state.comboTimer <= 0) {
+            state.combo = 0;
+            state.comboMultiplier = 1;
+          }
+        }
+
+        updatePlayer(dt);
+        if (state.mode !== "playing") return;
+        updateObstacles();
+        if (state.mode !== "playing") return;
+
+        state.distance = Math.max(0, (state.player.x - 90) / 11);
+        state.score = state.distance * state.comboMultiplier;
+        state.cameraX = Math.max(0, state.player.x - 110);
+        state.bestDistance = Math.max(state.bestDistance, state.distance);
+
+        if (state.time >= state.nextAbilityAt) {
+          openAbilityChoice();
+          return;
+        }
+
+        updateParticles(dt);
+        updateHud();
+      }
+
+      function updateGameOver(dt) {
+        updateParticles(dt);
+        if (state.gameOverClock > 0) {
+          state.gameOverClock = Math.max(0, state.gameOverClock - dt);
+          retryButton.disabled = state.gameOverClock > 0;
+          gameOverStatus.textContent = state.gameOverClock > 0
+            ? `Retry Ready In ${state.gameOverClock.toFixed(1)}s`
+            : "Retry Ready";
+        }
+        updateHud();
+      }
+
+      function updateHud() {
+        distanceText.textContent = `${Math.floor(state.distance)} m`;
+        scoreText.textContent = `${Math.floor(state.score)}`;
+        comboText.textContent = `x${state.comboMultiplier.toFixed(1)}`;
+        abilityText.textContent = state.mode === "playing"
+          ? `${Math.max(0, state.nextAbilityAt - state.time).toFixed(1)}s`
+          : "--";
+
+        if (state.statusClock > 0) {
+          statusText.textContent = state.statusMessage;
+        } else if (state.protectionTimer > 0) {
+          statusText.textContent = `BARRIER ${state.protectionTimer.toFixed(1)}s`;
+        } else if (state.shieldHits > 0) {
+          statusText.textContent = `SHIELD x${state.shieldHits}`;
+        } else {
+          statusText.textContent = "LIVE";
+        }
+
+        if (state.mode === "playing") {
+          hintText.innerHTML = state.combo > 0
+            ? `<span class="combo-live">Combo Active</span> Keep threading close calls. Perfect Swing is your burst option.`
+            : "Hold to hook. Release to drop. Graze obstacles to build combo.";
+        }
+      }
+
+      function update(dt) {
+        if (state.mode === "playing") {
+          updatePlaying(dt);
+        } else if (state.mode === "gameover") {
+          updateGameOver(dt);
+        } else if (state.mode === "ability") {
+          updateParticles(dt);
+          updateHud();
+        }
+        state.shake = Math.max(0, state.shake - dt * 22);
+      }
+
+      function drawBackground() {
+        const sky = ctx.createLinearGradient(0, 0, 0, VIEW.height);
+        sky.addColorStop(0, palette.skyTop);
+        sky.addColorStop(0.52, palette.skyMid);
+        sky.addColorStop(1, palette.skyBottom);
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, VIEW.width, VIEW.height);
+
+        const sunX = VIEW.width * 0.72;
+        const sunY = 140;
+        const sun = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 120);
+        sun.addColorStop(0, "rgba(255, 239, 184, 0.95)");
+        sun.addColorStop(0.4, "rgba(255, 209, 102, 0.45)");
+        sun.addColorStop(1, "rgba(255, 209, 102, 0)");
+        ctx.fillStyle = sun;
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, 120, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function drawSkyline() {
+        const farOffset = state.cameraX * 0.18;
+        ctx.fillStyle = palette.cityFar;
+        for (const block of state.skylineFar) {
+          const x = block.x - farOffset;
+          if (x > VIEW.width + 20 || x + block.w < -20) continue;
+          ctx.fillRect(x, VIEW.height - block.h, block.w, block.h);
+        }
+
+        const nearOffset = state.cameraX * 0.34;
+        ctx.fillStyle = palette.cityNear;
+        for (const block of state.skylineNear) {
+          const x = block.x - nearOffset;
+          if (x > VIEW.width + 20 || x + block.w < -20) continue;
+          ctx.fillRect(x, VIEW.height - block.h, block.w, block.h);
+        }
+      }
+
+      function drawSpeedLines() {
+        const speedFactor = clamp((state.player ? state.player.vx : 0) / 700, 0, 1);
+        ctx.strokeStyle = `rgba(255,255,255,${0.05 + speedFactor * 0.08})`;
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 9; i += 1) {
+          const y = ((state.time * 120 + i * 92) % (VIEW.height + 40)) - 20;
+          const len = 24 + i * 3 + speedFactor * 30;
+          const x = VIEW.width - ((state.time * 180 + i * 53) % (VIEW.width + 80));
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x - len, y + len * 0.08);
+          ctx.stroke();
+        }
+      }
+
+      function drawObstacles() {
+        for (const obstacle of state.obstacles) {
+          const x = obstacle.x - state.cameraX;
+          if (x > VIEW.width + 40 || x + obstacle.w < -40) continue;
+          ctx.fillStyle = palette.obstacle;
+          ctx.fillRect(x, obstacle.y, obstacle.w, obstacle.h);
+          ctx.fillStyle = palette.obstacleEdge;
+          ctx.fillRect(x, obstacle.y, obstacle.w, 4);
+        }
+      }
+
+      function drawHook() {
+        const hook = state.hook;
+        if (!hook || !hook.active) return;
+        const player = state.player;
+        const ax = hook.anchorX - state.cameraX;
+        const ay = hook.anchorY;
+
+        ctx.strokeStyle = palette.ropeGlow;
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(player.x - state.cameraX, player.y);
+        ctx.stroke();
+
+        ctx.strokeStyle = palette.rope;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(player.x - state.cameraX, player.y);
+        ctx.stroke();
+
+        ctx.fillStyle = palette.rope;
+        ctx.beginPath();
+        ctx.arc(ax, ay, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function drawPlayer() {
+        const player = state.player;
+        if (!player) return;
+        const px = player.x - state.cameraX;
+        const py = player.y;
+
+        if (state.protectionTimer > 0 || state.shieldHits > 0) {
+          ctx.strokeStyle = state.protectionTimer > 0 ? "rgba(125,255,179,0.72)" : "rgba(125,240,255,0.72)";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(px, py, player.radius + 8 + Math.sin(state.time * 8) * 2, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.save();
+        ctx.translate(px, py);
+        ctx.rotate(player.angle * 0.45);
+        ctx.fillStyle = palette.player;
+        ctx.beginPath();
+        ctx.arc(0, 0, player.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = palette.playerEye;
+        ctx.beginPath();
+        ctx.arc(5, -4, 4, 0, Math.PI * 2);
+        ctx.arc(-5, -4, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#0b1426";
+        ctx.beginPath();
+        ctx.arc(5, -4, 1.8, 0, Math.PI * 2);
+        ctx.arc(-5, -4, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawPointerGuide() {
+        if (state.mode !== "playing" || state.pointer.active) return;
+        const x = VIEW.width * 0.74;
+        const y = VIEW.height * 0.24;
+        ctx.strokeStyle = "rgba(125, 240, 255, 0.22)";
+        ctx.setLineDash([8, 8]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(VIEW.width * 0.42, VIEW.height * 0.58);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      function drawParticles() {
+        for (const particle of state.particles) {
+          const alpha = clamp(particle.life / particle.maxLife, 0, 1);
+          const x = particle.x - state.cameraX;
+          if (particle.text) {
+            ctx.globalAlpha = alpha;
+            ctx.font = "700 16px Hiragino Sans";
+            ctx.fillStyle = particle.color;
+            ctx.fillText(particle.text, x, particle.y);
+            ctx.globalAlpha = 1;
+          } else {
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+
+      function render() {
+        ctx.save();
+        if (state.shake > 0) {
+          ctx.translate(rand(-state.shake, state.shake), rand(-state.shake, state.shake));
+        }
+        drawBackground();
+        drawSkyline();
+        drawSpeedLines();
+        drawObstacles();
+        drawPointerGuide();
+        drawHook();
+        drawPlayer();
+        drawParticles();
+        ctx.restore();
+      }
+
+      let lastTime = 0;
+      function frame(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const dt = Math.min(0.033, (timestamp - lastTime) / 1000);
+        lastTime = timestamp;
+        update(dt);
+        render();
+        requestAnimationFrame(frame);
+      }
+
+      function handlePress(event) {
+        if (state.mode !== "playing") return;
+        event.preventDefault();
+        const point = getPointerPosition(event);
+        state.pointer.active = true;
+        state.pointer.x = point.x;
+        state.pointer.y = point.y;
+        engageHook(point);
+      }
+
+      function handleMove(event) {
+        if (!state.pointer.active || state.mode !== "playing") return;
+        event.preventDefault();
+        const point = getPointerPosition(event);
+        state.pointer.x = point.x;
+        state.pointer.y = point.y;
+        engageHook(point);
+      }
+
+      function handleRelease(event) {
+        if (event) event.preventDefault();
+        state.pointer.active = false;
+        releaseHook();
+      }
+
+      ["touchstart", "mousedown"].forEach((name) => {
+        canvas.addEventListener(name, handlePress, { passive: false });
+      });
+      ["touchmove", "mousemove"].forEach((name) => {
+        canvas.addEventListener(name, handleMove, { passive: false });
+      });
+      ["touchend", "touchcancel", "mouseup", "mouseleave"].forEach((name) => {
+        canvas.addEventListener(name, handleRelease, { passive: false });
+      });
+
+      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("touchmove", (event) => {
+        if (event.target === canvas) event.preventDefault();
+      }, { passive: false });
+      document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+      startButton.addEventListener("click", startGame);
+      retryButton.addEventListener("click", () => {
+        if (state.gameOverClock <= 0) startGame();
+      });
+      titleButton.addEventListener("click", backToTitle);
+      window.addEventListener("resize", resizeCanvas);
+
+      resizeCanvas();
+      backToTitle();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
