@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <title>Trace Escape MVP</title>
+  <style>
+    :root {
+      --bg-top: #fff9ef;
+      --bg-bottom: #f0d9aa;
+      --panel: rgba(255, 253, 248, 0.82);
+      --ink: #2d2419;
+      --accent: #d1603d;
+      --accent-strong: #8f3522;
+      --shadow: rgba(88, 54, 18, 0.15);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      overscroll-behavior: none;
+      touch-action: none;
+      color: var(--ink);
+      font-family: "Hiragino Sans", "Yu Gothic UI", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.8), transparent 28%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      padding: max(12px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom));
+    }
+    .app { width: min(100%, 430px); display: grid; gap: 12px; }
+    .panel {
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 36px var(--shadow);
+    }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent-strong);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(1.8rem, 7vw, 2.5rem); line-height: 1.05; }
+    .subtitle { margin: 8px 0 0; font-size: 0.98rem; line-height: 1.6; }
+    .back-link, button { border: 0; border-radius: 999px; font: inherit; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      color: var(--accent-strong);
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+    }
+    .canvas-panel { position: relative; padding: 10px; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffaf2 0%, #f5e5be 58%, #ddb67b 100%);
+      box-shadow: inset 0 0 0 1px rgba(106, 70, 19, 0.08);
+      touch-action: none;
+    }
+    .status {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 20px rgba(88, 54, 18, 0.12);
+    }
+    .footer { display: flex; align-items: center; gap: 10px; }
+    .hint { flex: 1; margin: 0; font-size: 0.95rem; line-height: 1.5; }
+    button {
+      min-width: 112px;
+      min-height: 46px;
+      padding: 0 18px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 10px 24px rgba(143, 53, 34, 0.24);
+    }
+    button:active { transform: translateY(1px); }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255, 250, 240, 0.34);
+      pointer-events: none;
+    }
+    .overlay.is-visible { display: flex; }
+    .overlay-card {
+      width: min(100%, 270px);
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.92);
+      text-align: center;
+      box-shadow: 0 18px 36px rgba(88, 54, 18, 0.18);
+    }
+    .overlay-card p { margin: 0; }
+    .overlay-card .result {
+      margin-bottom: 8px;
+      color: #26a96c;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+    .overlay-card .desc { font-size: 0.95rem; line-height: 1.55; }
+    @media (max-width: 380px) {
+      .footer { flex-direction: column; align-items: stretch; }
+      .back-link, button { min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel topbar">
+      <div>
+        <p class="eyebrow">Trace Escape MVP</p>
+        <h1>線を描いて助けろ</h1>
+        <p class="subtitle">走るキャラの前に橋を描き、穴を越えてゴールへ。</p>
+      </div>
+      <a class="back-link" href="../index.html">一覧へ</a>
+    </section>
+    <section class="panel canvas-panel">
+      <div class="status" aria-hidden="true">
+        <div class="chip" id="statusText">ドラッグで橋を描く</div>
+        <div class="chip" id="drawText">線 0%</div>
+      </div>
+      <canvas id="gameCanvas" width="360" height="540" aria-label="Trace Escapeのゲーム画面"></canvas>
+      <div class="overlay" id="clearOverlay">
+        <div class="overlay-card">
+          <p class="result">CLEAR</p>
+          <p class="desc">橋がつながった。リスタートでもう一度遊べます。</p>
+        </div>
+      </div>
+    </section>
+    <section class="panel footer">
+      <p class="hint">操作: 画面をなぞって足場線を描く。落ちたら即リトライ。</p>
+      <button id="restartButton" type="button">リスタート</button>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+      const restartButton = document.getElementById("restartButton");
+      const clearOverlay = document.getElementById("clearOverlay");
+      const statusText = document.getElementById("statusText");
+      const drawText = document.getElementById("drawText");
+
+      const world = { width: 360, height: 540 };
+      const stage = { floorY: 420, holeStart: 132, holeEnd: 242, goalX: 316, goalWidth: 20 };
+      const physics = { gravity: 2200, moveSpeed: 82, maxFallSpeed: 900 };
+      const drawConfig = { maxLength: 220, minPointDistance: 8, snapRadius: 18 };
+
+      let pointerDown = false;
+      let currentStroke = [];
+      let currentStrokeLength = 0;
+      let segments = [];
+      let state = {};
+      let lastTime = 0;
+
+      function resetGame() {
+        state = {
+          player: { x: 40, y: stage.floorY - 14, radius: 14, vy: 0, grounded: false },
+          cleared: false,
+          failed: false,
+          retryTimer: 0
+        };
+        currentStroke = [];
+        currentStrokeLength = 0;
+        segments = [];
+        pointerDown = false;
+        clearOverlay.classList.remove("is-visible");
+        statusText.textContent = "ドラッグで橋を描く";
+        updateDrawMeter();
+      }
+
+      function updateDrawMeter() {
+        const ratio = Math.min(1, currentStrokeLength / drawConfig.maxLength);
+        drawText.textContent = `線 ${Math.round(ratio * 100)}%`;
+      }
+
+      function getCanvasPoint(event) {
+        const rect = canvas.getBoundingClientRect();
+        const source = event.touches ? event.touches[0] : event;
+        return {
+          x: (source.clientX - rect.left) * (world.width / rect.width),
+          y: (source.clientY - rect.top) * (world.height / rect.height)
+        };
+      }
+
+      function clampPoint(point) {
+        return {
+          x: Math.max(8, Math.min(world.width - 8, point.x)),
+          y: Math.max(90, Math.min(world.height - 24, point.y))
+        };
+      }
+
+      function beginStroke(event) {
+        if (state.cleared) return;
+        event.preventDefault();
+        pointerDown = true;
+        const point = clampPoint(getCanvasPoint(event));
+        currentStroke = [point];
+        currentStrokeLength = 0;
+        segments = [];
+        statusText.textContent = "橋をつなげるように描く";
+        updateDrawMeter();
+      }
+
+      function extendStroke(event) {
+        if (!pointerDown || state.cleared) return;
+        event.preventDefault();
+        const point = clampPoint(getCanvasPoint(event));
+        const lastPoint = currentStroke[currentStroke.length - 1];
+        const dx = point.x - lastPoint.x;
+        const dy = point.y - lastPoint.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance < drawConfig.minPointDistance) return;
+
+        const remaining = drawConfig.maxLength - currentStrokeLength;
+        if (remaining <= 0) return;
+
+        let nextPoint = point;
+        let appliedDistance = distance;
+        if (distance > remaining) {
+          const ratio = remaining / distance;
+          nextPoint = { x: lastPoint.x + dx * ratio, y: lastPoint.y + dy * ratio };
+          appliedDistance = remaining;
+        }
+
+        currentStroke.push(nextPoint);
+        currentStrokeLength += appliedDistance;
+        rebuildSegments();
+        updateDrawMeter();
+      }
+
+      function endStroke(event) {
+        if (!pointerDown) return;
+        if (event) event.preventDefault();
+        pointerDown = false;
+        rebuildSegments();
+      }
+
+      function rebuildSegments() {
+        segments = [];
+        for (let i = 1; i < currentStroke.length; i += 1) {
+          const a = currentStroke[i - 1];
+          const b = currentStroke[i];
+          if (Math.abs(a.x - b.x) < 1 && Math.abs(a.y - b.y) < 1) continue;
+          segments.push({ a, b });
+        }
+      }
+
+      function getSurfaceYAt(segment, x) {
+        const minX = Math.min(segment.a.x, segment.b.x) - drawConfig.snapRadius;
+        const maxX = Math.max(segment.a.x, segment.b.x) + drawConfig.snapRadius;
+        if (x < minX || x > maxX) return null;
+
+        const dx = segment.b.x - segment.a.x;
+        if (Math.abs(dx) < 0.001) return Math.min(segment.a.y, segment.b.y);
+
+        const t = (x - segment.a.x) / dx;
+        if (t < -0.15 || t > 1.15) return null;
+        return segment.a.y + (segment.b.y - segment.a.y) * t;
+      }
+
+      function getGroundY(x) {
+        let groundY = null;
+        if (x <= stage.holeStart || x >= stage.holeEnd) groundY = stage.floorY;
+        for (const segment of segments) {
+          const y = getSurfaceYAt(segment, x);
+          if (y === null) continue;
+          if (groundY === null || y < groundY) groundY = y;
+        }
+        return groundY;
+      }
+
+      function updatePlayer(dt) {
+        const player = state.player;
+        const previousY = player.y;
+        player.x += physics.moveSpeed * dt;
+        player.vy = Math.min(player.vy + physics.gravity * dt, physics.maxFallSpeed);
+        player.y += player.vy * dt;
+        player.grounded = false;
+
+        const supportY = getGroundY(player.x);
+        if (supportY !== null) {
+          const feet = player.y + player.radius;
+          const previousFeet = previousY + player.radius;
+          if (previousFeet <= supportY + 6 && feet >= supportY - 2) {
+            player.y = supportY - player.radius;
+            player.vy = 0;
+            player.grounded = true;
+          }
+        }
+
+        if (!state.cleared && player.x + player.radius >= stage.goalX) {
+          state.cleared = true;
+          player.x = Math.min(player.x, stage.goalX);
+          clearOverlay.classList.add("is-visible");
+          statusText.textContent = "クリア";
+        }
+
+        if (player.y - player.radius > world.height + 40) {
+          state.failed = true;
+          state.retryTimer = 0.45;
+          statusText.textContent = "落下... 即リトライ";
+        }
+      }
+
+      function update(dt) {
+        if (state.cleared) return;
+        if (state.failed) {
+          state.retryTimer -= dt;
+          if (state.retryTimer <= 0) resetGame();
+          return;
+        }
+        updatePlayer(dt);
+      }
+
+      function drawBackground() {
+        ctx.clearRect(0, 0, world.width, world.height);
+        ctx.fillStyle = "#f5d9a7";
+        ctx.fillRect(0, stage.floorY, stage.holeStart, world.height - stage.floorY);
+        ctx.fillRect(stage.holeEnd, stage.floorY, world.width - stage.holeEnd, world.height - stage.floorY);
+        ctx.fillStyle = "#c58d55";
+        ctx.fillRect(0, stage.floorY + 10, stage.holeStart, world.height - stage.floorY - 10);
+        ctx.fillRect(stage.holeEnd, stage.floorY + 10, world.width - stage.holeEnd, world.height - stage.floorY - 10);
+        ctx.fillStyle = "rgba(63, 73, 94, 0.18)";
+        ctx.fillRect(stage.holeStart, stage.floorY, stage.holeEnd - stage.holeStart, world.height - stage.floorY);
+        ctx.fillStyle = "#e9c88c";
+        for (let x = 0; x < world.width; x += 26) ctx.fillRect(x, stage.floorY + 4, 12, 4);
+      }
+
+      function drawGoal() {
+        const poleX = stage.goalX + 10;
+        ctx.strokeStyle = "#4e3a23";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(poleX, stage.floorY);
+        ctx.lineTo(poleX, stage.floorY - 78);
+        ctx.stroke();
+        ctx.fillStyle = "#26a96c";
+        ctx.beginPath();
+        ctx.moveTo(poleX, stage.floorY - 78);
+        ctx.lineTo(poleX + 28, stage.floorY - 64);
+        ctx.lineTo(poleX, stage.floorY - 48);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "rgba(38, 169, 108, 0.12)";
+        ctx.fillRect(stage.goalX - 8, stage.floorY - 12, stage.goalWidth + 24, 12);
+      }
+
+      function drawStroke() {
+        if (currentStroke.length < 2) return;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "rgba(18, 53, 85, 0.16)";
+        ctx.lineWidth = 12;
+        ctx.beginPath();
+        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+        for (let i = 1; i < currentStroke.length; i += 1) ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+        ctx.stroke();
+        ctx.strokeStyle = "#2978b5";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+        for (let i = 1; i < currentStroke.length; i += 1) ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+        ctx.stroke();
+      }
+
+      function drawPlayer() {
+        const player = state.player;
+        ctx.fillStyle = "#ee6c4d";
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(player.x + 4, player.y - 3, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#1d1d1d";
+        ctx.beginPath();
+        ctx.arc(player.x + 4, player.y - 3, 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function drawGuide() {
+        if (currentStroke.length > 1 || state.cleared) return;
+        ctx.strokeStyle = "rgba(41, 120, 181, 0.18)";
+        ctx.lineWidth = 6;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.moveTo(stage.holeStart - 10, stage.floorY - 10);
+        ctx.lineTo(stage.holeEnd + 10, stage.floorY - 10);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      function render() {
+        drawBackground();
+        drawGoal();
+        drawGuide();
+        drawStroke();
+        drawPlayer();
+      }
+
+      function frame(time) {
+        if (!lastTime) lastTime = time;
+        const dt = Math.min(0.033, (time - lastTime) / 1000);
+        lastTime = time;
+        update(dt);
+        render();
+        requestAnimationFrame(frame);
+      }
+
+      ["mousedown", "touchstart"].forEach((name) => canvas.addEventListener(name, beginStroke, { passive: false }));
+      ["mousemove", "touchmove"].forEach((name) => canvas.addEventListener(name, extendStroke, { passive: false }));
+      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((name) => canvas.addEventListener(name, endStroke, { passive: false }));
+      restartButton.addEventListener("click", resetGame);
+      canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+      resetGame();
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

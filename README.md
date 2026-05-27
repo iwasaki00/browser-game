@@ -1,32 +1,33 @@
 # browser-game
 
-GitHub Pages で公開する前提のブラウザゲーム集です。ルートのメニューから各ゲームへ移動できます。
+GitHub Pages で公開できる軽量なブラウザゲーム集です。ルートのメニューから各ゲームへ移動できます。
 
 ## 収録ゲーム
 
+- Trace Escape MVP
 - ひもパックバトル
 - 五目並べ
+- SwordAndPoker
 
-## ローカル確認
+## ローカル実行
 
-静的サイトなので、`index.html` を直接開くだけでも確認できます。HTTP で見たい場合は `gomoku/server.py` を流用するか、任意の簡易サーバーを使ってください。
+静的サイトなので、基本は `index.html` をブラウザで開くだけでも動作確認できます。
+HTTP サーバーで確認したい場合は、任意の静的サーバーをこのリポジトリ直下で起動してください。
 
-## GitHub Pages で公開
+## GitHub Pages
 
-1. GitHub に新しいリポジトリを作成する
-2. このディレクトリをそのリポジトリへ push する
-3. GitHub の `Settings > Pages` を開く
-4. `Build and deployment` で `Deploy from a branch` を選ぶ
-5. Branch を `main`、Folder を `/ (root)` にして保存する
+1. このリポジトリを GitHub に push する
+2. `Settings > Pages` を開く
+3. `Build and deployment` で `Deploy from a branch` を選ぶ
+4. Branch に `main`、Folder に `/ (root)` を指定する
 
-公開後の URL は通常:
+公開後のURL例:
 
 `https://<GitHubユーザー名>.github.io/<リポジトリ名>/`
 
-五目並べの直リンクは:
+各ゲームのURL例:
 
-`https://<GitHubユーザー名>.github.io/<リポジトリ名>/gomoku/`
-
-ひもパックバトルの直リンクは:
-
-`https://<GitHubユーザー名>.github.io/<リポジトリ名>/himopack-battle/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/trace-escape/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/himopack-battle/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/gomoku/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/SwordAndPoker/poker-dungeon/`
