@@ -430,6 +430,14 @@ button:disabled {
   gap: 8px;
 }
 
+.mobile-player-hand {
+  justify-content: flex-start;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+}
+
 .combat-result {
   min-height: 112px;
   padding: 10px 12px;
@@ -872,9 +880,19 @@ button:disabled {
     padding: 4px 3px;
   }
 
+  .mobile-player-panel .card {
+    width: min(15.6vw, 58px);
+    min-height: min(22.8vw, 82px);
+    padding: 5px 4px;
+  }
+
   .enemy-panel .card-rank,
   .mobile-player-panel .card-rank {
     font-size: 1rem;
+  }
+
+  .mobile-player-panel .card-rank {
+    font-size: 1.15rem;
   }
 
   .enemy-panel .card-suit,
@@ -882,14 +900,26 @@ button:disabled {
     font-size: 0.78rem;
   }
 
+  .mobile-player-panel .card-suit {
+    font-size: 0.96rem;
+  }
+
   .enemy-panel .card-joker-mark,
   .mobile-player-panel .card-joker-mark {
     font-size: 0.9rem;
   }
 
+  .mobile-player-panel .card-joker-mark {
+    font-size: 1.05rem;
+  }
+
   .enemy-panel .card-joker-text,
   .mobile-player-panel .card-joker-text {
     font-size: 0.44rem;
+  }
+
+  .mobile-player-panel .card-joker-text {
+    font-size: 0.5rem;
   }
 
   .board-cell {
