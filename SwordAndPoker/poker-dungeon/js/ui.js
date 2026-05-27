@@ -12,6 +12,7 @@ const mobilePlayerHpElement = document.querySelector("#mobile-player-hp");
 const enemyHandElement = document.querySelector("#enemy-hand");
 const playerHandElement = document.querySelector("#player-hand");
 const mobilePlayerHandElement = document.querySelector("#mobile-player-hand");
+const mobilePrimaryActionsElement = document.querySelector("#mobile-primary-actions");
 const logListElement = document.querySelector("#log-list");
 const mobileLogListElement = document.querySelector("#mobile-log-list");
 const deckCountElement = document.querySelector("#deck-count");
@@ -35,6 +36,24 @@ const startGameButton = document.querySelector("#start-game-button");
 const closeSettingsButton = document.querySelector("#close-settings-button");
 const saveSettingsButton = document.querySelector("#save-settings-button");
 const settingsStatusElement = document.querySelector("#settings-status");
+const mobileLayoutMediaQuery = window.matchMedia("(max-width: 640px)");
+
+function syncMobilePrimaryActions() {
+  if (!mobilePrimaryActionsElement) {
+    return;
+  }
+
+  if (mobileLayoutMediaQuery.matches) {
+    mobilePrimaryActionsElement.append(confirmButton, passButton);
+    return;
+  }
+
+  const controlsElement = document.querySelector(".controls");
+  if (controlsElement) {
+    controlsElement.prepend(passButton);
+    controlsElement.prepend(confirmButton);
+  }
+}
 
 function bindUiEvents(handlers) {
   confirmButton.addEventListener("click", handlers.onConfirm);
@@ -45,6 +64,8 @@ function bindUiEvents(handlers) {
   saveSettingsButton.addEventListener("click", handlers.onSaveSettings);
   startGameButton.addEventListener("click", handlers.onStartGame);
   closeSettingsButton.addEventListener("click", handlers.onCloseSettings);
+  syncMobilePrimaryActions();
+  mobileLayoutMediaQuery.addEventListener("change", syncMobilePrimaryActions);
 }
 
 function createCardElement(card, options = {}) {
@@ -288,6 +309,7 @@ function renderPreviewBanner(placements) {
 }
 
 function renderAll(handlers) {
+  syncMobilePrimaryActions();
   renderPreviewBanner(handlers.getPreviewPlacements());
   renderSettingsScreen();
   renderStatus();

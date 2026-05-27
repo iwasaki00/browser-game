@@ -438,6 +438,16 @@ button:disabled {
   padding-bottom: 2px;
 }
 
+.mobile-player-body {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.mobile-primary-actions {
+  display: none;
+}
+
 .combat-result {
   min-height: 112px;
   padding: 10px 12px;
@@ -783,6 +793,23 @@ button:disabled {
     display: grid;
   }
 
+  .mobile-player-body {
+    align-items: flex-start;
+  }
+
+  .mobile-player-hand {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .mobile-primary-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    flex: 0 0 64px;
+    align-self: stretch;
+  }
+
   .player-panel,
   .mobile-log-panel {
     display: none;
@@ -820,6 +847,14 @@ button:disabled {
     padding: 5px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px;
+  }
+
+  .mobile-primary-actions button {
+    min-height: 34px;
+    height: calc(50% - 2px);
+    padding: 4px 3px;
+    font-size: 0.7rem;
+    line-height: 1.1;
   }
 
   button {
