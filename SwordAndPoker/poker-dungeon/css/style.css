@@ -680,14 +680,17 @@ button:disabled {
   }
 
   body {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .app-shell {
     width: 100%;
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
     gap: 6px;
-    grid-template-rows: auto minmax(0, 1fr);
+    min-height: var(--screen-height);
+    height: auto;
+    grid-template-rows: auto;
   }
 
   .combatant-panel,
@@ -762,9 +765,9 @@ button:disabled {
 
   .board-section {
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
-    gap: 6px;
-    min-height: 0;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 5px;
+    min-height: auto;
   }
 
   .left-column,
@@ -800,8 +803,8 @@ button:disabled {
   }
 
   .selection-summary {
-    font-size: 0.78rem;
-    line-height: 1.25;
+    font-size: 0.74rem;
+    line-height: 1.2;
   }
 
   .board {
@@ -809,20 +812,20 @@ button:disabled {
   }
 
   .board-stage {
-    padding: 6px;
+    padding: 5px;
     align-self: center;
   }
 
   .controls {
-    padding: 6px;
+    padding: 5px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 5px;
+    gap: 4px;
   }
 
   button {
-    min-height: 34px;
-    padding: 6px 4px;
-    font-size: 0.76rem;
+    min-height: 30px;
+    padding: 5px 3px;
+    font-size: 0.68rem;
     border-radius: 12px;
   }
 
