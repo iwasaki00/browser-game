@@ -9,14 +9,14 @@
   <title>AI遺産 - Last Memory Protocol -</title>
   <style>
     :root {
-      --ink: #eef5ff;
-      --muted: #9fb1c8;
-      --panel: rgba(4, 10, 20, 0.78);
-      --line: rgba(166, 205, 255, 0.22);
-      --accent: #6be3ff;
-      --danger: #ff6b8f;
-      --ok: #8df5b6;
-      --shadow: rgba(0, 0, 0, 0.36);
+      --ink: #ffffff;
+      --muted: #e7dfc8;
+      --panel: rgba(0, 0, 0, 0.08);
+      --line: rgba(255, 255, 255, 0.42);
+      --accent: #fff4a6;
+      --danger: #ffbdc8;
+      --ok: #cbffc4;
+      --shadow: rgba(0, 0, 0, 0.72);
     }
 
     * {
@@ -29,7 +29,7 @@
       min-height: 100%;
       color: var(--ink);
       font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
-      background: #030712;
+      background: #060503;
       overflow: hidden;
     }
 
@@ -47,8 +47,9 @@
       min-height: 100vh;
       isolation: isolate;
       background:
-        linear-gradient(180deg, rgba(2, 8, 18, 0.1), rgba(2, 8, 18, 0.92)),
-        var(--scene-bg, radial-gradient(circle at 50% 20%, #18334f, #030712 65%));
+        linear-gradient(180deg, rgba(20, 14, 8, 0.08), rgba(4, 3, 2, 0.36)),
+        var(--scene-bg, linear-gradient(180deg, #6e5c34 0 16%, #24221f 16% 18%, #9a865c 18% 38%, #293348 38% 78%, #1b1512 78%));
+      image-rendering: pixelated;
     }
 
     .stage::before,
@@ -61,20 +62,20 @@
     }
 
     .stage::before {
-      background-image:
-        linear-gradient(rgba(107, 227, 255, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(107, 227, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: linear-gradient(to bottom, transparent, black 14%, black 74%, transparent);
+      background:
+        linear-gradient(90deg, transparent 0 10%, rgba(18, 16, 12, 0.86) 10% 15%, transparent 15% 32%, rgba(31, 26, 20, 0.86) 32% 39%, transparent 39% 64%, rgba(18, 14, 11, 0.9) 64% 72%, transparent 72%),
+        radial-gradient(ellipse at 76% 52%, rgba(190, 166, 97, 0.86) 0 9%, transparent 9.4%),
+        linear-gradient(90deg, transparent 0 58%, rgba(36, 31, 22, 0.9) 58% 62%, rgba(134, 109, 55, 0.9) 62% 82%, rgba(36, 31, 22, 0.92) 82% 86%, transparent 86%),
+        linear-gradient(90deg, transparent 0 68%, rgba(238, 212, 120, 0.7) 68% 69%, transparent 69% 73%, rgba(238, 212, 120, 0.7) 73% 74%, transparent 74%);
+      opacity: 0.95;
     }
 
     .stage::after {
       background:
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px),
-        radial-gradient(circle at var(--pulse-x, 50%) var(--pulse-y, 45%), rgba(107, 227, 255, 0.2), transparent 18rem);
-      mix-blend-mode: screen;
-      opacity: 0.54;
-      animation: scan 5.5s linear infinite;
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 6px);
+      opacity: 0.5;
+      animation: scan 2.8s steps(8) infinite;
     }
 
     @keyframes scan {
@@ -96,10 +97,10 @@
 
     .brand,
     .status-chip {
-      border: 1px solid var(--line);
-      background: rgba(2, 8, 18, 0.62);
-      box-shadow: 0 12px 30px var(--shadow);
-      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      background: rgba(0, 0, 0, 0.34);
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.72);
+      backdrop-filter: none;
     }
 
     .brand {
@@ -113,6 +114,7 @@
       font-size: 0.95rem;
       font-weight: 800;
       letter-spacing: 0.04em;
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -132,40 +134,35 @@
       gap: 8px;
       min-height: 44px;
       padding: 8px 12px;
-      border-radius: 8px;
+      border-radius: 0;
       color: var(--muted);
       font-size: 0.82rem;
       white-space: nowrap;
+      text-shadow: 2px 2px 0 #000;
     }
 
     .memory-orb {
       position: absolute;
       left: 50%;
       top: 42%;
-      width: min(56vw, 430px);
-      aspect-ratio: 1;
+      width: min(72vw, 560px);
+      height: min(52vh, 430px);
       transform: translate(-50%, -50%);
-      border: 1px solid rgba(107, 227, 255, 0.24);
-      border-radius: 50%;
+      border: 0;
+      border-radius: 0;
       background:
-        radial-gradient(circle at 48% 38%, rgba(255, 255, 255, 0.82), transparent 0.8%),
-        radial-gradient(circle at 54% 39%, rgba(255, 255, 255, 0.7), transparent 0.8%),
-        radial-gradient(circle at 50% 58%, rgba(255, 125, 167, 0.56), transparent 0.7%),
-        radial-gradient(circle at 50% 48%, rgba(107, 227, 255, 0.34), transparent 14%),
-        radial-gradient(circle at 50% 50%, rgba(84, 125, 210, 0.2), transparent 44%);
-      filter: drop-shadow(0 0 40px rgba(107, 227, 255, 0.26));
-      opacity: 0.92;
+        linear-gradient(90deg, transparent 0 14%, rgba(16, 15, 18, 0.9) 14% 24%, transparent 24% 38%, rgba(12, 12, 14, 0.92) 38% 49%, transparent 49% 67%, rgba(18, 16, 18, 0.92) 67% 78%, transparent 78%),
+        radial-gradient(ellipse at 19% 36%, rgba(45, 49, 74, 0.95) 0 10%, transparent 10.5%),
+        radial-gradient(ellipse at 43% 35%, rgba(39, 42, 67, 0.95) 0 10%, transparent 10.5%),
+        radial-gradient(ellipse at 72% 37%, rgba(32, 33, 52, 0.96) 0 10%, transparent 10.5%);
+      filter: blur(0.3px);
+      opacity: 0.86;
       transition: opacity 320ms ease, transform 320ms ease;
     }
 
     .memory-orb::before,
     .memory-orb::after {
-      content: "";
-      position: absolute;
-      inset: 12%;
-      border: 1px solid rgba(107, 227, 255, 0.36);
-      border-radius: 48% 52% 46% 54%;
-      animation: rotate 18s linear infinite;
+      content: none;
     }
 
     .memory-orb::after {
@@ -181,55 +178,60 @@
 
     .novel-panel {
       position: absolute;
-      left: 50%;
+      left: 16px;
       right: auto;
-      bottom: max(18px, env(safe-area-inset-bottom));
+      top: 16px;
+      bottom: auto;
       z-index: 4;
-      width: min(980px, calc(100% - 28px));
-      transform: translateX(-50%);
-      border: 1px solid var(--line);
-      border-radius: 10px;
+      width: min(920px, calc(100% - 32px));
+      transform: none;
+      border: 0;
+      border-radius: 0;
       background: var(--panel);
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.44);
-      backdrop-filter: blur(14px);
+      box-shadow: none;
+      backdrop-filter: none;
       overflow: hidden;
+      padding-top: 64px;
     }
 
     .nameplate {
       display: inline-flex;
       min-width: 10rem;
       max-width: 100%;
-      padding: 10px 16px;
-      background: linear-gradient(90deg, rgba(107, 227, 255, 0.2), rgba(107, 227, 255, 0.02));
-      color: var(--accent);
+      padding: 0 0 6px;
+      background: transparent;
+      color: var(--ink);
       font-weight: 800;
       letter-spacing: 0.08em;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      border: 0;
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 0 0 8px #000;
     }
 
     .text {
-      min-height: 8rem;
+      min-height: 10.4rem;
       margin: 0;
-      padding: 18px 20px 12px;
-      font-size: clamp(1rem, 2.8vw, 1.18rem);
-      line-height: 1.85;
+      padding: 0 0 12px;
+      font-family: "Yu Gothic UI", "MS Gothic", "Hiragino Sans", monospace;
+      font-size: clamp(1.08rem, 3.4vw, 1.75rem);
+      font-weight: 800;
+      line-height: 1.62;
       white-space: pre-wrap;
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 0 0 10px #000;
     }
 
     .choices {
       display: grid;
       gap: 9px;
-      padding: 0 16px 14px;
+      padding: 0 0 14px;
     }
 
     .choice-button,
     .control-button {
       min-height: 44px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 0;
       color: var(--ink);
-      background: rgba(107, 227, 255, 0.09);
+      background: rgba(0, 0, 0, 0.42);
       cursor: pointer;
       transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     }
@@ -239,18 +241,20 @@
       padding: 11px 14px;
       text-align: left;
       line-height: 1.45;
+      font-weight: 800;
+      text-shadow: 2px 2px 0 #000;
     }
 
     .choice-button:hover,
     .control-button:hover {
       transform: translateY(-1px);
-      background: rgba(107, 227, 255, 0.18);
-      border-color: rgba(107, 227, 255, 0.52);
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.86);
     }
 
     .choice-button.danger {
       border-color: rgba(255, 107, 143, 0.36);
-      background: rgba(255, 107, 143, 0.11);
+      background: rgba(120, 10, 24, 0.48);
     }
 
     .controls {
@@ -258,9 +262,9 @@
       gap: 8px;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
-      border-top: 1px solid var(--line);
-      background: rgba(1, 6, 14, 0.52);
+      padding: 8px 0;
+      border-top: 0;
+      background: transparent;
     }
 
     .control-group {
@@ -275,10 +279,11 @@
       min-width: 44px;
       padding: 0 12px;
       font-weight: 700;
+      box-shadow: 2px 2px 0 #000;
     }
 
     .control-button.primary {
-      color: #04101a;
+      color: #161006;
       background: var(--accent);
       border-color: transparent;
     }
@@ -334,15 +339,39 @@
       gap: 10px;
     }
 
-    .route-button {
+    .condition-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .route-button,
+    .condition-button {
       min-height: 70px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 0;
       padding: 12px;
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.48);
       text-align: left;
       cursor: pointer;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.72);
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .condition-button {
+      min-height: 48px;
+      text-align: center;
+      padding: 9px 8px;
+      font-weight: 800;
+    }
+
+    .condition-button.selected {
+      color: #211706;
+      background: var(--accent);
+      border-color: #fff;
+      text-shadow: none;
     }
 
     .route-button strong {
@@ -433,6 +462,10 @@
       .route-grid {
         grid-template-columns: 1fr;
       }
+
+      .condition-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -469,10 +502,21 @@
       <div class="menu-card">
         <h1>AI遺産</h1>
         <p class="subtitle">事故死した妹のAI人格が告げた。「お兄ちゃん……どうして今回も失敗したの？」</p>
+        <div class="condition-grid" aria-label="分岐条件">
+          <button class="condition-button selected" type="button" data-condition="routeA">救済</button>
+          <button class="condition-button" type="button" data-condition="routeB">調査</button>
+          <button class="condition-button" type="button" data-condition="routeC">AI</button>
+          <button class="condition-button" type="button" data-condition="routeD">怪異</button>
+          <button class="condition-button" type="button" data-condition="routeE">噂</button>
+        </div>
         <div class="route-grid">
           <button class="route-button" type="button" data-start="common">
             <strong>はじめから</strong>
             <small>共通ルートから開始し、選択肢で各ルートへ分岐します。</small>
+          </button>
+          <button class="route-button" type="button" data-start="condition">
+            <strong>条件で開始</strong>
+            <small>上で選んだ分岐条件から、対応するストーリーへ直接入ります。</small>
           </button>
           <button class="route-button" type="button" data-start="routeA">
             <strong>A 妹救済編</strong>
@@ -527,6 +571,7 @@
       sceneId: "common",
       index: 0,
       route: "Common Route",
+      condition: "routeA",
       history: [],
       log: [],
       auto: false,
@@ -538,14 +583,14 @@
     };
 
     const backgrounds = {
-      home: "radial-gradient(circle at 50% 28%, #213753, #06101f 58%, #02050c)",
-      lab: "linear-gradient(130deg, #071426, #0e2740 45%, #050914)",
-      street: "linear-gradient(150deg, #1c2232, #102a3c 46%, #07070d)",
-      archive: "radial-gradient(circle at 35% 18%, #334161, #111827 55%, #030712)",
-      server: "linear-gradient(120deg, #07151f, #032838 48%, #120a20)",
-      horror: "radial-gradient(circle at 52% 40%, #311826, #09060b 64%)",
-      city: "linear-gradient(150deg, #10182a, #29214a 45%, #060713)",
-      dawn: "linear-gradient(155deg, #2c3f55, #84655a 58%, #120c18)"
+      home: "linear-gradient(180deg, #5d4b2b 0 14%, #241c16 14% 17%, #b69a61 17% 35%, #2d3f5e 35% 74%, #1c1511 74%)",
+      lab: "linear-gradient(180deg, #494337 0 15%, #181818 15% 18%, #7d765e 18% 34%, #223a48 34% 74%, #111314 74%)",
+      street: "linear-gradient(180deg, #605337 0 16%, #2a2118 16% 19%, #9b8452 19% 37%, #33425c 37% 76%, #181311 76%)",
+      archive: "linear-gradient(180deg, #4b442f 0 16%, #221c15 16% 19%, #9b895f 19% 36%, #29374f 36% 76%, #16110f 76%)",
+      server: "linear-gradient(180deg, #393b39 0 15%, #151719 15% 18%, #5a635d 18% 35%, #22314a 35% 75%, #0c0d10 75%)",
+      horror: "linear-gradient(180deg, #372424 0 16%, #110b0d 16% 19%, #5d3c3c 19% 36%, #222038 36% 75%, #090708 75%)",
+      city: "linear-gradient(180deg, #4c465d 0 15%, #151322 15% 18%, #6a5f7d 18% 36%, #26334f 36% 75%, #100f18 75%)",
+      dawn: "linear-gradient(180deg, #77634a 0 16%, #332416 16% 19%, #c69a6d 19% 38%, #42556c 38% 75%, #221612 75%)"
     };
 
     const scenes = {
@@ -726,12 +771,22 @@
 
     document.querySelectorAll("[data-start]").forEach((button) => {
       button.addEventListener("click", () => {
-        const target = button.dataset.start;
+        const target = button.dataset.start === "condition" ? state.condition : button.dataset.start;
         if (target === "truth" && !canOpenTruth()) {
           playTone("deny");
           return;
         }
         start(target);
+      });
+    });
+
+    document.querySelectorAll("[data-condition]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.condition = button.dataset.condition;
+        document.querySelectorAll("[data-condition]").forEach((item) => {
+          item.classList.toggle("selected", item === button);
+        });
+        playTone("page");
       });
     });
 
