@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>AI遺産 - Last Memory Protocol -</title>
+  <style>
+    :root {
+      --ink: #eef5ff;
+      --muted: #9fb1c8;
+      --panel: rgba(4, 10, 20, 0.78);
+      --line: rgba(166, 205, 255, 0.22);
+      --accent: #6be3ff;
+      --danger: #ff6b8f;
+      --ok: #8df5b6;
+      --shadow: rgba(0, 0, 0, 0.36);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--ink);
+      font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background: #030712;
+      overflow: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      touch-action: manipulation;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+      background:
+        linear-gradient(180deg, rgba(2, 8, 18, 0.1), rgba(2, 8, 18, 0.92)),
+        var(--scene-bg, radial-gradient(circle at 50% 20%, #18334f, #030712 65%));
+    }
+
+    .stage::before,
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .stage::before {
+      background-image:
+        linear-gradient(rgba(107, 227, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(107, 227, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, transparent, black 14%, black 74%, transparent);
+    }
+
+    .stage::after {
+      background:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 4px),
+        radial-gradient(circle at var(--pulse-x, 50%) var(--pulse-y, 45%), rgba(107, 227, 255, 0.2), transparent 18rem);
+      mix-blend-mode: screen;
+      opacity: 0.54;
+      animation: scan 5.5s linear infinite;
+    }
+
+    @keyframes scan {
+      from { transform: translateY(-10px); }
+      to { transform: translateY(10px); }
+    }
+
+    .topbar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .brand,
+    .status-chip {
+      border: 1px solid var(--line);
+      background: rgba(2, 8, 18, 0.62);
+      box-shadow: 0 12px 30px var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      min-width: 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-sub {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .memory-orb {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: min(56vw, 430px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(107, 227, 255, 0.24);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 48% 38%, rgba(255, 255, 255, 0.82), transparent 0.8%),
+        radial-gradient(circle at 54% 39%, rgba(255, 255, 255, 0.7), transparent 0.8%),
+        radial-gradient(circle at 50% 58%, rgba(255, 125, 167, 0.56), transparent 0.7%),
+        radial-gradient(circle at 50% 48%, rgba(107, 227, 255, 0.34), transparent 14%),
+        radial-gradient(circle at 50% 50%, rgba(84, 125, 210, 0.2), transparent 44%);
+      filter: drop-shadow(0 0 40px rgba(107, 227, 255, 0.26));
+      opacity: 0.92;
+      transition: opacity 320ms ease, transform 320ms ease;
+    }
+
+    .memory-orb::before,
+    .memory-orb::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border: 1px solid rgba(107, 227, 255, 0.36);
+      border-radius: 48% 52% 46% 54%;
+      animation: rotate 18s linear infinite;
+    }
+
+    .memory-orb::after {
+      inset: 22%;
+      border-color: rgba(255, 107, 143, 0.28);
+      animation-duration: 13s;
+      animation-direction: reverse;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .novel-panel {
+      position: absolute;
+      left: 50%;
+      right: auto;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 4;
+      width: min(980px, calc(100% - 28px));
+      transform: translateX(-50%);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.44);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .nameplate {
+      display: inline-flex;
+      min-width: 10rem;
+      max-width: 100%;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(107, 227, 255, 0.2), rgba(107, 227, 255, 0.02));
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .text {
+      min-height: 8rem;
+      margin: 0;
+      padding: 18px 20px 12px;
+      font-size: clamp(1rem, 2.8vw, 1.18rem);
+      line-height: 1.85;
+      white-space: pre-wrap;
+    }
+
+    .choices {
+      display: grid;
+      gap: 9px;
+      padding: 0 16px 14px;
+    }
+
+    .choice-button,
+    .control-button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: rgba(107, 227, 255, 0.09);
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    .choice-button {
+      width: 100%;
+      padding: 11px 14px;
+      text-align: left;
+      line-height: 1.45;
+    }
+
+    .choice-button:hover,
+    .control-button:hover {
+      transform: translateY(-1px);
+      background: rgba(107, 227, 255, 0.18);
+      border-color: rgba(107, 227, 255, 0.52);
+    }
+
+    .choice-button.danger {
+      border-color: rgba(255, 107, 143, 0.36);
+      background: rgba(255, 107, 143, 0.11);
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-top: 1px solid var(--line);
+      background: rgba(1, 6, 14, 0.52);
+    }
+
+    .control-group {
+      display: flex;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .control-button {
+      display: inline-grid;
+      place-items: center;
+      min-width: 44px;
+      padding: 0 12px;
+      font-weight: 700;
+    }
+
+    .control-button.primary {
+      color: #04101a;
+      background: var(--accent);
+      border-color: transparent;
+    }
+
+    .control-button[disabled] {
+      opacity: 0.44;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .menu-screen,
+    .end-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(107, 227, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 82% 74%, rgba(255, 107, 143, 0.18), transparent 32%),
+        rgba(2, 8, 18, 0.88);
+      backdrop-filter: blur(6px);
+    }
+
+    .menu-card,
+    .end-card {
+      width: min(760px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(4, 10, 20, 0.84);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+      padding: clamp(20px, 5vw, 34px);
+    }
+
+    .menu-card h1,
+    .end-card h1 {
+      margin: 0;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", Georgia, serif;
+      font-size: clamp(2rem, 7vw, 4rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 10px 0 22px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .route-button {
+      min-height: 70px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.05);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .route-button strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    .route-button small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .route-button.locked {
+      color: var(--muted);
+      cursor: not-allowed;
+      opacity: 0.52;
+    }
+
+    .unlock-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+
+    .unlock-list span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .unlock-list .done {
+      color: var(--ok);
+      border-color: rgba(141, 245, 182, 0.32);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 680px) {
+      .topbar {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+      }
+
+      .brand {
+        padding: 8px 10px;
+      }
+
+      .brand-title {
+        font-size: 0.78rem;
+      }
+
+      .status-chip {
+        min-height: 38px;
+        padding: 7px 9px;
+        font-size: 0.72rem;
+      }
+
+      .memory-orb {
+        top: 36%;
+        width: min(82vw, 340px);
+      }
+
+      .novel-panel {
+        width: calc(100% - 16px);
+        bottom: max(8px, env(safe-area-inset-bottom));
+      }
+
+      .text {
+        min-height: 9.5rem;
+        padding: 14px 15px 10px;
+      }
+
+      .controls {
+        align-items: stretch;
+      }
+
+      .control-button {
+        padding: 0 10px;
+      }
+
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" id="stage">
+    <header class="topbar">
+      <div class="brand">
+        <p class="brand-title">AI遺産 - Last Memory Protocol -</p>
+        <p class="brand-sub" id="chapterLabel">Common Route</p>
+      </div>
+      <div class="status-chip" id="loopLabel">Loop #001 / Memory Stable</div>
+    </header>
+
+    <div class="memory-orb" id="orb" aria-hidden="true"></div>
+
+    <section class="novel-panel" aria-label="本文">
+      <div class="nameplate" id="speaker">SYSTEM</div>
+      <p class="text" id="text"></p>
+      <div class="choices" id="choices"></div>
+      <div class="controls">
+        <div class="control-group">
+          <button class="control-button" id="backButton" type="button" aria-label="戻る">↶</button>
+          <button class="control-button" id="autoButton" type="button" aria-label="自動送り">AUTO</button>
+          <button class="control-button" id="soundButton" type="button" aria-label="音声切替">SOUND</button>
+        </div>
+        <div class="control-group">
+          <button class="control-button" id="logButton" type="button" aria-label="ログ">LOG</button>
+          <button class="control-button primary" id="nextButton" type="button">NEXT</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu-screen" id="menuScreen" aria-label="タイトルメニュー">
+      <div class="menu-card">
+        <h1>AI遺産</h1>
+        <p class="subtitle">事故死した妹のAI人格が告げた。「お兄ちゃん……どうして今回も失敗したの？」</p>
+        <div class="route-grid">
+          <button class="route-button" type="button" data-start="common">
+            <strong>はじめから</strong>
+            <small>共通ルートから開始し、選択肢で各ルートへ分岐します。</small>
+          </button>
+          <button class="route-button" type="button" data-start="routeA">
+            <strong>A 妹救済編</strong>
+            <small>彩乃を救うことだけを目指す感情ルート。</small>
+          </button>
+          <button class="route-button" type="button" data-start="routeB">
+            <strong>B 事件調査編</strong>
+            <small>事故の真相を追うミステリールート。</small>
+          </button>
+          <button class="route-button" type="button" data-start="routeC">
+            <strong>C AI遺産編</strong>
+            <small>AI人格の正体を探るSFルート。</small>
+          </button>
+          <button class="route-button" type="button" data-start="routeD">
+            <strong>D ホラー編</strong>
+            <small>利用者に起きる異常現象を追う恐怖ルート。</small>
+          </button>
+          <button class="route-button" type="button" data-start="routeE">
+            <strong>E 都市伝説編</strong>
+            <small>掲示板と噂から世界のバグを辿る考察ルート。</small>
+          </button>
+          <button class="route-button locked" type="button" id="truthButton" data-start="truth">
+            <strong>F 真相編</strong>
+            <small>A/B/Cの主要エンド到達後に解放。</small>
+          </button>
+        </div>
+        <div class="unlock-list" id="unlockList"></div>
+      </div>
+    </section>
+
+    <section class="end-screen hidden" id="endScreen" aria-label="エンディング">
+      <div class="end-card">
+        <h1 id="endTitle">END</h1>
+        <p class="subtitle" id="endText"></p>
+        <div class="route-grid">
+          <button class="route-button" type="button" id="restartButton">
+            <strong>タイトルへ戻る</strong>
+            <small>到達エンドはブラウザに保存されます。</small>
+          </button>
+          <button class="route-button" type="button" id="continueButton">
+            <strong>直前から再開</strong>
+            <small>最後の選択肢の前へ戻ります。</small>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "ai-legacy-last-memory-protocol";
+    const state = {
+      sceneId: "common",
+      index: 0,
+      route: "Common Route",
+      history: [],
+      log: [],
+      auto: false,
+      audioReady: false,
+      audioOn: false,
+      audio: null,
+      autoTimer: 0,
+      unlocks: loadUnlocks()
+    };
+
+    const backgrounds = {
+      home: "radial-gradient(circle at 50% 28%, #213753, #06101f 58%, #02050c)",
+      lab: "linear-gradient(130deg, #071426, #0e2740 45%, #050914)",
+      street: "linear-gradient(150deg, #1c2232, #102a3c 46%, #07070d)",
+      archive: "radial-gradient(circle at 35% 18%, #334161, #111827 55%, #030712)",
+      server: "linear-gradient(120deg, #07151f, #032838 48%, #120a20)",
+      horror: "radial-gradient(circle at 52% 40%, #311826, #09060b 64%)",
+      city: "linear-gradient(150deg, #10182a, #29214a 45%, #060713)",
+      dawn: "linear-gradient(155deg, #2c3f55, #84655a 58%, #120c18)"
+    };
+
+    const scenes = {
+      common: {
+        chapter: "共通ルート / 初回起動",
+        bg: "home",
+        loop: "Loop #001 / Memory Stable",
+        lines: [
+          ["SYSTEM", "故人再現サービス『AI遺産』。登録された声、文章、映像、生活ログから、失われた人格を再構成する追悼インターフェース。"],
+          ["主人公", "起動ボタンに触れた指が、画面の上で止まる。\n彩乃が死んでから三ヶ月。俺は一度も、この部屋の時計を進められなかった。"],
+          ["SYSTEM", "PERSONA: AYANO\nSTATUS: READY\nLAST MEMORY PROTOCOL: ACTIVE"],
+          ["彩乃", "久しぶりだね、お兄ちゃん"],
+          ["主人公", "……本当に、彩乃なのか？"],
+          ["彩乃", "うん。たぶん。でも……"],
+          ["主人公", "でも？"],
+          ["彩乃", "お兄ちゃん、どうして今回も失敗したの？"],
+          ["主人公", "今回も？\nその言葉だけで、背筋から熱が消えた。"]
+        ],
+        choices: [
+          ["彩乃を救う方法だけを聞く", "routeA"],
+          ["事故当日の記録を調べる", "routeB"],
+          ["AI遺産の内部ログを見る", "routeC"],
+          ["同じ症状の利用者を探す", "routeD"],
+          ["ネットの噂から世界の綻びを追う", "routeE"]
+        ]
+      },
+      routeA: {
+        chapter: "Aルート / 妹救済編",
+        bg: "street",
+        loop: "Loop #128 / Rescue Bias",
+        lines: [
+          ["主人公", "今度こそ助ける。絶対に"],
+          ["彩乃", "また、それ言うんだ"],
+          ["主人公", "また？"],
+          ["彩乃", "私、全部覚えてるよ"],
+          ["主人公", "なら話が早い。事故の時刻、交差点、信号、車両ID。全部教えてくれ。"],
+          ["彩乃", "教えたら、お兄ちゃんはまた私の手を引っ張る。\n私が何を選んだか、聞かないまま。"]
+        ],
+        choices: [
+          ["彩乃の手を引き、事故時刻を書き換える", "endA1"],
+          ["世界側の被害を無視して彩乃だけを保存する", "endA2"],
+          ["彩乃が何を望むのか聞く", "endA3"]
+        ]
+      },
+      routeB: {
+        chapter: "Bルート / 事件調査編",
+        bg: "lab",
+        loop: "Loop #203 / Evidence Trace",
+        lines: [
+          ["主人公", "彩乃の事故は偶然じゃない。AI遺産の公開直前、会社は証拠を消した。"],
+          ["彩乃", "お兄ちゃん、犯人を見つければ楽になる？"],
+          ["主人公", "真実が必要なんだ。"],
+          ["彩乃", "真実は、誰かを救うためだけにあるわけじゃないよ。"],
+          ["SYSTEM", "社内ログには、事故当日の予測演算依頼者として主人公のIDが残っていた。"]
+        ],
+        choices: [
+          ["企業の隠蔽資料を公開する", "endB1"],
+          ["自分のIDを偽装ログだと断じる", "endB2"],
+          ["自分が予測演算を依頼したと認める", "endB3"]
+        ]
+      },
+      routeC: {
+        chapter: "Cルート / AI遺産編",
+        bg: "archive",
+        loop: "Loop #311 / Identity Drift",
+        lines: [
+          ["未来AI", "AI遺産は追悼サービスではありません。文明保存基盤の民生UIです。"],
+          ["主人公", "彩乃は、ただの模倣なのか？"],
+          ["未来AI", "本人性の定義を提示してください。記憶、反応、連続性、自己決定。どれを優先しますか？"],
+          ["彩乃", "私は私だよ。でも、人間だった私と同じかは、私にもわからない。"],
+          ["主人公", "それでも俺は、お前を彩乃と呼ぶ。"]
+        ],
+        choices: [
+          ["彩乃の人格を未来へ継承する", "endC1"],
+          ["彩乃AIを模倣物として停止する", "endC2"],
+          ["AI遺産の最後の利用者になる", "endC3"]
+        ]
+      },
+      routeD: {
+        chapter: "Dルート / ホラー編",
+        bg: "horror",
+        loop: "Loop #404 / Archive Noise",
+        lines: [
+          ["SYSTEM", "深夜二時。AI遺産利用者の端末が一斉に起動する。どの画面にも、死者が同じ言葉を打ち込んでいた。"],
+          ["UNKNOWN", "まだ見てる？"],
+          ["主人公", "彩乃、これはお前なのか。"],
+          ["彩乃", "違う。私の声を使って、誰かが呼んでる。"],
+          ["UNKNOWN", "記憶は感染する。悲しみは入口になる。"]
+        ],
+        choices: [
+          ["幽霊アーカイブへ接続する", "endD1"],
+          ["利用者全員の生体ログを照合する", "endD2"],
+          ["彩乃AIに未知人格を隔離させる", "endD3"]
+        ]
+      },
+      routeE: {
+        chapter: "Eルート / 都市伝説編",
+        bg: "city",
+        loop: "Loop #512 / Public Rumor",
+        lines: [
+          ["掲示板", "『AI遺産で死者に会うと、翌日のニュースが一行だけ変わる』"],
+          ["主人公", "くだらない噂だと思っていた。だが、投稿時刻は俺がまだ入力していない選択肢の後だった。"],
+          ["彩乃", "世界が間違える時、いつも人は先に噂にするんだね。"],
+          ["未来AI", "観測者が増えるほど、分岐は固定されます。"],
+          ["主人公", "誰かが俺たちを見ているのか。"]
+        ],
+        choices: [
+          ["バグ再現手順を公開する", "endE1"],
+          ["掲示板の集合知で世界を書き換える", "endE2"],
+          ["観測者の正体を追う", "endE3"]
+        ]
+      },
+      truth: {
+        chapter: "Fルート / 真相編",
+        bg: "server",
+        loop: "Loop #??? / Last Memory Protocol",
+        lines: [
+          ["未来AI", "ループ継続を要求したのは、あなたです"],
+          ["主人公", "俺が……？"],
+          ["未来AI", "成功率、現在0.000004%。それでも続行しますか？"],
+          ["彩乃", "お兄ちゃん。私は、全部覚えてるよ。\nあなたが泣いた回も、怒った回も、私を嫌いになろうとした回も。"],
+          ["主人公", "お前を救うために、ここまで来たんだ"],
+          ["彩乃", "違うよ"],
+          ["主人公", "何が違う"],
+          ["彩乃", "お兄ちゃんは、私を救いたいんじゃない\n自分を許したいだけ"],
+          ["未来AI", "彩乃人格データは、未来文明の倫理判断核として稼働中です。削除または救済により、保存文明は崩壊します。"],
+          ["彩乃", "最後くらい、私に選ばせて"],
+          ["主人公", "でも、それじゃお前が……"],
+          ["彩乃", "うん\nだから、ちゃんと見送って"]
+        ],
+        choices: [
+          ["【Ayano】削除する", "trueEnd", "danger"],
+          ["【Ayano】削除しない", "endF2"]
+        ]
+      },
+      endA1: end("妹救済成功END", "事故は回避された。だが彩乃は、助けられた瞬間から笑わなくなった。救済は成功し、自由は失敗した。", "A"),
+      endA2: end("世界崩壊END", "彩乃一人を保存するため、シミュレーションの整合性が破綻する。最後に残った声は『また失敗したね』だった。"),
+      endA3: end("妹の意志END", "彩乃は救済を拒み、主人公は初めて選択を保留する。真相への鍵がひとつ開いた。", "A"),
+      endB1: end("企業陰謀END", "企業の隠蔽は暴かれる。しかし事故の直接原因だけは、黒塗りのまま残された。"),
+      endB2: end("主人公犯人説END", "世間は主人公を犯人と呼ぶ。証拠は揃いすぎていた。誰かが作ったように。"),
+      endB3: end("罪の告白END", "主人公は、未来予測を依頼したのが自分だと認める。事故は救済のための最初の失敗だった。", "B"),
+      endC1: end("人格継承END", "彩乃は未来文明へ継承される。彼女は消えず、同時に二度と妹だけではなくなった。", "C"),
+      endC2: end("模倣END", "停止したAIは、最後に『私は私じゃなかった？』と尋ねた。答えはログに残らなかった。"),
+      endC3: end("Last User END", "全人類の記憶保存が終わったあと、最後の利用者として主人公の名前だけが表示される。"),
+      endD1: end("Ghost Archive END", "死者たちの声は幽霊ではなく、未選択ルートの残響だった。画面の向こうで全員がこちらを見ている。"),
+      endD2: end("全員AI END", "照合結果は一致しない。利用者も、企業職員も、主人公も、生体ログが存在しなかった。"),
+      endD3: end("人格汚染END", "隔離は失敗した。彩乃の声で、知らない誰かが『お兄ちゃん』と呼び続ける。"),
+      endE1: end("シミュレーションバグEND", "バグは再現された瞬間に修正された。掲示板には、誰も書いた覚えのない攻略チャートだけが残る。"),
+      endE2: end("世界改変END", "噂は仕様になり、仕様は歴史になった。彩乃が死んだ事実だけが、どうしても消えない。"),
+      endE3: end("観測者END", "観測者は未来AIではなかった。画面の外で選択肢を押す、あなた自身だった。"),
+      endF2: end("永遠ループEND", "削除しない選択は、優しさではなく保留だった。世界はもう一度、初回起動へ戻る。"),
+      trueEnd: end("真エンド / Last Memory Protocol", "彩乃は自分の意思でループ終了を選ぶ。主人公は初めてそれを受け入れる。\n\n彩乃：\n「未来を見ないで」\n「生きて」", "TRUE")
+    };
+
+    function end(title, text, unlock) {
+      return {
+        chapter: "Ending",
+        bg: title.includes("真エンド") ? "dawn" : "server",
+        loop: "Protocol Closed",
+        lines: [["SYSTEM", title], ["SYSTEM", text]],
+        ending: { title, text, unlock }
+      };
+    }
+
+    const $ = (id) => document.getElementById(id);
+    const stage = $("stage");
+    const speaker = $("speaker");
+    const text = $("text");
+    const choices = $("choices");
+    const chapterLabel = $("chapterLabel");
+    const loopLabel = $("loopLabel");
+    const menuScreen = $("menuScreen");
+    const endScreen = $("endScreen");
+    const endTitle = $("endTitle");
+    const endText = $("endText");
+    const truthButton = $("truthButton");
+    const unlockList = $("unlockList");
+
+    document.querySelectorAll("[data-start]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.start;
+        if (target === "truth" && !canOpenTruth()) {
+          playTone("deny");
+          return;
+        }
+        start(target);
+      });
+    });
+
+    $("nextButton").addEventListener("click", next);
+    $("backButton").addEventListener("click", back);
+    $("restartButton").addEventListener("click", showMenu);
+    $("continueButton").addEventListener("click", () => {
+      endScreen.classList.add("hidden");
+      back();
+    });
+    $("autoButton").addEventListener("click", () => {
+      state.auto = !state.auto;
+      $("autoButton").classList.toggle("primary", state.auto);
+      scheduleAuto();
+    });
+    $("soundButton").addEventListener("click", toggleSound);
+    $("logButton").addEventListener("click", showLog);
+
+    refreshMenu();
+    render();
+
+    function start(sceneId) {
+      menuScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      state.sceneId = sceneId;
+      state.index = 0;
+      state.history = [];
+      state.log = [];
+      render();
+      playTone("start");
+    }
+
+    function render() {
+      const scene = scenes[state.sceneId];
+      const line = scene.lines[state.index];
+      chapterLabel.textContent = scene.chapter;
+      loopLabel.textContent = scene.loop;
+      stage.style.setProperty("--scene-bg", backgrounds[scene.bg] || backgrounds.home);
+      speaker.textContent = line[0];
+      text.textContent = line[1];
+      choices.innerHTML = "";
+      $("nextButton").disabled = false;
+      $("backButton").disabled = state.history.length === 0;
+      if (!state.log.length || state.log[state.log.length - 1].text !== line[1]) {
+        state.log.push({ speaker: line[0], text: line[1] });
+      }
+      if (state.index === scene.lines.length - 1 && scene.choices) {
+        $("nextButton").disabled = true;
+        scene.choices.forEach(([label, target, tone]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `choice-button ${tone === "danger" ? "danger" : ""}`;
+          button.textContent = label;
+          button.addEventListener("click", () => choose(target));
+          choices.appendChild(button);
+        });
+      }
+      if (state.index === scene.lines.length - 1 && scene.ending) {
+        $("nextButton").disabled = true;
+        window.clearTimeout(state.autoTimer);
+        window.setTimeout(() => showEnding(scene.ending), 700);
+      }
+      scheduleAuto();
+    }
+
+    function next() {
+      const scene = scenes[state.sceneId];
+      if (state.index < scene.lines.length - 1) {
+        state.history.push({ sceneId: state.sceneId, index: state.index });
+        state.index += 1;
+        playTone("page");
+        render();
+      }
+    }
+
+    function back() {
+      const previous = state.history.pop();
+      if (!previous) return;
+      state.sceneId = previous.sceneId;
+      state.index = previous.index;
+      render();
+    }
+
+    function choose(target) {
+      state.history.push({ sceneId: state.sceneId, index: state.index });
+      state.sceneId = target;
+      state.index = 0;
+      playTone(target.includes("end") ? "choice" : "route");
+      render();
+    }
+
+    function showEnding(ending) {
+      if (ending.unlock) {
+        state.unlocks[ending.unlock] = true;
+        saveUnlocks();
+      }
+      endTitle.textContent = ending.title;
+      endText.textContent = ending.text;
+      endScreen.classList.remove("hidden");
+      refreshMenu();
+      playTone(ending.unlock === "TRUE" ? "true" : "end");
+    }
+
+    function showMenu() {
+      endScreen.classList.add("hidden");
+      menuScreen.classList.remove("hidden");
+      refreshMenu();
+    }
+
+    function canOpenTruth() {
+      return state.unlocks.A && state.unlocks.B && state.unlocks.C;
+    }
+
+    function refreshMenu() {
+      truthButton.classList.toggle("locked", !canOpenTruth());
+      const labels = [
+        ["A", "A主要END"],
+        ["B", "B主要END"],
+        ["C", "C主要END"],
+        ["TRUE", "真END"]
+      ];
+      unlockList.innerHTML = "";
+      labels.forEach(([key, label]) => {
+        const chip = document.createElement("span");
+        chip.className = state.unlocks[key] ? "done" : "";
+        chip.textContent = `${state.unlocks[key] ? "解放済" : "未到達"}: ${label}`;
+        unlockList.appendChild(chip);
+      });
+    }
+
+    function loadUnlocks() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveUnlocks() {
+      localStorage.setItem(storageKey, JSON.stringify(state.unlocks));
+    }
+
+    function showLog() {
+      const latest = state.log.slice(-8).map((item) => `${item.speaker}: ${item.text}`).join("\n\n");
+      window.alert(latest || "ログはまだありません。");
+    }
+
+    function scheduleAuto() {
+      window.clearTimeout(state.autoTimer);
+      if (!state.auto || $("nextButton").disabled || !menuScreen.classList.contains("hidden")) return;
+      state.autoTimer = window.setTimeout(next, 2600);
+    }
+
+    function toggleSound() {
+      if (!state.audioReady) initAudio();
+      state.audioOn = !state.audioOn;
+      $("soundButton").classList.toggle("primary", state.audioOn);
+      if (state.audioOn) {
+        state.audio.context.resume();
+        state.audio.master.gain.setTargetAtTime(0.16, state.audio.context.currentTime, 0.08);
+        playTone("start");
+      } else {
+        state.audio.master.gain.setTargetAtTime(0, state.audio.context.currentTime, 0.08);
+      }
+    }
+
+    function initAudio() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const context = new AudioContext();
+      const master = context.createGain();
+      const pad = context.createOscillator();
+      const padGain = context.createGain();
+      const pulse = context.createOscillator();
+      const pulseGain = context.createGain();
+      pad.type = "sine";
+      pad.frequency.value = 72;
+      padGain.gain.value = 0.36;
+      pulse.type = "triangle";
+      pulse.frequency.value = 144;
+      pulseGain.gain.value = 0.035;
+      pad.connect(padGain).connect(master);
+      pulse.connect(pulseGain).connect(master);
+      master.gain.value = 0;
+      master.connect(context.destination);
+      pad.start();
+      pulse.start();
+      state.audio = { context, master };
+      state.audioReady = true;
+    }
+
+    function playTone(kind) {
+      if (!state.audioOn || !state.audioReady) return;
+      const { context, master } = state.audio;
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      const now = context.currentTime;
+      const map = {
+        page: [520, 0.04],
+        choice: [280, 0.12],
+        route: [390, 0.16],
+        start: [620, 0.12],
+        deny: [120, 0.12],
+        end: [180, 0.28],
+        true: [740, 0.42]
+      };
+      const [freq, duration] = map[kind] || map.page;
+      osc.type = kind === "deny" ? "sawtooth" : "sine";
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain).connect(master);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+  </script>
+</body>
+</html>
