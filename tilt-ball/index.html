@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Tilt Ball Balance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <canvas id="gameCanvas" width="390" height="640" aria-label="傾き操作の玉ころがしバランスゲーム"></canvas>
+
+    <section class="hud" aria-label="ゲーム情報">
+      <div class="hud-row">
+        <a class="icon-link" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
+        <div class="stat">
+          <span>TIME</span>
+          <strong id="timeText">0.00</strong>
+        </div>
+        <div class="stat">
+          <span>BEST</span>
+          <strong id="bestText">--</strong>
+        </div>
+      </div>
+      <div class="tilt-readout" id="tiltText">beta 0.0 / gamma 0.0</div>
+    </section>
+
+    <section class="controls" aria-label="ゲーム操作">
+      <label class="range-control">
+        <span>傾き感度</span>
+        <input id="sensitivitySlider" type="range" min="0.5" max="2.2" step="0.1" value="1.0">
+        <strong id="sensitivityText">1.0x</strong>
+      </label>
+      <button id="resetButton" class="secondary-button" type="button">リセット</button>
+    </section>
+
+    <section class="virtual-pad" id="virtualPad" aria-label="仮想操作ボタン">
+      <button data-dir="up" type="button" aria-label="上へ傾ける">↑</button>
+      <div>
+        <button data-dir="left" type="button" aria-label="左へ傾ける">←</button>
+        <button data-dir="down" type="button" aria-label="下へ傾ける">↓</button>
+        <button data-dir="right" type="button" aria-label="右へ傾ける">→</button>
+      </div>
+    </section>
+
+    <section class="overlay show" id="startOverlay" aria-label="ゲーム開始">
+      <div class="panel">
+        <p class="eyebrow">Tilt Ball Balance</p>
+        <h1>玉ころがし</h1>
+        <p class="lead">iPhoneを傾けて玉をゴール穴へ入れてください。黒い落とし穴に入るとミスです。</p>
+        <button id="startButton" type="button">ゲーム開始</button>
+        <p class="small">iPhone Safariでは開始時にモーションセンサーの許可を求めます。PCでは矢印キーで操作できます。</p>
+      </div>
+    </section>
+
+    <section class="overlay" id="resultOverlay" aria-label="結果">
+      <div class="panel">
+        <p class="eyebrow" id="resultLabel">CLEAR</p>
+        <h2 id="resultTitle">クリア</h2>
+        <p class="lead" id="resultDetail">Time 0.00</p>
+        <button id="retryButton" type="button">リトライ</button>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
