@@ -6,16 +6,20 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
-  <title>Tilt Ball Balance</title>
+  <title>Tilt Balance Modes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main id="app">
-    <canvas id="gameCanvas" width="390" height="640" aria-label="傾き操作の玉ころがしバランスゲーム"></canvas>
+    <canvas id="gameCanvas" width="390" height="640" aria-label="傾き操作のバランスゲーム"></canvas>
 
     <section class="hud" aria-label="ゲーム情報">
       <div class="hud-row">
         <a class="icon-link" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
+        <div class="stat">
+          <span>MODE</span>
+          <strong id="modeNameText">玉ころがし</strong>
+        </div>
         <div class="stat">
           <span>TIME</span>
           <strong id="timeText">0.00</strong>
@@ -26,6 +30,12 @@
         </div>
       </div>
       <div class="tilt-readout" id="tiltText">beta 0.0 / gamma 0.0</div>
+      <div class="tilt-readout water-readout" id="waterText">water 80 / goal 0</div>
+    </section>
+
+    <section class="mode-switch" aria-label="モード選択">
+      <button class="mode-button active" data-mode="ball" type="button">玉ころがし</button>
+      <button class="mode-button" data-mode="water" type="button">水バランス</button>
     </section>
 
     <section class="controls" aria-label="ゲーム操作">
@@ -48,11 +58,12 @@
 
     <section class="overlay show" id="startOverlay" aria-label="ゲーム開始">
       <div class="panel">
-        <p class="eyebrow">Tilt Ball Balance</p>
-        <h1>玉ころがし</h1>
-        <p class="lead">iPhoneを傾けて玉をゴール穴へ入れてください。黒い落とし穴に入るとミスです。</p>
+        <p class="eyebrow">Tilt Balance</p>
+        <h1>傾きバランス</h1>
+        <p class="lead">モードを選び、iPhoneを傾けて盤面を攻略してください。PCでは矢印キーで操作できます。</p>
+        <p class="mode-copy">現在のモード: <strong id="startModeName">玉ころがし</strong></p>
         <button id="startButton" type="button">ゲーム開始</button>
-        <p class="small">iPhone Safariでは開始時にモーションセンサーの許可を求めます。PCでは矢印キーで操作できます。</p>
+        <p class="small">iPhone Safariでは開始時にモーションセンサーの許可を求めます。HTTPSまたはlocalhostで動作します。</p>
       </div>
     </section>
 
