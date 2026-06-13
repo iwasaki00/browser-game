@@ -164,6 +164,13 @@ body {
   box-shadow: 0 10px 24px rgba(31, 122, 109, 0.2);
 }
 
+.panel-mode-switch {
+  position: static;
+  margin: 0 0 12px;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.42);
+}
+
 .controls {
   position: absolute;
   left: 12px;
