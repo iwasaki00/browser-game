@@ -30,6 +30,11 @@
     water: {
       label: "水バランス",
       storageKey: "tiltBalanceBestTime:water"
+    },
+    tray: {
+      label: "お盆バランス",
+      storageKey: "tiltBalanceBestTime:tray",
+      scoreKey: "tiltBalanceBestRemain:tray"
     }
   };
 
@@ -64,12 +69,26 @@
     failBelow: 30,
     radius: 3.6
   };
+  const trayRules = {
+    duration: 30,
+    dangerInset: 44
+  };
+  const trayItems = [
+    { name: "たこ焼き", x: 114, y: 206, r: 12, mass: 0.92, friction: 0.981, color: "#b7652d", accent: "#f7d49b" },
+    { name: "みかん", x: 262, y: 214, r: 13, mass: 0.86, friction: 0.976, color: "#f08a24", accent: "#3c8b3e" },
+    { name: "湯のみ", x: 184, y: 314, r: 14, mass: 1.22, friction: 0.988, color: "#e8f2ec", accent: "#4b8c78" },
+    { name: "小皿", x: 104, y: 420, r: 15, mass: 1.08, friction: 0.986, color: "#f5f2df", accent: "#6e9fc8" },
+    { name: "団子", x: 274, y: 430, r: 11, mass: 0.78, friction: 0.972, color: "#eecf90", accent: "#7d5c2d" }
+  ];
 
   const state = {
     mode: "ball",
     phase: "title",
     ball: makeBall(),
     water: makeWaterParticles(),
+    tray: makeTrayItems(),
+    trayRemaining: 5,
+    trayPerfect: false,
     beta: 0,
     gamma: 0,
     targetBeta: 0,
@@ -83,8 +102,10 @@
     startedAt: 0,
     bestTimes: {
       ball: loadBestTime("ball"),
-      water: loadBestTime("water")
+      water: loadBestTime("water"),
+      tray: loadBestTime("tray")
     },
+    bestTrayRemaining: loadBestTrayRemaining(),
     sensorAvailable: false,
     sensorPermissionAsked: false,
     goalWaterCount: 0
@@ -113,6 +134,16 @@
     return particles;
   }
 
+  function makeTrayItems() {
+    return trayItems.map((item) => ({
+      ...item,
+      vx: 0,
+      vy: 0,
+      alive: true,
+      angle: 0
+    }));
+  }
+
   function shouldReduceWaterCount() {
     const memory = navigator.deviceMemory || 8;
     return memory <= 2;
@@ -124,11 +155,28 @@
     return Number.isFinite(value) && value > 0 ? value : 0;
   }
 
+  function loadBestTrayRemaining() {
+    const raw = localStorage.getItem(modes.tray.scoreKey);
+    const value = raw ? Number(raw) : 0;
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
   function saveBestTime(time) {
     const currentBest = state.bestTimes[state.mode];
     if (!currentBest || time < currentBest) {
       state.bestTimes[state.mode] = time;
       localStorage.setItem(modes[state.mode].storageKey, String(time));
+    }
+  }
+
+  function saveTrayResult(remaining, time, clear) {
+    if (remaining > state.bestTrayRemaining) {
+      state.bestTrayRemaining = remaining;
+      localStorage.setItem(modes.tray.scoreKey, String(remaining));
+    }
+    if (clear && (!state.bestTimes.tray || time < state.bestTimes.tray)) {
+      state.bestTimes.tray = time;
+      localStorage.setItem(modes.tray.storageKey, String(time));
     }
   }
 
@@ -154,14 +202,37 @@
   }
 
   function resetStage(keepPlaying = true) {
-    state.ball = makeBall();
-    state.water = makeWaterParticles();
-    state.goalWaterCount = 0;
+    resetModeState();
     state.elapsed = 0;
     state.startedAt = performance.now();
     state.phase = keepPlaying ? "playing" : "title";
     setOverlay(resultOverlay, false);
     updateHud();
+  }
+
+  function resetModeState() {
+    if (state.mode === "water") {
+      resetWaterMode();
+    } else if (state.mode === "tray") {
+      resetTrayMode();
+    } else {
+      resetBallMode();
+    }
+  }
+
+  function resetBallMode() {
+    state.ball = makeBall();
+  }
+
+  function resetWaterMode() {
+    state.water = makeWaterParticles();
+    state.goalWaterCount = 0;
+  }
+
+  function resetTrayMode() {
+    state.tray = makeTrayItems();
+    state.trayRemaining = state.tray.length;
+    state.trayPerfect = false;
   }
 
   async function requestMotionPermission() {
@@ -205,10 +276,21 @@
 
   function finishGame(clear) {
     state.phase = clear ? "clear" : "miss";
-    if (clear) saveBestTime(state.elapsed);
+    if (state.mode === "tray") {
+      saveTrayResult(state.trayRemaining, state.elapsed, clear);
+    } else if (clear) {
+      saveBestTime(state.elapsed);
+    }
 
     resultLabel.textContent = clear ? "CLEAR" : "MISS";
-    if (state.mode === "water") {
+    if (state.mode === "tray") {
+      resultTitle.textContent = clear
+        ? state.trayPerfect ? "パーフェクト！全部守った！" : "落とさず耐えた！"
+        : "全部落ちた…";
+      resultDetail.textContent = clear
+        ? `残り ${state.trayRemaining}/${trayItems.length} / Time ${formatTime(state.elapsed)}`
+        : "リトライしてお盆を水平に保ってください";
+    } else if (state.mode === "water") {
       resultTitle.textContent = clear ? "水を集めた！" : "水が足りない";
       resultDetail.textContent = clear
         ? `Time ${formatTime(state.elapsed)} / water ${state.goalWaterCount}`
@@ -231,12 +313,19 @@
     const mode = modes[state.mode];
     modeNameText.textContent = mode.label;
     startModeName.textContent = mode.label;
-    timeText.textContent = formatTime(state.elapsed);
-    bestText.textContent = formatTime(state.bestTimes[state.mode]);
+    if (state.mode === "tray") {
+      timeText.textContent = formatTime(Math.max(0, trayRules.duration - state.elapsed));
+      bestText.textContent = `${state.bestTrayRemaining}/${trayItems.length}`;
+    } else {
+      timeText.textContent = formatTime(state.elapsed);
+      bestText.textContent = formatTime(state.bestTimes[state.mode]);
+    }
     sensitivityText.textContent = `${state.sensitivity.toFixed(1)}x`;
     tiltText.textContent = `beta ${state.beta.toFixed(1)} / gamma ${state.gamma.toFixed(1)}`;
-    waterText.textContent = `water ${getAliveWaterCount()} / goal ${state.goalWaterCount}`;
-    waterText.classList.toggle("show", state.mode === "water");
+    waterText.textContent = state.mode === "tray"
+      ? `items ${state.trayRemaining}/${trayItems.length}`
+      : `water ${getAliveWaterCount()} / goal ${state.goalWaterCount}`;
+    waterText.classList.toggle("show", state.mode === "water" || state.mode === "tray");
     modeButtons.forEach((button) => {
       button.classList.toggle("active", button.dataset.mode === state.mode);
     });
@@ -265,6 +354,8 @@
     state.elapsed = (performance.now() - state.startedAt) / 1000;
     if (state.mode === "water") {
       updateWaterMode(dt);
+    } else if (state.mode === "tray") {
+      updateTrayMode(dt);
     } else {
       updateBallMode(dt);
     }
@@ -344,6 +435,67 @@
     }
   }
 
+  function updateTrayMode(dt) {
+    const accel = getAcceleration();
+    const tiltAmount = Math.min(1.8, Math.hypot(state.beta, state.gamma) / 24);
+    state.trayRemaining = 0;
+
+    for (const item of state.tray) {
+      if (!item.alive) continue;
+      item.vx += (accel.x / item.mass) * (0.75 + tiltAmount * 0.55) * dt;
+      item.vy += (accel.y / item.mass) * (0.75 + tiltAmount * 0.55) * dt;
+      item.vx *= Math.pow(item.friction, dt * 60);
+      item.vy *= Math.pow(item.friction, dt * 60);
+      limitSpeed(item, 250 + tiltAmount * 80);
+
+      item.x += item.vx * dt;
+      item.y += item.vy * dt;
+      item.angle += (item.vx * dt) / Math.max(6, item.r);
+
+      keepTrayItemsApart(item);
+
+      if (isOutsideTray(item)) {
+        item.alive = false;
+        continue;
+      }
+      state.trayRemaining += 1;
+    }
+
+    if (state.trayRemaining <= 0) {
+      finishGame(false);
+      return;
+    }
+
+    if (state.elapsed >= trayRules.duration) {
+      state.trayPerfect = state.trayRemaining === trayItems.length;
+      finishGame(true);
+    }
+  }
+
+  function keepTrayItemsApart(item) {
+    for (const other of state.tray) {
+      if (item === other || !other.alive) continue;
+      const dx = item.x - other.x;
+      const dy = item.y - other.y;
+      const dist = Math.hypot(dx, dy);
+      const minDist = item.r + other.r + 2;
+      if (dist <= 0 || dist >= minDist) continue;
+      const nx = dx / dist;
+      const ny = dy / dist;
+      const push = (minDist - dist) * 0.5;
+      item.x += nx * push;
+      item.y += ny * push;
+      other.x -= nx * push;
+      other.y -= ny * push;
+      const exchange = (item.vx - other.vx) * nx + (item.vy - other.vy) * ny;
+      if (exchange < 0) continue;
+      item.vx -= exchange * nx * 0.18;
+      item.vy -= exchange * ny * 0.18;
+      other.vx += exchange * nx * 0.18;
+      other.vy += exchange * ny * 0.18;
+    }
+  }
+
   function getAcceleration() {
     return {
       x: clamp(state.gamma / 24, -1.5, 1.5) * physics.gravityScale * state.sensitivity,
@@ -416,6 +568,14 @@
     );
   }
 
+  function isOutsideTray(item) {
+    const left = board.x + board.wall + item.r;
+    const right = board.x + board.w - board.wall - item.r;
+    const top = board.y + board.wall + item.r;
+    const bottom = board.y + board.h - board.wall - item.r;
+    return item.x < left || item.x > right || item.y < top || item.y > bottom;
+  }
+
   function pullIntoHole(body, hole) {
     body.x += (hole.x - body.x) / physics.holePull;
     body.y += (hole.y - body.y) / physics.holePull;
@@ -429,13 +589,20 @@
 
   function draw() {
     drawTable();
-    drawBoard();
-    drawHoles();
-    drawWalls();
-    drawStartMark();
-    if (state.mode === "water") {
+    if (state.mode === "tray") {
+      drawTrayBoard();
+      drawTrayMode();
+    } else if (state.mode === "water") {
+      drawBoard();
+      drawHoles();
+      drawWalls();
+      drawStartMark();
       drawWaterMode();
     } else {
+      drawBoard();
+      drawHoles();
+      drawWalls();
+      drawStartMark();
       drawBallMode();
     }
   }
@@ -474,6 +641,53 @@
     ctx.lineWidth = board.wall;
     ctx.strokeStyle = "#6f3d1e";
     roundRect(board.x + board.wall / 2, board.y + board.wall / 2, board.w - board.wall, board.h - board.wall, 12);
+    ctx.stroke();
+  }
+
+  function drawTrayBoard() {
+    const tray = ctx.createRadialGradient(
+      board.x + board.w * 0.5,
+      board.y + board.h * 0.45,
+      30,
+      board.x + board.w * 0.5,
+      board.y + board.h * 0.5,
+      board.w * 0.7
+    );
+    tray.addColorStop(0, "#e6b66f");
+    tray.addColorStop(0.62, "#b86f30");
+    tray.addColorStop(1, "#6e3d20");
+    roundRect(board.x, board.y, board.w, board.h, 28);
+    ctx.fillStyle = tray;
+    ctx.fill();
+
+    ctx.save();
+    ctx.beginPath();
+    roundRect(board.x + 8, board.y + 8, board.w - 16, board.h - 16, 24);
+    ctx.clip();
+    ctx.fillStyle = "rgba(178, 32, 24, 0.22)";
+    ctx.fillRect(board.x + board.wall, board.y + board.wall, board.w - board.wall * 2, trayRules.dangerInset);
+    ctx.fillRect(board.x + board.wall, board.y + board.h - board.wall - trayRules.dangerInset, board.w - board.wall * 2, trayRules.dangerInset);
+    ctx.fillRect(board.x + board.wall, board.y + board.wall, trayRules.dangerInset, board.h - board.wall * 2);
+    ctx.fillRect(board.x + board.w - board.wall - trayRules.dangerInset, board.y + board.wall, trayRules.dangerInset, board.h - board.wall * 2);
+
+    for (let y = board.y + 28; y < board.y + board.h - 20; y += 32) {
+      ctx.strokeStyle = "rgba(92, 45, 16, 0.18)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(board.x + 24, y);
+      ctx.bezierCurveTo(board.x + 120, y - 9, board.x + 240, y + 11, board.x + board.w - 24, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    ctx.lineWidth = 14;
+    ctx.strokeStyle = "#5a2f18";
+    roundRect(board.x + 7, board.y + 7, board.w - 14, board.h - 14, 24);
+    ctx.stroke();
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(255, 225, 170, 0.34)";
+    roundRect(board.x + 18, board.y + 18, board.w - 36, board.h - 36, 18);
     ctx.stroke();
   }
 
@@ -596,6 +810,104 @@
       ctx.fill();
     }
     ctx.restore();
+  }
+
+  function drawTrayMode() {
+    for (const item of state.tray) {
+      if (!item.alive) continue;
+      drawTrayItem(item);
+    }
+  }
+
+  function drawTrayItem(item) {
+    const danger = getTrayDanger(item);
+    ctx.save();
+    ctx.translate(item.x, item.y);
+    ctx.rotate(item.angle * 0.55);
+    ctx.globalAlpha = 1;
+    ctx.shadowColor = danger > 0.55 ? "rgba(190, 28, 24, 0.55)" : "rgba(0,0,0,0.28)";
+    ctx.shadowBlur = danger > 0.55 ? 14 : 8;
+    ctx.shadowOffsetY = 4;
+
+    if (item.name === "湯のみ") {
+      drawCup(item);
+    } else if (item.name === "小皿") {
+      drawPlate(item);
+    } else if (item.name === "団子") {
+      drawDango(item);
+    } else {
+      drawRoundFood(item);
+    }
+    ctx.restore();
+  }
+
+  function drawRoundFood(item) {
+    const grad = ctx.createRadialGradient(-4, -5, 2, 0, 0, item.r + 4);
+    grad.addColorStop(0, "#fff5cf");
+    grad.addColorStop(0.35, item.color);
+    grad.addColorStop(1, "#6b381c");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, item.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = item.accent;
+    if (item.name === "たこ焼き") {
+      for (let i = -1; i <= 1; i += 1) ctx.fillRect(i * 5 - 2, -2, 4, 9);
+    } else {
+      ctx.beginPath();
+      ctx.ellipse(2, -item.r + 2, 4, 2, -0.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawCup(item) {
+    ctx.fillStyle = item.color;
+    roundRect(-item.r * 0.75, -item.r, item.r * 1.5, item.r * 2, 5);
+    ctx.fill();
+    ctx.strokeStyle = item.accent;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(item.r * 0.75, 0, 5, -Math.PI * 0.5, Math.PI * 0.5);
+    ctx.stroke();
+  }
+
+  function drawPlate(item) {
+    ctx.fillStyle = item.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, item.r * 1.15, item.r * 0.78, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = item.accent;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(0, 0, item.r * 0.62, item.r * 0.38, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  function drawDango(item) {
+    const colors = ["#f4e5c2", "#e8b8c7", "#b9d99c"];
+    for (let i = 0; i < 3; i += 1) {
+      ctx.fillStyle = colors[i];
+      ctx.beginPath();
+      ctx.arc((i - 1) * item.r * 0.78, 0, item.r * 0.62, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.strokeStyle = item.accent;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-item.r * 1.6, item.r * 0.72);
+    ctx.lineTo(item.r * 1.6, -item.r * 0.72);
+    ctx.stroke();
+  }
+
+  function getTrayDanger(item) {
+    const left = item.x - (board.x + board.wall);
+    const right = board.x + board.w - board.wall - item.x;
+    const top = item.y - (board.y + board.wall);
+    const bottom = board.y + board.h - board.wall - item.y;
+    const nearest = Math.min(left, right, top, bottom);
+    return clamp(1 - nearest / trayRules.dangerInset, 0, 1);
   }
 
   function roundRect(x, y, w, h, r) {
