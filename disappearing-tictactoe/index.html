@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>消える三目並べ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="start-screen" id="startScreen" aria-labelledby="gameTitle">
+      <div class="brand">
+        <p class="kicker">Disappearing Tic-Tac-Toe</p>
+        <h1 id="gameTitle">消える三目並べ</h1>
+        <p class="intro">古い駒から消えていく、勝者が出るまで続く三目並べ。</p>
+      </div>
+
+      <div class="mode-panel" aria-label="モード選択">
+        <h2>モード選択</h2>
+        <div class="mode-grid" id="modeGrid">
+          <button class="mode-button active" type="button" data-mode="normal">ノーマル</button>
+          <button class="mode-button" type="button" data-mode="four">4×4モード</button>
+          <button class="mode-button" type="button" data-mode="move">移動あり</button>
+          <button class="mode-button" type="button" data-mode="king">王様駒</button>
+          <button class="mode-button" type="button" data-mode="bomb">爆弾マス</button>
+        </div>
+      </div>
+
+      <div class="mode-description" aria-live="polite">
+        <h2>モード説明</h2>
+        <p id="modeDescription"></p>
+        <p class="mode-notice" id="modeNotice"></p>
+      </div>
+
+      <button class="primary-button" id="startButton" type="button">ゲーム開始</button>
+    </section>
+
+    <section class="game-screen hidden" id="gameScreen" aria-labelledby="playTitle">
+      <header class="game-header">
+        <div>
+          <p class="kicker">Normal Mode</p>
+          <h1 id="playTitle">消える三目並べ</h1>
+        </div>
+        <button class="ghost-button" id="backButton" type="button">モード</button>
+      </header>
+
+      <div class="score-strip" aria-label="現在の状態">
+        <div class="score-box player-box">
+          <span class="label">あなた</span>
+          <strong>○</strong>
+        </div>
+        <div class="turn-box">
+          <span class="label">ターン</span>
+          <strong id="turnText">あなたの番</strong>
+        </div>
+        <div class="score-box cpu-box">
+          <span class="label">CPU</span>
+          <strong>×</strong>
+        </div>
+      </div>
+
+      <p class="status" id="statusText" aria-live="polite">空いているマスをタップしてください。</p>
+
+      <div class="board-wrap">
+        <div class="win-line hidden" id="winLine" aria-hidden="true"></div>
+        <div class="board" id="board" role="grid" aria-label="三目並べの盤面"></div>
+      </div>
+
+      <div class="move-order" aria-label="置いた順番">
+        <div>
+          <span class="label">○の順番</span>
+          <ol id="playerOrder"></ol>
+        </div>
+        <div>
+          <span class="label">×の順番</span>
+          <ol id="cpuOrder"></ol>
+        </div>
+      </div>
+
+      <button class="primary-button restart" id="restartButton" type="button">リスタート</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
