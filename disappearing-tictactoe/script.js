@@ -12,32 +12,62 @@ const modeGrid = document.getElementById("modeGrid");
 const modeDescription = document.getElementById("modeDescription");
 const modeNotice = document.getElementById("modeNotice");
 const winLine = document.getElementById("winLine");
+const modeName = document.getElementById("modeName");
 
 const PLAYER = "player";
 const CPU = "cpu";
-const MAX_MOVES = 3;
 const CPU_DELAY = 520;
+
+const modeConfigs = {
+  normal: {
+    label: "Normal Mode",
+    boardSize: 3,
+    maxMoves: 3,
+    winLength: 3,
+    playable: true
+  },
+  four: {
+    label: "4×4 Mode",
+    boardSize: 4,
+    maxMoves: 4,
+    winLength: 4,
+    playable: true
+  },
+  move: {
+    label: "Move Mode",
+    boardSize: 3,
+    maxMoves: 3,
+    winLength: 3,
+    playable: false
+  },
+  king: {
+    label: "King Mode",
+    boardSize: 3,
+    maxMoves: 3,
+    winLength: 3,
+    playable: false
+  },
+  bomb: {
+    label: "Bomb Mode",
+    boardSize: 3,
+    maxMoves: 3,
+    winLength: 3,
+    playable: false
+  }
+};
 
 const modeTexts = {
   normal: "3×3盤面で、保持できる駒は3個。3つ揃えると勝利です。",
-  four: "4×4盤面で、4つ揃えると勝利。保持できる駒は4個です。",
+  four: "4×4盤面で、保持できる駒は4個。5手目を置くと自分の1手目が消えます。横・縦・斜めのいずれかで4つ揃えると勝利です。",
   move: "新しく駒を置く代わりに、自分の駒を別の空きマスへ移動できます。",
   king: "各プレイヤーに1つだけ消えない王様駒があります。王様駒を含めて3つ揃えると勝利です。",
   bomb: "数ターンごとに爆弾マスが出現します。爆弾マス上の駒は一定ターン後に消えます。"
 };
 
-const winPatterns = [
-  { cells: [0, 1, 2], line: "row-0" },
-  { cells: [3, 4, 5], line: "row-1" },
-  { cells: [6, 7, 8], line: "row-2" },
-  { cells: [0, 3, 6], line: "col-0" },
-  { cells: [1, 4, 7], line: "col-1" },
-  { cells: [2, 5, 8], line: "col-2" },
-  { cells: [0, 4, 8], line: "diag-0" },
-  { cells: [2, 4, 6], line: "diag-1" }
-];
-
-let board = Array(9).fill(null);
+let boardSize = modeConfigs.normal.boardSize;
+let maxMoves = modeConfigs.normal.maxMoves;
+let winLength = modeConfigs.normal.winLength;
+let board = Array(boardSize * boardSize).fill(null);
 let currentTurn = PLAYER;
 let playerMoves = [];
 let cpuMoves = [];
@@ -47,7 +77,11 @@ let cpuThinking = false;
 let fadingMarks = {};
 
 function initGame() {
-  board = Array(9).fill(null);
+  const config = getModeConfig();
+  boardSize = config.boardSize;
+  maxMoves = config.maxMoves;
+  winLength = config.winLength;
+  board = Array(boardSize * boardSize).fill(null);
   currentTurn = PLAYER;
   playerMoves = [];
   cpuMoves = [];
@@ -55,6 +89,11 @@ function initGame() {
   cpuThinking = false;
   fadingMarks = {};
   winLine.className = "win-line hidden";
+  resetWinLine();
+  boardElement.style.setProperty("--board-size", boardSize);
+  boardElement.setAttribute("aria-label", `${boardSize}×${boardSize}盤面`);
+  boardElement.classList.toggle("board-four", boardSize === 4);
+  modeName.textContent = config.label;
   renderBoard();
   updateStatus();
 }
@@ -91,7 +130,7 @@ function renderBoard(winningCells = []) {
         button.classList.add("removing");
       }
 
-      if (cell && ageIndex === 0 && moves.length === MAX_MOVES) {
+      if (cell && ageIndex === 0 && moves.length === maxMoves) {
         mark.classList.add("oldest");
       }
 
@@ -158,7 +197,7 @@ function placeMark(player, index) {
   const moves = getMoves(player);
   moves.push(index);
 
-  if (moves.length > MAX_MOVES) {
+  if (moves.length > maxMoves) {
     removeOldestMove(player);
   }
 
@@ -180,7 +219,7 @@ function removeOldestMove(player) {
 }
 
 function checkWinner(player, customBoard = board) {
-  const pattern = winPatterns.find(({ cells }) => cells.every((index) => customBoard[index] === player));
+  const pattern = getWinPatterns().find(({ cells }) => cells.every((index) => customBoard[index] === player));
   return pattern ? { won: true, cells: pattern.cells, line: pattern.line } : { won: false, cells: [], line: "" };
 }
 
@@ -197,11 +236,12 @@ function getCpuMove() {
     return blockingMove;
   }
 
-  if (board[4] === null) {
-    return 4;
+  const centerMove = getCenterCandidates().find((index) => board[index] === null);
+  if (centerMove !== undefined) {
+    return centerMove;
   }
 
-  const corner = [0, 2, 6, 8].find((index) => board[index] === null);
+  const corner = getCornerCandidates().find((index) => board[index] === null);
   if (corner !== undefined) {
     return corner;
   }
@@ -225,7 +265,7 @@ function simulateMove(player, index) {
   simulatedBoard[index] = player;
   simulatedMoves.push(index);
 
-  if (simulatedMoves.length > MAX_MOVES) {
+  if (simulatedMoves.length > maxMoves) {
     const removed = simulatedMoves.shift();
     simulatedBoard[removed] = null;
   }
@@ -256,15 +296,24 @@ function resetGame() {
 }
 
 function selectMode(mode) {
+  if (!modeConfigs[mode]) {
+    return;
+  }
+
+  const modeChanged = selectedMode !== mode;
   selectedMode = mode;
   document.querySelectorAll(".mode-button").forEach((button) => {
     button.classList.toggle("active", button.dataset.mode === mode);
   });
 
+  const config = getModeConfig();
   modeDescription.textContent = modeTexts[mode];
-  const isNormal = mode === "normal";
-  modeNotice.textContent = isNormal ? "" : "このモードは今後追加予定です";
-  startButton.disabled = !isNormal;
+  modeNotice.textContent = config.playable ? "" : "このモードは今後追加予定です";
+  startButton.disabled = !config.playable;
+
+  if (modeChanged) {
+    initGame();
+  }
 }
 
 function finishGame(winner, result) {
@@ -274,7 +323,7 @@ function finishGame(winner, result) {
   statusText.textContent = winner === PLAYER ? "あなたの勝ちです。" : "CPUの勝ちです。";
   turnText.textContent = "決着";
   renderBoard(result.cells);
-  winLine.className = `win-line ${result.line}`;
+  showWinLine(result.line);
 }
 
 function getMoves(player) {
@@ -292,9 +341,10 @@ function getOpacityForAge(ageIndex, length) {
     return "1";
   }
   if (ageIndex === 0) {
-    return "0.4";
+    return "0.35";
   }
-  return "0.7";
+  const ratio = ageIndex / Math.max(length - 1, 1);
+  return String(0.45 + ratio * 0.45);
 }
 
 function renderMoveOrder() {
@@ -307,7 +357,7 @@ function renderOrderList(listElement, moves) {
   moves.forEach((index, orderIndex) => {
     const item = document.createElement("li");
     item.textContent = String(index + 1);
-    if (orderIndex === 0 && moves.length === MAX_MOVES) {
+    if (orderIndex === 0 && moves.length === maxMoves) {
       item.classList.add("oldest");
     }
     listElement.appendChild(item);
@@ -315,12 +365,102 @@ function renderOrderList(listElement, moves) {
 }
 
 function getCellLabel(index, cell) {
-  const row = Math.floor(index / 3) + 1;
-  const col = (index % 3) + 1;
+  const row = Math.floor(index / boardSize) + 1;
+  const col = (index % boardSize) + 1;
   if (!cell) {
     return `${row}行${col}列 空きマス`;
   }
   return `${row}行${col}列 ${cell === PLAYER ? "あなたの丸" : "CPUのバツ"}`;
+}
+
+function getModeConfig() {
+  return modeConfigs[selectedMode] || modeConfigs.normal;
+}
+
+function getWinPatterns() {
+  const patterns = [];
+
+  for (let row = 0; row < boardSize; row += 1) {
+    patterns.push({
+      cells: Array.from({ length: winLength }, (_, col) => row * boardSize + col),
+      line: `row-${row}`
+    });
+  }
+
+  for (let col = 0; col < boardSize; col += 1) {
+    patterns.push({
+      cells: Array.from({ length: winLength }, (_, row) => row * boardSize + col),
+      line: `col-${col}`
+    });
+  }
+
+  patterns.push({
+    cells: Array.from({ length: winLength }, (_, offset) => offset * boardSize + offset),
+    line: "diag-0"
+  });
+  patterns.push({
+    cells: Array.from({ length: winLength }, (_, offset) => offset * boardSize + (boardSize - 1 - offset)),
+    line: "diag-1"
+  });
+
+  return patterns;
+}
+
+function getCenterCandidates() {
+  if (boardSize % 2 === 1) {
+    const center = Math.floor(boardSize / 2);
+    return [center * boardSize + center];
+  }
+
+  const upper = boardSize / 2 - 1;
+  const lower = boardSize / 2;
+  return [
+    upper * boardSize + upper,
+    upper * boardSize + lower,
+    lower * boardSize + upper,
+    lower * boardSize + lower
+  ];
+}
+
+function getCornerCandidates() {
+  return [
+    0,
+    boardSize - 1,
+    boardSize * (boardSize - 1),
+    boardSize * boardSize - 1
+  ];
+}
+
+function resetWinLine() {
+  winLine.removeAttribute("style");
+}
+
+function showWinLine(line) {
+  resetWinLine();
+  const [type, rawIndex] = line.split("-");
+  const index = Number(rawIndex);
+  const cellPercent = 100 / boardSize;
+  const centerPercent = cellPercent * index + cellPercent / 2;
+
+  winLine.className = "win-line";
+
+  if (type === "row") {
+    winLine.style.left = "4%";
+    winLine.style.top = `${centerPercent}%`;
+    winLine.style.width = "92%";
+    winLine.style.transform = "translateY(-50%)";
+  } else if (type === "col") {
+    winLine.style.left = `${centerPercent}%`;
+    winLine.style.top = "4%";
+    winLine.style.width = "7px";
+    winLine.style.height = "92%";
+    winLine.style.transform = "translateX(-50%)";
+  } else {
+    winLine.style.left = "-12%";
+    winLine.style.top = "50%";
+    winLine.style.width = "124%";
+    winLine.style.transform = `translateY(-50%) rotate(${line === "diag-0" ? 45 : -45}deg)`;
+  }
 }
 
 modeGrid.addEventListener("click", (event) => {
@@ -331,7 +471,7 @@ modeGrid.addEventListener("click", (event) => {
 });
 
 startButton.addEventListener("click", () => {
-  if (selectedMode !== "normal") {
+  if (!getModeConfig().playable) {
     return;
   }
   startScreen.classList.add("hidden");
