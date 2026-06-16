@@ -13,6 +13,7 @@ const modeDescription = document.getElementById("modeDescription");
 const modeNotice = document.getElementById("modeNotice");
 const winLine = document.getElementById("winLine");
 const modeName = document.getElementById("modeName");
+const maxMovesSelect = document.getElementById("maxMovesSelect");
 
 const PLAYER = "player";
 const CPU = "cpu";
@@ -57,8 +58,8 @@ const modeConfigs = {
 };
 
 const modeTexts = {
-  normal: "3×3盤面で、保持できる駒は3個。3つ揃えると勝利です。",
-  four: "4×4盤面で、保持できる駒は4個。5手目を置くと自分の1手目が消えます。横・縦・斜めのいずれかで4つ揃えると勝利です。",
+  normal: "3×3盤面で、3つ揃えると勝利です。",
+  four: "4×4盤面で、横・縦・斜めのいずれかに4つ揃えると勝利です。",
   move: "新しく駒を置く代わりに、自分の駒を別の空きマスへ移動できます。",
   king: "各プレイヤーに1つだけ消えない王様駒があります。王様駒を含めて3つ揃えると勝利です。",
   bomb: "数ターンごとに爆弾マスが出現します。爆弾マス上の駒は一定ターン後に消えます。"
@@ -75,11 +76,14 @@ let gameOver = false;
 let selectedMode = "normal";
 let cpuThinking = false;
 let fadingMarks = {};
+let maxMovesByMode = Object.fromEntries(
+  Object.entries(modeConfigs).map(([mode, config]) => [mode, config.maxMoves])
+);
 
 function initGame() {
   const config = getModeConfig();
   boardSize = config.boardSize;
-  maxMoves = config.maxMoves;
+  maxMoves = getSelectedMaxMoves();
   winLength = config.winLength;
   board = Array(boardSize * boardSize).fill(null);
   currentTurn = PLAYER;
@@ -310,6 +314,9 @@ function selectMode(mode) {
   modeDescription.textContent = modeTexts[mode];
   modeNotice.textContent = config.playable ? "" : "このモードは今後追加予定です";
   startButton.disabled = !config.playable;
+  maxMovesSelect.disabled = !config.playable;
+  renderMaxMovesOptions();
+  updateModeDescription();
 
   if (modeChanged) {
     initGame();
@@ -375,6 +382,43 @@ function getCellLabel(index, cell) {
 
 function getModeConfig() {
   return modeConfigs[selectedMode] || modeConfigs.normal;
+}
+
+function getSelectedMaxMoves() {
+  const config = getModeConfig();
+  const selected = maxMovesByMode[selectedMode] || config.maxMoves;
+  return clamp(selected, config.winLength, getMaxMoveLimit(config));
+}
+
+function getMaxMoveLimit(config = getModeConfig()) {
+  return Math.floor((config.boardSize * config.boardSize) / 2);
+}
+
+function renderMaxMovesOptions() {
+  const config = getModeConfig();
+  const current = getSelectedMaxMoves();
+  maxMovesByMode[selectedMode] = current;
+  maxMovesSelect.innerHTML = "";
+
+  for (let count = config.winLength; count <= getMaxMoveLimit(config); count += 1) {
+    const option = document.createElement("option");
+    option.value = String(count);
+    option.textContent = `各${count}個`;
+    option.selected = count === current;
+    maxMovesSelect.appendChild(option);
+  }
+
+  maxMovesSelect.value = String(current);
+}
+
+function updateModeDescription() {
+  const selectedMaxMoves = getSelectedMaxMoves();
+  const nextRemovalTurn = selectedMaxMoves + 1;
+  modeDescription.textContent = `${modeTexts[selectedMode]} 現在の設定では各プレイヤーが${selectedMaxMoves}個まで保持でき、${nextRemovalTurn}手目を置くと自分の1手目が消えます。`;
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function getWinPatterns() {
@@ -468,6 +512,12 @@ modeGrid.addEventListener("click", (event) => {
   if (button) {
     selectMode(button.dataset.mode);
   }
+});
+
+maxMovesSelect.addEventListener("change", () => {
+  maxMovesByMode[selectedMode] = Number(maxMovesSelect.value);
+  updateModeDescription();
+  initGame();
 });
 
 startButton.addEventListener("click", () => {
