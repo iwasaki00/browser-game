@@ -308,6 +308,29 @@ h2 {
   box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.35), 0 0 24px rgba(255, 209, 102, 0.22);
 }
 
+.cell.selectable {
+  border-color: rgba(116, 242, 206, 0.52);
+}
+
+.cell.selected {
+  border-color: var(--player);
+  box-shadow: 0 0 0 3px rgba(116, 242, 206, 0.34), 0 0 26px rgba(116, 242, 206, 0.32);
+}
+
+.cell.move-target {
+  border-color: rgba(255, 209, 102, 0.58);
+  background: linear-gradient(145deg, rgba(255, 209, 102, 0.18), #11182a);
+}
+
+.cell.move-target::after {
+  content: "";
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255, 209, 102, 0.7);
+  box-shadow: 0 0 18px rgba(255, 209, 102, 0.35);
+}
+
 .mark {
   width: 74%;
   height: 74%;
