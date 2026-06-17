@@ -137,7 +137,12 @@ function renderBoard(winningCells = []) {
     button.type = "button";
     button.setAttribute("role", "gridcell");
     button.setAttribute("aria-label", getCellLabel(index, cell));
-    button.disabled = isCellDisabled(index);
+    const cellDisabled = isCellDisabled(index);
+    button.disabled = false;
+    button.setAttribute("aria-disabled", String(cellDisabled));
+    if (cellDisabled) {
+      button.classList.add("unavailable");
+    }
 
     if (winningCells.includes(index)) {
       button.classList.add("winner");
@@ -759,12 +764,18 @@ function showWinLine(line) {
   }
 }
 
-modeGrid.addEventListener("click", (event) => {
+function handleModeSelectEvent(event) {
   const button = event.target.closest(".mode-button");
   if (button) {
+    if (event.type === "touchend") {
+      event.preventDefault();
+    }
     selectMode(button.dataset.mode);
   }
-});
+}
+
+modeGrid.addEventListener("click", handleModeSelectEvent);
+modeGrid.addEventListener("touchend", handleModeSelectEvent, { passive: false });
 
 maxMovesSelect.addEventListener("change", () => {
   maxMovesByMode[selectedMode] = Number(maxMovesSelect.value);

@@ -299,7 +299,7 @@ h2 {
   overflow: hidden;
 }
 
-.cell:disabled {
+.cell.unavailable {
   cursor: default;
 }
 
