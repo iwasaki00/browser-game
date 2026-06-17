@@ -65,10 +65,13 @@ a {
 
 .back-link,
 .status-pill,
+.vitals,
 .reset-button,
 .hint,
 .stick-base,
-.break-button,
+.action-button,
+.inventory-strip,
+.tool-bar,
 .block-bar {
   border: 1px solid var(--line);
   background: var(--panel);
@@ -78,7 +81,7 @@ a {
 
 .back-link,
 .reset-button,
-.break-button,
+.action-button,
 .block-option {
   pointer-events: auto;
   border-radius: 14px;
@@ -107,6 +110,23 @@ a {
   padding: 8px 12px;
   border-radius: 14px;
   font-weight: 800;
+}
+
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px;
+  min-height: 46px;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 14px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.vitals span {
+  white-space: nowrap;
 }
 
 .status-pill span {
@@ -179,20 +199,93 @@ a {
   box-shadow: 0 8px 18px rgba(91, 62, 17, 0.22);
 }
 
-.break-button {
+.action-rail {
   position: absolute;
   right: 18px;
-  bottom: calc(max(126px, env(safe-area-inset-bottom) + 118px));
-  width: 92px;
-  height: 58px;
-  color: #fff;
-  background: linear-gradient(180deg, #ec8066, var(--danger));
-  border-color: rgba(255, 255, 255, 0.38);
-  box-shadow: 0 14px 26px rgba(137, 53, 34, 0.28);
+  bottom: calc(max(176px, env(safe-area-inset-bottom) + 168px));
+  display: grid;
+  gap: 7px;
+  width: 82px;
+  pointer-events: auto;
 }
 
-.break-button.active {
+.action-button {
+  min-height: 46px;
+  padding: 0 6px;
+  color: #fff;
+  background: linear-gradient(180deg, #62b86b, #288d4b);
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: 0 10px 22px rgba(29, 88, 48, 0.22);
+  font-size: 0.78rem;
+}
+
+.action-button.active {
   background: linear-gradient(180deg, #7a5f55, #3c302d);
+}
+
+.action-button.craft {
+  background: linear-gradient(180deg, #efb347, #c87928);
+}
+
+.inventory-strip {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: calc(max(156px, env(safe-area-inset-bottom) + 148px));
+  min-height: 34px;
+  display: flex;
+  gap: 5px;
+  padding: 6px;
+  border-radius: 14px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.inv-chip {
+  min-width: 38px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.64);
+  font-size: 0.64rem;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tool-bar {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: calc(max(92px, env(safe-area-inset-bottom) + 84px));
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 6px;
+  border-radius: 16px;
+  pointer-events: auto;
+}
+
+.tool-option {
+  min-width: 0;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 2px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink);
+  font-size: 0.68rem;
+  font-weight: 900;
+  overflow: hidden;
+}
+
+.tool-option.active {
+  background: rgba(255, 229, 141, 0.86);
+  border-color: rgba(162, 105, 25, 0.42);
+}
+
+.tool-option.locked {
+  opacity: 0.44;
 }
 
 .block-bar {
@@ -201,11 +294,17 @@ a {
   right: 8px;
   bottom: max(10px, env(safe-area-inset-bottom));
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(58px, 1fr));
   gap: 5px;
   padding: 7px;
   border-radius: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
   pointer-events: auto;
+}
+
+.block-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .block-option {
@@ -229,6 +328,10 @@ a {
   background: rgba(185, 242, 146, 0.76);
 }
 
+.block-option.empty {
+  opacity: 0.45;
+}
+
 .swatch {
   width: 30px;
   height: 24px;
@@ -242,6 +345,121 @@ a {
 .swatch.stone { background: #89949c; }
 .swatch.wood { background: #bd7d36; }
 .swatch.water { background: #49a9ee; }
+.swatch.sand { background: #e6c96e; }
+.swatch.ore { background: #6f7781; }
+.swatch.torch { background: #f3c149; }
+.swatch.chest { background: #a7682e; }
+
+.craft-panel,
+.tutorial {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(20, 28, 23, 0.46);
+  pointer-events: auto;
+}
+
+.craft-panel.show,
+.tutorial.show {
+  display: flex;
+}
+
+.craft-card,
+.tutorial-card {
+  width: min(100%, 350px);
+  max-height: min(80vh, 560px);
+  overflow: auto;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 232, 0.96);
+  box-shadow: 0 20px 48px rgba(21, 38, 26, 0.34);
+}
+
+.craft-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.craft-head strong,
+.tutorial-card h1 {
+  font-size: 1.35rem;
+}
+
+.craft-head button,
+.tutorial-card button,
+.recipe-button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 14px;
+  color: #fff;
+  background: linear-gradient(180deg, #62b86b, #288d4b);
+  font-weight: 900;
+}
+
+.craft-list {
+  display: grid;
+  gap: 8px;
+}
+
+.recipe-button {
+  width: 100%;
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+  background: #fff7d6;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.recipe-button strong {
+  display: block;
+}
+
+.recipe-button span {
+  color: var(--soft-ink);
+  font-size: 0.72rem;
+}
+
+.recipe-button.disabled {
+  opacity: 0.48;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #2d8c4c;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tutorial-card h1,
+.tutorial-card p {
+  margin: 0;
+}
+
+.tutorial-card ol {
+  margin: 12px 0 16px;
+  padding-left: 22px;
+  line-height: 1.7;
+  font-weight: 800;
+}
+
+.mission-done {
+  color: #2a9b4f;
+  text-decoration: line-through;
+}
 
 button:active,
 .back-link:active {
@@ -257,7 +475,47 @@ button:active,
     font-size: 0.62rem;
   }
 
+  .vitals {
+    display: none;
+  }
+
   .swatch {
     width: 26px;
+  }
+}
+
+@media (max-width: 430px) {
+  .top-hud {
+    gap: 6px;
+  }
+
+  .status-pill {
+    flex: 0 1 142px;
+  }
+
+  .vitals {
+    grid-template-columns: 1fr;
+    gap: 1px;
+    min-width: 72px;
+    padding: 5px 7px;
+    font-size: 0.62rem;
+  }
+
+  .reset-button {
+    width: 44px;
+    min-height: 42px;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .reset-button::after {
+    content: "R";
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .vitals {
+    display: none;
   }
 }

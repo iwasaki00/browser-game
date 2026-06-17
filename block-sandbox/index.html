@@ -14,16 +14,21 @@
     <canvas id="gameCanvas" aria-label="Block Pocket Sandbox"></canvas>
 
     <section class="top-hud" aria-label="game status">
-      <a class="back-link" href="../index.html" aria-label="Back to menu">←</a>
+      <a class="back-link" href="../index.html" aria-label="Back to menu">&larr;</a>
       <div class="status-pill">
         <span id="positionText">16,16</span>
         <strong id="modeText">BUILD</strong>
+      </div>
+      <div class="vitals" aria-label="player vitals">
+        <span id="hpText">HP 100</span>
+        <span id="foodText">Food 100</span>
+        <span id="timeText">Day</span>
       </div>
       <button id="resetButton" class="reset-button" type="button">Reset</button>
     </section>
 
     <section class="hint" id="hintText" aria-live="polite">
-      Move with the stick. Tap a tile to place. Hold or use Break to remove.
+      Break wood, craft tools, and prepare for night.
     </section>
 
     <section class="joystick" id="joystick" aria-label="move">
@@ -32,7 +37,22 @@
       </div>
     </section>
 
-    <button id="breakButton" class="break-button" type="button" aria-pressed="false">Break</button>
+    <section class="action-rail" aria-label="actions">
+      <button id="placeButton" class="action-button active" data-action="place" type="button">Place</button>
+      <button id="breakButton" class="action-button" data-action="break" type="button" aria-pressed="false">Break</button>
+      <button id="attackButton" class="action-button" data-action="attack" type="button">Attack</button>
+      <button id="eatButton" class="action-button" type="button">Eat</button>
+      <button id="craftButton" class="action-button craft" type="button">Craft</button>
+    </section>
+
+    <section class="inventory-strip" id="inventoryStrip" aria-label="inventory"></section>
+
+    <section class="tool-bar" id="toolBar" aria-label="tool selection">
+      <button class="tool-option active" data-tool="hand" type="button">Hand</button>
+      <button class="tool-option" data-tool="axe" type="button">Axe</button>
+      <button class="tool-option" data-tool="pickaxe" type="button">Pick</button>
+      <button class="tool-option" data-tool="shovel" type="button">Shovel</button>
+    </section>
 
     <section class="block-bar" id="blockBar" aria-label="block selection">
       <button class="block-option active" data-block="grass" type="button">
@@ -55,6 +75,45 @@
         <span class="swatch water"></span>
         <span>Water</span>
       </button>
+      <button class="block-option" data-block="sand" type="button">
+        <span class="swatch sand"></span>
+        <span>Sand</span>
+      </button>
+      <button class="block-option" data-block="ore" type="button">
+        <span class="swatch ore"></span>
+        <span>Ore</span>
+      </button>
+      <button class="block-option" data-block="torch" type="button">
+        <span class="swatch torch"></span>
+        <span>Torch</span>
+      </button>
+      <button class="block-option" data-block="chest" type="button">
+        <span class="swatch chest"></span>
+        <span>Chest</span>
+      </button>
+    </section>
+
+    <section class="craft-panel" id="craftPanel" aria-label="crafting">
+      <div class="craft-card">
+        <div class="craft-head">
+          <strong>Craft</strong>
+          <button id="closeCraftButton" type="button">Close</button>
+        </div>
+        <div class="craft-list" id="craftList"></div>
+      </div>
+    </section>
+
+    <section class="tutorial show" id="tutorialPanel" aria-label="tutorial">
+      <div class="tutorial-card">
+        <p class="eyebrow">Mission</p>
+        <h1>Block Pocket Sandbox</h1>
+        <ol>
+          <li id="missionWood">Break wood to collect materials.</li>
+          <li id="missionBench">Craft planks and a workbench.</li>
+          <li id="missionTorch">Craft a torch before night.</li>
+        </ol>
+        <button id="startButton" type="button">Start</button>
+      </div>
     </section>
   </main>
   <script src="script.js"></script>
