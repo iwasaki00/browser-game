@@ -278,10 +278,15 @@ h2 {
   display: grid;
   grid-template-columns: repeat(var(--board-size, 3), 1fr);
   gap: 10px;
+  touch-action: manipulation;
 }
 
 .board-four {
   gap: 8px;
+}
+
+.board.dragging {
+  touch-action: none;
 }
 
 .cell {
@@ -310,6 +315,7 @@ h2 {
 
 .cell.selectable {
   border-color: rgba(116, 242, 206, 0.52);
+  touch-action: none;
 }
 
 .cell.selected {
@@ -320,6 +326,12 @@ h2 {
 .cell.move-target {
   border-color: rgba(255, 209, 102, 0.58);
   background: linear-gradient(145deg, rgba(255, 209, 102, 0.18), #11182a);
+}
+
+.cell.drag-over {
+  border-color: var(--accent);
+  background: linear-gradient(145deg, rgba(255, 209, 102, 0.28), #11182a);
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.24), 0 0 24px rgba(255, 209, 102, 0.24);
 }
 
 .cell.move-target::after {
@@ -342,6 +354,7 @@ h2 {
   line-height: 1;
   transform: scale(1);
   animation: popIn 180ms ease-out both;
+  pointer-events: none;
 }
 
 .board-four .mark {

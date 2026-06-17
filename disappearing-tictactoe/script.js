@@ -99,6 +99,11 @@ let modeType = modeConfigs.normal.type;
 let cpuThinking = false;
 let fadingMarks = {};
 let selectedPieceIndex = null;
+let dragSourceIndex = null;
+let dragHoverIndex = null;
+let hasDraggedPiece = false;
+let dragStartedSelected = false;
+let suppressNextTap = false;
 let maxMovesByMode = Object.fromEntries(
   Object.entries(modeConfigs).map(([mode, config]) => [mode, config.maxMoves])
 );
@@ -117,6 +122,7 @@ function initGame() {
   cpuThinking = false;
   fadingMarks = {};
   selectedPieceIndex = null;
+  resetDragState();
   winLine.className = "win-line hidden";
   resetWinLine();
   boardElement.style.setProperty("--board-size", boardSize);
@@ -135,6 +141,7 @@ function renderBoard(winningCells = []) {
     const button = document.createElement("button");
     button.className = "cell";
     button.type = "button";
+    button.dataset.index = String(index);
     button.setAttribute("role", "gridcell");
     button.setAttribute("aria-label", getCellLabel(index, cell));
     const cellDisabled = isCellDisabled(index);
@@ -158,6 +165,9 @@ function renderBoard(winningCells = []) {
       }
       if (playerCanMove && selectedPieceIndex !== null && cell === null) {
         button.classList.add("move-target");
+      }
+      if (dragHoverIndex === index) {
+        button.classList.add("drag-over");
       }
     }
 
@@ -193,6 +203,7 @@ function renderBoard(winningCells = []) {
     }
 
     button.addEventListener("click", () => handleCellTap(index));
+    button.addEventListener("pointerdown", (event) => handleCellPointerDown(event, index));
     boardElement.appendChild(button);
   });
 
@@ -200,6 +211,11 @@ function renderBoard(winningCells = []) {
 }
 
 function handleCellTap(index) {
+  if (suppressNextTap) {
+    suppressNextTap = false;
+    return;
+  }
+
   if (gameOver || cpuThinking || currentTurn !== PLAYER) {
     return;
   }
@@ -215,6 +231,114 @@ function handleCellTap(index) {
 
   placeMark(PLAYER, index);
   completePlayerTurn();
+}
+
+function handleCellPointerDown(event, index) {
+  if (!canDragReplacePiece(index)) {
+    return;
+  }
+
+  event.preventDefault();
+  suppressNextTap = true;
+  dragSourceIndex = index;
+  dragHoverIndex = null;
+  hasDraggedPiece = false;
+  dragStartedSelected = selectedPieceIndex === index;
+  selectedPieceIndex = index;
+  boardElement.classList.add("dragging");
+  updateStatus();
+  renderBoard();
+}
+
+function handleBoardPointerMove(event) {
+  if (dragSourceIndex === null) {
+    return;
+  }
+
+  event.preventDefault();
+  hasDraggedPiece = true;
+  const targetIndex = getPointerCellIndex(event);
+  const nextHoverIndex = targetIndex !== null && board[targetIndex] === null ? targetIndex : null;
+
+  if (dragHoverIndex !== nextHoverIndex) {
+    dragHoverIndex = nextHoverIndex;
+    updateDragHoverClass();
+  }
+}
+
+function handleBoardPointerUp(event) {
+  if (dragSourceIndex === null) {
+    return;
+  }
+
+  event.preventDefault();
+  const sourceIndex = dragSourceIndex;
+  const targetIndex = getPointerCellIndex(event);
+  const wasDragged = hasDraggedPiece;
+  resetDragState();
+
+  if (wasDragged && targetIndex !== null && board[targetIndex] === null) {
+    moveMark(PLAYER, sourceIndex, targetIndex);
+    selectedPieceIndex = null;
+    completePlayerTurn();
+    return;
+  }
+
+  if (!wasDragged) {
+    selectedPieceIndex = dragStartedSelected ? null : sourceIndex;
+  }
+
+  updateStatus();
+  renderBoard();
+}
+
+function handleBoardPointerCancel() {
+  if (dragSourceIndex === null) {
+    return;
+  }
+
+  resetDragState();
+  selectedPieceIndex = null;
+  updateStatus();
+  renderBoard();
+}
+
+function canDragReplacePiece(index) {
+  return modeType === "replace"
+    && currentTurn === PLAYER
+    && !gameOver
+    && !cpuThinking
+    && playerMoves.length >= maxMoves
+    && board[index] === PLAYER;
+}
+
+function getPointerCellIndex(event) {
+  if (!document.elementFromPoint) {
+    return null;
+  }
+
+  const element = document.elementFromPoint(event.clientX, event.clientY);
+  const cell = element ? element.closest(".cell") : null;
+  if (!cell || !cell.dataset) {
+    return null;
+  }
+
+  const index = Number(cell.dataset.index);
+  return Number.isInteger(index) ? index : null;
+}
+
+function updateDragHoverClass() {
+  Array.from(boardElement.children).forEach((cell, index) => {
+    cell.classList.toggle("drag-over", index === dragHoverIndex);
+  });
+}
+
+function resetDragState() {
+  dragSourceIndex = null;
+  dragHoverIndex = null;
+  hasDraggedPiece = false;
+  dragStartedSelected = false;
+  boardElement.classList.remove("dragging");
 }
 
 function handleReplacePlayerTap(index) {
@@ -508,8 +632,8 @@ function updateStatus(message) {
   } else if (currentTurn === PLAYER) {
     if (modeType === "replace" && playerMoves.length >= maxMoves) {
       statusText.textContent = selectedPieceIndex === null
-        ? "動かす駒を選んでください。"
-        : "移動先を選んでください。";
+        ? "動かす駒をドラッグしてください。"
+        : "移動先で指を離してください。";
     } else {
       statusText.textContent = "空いているマスをタップしてください。";
     }
@@ -776,6 +900,12 @@ function handleModeSelectEvent(event) {
 
 modeGrid.addEventListener("click", handleModeSelectEvent);
 modeGrid.addEventListener("touchend", handleModeSelectEvent, { passive: false });
+
+if (window.addEventListener) {
+  window.addEventListener("pointermove", handleBoardPointerMove, { passive: false });
+  window.addEventListener("pointerup", handleBoardPointerUp, { passive: false });
+  window.addEventListener("pointercancel", handleBoardPointerCancel);
+}
 
 maxMovesSelect.addEventListener("change", () => {
   maxMovesByMode[selectedMode] = Number(maxMovesSelect.value);
