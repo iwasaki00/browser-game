@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Block Pocket Sandbox</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <canvas id="gameCanvas" aria-label="Block Pocket Sandbox"></canvas>
+
+    <section class="top-hud" aria-label="game status">
+      <a class="back-link" href="../index.html" aria-label="Back to menu">←</a>
+      <div class="status-pill">
+        <span id="positionText">16,16</span>
+        <strong id="modeText">BUILD</strong>
+      </div>
+      <button id="resetButton" class="reset-button" type="button">Reset</button>
+    </section>
+
+    <section class="hint" id="hintText" aria-live="polite">
+      Move with the stick. Tap a tile to place. Hold or use Break to remove.
+    </section>
+
+    <section class="joystick" id="joystick" aria-label="move">
+      <div class="stick-base">
+        <div class="stick-thumb" id="stickThumb"></div>
+      </div>
+    </section>
+
+    <button id="breakButton" class="break-button" type="button" aria-pressed="false">Break</button>
+
+    <section class="block-bar" id="blockBar" aria-label="block selection">
+      <button class="block-option active" data-block="grass" type="button">
+        <span class="swatch grass"></span>
+        <span>Grass</span>
+      </button>
+      <button class="block-option" data-block="dirt" type="button">
+        <span class="swatch dirt"></span>
+        <span>Dirt</span>
+      </button>
+      <button class="block-option" data-block="stone" type="button">
+        <span class="swatch stone"></span>
+        <span>Stone</span>
+      </button>
+      <button class="block-option" data-block="wood" type="button">
+        <span class="swatch wood"></span>
+        <span>Wood</span>
+      </button>
+      <button class="block-option" data-block="water" type="button">
+        <span class="swatch water"></span>
+        <span>Water</span>
+      </button>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
