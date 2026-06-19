@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase Connection Test</title>
+  <title>Firebase Room Sync Test</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="main.js"></script>
 </head>
@@ -12,24 +12,64 @@
     <header class="header">
       <a class="back-link" href="../index.html">メニューへ戻る</a>
       <p class="eyebrow">Firebase Realtime Database</p>
-      <h1>Firebase Connection Test</h1>
+      <h1>Room Sync Test</h1>
     </header>
 
-    <section class="status-panel" aria-label="Firebase接続テスト結果">
+    <section class="panel controls-panel" aria-label="部屋操作">
+      <button id="createRoomButton" class="primary-button" type="button">部屋作成</button>
+
+      <div class="join-form">
+        <label for="roomIdInput">部屋ID</label>
+        <div class="join-row">
+          <input
+            id="roomIdInput"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            placeholder="123456"
+            autocomplete="off"
+          >
+          <button id="joinRoomButton" type="button">部屋参加</button>
+        </div>
+      </div>
+
+      <button id="leaveRoomButton" class="ghost-button" type="button" disabled>退出</button>
+    </section>
+
+    <section class="panel" aria-label="部屋状態">
       <dl class="status-list">
         <div class="status-row">
           <dt>Firebase接続状態</dt>
-          <dd id="connectionStatus" class="status pending">接続確認中</dd>
+          <dd id="connectionStatus" class="status pending">未接続</dd>
         </div>
         <div class="status-row">
-          <dt>最新メッセージ</dt>
-          <dd id="latestMessage">-</dd>
+          <dt>部屋ID</dt>
+          <dd id="currentRoomId">-</dd>
+        </div>
+        <div class="status-row">
+          <dt>現在の参加人数</dt>
+          <dd id="participantCount">0 / 2</dd>
+        </div>
+        <div class="status-row">
+          <dt>あなた</dt>
+          <dd id="playerRole">-</dd>
+        </div>
+        <div class="status-row">
+          <dt>相手の入室</dt>
+          <dd id="opponentStatus">未入室</dd>
         </div>
         <div class="status-row">
           <dt>最終更新時刻</dt>
           <dd id="lastUpdated">-</dd>
         </div>
       </dl>
+      <p id="roomStatusMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel debug-panel" aria-label="Firebaseデバッグ表示">
+      <h2>Firebase room data</h2>
+      <pre id="debugData">{}</pre>
     </section>
   </main>
 </body>
