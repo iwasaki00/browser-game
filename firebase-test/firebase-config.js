@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBg3WyGQqX5llya3pjmRtbmDZcdGyg8tUg",
+  authDomain: "gomoku-d0fde.firebaseapp.com",
+  databaseURL: "https://gomoku-d0fde-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "gomoku-d0fde",
+  storageBucket: "gomoku-d0fde.firebasestorage.app",
+  messagingSenderId: "1036314081288",
+  appId: "1:1036314081288:web:ec9d5c3b76a8cd74e5b9bd"
 };
