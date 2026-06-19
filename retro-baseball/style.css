@@ -1,8 +1,8 @@
 :root {
-  --bg: #1a4c42;
-  --panel: #fff6d5;
+  --bg: #101c2a;
+  --panel: #fff2bf;
   --ink: #20130f;
-  --accent: #ef4f3d;
+  --accent: #f2553d;
   --gold: #ffd65a;
 }
 
@@ -17,7 +17,7 @@ body {
   width: 100%;
   min-height: 100%;
   overflow: hidden;
-  background: #0b272c;
+  background: var(--bg);
   color: var(--panel);
   font-family: "Courier New", "Hiragino Sans", "Yu Gothic UI", monospace;
   touch-action: manipulation;
@@ -32,42 +32,41 @@ body {
   display: grid;
   place-items: center;
   background:
-    linear-gradient(180deg, rgba(255, 214, 90, 0.12), transparent 34%),
-    radial-gradient(circle at 50% 28%, rgba(74, 177, 93, 0.35), transparent 42%),
-    #0b272c;
+    linear-gradient(180deg, rgba(63, 100, 128, 0.28), transparent 28%),
+    radial-gradient(circle at 50% 76%, rgba(245, 90, 52, 0.14), transparent 34%),
+    #101c2a;
 }
 
 #gameCanvas {
   width: min(100vw, 430px);
-  height: min(100dvh, 760px);
+  height: min(100dvh, 792px);
   max-height: 100dvh;
+  background: #193d35;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  background: #2e8b57;
-  box-shadow: 0 0 0 4px #111, 0 12px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 0 4px #07090d, 0 16px 36px rgba(0, 0, 0, 0.45);
 }
 
-.retry-button {
+.debug-button {
   position: absolute;
-  left: 50%;
-  bottom: max(34px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  display: none;
-  width: min(72vw, 280px);
-  min-height: 54px;
-  border: 4px solid #20130f;
-  border-radius: 8px;
-  background: var(--gold);
+  top: max(12px, env(safe-area-inset-top));
+  right: 12px;
+  min-width: 78px;
+  min-height: 38px;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: var(--panel);
   color: var(--ink);
-  box-shadow: 0 6px 0 #8f4c25;
-  font: 700 20px/1 "Courier New", "Yu Gothic UI", monospace;
+  box-shadow: 0 4px 0 #8f4c25;
+  font: 700 14px/1 "Courier New", "Yu Gothic UI", monospace;
 }
 
-.retry-button:active {
-  transform: translate(-50%, 4px);
-  box-shadow: 0 2px 0 #8f4c25;
+.debug-button[aria-pressed="true"] {
+  background: var(--gold);
+  color: #111;
 }
 
-.retry-button.show {
-  display: block;
+.debug-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #8f4c25;
 }
