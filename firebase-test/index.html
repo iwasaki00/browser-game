@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Connection Test</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <a class="back-link" href="../index.html">メニューへ戻る</a>
+      <p class="eyebrow">Firebase Realtime Database</p>
+      <h1>Firebase Connection Test</h1>
+    </header>
+
+    <section class="status-panel" aria-label="Firebase接続テスト結果">
+      <dl class="status-list">
+        <div class="status-row">
+          <dt>Firebase接続状態</dt>
+          <dd id="connectionStatus" class="status pending">接続確認中</dd>
+        </div>
+        <div class="status-row">
+          <dt>最新メッセージ</dt>
+          <dd id="latestMessage">-</dd>
+        </div>
+        <div class="status-row">
+          <dt>最終更新時刻</dt>
+          <dd id="lastUpdated">-</dd>
+        </div>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>
