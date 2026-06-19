@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import {
+  get,
   getDatabase,
   off,
   onDisconnect,
@@ -11,6 +12,7 @@ import {
 import { firebaseConfig } from "./firebase-config.js";
 
 const connectionStatus = document.querySelector("#connectionStatus");
+const roomState = document.querySelector("#roomState");
 const currentRoomIdView = document.querySelector("#currentRoomId");
 const participantCount = document.querySelector("#participantCount");
 const playerRole = document.querySelector("#playerRole");
@@ -38,9 +40,18 @@ const formatDisplayTime = (date) =>
     timeStyle: "medium"
   }).format(date);
 
-const setStatus = (message, state) => {
+const updateLastUpdated = () => {
+  lastUpdated.textContent = formatDisplayTime(new Date());
+};
+
+const setFirebaseStatus = (message, state) => {
   connectionStatus.textContent = message;
   connectionStatus.className = `status ${state}`;
+};
+
+const setRoomState = (message, state) => {
+  roomState.textContent = message;
+  roomState.className = `status ${state}`;
 };
 
 const setMessage = (message, state = "") => {
@@ -54,13 +65,17 @@ const setBusy = (busy) => {
   roomIdInput.disabled = busy;
 };
 
-const updateLastUpdated = () => {
-  lastUpdated.textContent = formatDisplayTime(new Date());
-};
+const normalizeRoomId = (roomId) => String(roomId).trim();
 
-const normalizeRoomId = (value) => value.trim().replace(/\D/g, "").slice(0, 6);
+const isValidRoomId = (roomId) => /^\d{6}$/.test(roomId);
 
-const generateRoomId = () => String(Math.floor(100000 + Math.random() * 900000));
+const generateRoomId = () => normalizeRoomId(Math.floor(100000 + Math.random() * 900000));
+
+const getRoomPath = (roomId) => `rooms/${normalizeRoomId(roomId)}`;
+
+const getRoomRef = (roomId) => ref(database, getRoomPath(roomId));
+
+const getPlayerPath = (roomId) => `${getRoomPath(roomId)}/players/${playerId}`;
 
 const getPlayers = (roomData) => roomData?.players ?? {};
 
@@ -80,6 +95,14 @@ const resetRoomView = () => {
   leaveRoomButton.disabled = true;
 };
 
+const logJoinDebug = ({ inputValue, roomId, roomPath, snapshot }) => {
+  console.log("[room join] inputValue:", inputValue);
+  console.log("[room join] normalizedRoomId:", roomId);
+  console.log("[room join] refPath:", roomPath);
+  console.log("[room join] snapshot.exists():", snapshot.exists());
+  console.log("[room join] snapshot.val():", snapshot.val());
+};
+
 const detachRoomListener = () => {
   if (currentRoomRef && currentRoomCallback) {
     off(currentRoomRef, "value", currentRoomCallback);
@@ -89,7 +112,7 @@ const detachRoomListener = () => {
 };
 
 const registerDisconnectCleanup = async (roomId) => {
-  currentPlayerRef = ref(database, `rooms/${roomId}/players/${playerId}`);
+  currentPlayerRef = ref(database, getPlayerPath(roomId));
   await onDisconnect(currentPlayerRef).remove();
 };
 
@@ -101,11 +124,21 @@ const cancelDisconnectCleanup = async () => {
   currentPlayerRef = null;
 };
 
-const subscribeRoom = async (roomId) => {
+const resetCurrentRoomState = () => {
+  detachRoomListener();
+  currentRoomId = "";
+  currentRoomRef = null;
+  currentPlayerRef = null;
+  resetRoomView();
+};
+
+const subscribeRoom = async (roomIdValue) => {
+  const roomId = normalizeRoomId(roomIdValue);
+
   detachRoomListener();
 
   currentRoomId = roomId;
-  currentRoomRef = ref(database, `rooms/${roomId}`);
+  currentRoomRef = getRoomRef(roomId);
   currentRoomIdView.textContent = roomId;
   leaveRoomButton.disabled = false;
 
@@ -124,29 +157,24 @@ const subscribeRoom = async (roomId) => {
     updateLastUpdated();
 
     if (!roomData || !ownPlayer) {
-      setStatus("未接続", "pending");
+      setRoomState("部屋未参加", "pending");
       setMessage("この部屋から退出しました。", "warning");
       resetCurrentRoomState();
       return;
     }
 
-    setStatus("接続成功", "success");
+    setFirebaseStatus("Firebase接続成功", "success");
+    setRoomState("部屋参加中", "success");
     setMessage(opponent ? "相手が入室しました。" : "相手の入室を待っています。");
   };
 
+  console.log("[room watch] refPath:", getRoomPath(roomId));
+
   onValue(currentRoomRef, currentRoomCallback, (error) => {
-    setStatus("接続失敗", "error");
+    setFirebaseStatus("Firebase接続失敗", "error");
     setMessage(error.message, "error");
     updateLastUpdated();
   });
-};
-
-const resetCurrentRoomState = () => {
-  detachRoomListener();
-  currentRoomId = "";
-  currentRoomRef = null;
-  currentPlayerRef = null;
-  resetRoomView();
 };
 
 const buildPlayerData = (slot) => ({
@@ -155,8 +183,9 @@ const buildPlayerData = (slot) => ({
   lastSeenAt: Date.now()
 });
 
-const createRoomWithId = async (roomId) => {
-  const roomRef = ref(database, `rooms/${roomId}`);
+const createRoomWithId = async (roomIdValue) => {
+  const roomId = normalizeRoomId(roomIdValue);
+  const roomRef = getRoomRef(roomId);
   const result = await runTransaction(roomRef, (roomData) => {
     if (roomData !== null) {
       return;
@@ -176,27 +205,32 @@ const createRoomWithId = async (roomId) => {
 
 const createRoom = async () => {
   setBusy(true);
-  setStatus("接続中", "pending");
+  setFirebaseStatus("Firebase接続成功", "success");
+  setRoomState("部屋作成中", "pending");
   setMessage("部屋を作成しています。");
 
   try {
     await leaveCurrentRoom();
 
     for (let attempt = 0; attempt < 20; attempt += 1) {
-      const roomId = generateRoomId();
+      const roomId = normalizeRoomId(generateRoomId());
       const created = await createRoomWithId(roomId);
 
       if (created) {
         roomIdInput.value = roomId;
+        currentRoomIdView.textContent = roomId;
+        console.log("[room create] roomId:", roomId);
+        console.log("[room create] refPath:", getRoomPath(roomId));
         await subscribeRoom(roomId);
-        setMessage("部屋を作成しました。相手の入室を待っています。");
+        setMessage(`部屋を作成しました。部屋ID: ${roomId}`);
         return;
       }
     }
 
     throw new Error("部屋IDの生成に失敗しました。もう一度作成してください。");
   } catch (error) {
-    setStatus("接続失敗", "error");
+    setFirebaseStatus("Firebase接続失敗", "error");
+    setRoomState("部屋未参加", "pending");
     setMessage(error.message, "error");
     updateLastUpdated();
   } finally {
@@ -204,28 +238,58 @@ const createRoom = async () => {
   }
 };
 
+const verifyRoomExists = async (inputValue) => {
+  const roomId = normalizeRoomId(inputValue);
+  const roomPath = getRoomPath(roomId);
+  const snapshot = await get(getRoomRef(roomId));
+
+  logJoinDebug({ inputValue, roomId, roomPath, snapshot });
+
+  return {
+    roomId,
+    roomPath,
+    snapshot
+  };
+};
+
 const joinRoom = async () => {
-  const roomId = normalizeRoomId(roomIdInput.value);
+  const inputValue = roomIdInput.value;
+  const roomId = normalizeRoomId(inputValue);
   roomIdInput.value = roomId;
 
-  if (roomId.length !== 6) {
-    setMessage("6桁の部屋IDを入力してください。", "warning");
+  if (!isValidRoomId(roomId)) {
+    setRoomState("部屋未参加", "pending");
+    setMessage("6桁の数字だけで部屋IDを入力してください。", "warning");
     return;
   }
 
   setBusy(true);
-  setStatus("接続中", "pending");
-  setMessage("部屋に参加しています。");
+  setFirebaseStatus("Firebase接続成功", "success");
+  setRoomState("部屋確認中", "pending");
+  setMessage("部屋を確認しています。");
 
   let transactionError = "";
 
   try {
+    const verification = await verifyRoomExists(inputValue);
+
+    if (!verification.snapshot.exists()) {
+      setRoomState("部屋が見つからない", "error");
+      setMessage(`部屋が見つかりません。参照パス: ${verification.roomPath}`, "error");
+      debugData.textContent = JSON.stringify({
+        requestedPath: verification.roomPath,
+        exists: false,
+        value: null
+      }, null, 2);
+      updateLastUpdated();
+      return;
+    }
+
     await leaveCurrentRoom();
 
-    const roomRef = ref(database, `rooms/${roomId}`);
-    const result = await runTransaction(roomRef, (roomData) => {
+    const result = await runTransaction(getRoomRef(roomId), (roomData) => {
       if (roomData === null) {
-        transactionError = "指定された部屋が見つかりません。";
+        transactionError = `部屋が見つかりません。参照パス: ${getRoomPath(roomId)}`;
         return;
       }
 
@@ -258,9 +322,10 @@ const joinRoom = async () => {
     }
 
     await subscribeRoom(roomId);
-    setMessage("部屋に参加しました。");
+    setMessage(`部屋に参加しました。参照パス: ${getRoomPath(roomId)}`);
   } catch (error) {
-    setStatus("接続失敗", "error");
+    setFirebaseStatus("Firebase接続失敗", "error");
+    setRoomState("部屋未参加", "pending");
     setMessage(error.message, "error");
     updateLastUpdated();
   } finally {
@@ -268,10 +333,10 @@ const joinRoom = async () => {
   }
 };
 
-const cleanupEmptyRoom = async (roomId) => {
-  const roomRef = ref(database, `rooms/${roomId}`);
+const cleanupEmptyRoom = async (roomIdValue) => {
+  const roomId = normalizeRoomId(roomIdValue);
 
-  await runTransaction(roomRef, (roomData) => {
+  await runTransaction(getRoomRef(roomId), (roomData) => {
     if (!roomData) {
       return null;
     }
@@ -294,10 +359,10 @@ const leaveCurrentRoom = async () => {
     return;
   }
 
-  const leavingRoomId = currentRoomId;
+  const leavingRoomId = normalizeRoomId(currentRoomId);
 
   await cancelDisconnectCleanup();
-  await remove(ref(database, `rooms/${leavingRoomId}/players/${playerId}`));
+  await remove(ref(database, getPlayerPath(leavingRoomId)));
   await cleanupEmptyRoom(leavingRoomId);
   resetCurrentRoomState();
 };
@@ -305,11 +370,12 @@ const leaveCurrentRoom = async () => {
 const leaveRoom = async () => {
   try {
     await leaveCurrentRoom();
-    setStatus("未接続", "pending");
+    setFirebaseStatus("Firebase接続成功", "success");
+    setRoomState("部屋未参加", "pending");
     setMessage("部屋から退出しました。");
     updateLastUpdated();
   } catch (error) {
-    setStatus("接続失敗", "error");
+    setFirebaseStatus("Firebase接続失敗", "error");
     setMessage(error.message, "error");
     updateLastUpdated();
   }
@@ -331,9 +397,10 @@ leaveRoomButton.addEventListener("click", leaveRoom);
 
 window.addEventListener("pagehide", () => {
   if (currentRoomId) {
-    remove(ref(database, `rooms/${currentRoomId}/players/${playerId}`));
+    remove(ref(database, getPlayerPath(currentRoomId)));
   }
 });
 
-setStatus("未接続", "pending");
+setFirebaseStatus("Firebase接続成功", "success");
+setRoomState("部屋未参加", "pending");
 resetRoomView();
