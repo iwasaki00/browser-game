@@ -8,6 +8,7 @@
   const W = canvas.width;
   const H = canvas.height;
   const CELL = 32;
+  const SOURCE_CELL = 160;
   const SPRITE_SRC = "assets/baseball_sprites.png";
 
   // Sprite coordinates are intentionally centralized. Adjust only this table
@@ -28,35 +29,35 @@
 
     batter: {
       ready: [
-        { col: 0, row: 1 },
-        { col: 1, row: 1 },
-      ],
-      swing: [
         { col: 0, row: 2 },
         { col: 1, row: 2 },
-        { col: 2, row: 2 },
-        { col: 3, row: 2 },
-        { col: 4, row: 2 },
       ],
-    },
-
-    fielder: {
-      idle: [
+      swing: [
         { col: 0, row: 3 },
-      ],
-      catch: [
+        { col: 1, row: 3 },
+        { col: 2, row: 3 },
         { col: 3, row: 3 },
         { col: 4, row: 3 },
       ],
     },
 
-    ball: {
-      normal: [
+    fielder: {
+      idle: [
         { col: 0, row: 4 },
       ],
+      catch: [
+        { col: 4, row: 4 },
+        { col: 5, row: 4 },
+      ],
+    },
+
+    ball: {
+      normal: [
+        { col: 0, row: 5 },
+      ],
       fast: [
-        { col: 1, row: 4 },
-        { col: 2, row: 4 },
+        { col: 1, row: 5 },
+        { col: 2, row: 5 },
       ],
     },
   };
@@ -93,15 +94,18 @@
     constructor(image) {
       this.image = image;
       this.cellSize = CELL;
+      // The supplied PNG is an enlarged pixel-art sheet: one logical 32px
+      // sprite occupies a 160px square in the source image.
+      this.sourceCellSize = SOURCE_CELL;
     }
 
     draw(ctx, col, row, x, y, scale = 4) {
       ctx.drawImage(
         this.image,
-        col * this.cellSize,
-        row * this.cellSize,
-        this.cellSize,
-        this.cellSize,
+        col * this.sourceCellSize,
+        row * this.sourceCellSize,
+        this.sourceCellSize,
+        this.sourceCellSize,
         Math.round(x),
         Math.round(y),
         Math.round(this.cellSize * scale),
@@ -508,13 +512,24 @@
     ctx.fillRect(6, 92, sheetW + 108, Math.min(sheetH, 382) + 84);
     ctx.drawImage(image, x, y, sheetW, sheetH);
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.34)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
     ctx.lineWidth = 1;
     for (let gx = 0; gx <= image.width; gx += CELL) {
       const px = x + gx * scale;
       line(px, y, px, y + sheetH);
     }
     for (let gy = 0; gy <= image.height; gy += CELL) {
+      const py = y + gy * scale;
+      line(x, py, x + sheetW, py);
+    }
+
+    ctx.strokeStyle = "rgba(255, 216, 90, 0.9)";
+    ctx.lineWidth = 2;
+    for (let gx = 0; gx <= image.width; gx += SOURCE_CELL) {
+      const px = x + gx * scale;
+      line(px, y, px, y + sheetH);
+    }
+    for (let gy = 0; gy <= image.height; gy += SOURCE_CELL) {
       const py = y + gy * scale;
       line(x, py, x + sheetW, py);
     }
@@ -527,6 +542,14 @@
     ];
     used.forEach(([name, frame], index) => {
       text(`${name}: c${frame.col} r${frame.row}`, x + sheetW + 12, y + 18 + index * 18, 12, COLORS.panel);
+      ctx.strokeStyle = index === 0 ? "#ff3d3d" : index === 1 ? "#35a7ff" : index === 2 ? "#55ff74" : "#ffffff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(
+        x + frame.col * SOURCE_CELL * scale,
+        y + frame.row * SOURCE_CELL * scale,
+        SOURCE_CELL * scale,
+        SOURCE_CELL * scale,
+      );
     });
 
     // Ball and judgement range overlay.
