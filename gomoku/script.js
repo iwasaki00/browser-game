@@ -3,9 +3,13 @@ import {
   child,
   get,
   getDatabase,
+  limitToLast,
   off,
   onDisconnect,
   onValue,
+  orderByChild,
+  push,
+  query,
   ref,
   remove,
   runTransaction,
@@ -24,7 +28,7 @@ const DIRECTIONS = [
   [1, 1],
   [1, -1],
 ];
-const ROOM_ROOT = "gomokuRooms";
+const ROOM_ROOT = "rooms";
 
 const boardElement = document.getElementById("board");
 const statusElement = document.getElementById("status");
@@ -36,6 +40,9 @@ const joinRoomButton = document.getElementById("joinRoomButton");
 const leaveRoomButton = document.getElementById("leaveRoomButton");
 const roomIdInput = document.getElementById("roomIdInput");
 const roomInfoElement = document.getElementById("roomInfo");
+const chatMessagesElement = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const sendChatButton = document.getElementById("sendChatButton");
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -50,6 +57,7 @@ let onlinePlayerColor = "";
 let onlineRoomRef = null;
 let onlineRoomCallback = null;
 let onlinePlayerRef = null;
+let chatUnsubscribe = null;
 
 function createEmptyBoard() {
   return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(EMPTY));
@@ -77,6 +85,10 @@ function playerRef(roomId) {
   return child(roomRef(roomId), `players/${clientId}`);
 }
 
+function messagesRef(roomId) {
+  return child(roomRef(roomId), "messages");
+}
+
 function playerLabel(player) {
   return player === BLACK ? "黒" : "白";
 }
@@ -95,6 +107,80 @@ function updateRoomInfo(message = "") {
   }
 
   roomInfoElement.textContent = message;
+}
+
+function setChatEnabled(enabled) {
+  chatInput.disabled = !enabled;
+  sendChatButton.disabled = !enabled;
+}
+
+function clearChat() {
+  chatMessagesElement.innerHTML = "";
+}
+
+function renderMessages(messages) {
+  chatMessagesElement.innerHTML = "";
+
+  for (const message of messages) {
+    const item = document.createElement("div");
+    item.className = `chat-message ${message.senderId === clientId ? "own" : "opponent"}`;
+
+    const sender = document.createElement("span");
+    sender.className = "chat-sender";
+    sender.textContent = message.senderId === clientId ? "自分" : "相手";
+
+    const body = document.createElement("span");
+    body.className = "chat-text";
+    body.textContent = message.text || "";
+
+    item.append(sender, body);
+    chatMessagesElement.appendChild(item);
+  }
+
+  chatMessagesElement.scrollTop = chatMessagesElement.scrollHeight;
+}
+
+function startChat(roomId) {
+  if (chatUnsubscribe) {
+    chatUnsubscribe();
+  }
+
+  const recentMessages = query(messagesRef(roomId), orderByChild("createdAt"), limitToLast(50));
+  chatUnsubscribe = onValue(recentMessages, (snapshot) => {
+    const values = snapshot.val() || {};
+    const messages = Object.entries(values)
+      .map(([id, value]) => ({ id, ...value }))
+      .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+    renderMessages(messages);
+  });
+}
+
+function stopChat() {
+  if (chatUnsubscribe) {
+    chatUnsubscribe();
+    chatUnsubscribe = null;
+  }
+
+  setChatEnabled(false);
+  clearChat();
+}
+
+async function sendChatMessage() {
+  const text = chatInput.value.trim();
+
+  if (!onlineRoomId || !onlinePlayerColor || !text) {
+    return;
+  }
+
+  const limitedText = text.slice(0, 100);
+  await push(messagesRef(onlineRoomId), {
+    senderId: clientId,
+    text: limitedText,
+    createdAt: Date.now()
+  });
+
+  chatInput.value = "";
 }
 
 function getPlayers(roomData) {
@@ -395,6 +481,7 @@ async function subscribeOnlineRoom(roomId) {
   onlineRoomRef = roomRef(roomId);
   onlinePlayerRef = playerRef(roomId);
   await onDisconnect(onlinePlayerRef).remove();
+  startChat(roomId);
 
   onlineRoomCallback = (snapshot) => {
     const roomData = snapshot.val();
@@ -409,6 +496,7 @@ async function subscribeOnlineRoom(roomId) {
 
     const ownPlayer = roomData.players?.[clientId];
     onlinePlayerColor = ownPlayer?.color || "";
+    setChatEnabled(Boolean(ownPlayer));
     board = roomData.board || createEmptyBoard();
     currentPlayer = roomData.currentPlayer || BLACK;
     gameOver = Boolean(roomData.gameOver);
@@ -506,6 +594,7 @@ async function leaveOnlineRoom() {
   onlineRoomCallback = null;
   onlinePlayerRef = null;
   updateRoomInfo("");
+  stopChat();
 }
 
 async function resetOnlineRoom() {
@@ -568,6 +657,12 @@ leaveRoomButton.addEventListener("click", async () => {
   resetGame();
   updateStatus("部屋から退出しました");
 });
+sendChatButton.addEventListener("click", sendChatMessage);
+chatInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    sendChatMessage();
+  }
+});
 
 window.addEventListener("pagehide", () => {
   if (onlineRoomId) {
@@ -576,4 +671,5 @@ window.addEventListener("pagehide", () => {
 });
 
 onlineControls.hidden = true;
+setChatEnabled(false);
 resetGame();

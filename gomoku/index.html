@@ -43,6 +43,13 @@
           </label>
           <button id="leaveRoomButton" type="button">退出</button>
           <p id="roomInfo" class="room-info"></p>
+          <section class="chat-panel" aria-label="部屋チャット">
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-row">
+              <input id="chatInput" type="text" maxlength="100" placeholder="メッセージ" autocomplete="off" disabled>
+              <button id="sendChatButton" type="button" disabled>送信</button>
+            </div>
+          </section>
         </div>
         <button id="resetButton" type="button">新しく始める</button>
       </div>
