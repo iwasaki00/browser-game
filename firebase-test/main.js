@@ -30,7 +30,7 @@ const roomIdInput = document.querySelector("#roomIdInput");
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const playerId = crypto.randomUUID();
-const GAME_ID = "gomoku";
+const GAME_ID = "firebase-test";
 
 let currentRoomId = "";
 let currentRoomRef = null;
