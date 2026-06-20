@@ -12,9 +12,6 @@ const DIRECTIONS = [
 const boardElement = document.getElementById("board");
 const modeSelect = document.getElementById("modeSelect");
 const restartButton = document.getElementById("restartButton");
-const turnText = document.getElementById("turnText");
-const blackCount = document.getElementById("blackCount");
-const whiteCount = document.getElementById("whiteCount");
 const messageText = document.getElementById("messageText");
 const onlinePanel = document.getElementById("onlinePanel");
 const createRoomButton = document.getElementById("createRoomButton");
@@ -27,6 +24,9 @@ const onlinePlayersText = document.getElementById("onlinePlayersText");
 const onlineColorText = document.getElementById("onlineColorText");
 const onlineTurnText = document.getElementById("onlineTurnText");
 const onlineHint = document.getElementById("onlineHint");
+const chatMessagesElement = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const sendChatButton = document.getElementById("sendChatButton");
 const skillButtons = Array.from(document.querySelectorAll(".skill-button"));
 const skillCountElements = {
   bomb: document.getElementById("bombCount"),
@@ -48,6 +48,7 @@ let onlinePlayerColor = "";
 let onlineRoomRef = null;
 let onlineRoomCallback = null;
 let onlinePlayerRef = null;
+let chatUnsubscribe = null;
 let firebaseTools = null;
 let firebaseLoadPromise = null;
 
@@ -149,6 +150,10 @@ function playerRef(roomId) {
 
 function playersRef(roomId) {
   return firebaseTools.child(roomRef(roomId), "players");
+}
+
+function messagesRef(roomId) {
+  return firebaseTools.child(roomRef(roomId), "messages");
 }
 
 function generateRoomId() {
@@ -414,10 +419,6 @@ function renderBoard() {
 }
 
 function renderStatus() {
-  const counts = countStones(board);
-  turnText.textContent = gameOver ? "終了" : `${playerLabel(currentPlayer)}の手番`;
-  blackCount.textContent = counts.black;
-  whiteCount.textContent = counts.white;
   messageText.textContent = message;
   updateSkillButtons();
 }
@@ -579,6 +580,83 @@ function updateRoomInfo(text = "") {
   roomInfo.textContent = text;
 }
 
+function setChatEnabled(enabled) {
+  chatInput.disabled = !enabled;
+  sendChatButton.disabled = !enabled;
+}
+
+function clearChat() {
+  chatMessagesElement.innerHTML = "";
+}
+
+function renderMessages(messages) {
+  chatMessagesElement.innerHTML = "";
+
+  for (const messageItem of messages) {
+    const item = document.createElement("div");
+    item.className = `chat-message ${messageItem.senderId === clientId ? "own" : "opponent"}`;
+
+    const sender = document.createElement("span");
+    sender.className = "chat-sender";
+    sender.textContent = messageItem.senderId === clientId ? "あなた" : "相手";
+
+    const body = document.createElement("span");
+    body.className = "chat-text";
+    body.textContent = messageItem.text || "";
+
+    item.append(sender, body);
+    chatMessagesElement.appendChild(item);
+  }
+
+  chatMessagesElement.scrollTop = chatMessagesElement.scrollHeight;
+}
+
+function startChat(roomId) {
+  stopChat();
+
+  const recentMessages = firebaseTools.query(
+    messagesRef(roomId),
+    firebaseTools.orderByChild("createdAt"),
+    firebaseTools.limitToLast(40)
+  );
+
+  chatUnsubscribe = firebaseTools.onValue(recentMessages, (snapshot) => {
+    const values = snapshot.val() || {};
+    const messages = Object.entries(values)
+      .map(([id, value]) => ({ id, ...value }))
+      .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+    renderMessages(messages);
+  });
+}
+
+function stopChat() {
+  if (chatUnsubscribe) {
+    chatUnsubscribe();
+    chatUnsubscribe = null;
+  }
+
+  setChatEnabled(false);
+  clearChat();
+}
+
+async function sendChatMessage() {
+  await ensureFirebase();
+
+  const text = chatInput.value.trim();
+  if (!onlineRoomId || !onlinePlayerColor || !text) {
+    return;
+  }
+
+  await firebaseTools.push(messagesRef(onlineRoomId), {
+    senderId: clientId,
+    text: text.slice(0, 80),
+    createdAt: Date.now()
+  });
+
+  chatInput.value = "";
+}
+
 function updateOnlineDetails({
   connection = "未接続",
   players = "0/2",
@@ -672,6 +750,7 @@ async function subscribeOnlineRoom(roomId) {
   onlineRoomRef = roomRef(roomId);
   onlinePlayerRef = playerRef(roomId);
   await firebaseTools.onDisconnect(onlinePlayerRef).remove();
+  startChat(roomId);
 
   onlineRoomCallback = (snapshot) => {
     const roomData = snapshot.val();
@@ -687,6 +766,7 @@ async function subscribeOnlineRoom(roomId) {
 
     const ownPlayer = roomData.players?.[clientId];
     onlinePlayerColor = ownPlayer?.color || "";
+    setChatEnabled(Boolean(ownPlayer));
     board = cloneBoard(roomData.board || createInitialBoard());
     currentPlayer = roomData.currentPlayer || BLACK;
     skillCounts = normalizeSkillCounts(roomData.skillCounts);
@@ -830,6 +910,7 @@ async function leaveOnlineRoom() {
   onlinePlayerRef = null;
   updateRoomInfo("");
   updateOnlineDetails();
+  stopChat();
 }
 
 async function leaveRoomData(roomIdValue) {
@@ -903,6 +984,14 @@ createRoomButton.addEventListener("click", () => {
 });
 joinRoomButton.addEventListener("click", () => {
   joinOnlineRoom().catch(showOnlineError);
+});
+sendChatButton.addEventListener("click", () => {
+  sendChatMessage().catch(showOnlineError);
+});
+chatInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    sendChatMessage().catch(showOnlineError);
+  }
 });
 leaveRoomButton.addEventListener("click", async () => {
   await leaveOnlineRoom().catch(showOnlineError);

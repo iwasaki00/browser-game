@@ -60,21 +60,16 @@
       </div>
       <p id="onlineHint" class="online-hint">部屋を作るか、6桁の部屋IDを入力して参加してください。</p>
       <p id="roomInfo" class="room-info"></p>
+      <section class="chat-panel" aria-label="チャット">
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-row">
+          <input id="chatInput" type="text" maxlength="80" placeholder="メッセージ" autocomplete="off" disabled>
+          <button id="sendChatButton" type="button" disabled>送信</button>
+        </div>
+      </section>
     </section>
 
     <section class="status-panel" aria-label="ゲーム状況">
-      <div>
-        <span class="label">手番</span>
-        <strong id="turnText">黒の手番</strong>
-      </div>
-      <div>
-        <span class="label">黒</span>
-        <strong id="blackCount">2</strong>
-      </div>
-      <div>
-        <span class="label">白</span>
-        <strong id="whiteCount">2</strong>
-      </div>
       <div>
         <span class="label">状況</span>
         <strong id="messageText">置ける場所を選んでください</strong>
