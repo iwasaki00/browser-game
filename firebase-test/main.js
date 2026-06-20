@@ -30,6 +30,7 @@ const roomIdInput = document.querySelector("#roomIdInput");
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const playerId = crypto.randomUUID();
+const GAME_ID = "gomoku";
 
 let currentRoomId = "";
 let currentRoomRef = null;
@@ -119,13 +120,15 @@ const isValidRoomId = (roomId) => /^\d{6}$/.test(roomId);
 
 const generateRoomId = () => normalizeRoomId(Math.floor(100000 + Math.random() * 900000));
 
-const roomPath = (roomId) => `rooms/${roomId}`;
+const roomPath = (roomId) => `rooms/${GAME_ID}/${roomId}`;
 
 const roomRef = (roomId) => ref(db, roomPath(roomId));
 
-const roomsRef = () => ref(db, "rooms");
+const roomsRef = () => ref(db, `rooms/${GAME_ID}`);
 
 const playerRef = (roomId) => child(roomRef(roomId), `players/${playerId}`);
+
+const playersRef = (roomId) => child(roomRef(roomId), "players");
 
 const getPlayers = (roomData) => roomData?.players ?? {};
 
@@ -458,22 +461,16 @@ const joinRoom = async () => {
 
 const cleanupEmptyRoom = async (roomIdValue) => {
   const roomId = normalizeRoomId(roomIdValue);
+  const playersSnapshot = await get(playersRef(roomId));
+  const players = playersSnapshot.val() || {};
 
-  await runTransaction(roomRef(roomId), (roomData) => {
-    if (!roomData) {
-      return null;
-    }
+  if (Object.keys(players).length === 0) {
+    await remove(roomRef(roomId));
+    return;
+  }
 
-    const players = getPlayers(roomData);
-
-    if (Object.keys(players).length === 0) {
-      return null;
-    }
-
-    return {
-      ...roomData,
-      updatedAt: Date.now()
-    };
+  await update(roomRef(roomId), {
+    updatedAt: Date.now()
   });
 };
 
@@ -628,11 +625,14 @@ createRoomButton.addEventListener("click", createRoom);
 joinRoomButton.addEventListener("click", joinRoomFixed);
 leaveRoomButton.addEventListener("click", leaveRoom);
 
-window.addEventListener("pagehide", () => {
+const handlePageExit = () => {
   if (currentRoomId) {
-    remove(playerRef(currentRoomId));
+    leaveCurrentRoom();
   }
-});
+};
+
+window.addEventListener("pagehide", handlePageExit);
+window.addEventListener("beforeunload", handlePageExit);
 
 setFirebaseStatus("Firebase初期化成功", "success");
 setRoomState("部屋未参加", "pending");

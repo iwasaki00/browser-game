@@ -28,7 +28,7 @@ const DIRECTIONS = [
   [1, 1],
   [1, -1],
 ];
-const ROOM_ROOT = "rooms";
+const GAME_ID = "gomoku";
 
 const boardElement = document.getElementById("board");
 const statusElement = document.getElementById("status");
@@ -74,7 +74,7 @@ function generateRoomId() {
 }
 
 function roomPath(roomId) {
-  return `${ROOM_ROOT}/${roomId}`;
+  return `rooms/${GAME_ID}/${roomId}`;
 }
 
 function roomRef(roomId) {
@@ -83,6 +83,10 @@ function roomRef(roomId) {
 
 function playerRef(roomId) {
   return child(roomRef(roomId), `players/${clientId}`);
+}
+
+function playersRef(roomId) {
+  return child(roomRef(roomId), "players");
 }
 
 function messagesRef(roomId) {
@@ -576,6 +580,8 @@ async function joinOnlineRoom() {
 }
 
 async function leaveOnlineRoom() {
+  const leavingRoomId = onlineRoomId;
+
   if (onlineRoomRef && onlineRoomCallback) {
     off(onlineRoomRef, "value", onlineRoomCallback);
   }
@@ -584,8 +590,8 @@ async function leaveOnlineRoom() {
     await onDisconnect(onlinePlayerRef).cancel();
   }
 
-  if (onlineRoomId) {
-    await remove(playerRef(onlineRoomId));
+  if (leavingRoomId) {
+    await leaveRoomData(leavingRoomId);
   }
 
   onlineRoomId = "";
@@ -595,6 +601,24 @@ async function leaveOnlineRoom() {
   onlinePlayerRef = null;
   updateRoomInfo("");
   stopChat();
+}
+
+async function leaveRoomData(roomIdValue) {
+  const roomId = normalizeRoomId(roomIdValue);
+
+  await remove(playerRef(roomId));
+
+  const playersSnapshot = await get(playersRef(roomId));
+  const players = playersSnapshot.val() || {};
+
+  if (Object.keys(players).length === 0) {
+    await remove(roomRef(roomId));
+    return;
+  }
+
+  await update(roomRef(roomId), {
+    updatedAt: Date.now()
+  });
 }
 
 async function resetOnlineRoom() {
@@ -664,11 +688,14 @@ chatInput.addEventListener("keydown", (event) => {
   }
 });
 
-window.addEventListener("pagehide", () => {
+function handlePageExit() {
   if (onlineRoomId) {
-    remove(playerRef(onlineRoomId));
+    leaveRoomData(onlineRoomId);
   }
-});
+}
+
+window.addEventListener("pagehide", handlePageExit);
+window.addEventListener("beforeunload", handlePageExit);
 
 onlineControls.hidden = true;
 setChatEnabled(false);
