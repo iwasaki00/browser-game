@@ -16,7 +16,7 @@ import {
   set,
   update
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-import { firebaseConfig } from "../firebase-test/firebase-config.js?v=iwa-games-20260620";
+import { firebaseConfig } from "../_cmn_firebase/firebase-config.js?v=iwa-games-20260620";
 
 const BOARD_SIZE = 15;
 const EMPTY = "";
