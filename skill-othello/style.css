@@ -160,6 +160,36 @@ input {
   overflow-wrap: anywhere;
 }
 
+.online-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.online-status-grid div {
+  min-width: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.online-status-grid strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.96rem;
+  overflow-wrap: anywhere;
+}
+
+.online-hint {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #101418;
+  background: rgba(255, 209, 102, 0.94);
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .status-panel {
   padding: 12px;
   display: grid;
@@ -411,6 +441,10 @@ input {
 
   .online-actions {
     grid-template-columns: 1fr;
+  }
+
+  .online-status-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

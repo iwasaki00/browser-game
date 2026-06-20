@@ -22,6 +22,11 @@ const joinRoomButton = document.getElementById("joinRoomButton");
 const leaveRoomButton = document.getElementById("leaveRoomButton");
 const roomIdInput = document.getElementById("roomIdInput");
 const roomInfo = document.getElementById("roomInfo");
+const onlineConnectionText = document.getElementById("onlineConnectionText");
+const onlinePlayersText = document.getElementById("onlinePlayersText");
+const onlineColorText = document.getElementById("onlineColorText");
+const onlineTurnText = document.getElementById("onlineTurnText");
+const onlineHint = document.getElementById("onlineHint");
 const skillButtons = Array.from(document.querySelectorAll(".skill-button"));
 const skillCountElements = {
   bomb: document.getElementById("bombCount"),
@@ -506,6 +511,10 @@ async function handleOnlineMove(row, col) {
   }
 
   if (currentPlayer !== onlinePlayerColor || !canUseSelectedSkill()) {
+    message = currentPlayer !== onlinePlayerColor
+      ? "まだあなたの手番ではありません"
+      : "選択中のスキル石は残っていません";
+    renderStatus();
     return;
   }
 
@@ -550,6 +559,11 @@ async function handleOnlineMove(row, col) {
   if (result.committed && moveSkill !== NORMAL) {
     selectedSkill = NORMAL;
   }
+
+  if (!result.committed) {
+    message = "手を送信できませんでした。参加人数と手番を確認してください。";
+    renderStatus();
+  }
 }
 
 function handleCellClick(row, col) {
@@ -565,30 +579,85 @@ function updateRoomInfo(text = "") {
   roomInfo.textContent = text;
 }
 
+function updateOnlineDetails({
+  connection = "未接続",
+  players = "0/2",
+  color = "-",
+  turn = "-",
+  hint = "部屋を作るか、6桁の部屋IDを入力して参加してください。"
+} = {}) {
+  onlineConnectionText.textContent = connection;
+  onlinePlayersText.textContent = players;
+  onlineColorText.textContent = color;
+  onlineTurnText.textContent = turn;
+  onlineHint.textContent = hint;
+}
+
 function showOnlineError(error) {
   message = `オンライン接続エラー: ${error.message}`;
+  updateOnlineDetails({
+    connection: "エラー",
+    players: onlineRoomId ? "確認中" : "0/2",
+    color: onlinePlayerColor ? playerLabel(onlinePlayerColor) : "-",
+    turn: "-",
+    hint: `オンライン接続に失敗しました: ${error.message}`
+  });
   renderStatus();
 }
 
 function updateOnlineStatus(roomData) {
   const players = getPlayerList(roomData);
   const ownPlayer = roomData?.players?.[clientId];
+  const legalCount = onlinePlayerColor
+    ? getLegalMovesFor(board, onlinePlayerColor).length
+    : 0;
+  const lastMove = roomData.lastMove
+    ? `${playerLabel(roomData.lastMove.color)} ${roomData.lastMove.row + 1}行${roomData.lastMove.col + 1}列`
+    : "なし";
+
   updateRoomInfo(onlineRoomId
-    ? `部屋ID: ${onlineRoomId} / ${players.length}人参加 / あなた: ${onlinePlayerColor ? playerLabel(onlinePlayerColor) : "-"}`
+    ? `部屋ID: ${onlineRoomId} / 最終手: ${lastMove}`
     : "");
 
   if (!ownPlayer) {
     message = "部屋から退出しました";
+    updateOnlineDetails({
+      connection: "未参加",
+      players: `${players.length}/2`,
+      color: "-",
+      turn: "-",
+      hint: "この端末は部屋に参加していません。部屋を作るか、部屋IDで入り直してください。"
+    });
     return;
   }
 
   if (players.length < 2) {
     message = "相手の入室を待っています";
+    updateOnlineDetails({
+      connection: "待機中",
+      players: `${players.length}/2`,
+      color: playerLabel(onlinePlayerColor),
+      turn: `${playerLabel(roomData.currentPlayer || BLACK)}の手番`,
+      hint: `部屋ID ${onlineRoomId} を相手に共有してください。相手が入ると自動で開始します。`
+    });
     return;
   }
 
+  const isOwnTurn = roomData.currentPlayer === onlinePlayerColor;
+  const hint = isOwnTurn
+    ? `あなたの手番です。黄色の印が置ける場所です。置ける場所: ${legalCount}`
+    : `相手の手番です。相手の操作が終わると自動で盤面が更新されます。`;
+
+  updateOnlineDetails({
+    connection: roomData.gameOver ? "終了" : "対戦中",
+    players: `${players.length}/2`,
+    color: playerLabel(onlinePlayerColor),
+    turn: isOwnTurn ? "あなた" : "相手",
+    hint: roomData.gameOver ? (roomData.message || "ゲーム終了です。") : hint
+  });
+
   if (!roomData.gameOver) {
-    message = roomData.currentPlayer === onlinePlayerColor ? "あなたの手番です" : "相手の手番です";
+    message = isOwnTurn ? "あなたの手番です" : "相手の手番です";
   }
 }
 
@@ -638,6 +707,13 @@ async function createOnlineRoom() {
   await ensureFirebase();
   const roomId = generateRoomId();
   await leaveOnlineRoom();
+  updateOnlineDetails({
+    connection: "作成中",
+    players: "1/2",
+    color: "黒",
+    turn: "黒",
+    hint: "部屋を作成しています。"
+  });
 
   await firebaseTools.set(roomRef(roomId), {
     board: createInitialBoard(),
@@ -666,9 +742,23 @@ async function joinOnlineRoom() {
   await ensureFirebase();
   const roomId = normalizeRoomId(roomIdInput.value);
   roomIdInput.value = roomId;
+  updateOnlineDetails({
+    connection: "参加中",
+    players: "確認中",
+    color: "-",
+    turn: "-",
+    hint: "部屋を確認しています。"
+  });
 
   if (!/^\d{6}$/.test(roomId)) {
     message = "6桁の部屋IDを入力してください";
+    updateOnlineDetails({
+      connection: "未接続",
+      players: "0/2",
+      color: "-",
+      turn: "-",
+      hint: "6桁の部屋IDを入力してから「部屋に入る」を押してください。"
+    });
     renderStatus();
     return;
   }
@@ -676,6 +766,13 @@ async function joinOnlineRoom() {
   const snapshot = await firebaseTools.get(roomRef(roomId));
   if (!snapshot.exists()) {
     message = "部屋が見つかりません";
+    updateOnlineDetails({
+      connection: "未接続",
+      players: "0/2",
+      color: "-",
+      turn: "-",
+      hint: `部屋ID ${roomId} は見つかりませんでした。作成側の画面に表示されたIDを確認してください。`
+    });
     renderStatus();
     return;
   }
@@ -686,6 +783,13 @@ async function joinOnlineRoom() {
 
   if (!alreadyJoined && Object.keys(players).length >= 2) {
     message = "部屋が満員です";
+    updateOnlineDetails({
+      connection: "満員",
+      players: "2/2",
+      color: "-",
+      turn: "-",
+      hint: "この部屋にはすでに2人参加しています。別の部屋を作ってください。"
+    });
     renderStatus();
     return;
   }
@@ -725,6 +829,7 @@ async function leaveOnlineRoom() {
   onlineRoomCallback = null;
   onlinePlayerRef = null;
   updateRoomInfo("");
+  updateOnlineDetails();
 }
 
 async function leaveRoomData(roomIdValue) {

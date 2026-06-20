@@ -40,6 +40,25 @@
         <span>部屋ID</span>
         <input id="roomIdInput" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
       </label>
+      <div class="online-status-grid" aria-label="オンライン状況">
+        <div>
+          <span class="label">接続</span>
+          <strong id="onlineConnectionText">未接続</strong>
+        </div>
+        <div>
+          <span class="label">参加</span>
+          <strong id="onlinePlayersText">0/2</strong>
+        </div>
+        <div>
+          <span class="label">自分</span>
+          <strong id="onlineColorText">-</strong>
+        </div>
+        <div>
+          <span class="label">手番</span>
+          <strong id="onlineTurnText">-</strong>
+        </div>
+      </div>
+      <p id="onlineHint" class="online-hint">部屋を作るか、6桁の部屋IDを入力して参加してください。</p>
       <p id="roomInfo" class="room-info"></p>
     </section>
 
