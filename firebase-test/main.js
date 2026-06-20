@@ -11,7 +11,7 @@ import {
   runTransaction,
   update
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-import { firebaseConfig } from "./firebase-config.js";
+import { firebaseConfig } from "./firebase-config.js?v=iwa-games-20260620";
 
 const connectionStatus = document.querySelector("#connectionStatus");
 const roomState = document.querySelector("#roomState");
