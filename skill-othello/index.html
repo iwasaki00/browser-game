@@ -83,23 +83,61 @@
     <section class="skill-panel" aria-label="スキル石選択">
       <button class="skill-button active" type="button" data-skill="normal">
         <span class="skill-icon normal-icon"></span>
-        <span>通常石</span>
+        <span>通常石(∞)</span>
       </button>
       <button class="skill-button" type="button" data-skill="bomb">
         <span class="skill-icon bomb-icon"></span>
-        <span>爆弾石 <b id="bombCount">2</b></span>
+        <span>爆弾石(<b data-skill-count="bomb">2</b>)</span>
       </button>
       <button class="skill-button" type="button" data-skill="wall">
         <span class="skill-icon wall-icon"></span>
-        <span>壁石 <b id="wallCount">2</b></span>
+        <span>壁石(<b data-skill-count="wall">2</b>)</span>
       </button>
       <button class="skill-button" type="button" data-skill="convert">
         <span class="skill-icon convert-icon"></span>
-        <span>変換石 <b id="convertCount">1</b></span>
+        <span>変換石(<b data-skill-count="convert">1</b>)</span>
       </button>
+      <button class="skill-button" type="button" data-skill="timer">
+        <span class="skill-icon timer-icon">◷</span>
+        <span>時限石(<b data-skill-count="timer">2</b>)</span>
+      </button>
+      <button class="skill-button" type="button" data-skill="heavy">
+        <span class="skill-icon heavy-icon"></span>
+        <span>重石(<b data-skill-count="heavy">2</b>)</span>
+      </button>
+      <button class="skill-button" type="button" data-skill="trap">
+        <span class="skill-icon trap-icon"></span>
+        <span>トラップ石(<b data-skill-count="trap">2</b>)</span>
+      </button>
+    </section>
+
+    <button id="skillHelpButton" class="skill-help-button" type="button">スキル説明</button>
+
+    <section id="summaryPanel" class="summary-panel" aria-label="戦績サマリー" hidden>
+      <h2>戦績サマリー</h2>
+      <div id="summaryContent" class="summary-content"></div>
     </section>
   </main>
 
-  <script type="module" src="script.js?v=skill-othello-20260620-room-cleanup"></script>
+  <div id="skillModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="skillModalTitle" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="modal-content">
+      <header class="modal-header">
+        <h2 id="skillModalTitle">スキル説明</h2>
+        <button id="closeSkillModalButton" class="modal-close" type="button" aria-label="閉じる">×</button>
+      </header>
+      <div class="skill-descriptions">
+        <article><h3>通常石</h3><p>オセロの基本となる石</p></article>
+        <article><h3>爆弾石</h3><p>周囲8マスの敵石を反転</p></article>
+        <article><h3>壁石</h3><p>反転されない特殊石</p></article>
+        <article><h3>変換石</h3><p>8方向最初の敵石を変換</p></article>
+        <article><h3>時限石</h3><p>3ターン後に消滅する石</p></article>
+        <article><h3>重石</h3><p>2回攻撃されるまで反転しない</p></article>
+        <article><h3>トラップ石</h3><p>反転された時に周囲を巻き込む</p></article>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="script.js?v=skill-othello-20260620-new-skills"></script>
 </body>
 </html>

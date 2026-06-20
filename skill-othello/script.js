@@ -5,6 +5,15 @@ const NORMAL = "normal";
 const GAME_ID = "skill-othello";
 const PLAYER_STALE_MS = 45_000;
 const HEARTBEAT_MS = 15_000;
+const SKILLS = {
+  normal: { label: "通常石", initial: Infinity },
+  bomb: { label: "爆弾石", initial: 2 },
+  wall: { label: "壁石", initial: 2 },
+  convert: { label: "変換石", initial: 1 },
+  timer: { label: "時限石", initial: 2, remainingTurns: 3 },
+  heavy: { label: "重石", initial: 2, durability: 2 },
+  trap: { label: "トラップ石", initial: 2 }
+};
 const DIRECTIONS = [
   [-1, -1], [-1, 0], [-1, 1],
   [0, -1], [0, 1],
@@ -29,12 +38,15 @@ const onlineHint = document.getElementById("onlineHint");
 const chatMessagesElement = document.getElementById("chatMessages");
 const chatInput = document.getElementById("chatInput");
 const sendChatButton = document.getElementById("sendChatButton");
+const skillHelpButton = document.getElementById("skillHelpButton");
+const skillModal = document.getElementById("skillModal");
+const closeSkillModalButton = document.getElementById("closeSkillModalButton");
+const summaryPanel = document.getElementById("summaryPanel");
+const summaryContent = document.getElementById("summaryContent");
 const skillButtons = Array.from(document.querySelectorAll(".skill-button"));
-const skillCountElements = {
-  bomb: document.getElementById("bombCount"),
-  wall: document.getElementById("wallCount"),
-  convert: document.getElementById("convertCount")
-};
+const skillCountElements = Object.fromEntries(
+  Array.from(document.querySelectorAll("[data-skill-count]")).map((element) => [element.dataset.skillCount, element])
+);
 
 const clientId = crypto.randomUUID();
 
@@ -44,6 +56,7 @@ let selectedSkill = NORMAL;
 let gameOver = false;
 let message = "置ける場所を選んでください";
 let skillCounts = createInitialSkillCounts();
+let matchStats = createInitialMatchStats();
 let lastEffect = null;
 let onlineRoomId = "";
 let onlinePlayerColor = "";
@@ -78,8 +91,14 @@ async function ensureFirebase() {
   return firebaseLoadPromise;
 }
 
-function createCell(color = null, skill = null) {
-  return { color, skill };
+function createCell(color = null, skill = null, state = {}) {
+  return {
+    color,
+    skill,
+    remainingTurns: state.remainingTurns ?? null,
+    durability: state.durability ?? null,
+    owner: state.owner ?? null
+  };
 }
 
 function cloneBoard(source) {
@@ -98,7 +117,11 @@ function normalizeBoard(source) {
       const cell = source?.[row]?.[col];
       const color = cell?.color === BLACK || cell?.color === WHITE ? cell.color : null;
       const skill = color && cell?.skill ? cell.skill : color ? NORMAL : null;
-      normalized[row][col] = createCell(color, skill);
+      normalized[row][col] = createCell(color, skill, {
+        remainingTurns: skill === "timer" ? Math.max(1, Number(cell?.remainingTurns) || 3) : null,
+        durability: skill === "heavy" ? Math.max(1, Number(cell?.durability) || 2) : null,
+        owner: skill === "trap" ? cell?.owner || color : null
+      });
     }
   }
 
@@ -115,14 +138,31 @@ function createInitialBoard() {
 }
 
 function createInitialSkillCounts() {
+  const counts = Object.fromEntries(
+    Object.entries(SKILLS)
+      .filter(([skill]) => skill !== NORMAL)
+      .map(([skill, definition]) => [skill, definition.initial])
+  );
+  return { [BLACK]: { ...counts }, [WHITE]: { ...counts } };
+}
+
+function createInitialMatchStats() {
   return {
-    [BLACK]: { bomb: 2, wall: 2, convert: 1 },
-    [WHITE]: { bomb: 2, wall: 2, convert: 1 }
+    [BLACK]: { skillsUsed: 0, bombsTriggered: 0, trapsTriggered: 0 },
+    [WHITE]: { skillsUsed: 0, bombsTriggered: 0, trapsTriggered: 0 }
   };
 }
 
 function normalizeSkillCounts(value) {
   const fresh = createInitialSkillCounts();
+  return {
+    [BLACK]: { ...fresh[BLACK], ...(value?.[BLACK] || {}) },
+    [WHITE]: { ...fresh[WHITE], ...(value?.[WHITE] || {}) }
+  };
+}
+
+function normalizeMatchStats(value) {
+  const fresh = createInitialMatchStats();
   return {
     [BLACK]: { ...fresh[BLACK], ...(value?.[BLACK] || {}) },
     [WHITE]: { ...fresh[WHITE], ...(value?.[WHITE] || {}) }
@@ -275,16 +315,111 @@ function countStones(targetBoard) {
   }, { black: 0, white: 0 });
 }
 
-function applyStandardFlips(targetBoard, flips, color) {
-  for (const [row, col] of flips) {
-    if (targetBoard[row][col].skill !== "wall") {
-      targetBoard[row][col] = createCell(color, NORMAL);
+function applyTrapEffect(targetBoard, row, col, owner) {
+  const enemy = opponentOf(owner);
+
+  for (let rowDelta = -1; rowDelta <= 1; rowDelta += 1) {
+    for (let colDelta = -1; colDelta <= 1; colDelta += 1) {
+      if (rowDelta === 0 && colDelta === 0) {
+        continue;
+      }
+
+      const targetRow = row + rowDelta;
+      const targetCol = col + colDelta;
+      if (!isInside(targetRow, targetCol)) {
+        continue;
+      }
+
+      const cell = targetBoard[targetRow][targetCol];
+      if (cell.color === enemy && cell.skill !== "wall") {
+        targetBoard[targetRow][targetCol] = createCell(owner, NORMAL);
+      }
     }
   }
 }
 
-function applyBombEffect(targetBoard, row, col, color) {
+function applyStandardFlips(targetBoard, flips, color, stats) {
+  const triggeredTraps = [];
+
+  for (const [row, col] of flips) {
+    const cell = targetBoard[row][col];
+    if (cell.skill === "wall") {
+      continue;
+    }
+
+    if (cell.skill === "heavy") {
+      if ((cell.durability || 2) > 1) {
+        targetBoard[row][col] = createCell(cell.color, "heavy", {
+          durability: (cell.durability || 2) - 1
+        });
+      } else {
+        targetBoard[row][col] = createCell(color, "heavy", { durability: 2 });
+      }
+      continue;
+    }
+
+    if (cell.skill === "timer") {
+      targetBoard[row][col] = createCell(color, "timer", {
+        remainingTurns: cell.remainingTurns || 1
+      });
+      continue;
+    }
+
+    if (cell.skill === "trap") {
+      triggeredTraps.push({ row, col, owner: cell.owner || cell.color });
+    }
+
+    targetBoard[row][col] = createCell(color, NORMAL);
+  }
+
+  for (const trap of triggeredTraps) {
+    applyTrapEffect(targetBoard, trap.row, trap.col, trap.owner);
+    stats[trap.owner].trapsTriggered += 1;
+  }
+
+  return triggeredTraps;
+}
+
+function captureCellBySkillEffect(targetBoard, row, col, color, stats) {
+  const cell = targetBoard[row][col];
+  if (cell.skill === "wall") {
+    return null;
+  }
+
+  if (cell.skill === "heavy") {
+    if ((cell.durability || 2) > 1) {
+      targetBoard[row][col] = createCell(cell.color, "heavy", {
+        durability: (cell.durability || 2) - 1
+      });
+    } else {
+      targetBoard[row][col] = createCell(color, "heavy", { durability: 2 });
+    }
+    return null;
+  }
+
+  if (cell.skill === "timer") {
+    targetBoard[row][col] = createCell(color, "timer", {
+      remainingTurns: cell.remainingTurns || 1
+    });
+    return null;
+  }
+
+  const triggeredTrap = cell.skill === "trap"
+    ? { row, col, owner: cell.owner || cell.color }
+    : null;
+  targetBoard[row][col] = createCell(color, NORMAL);
+
+  if (triggeredTrap) {
+    applyTrapEffect(targetBoard, row, col, triggeredTrap.owner);
+    stats[triggeredTrap.owner].trapsTriggered += 1;
+  }
+
+  return triggeredTrap;
+}
+
+function applyBombEffect(targetBoard, row, col, color, stats) {
   const opponent = opponentOf(color);
+  const triggeredTraps = [];
 
   for (let rowDelta = -1; rowDelta <= 1; rowDelta += 1) {
     for (let colDelta = -1; colDelta <= 1; colDelta += 1) {
@@ -300,14 +435,20 @@ function applyBombEffect(targetBoard, row, col, color) {
 
       const cell = targetBoard[targetRow][targetCol];
       if (cell.color === opponent && cell.skill !== "wall") {
-        targetBoard[targetRow][targetCol] = createCell(color, NORMAL);
+        const trap = captureCellBySkillEffect(targetBoard, targetRow, targetCol, color, stats);
+        if (trap) {
+          triggeredTraps.push(trap);
+        }
       }
     }
   }
+
+  return triggeredTraps;
 }
 
-function applyConvertEffect(targetBoard, row, col, color) {
+function applyConvertEffect(targetBoard, row, col, color, stats) {
   const opponent = opponentOf(color);
+  const triggeredTraps = [];
 
   for (const [rowStep, colStep] of DIRECTIONS) {
     let targetRow = row + rowStep;
@@ -317,7 +458,10 @@ function applyConvertEffect(targetBoard, row, col, color) {
       const cell = targetBoard[targetRow][targetCol];
       if (cell.color === opponent) {
         if (cell.skill !== "wall") {
-          targetBoard[targetRow][targetCol] = createCell(color, NORMAL);
+          const trap = captureCellBySkillEffect(targetBoard, targetRow, targetCol, color, stats);
+          if (trap) {
+            triggeredTraps.push(trap);
+          }
         }
         break;
       }
@@ -326,15 +470,56 @@ function applyConvertEffect(targetBoard, row, col, color) {
       targetCol += colStep;
     }
   }
+
+  return triggeredTraps;
 }
 
-function applySkillEffect(targetBoard, row, col, color, skill) {
+function applySkillEffect(targetBoard, row, col, color, skill, stats) {
+  let triggeredTraps = [];
   if (skill === "bomb") {
-    applyBombEffect(targetBoard, row, col, color);
+    triggeredTraps = applyBombEffect(targetBoard, row, col, color, stats);
+    stats[color].bombsTriggered += 1;
   }
   if (skill === "convert") {
-    applyConvertEffect(targetBoard, row, col, color);
+    triggeredTraps = applyConvertEffect(targetBoard, row, col, color, stats);
   }
+  return triggeredTraps;
+}
+
+function createSkillCell(color, skill) {
+  if (skill === "timer") {
+    return createCell(color, skill, { remainingTurns: SKILLS.timer.remainingTurns });
+  }
+  if (skill === "heavy") {
+    return createCell(color, skill, { durability: SKILLS.heavy.durability });
+  }
+  if (skill === "trap") {
+    return createCell(color, skill, { owner: color });
+  }
+  return createCell(color, skill);
+}
+
+function countdownTimers(targetBoard, skippedCell = null) {
+  const expired = [];
+
+  for (let row = 0; row < SIZE; row += 1) {
+    for (let col = 0; col < SIZE; col += 1) {
+      const cell = targetBoard[row][col];
+      if (cell.skill !== "timer" || (skippedCell?.row === row && skippedCell?.col === col)) {
+        continue;
+      }
+
+      const remainingTurns = (cell.remainingTurns || 1) - 1;
+      if (remainingTurns <= 0) {
+        targetBoard[row][col] = createCell();
+        expired.push({ row, col });
+      } else {
+        targetBoard[row][col] = createCell(cell.color, "timer", { remainingTurns });
+      }
+    }
+  }
+
+  return expired;
 }
 
 function applyMoveToState(state, row, col, color, skill) {
@@ -345,18 +530,21 @@ function applyMoveToState(state, row, col, color, skill) {
 
   const nextBoard = cloneBoard(state.board);
   const nextSkillCounts = normalizeSkillCounts(state.skillCounts);
-  nextBoard[row][col] = createCell(color, skill);
-  applyStandardFlips(nextBoard, flips, color);
-  applySkillEffect(nextBoard, row, col, color, skill);
+  const nextStats = normalizeMatchStats(state.matchStats);
+  nextBoard[row][col] = createSkillCell(color, skill);
+  const triggeredTraps = applyStandardFlips(nextBoard, flips, color, nextStats);
+  triggeredTraps.push(...applySkillEffect(nextBoard, row, col, color, skill, nextStats));
+  const expiredTimers = countdownTimers(nextBoard, skill === "timer" ? { row, col } : null);
 
   if (skill !== NORMAL) {
     nextSkillCounts[color][skill] -= 1;
+    nextStats[color].skillsUsed += 1;
   }
 
   const nextPlayer = opponentOf(color);
-  const nextLegal = getLegalMovesFor(nextBoard, nextPlayer);
-  const currentLegal = getLegalMovesFor(nextBoard, color);
-  const counts = countStones(nextBoard);
+  let nextLegal = getLegalMovesFor(nextBoard, nextPlayer);
+  let currentLegal = getLegalMovesFor(nextBoard, color);
+  let counts = countStones(nextBoard);
   let nextMessage = `${playerLabel(nextPlayer)}の手番です`;
   let nextCurrentPlayer = nextPlayer;
   let nextGameOver = false;
@@ -369,17 +557,39 @@ function applyMoveToState(state, row, col, color, skill) {
       nextMessage = `${counts.black > counts.white ? "黒" : "白"}の勝ちです`;
     }
   } else if (nextLegal.length === 0) {
-    nextCurrentPlayer = color;
-    nextMessage = `${playerLabel(nextPlayer)}はパス。${playerLabel(color)}の手番です`;
+    expiredTimers.push(...countdownTimers(nextBoard));
+    nextLegal = getLegalMovesFor(nextBoard, nextPlayer);
+    currentLegal = getLegalMovesFor(nextBoard, color);
+    counts = countStones(nextBoard);
+
+    if (nextLegal.length === 0 && currentLegal.length === 0) {
+      nextGameOver = true;
+      nextMessage = counts.black === counts.white
+        ? "引き分けです"
+        : `${counts.black > counts.white ? "黒" : "白"}の勝ちです`;
+    } else if (currentLegal.length > 0) {
+      nextCurrentPlayer = color;
+      nextMessage = `${playerLabel(nextPlayer)}はパス。${playerLabel(color)}の手番です`;
+    } else {
+      nextCurrentPlayer = nextPlayer;
+      nextMessage = `${playerLabel(nextPlayer)}はパス後、盤面変化でもう一度手番です`;
+    }
   }
 
   return {
     board: nextBoard,
     currentPlayer: nextCurrentPlayer,
     skillCounts: nextSkillCounts,
+    matchStats: nextStats,
     gameOver: nextGameOver,
     message: nextMessage,
-    lastEffect: skill !== NORMAL ? { row, col, skill, at: Date.now() } : null
+    lastEffect: triggeredTraps.length > 0
+      ? { ...triggeredTraps[triggeredTraps.length - 1], skill: "trap-trigger", at: Date.now() }
+      : expiredTimers.length > 0
+        ? { ...expiredTimers[expiredTimers.length - 1], skill: "timer-expire", at: Date.now() }
+        : skill !== NORMAL && skill !== "trap"
+          ? { row, col, skill, at: Date.now() }
+          : null
   };
 }
 
@@ -405,14 +615,15 @@ function updateSkillButtons() {
     button.disabled = skill !== NORMAL && (!isHumanTurn() || (counts[skill] || 0) <= 0);
   }
 
-  skillCountElements.bomb.textContent = counts.bomb ?? 0;
-  skillCountElements.wall.textContent = counts.wall ?? 0;
-  skillCountElements.convert.textContent = counts.convert ?? 0;
+  for (const [skill, element] of Object.entries(skillCountElements)) {
+    element.textContent = counts[skill] ?? 0;
+  }
 }
 
 function renderBoard() {
   const legalMoves = isHumanTurn() && !gameOver ? getLegalMovesFor(board, currentPlayer) : [];
   const legalKeys = new Set(legalMoves.map((move) => `${move.row},${move.col}`));
+  const viewerColor = isOnlineMode() ? onlinePlayerColor : BLACK;
   boardElement.innerHTML = "";
 
   for (let row = 0; row < SIZE; row += 1) {
@@ -429,14 +640,46 @@ function renderBoard() {
       }
 
       if (lastEffect?.row === row && lastEffect?.col === col) {
-        cellButton.classList.add(lastEffect.skill === "bomb" ? "effect-bomb" : "effect-convert");
+        const effectClass = {
+          bomb: "effect-bomb",
+          convert: "effect-convert",
+          "trap-trigger": "effect-trap",
+          "timer-expire": "effect-timer-expire"
+        }[lastEffect.skill];
+        if (effectClass) {
+          cellButton.classList.add(effectClass);
+        }
       }
 
       const cell = board[row][col];
       if (cell.color) {
         const stone = document.createElement("span");
-        stone.className = `stone ${cell.color} ${cell.skill || NORMAL}`;
+        const visibleSkill = cell.skill === "trap" && cell.owner !== viewerColor ? NORMAL : cell.skill || NORMAL;
+        stone.className = `stone ${cell.color} ${visibleSkill}`;
         stone.setAttribute("aria-hidden", "true");
+
+        if (visibleSkill === "timer") {
+          const timer = document.createElement("span");
+          timer.className = "timer-value";
+          timer.textContent = cell.remainingTurns;
+          stone.appendChild(timer);
+        }
+
+        if (visibleSkill === "heavy") {
+          const durability = document.createElement("span");
+          durability.className = "durability-value";
+          durability.textContent = `×${cell.durability || 2}`;
+          stone.classList.toggle("cracked", cell.durability === 1);
+          stone.appendChild(durability);
+        }
+
+        if (visibleSkill === "trap") {
+          const trap = document.createElement("span");
+          trap.className = "trap-mark";
+          trap.textContent = "罠";
+          stone.appendChild(trap);
+        }
+
         cellButton.appendChild(stone);
       }
 
@@ -447,9 +690,32 @@ function renderBoard() {
   }
 }
 
+function renderSummary() {
+  summaryPanel.hidden = !gameOver;
+  if (!gameOver) {
+    summaryContent.innerHTML = "";
+    return;
+  }
+
+  summaryContent.innerHTML = "";
+  for (const color of [BLACK, WHITE]) {
+    const stats = matchStats[color];
+    const item = document.createElement("div");
+    item.className = "summary-item";
+    item.innerHTML = `
+      <strong>${playerLabel(color)}</strong>
+      <span>使用スキル ${stats.skillsUsed}</span>
+      <span>爆弾発動 ${stats.bombsTriggered}</span>
+      <span>トラップ発動 ${stats.trapsTriggered}</span>
+    `;
+    summaryContent.appendChild(item);
+  }
+}
+
 function renderStatus() {
   messageText.textContent = message;
   updateSkillButtons();
+  renderSummary();
 }
 
 function render() {
@@ -461,6 +727,7 @@ function setLocalState(nextState) {
   board = nextState.board;
   currentPlayer = nextState.currentPlayer;
   skillCounts = normalizeSkillCounts(nextState.skillCounts);
+  matchStats = normalizeMatchStats(nextState.matchStats);
   gameOver = nextState.gameOver;
   message = nextState.message;
   lastEffect = nextState.lastEffect;
@@ -474,6 +741,7 @@ function resetLocalGame() {
   gameOver = false;
   message = "置ける場所を選んでください";
   skillCounts = createInitialSkillCounts();
+  matchStats = createInitialMatchStats();
   lastEffect = null;
   render();
 }
@@ -503,7 +771,7 @@ function runCpuTurn() {
       return;
     }
 
-    const nextState = applyMoveToState({ board, currentPlayer, skillCounts }, move.row, move.col, WHITE, NORMAL);
+    const nextState = applyMoveToState({ board, currentPlayer, skillCounts, matchStats }, move.row, move.col, WHITE, NORMAL);
     if (nextState) {
       setLocalState(nextState);
       if (!gameOver && currentPlayer === WHITE) {
@@ -519,7 +787,7 @@ function handleLocalMove(row, col) {
   }
 
   const moveSkill = selectedSkill;
-  const nextState = applyMoveToState({ board, currentPlayer, skillCounts }, row, col, BLACK, moveSkill);
+  const nextState = applyMoveToState({ board, currentPlayer, skillCounts, matchStats }, row, col, BLACK, moveSkill);
   if (!nextState) {
     return;
   }
@@ -566,7 +834,8 @@ async function handleOnlineMove(row, col) {
     const nextState = applyMoveToState({
       board: normalizeBoard(roomData.board || createInitialBoard()),
       currentPlayer: roomData.currentPlayer || BLACK,
-      skillCounts: counts
+      skillCounts: counts,
+      matchStats: normalizeMatchStats(roomData.matchStats)
     }, row, col, onlinePlayerColor, moveSkill);
 
     if (!nextState) {
@@ -578,6 +847,7 @@ async function handleOnlineMove(row, col) {
       board: nextState.board,
       currentPlayer: nextState.currentPlayer,
       skillCounts: nextState.skillCounts,
+      matchStats: nextState.matchStats,
       gameOver: nextState.gameOver,
       message: nextState.message,
       lastEffect: nextState.lastEffect,
@@ -846,6 +1116,7 @@ async function subscribeOnlineRoom(roomId) {
     board = normalizeBoard(roomData.board || createInitialBoard());
     currentPlayer = roomData.currentPlayer || BLACK;
     skillCounts = normalizeSkillCounts(roomData.skillCounts);
+    matchStats = normalizeMatchStats(roomData.matchStats);
     gameOver = Boolean(roomData.gameOver);
     message = roomData.message || "オンライン対戦中です";
     lastEffect = roomData.lastEffect || null;
@@ -875,6 +1146,7 @@ async function createOnlineRoom() {
     board: createInitialBoard(),
     currentPlayer: BLACK,
     skillCounts: createInitialSkillCounts(),
+    matchStats: createInitialMatchStats(),
     gameOver: false,
     message: "相手の入室を待っています",
     lastEffect: null,
@@ -1029,6 +1301,7 @@ async function resetOnlineRoom() {
     board: createInitialBoard(),
     currentPlayer: BLACK,
     skillCounts: createInitialSkillCounts(),
+    matchStats: createInitialMatchStats(),
     gameOver: false,
     message: "黒の手番です",
     lastEffect: null,
@@ -1041,6 +1314,18 @@ function handlePageExit() {
   if (onlineRoomId) {
     leaveRoomData(onlineRoomId);
   }
+}
+
+function openSkillModal() {
+  skillModal.hidden = false;
+  document.body.classList.add("modal-open");
+  closeSkillModalButton.focus();
+}
+
+function closeSkillModal() {
+  skillModal.hidden = true;
+  document.body.classList.remove("modal-open");
+  skillHelpButton.focus();
 }
 
 modeSelect.addEventListener("change", async () => {
@@ -1075,6 +1360,18 @@ sendChatButton.addEventListener("click", () => {
 chatInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     sendChatMessage().catch(showOnlineError);
+  }
+});
+skillHelpButton.addEventListener("click", openSkillModal);
+closeSkillModalButton.addEventListener("click", closeSkillModal);
+skillModal.addEventListener("click", (event) => {
+  if (event.target.matches("[data-close-modal]")) {
+    closeSkillModal();
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !skillModal.hidden) {
+    closeSkillModal();
   }
 });
 leaveRoomButton.addEventListener("click", async () => {
