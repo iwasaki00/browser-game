@@ -33,6 +33,17 @@ let currentRoomId = "";
 let currentRoomRef = null;
 let currentPlayerRef = null;
 let currentRoomCallback = null;
+let latestRoomData = null;
+let debugState = {
+  firebaseStatus: "Firebase初期化成功",
+  roomStatus: "部屋未参加",
+  inputRoomId: "",
+  normalizedRoomId: "",
+  refPath: "",
+  snapshotExists: null,
+  snapshotValue: null,
+  error: ""
+};
 
 const formatDisplayTime = (date) =>
   new Intl.DateTimeFormat("ja-JP", {
@@ -44,19 +55,45 @@ const updateLastUpdated = () => {
   lastUpdated.textContent = formatDisplayTime(new Date());
 };
 
+const renderDebug = () => {
+  debugData.textContent = JSON.stringify({
+    現在のFirebase状態: debugState.firebaseStatus,
+    現在の部屋状態: debugState.roomStatus,
+    入力された部屋ID: debugState.inputRoomId,
+    normalize後の部屋ID: debugState.normalizedRoomId,
+    実際に参照したパス: debugState.refPath,
+    "snapshot.exists()": debugState.snapshotExists,
+    "snapshot.val()": debugState.snapshotValue,
+    エラー内容: debugState.error,
+    roomData: latestRoomData
+  }, null, 2);
+};
+
 const setFirebaseStatus = (message, state) => {
   connectionStatus.textContent = message;
   connectionStatus.className = `status ${state}`;
+  debugState.firebaseStatus = message;
+  renderDebug();
 };
 
 const setRoomState = (message, state) => {
   roomState.textContent = message;
   roomState.className = `status ${state}`;
+  debugState.roomStatus = message;
+  renderDebug();
 };
 
 const setMessage = (message, state = "") => {
   roomStatusMessage.textContent = message;
   roomStatusMessage.className = `message ${state}`;
+};
+
+const setDebugState = (nextState) => {
+  debugState = {
+    ...debugState,
+    ...nextState
+  };
+  renderDebug();
 };
 
 const setBusy = (busy) => {
@@ -91,7 +128,8 @@ const resetRoomView = () => {
   participantCount.textContent = "0 / 2";
   playerRole.textContent = "-";
   opponentStatus.textContent = "未入室";
-  debugData.textContent = "{}";
+  latestRoomData = null;
+  renderDebug();
   leaveRoomButton.disabled = true;
 };
 
@@ -134,6 +172,7 @@ const resetCurrentRoomState = () => {
 
 const subscribeRoom = async (roomIdValue) => {
   const roomId = normalizeRoomId(roomIdValue);
+  const roomPath = getRoomPath(roomId);
 
   detachRoomListener();
 
@@ -141,16 +180,28 @@ const subscribeRoom = async (roomIdValue) => {
   currentRoomRef = getRoomRef(roomId);
   currentRoomIdView.textContent = roomId;
   leaveRoomButton.disabled = false;
+  setDebugState({
+    normalizedRoomId: roomId,
+    refPath: roomPath,
+    error: ""
+  });
 
   await registerDisconnectCleanup(roomId);
 
   currentRoomCallback = (snapshot) => {
     const roomData = snapshot.val();
+    latestRoomData = roomData;
     const players = getPlayerList(roomData);
     const ownPlayer = roomData?.players?.[playerId];
     const opponent = players.find(([id]) => id !== playerId)?.[1];
 
-    debugData.textContent = JSON.stringify(roomData ?? null, null, 2);
+    setDebugState({
+      normalizedRoomId: roomId,
+      refPath: roomPath,
+      snapshotExists: snapshot.exists(),
+      snapshotValue: roomData,
+      error: ""
+    });
     participantCount.textContent = `${players.length} / 2`;
     playerRole.textContent = ownPlayer ? `プレイヤー${ownPlayer.slot}` : "-";
     opponentStatus.textContent = opponent ? `プレイヤー${opponent.slot} が入室中` : "相手待機中";
@@ -163,15 +214,16 @@ const subscribeRoom = async (roomIdValue) => {
       return;
     }
 
-    setFirebaseStatus("Firebase接続成功", "success");
+    setFirebaseStatus("Realtime Database読み込み成功", "success");
     setRoomState("部屋参加中", "success");
     setMessage(opponent ? "相手が入室しました。" : "相手の入室を待っています。");
   };
 
-  console.log("[room watch] refPath:", getRoomPath(roomId));
+  console.log("[room watch] refPath:", roomPath);
 
   onValue(currentRoomRef, currentRoomCallback, (error) => {
-    setFirebaseStatus("Firebase接続失敗", "error");
+    setFirebaseStatus("Realtime Database読み込み失敗", "error");
+    setDebugState({ error: error.message });
     setMessage(error.message, "error");
     updateLastUpdated();
   });
@@ -205,7 +257,7 @@ const createRoomWithId = async (roomIdValue) => {
 
 const createRoom = async () => {
   setBusy(true);
-  setFirebaseStatus("Firebase接続成功", "success");
+  setFirebaseStatus("Firebase初期化成功", "success");
   setRoomState("部屋作成中", "pending");
   setMessage("部屋を作成しています。");
 
@@ -219,6 +271,16 @@ const createRoom = async () => {
       if (created) {
         roomIdInput.value = roomId;
         currentRoomIdView.textContent = roomId;
+        setFirebaseStatus("Realtime Database書き込み成功", "success");
+        setRoomState("部屋作成成功", "success");
+        setDebugState({
+          inputRoomId: roomId,
+          normalizedRoomId: roomId,
+          refPath: getRoomPath(roomId),
+          snapshotExists: null,
+          snapshotValue: null,
+          error: ""
+        });
         console.log("[room create] roomId:", roomId);
         console.log("[room create] refPath:", getRoomPath(roomId));
         await subscribeRoom(roomId);
@@ -231,6 +293,7 @@ const createRoom = async () => {
   } catch (error) {
     setFirebaseStatus("Firebase接続失敗", "error");
     setRoomState("部屋未参加", "pending");
+    setDebugState({ error: error.message });
     setMessage(error.message, "error");
     updateLastUpdated();
   } finally {
@@ -243,6 +306,15 @@ const verifyRoomExists = async (inputValue) => {
   const roomPath = getRoomPath(roomId);
   const snapshot = await get(getRoomRef(roomId));
 
+  setFirebaseStatus("Realtime Database読み込み成功", "success");
+  setDebugState({
+    inputRoomId: inputValue,
+    normalizedRoomId: roomId,
+    refPath: roomPath,
+    snapshotExists: snapshot.exists(),
+    snapshotValue: snapshot.val(),
+    error: ""
+  });
   logJoinDebug({ inputValue, roomId, roomPath, snapshot });
 
   return {
@@ -256,15 +328,24 @@ const joinRoom = async () => {
   const inputValue = roomIdInput.value;
   const roomId = normalizeRoomId(inputValue);
   roomIdInput.value = roomId;
+  setDebugState({
+    inputRoomId: inputValue,
+    normalizedRoomId: roomId,
+    refPath: isValidRoomId(roomId) ? getRoomPath(roomId) : "",
+    snapshotExists: null,
+    snapshotValue: null,
+    error: ""
+  });
 
   if (!isValidRoomId(roomId)) {
     setRoomState("部屋未参加", "pending");
+    setDebugState({ error: "6桁の数字だけで部屋IDを入力してください。" });
     setMessage("6桁の数字だけで部屋IDを入力してください。", "warning");
     return;
   }
 
   setBusy(true);
-  setFirebaseStatus("Firebase接続成功", "success");
+  setFirebaseStatus("Firebase初期化成功", "success");
   setRoomState("部屋確認中", "pending");
   setMessage("部屋を確認しています。");
 
@@ -274,13 +355,11 @@ const joinRoom = async () => {
     const verification = await verifyRoomExists(inputValue);
 
     if (!verification.snapshot.exists()) {
-      setRoomState("部屋が見つからない", "error");
+      setRoomState("部屋未発見", "error");
+      setDebugState({
+        error: `部屋が見つかりません。参照パス: ${verification.roomPath}`
+      });
       setMessage(`部屋が見つかりません。参照パス: ${verification.roomPath}`, "error");
-      debugData.textContent = JSON.stringify({
-        requestedPath: verification.roomPath,
-        exists: false,
-        value: null
-      }, null, 2);
       updateLastUpdated();
       return;
     }
@@ -318,14 +397,20 @@ const joinRoom = async () => {
     });
 
     if (!result.committed) {
-      throw new Error(transactionError || "部屋への参加に失敗しました。");
+      setRoomState("部屋参加失敗", "error");
+      setDebugState({ error: transactionError || "部屋への参加に失敗しました。" });
+      setMessage(transactionError || "部屋への参加に失敗しました。", "error");
+      updateLastUpdated();
+      return;
     }
 
+    setFirebaseStatus("Realtime Database書き込み成功", "success");
     await subscribeRoom(roomId);
     setMessage(`部屋に参加しました。参照パス: ${getRoomPath(roomId)}`);
   } catch (error) {
     setFirebaseStatus("Firebase接続失敗", "error");
     setRoomState("部屋未参加", "pending");
+    setDebugState({ error: error.message });
     setMessage(error.message, "error");
     updateLastUpdated();
   } finally {
@@ -370,12 +455,14 @@ const leaveCurrentRoom = async () => {
 const leaveRoom = async () => {
   try {
     await leaveCurrentRoom();
-    setFirebaseStatus("Firebase接続成功", "success");
+    setFirebaseStatus("Realtime Database書き込み成功", "success");
     setRoomState("部屋未参加", "pending");
+    setDebugState({ error: "" });
     setMessage("部屋から退出しました。");
     updateLastUpdated();
   } catch (error) {
     setFirebaseStatus("Firebase接続失敗", "error");
+    setDebugState({ error: error.message });
     setMessage(error.message, "error");
     updateLastUpdated();
   }
@@ -401,6 +488,6 @@ window.addEventListener("pagehide", () => {
   }
 });
 
-setFirebaseStatus("Firebase接続成功", "success");
+setFirebaseStatus("Firebase初期化成功", "success");
 setRoomState("部屋未参加", "pending");
 resetRoomView();
