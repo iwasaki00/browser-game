@@ -29,8 +29,21 @@
           <select id="mode">
             <option value="pvp">2人対戦</option>
             <option value="cpu">CPU 対戦</option>
+            <option value="online">オンライン対戦</option>
           </select>
         </label>
+        <div id="onlineControls" class="online-controls" hidden>
+          <div class="room-row">
+            <button id="createRoomButton" type="button">部屋作成</button>
+            <button id="joinRoomButton" type="button">部屋参加</button>
+          </div>
+          <label class="mode-picker">
+            <span>部屋ID</span>
+            <input id="roomIdInput" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
+          </label>
+          <button id="leaveRoomButton" type="button">退出</button>
+          <p id="roomInfo" class="room-info"></p>
+        </div>
         <button id="resetButton" type="button">新しく始める</button>
       </div>
 
@@ -57,6 +70,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

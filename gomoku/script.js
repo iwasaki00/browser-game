@@ -1,3 +1,19 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {
+  child,
+  get,
+  getDatabase,
+  off,
+  onDisconnect,
+  onValue,
+  ref,
+  remove,
+  runTransaction,
+  set,
+  update
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { firebaseConfig } from "../firebase-test/firebase-config.js";
+
 const BOARD_SIZE = 15;
 const EMPTY = "";
 const BLACK = "black";
@@ -8,26 +24,90 @@ const DIRECTIONS = [
   [1, 1],
   [1, -1],
 ];
+const ROOM_ROOT = "gomokuRooms";
 
 const boardElement = document.getElementById("board");
 const statusElement = document.getElementById("status");
 const modeElement = document.getElementById("mode");
 const resetButton = document.getElementById("resetButton");
+const onlineControls = document.getElementById("onlineControls");
+const createRoomButton = document.getElementById("createRoomButton");
+const joinRoomButton = document.getElementById("joinRoomButton");
+const leaveRoomButton = document.getElementById("leaveRoomButton");
+const roomIdInput = document.getElementById("roomIdInput");
+const roomInfoElement = document.getElementById("roomInfo");
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const clientId = crypto.randomUUID();
 
 let board = [];
 let currentPlayer = BLACK;
 let gameOver = false;
+let winningLine = null;
+let onlineRoomId = "";
+let onlinePlayerColor = "";
+let onlineRoomRef = null;
+let onlineRoomCallback = null;
+let onlinePlayerRef = null;
 
 function createEmptyBoard() {
   return Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(EMPTY));
+}
+
+function normalizeRoomId(value) {
+  return String(value).trim().replace(/[０-９]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) - 0xfee0)
+  );
+}
+
+function generateRoomId() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function roomPath(roomId) {
+  return `${ROOM_ROOT}/${roomId}`;
+}
+
+function roomRef(roomId) {
+  return ref(db, roomPath(roomId));
+}
+
+function playerRef(roomId) {
+  return child(roomRef(roomId), `players/${clientId}`);
 }
 
 function playerLabel(player) {
   return player === BLACK ? "黒" : "白";
 }
 
+function colorForSlot(slot) {
+  return slot === 1 ? BLACK : WHITE;
+}
+
 function updateStatus(message) {
   statusElement.textContent = message;
+}
+
+function updateRoomInfo(message = "") {
+  if (!roomInfoElement) {
+    return;
+  }
+
+  roomInfoElement.textContent = message;
+}
+
+function getPlayers(roomData) {
+  return roomData?.players || {};
+}
+
+function getPlayerList(roomData) {
+  return Object.entries(getPlayers(roomData));
+}
+
+function getAvailableSlot(players) {
+  const usedSlots = new Set(Object.values(players).map((player) => player.slot));
+  return usedSlots.has(1) ? 2 : 1;
 }
 
 function renderBoard() {
@@ -40,6 +120,11 @@ function renderBoard() {
       cell.className = "cell";
       cell.setAttribute("role", "gridcell");
       cell.setAttribute("aria-label", `${row + 1}行 ${col + 1}列`);
+
+      const isWinningCell = winningLine?.some(([winRow, winCol]) => winRow === row && winCol === col);
+      if (isWinningCell) {
+        cell.classList.add("winning");
+      }
 
       const stone = board[row][col];
       if (stone !== EMPTY) {
@@ -60,12 +145,12 @@ function isInsideBoard(row, col) {
   return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
 }
 
-function countDirection(row, col, rowStep, colStep, player) {
+function countDirectionOn(targetBoard, row, col, rowStep, colStep, player) {
   let count = 0;
   let nextRow = row + rowStep;
   let nextCol = col + colStep;
 
-  while (isInsideBoard(nextRow, nextCol) && board[nextRow][nextCol] === player) {
+  while (isInsideBoard(nextRow, nextCol) && targetBoard[nextRow][nextCol] === player) {
     count += 1;
     nextRow += rowStep;
     nextCol += colStep;
@@ -74,10 +159,14 @@ function countDirection(row, col, rowStep, colStep, player) {
   return count;
 }
 
-function getWinningLine(row, col, player) {
+function countDirection(row, col, rowStep, colStep, player) {
+  return countDirectionOn(board, row, col, rowStep, colStep, player);
+}
+
+function getWinningLineOn(targetBoard, row, col, player) {
   for (const [rowStep, colStep] of DIRECTIONS) {
-    const backward = countDirection(row, col, -rowStep, -colStep, player);
-    const forward = countDirection(row, col, rowStep, colStep, player);
+    const backward = countDirectionOn(targetBoard, row, col, -rowStep, -colStep, player);
+    const forward = countDirectionOn(targetBoard, row, col, rowStep, colStep, player);
 
     if (backward + forward + 1 >= 5) {
       const startOffset = Math.min(backward, 4);
@@ -87,7 +176,7 @@ function getWinningLine(row, col, player) {
         const currentRow = row + rowStep * offset;
         const currentCol = col + colStep * offset;
 
-        if (isInsideBoard(currentRow, currentCol) && board[currentRow][currentCol] === player) {
+        if (isInsideBoard(currentRow, currentCol) && targetBoard[currentRow][currentCol] === player) {
           positions.push([currentRow, currentCol]);
         }
       }
@@ -104,16 +193,16 @@ function getWinningLine(row, col, player) {
   return null;
 }
 
-function highlightWinningCells(cells) {
-  const buttonNodes = boardElement.querySelectorAll(".cell");
-  for (const [row, col] of cells) {
-    const index = row * BOARD_SIZE + col;
-    buttonNodes[index].classList.add("winning");
-  }
+function getWinningLine(row, col, player) {
+  return getWinningLineOn(board, row, col, player);
+}
+
+function isBoardFullOn(targetBoard) {
+  return targetBoard.every((row) => row.every((cell) => cell !== EMPTY));
 }
 
 function isBoardFull() {
-  return board.every((row) => row.every((cell) => cell !== EMPTY));
+  return isBoardFullOn(board);
 }
 
 function switchPlayer() {
@@ -122,10 +211,10 @@ function switchPlayer() {
 
 function evaluateMove(row, col, player) {
   board[row][col] = player;
-  const winningLine = getWinningLine(row, col, player);
+  const line = getWinningLine(row, col, player);
   board[row][col] = EMPTY;
 
-  if (winningLine) {
+  if (line) {
     return 1_000_000;
   }
 
@@ -169,10 +258,11 @@ function getBestCpuMove() {
 }
 
 function finishTurn(row, col) {
-  const winningLine = getWinningLine(row, col, currentPlayer);
-  if (winningLine) {
+  const line = getWinningLine(row, col, currentPlayer);
+  if (line) {
     gameOver = true;
-    highlightWinningCells(winningLine);
+    winningLine = line;
+    renderBoard();
     updateStatus(`${playerLabel(currentPlayer)}の勝ちです`);
     return;
   }
@@ -187,7 +277,63 @@ function finishTurn(row, col) {
   updateStatus(`${playerLabel(currentPlayer)}の手番です`);
 }
 
+async function handleOnlineMove(row, col) {
+  if (!onlineRoomId || !onlinePlayerColor) {
+    updateStatus("オンライン部屋に参加してください");
+    return;
+  }
+
+  if (gameOver || board[row][col] !== EMPTY) {
+    return;
+  }
+
+  if (currentPlayer !== onlinePlayerColor) {
+    updateStatus("相手の手番です");
+    return;
+  }
+
+  const result = await runTransaction(roomRef(onlineRoomId), (roomData) => {
+    if (!roomData || roomData.gameOver || roomData.currentPlayer !== onlinePlayerColor) {
+      return roomData;
+    }
+
+    const players = getPlayerList(roomData);
+    if (players.length < 2) {
+      return roomData;
+    }
+
+    const nextBoard = roomData.board || createEmptyBoard();
+    if (nextBoard[row][col] !== EMPTY) {
+      return roomData;
+    }
+
+    nextBoard[row][col] = onlinePlayerColor;
+    const line = getWinningLineOn(nextBoard, row, col, onlinePlayerColor);
+    const full = isBoardFullOn(nextBoard);
+
+    return {
+      ...roomData,
+      board: nextBoard,
+      currentPlayer: onlinePlayerColor === BLACK ? WHITE : BLACK,
+      gameOver: Boolean(line) || full,
+      winner: line ? onlinePlayerColor : "",
+      winningLine: line || null,
+      lastMove: { row, col, player: onlinePlayerColor, at: Date.now() },
+      updatedAt: Date.now()
+    };
+  });
+
+  if (!result.committed) {
+    updateStatus("着手を同期できませんでした");
+  }
+}
+
 function handleMove(row, col) {
+  if (modeElement.value === "online") {
+    handleOnlineMove(row, col);
+    return;
+  }
+
   if (gameOver || board[row][col] !== EMPTY) {
     return;
   }
@@ -210,15 +356,224 @@ function handleMove(row, col) {
   }
 }
 
+function updateOnlineStatus(roomData) {
+  const players = getPlayerList(roomData);
+  const ownPlayer = roomData?.players?.[clientId];
+  const roomText = onlineRoomId
+    ? `部屋ID: ${onlineRoomId} / ${players.length}人参加 / あなた: ${onlinePlayerColor ? playerLabel(onlinePlayerColor) : "-"}`
+    : "";
+  updateRoomInfo(roomText);
+
+  if (!ownPlayer) {
+    updateStatus("部屋から退出しました");
+    return;
+  }
+
+  if (players.length < 2) {
+    updateStatus("相手の入室を待っています");
+    return;
+  }
+
+  if (roomData.gameOver) {
+    if (roomData.winner) {
+      updateStatus(`${playerLabel(roomData.winner)}の勝ちです`);
+    } else {
+      updateStatus("引き分けです");
+    }
+    return;
+  }
+
+  updateStatus(roomData.currentPlayer === onlinePlayerColor ? "あなたの手番です" : "相手の手番です");
+}
+
+async function subscribeOnlineRoom(roomId) {
+  if (onlineRoomRef && onlineRoomCallback) {
+    off(onlineRoomRef, "value", onlineRoomCallback);
+  }
+
+  onlineRoomId = roomId;
+  onlineRoomRef = roomRef(roomId);
+  onlinePlayerRef = playerRef(roomId);
+  await onDisconnect(onlinePlayerRef).remove();
+
+  onlineRoomCallback = (snapshot) => {
+    const roomData = snapshot.val();
+    if (!roomData) {
+      onlineRoomId = "";
+      onlinePlayerColor = "";
+      resetGame();
+      updateRoomInfo("");
+      updateStatus("部屋が見つかりません");
+      return;
+    }
+
+    const ownPlayer = roomData.players?.[clientId];
+    onlinePlayerColor = ownPlayer?.color || "";
+    board = roomData.board || createEmptyBoard();
+    currentPlayer = roomData.currentPlayer || BLACK;
+    gameOver = Boolean(roomData.gameOver);
+    winningLine = roomData.winningLine || null;
+    renderBoard();
+    updateOnlineStatus(roomData);
+  };
+
+  onValue(onlineRoomRef, onlineRoomCallback, (error) => {
+    updateStatus(`Firebaseエラー: ${error.message}`);
+  });
+}
+
+async function createOnlineRoom() {
+  const roomId = generateRoomId();
+  const initialBoard = createEmptyBoard();
+  await leaveOnlineRoom();
+
+  await set(roomRef(roomId), {
+    board: initialBoard,
+    currentPlayer: BLACK,
+    gameOver: false,
+    winner: "",
+    winningLine: null,
+    players: {
+      [clientId]: {
+        slot: 1,
+        color: BLACK,
+        joinedAt: Date.now()
+      }
+    },
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  });
+
+  roomIdInput.value = roomId;
+  onlinePlayerColor = BLACK;
+  await subscribeOnlineRoom(roomId);
+}
+
+async function joinOnlineRoom() {
+  const roomId = normalizeRoomId(roomIdInput.value);
+  roomIdInput.value = roomId;
+
+  if (!/^\d{6}$/.test(roomId)) {
+    updateStatus("6桁の部屋IDを入力してください");
+    return;
+  }
+
+  const snapshot = await get(roomRef(roomId));
+  if (!snapshot.exists()) {
+    updateStatus("部屋が見つかりません");
+    return;
+  }
+
+  const roomData = snapshot.val();
+  const players = getPlayers(roomData);
+  const alreadyJoined = Boolean(players[clientId]);
+
+  if (!alreadyJoined && Object.keys(players).length >= 2) {
+    updateStatus("部屋が満員です");
+    return;
+  }
+
+  await leaveOnlineRoom();
+
+  const slot = alreadyJoined ? players[clientId].slot : getAvailableSlot(players);
+  const color = colorForSlot(slot);
+  await update(playerRef(roomId), {
+    slot,
+    color,
+    joinedAt: Date.now()
+  });
+
+  onlinePlayerColor = color;
+  await subscribeOnlineRoom(roomId);
+}
+
+async function leaveOnlineRoom() {
+  if (onlineRoomRef && onlineRoomCallback) {
+    off(onlineRoomRef, "value", onlineRoomCallback);
+  }
+
+  if (onlinePlayerRef) {
+    await onDisconnect(onlinePlayerRef).cancel();
+  }
+
+  if (onlineRoomId) {
+    await remove(playerRef(onlineRoomId));
+  }
+
+  onlineRoomId = "";
+  onlinePlayerColor = "";
+  onlineRoomRef = null;
+  onlineRoomCallback = null;
+  onlinePlayerRef = null;
+  updateRoomInfo("");
+}
+
+async function resetOnlineRoom() {
+  if (!onlineRoomId) {
+    updateStatus("オンライン部屋に参加してください");
+    return;
+  }
+
+  if (onlinePlayerColor !== BLACK) {
+    updateStatus("部屋作成者だけがリセットできます");
+    return;
+  }
+
+  await update(roomRef(onlineRoomId), {
+    board: createEmptyBoard(),
+    currentPlayer: BLACK,
+    gameOver: false,
+    winner: "",
+    winningLine: null,
+    lastMove: null,
+    updatedAt: Date.now()
+  });
+}
+
 function resetGame() {
   board = createEmptyBoard();
   currentPlayer = BLACK;
   gameOver = false;
+  winningLine = null;
   renderBoard();
   updateStatus("黒の手番です");
 }
 
-modeElement.addEventListener("change", resetGame);
-resetButton.addEventListener("click", resetGame);
+modeElement.addEventListener("change", async () => {
+  const isOnline = modeElement.value === "online";
+  onlineControls.hidden = !isOnline;
 
+  if (!isOnline) {
+    await leaveOnlineRoom();
+    resetGame();
+  } else {
+    resetGame();
+    updateStatus("部屋を作成するか、部屋IDで参加してください");
+  }
+});
+
+resetButton.addEventListener("click", () => {
+  if (modeElement.value === "online") {
+    resetOnlineRoom();
+    return;
+  }
+
+  resetGame();
+});
+
+createRoomButton.addEventListener("click", createOnlineRoom);
+joinRoomButton.addEventListener("click", joinOnlineRoom);
+leaveRoomButton.addEventListener("click", async () => {
+  await leaveOnlineRoom();
+  resetGame();
+  updateStatus("部屋から退出しました");
+});
+
+window.addEventListener("pagehide", () => {
+  if (onlineRoomId) {
+    remove(playerRef(onlineRoomId));
+  }
+});
+
+onlineControls.hidden = true;
 resetGame();
