@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>スキルオセロ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <nav class="topbar" aria-label="サイトナビゲーション">
+      <a class="back-link" href="../index.html">← ゲーム一覧へ戻る</a>
+    </nav>
+
+    <header class="header">
+      <p class="eyebrow">Browser Game</p>
+      <h1>スキルオセロ</h1>
+      <div class="mode-row" aria-label="ゲームモード">
+        <label class="mode-picker">
+          <span>対戦モード</span>
+          <select id="modeSelect">
+            <option value="cpu">CPU対戦</option>
+            <option value="online">オンライン対戦</option>
+          </select>
+        </label>
+        <button id="restartButton" type="button">リスタート</button>
+      </div>
+    </header>
+
+    <section id="onlinePanel" class="online-panel" hidden>
+      <div class="online-actions">
+        <button id="createRoomButton" type="button">部屋を作る</button>
+        <button id="joinRoomButton" type="button">部屋に入る</button>
+        <button id="leaveRoomButton" type="button">退出</button>
+      </div>
+      <label class="room-field">
+        <span>部屋ID</span>
+        <input id="roomIdInput" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
+      </label>
+      <p id="roomInfo" class="room-info"></p>
+    </section>
+
+    <section class="status-panel" aria-label="ゲーム状況">
+      <div>
+        <span class="label">手番</span>
+        <strong id="turnText">黒の手番</strong>
+      </div>
+      <div>
+        <span class="label">黒</span>
+        <strong id="blackCount">2</strong>
+      </div>
+      <div>
+        <span class="label">白</span>
+        <strong id="whiteCount">2</strong>
+      </div>
+      <div>
+        <span class="label">状況</span>
+        <strong id="messageText">置ける場所を選んでください</strong>
+      </div>
+    </section>
+
+    <section class="board-wrap" aria-label="オセロ盤">
+      <div id="board" class="board" role="grid" aria-label="8×8のオセロ盤"></div>
+    </section>
+
+    <section class="skill-panel" aria-label="スキル石選択">
+      <button class="skill-button active" type="button" data-skill="normal">
+        <span class="skill-icon normal-icon"></span>
+        <span>通常石</span>
+      </button>
+      <button class="skill-button" type="button" data-skill="bomb">
+        <span class="skill-icon bomb-icon"></span>
+        <span>爆弾石 <b id="bombCount">2</b></span>
+      </button>
+      <button class="skill-button" type="button" data-skill="wall">
+        <span class="skill-icon wall-icon"></span>
+        <span>壁石 <b id="wallCount">2</b></span>
+      </button>
+      <button class="skill-button" type="button" data-skill="convert">
+        <span class="skill-icon convert-icon"></span>
+        <span>変換石 <b id="convertCount">1</b></span>
+      </button>
+    </section>
+  </main>
+
+  <script type="module" src="script.js?v=skill-othello-20260620"></script>
+</body>
+</html>
