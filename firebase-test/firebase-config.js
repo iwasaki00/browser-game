@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyBg3WyGQqX5llya3pjmRtbmDZcdGyg8tUg",
-  authDomain: "gomoku-d0fde.firebaseapp.com",
-  databaseURL: "https://gomoku-d0fde-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "gomoku-d0fde",
-  storageBucket: "gomoku-d0fde.firebasestorage.app",
-  messagingSenderId: "1036314081288",
-  appId: "1:1036314081288:web:ec9d5c3b76a8cd74e5b9bd"
+  apiKey: "AIzaSyArMxZM_pYb3rJ1MZkNoMFw12Ct58GLEDQ",
+  authDomain: "iwa-games.firebaseapp.com",
+  databaseURL: "https://iwa-games-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "iwa-games",
+  storageBucket: "iwa-games.firebasestorage.app",
+  messagingSenderId: "580654957912",
+  appId: "1:580654957912:web:f59f31fc8df5286086d12d"
 };
