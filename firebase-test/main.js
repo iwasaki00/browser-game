@@ -8,7 +8,8 @@ import {
   onValue,
   ref,
   remove,
-  runTransaction
+  runTransaction,
+  update
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -476,6 +477,114 @@ const cleanupEmptyRoom = async (roomIdValue) => {
   });
 };
 
+const joinRoomFixed = async () => {
+  const inputValue = roomIdInput.value;
+  const roomId = normalizeRoomId(inputValue);
+  roomIdInput.value = roomId;
+  setDebugState({
+    inputRoomId: inputValue,
+    normalizedRoomId: roomId,
+    refPath: isValidRoomId(roomId) ? roomPath(roomId) : "",
+    snapshotExists: null,
+    snapshotValue: null,
+    error: "",
+    verifyContext: "join-input"
+  });
+
+  if (!isValidRoomId(roomId)) {
+    setRoomState("部屋未参加", "pending");
+    setDebugState({ error: "正規化後の部屋IDが6桁数字ではありません。" });
+    setMessage("部屋IDは6桁の数字だけで入力してください。", "warning");
+    return;
+  }
+
+  setBusy(true);
+  setFirebaseStatus("Firebase接続成功", "success");
+  setRoomState("部屋確認中", "pending");
+  setMessage("部屋を確認しています。");
+
+  try {
+    const roomSnapshot = await get(roomRef(roomId));
+    const roomsSnapshot = await get(roomsRef());
+    const roomsValue = roomsSnapshot.val();
+    const roomsKeys = roomsValue ? Object.keys(roomsValue) : [];
+
+    setDebugState({
+      inputRoomId: inputValue,
+      normalizedRoomId: roomId,
+      refPath: roomPath(roomId),
+      roomsKeys,
+      snapshotExists: roomSnapshot.exists(),
+      snapshotValue: roomSnapshot.val(),
+      error: "",
+      verifyContext: "join-before-update"
+    });
+
+    console.log("[room join] inputValue:", inputValue);
+    console.log("[room join] normalizedRoomId:", roomId);
+    console.log("[room join] refPath:", roomPath(roomId));
+    console.log("[room join] roomsKeys:", roomsKeys);
+    console.log("[room join] snapshot.exists():", roomSnapshot.exists());
+    console.log("[room join] snapshot.val():", roomSnapshot.val());
+
+    if (!roomSnapshot.exists()) {
+      setRoomState("部屋参加失敗：部屋が見つかりません", "error");
+      setDebugState({ error: `部屋が見つかりません。参照パス: ${roomPath(roomId)}` });
+      setMessage(`部屋が見つかりません。参照パス: ${roomPath(roomId)}`, "error");
+      updateLastUpdated();
+      return;
+    }
+
+    const roomData = roomSnapshot.val();
+    latestRoomData = roomData;
+    const players = roomData.players || {};
+    const alreadyJoined = Boolean(players[playerId]);
+
+    if (!alreadyJoined && Object.keys(players).length >= 2) {
+      setRoomState("部屋参加失敗：部屋が満員です", "error");
+      setDebugState({ error: "部屋が満員です。" });
+      setMessage("部屋が満員です。", "error");
+      updateLastUpdated();
+      return;
+    }
+
+    const slot = alreadyJoined ? players[playerId].slot : getAvailableSlot(players);
+
+    if (currentRoomId && currentRoomId !== roomId) {
+      await leaveCurrentRoom();
+    }
+
+    try {
+      await update(playerRef(roomId), {
+        ...buildPlayerData(slot),
+        rejoinedAt: alreadyJoined ? Date.now() : null
+      });
+      await update(roomRef(roomId), {
+        updatedAt: Date.now()
+      });
+    } catch (error) {
+      setRoomState("部屋参加失敗：Firebase書き込み失敗", "error");
+      setDebugState({ error: error.message });
+      setMessage(`Firebase書き込み失敗: ${error.message}`, "error");
+      updateLastUpdated();
+      return;
+    }
+
+    setFirebaseStatus("Firebase接続成功", "success");
+    setRoomState("部屋参加中", "success");
+    await subscribeRoom(roomId);
+    setMessage(`部屋に参加しました。参照パス: ${roomPath(roomId)}`);
+  } catch (error) {
+    setFirebaseStatus("Firebase接続失敗", "error");
+    setRoomState("部屋参加失敗：その他例外", "error");
+    setDebugState({ error: error.message });
+    setMessage(error.message, "error");
+    updateLastUpdated();
+  } finally {
+    setBusy(false);
+  }
+};
+
 const leaveCurrentRoom = async () => {
   if (!currentRoomId) {
     return;
@@ -511,12 +620,12 @@ roomIdInput.addEventListener("input", () => {
 
 roomIdInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    joinRoom();
+    joinRoomFixed();
   }
 });
 
 createRoomButton.addEventListener("click", createRoom);
-joinRoomButton.addEventListener("click", joinRoom);
+joinRoomButton.addEventListener("click", joinRoomFixed);
 leaveRoomButton.addEventListener("click", leaveRoom);
 
 window.addEventListener("pagehide", () => {
