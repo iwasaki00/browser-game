@@ -80,11 +80,26 @@ function createCell(color = null, skill = null) {
 }
 
 function cloneBoard(source) {
-  return source.map((row) => row.map((cell) => createCell(cell.color, cell.skill)));
+  return normalizeBoard(source);
 }
 
 function createEmptyBoard() {
   return Array.from({ length: SIZE }, () => Array.from({ length: SIZE }, () => createCell()));
+}
+
+function normalizeBoard(source) {
+  const normalized = createEmptyBoard();
+
+  for (let row = 0; row < SIZE; row += 1) {
+    for (let col = 0; col < SIZE; col += 1) {
+      const cell = source?.[row]?.[col];
+      const color = cell?.color === BLACK || cell?.color === WHITE ? cell.color : null;
+      const skill = color && cell?.skill ? cell.skill : color ? NORMAL : null;
+      normalized[row][col] = createCell(color, skill);
+    }
+  }
+
+  return normalized;
 }
 
 function createInitialBoard() {
@@ -535,7 +550,7 @@ async function handleOnlineMove(row, col) {
     }
 
     const nextState = applyMoveToState({
-      board: roomData.board || createInitialBoard(),
+      board: normalizeBoard(roomData.board || createInitialBoard()),
       currentPlayer: roomData.currentPlayer || BLACK,
       skillCounts: counts
     }, row, col, onlinePlayerColor, moveSkill);
@@ -767,7 +782,7 @@ async function subscribeOnlineRoom(roomId) {
     const ownPlayer = roomData.players?.[clientId];
     onlinePlayerColor = ownPlayer?.color || "";
     setChatEnabled(Boolean(ownPlayer));
-    board = cloneBoard(roomData.board || createInitialBoard());
+    board = normalizeBoard(roomData.board || createInitialBoard());
     currentPlayer = roomData.currentPlayer || BLACK;
     skillCounts = normalizeSkillCounts(roomData.skillCounts);
     gameOver = Boolean(roomData.gameOver);
