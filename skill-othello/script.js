@@ -3,6 +3,8 @@ const BLACK = "black";
 const WHITE = "white";
 const NORMAL = "normal";
 const GAME_ID = "skill-othello";
+const PLAYER_STALE_MS = 45_000;
+const HEARTBEAT_MS = 15_000;
 const DIRECTIONS = [
   [-1, -1], [-1, 0], [-1, 1],
   [0, -1], [0, 1],
@@ -49,6 +51,7 @@ let onlineRoomRef = null;
 let onlineRoomCallback = null;
 let onlinePlayerRef = null;
 let chatUnsubscribe = null;
+let heartbeatTimer = null;
 let firebaseTools = null;
 let firebaseLoadPromise = null;
 
@@ -192,6 +195,17 @@ function getPlayerList(roomData) {
 function getAvailableSlot(players) {
   const usedSlots = new Set(Object.values(players).map((player) => player.slot));
   return usedSlots.has(1) ? 2 : 1;
+}
+
+function pruneStalePlayers(players, now = Date.now()) {
+  return Object.fromEntries(Object.entries(players).filter(([id, player]) => {
+    if (id === clientId) {
+      return false;
+    }
+
+    const lastSeen = player.lastSeen || player.joinedAt || 0;
+    return now - lastSeen <= PLAYER_STALE_MS;
+  }));
 }
 
 function colorForSlot(slot) {
@@ -655,6 +669,28 @@ function stopChat() {
   clearChat();
 }
 
+function startHeartbeat(roomId) {
+  stopHeartbeat();
+
+  const beat = () => {
+    firebaseTools.update(playerRef(roomId), {
+      lastSeen: Date.now()
+    }).catch(() => {
+      // The room may have been removed by the other player.
+    });
+  };
+
+  beat();
+  heartbeatTimer = window.setInterval(beat, HEARTBEAT_MS);
+}
+
+function stopHeartbeat() {
+  if (heartbeatTimer) {
+    window.clearInterval(heartbeatTimer);
+    heartbeatTimer = null;
+  }
+}
+
 async function sendChatMessage() {
   await ensureFirebase();
 
@@ -670,6 +706,30 @@ async function sendChatMessage() {
   });
 
   chatInput.value = "";
+}
+
+async function cleanupStaleRoomPlayers(roomId) {
+  await firebaseTools.runTransaction(roomRef(roomId), (roomData) => {
+    if (!roomData) {
+      return null;
+    }
+
+    const now = Date.now();
+    const players = Object.fromEntries(Object.entries(roomData.players || {}).filter(([id, player]) => {
+      const lastSeen = player.lastSeen || player.joinedAt || 0;
+      return id === clientId || now - lastSeen <= PLAYER_STALE_MS;
+    }));
+
+    if (Object.keys(players).length === 0) {
+      return null;
+    }
+
+    return {
+      ...roomData,
+      players,
+      updatedAt: now
+    };
+  });
 }
 
 function updateOnlineDetails({
@@ -766,6 +826,7 @@ async function subscribeOnlineRoom(roomId) {
   onlinePlayerRef = playerRef(roomId);
   await firebaseTools.onDisconnect(onlinePlayerRef).remove();
   startChat(roomId);
+  startHeartbeat(roomId);
 
   onlineRoomCallback = (snapshot) => {
     const roomData = snapshot.val();
@@ -821,7 +882,8 @@ async function createOnlineRoom() {
       [clientId]: {
         slot: 1,
         color: BLACK,
-        joinedAt: Date.now()
+        joinedAt: Date.now(),
+        lastSeen: Date.now()
       }
     },
     createdAt: Date.now(),
@@ -857,6 +919,8 @@ async function joinOnlineRoom() {
     renderStatus();
     return;
   }
+
+  await cleanupStaleRoomPlayers(roomId);
 
   const snapshot = await firebaseTools.get(roomRef(roomId));
   if (!snapshot.exists()) {
@@ -896,7 +960,8 @@ async function joinOnlineRoom() {
   await firebaseTools.update(playerRef(roomId), {
     slot,
     color,
-    joinedAt: Date.now()
+    joinedAt: Date.now(),
+    lastSeen: Date.now()
   });
 
   onlinePlayerColor = color;
@@ -905,6 +970,7 @@ async function joinOnlineRoom() {
 
 async function leaveOnlineRoom() {
   const leavingRoomId = onlineRoomId;
+  stopHeartbeat();
 
   if (onlineRoomRef && onlineRoomCallback) {
     firebaseTools.off(onlineRoomRef, "value", onlineRoomCallback);
@@ -931,19 +997,22 @@ async function leaveOnlineRoom() {
 async function leaveRoomData(roomIdValue) {
   await ensureFirebase();
   const roomId = normalizeRoomId(roomIdValue);
-  await firebaseTools.remove(playerRef(roomId));
+  await firebaseTools.runTransaction(roomRef(roomId), (roomData) => {
+    if (!roomData) {
+      return null;
+    }
 
-  const playersSnapshot = await firebaseTools.get(playersRef(roomId));
-  const players = playersSnapshot.val() || {};
+    const players = pruneStalePlayers(roomData.players || {});
+    if (Object.keys(players).length === 0) {
+      return null;
+    }
 
-  if (Object.keys(players).length === 0) {
-    await firebaseTools.remove(roomRef(roomId));
-    return;
-  }
-
-  await firebaseTools.update(roomRef(roomId), {
-    message: "相手が退出しました",
-    updatedAt: Date.now()
+    return {
+      ...roomData,
+      players,
+      message: "相手が退出しました",
+      updatedAt: Date.now()
+    };
   });
 }
 
