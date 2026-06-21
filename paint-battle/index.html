@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#101827">
+  <title>Paint Battle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section id="titleScreen" class="screen title-screen">
+      <a class="back-link" href="../index.html">← ゲーム一覧</a>
+      <div class="logo" aria-label="Paint Battle">
+        <span>PAINT</span>
+        <strong>BATTLE</strong>
+      </div>
+      <p class="tagline">30 × 30のフィールドを、60秒で塗り尽くせ。</p>
+
+      <div class="menu-card">
+        <button id="createRoomButton" class="button primary" type="button">部屋を作る</button>
+        <div class="join-row">
+          <label class="sr-only" for="roomIdInput">6桁の部屋ID</label>
+          <input id="roomIdInput" type="text" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="6桁の部屋ID">
+          <button id="joinRoomButton" class="button orange" type="button">部屋に入る</button>
+        </div>
+        <div class="divider"><span>または</span></div>
+        <button id="practiceButton" class="button ghost" type="button">ひとりで練習</button>
+        <p id="titleMessage" class="message" role="status" aria-live="polite"></p>
+      </div>
+      <p class="hint">オンライン対戦にはFirebaseの設定と通信環境が必要です。</p>
+    </section>
+
+    <section id="waitingScreen" class="screen waiting-screen hidden">
+      <p class="eyebrow">ONLINE ROOM</p>
+      <h1>対戦相手を待っています</h1>
+      <div class="room-code-card">
+        <span>部屋ID</span>
+        <strong id="roomIdView">------</strong>
+        <button id="copyRoomIdButton" class="copy-button" type="button">コピー</button>
+      </div>
+      <div class="waiting-details">
+        <div><span>参加人数</span><strong id="playerCountView">1 / 2</strong></div>
+        <div><span>あなたの色</span><strong id="ownColorView" class="color-label blue">ブルー</strong></div>
+      </div>
+      <p id="waitingMessage" class="message" role="status" aria-live="polite">相手に部屋IDを伝えてください。</p>
+      <button id="startGameButton" class="button primary hidden" type="button">バトル開始</button>
+      <button id="leaveWaitingButton" class="button text-button" type="button">退出する</button>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen hidden">
+      <header class="battle-hud">
+        <div class="score blue-score"><span>BLUE</span><strong id="blueScore">0</strong></div>
+        <div class="timer"><span>TIME</span><strong id="timeView">60</strong></div>
+        <div class="score orange-score"><span>ORANGE</span><strong id="orangeScore">0</strong></div>
+      </header>
+      <div class="canvas-frame">
+        <canvas id="gameCanvas" width="900" height="900" aria-label="30×30マスの塗りつぶしフィールド"></canvas>
+        <div id="countdown" class="countdown hidden" aria-live="assertive"></div>
+      </div>
+      <p id="battleStatus" class="battle-status">周囲3×3マスを自分の色に塗ろう</p>
+      <div class="dpad" aria-label="移動ボタン">
+        <button class="direction up" data-direction="up" aria-label="上へ移動" type="button">▲</button>
+        <button class="direction left" data-direction="left" aria-label="左へ移動" type="button">◀</button>
+        <div class="dpad-center" aria-hidden="true"></div>
+        <button class="direction right" data-direction="right" aria-label="右へ移動" type="button">▶</button>
+        <button class="direction down" data-direction="down" aria-label="下へ移動" type="button">▼</button>
+      </div>
+      <button id="leaveGameButton" class="leave-game" type="button">退出</button>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen hidden">
+      <p class="eyebrow">BATTLE RESULT</p>
+      <h1 id="resultTitle">勝利！</h1>
+      <p id="resultSubtitle" class="result-subtitle"></p>
+      <div class="result-scores">
+        <div class="result-team blue-result"><span>BLUE</span><strong id="resultBlueScore">0</strong><small>マス</small></div>
+        <span class="versus">VS</span>
+        <div class="result-team orange-result"><span>ORANGE</span><strong id="resultOrangeScore">0</strong><small>マス</small></div>
+      </div>
+      <button id="backToTitleButton" class="button primary" type="button">タイトルに戻る</button>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
