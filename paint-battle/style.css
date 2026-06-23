@@ -34,6 +34,7 @@ body {
 }
 
 button, input { font: inherit; }
+select { font: inherit; }
 button { touch-action: manipulation; }
 
 .app-shell {
@@ -89,6 +90,31 @@ button { touch-action: manipulation; }
   background: rgba(24, 36, 56, .96);
   box-shadow: 0 18px 55px rgba(0,0,0,.3);
 }
+.mode-menu { gap: 16px; }
+.mode-choice {
+  display: grid;
+  gap: 5px;
+  min-height: 88px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 14px 18px;
+  color: #fff;
+  text-align: left;
+}
+.mode-choice strong { font-size: 1.25rem; }
+.mode-choice span { font-size: .78rem; opacity: .82; }
+.cpu-choice { border-color: #ffb45f; background: linear-gradient(135deg, #9c480d, #e76c12); }
+.online-choice { border-color: #65baff; background: linear-gradient(135deg, #075bb0, #178cff); }
+.setup-screen { display: flex; flex-direction: column; justify-content: center; gap: 18px; text-align: center; }
+.setup-screen h1 { margin: 0; }
+.setup-card { display: grid; gap: 15px; padding: 18px; border-radius: 20px; background: var(--panel); }
+.difficulty-picker { margin: 0; border: 0; padding: 0; }
+.difficulty-picker legend { margin-bottom: 8px; color: var(--muted); font-size: .78rem; font-weight: 900; }
+.difficulty-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.difficulty-option { min-height: 46px; border: 2px solid #41516a; border-radius: 10px; color: var(--text); background: #101a2a; font-weight: 800; }
+.difficulty-option.selected { border-color: var(--orange-light); color: #fff; background: #71360f; }
+.select-label { color: var(--muted); font-size: .78rem; font-weight: 900; text-align: left; }
+#cpuWeaponSelect { min-height: 50px; border: 1px solid #4a5c77; border-radius: 11px; padding: 0 12px; color: var(--text); background: #101a2a; }
 
 .button, input {
   min-height: 52px;

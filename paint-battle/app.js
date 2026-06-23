@@ -23,9 +23,14 @@ const WEAPONS = {
   bomb: { name: "ボム", speed: 1, action: "ボム" },
   charger: { name: "チャージャー", speed: .9, action: "長押し" }
 };
+const CPU_LEVELS = {
+  easy: { speed: .72, randomBias: .78, attackDelay: 1.55, chargeTime: 700 },
+  normal: { speed: 1, randomBias: .4, attackDelay: 1, chargeTime: 1100 },
+  hard: { speed: 1.16, randomBias: .14, attackDelay: .68, chargeTime: 1500 }
+};
 
 const $ = (selector) => document.querySelector(selector);
-const screens = ["#titleScreen", "#waitingScreen", "#gameScreen", "#resultScreen"];
+const screens = ["#titleScreen", "#cpuSetupScreen", "#onlineSetupScreen", "#waitingScreen", "#gameScreen", "#resultScreen"];
 const canvas = $("#gameCanvas");
 const context = canvas.getContext("2d");
 const titleMessage = $("#titleMessage");
@@ -38,7 +43,7 @@ let firebase = null;
 let db = null;
 let serverOffset = 0;
 let playerId = getPersistentPlayerId();
-let mode = "practice";
+let gameMode = "cpu";
 let roomId = "";
 let ownSlot = 1;
 let isHost = false;
@@ -46,10 +51,8 @@ let roomData = null;
 let subscriptions = [];
 let disconnectHandle = null;
 let grid = new Uint8Array(CELL_COUNT);
-let positions = { 1: { x: 3, y: 15 }, 2: { x: 26, y: 15 } };
-let directions = { 1: { x: 1, y: 0 }, 2: { x: -1, y: 0 } };
 let selectedWeapon = "roller";
-let playerWeapons = { 1: "roller", 2: "roller" };
+let battlePlayers = createBattlePlayers();
 let joystickInput = { x: 0, y: 0, magnitude: 0, pointerId: null };
 let keyboardInput = { up: false, down: false, left: false, right: false };
 let gameRunning = false;
@@ -57,15 +60,31 @@ let gameEndAt = 0;
 let animationFrame = 0;
 let lastFrameAt = 0;
 let lastPositionSyncAt = 0;
-let lastPaintCell = -1;
 let recentPaint = new Map();
-let practiceFinished = false;
+let cpuFinished = false;
 let onlinePlayerCount = 0;
 let actionHeld = false;
 let chargeStartedAt = 0;
 let nextActionAt = 0;
 let bombEffects = [];
 let attackTrails = [];
+let cpuDifficulty = "normal";
+let cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0 };
+
+function createBattlePlayers() {
+  return {
+    player1: { id: "player1", slot: 1, x: 3, y: 15, direction: { x: 1, y: 0 }, weapon: selectedWeapon, lastPaintCell: -1 },
+    player2: { id: "player2", slot: 2, x: 26, y: 15, direction: { x: -1, y: 0 }, weapon: "roller", lastPaintCell: -1 }
+  };
+}
+
+function getBattlePlayer(slot) {
+  return slot === 1 ? battlePlayers.player1 : battlePlayers.player2;
+}
+
+function isOnlineMode() {
+  return gameMode === "online";
+}
 
 function getPersistentPlayerId() {
   const key = "paintBattlePlayerId";
@@ -89,7 +108,6 @@ function setTitleMessage(message, isError = false) {
 function setBusy(busy) {
   $("#createRoomButton").disabled = busy;
   $("#joinRoomButton").disabled = busy;
-  $("#practiceButton").disabled = busy;
   $("#roomIdInput").disabled = busy;
 }
 
@@ -124,13 +142,15 @@ function generateRoomId() {
 }
 
 function buildPlayer(slot) {
-  const start = slot === 1 ? positions[1] : positions[2];
+  const start = slot === 1
+    ? { x: 3, y: 15, direction: { x: 1, y: 0 } }
+    : { x: 26, y: 15, direction: { x: -1, y: 0 } };
   return {
     slot,
     x: start.x,
     y: start.y,
     weapon: selectedWeapon,
-    direction: directions[slot],
+    direction: start.direction,
     joinedAt: firebase.serverTimestamp(),
     lastSeenAt: firebase.serverTimestamp()
   };
@@ -211,12 +231,12 @@ async function joinRoom() {
 }
 
 async function enterRoom(id, slot) {
-  mode = "online";
+  gameMode = "online";
   roomId = id;
   ownSlot = slot;
   grid = new Uint8Array(CELL_COUNT);
-  positions = { 1: { x: 3, y: 15 }, 2: { x: 26, y: 15 } };
-  directions = { 1: { x: 1, y: 0 }, 2: { x: -1, y: 0 } };
+  battlePlayers = createBattlePlayers();
+  getBattlePlayer(ownSlot).weapon = selectedWeapon;
   $("#roomIdView").textContent = id;
   $("#ownColorView").textContent = slot === 1 ? "ブルー" : "オレンジ";
   $("#ownColorView").className = `color-label ${slot === 1 ? "blue" : "orange"}`;
@@ -249,11 +269,11 @@ function subscribeToRoom() {
     entries.forEach(([id, player]) => {
       if (player.slot && Number.isFinite(player.x) && Number.isFinite(player.y)) {
         if (id === playerId && gameRunning) return;
-        positions[player.slot] = { x: player.x, y: player.y };
+        Object.assign(getBattlePlayer(player.slot), { x: player.x, y: player.y });
       }
-      if (player.slot && WEAPONS[player.weapon]) playerWeapons[player.slot] = player.weapon;
+      if (player.slot && WEAPONS[player.weapon]) getBattlePlayer(player.slot).weapon = player.weapon;
       if (player.slot && Number.isFinite(player.direction?.x) && Number.isFinite(player.direction?.y)) {
-        if (id !== playerId || !gameRunning) directions[player.slot] = player.direction;
+        if (id !== playerId || !gameRunning) getBattlePlayer(player.slot).direction = player.direction;
       }
       if (id === playerId && WEAPONS[player.weapon]) selectedWeapon = player.weapon;
     });
@@ -325,15 +345,20 @@ async function startOnlineBattle() {
   }
 }
 
-function startPractice() {
-  mode = "practice";
+function startCpuBattle() {
+  gameMode = "cpu";
   ownSlot = 1;
   roomId = "";
   grid = new Uint8Array(CELL_COUNT);
-  positions = { 1: { x: 3, y: 15 }, 2: { x: 26, y: 15 } };
-  directions = { 1: { x: 1, y: 0 }, 2: { x: -1, y: 0 } };
-  playerWeapons[1] = selectedWeapon;
-  practiceFinished = false;
+  battlePlayers = createBattlePlayers();
+  battlePlayers.player1.weapon = selectedWeapon;
+  const requestedWeapon = $("#cpuWeaponSelect").value;
+  const weaponKeys = Object.keys(WEAPONS);
+  battlePlayers.player2.weapon = requestedWeapon === "random"
+    ? weaponKeys[Math.floor(Math.random() * weaponKeys.length)]
+    : requestedWeapon;
+  cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0 };
+  cpuFinished = false;
   startGame(Date.now() + GAME_DURATION);
 }
 
@@ -347,17 +372,19 @@ function startGame(endAt) {
   gameEndAt = endAt;
   gameRunning = true;
   lastFrameAt = performance.now();
-  lastPaintCell = -1;
   nextActionAt = 0;
   actionHeld = false;
   chargeStartedAt = 0;
   bombEffects = [];
   attackTrails = [];
-  playerWeapons[ownSlot] = selectedWeapon;
+  getBattlePlayer(ownSlot).weapon = selectedWeapon;
   $("#currentWeaponView").textContent = WEAPONS[selectedWeapon].name;
-  $("#battleStatus").textContent = mode === "practice" ? "練習モード：スティックで移動" : `あなたは${ownSlot === 1 ? "ブルー" : "オレンジ"}`;
+  $("#battleStatus").textContent = gameMode === "cpu"
+    ? `CPU: ${WEAPONS[battlePlayers.player2.weapon].name}（${difficultyName(cpuDifficulty)}）`
+    : `あなたは${ownSlot === 1 ? "ブルー" : "オレンジ"}`;
   configureActionButton();
-  if (selectedWeapon === "roller") paintRoller(true);
+  if (selectedWeapon === "roller") paintRoller(getBattlePlayer(ownSlot), true);
+  if (gameMode === "cpu" && battlePlayers.player2.weapon === "roller") paintRoller(battlePlayers.player2, true);
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(gameLoop);
 }
@@ -367,6 +394,7 @@ function gameLoop(now) {
   const deltaSeconds = Math.min((now - lastFrameAt) / 1000, .05);
   lastFrameAt = now;
   updateMovement(deltaSeconds, now);
+  if (gameMode === "cpu") updateCpu(deltaSeconds, now);
   updateWeaponAction(now);
   updateEffects(now);
   drawGame(now);
@@ -382,20 +410,20 @@ function gameLoop(now) {
 function updateMovement(deltaSeconds, now) {
   const input = getMovementInput();
   if (input.magnitude <= .02) return;
-  const position = positions[ownSlot];
+  const player = getBattlePlayer(ownSlot);
   const distance = MOVE_SPEED * WEAPONS[selectedWeapon].speed * input.magnitude * deltaSeconds;
-  position.x += input.x * distance;
-  position.y += input.y * distance;
-  position.x = Math.max(.5, Math.min(GRID_SIZE - .5, position.x));
-  position.y = Math.max(.5, Math.min(GRID_SIZE - .5, position.y));
-  directions[ownSlot] = { x: input.x, y: input.y };
-  if (selectedWeapon === "roller") paintRoller(false);
+  player.x += input.x * distance;
+  player.y += input.y * distance;
+  player.x = Math.max(.5, Math.min(GRID_SIZE - .5, player.x));
+  player.y = Math.max(.5, Math.min(GRID_SIZE - .5, player.y));
+  player.direction = { x: input.x, y: input.y };
+  if (selectedWeapon === "roller") paintRoller(player, false);
 
-  if (mode === "online" && now - lastPositionSyncAt >= POSITION_SYNC_INTERVAL) {
+  if (isOnlineMode() && now - lastPositionSyncAt >= POSITION_SYNC_INTERVAL) {
     lastPositionSyncAt = now;
     firebase.update(firebase.ref(db, `${GAME_PATH}/${roomId}/players/${playerId}`), {
-      x: Math.round(position.x * 100) / 100,
-      y: Math.round(position.y * 100) / 100,
+      x: Math.round(player.x * 100) / 100,
+      y: Math.round(player.y * 100) / 100,
       direction: {
         x: Math.round(input.x * 100) / 100,
         y: Math.round(input.y * 100) / 100
@@ -413,13 +441,75 @@ function getMovementInput() {
   return length ? { x: x / length, y: y / length, magnitude: 1 } : { x: 0, y: 0, magnitude: 0 };
 }
 
-function paintRoller(force = false) {
-  const position = positions[ownSlot];
-  const centerX = Math.floor(position.x);
-  const centerY = Math.floor(position.y);
+function updateCpu(deltaSeconds, now) {
+  const cpu = battlePlayers.player2;
+  const level = CPU_LEVELS[cpuDifficulty];
+  if (now >= cpuBrain.nextDecisionAt) {
+    cpu.direction = chooseCpuDirection(cpu, level);
+    cpuBrain.nextDecisionAt = now + 500;
+  }
+
+  const distance = MOVE_SPEED * WEAPONS[cpu.weapon].speed * level.speed * deltaSeconds;
+  cpu.x = Math.max(.5, Math.min(GRID_SIZE - .5, cpu.x + cpu.direction.x * distance));
+  cpu.y = Math.max(.5, Math.min(GRID_SIZE - .5, cpu.y + cpu.direction.y * distance));
+  if (cpu.weapon === "roller") paintRoller(cpu, false);
+  updateCpuWeapon(cpu, level, now);
+}
+
+function chooseCpuDirection(cpu, level) {
+  const candidates = [
+    { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 },
+    { x: .707, y: .707 }, { x: .707, y: -.707 }, { x: -.707, y: .707 }, { x: -.707, y: -.707 }
+  ];
+  if (Math.random() < level.randomBias) return candidates[Math.floor(Math.random() * candidates.length)];
+
+  return candidates.reduce((best, direction) => {
+    let score = Math.random() * 2;
+    for (let step = 1; step <= 7; step += 1) {
+      const x = Math.floor(cpu.x + direction.x * step);
+      const y = Math.floor(cpu.y + direction.y * step);
+      const index = cellIndex(x, y);
+      if (index === -1) { score -= 12; break; }
+      if (grid[index] !== cpu.slot) score += grid[index] === 0 ? 2 : 1.35;
+    }
+    if (cpu.x < 2 && direction.x < 0 || cpu.x > GRID_SIZE - 2 && direction.x > 0) score -= 20;
+    if (cpu.y < 2 && direction.y < 0 || cpu.y > GRID_SIZE - 2 && direction.y > 0) score -= 20;
+    return score > best.score ? { ...direction, score } : best;
+  }, { x: -1, y: 0, score: -Infinity });
+}
+
+function updateCpuWeapon(cpu, level, now) {
+  if (cpu.weapon === "roller") return;
+  if (cpu.weapon === "charger") {
+    if (cpuBrain.chargingAt && now - cpuBrain.chargingAt >= level.chargeTime) {
+      paintCharger(level.chargeTime / 1500, cpu);
+      cpuBrain.chargingAt = 0;
+      cpuBrain.nextAttackAt = now + 1900 * level.attackDelay;
+    } else if (!cpuBrain.chargingAt && now >= cpuBrain.nextAttackAt) {
+      cpuBrain.chargingAt = now;
+    }
+    return;
+  }
+  if (now < cpuBrain.nextAttackAt) return;
+  if (cpu.weapon === "shooter") {
+    paintShooter(cpu);
+    cpuBrain.nextAttackAt = now + 900 * level.attackDelay;
+  } else if (cpu.weapon === "bomb") {
+    throwBomb(now, cpu, true);
+    cpuBrain.nextAttackAt = now + Math.max(5000, 5200 * level.attackDelay);
+  }
+}
+
+function difficultyName(value) {
+  return { easy: "やさしい", normal: "ふつう", hard: "つよい" }[value] || "ふつう";
+}
+
+function paintRoller(actor = getBattlePlayer(ownSlot), force = false) {
+  const centerX = Math.floor(actor.x);
+  const centerY = Math.floor(actor.y);
   const centerIndex = centerY * GRID_SIZE + centerX;
-  if (!force && centerIndex === lastPaintCell) return;
-  lastPaintCell = centerIndex;
+  if (!force && centerIndex === actor.lastPaintCell) return;
+  actor.lastPaintCell = centerIndex;
   const cells = [];
 
   for (let y = centerY - 1; y <= centerY + 1; y += 1) {
@@ -428,16 +518,16 @@ function paintRoller(force = false) {
       if (index !== -1) cells.push(index);
     }
   }
-  updatePaintCells(cells, ownSlot);
+  paintCells(cells, actor.slot);
 }
 
-function paintShooter() {
-  const cells = getLineCells(6);
-  updatePaintCells(cells, ownSlot);
-  addAttackTrail(6, "shot");
+function paintShooter(actor = getBattlePlayer(ownSlot)) {
+  const cells = getLineCells(6, actor);
+  paintCells(cells, actor.slot);
+  addAttackTrail(6, "shot", actor);
 }
 
-function paintBomb(targetX, targetY) {
+function paintBomb(targetX, targetY, actor = getBattlePlayer(ownSlot)) {
   const cells = [];
   const centerX = Math.floor(targetX);
   const centerY = Math.floor(targetY);
@@ -447,16 +537,16 @@ function paintBomb(targetX, targetY) {
       if (index !== -1) cells.push(index);
     }
   }
-  updatePaintCells(cells, ownSlot);
+  paintCells(cells, actor.slot);
 }
 
-function paintCharger(chargeRatio) {
+function paintCharger(chargeRatio, actor = getBattlePlayer(ownSlot)) {
   const range = Math.max(2, Math.round(12 * Math.min(1, chargeRatio)));
-  updatePaintCells(getLineCells(range), ownSlot);
-  addAttackTrail(range, "charge");
+  paintCells(getLineCells(range, actor), actor.slot);
+  addAttackTrail(range, "charge", actor);
 }
 
-function updatePaintCells(cells, color) {
+function paintCells(cells, color) {
   const updates = {};
   const now = performance.now();
   [...new Set(cells)].forEach((index) => {
@@ -466,7 +556,7 @@ function updatePaintCells(cells, color) {
     updates[`grid/${index}`] = color;
   });
 
-  if (mode === "online" && Object.keys(updates).length) {
+  if (isOnlineMode() && Object.keys(updates).length) {
     firebase.update(roomRef(), updates).catch(console.warn);
   }
 }
@@ -475,12 +565,10 @@ function cellIndex(x, y) {
   return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE ? y * GRID_SIZE + x : -1;
 }
 
-function getLineCells(range) {
-  const position = positions[ownSlot];
-  const direction = directions[ownSlot];
+function getLineCells(range, actor = getBattlePlayer(ownSlot)) {
   const cells = [];
   for (let step = 1; step <= range; step += 1) {
-    const index = cellIndex(Math.floor(position.x + direction.x * step), Math.floor(position.y + direction.y * step));
+    const index = cellIndex(Math.floor(actor.x + actor.direction.x * step), Math.floor(actor.y + actor.direction.y * step));
     if (index === -1) break;
     cells.push(index);
   }
@@ -489,7 +577,7 @@ function getLineCells(range) {
 
 function updateWeaponAction(now) {
   if (selectedWeapon === "shooter" && actionHeld && now >= nextActionAt) {
-    paintShooter();
+    paintShooter(getBattlePlayer(ownSlot));
     nextActionAt = now + 180;
   }
   if (selectedWeapon === "charger" && chargeStartedAt) {
@@ -505,32 +593,28 @@ function updateWeaponAction(now) {
   }
 }
 
-function throwBomb(now) {
-  if (now < nextActionAt) return;
-  const position = positions[ownSlot];
-  const direction = directions[ownSlot];
+function throwBomb(now, actor = getBattlePlayer(ownSlot), isCpu = false) {
+  if (!isCpu && now < nextActionAt) return;
   const distance = 6;
-  const targetX = Math.max(.5, Math.min(GRID_SIZE - .5, position.x + direction.x * distance));
-  const targetY = Math.max(.5, Math.min(GRID_SIZE - .5, position.y + direction.y * distance));
-  bombEffects.push({ fromX: position.x, fromY: position.y, targetX, targetY, startedAt: now, explodesAt: now + 520, exploded: false, removeAt: now + 920 });
-  nextActionAt = now + 5000;
+  const targetX = Math.max(.5, Math.min(GRID_SIZE - .5, actor.x + actor.direction.x * distance));
+  const targetY = Math.max(.5, Math.min(GRID_SIZE - .5, actor.y + actor.direction.y * distance));
+  bombEffects.push({ ownerSlot: actor.slot, fromX: actor.x, fromY: actor.y, targetX, targetY, startedAt: now, explodesAt: now + 520, exploded: false, removeAt: now + 920 });
+  if (!isCpu) nextActionAt = now + 5000;
 }
 
 function updateEffects(now) {
   bombEffects.forEach((effect) => {
     if (!effect.exploded && now >= effect.explodesAt) {
       effect.exploded = true;
-      paintBomb(effect.targetX, effect.targetY);
+      paintBomb(effect.targetX, effect.targetY, getBattlePlayer(effect.ownerSlot));
     }
   });
   bombEffects = bombEffects.filter((effect) => now < effect.removeAt);
   attackTrails = attackTrails.filter((trail) => now < trail.removeAt);
 }
 
-function addAttackTrail(range, type) {
-  const position = positions[ownSlot];
-  const direction = directions[ownSlot];
-  attackTrails.push({ x1: position.x, y1: position.y, x2: position.x + direction.x * range, y2: position.y + direction.y * range, type, removeAt: performance.now() + 180 });
+function addAttackTrail(range, type, actor = getBattlePlayer(ownSlot)) {
+  attackTrails.push({ ownerSlot: actor.slot, x1: actor.x, y1: actor.y, x2: actor.x + actor.direction.x * range, y2: actor.y + actor.direction.y * range, type, removeAt: performance.now() + 180 });
 }
 
 function drawGame(now = performance.now()) {
@@ -568,7 +652,7 @@ function drawGame(now = performance.now()) {
     context.moveTo(trail.x1 * cell, trail.y1 * cell);
     context.lineTo(trail.x2 * cell, trail.y2 * cell);
     context.lineWidth = trail.type === "charge" ? cell * .45 : cell * .24;
-    context.strokeStyle = ownSlot === 1 ? "rgba(220,244,255,.9)" : "rgba(255,236,210,.9)";
+    context.strokeStyle = trail.ownerSlot === 1 ? "rgba(220,244,255,.9)" : "rgba(255,236,210,.9)";
     context.stroke();
   });
 
@@ -588,25 +672,24 @@ function drawGame(now = performance.now()) {
     context.fillStyle = effect.exploded ? "rgba(255,255,255,.58)" : "#182438";
     context.fill();
     context.lineWidth = cell * .12;
-    context.strokeStyle = ownSlot === 1 ? COLORS.blue : COLORS.orange;
+    context.strokeStyle = effect.ownerSlot === 1 ? COLORS.blue : COLORS.orange;
     context.stroke();
   });
 
-  Object.entries(positions).forEach(([slotValue, position]) => {
-    const slot = Number(slotValue);
-    if (mode === "practice" && slot === 2) return;
+  Object.values(battlePlayers).forEach((player) => {
+    const slot = player.slot;
     const radius = cell * .62;
     context.beginPath();
-    context.arc(position.x * cell, position.y * cell, radius, 0, Math.PI * 2);
+    context.arc(player.x * cell, player.y * cell, radius, 0, Math.PI * 2);
     context.fillStyle = slot === 1 ? COLORS.blue : COLORS.orange;
     context.fill();
     context.lineWidth = slot === ownSlot ? cell * .22 : cell * .15;
     context.strokeStyle = slot === ownSlot ? "#ffffff" : "#172033";
     context.stroke();
-    const direction = directions[slot] || { x: 1, y: 0 };
+    const direction = player.direction || { x: 1, y: 0 };
     context.beginPath();
-    context.moveTo(position.x * cell, position.y * cell);
-    context.lineTo((position.x + direction.x) * cell, (position.y + direction.y) * cell);
+    context.moveTo(player.x * cell, player.y * cell);
+    context.lineTo((player.x + direction.x) * cell, (player.y + direction.y) * cell);
     context.lineWidth = cell * .18;
     context.strokeStyle = "#ffffff";
     context.stroke();
@@ -633,9 +716,9 @@ function finishGame() {
   gameRunning = false;
   clearDirectionState();
   const scores = countScores();
-  if (mode === "practice") {
-    if (!practiceFinished) {
-      practiceFinished = true;
+  if (gameMode === "cpu") {
+    if (!cpuFinished) {
+      cpuFinished = true;
       showResult(scores.blue, scores.orange);
     }
     return;
@@ -672,7 +755,7 @@ function showResult(blue, orange) {
   let subtitle = "両チーム同じ面積でした。";
   if (blue !== orange) {
     const winningSlot = blue > orange ? 1 : 2;
-    title = mode === "practice" || winningSlot === ownSlot ? "勝利！" : "敗北…";
+    title = winningSlot === ownSlot ? "勝利！" : "敗北…";
     subtitle = `${winningSlot === 1 ? "ブルー" : "オレンジ"}チームの勝ち`;
   }
   $("#resultTitle").textContent = title;
@@ -688,7 +771,7 @@ async function leaveRoom(showTitle = true) {
   const leavingRoom = roomId;
   roomId = "";
 
-  if (mode === "online" && firebase && leavingRoom) {
+  if (isOnlineMode() && firebase && leavingRoom) {
     try {
       if (disconnectHandle) await disconnectHandle.cancel();
       await firebase.runTransaction(roomRef(leavingRoom), (current) => {
@@ -708,7 +791,7 @@ async function leaveRoom(showTitle = true) {
   roomData = null;
   isHost = false;
   onlinePlayerCount = 0;
-  mode = "practice";
+  gameMode = "cpu";
   if (showTitle) {
     setTitleMessage("");
     showScreen("#titleScreen");
@@ -756,9 +839,9 @@ window.cleanupOldPaintBattleRooms = cleanupOldPaintBattleRooms;
 function selectWeapon(weapon) {
   if (!WEAPONS[weapon] || gameRunning) return;
   selectedWeapon = weapon;
-  playerWeapons[ownSlot] = weapon;
+  getBattlePlayer(ownSlot).weapon = weapon;
   renderWeaponSelection();
-  if (mode === "online" && roomId && firebase) {
+  if (isOnlineMode() && roomId && firebase) {
     firebase.update(firebase.ref(db, `${GAME_PATH}/${roomId}/players/${playerId}`), { weapon }).catch((error) => {
       waitingMessage.textContent = readableFirebaseError(error);
     });
@@ -894,7 +977,30 @@ $("#gameScreen").addEventListener("touchmove", (event) => {
 
 $("#createRoomButton").addEventListener("click", createRoom);
 $("#joinRoomButton").addEventListener("click", joinRoom);
-$("#practiceButton").addEventListener("click", startPractice);
+$("#cpuModeButton").addEventListener("click", () => {
+  gameMode = "cpu";
+  showScreen("#cpuSetupScreen");
+});
+$("#onlineModeButton").addEventListener("click", () => {
+  gameMode = "online";
+  setTitleMessage("");
+  showScreen("#onlineSetupScreen");
+});
+$("#startCpuButton").addEventListener("click", startCpuBattle);
+$("#backFromCpuButton").addEventListener("click", () => showScreen("#titleScreen"));
+$("#backFromOnlineButton").addEventListener("click", () => {
+  gameMode = "cpu";
+  showScreen("#titleScreen");
+});
+document.querySelectorAll(".difficulty-option").forEach((button) => {
+  button.addEventListener("click", () => {
+    cpuDifficulty = button.dataset.difficulty;
+    document.querySelectorAll(".difficulty-option").forEach((option) => {
+      option.classList.toggle("selected", option === button);
+      option.setAttribute("aria-pressed", String(option === button));
+    });
+  });
+});
 $("#startGameButton").addEventListener("click", startOnlineBattle);
 $("#leaveWaitingButton").addEventListener("click", () => leaveRoom(true));
 $("#leaveGameButton").addEventListener("click", () => leaveRoom(true));

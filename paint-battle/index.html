@@ -19,9 +19,52 @@
       </div>
       <p class="tagline">30 × 30のフィールドを、60秒で塗り尽くせ。</p>
 
+      <div class="menu-card mode-menu">
+        <button id="cpuModeButton" class="mode-choice cpu-choice" type="button"><strong>CPU対戦</strong><span>Firebase不要・すぐに遊べる</span></button>
+        <button id="onlineModeButton" class="mode-choice online-choice" type="button"><strong>オンライン対戦</strong><span>部屋を作って2人で対戦</span></button>
+      </div>
+    </section>
+
+    <section id="cpuSetupScreen" class="screen setup-screen hidden">
+      <p class="eyebrow">CPU BATTLE</p>
+      <h1>CPU対戦設定</h1>
+      <div class="setup-card">
+        <fieldset class="weapon-picker" data-weapon-picker="cpu">
+          <legend>自分の武器</legend>
+          <div class="weapon-options">
+            <button class="weapon-option selected" data-weapon="roller" type="button"><strong>ローラー</strong><small>近距離</small></button>
+            <button class="weapon-option" data-weapon="shooter" type="button"><strong>シューター</strong><small>連射</small></button>
+            <button class="weapon-option" data-weapon="bomb" type="button"><strong>ボム</strong><small>広範囲</small></button>
+            <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>長射程</small></button>
+          </div>
+        </fieldset>
+        <fieldset class="difficulty-picker">
+          <legend>CPUの強さ</legend>
+          <div class="difficulty-options">
+            <button class="difficulty-option" data-difficulty="easy" type="button">やさしい</button>
+            <button class="difficulty-option selected" data-difficulty="normal" type="button">ふつう</button>
+            <button class="difficulty-option" data-difficulty="hard" type="button">つよい</button>
+          </div>
+        </fieldset>
+        <label class="select-label" for="cpuWeaponSelect">CPUの武器</label>
+        <select id="cpuWeaponSelect">
+          <option value="random">ランダム</option>
+          <option value="roller">ローラー</option>
+          <option value="shooter">シューター</option>
+          <option value="bomb">ボム</option>
+          <option value="charger">チャージャー</option>
+        </select>
+        <button id="startCpuButton" class="button orange" type="button">CPU対戦を開始</button>
+        <button id="backFromCpuButton" class="button text-button" type="button">タイトルに戻る</button>
+      </div>
+    </section>
+
+    <section id="onlineSetupScreen" class="screen setup-screen hidden">
+      <p class="eyebrow">ONLINE BATTLE</p>
+      <h1>オンライン対戦</h1>
       <div class="menu-card">
-        <fieldset class="weapon-picker compact-picker" data-weapon-picker="title">
-          <legend>練習で使う武器</legend>
+        <fieldset class="weapon-picker compact-picker" data-weapon-picker="online">
+          <legend>自分の武器</legend>
           <div class="weapon-options">
             <button class="weapon-option selected" data-weapon="roller" type="button"><strong>ローラー</strong><small>近距離</small></button>
             <button class="weapon-option" data-weapon="shooter" type="button"><strong>シューター</strong><small>連射</small></button>
@@ -35,9 +78,8 @@
           <input id="roomIdInput" type="text" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="6桁の部屋ID">
           <button id="joinRoomButton" class="button orange" type="button">部屋に入る</button>
         </div>
-        <div class="divider"><span>または</span></div>
-        <button id="practiceButton" class="button ghost" type="button">ひとりで練習</button>
         <p id="titleMessage" class="message" role="status" aria-live="polite"></p>
+        <button id="backFromOnlineButton" class="button text-button" type="button">タイトルに戻る</button>
       </div>
       <p class="hint">オンライン対戦にはFirebaseの設定と通信環境が必要です。</p>
     </section>
