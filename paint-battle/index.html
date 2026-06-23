@@ -20,6 +20,15 @@
       <p class="tagline">30 × 30のフィールドを、60秒で塗り尽くせ。</p>
 
       <div class="menu-card">
+        <fieldset class="weapon-picker compact-picker" data-weapon-picker="title">
+          <legend>練習で使う武器</legend>
+          <div class="weapon-options">
+            <button class="weapon-option selected" data-weapon="roller" type="button"><strong>ローラー</strong><small>近距離</small></button>
+            <button class="weapon-option" data-weapon="shooter" type="button"><strong>シューター</strong><small>連射</small></button>
+            <button class="weapon-option" data-weapon="bomb" type="button"><strong>ボム</strong><small>広範囲</small></button>
+            <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>長射程</small></button>
+          </div>
+        </fieldset>
         <button id="createRoomButton" class="button primary" type="button">部屋を作る</button>
         <div class="join-row">
           <label class="sr-only" for="roomIdInput">6桁の部屋ID</label>
@@ -45,6 +54,16 @@
         <div><span>参加人数</span><strong id="playerCountView">1 / 2</strong></div>
         <div><span>あなたの色</span><strong id="ownColorView" class="color-label blue">ブルー</strong></div>
       </div>
+      <fieldset class="weapon-picker" data-weapon-picker="waiting">
+        <legend>武器を選ぶ</legend>
+        <div class="weapon-options">
+          <button class="weapon-option selected" data-weapon="roller" type="button"><strong>ローラー</strong><small>3×3を塗る</small></button>
+          <button class="weapon-option" data-weapon="shooter" type="button"><strong>シューター</strong><small>射程6</small></button>
+          <button class="weapon-option" data-weapon="bomb" type="button"><strong>ボム</strong><small>5×5爆発</small></button>
+          <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>最大射程12</small></button>
+        </div>
+      </fieldset>
+      <div class="opponent-loadout"><span>相手の武器</span><strong id="opponentWeaponView">未参加</strong></div>
       <p id="waitingMessage" class="message" role="status" aria-live="polite">相手に部屋IDを伝えてください。</p>
       <button id="startGameButton" class="button primary hidden" type="button">バトル開始</button>
       <button id="leaveWaitingButton" class="button text-button" type="button">退出する</button>
@@ -60,13 +79,17 @@
         <canvas id="gameCanvas" width="900" height="900" aria-label="30×30マスの塗りつぶしフィールド"></canvas>
         <div id="countdown" class="countdown hidden" aria-live="assertive"></div>
       </div>
-      <p id="battleStatus" class="battle-status">周囲3×3マスを自分の色に塗ろう</p>
-      <div class="dpad" aria-label="移動ボタン">
-        <button class="direction up" data-direction="up" aria-label="上へ移動" type="button">▲</button>
-        <button class="direction left" data-direction="left" aria-label="左へ移動" type="button">◀</button>
-        <div class="dpad-center" aria-hidden="true"></div>
-        <button class="direction right" data-direction="right" aria-label="右へ移動" type="button">▶</button>
-        <button class="direction down" data-direction="down" aria-label="下へ移動" type="button">▼</button>
+      <div class="weapon-readout"><span>WEAPON</span><strong id="currentWeaponView">ローラー</strong></div>
+      <p id="battleStatus" class="battle-status">スティックを倒して移動</p>
+      <div class="control-deck">
+        <div id="joystick" class="joystick" aria-label="移動スティック" role="application">
+          <div class="joystick-ring"></div>
+          <div id="joystickKnob" class="joystick-knob"></div>
+        </div>
+        <div class="action-area">
+          <button id="actionButton" class="action-button hidden" type="button"><span id="actionButtonLabel">撃つ</span><i id="chargeFill"></i></button>
+          <span id="actionStatus" class="action-status"></span>
+        </div>
       </div>
       <button id="leaveGameButton" class="leave-game" type="button">退出</button>
     </section>
