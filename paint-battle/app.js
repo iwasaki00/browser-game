@@ -1,3 +1,5 @@
+import { SPECIALS, SpecialManager } from "./special-manager.js";
+
 // Firebase Webアプリ設定: 利用するプロジェクトの値へ差し替えてください。
 const firebaseConfig = {
   apiKey: "AIzaSyArMxZM_pYb3rJ1MZkNoMFw12Ct58GLEDQ",
@@ -52,6 +54,7 @@ let subscriptions = [];
 let disconnectHandle = null;
 let grid = new Uint8Array(CELL_COUNT);
 let selectedWeapon = "roller";
+let selectedSpecial = "storm";
 let battlePlayers = createBattlePlayers();
 let joystickInput = { x: 0, y: 0, magnitude: 0, pointerId: null };
 let keyboardInput = { up: false, down: false, left: false, right: false };
@@ -69,12 +72,20 @@ let nextActionAt = 0;
 let bombEffects = [];
 let attackTrails = [];
 let cpuDifficulty = "normal";
-let cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0 };
+let cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0, nextSpecialCheckAt: 0 };
+const specialManager = new SpecialManager({
+  gridSize: GRID_SIZE,
+  paintCells: (cells, color) => paintCells(cells, color),
+  getPlayer: (slot) => getBattlePlayer(slot),
+  getGridColor: (index) => grid[index],
+  announce: (slot, name) => showSpecialAnnouncement(slot, name),
+  shake: () => shakeScreen()
+});
 
 function createBattlePlayers() {
   return {
-    player1: { id: "player1", slot: 1, x: 3, y: 15, direction: { x: 1, y: 0 }, weapon: selectedWeapon, lastPaintCell: -1 },
-    player2: { id: "player2", slot: 2, x: 26, y: 15, direction: { x: -1, y: 0 }, weapon: "roller", lastPaintCell: -1 }
+    player1: { id: "player1", slot: 1, x: 3, y: 15, direction: { x: 1, y: 0 }, weapon: selectedWeapon, selectedSpecial, spGauge: 0, lastPaintCell: -1 },
+    player2: { id: "player2", slot: 2, x: 26, y: 15, direction: { x: -1, y: 0 }, weapon: "roller", selectedSpecial: "storm", spGauge: 0, lastPaintCell: -1 }
   };
 }
 
@@ -150,6 +161,8 @@ function buildPlayer(slot) {
     x: start.x,
     y: start.y,
     weapon: selectedWeapon,
+    selectedSpecial,
+    spGauge: 0,
     direction: start.direction,
     joinedAt: firebase.serverTimestamp(),
     lastSeenAt: firebase.serverTimestamp()
@@ -237,6 +250,7 @@ async function enterRoom(id, slot) {
   grid = new Uint8Array(CELL_COUNT);
   battlePlayers = createBattlePlayers();
   getBattlePlayer(ownSlot).weapon = selectedWeapon;
+  getBattlePlayer(ownSlot).selectedSpecial = selectedSpecial;
   $("#roomIdView").textContent = id;
   $("#ownColorView").textContent = slot === 1 ? "ブルー" : "オレンジ";
   $("#ownColorView").className = `color-label ${slot === 1 ? "blue" : "orange"}`;
@@ -272,14 +286,19 @@ function subscribeToRoom() {
         Object.assign(getBattlePlayer(player.slot), { x: player.x, y: player.y });
       }
       if (player.slot && WEAPONS[player.weapon]) getBattlePlayer(player.slot).weapon = player.weapon;
+      if (player.slot && SPECIALS[player.selectedSpecial]) getBattlePlayer(player.slot).selectedSpecial = player.selectedSpecial;
+      if (player.slot && Number.isFinite(player.spGauge)) getBattlePlayer(player.slot).spGauge = Math.max(0, Math.min(100, player.spGauge));
       if (player.slot && Number.isFinite(player.direction?.x) && Number.isFinite(player.direction?.y)) {
         if (id !== playerId || !gameRunning) getBattlePlayer(player.slot).direction = player.direction;
       }
       if (id === playerId && WEAPONS[player.weapon]) selectedWeapon = player.weapon;
+      if (id === playerId && SPECIALS[player.selectedSpecial]) selectedSpecial = player.selectedSpecial;
     });
     const opponent = entries.find(([id]) => id !== playerId)?.[1];
     $("#opponentWeaponView").textContent = opponent ? (WEAPONS[opponent.weapon]?.name || WEAPONS.roller.name) : "未参加";
+    $("#opponentSpecialView").textContent = opponent ? (SPECIALS[opponent.selectedSpecial]?.name || SPECIALS.storm.name) : "";
     renderWeaponSelection();
+    renderSpecialSelection();
     const hostId = roomData?.hostId;
     isHost = hostId === playerId;
     $("#startGameButton").classList.toggle("hidden", !isHost);
@@ -312,6 +331,8 @@ function applyGridCell(indexValue, colorValue) {
   if (index >= 0 && index < CELL_COUNT && (color === 1 || color === 2)) {
     if (grid[index] !== color) recentPaint.set(index, performance.now());
     grid[index] = color;
+    const protectedColor = specialManager.resolvePaintColor(index, color, performance.now());
+    if (gameRunning && protectedColor !== color) paintCells([index], protectedColor);
   }
 }
 
@@ -352,12 +373,15 @@ function startCpuBattle() {
   grid = new Uint8Array(CELL_COUNT);
   battlePlayers = createBattlePlayers();
   battlePlayers.player1.weapon = selectedWeapon;
+  battlePlayers.player1.selectedSpecial = selectedSpecial;
   const requestedWeapon = $("#cpuWeaponSelect").value;
   const weaponKeys = Object.keys(WEAPONS);
   battlePlayers.player2.weapon = requestedWeapon === "random"
     ? weaponKeys[Math.floor(Math.random() * weaponKeys.length)]
     : requestedWeapon;
-  cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0 };
+  const specialKeys = Object.keys(SPECIALS);
+  battlePlayers.player2.selectedSpecial = specialKeys[Math.floor(Math.random() * specialKeys.length)];
+  cpuBrain = { nextDecisionAt: 0, nextAttackAt: 0, chargingAt: 0, nextSpecialCheckAt: 0 };
   cpuFinished = false;
   startGame(Date.now() + GAME_DURATION);
 }
@@ -377,12 +401,15 @@ function startGame(endAt) {
   chargeStartedAt = 0;
   bombEffects = [];
   attackTrails = [];
+  specialManager.reset();
   getBattlePlayer(ownSlot).weapon = selectedWeapon;
   $("#currentWeaponView").textContent = WEAPONS[selectedWeapon].name;
+  $("#currentSpecialView").textContent = SPECIALS[getBattlePlayer(ownSlot).selectedSpecial].name;
   $("#battleStatus").textContent = gameMode === "cpu"
     ? `CPU: ${WEAPONS[battlePlayers.player2.weapon].name}（${difficultyName(cpuDifficulty)}）`
     : `あなたは${ownSlot === 1 ? "ブルー" : "オレンジ"}`;
   configureActionButton();
+  updateSpecialHud();
   if (selectedWeapon === "roller") paintRoller(getBattlePlayer(ownSlot), true);
   if (gameMode === "cpu" && battlePlayers.player2.weapon === "roller") paintRoller(battlePlayers.player2, true);
   cancelAnimationFrame(animationFrame);
@@ -397,6 +424,7 @@ function gameLoop(now) {
   if (gameMode === "cpu") updateCpu(deltaSeconds, now);
   updateWeaponAction(now);
   updateEffects(now);
+  specialManager.update(now);
   drawGame(now);
   updateHud();
 
@@ -411,13 +439,13 @@ function updateMovement(deltaSeconds, now) {
   const input = getMovementInput();
   if (input.magnitude <= .02) return;
   const player = getBattlePlayer(ownSlot);
-  const distance = MOVE_SPEED * WEAPONS[selectedWeapon].speed * input.magnitude * deltaSeconds;
+  const distance = MOVE_SPEED * WEAPONS[selectedWeapon].speed * specialManager.getSpeedMultiplier(player.slot, now) * input.magnitude * deltaSeconds;
   player.x += input.x * distance;
   player.y += input.y * distance;
   player.x = Math.max(.5, Math.min(GRID_SIZE - .5, player.x));
   player.y = Math.max(.5, Math.min(GRID_SIZE - .5, player.y));
   player.direction = { x: input.x, y: input.y };
-  if (selectedWeapon === "roller") paintRoller(player, false);
+  if (selectedWeapon === "roller" || specialManager.isMegaRoller(player.slot, now)) paintRoller(player, false);
 
   if (isOnlineMode() && now - lastPositionSyncAt >= POSITION_SYNC_INTERVAL) {
     lastPositionSyncAt = now;
@@ -449,11 +477,12 @@ function updateCpu(deltaSeconds, now) {
     cpuBrain.nextDecisionAt = now + 500;
   }
 
-  const distance = MOVE_SPEED * WEAPONS[cpu.weapon].speed * level.speed * deltaSeconds;
+  const distance = MOVE_SPEED * WEAPONS[cpu.weapon].speed * level.speed * specialManager.getSpeedMultiplier(cpu.slot, now) * deltaSeconds;
   cpu.x = Math.max(.5, Math.min(GRID_SIZE - .5, cpu.x + cpu.direction.x * distance));
   cpu.y = Math.max(.5, Math.min(GRID_SIZE - .5, cpu.y + cpu.direction.y * distance));
-  if (cpu.weapon === "roller") paintRoller(cpu, false);
+  if (cpu.weapon === "roller" || specialManager.isMegaRoller(cpu.slot, now)) paintRoller(cpu, false);
   updateCpuWeapon(cpu, level, now);
+  updateCpuSpecial(cpu, now);
 }
 
 function chooseCpuDirection(cpu, level) {
@@ -500,6 +529,13 @@ function updateCpuWeapon(cpu, level, now) {
   }
 }
 
+function updateCpuSpecial(cpu, now) {
+  if (cpu.spGauge < 100 || now < cpuBrain.nextSpecialCheckAt) return;
+  const chance = { easy: .5, normal: .75, hard: 1 }[cpuDifficulty];
+  cpuBrain.nextSpecialCheckAt = now + 3000;
+  if (Math.random() <= chance) activateSpecial(cpu);
+}
+
 function difficultyName(value) {
   return { easy: "やさしい", normal: "ふつう", hard: "つよい" }[value] || "ふつう";
 }
@@ -512,8 +548,9 @@ function paintRoller(actor = getBattlePlayer(ownSlot), force = false) {
   actor.lastPaintCell = centerIndex;
   const cells = [];
 
-  for (let y = centerY - 1; y <= centerY + 1; y += 1) {
-    for (let x = centerX - 1; x <= centerX + 1; x += 1) {
+  const radius = specialManager.isMegaRoller(actor.slot, performance.now()) ? 3 : 1;
+  for (let y = centerY - radius; y <= centerY + radius; y += 1) {
+    for (let x = centerX - radius; x <= centerX + radius; x += 1) {
       const index = cellIndex(x, y);
       if (index !== -1) cells.push(index);
     }
@@ -549,12 +586,21 @@ function paintCharger(chargeRatio, actor = getBattlePlayer(ownSlot)) {
 function paintCells(cells, color) {
   const updates = {};
   const now = performance.now();
+  const actor = getBattlePlayer(color);
+  let gaugeGain = 0;
   [...new Set(cells)].forEach((index) => {
-    if (index < 0 || index >= CELL_COUNT || grid[index] === color) return;
-    grid[index] = color;
+    if (index < 0 || index >= CELL_COUNT) return;
+    const previousColor = grid[index];
+    gaugeGain += previousColor === 0 ? 2 : previousColor === color ? 1 : 3;
+    const resolvedColor = specialManager.resolvePaintColor(index, color, now);
+    if (previousColor === resolvedColor) return;
+    grid[index] = resolvedColor;
     recentPaint.set(index, now);
-    updates[`grid/${index}`] = color;
+    updates[`grid/${index}`] = resolvedColor;
   });
+
+  actor.spGauge = Math.min(100, actor.spGauge + gaugeGain);
+  if (isOnlineMode() && color === ownSlot) updates[`players/${playerId}/spGauge`] = actor.spGauge;
 
   if (isOnlineMode() && Object.keys(updates).length) {
     firebase.update(roomRef(), updates).catch(console.warn);
@@ -656,6 +702,8 @@ function drawGame(now = performance.now()) {
     context.stroke();
   });
 
+  specialManager.draw(context, cell, now, COLORS);
+
   bombEffects.forEach((effect) => {
     let x = effect.targetX;
     let y = effect.targetY;
@@ -710,6 +758,7 @@ function updateHud() {
   const seconds = Math.max(0, Math.ceil((gameEndAt - Date.now()) / 1000));
   $("#timeView").textContent = seconds;
   $("#timeView").parentElement.classList.toggle("danger", seconds <= 10);
+  updateSpecialHud();
 }
 
 function finishGame() {
@@ -848,6 +897,66 @@ function selectWeapon(weapon) {
   }
 }
 
+function selectSpecial(specialId) {
+  if (!SPECIALS[specialId] || gameRunning) return;
+  selectedSpecial = specialId;
+  getBattlePlayer(ownSlot).selectedSpecial = specialId;
+  renderSpecialSelection();
+  if (isOnlineMode() && roomId && firebase) {
+    firebase.update(firebase.ref(db, `${GAME_PATH}/${roomId}/players/${playerId}`), { selectedSpecial: specialId }).catch((error) => {
+      waitingMessage.textContent = readableFirebaseError(error);
+    });
+  }
+}
+
+function renderSpecialSelection() {
+  document.querySelectorAll(".special-select").forEach((select) => { select.value = selectedSpecial; });
+}
+
+function updateSpecialHud() {
+  const player = getBattlePlayer(ownSlot);
+  const gauge = Math.max(0, Math.min(100, Math.round(player.spGauge)));
+  $("#spGaugeFill").style.height = `${gauge}%`;
+  $("#spGaugeValue").textContent = gauge;
+  $("#specialButton").disabled = gauge < 100 || !gameRunning;
+  $("#specialButton").classList.toggle("ready", gauge >= 100 && gameRunning);
+}
+
+function activateSpecial(actor = getBattlePlayer(ownSlot)) {
+  if (!gameRunning || actor.spGauge < 100 || !SPECIALS[actor.selectedSpecial]) return false;
+  actor.spGauge = 0;
+  const activated = specialManager.activate(actor, actor.selectedSpecial, performance.now());
+  if (!activated) return false;
+  if (isOnlineMode() && actor.slot === ownSlot) {
+    firebase.update(firebase.ref(db, `${GAME_PATH}/${roomId}/players/${playerId}`), {
+      spGauge: 0,
+      x: Math.round(actor.x * 100) / 100,
+      y: Math.round(actor.y * 100) / 100,
+      direction: actor.direction
+    }).catch(console.warn);
+  }
+  updateSpecialHud();
+  if (navigator.vibrate) navigator.vibrate([60, 35, 100]);
+  return true;
+}
+
+function showSpecialAnnouncement(slot, name) {
+  const announcement = $("#specialAnnouncement");
+  $("#specialAnnouncementName").textContent = `${slot === 1 ? "BLUE" : "ORANGE"} / ${name}`;
+  announcement.classList.add("hidden");
+  void announcement.offsetWidth;
+  announcement.classList.remove("hidden");
+  window.setTimeout(() => announcement.classList.add("hidden"), 850);
+}
+
+function shakeScreen() {
+  const frame = document.querySelector(".canvas-frame");
+  frame.classList.remove("shaking");
+  void frame.offsetWidth;
+  frame.classList.add("shaking");
+  window.setTimeout(() => frame.classList.remove("shaking"), 360);
+}
+
 function renderWeaponSelection() {
   document.querySelectorAll(".weapon-option").forEach((button) => {
     button.classList.toggle("selected", button.dataset.weapon === selectedWeapon);
@@ -937,6 +1046,10 @@ function endAction(event) {
 document.querySelectorAll(".weapon-option").forEach((button) => {
   button.addEventListener("click", () => selectWeapon(button.dataset.weapon));
 });
+document.querySelectorAll(".special-select").forEach((select) => {
+  select.addEventListener("change", () => selectSpecial(select.value));
+});
+$("#specialButton").addEventListener("click", () => activateSpecial());
 
 joystick.addEventListener("pointerdown", (event) => {
   event.preventDefault();
@@ -1017,4 +1130,5 @@ $("#copyRoomIdButton").addEventListener("click", async () => {
 });
 
 renderWeaponSelection();
+renderSpecialSelection();
 drawGame();

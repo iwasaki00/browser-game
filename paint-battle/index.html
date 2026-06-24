@@ -38,6 +38,17 @@
             <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>長射程</small></button>
           </div>
         </fieldset>
+        <label class="select-label" for="cpuSpecialSelect">自分のスペシャル</label>
+        <select id="cpuSpecialSelect" class="special-select">
+          <option value="storm">ペイントストーム</option>
+          <option value="megaRoller">メガローラー</option>
+          <option value="missile">インクミサイル</option>
+          <option value="laser">ペイントレーザー</option>
+          <option value="barrier">塗り返しバリア</option>
+          <option value="shark">ペイントサメ</option>
+          <option value="copyCat">コピーキャット</option>
+          <option value="blackHole">ペイントブラックホール</option>
+        </select>
         <fieldset class="difficulty-picker">
           <legend>CPUの強さ</legend>
           <div class="difficulty-options">
@@ -72,6 +83,17 @@
             <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>長射程</small></button>
           </div>
         </fieldset>
+        <label class="select-label" for="onlineSpecialSelect">スペシャル</label>
+        <select id="onlineSpecialSelect" class="special-select">
+          <option value="storm">ペイントストーム</option>
+          <option value="megaRoller">メガローラー</option>
+          <option value="missile">インクミサイル</option>
+          <option value="laser">ペイントレーザー</option>
+          <option value="barrier">塗り返しバリア</option>
+          <option value="shark">ペイントサメ</option>
+          <option value="copyCat">コピーキャット</option>
+          <option value="blackHole">ペイントブラックホール</option>
+        </select>
         <button id="createRoomButton" class="button primary" type="button">部屋を作る</button>
         <div class="join-row">
           <label class="sr-only" for="roomIdInput">6桁の部屋ID</label>
@@ -105,7 +127,18 @@
           <button class="weapon-option" data-weapon="charger" type="button"><strong>チャージャー</strong><small>最大射程12</small></button>
         </div>
       </fieldset>
-      <div class="opponent-loadout"><span>相手の武器</span><strong id="opponentWeaponView">未参加</strong></div>
+      <label class="select-label" for="waitingSpecialSelect">スペシャル</label>
+      <select id="waitingSpecialSelect" class="special-select">
+        <option value="storm">ペイントストーム</option>
+        <option value="megaRoller">メガローラー</option>
+        <option value="missile">インクミサイル</option>
+        <option value="laser">ペイントレーザー</option>
+        <option value="barrier">塗り返しバリア</option>
+        <option value="shark">ペイントサメ</option>
+        <option value="copyCat">コピーキャット</option>
+        <option value="blackHole">ペイントブラックホール</option>
+      </select>
+      <div class="opponent-loadout"><span>相手の装備</span><strong><span id="opponentWeaponView">未参加</span><small id="opponentSpecialView"></small></strong></div>
       <p id="waitingMessage" class="message" role="status" aria-live="polite">相手に部屋IDを伝えてください。</p>
       <button id="startGameButton" class="button primary hidden" type="button">バトル開始</button>
       <button id="leaveWaitingButton" class="button text-button" type="button">退出する</button>
@@ -120,8 +153,14 @@
       <div class="canvas-frame">
         <canvas id="gameCanvas" width="900" height="900" aria-label="30×30マスの塗りつぶしフィールド"></canvas>
         <div id="countdown" class="countdown hidden" aria-live="assertive"></div>
+        <div id="specialAnnouncement" class="special-announcement hidden"><strong>SPECIAL!</strong><span id="specialAnnouncementName"></span></div>
       </div>
-      <div class="weapon-readout"><span>WEAPON</span><strong id="currentWeaponView">ローラー</strong></div>
+      <div class="special-panel">
+        <button id="specialButton" class="special-button" type="button" disabled>SP</button>
+        <div class="sp-gauge"><i id="spGaugeFill"></i></div>
+        <span id="spGaugeValue">0</span>
+      </div>
+      <div class="weapon-readout"><span>WEAPON</span><strong id="currentWeaponView">ローラー</strong><span>SPECIAL</span><strong id="currentSpecialView">ペイントストーム</strong></div>
       <p id="battleStatus" class="battle-status">スティックを倒して移動</p>
       <div class="control-deck">
         <div id="joystick" class="joystick" aria-label="移動スティック" role="application">
