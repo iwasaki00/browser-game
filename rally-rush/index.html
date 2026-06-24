@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Rally Rush</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game">
+    <canvas id="gameCanvas" aria-label="俯瞰視点のラリーゲーム"></canvas>
+
+    <header class="hud" aria-label="レース情報">
+      <a class="back" href="../index.html" aria-label="ゲーム一覧へ戻る">‹</a>
+      <div class="meter"><span>TIME</span><strong id="timeText">0:00.00</strong></div>
+      <div class="meter"><span>SPEED</span><strong><b id="speedText">0</b> km/h</strong></div>
+      <div class="meter turbo-meter"><span>TURBO</span><strong id="turboText">● ● ●</strong></div>
+    </header>
+
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+    <div class="surface" id="surfaceText">ASPHALT</div>
+
+    <section class="controls" aria-label="ハンドル操作">
+      <div id="wheelControl" class="wheel-control" role="slider" aria-label="ステアリング" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+        <div id="steeringWheel" class="steering-wheel" aria-hidden="true">
+          <i class="wheel-rim"></i>
+          <i class="wheel-spoke spoke-left"></i>
+          <i class="wheel-spoke spoke-right"></i>
+          <i class="wheel-spoke spoke-bottom"></i>
+          <b>R</b>
+        </div>
+        <small>DRAG TO STEER</small>
+      </div>
+      <button id="turboButton" class="turbo" type="button" aria-label="ターボを使う"><span>⚡</span><small>TURBO</small></button>
+    </section>
+
+    <section class="overlay show" id="startOverlay">
+      <div class="panel">
+        <p class="kicker">TOP-DOWN RALLY</p>
+        <h1>RALLY<br><em>RUSH</em></h1>
+        <p>アクセルは全開のまま。左右のハンドルで、毎回変わるコースを駆け抜けろ。</p>
+        <div class="tips"><span>◎ ドラッグで旋回</span><span>⚡ ターボ × 3</span></div>
+        <p class="best">BEST <strong id="startBestText">--:--.--</strong></p>
+        <button id="startButton" class="primary" type="button">START</button>
+        <small class="keyboard">PC: ← → / SPACE</small>
+      </div>
+    </section>
+
+    <section class="overlay" id="resultOverlay">
+      <div class="panel result-panel">
+        <p class="kicker">FINISH</p>
+        <h2 id="resultTitle">STAGE CLEAR</h2>
+        <p class="result-time" id="resultTime">0:00.00</p>
+        <p class="best" id="resultBest">BEST --:--.--</p>
+        <button id="retryButton" class="primary" type="button">RETRY</button>
+        <a class="menu-link" href="../index.html">ゲーム一覧へ</a>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
