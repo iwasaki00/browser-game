@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>最強生物トーナメント</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">‹ MENU</a>
+      <p class="kicker">GENETIC BATTLE LAB</p>
+      <h1>最強生物<br><span>トーナメント</span></h1>
+      <p class="intro">戦い、選ばれ、受け継がれる。64体の進化を見届けよう。</p>
+    </header>
+
+    <section class="status-grid" aria-label="現在の状況">
+      <article class="status-card generation-card"><span>GENERATION</span><strong id="generation">1</strong><small>世代</small></article>
+      <article class="status-card"><span>POPULATION</span><strong id="population">64</strong><small>個体</small></article>
+    </section>
+
+    <section class="panel champion-panel">
+      <div class="panel-heading">
+        <div><p class="section-label">CURRENT ALPHA</p><h2>最強候補</h2></div>
+        <span class="title-badge" id="creature-title">原初の王</span>
+      </div>
+      <div class="creature-profile">
+        <div class="creature-avatar" aria-hidden="true">
+          <span class="horn horn-left"></span><span class="horn horn-right"></span>
+          <span class="eye eye-left"></span><span class="eye eye-right"></span><span class="mouth"></span>
+        </div>
+        <div><p class="creature-name" id="best-name">---</p><p class="creature-code" id="best-code">ID: ---</p></div>
+      </div>
+      <div class="stats" id="best-stats" aria-label="最強個体の能力値"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading compact">
+        <div><p class="section-label">POPULATION DATA</p><h2>平均能力値</h2></div>
+        <strong class="average-score" id="average-score">--</strong>
+      </div>
+      <div class="stats average-stats" id="average-stats" aria-label="平均能力値"></div>
+    </section>
+
+    <section class="controls" aria-label="世代操作">
+      <button class="primary-button" id="next-generation" type="button"><span>▶</span><strong>1世代進める</strong></button>
+      <button class="secondary-button" id="next-ten" type="button">10世代進める</button>
+      <button class="reset-button" id="reset" type="button">↻ リセット</button>
+      <p class="progress-text" id="progress" aria-live="polite"></p>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-heading compact"><div><p class="section-label">HALL OF FAME</p><h2>歴代チャンピオン</h2></div></div>
+      <div class="history-chart" id="history-chart"><p class="empty-message">トーナメントを開始すると記録されます</p></div>
+      <div class="history-list" id="history-list"></div>
+    </section>
+
+    <section class="panel log-panel">
+      <div class="panel-heading compact">
+        <div><p class="section-label">BATTLE REPORT</p><h2>トーナメント結果</h2></div><span class="live-dot">LIVE</span>
+      </div>
+      <ol class="battle-log" id="battle-log" aria-live="polite"><li class="empty-message">第1世代、64体が待機中…</li></ol>
+    </section>
+    <footer>Mutation rate 5% · Gene range 1–100</footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
