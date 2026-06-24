@@ -6,113 +6,80 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
-  <title>Block Pocket Sandbox</title>
+  <title>Frontier Below</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main id="app">
-    <canvas id="gameCanvas" aria-label="Block Pocket Sandbox"></canvas>
+    <canvas id="gameCanvas" aria-label="Frontier Below game world"></canvas>
 
-    <section class="top-hud" aria-label="game status">
-      <a class="back-link" href="../index.html" aria-label="Back to menu">&larr;</a>
-      <div class="status-pill">
-        <span id="positionText">16,16</span>
-        <strong id="modeText">BUILD</strong>
+    <header class="hud">
+      <a class="icon-button back-button" href="../index.html" aria-label="Back to games">&larr;</a>
+      <div class="health-panel">
+        <span>HP</span>
+        <div class="health-track"><div id="healthFill"></div></div>
+        <strong id="healthText">100</strong>
       </div>
-      <div class="vitals" aria-label="player vitals">
-        <span id="hpText">HP 100</span>
-        <span id="foodText">Food 100</span>
-        <span id="timeText">Day</span>
+      <div class="world-status">
+        <strong id="timeText">Day</strong>
+        <span id="depthText">Surface</span>
       </div>
-      <button id="resetButton" class="reset-button" type="button">Reset</button>
+      <button id="pauseButton" class="icon-button" type="button" aria-label="Pause">II</button>
+    </header>
+
+    <div class="message" id="messageText" aria-live="polite">Tap the world to aim.</div>
+    <div class="rotate-tip">Landscape mode recommended</div>
+
+    <section class="move-controls" aria-label="move controls">
+      <button id="leftButton" class="round-control" type="button" aria-label="Move left">&larr;</button>
+      <button id="rightButton" class="round-control" type="button" aria-label="Move right">&rarr;</button>
     </section>
 
-    <section class="hint" id="hintText" aria-live="polite">
-      Break wood, craft tools, and prepare for night.
+    <section class="action-controls" aria-label="action controls">
+      <button id="jumpButton" class="action jump" type="button">Jump</button>
+      <button id="mineButton" class="action mine" type="button">Mine</button>
+      <button id="placeButton" class="action place" type="button">Place</button>
+      <button id="attackButton" class="action attack" type="button">Attack</button>
+      <button id="craftButton" class="action craft" type="button">Craft</button>
     </section>
 
-    <section class="joystick" id="joystick" aria-label="move">
-      <div class="stick-base">
-        <div class="stick-thumb" id="stickThumb"></div>
-      </div>
-    </section>
+    <section class="hotbar" id="hotbar" aria-label="hotbar"></section>
 
-    <section class="action-rail" aria-label="actions">
-      <button id="placeButton" class="action-button active" data-action="place" type="button">Place</button>
-      <button id="breakButton" class="action-button" data-action="break" type="button" aria-pressed="false">Break</button>
-      <button id="attackButton" class="action-button" data-action="attack" type="button">Attack</button>
-      <button id="eatButton" class="action-button" type="button">Eat</button>
-      <button id="craftButton" class="action-button craft" type="button">Craft</button>
-    </section>
-
-    <section class="inventory-strip" id="inventoryStrip" aria-label="inventory"></section>
-
-    <section class="tool-bar" id="toolBar" aria-label="tool selection">
-      <button class="tool-option active" data-tool="hand" type="button">Hand</button>
-      <button class="tool-option" data-tool="axe" type="button">Axe</button>
-      <button class="tool-option" data-tool="pickaxe" type="button">Pick</button>
-      <button class="tool-option" data-tool="shovel" type="button">Shovel</button>
-    </section>
-
-    <section class="block-bar" id="blockBar" aria-label="block selection">
-      <button class="block-option active" data-block="grass" type="button">
-        <span class="swatch grass"></span>
-        <span>Grass</span>
-      </button>
-      <button class="block-option" data-block="dirt" type="button">
-        <span class="swatch dirt"></span>
-        <span>Dirt</span>
-      </button>
-      <button class="block-option" data-block="stone" type="button">
-        <span class="swatch stone"></span>
-        <span>Stone</span>
-      </button>
-      <button class="block-option" data-block="wood" type="button">
-        <span class="swatch wood"></span>
-        <span>Wood</span>
-      </button>
-      <button class="block-option" data-block="water" type="button">
-        <span class="swatch water"></span>
-        <span>Water</span>
-      </button>
-      <button class="block-option" data-block="sand" type="button">
-        <span class="swatch sand"></span>
-        <span>Sand</span>
-      </button>
-      <button class="block-option" data-block="ore" type="button">
-        <span class="swatch ore"></span>
-        <span>Ore</span>
-      </button>
-      <button class="block-option" data-block="torch" type="button">
-        <span class="swatch torch"></span>
-        <span>Torch</span>
-      </button>
-      <button class="block-option" data-block="chest" type="button">
-        <span class="swatch chest"></span>
-        <span>Chest</span>
-      </button>
-    </section>
-
-    <section class="craft-panel" id="craftPanel" aria-label="crafting">
-      <div class="craft-card">
-        <div class="craft-head">
-          <strong>Craft</strong>
-          <button id="closeCraftButton" type="button">Close</button>
+    <section class="modal" id="craftModal" aria-label="crafting menu">
+      <div class="modal-card craft-card">
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow">Workshop</p>
+            <h2>Craft</h2>
+          </div>
+          <button id="closeCraftButton" class="icon-button" type="button" aria-label="Close crafting">X</button>
         </div>
-        <div class="craft-list" id="craftList"></div>
+        <p class="craft-note" id="craftNote">Basic recipes are available anywhere.</p>
+        <div class="recipe-list" id="recipeList"></div>
       </div>
     </section>
 
-    <section class="tutorial show" id="tutorialPanel" aria-label="tutorial">
-      <div class="tutorial-card">
-        <p class="eyebrow">Mission</p>
-        <h1>Block Pocket Sandbox</h1>
-        <ol>
-          <li id="missionWood">Break wood to collect materials.</li>
-          <li id="missionBench">Craft planks and a workbench.</li>
-          <li id="missionTorch">Craft a torch before night.</li>
-        </ol>
-        <button id="startButton" type="button">Start</button>
+    <section class="modal" id="pauseModal" aria-label="pause menu">
+      <div class="modal-card pause-card">
+        <p class="eyebrow">Frontier Below</p>
+        <h2>Paused</h2>
+        <button id="resumeButton" class="menu-button primary" type="button">Resume</button>
+        <button id="saveButton" class="menu-button" type="button">Save</button>
+        <button id="resetButton" class="menu-button danger" type="button">Reset World</button>
+      </div>
+    </section>
+
+    <section class="modal show" id="startModal" aria-label="game introduction">
+      <div class="modal-card intro-card">
+        <p class="eyebrow">Original 2D Sandbox</p>
+        <h1>Frontier Below</h1>
+        <p>Explore a changing frontier, dig into caves, build shelters, craft tools, and fend off wandering slimes.</p>
+        <ul>
+          <li>Tap the world to choose a target.</li>
+          <li>Hold Mine for continuous digging.</li>
+          <li>Craft a workbench to unlock better gear.</li>
+        </ul>
+        <button id="startButton" class="menu-button primary" type="button">Start Exploring</button>
       </div>
     </section>
   </main>
