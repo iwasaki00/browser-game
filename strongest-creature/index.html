@@ -12,27 +12,66 @@
 <body>
   <main class="app">
     <header class="hero">
-      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">‹ MENU</a>
-      <p class="kicker">GENETIC BATTLE LAB</p>
+      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">← MENU</a>
+      <p class="kicker">GENETIC BATTLE ARENA</p>
       <h1>最強生物<br><span>トーナメント</span></h1>
-      <p class="intro">戦い、選ばれ、受け継がれる。64体の進化を見届けよう。</p>
+      <p class="intro">64体の小さなモンスターが戦い、勝者の遺伝子を次世代へつないでいきます。</p>
     </header>
 
-    <section class="status-grid" aria-label="現在の状況">
+    <section class="status-grid" aria-label="現在の状態">
       <article class="status-card generation-card"><span>GENERATION</span><strong id="generation">1</strong><small>世代</small></article>
-      <article class="status-card"><span>POPULATION</span><strong id="population">64</strong><small>個体</small></article>
+      <article class="status-card"><span>POPULATION</span><strong id="population">64</strong><small>体</small></article>
+    </section>
+
+    <section class="arena-panel" aria-label="バトルアリーナ">
+      <div class="arena-header">
+        <div>
+          <p class="section-label" id="round-label">READY</p>
+          <h2 id="match-title">進化を開始</h2>
+        </div>
+        <span class="live-dot">LIVE</span>
+      </div>
+
+      <div class="arena" id="arena">
+        <div class="arena-lane"></div>
+        <div class="creature-fighter fighter-left" id="fighter-a">
+          <div class="hp-wrap"><span class="hp-fill" id="hp-a"></span></div>
+          <div class="monster" id="monster-a" aria-hidden="true"></div>
+          <strong class="fighter-name" id="fighter-a-name">---</strong>
+        </div>
+        <div class="creature-fighter fighter-right" id="fighter-b">
+          <div class="hp-wrap"><span class="hp-fill" id="hp-b"></span></div>
+          <div class="monster" id="monster-b" aria-hidden="true"></div>
+          <strong class="fighter-name" id="fighter-b-name">---</strong>
+        </div>
+        <div class="projectile" id="projectile"></div>
+        <div class="winner-crown" id="winner-crown">♛</div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="世代操作">
+      <button class="primary-button" id="next-generation" type="button"><span>▶</span><strong>1世代</strong></button>
+      <button class="secondary-button" id="next-ten" type="button">10世代</button>
+      <button class="auto-button" id="auto-evolve" type="button">自動進化</button>
+      <button class="reset-button" id="reset" type="button">↻ リセット</button>
+      <p class="progress-text" id="progress" aria-live="polite"></p>
+    </section>
+
+    <section class="panel pack-panel" aria-label="群れエリア">
+      <div class="panel-heading compact">
+        <div><p class="section-label">PACK VIEW</p><h2>群れの世代交代</h2></div>
+        <span class="pack-note">上位25%が親</span>
+      </div>
+      <div class="pack-grid" id="pack-grid"></div>
     </section>
 
     <section class="panel champion-panel">
       <div class="panel-heading">
-        <div><p class="section-label">CURRENT ALPHA</p><h2>最強候補</h2></div>
+        <div><p class="section-label">CURRENT ALPHA</p><h2>優勝個体</h2></div>
         <span class="title-badge" id="creature-title">原初の王</span>
       </div>
       <div class="creature-profile">
-        <div class="creature-avatar" aria-hidden="true">
-          <span class="horn horn-left"></span><span class="horn horn-right"></span>
-          <span class="eye eye-left"></span><span class="eye eye-right"></span><span class="mouth"></span>
-        </div>
+        <div class="champion-monster" id="champion-monster" aria-hidden="true"></div>
         <div><p class="creature-name" id="best-name">---</p><p class="creature-code" id="best-code">ID: ---</p></div>
       </div>
       <div class="stats" id="best-stats" aria-label="最強個体の能力値"></div>
@@ -40,32 +79,18 @@
 
     <section class="panel">
       <div class="panel-heading compact">
-        <div><p class="section-label">POPULATION DATA</p><h2>平均能力値</h2></div>
+        <div><p class="section-label">AVERAGE GENES</p><h2>群れの平均</h2></div>
         <strong class="average-score" id="average-score">--</strong>
       </div>
       <div class="stats average-stats" id="average-stats" aria-label="平均能力値"></div>
     </section>
 
-    <section class="controls" aria-label="世代操作">
-      <button class="primary-button" id="next-generation" type="button"><span>▶</span><strong>1世代進める</strong></button>
-      <button class="secondary-button" id="next-ten" type="button">10世代進める</button>
-      <button class="reset-button" id="reset" type="button">↻ リセット</button>
-      <p class="progress-text" id="progress" aria-live="polite"></p>
-    </section>
-
-    <section class="panel history-panel">
-      <div class="panel-heading compact"><div><p class="section-label">HALL OF FAME</p><h2>歴代チャンピオン</h2></div></div>
-      <div class="history-chart" id="history-chart"><p class="empty-message">トーナメントを開始すると記録されます</p></div>
-      <div class="history-list" id="history-list"></div>
-    </section>
-
     <section class="panel log-panel">
-      <div class="panel-heading compact">
-        <div><p class="section-label">BATTLE REPORT</p><h2>トーナメント結果</h2></div><span class="live-dot">LIVE</span>
-      </div>
-      <ol class="battle-log" id="battle-log" aria-live="polite"><li class="empty-message">第1世代、64体が待機中…</li></ol>
+      <div class="panel-heading compact"><div><p class="section-label">SHORT LOG</p><h2>進化ログ</h2></div></div>
+      <ol class="battle-log" id="battle-log" aria-live="polite"><li class="empty-message">1世代目、64体が待機中</li></ol>
     </section>
-    <footer>Mutation rate 5% · Gene range 1–100</footer>
+
+    <footer>Mutation 5% · Gene range 1-100 · Lightweight DOM animation</footer>
   </main>
   <script src="script.js"></script>
 </body>
