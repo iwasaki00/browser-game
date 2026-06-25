@@ -17,13 +17,15 @@
       <a class="back" href="../index.html" aria-label="ゲーム一覧へ戻る">‹</a>
       <div class="meter"><span>TIME</span><strong id="timeText">0:00.00</strong></div>
       <div class="meter"><span>SPEED</span><strong><b id="speedText">0</b> km/h</strong></div>
-      <div class="meter turbo-meter"><span>TURBO</span><strong id="turboText">● ● ●</strong></div>
+      <div class="meter turbo-meter"><span>TURBO</span><strong id="turboText">★★★</strong></div>
+      <div class="meter jump-meter"><span>JUMP</span><strong id="jumpText">READY</strong></div>
     </header>
 
     <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
     <div class="surface" id="surfaceText">ASPHALT</div>
 
     <section class="controls" aria-label="ハンドル操作">
+      <button id="jumpButton" class="jump" type="button" aria-label="ジャンプ"><span>↥</span><small>JUMP</small></button>
       <div id="wheelControl" class="wheel-control" role="slider" aria-label="ステアリング" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" tabindex="0">
         <div id="steeringWheel" class="steering-wheel" aria-hidden="true">
           <i class="wheel-rim"></i>
@@ -34,18 +36,32 @@
         </div>
         <small>DRAG TO STEER</small>
       </div>
-      <button id="turboButton" class="turbo" type="button" aria-label="ターボを使う"><span>⚡</span><small>TURBO</small></button>
+      <button id="turboButton" class="turbo" type="button" aria-label="ターボ"><span>⚡</span><small>TURBO</small></button>
     </section>
 
     <section class="overlay show" id="startOverlay">
       <div class="panel">
         <p class="kicker">TOP-DOWN RALLY</p>
         <h1>RALLY<br><em>RUSH</em></h1>
-        <p>アクセルは全開のまま。左右のハンドルで、毎回変わるコースを駆け抜けろ。</p>
-        <div class="tips"><span>◎ ドラッグで旋回</span><span>⚡ ターボ × 3</span></div>
+        <p>コースを選んでスタート。ハンドル操作、ターボ、ジャンプでランダム生成ラリーを走破してください。</p>
+        <div class="course-select" id="courseSelect" aria-label="コース選択">
+          <button class="course-card active" type="button" data-course="forest">
+            <strong>ビギナー林道</strong><span>広い道 / 緩いカーブ / 少なめ</span>
+          </button>
+          <button class="course-card" type="button" data-course="drift">
+            <strong>ドリフト峠</strong><span>S字多め / ダート多め / 滑りやすい</span>
+          </button>
+          <button class="course-card" type="button" data-course="rocky">
+            <strong>岩場ラリー</strong><span>急カーブ / 岩多め / ジャンプ重要</span>
+          </button>
+          <button class="course-card" type="button" data-course="marsh">
+            <strong>沼地ステージ</strong><span>水たまり / 滑る / やや狭い</span>
+          </button>
+        </div>
+        <div class="tips"><span>◎ ドラッグで旋回</span><span>⚡ ターボ × 3</span><span>↥ JUMP</span></div>
         <p class="best">BEST <strong id="startBestText">--:--.--</strong></p>
         <button id="startButton" class="primary" type="button">START</button>
-        <small class="keyboard">PC: ← → / SPACE</small>
+        <small class="keyboard">PC: ← → / SPACE / SHIFT</small>
       </div>
     </section>
 
