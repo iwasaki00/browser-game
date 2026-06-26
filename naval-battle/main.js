@@ -840,6 +840,10 @@ function updateRoomState(partialData) {
 
 function setPlayerReady() {
   if (gameState.mode !== "online" || !onlineState.role) return;
+  if (gameState.phase === "victory" || gameState.phase === "defeat") {
+    prepareOnlineRematch();
+    return;
+  }
   const localOwner = getLocalOwner();
   if (localOwner.ships.length !== SHIPS.length) {
     addLog("全艦を配置してから準備完了してください。");
@@ -1140,10 +1144,34 @@ function addLog(message) {
 
 function restartGame() {
   if (gameState.mode === "online") {
-    leaveRoom(true);
+    prepareOnlineRematch();
     return;
   }
   startCpuMode();
+}
+
+function prepareOnlineRematch() {
+  if (gameState.mode !== "online" || !onlineState.roomId || !onlineState.role) return;
+  const roomData = onlineState.roomData || {};
+  const hostOwner = createPreparedOwner("host", true);
+  const guestOwner = roomData.guestId ? createPreparedOwner("guest", true) : emptyRoomPlayer("guest");
+  const updates = {
+    status: roomData.hostId && roomData.guestId ? "setup" : "waiting",
+    currentTurn: "host",
+    turnCount: 1,
+    winner: null,
+    "players/host": { ...serializeOwner(hostOwner), name: "host", ready: false },
+    "players/guest": roomData.guestId
+      ? { ...serializeOwner(guestOwner), name: "guest", ready: false }
+      : emptyRoomPlayer("guest"),
+    "public/host": { attackedCells: [], sunkShips: [] },
+    "public/guest": { attackedCells: [], sunkShips: [] },
+    logs: prependLog(roomData.logs, `${onlineState.role} が再戦準備を開始しました。`)
+  };
+
+  withFirebase(async () => {
+    await updateRoomState(updates);
+  }, "再戦準備に失敗しました。");
 }
 
 function pickCpuCard() {
