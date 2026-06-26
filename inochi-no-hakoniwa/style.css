@@ -1,0 +1,221 @@
+:root {
+  --bg: #10130f;
+  --panel: rgba(246, 244, 232, 0.94);
+  --panel-dark: rgba(25, 31, 25, 0.9);
+  --ink: #172016;
+  --muted: #667160;
+  --line: rgba(23, 32, 22, 0.14);
+  --leaf: #4ca83d;
+  --herb: #2e9bc3;
+  --pred: #d84c42;
+  --gold: #f2c94c;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button,
+a {
+  font: inherit;
+  touch-action: manipulation;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  width: 100%;
+  max-width: 520px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
+  gap: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    #182118;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  min-height: 48px;
+  color: #f8f5df;
+}
+
+.back-link {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  color: #d5dcc9;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.kicker {
+  margin: 0 0 3px;
+  color: #a8d86f;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.65rem, 8vw, 2.45rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+}
+
+.stat {
+  min-width: 0;
+  padding: 6px 6px 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fffdf1;
+}
+
+.stat span {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.57rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat strong {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  font-size: 0.9rem;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat.grass strong { color: var(--leaf); }
+.stat.herb strong { color: var(--herb); }
+.stat.pred strong { color: var(--pred); }
+
+.comment {
+  grid-column: 4 / 5;
+  grid-row: 2 / 4;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 7px;
+  border-radius: 6px;
+  color: #fbf8e7;
+  background: var(--panel-dark);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.world-wrap {
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    #263425;
+  background-size: 24px 24px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18), 0 18px 34px rgba(0, 0, 0, 0.22);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+button {
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  color: #182118;
+  background: #f2edd1;
+  font-size: 0.92rem;
+  font-weight: 900;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+}
+
+button:active { transform: translateY(1px); }
+
+.speed-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  min-height: 46px;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.speed-group button {
+  min-height: 38px;
+  box-shadow: none;
+  background: rgba(242, 237, 209, 0.78);
+  font-size: 0.82rem;
+}
+
+.speed-group button.is-active {
+  color: #0c160c;
+  background: var(--gold);
+}
+
+#pause { background: #a8d86f; }
+#add-grass { background: #d7f3c5; }
+
+@media (max-height: 720px) {
+  .app {
+    gap: 6px;
+    padding-top: calc(7px + env(safe-area-inset-top));
+    padding-bottom: calc(7px + env(safe-area-inset-bottom));
+  }
+
+  .topbar { min-height: 42px; }
+  h1 { font-size: 1.55rem; }
+  .stats { padding: 5px; }
+  .stat { padding: 5px; }
+  button { min-height: 42px; }
+}

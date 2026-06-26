@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>いのちの箱庭</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">MENU</a>
+      <div>
+        <p class="kicker">ECOSYSTEM SIMULATOR</p>
+        <h1>いのちの箱庭</h1>
+      </div>
+    </header>
+
+    <section class="stats" aria-label="生態系の統計">
+      <div class="stat"><span>時間</span><strong id="time">0:00</strong></div>
+      <div class="stat"><span>最大世代</span><strong id="generation">1</strong></div>
+      <div class="stat grass"><span>草</span><strong id="grass-count">150</strong></div>
+      <div class="stat herb"><span>草食</span><strong id="herb-count">25</strong></div>
+      <div class="stat pred"><span>肉食</span><strong id="pred-count">6</strong></div>
+      <div class="stat"><span>草食 速/視</span><strong id="herb-avg">-- / --</strong></div>
+      <div class="stat"><span>肉食 速/視</span><strong id="pred-avg">-- / --</strong></div>
+      <p class="comment" id="comment">新しい箱庭が動き出しました</p>
+    </section>
+
+    <section class="world-wrap" aria-label="生態系の表示">
+      <canvas id="world" width="390" height="480"></canvas>
+    </section>
+
+    <section class="controls" aria-label="操作">
+      <button id="reset" type="button">リセット</button>
+      <button id="pause" type="button">一時停止</button>
+      <div class="speed-group" role="group" aria-label="シミュレーション速度">
+        <button class="speed is-active" data-speed="1" type="button">x1</button>
+        <button class="speed" data-speed="2" type="button">x2</button>
+        <button class="speed" data-speed="5" type="button">x5</button>
+      </div>
+      <button id="add-grass" type="button">草を追加</button>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
