@@ -761,49 +761,27 @@ function joinOnlineRoom(roomIdValue) {
     if (!beforeJoinSnapshot.exists()) {
       throw new Error(await buildRoomNotFoundMessage(roomId));
     }
-
+    const roomData = beforeJoinSnapshot.val();
     let role = null;
-    let joinError = "";
-    const guestOwner = createPreparedOwner("guest", true);
-    const result = await roomRef(roomId).transaction((roomData) => {
-      if (!roomData) {
-        joinError = awaitlessRoomNotFoundMessage(roomId);
-        return;
-      }
+    const updates = { updatedAt: Date.now() };
 
-      if (roomData.hostId === onlineState.playerId) {
-        role = "host";
-        roomData.updatedAt = Date.now();
-        return roomData;
-      }
-
-      if (roomData.guestId === onlineState.playerId) {
-        role = "guest";
-        roomData.updatedAt = Date.now();
-        return roomData;
-      }
-
-      if (roomData.guestId) {
-        joinError = "この部屋は満員です。";
-        return;
-      }
-
+    if (roomData.hostId === onlineState.playerId) {
+      role = "host";
+    } else if (roomData.guestId === onlineState.playerId) {
       role = "guest";
-      roomData.guestId = onlineState.playerId;
-      roomData.status = "setup";
-      roomData.updatedAt = Date.now();
-      roomData.players = roomData.players || {};
-      roomData.players.guest = { ...serializeOwner(guestOwner), name: "guest", ready: false };
-      roomData.public = roomData.public || {};
-      roomData.public.guest = roomData.public.guest || { attackedCells: [], sunkShips: [] };
-      roomData.logs = prependLog(roomData.logs, "ゲストが参加しました。");
-      return roomData;
-    });
-
-    if (!result.committed || !role) {
-      throw new Error(joinError || "部屋に入れませんでした。");
+    } else if (!roomData.guestId) {
+      const guestOwner = createPreparedOwner("guest", true);
+      role = "guest";
+      updates.guestId = onlineState.playerId;
+      updates.status = "setup";
+      updates["players/guest"] = { ...serializeOwner(guestOwner), name: "guest", ready: false };
+      updates["public/guest"] = roomData.public?.guest || { attackedCells: [], sunkShips: [] };
+      updates.logs = prependLog(roomData.logs, "ゲストが参加しました。");
+    } else {
+      throw new Error("この部屋は満員です。");
     }
 
+    await roomRef(roomId).update(updates);
     attachOnlineRoom(roomId, role);
   }, "部屋参加に失敗しました。");
 }
