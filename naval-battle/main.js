@@ -368,7 +368,9 @@ function render() {
   const currentShip = SHIPS[gameState.placementIndex];
   const online = gameState.mode === "online";
   const myTurn = isLocalTurn();
+  const compactBattle = ["playerTurn", "cpuTurn", "victory", "defeat"].includes(gameState.phase);
 
+  elements.app.classList.toggle("battle-compact", compactBattle);
   elements.modePanel.hidden = gameState.phase !== "menu";
   elements.onlinePanel.hidden = !online || gameState.phase === "menu";
   elements.commandPanel.hidden = gameState.phase === "menu";
@@ -532,8 +534,11 @@ function renderCards() {
 }
 
 function renderFleetStatus(localOwner, remoteOwner) {
-  elements.enemyFleetText.textContent = `${remoteOwner.ships.filter((ship) => !ship.sunk).length} ships`;
-  elements.playerFleetText.textContent = `${localOwner.ships.filter((ship) => !ship.sunk).length} ships`;
+  const enemyAlive = remoteOwner.ships.filter((ship) => !ship.sunk).length;
+  const playerAlive = localOwner.ships.filter((ship) => !ship.sunk).length;
+  const compactBattle = elements.app.classList.contains("battle-compact");
+  elements.enemyFleetText.textContent = compactBattle ? `敵 ${enemyAlive}隻` : `${enemyAlive} ships`;
+  elements.playerFleetText.textContent = compactBattle ? `自 ${playerAlive}隻` : `${playerAlive} ships`;
 }
 
 function renderLogs() {

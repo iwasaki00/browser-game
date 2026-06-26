@@ -382,6 +382,13 @@ h1 {
   margin-top: 10px;
 }
 
+.bottom-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  min-width: 0;
+}
+
 .board-panel {
   min-width: 0;
   padding: 10px;
@@ -746,5 +753,296 @@ h1 {
 
   .card-button {
     min-height: 70px;
+  }
+}
+
+.battle-compact {
+  --enemy-cell: clamp(28px, 8.4vw, 34px);
+  --mini-cell: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: max(6px, env(safe-area-inset-top)) 6px max(10px, env(safe-area-inset-bottom));
+}
+
+.battle-compact .topbar {
+  order: 1;
+  gap: 8px;
+  padding: 0;
+}
+
+.battle-compact .back-link {
+  width: 36px;
+  height: 36px;
+}
+
+.battle-compact .eyebrow,
+.battle-compact .board-heading p {
+  display: none;
+}
+
+.battle-compact h1 {
+  font-size: 1.05rem;
+}
+
+.battle-compact .status-chip {
+  min-width: 74px;
+  padding: 6px 8px;
+  font-size: 0.75rem;
+}
+
+.battle-compact .rules {
+  display: none;
+}
+
+.battle-compact .online-panel {
+  order: 2;
+  gap: 6px;
+  margin-top: 0;
+  padding: 6px;
+  box-shadow: none;
+}
+
+.battle-compact .room-code {
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  padding: 6px;
+}
+
+.battle-compact .room-code strong {
+  font-size: 1.35rem;
+}
+
+.battle-compact .online-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.battle-compact .online-stat {
+  padding: 5px 6px;
+}
+
+.battle-compact .online-stat strong {
+  font-size: 0.72rem;
+}
+
+.battle-compact .online-actions,
+.battle-compact #onlineMessage {
+  display: none;
+}
+
+.battle-compact .boards {
+  display: contents;
+}
+
+.battle-compact .enemy-panel {
+  order: 3;
+  padding: 6px;
+}
+
+.battle-compact .board-heading {
+  margin-bottom: 4px;
+}
+
+.battle-compact .board-heading h2 {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.battle-compact .board-heading span {
+  font-size: 0.74rem;
+}
+
+.battle-compact .enemy-panel .board-wrap {
+  grid-template-columns: 18px auto;
+  grid-template-rows: 16px auto;
+  gap: 2px;
+  justify-content: center;
+}
+
+.battle-compact .enemy-panel .coords.cols {
+  width: calc(var(--enemy-cell) * 10);
+}
+
+.battle-compact #enemyBoard {
+  width: calc(var(--enemy-cell) * 10);
+  aspect-ratio: auto;
+  grid-template-columns: repeat(10, var(--enemy-cell));
+}
+
+.battle-compact #enemyBoard .cell {
+  width: var(--enemy-cell);
+  height: var(--enemy-cell);
+}
+
+.battle-compact #cards {
+  order: 4;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin-top: 0;
+  padding: 6px 2px;
+  overflow-x: auto;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.battle-compact .card-button {
+  flex: 0 0 auto;
+  min-width: 92px;
+  max-width: 110px;
+  min-height: 52px;
+  padding: 6px;
+}
+
+.battle-compact .card-button strong {
+  font-size: 0.75rem;
+}
+
+.battle-compact .card-button span {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-compact .card-button b {
+  min-width: 24px;
+  min-height: 18px;
+  margin-top: 4px;
+  font-size: 0.7rem;
+}
+
+.battle-compact .bottom-info {
+  order: 5;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.battle-compact .player-mini-panel {
+  width: fit-content;
+  padding: 6px;
+}
+
+.battle-compact .player-mini-panel .coords {
+  display: none;
+}
+
+.battle-compact .player-mini-panel .board-heading {
+  margin-bottom: 4px;
+}
+
+.battle-compact .player-mini-panel .board-wrap {
+  display: block;
+}
+
+.battle-compact #playerBoard {
+  width: calc(var(--mini-cell) * 10);
+  aspect-ratio: auto;
+  grid-template-columns: repeat(10, var(--mini-cell));
+  border-radius: 4px;
+}
+
+.battle-compact #playerBoard .cell {
+  width: var(--mini-cell);
+  height: var(--mini-cell);
+  border-width: 1px;
+}
+
+.battle-compact #playerBoard .sprite-layer {
+  display: none;
+}
+
+.battle-compact #playerBoard .cell {
+  background: #12333a;
+}
+
+.battle-compact #playerBoard .cell.ship {
+  background: #687887;
+}
+
+.battle-compact #playerBoard .cell.hit {
+  background: #ff4b3e;
+}
+
+.battle-compact #playerBoard .cell.miss {
+  background: #3aa7df;
+}
+
+.battle-compact .log-panel {
+  min-width: 0;
+  max-height: 130px;
+  margin-top: 0;
+  padding: 6px;
+  overflow-y: auto;
+}
+
+.battle-compact .log-panel h2 {
+  margin-bottom: 4px;
+  font-size: 0.68rem;
+}
+
+.battle-compact #logList {
+  gap: 3px;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.battle-compact #logList li {
+  min-height: 0;
+  padding: 3px 5px;
+}
+
+.battle-compact .command-panel {
+  order: 6;
+  grid-template-columns: 42px 58px minmax(0, 1fr) 74px;
+  gap: 5px;
+  margin-top: 0;
+  padding: 6px;
+}
+
+.battle-compact .stat {
+  padding: 5px 6px;
+}
+
+.battle-compact .stat span {
+  font-size: 0.58rem;
+}
+
+.battle-compact .stat strong {
+  font-size: 0.72rem;
+}
+
+.battle-compact .command-panel button {
+  min-height: 36px;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 430px) {
+  .battle-compact {
+    --mini-cell: 9px;
+  }
+
+  .battle-compact .online-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .battle-compact .bottom-info {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .battle-compact .command-panel {
+    grid-template-columns: 40px 54px minmax(0, 1fr);
+  }
+
+  .battle-compact .command-panel .secondary {
+    grid-column: auto;
   }
 }
