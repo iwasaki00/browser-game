@@ -459,6 +459,7 @@ h1 {
   padding: 0;
   border-radius: 0;
   place-items: center;
+  overflow: hidden;
   border: 1px solid rgba(127, 232, 214, 0.12);
   background:
     radial-gradient(circle at 30% 28%, rgba(58, 160, 255, 0.18), transparent 36%),
@@ -553,14 +554,24 @@ h1 {
 }
 
 .sprite-drawn.cell {
-  background-repeat: no-repeat;
-  background-size: 384px 192px;
   image-rendering: pixelated;
 }
 
-.cell.ship-vertical {
-  transform: none;
-  transform-origin: center;
+.sprite-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  background-size: 384px 192px;
+  pointer-events: none;
+  transform-origin: center center;
+  z-index: 0;
+}
+
+.sprite-layer.vertical {
+  transform: rotate(90deg);
 }
 
 .cell.recent {

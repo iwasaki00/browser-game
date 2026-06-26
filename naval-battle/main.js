@@ -467,10 +467,7 @@ function renderBoard(which, container) {
 
 function getCellClass(which, cell, showShips) {
   const classes = ["cell", "sprite-drawn"];
-  if (showShips && cell.shipId) {
-    classes.push("ship");
-    if (cell.shipDirection === "vertical") classes.push("ship-vertical");
-  }
+  if (showShips && cell.shipId && !cell.attacked) classes.push("ship");
   if (cell.attacked) classes.push(cell.hit ? "hit" : "miss", "attacked");
   if (cell.sunk) classes.push("sunk");
   if (gameState.recentCells.some((recent) => recent.owner === which && recent.x === cell.x && recent.y === cell.y)) {
@@ -491,9 +488,22 @@ function getSpriteForCell(cell, showShips) {
 
 function applySpriteToCellButton(button, cell, showShips) {
   const sprite = getSpriteForCell(cell, showShips);
-  button.style.backgroundImage = 'url("assets/naval_sprites.png")';
-  button.style.backgroundSize = `${SPRITE_SHEET_WIDTH}px ${SPRITE_SHEET_HEIGHT}px`;
-  button.style.backgroundPosition = `-${sprite.x}px -${sprite.y}px`;
+  const layer = document.createElement("span");
+  layer.className = "sprite-layer";
+  layer.style.backgroundImage = 'url("assets/naval_sprites.png")';
+  layer.style.backgroundSize = `${SPRITE_SHEET_WIDTH}px ${SPRITE_SHEET_HEIGHT}px`;
+  layer.style.backgroundPosition = `-${sprite.x}px -${sprite.y}px`;
+
+  if (
+    showShips &&
+    cell.shipId &&
+    !cell.attacked &&
+    cell.shipDirection === "vertical"
+  ) {
+    layer.classList.add("vertical");
+  }
+
+  button.appendChild(layer);
 }
 
 function renderCards() {
