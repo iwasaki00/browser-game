@@ -731,6 +731,12 @@ function createOnlineRoom() {
       logs: ["部屋を作成しました。ゲストを待っています。"]
     };
     await roomRef(roomId).set(roomData);
+    const verifySnapshot = await roomRef(roomId).get();
+    if (!verifySnapshot.exists()) {
+      throw new Error(`部屋作成後の確認に失敗しました。参照先: ${roomPath(roomId)}`);
+    }
+    elements.roomIdInput.value = roomId;
+    setModeMessage(`部屋を作成しました。部屋ID: ${roomId}`);
     attachOnlineRoom(roomId, "host");
   }, "部屋作成に失敗しました。");
 }
@@ -751,12 +757,17 @@ function joinOnlineRoom(roomIdValue) {
     return;
   }
   withFirebase(async () => {
+    const beforeJoinSnapshot = await roomRef(roomId).get();
+    if (!beforeJoinSnapshot.exists()) {
+      throw new Error(await buildRoomNotFoundMessage(roomId));
+    }
+
     let role = null;
     let joinError = "";
     const guestOwner = createPreparedOwner("guest", true);
     const result = await roomRef(roomId).transaction((roomData) => {
       if (!roomData) {
-        joinError = "部屋が見つかりません。";
+        joinError = awaitlessRoomNotFoundMessage(roomId);
         return;
       }
 
@@ -795,6 +806,18 @@ function joinOnlineRoom(roomIdValue) {
 
     attachOnlineRoom(roomId, role);
   }, "部屋参加に失敗しました。");
+}
+
+async function buildRoomNotFoundMessage(roomId) {
+  const roomsSnapshot = await roomRef("").get();
+  const rooms = roomsSnapshot.val() || {};
+  const roomIds = Object.keys(rooms).sort();
+  const visibleRooms = roomIds.length ? roomIds.slice(-8).join(", ") : "なし";
+  return `${awaitlessRoomNotFoundMessage(roomId)} 現在見えている部屋ID: ${visibleRooms}`;
+}
+
+function awaitlessRoomNotFoundMessage(roomId) {
+  return `部屋が見つかりません。入力ID: ${roomId} / 参照先: ${roomPath(roomId)}`;
 }
 
 function listenRoom(roomId) {
@@ -1084,6 +1107,10 @@ function withFirebase(task, fallbackMessage) {
 
 function roomRef(roomId) {
   return database.ref(roomId ? `${GAME_PATH}/${roomId}` : GAME_PATH);
+}
+
+function roomPath(roomId) {
+  return roomId ? `${GAME_PATH}/${roomId}` : GAME_PATH;
 }
 
 function detachRoomListener() {
