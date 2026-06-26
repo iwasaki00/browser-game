@@ -85,36 +85,37 @@
         <div class="board-heading">
           <div>
             <p>ENEMY WATERS</p>
-            <h2>相手海域</h2>
+            <h2>敵海域</h2>
           </div>
           <span id="enemyFleetText">0 ships</span>
         </div>
         <div class="board-wrap">
           <div class="coords cols" aria-hidden="true"></div>
           <div class="coords rows" aria-hidden="true"></div>
-          <div class="board" id="enemyBoard" role="grid" aria-label="相手海域ボード"></div>
+          <div class="board" id="enemyBoard" role="grid" aria-label="敵海域ボード"></div>
         </div>
       </article>
 
       <div class="bottom-info">
-      <article class="board-panel own-panel player-mini-panel">
-        <div class="board-heading">
-          <div>
-            <p>HOME WATERS</p>
-            <h2>自海域</h2>
+        <article class="board-panel own-panel player-mini-panel">
+          <div class="board-heading">
+            <div>
+              <p>HOME WATERS</p>
+              <h2>自海域</h2>
+            </div>
+            <span id="playerFleetText">0 ships</span>
           </div>
-          <span id="playerFleetText">0 ships</span>
-        </div>
-        <div class="board-wrap">
-          <div class="coords cols" aria-hidden="true"></div>
-          <div class="coords rows" aria-hidden="true"></div>
-          <div class="board" id="playerBoard" role="grid" aria-label="自海域ボード"></div>
-        </div>
-      </article>
-      <section class="log-panel" id="logPanel" hidden aria-label="メッセージログ">
-        <h2>LOG</h2>
-        <ol id="logList"></ol>
-      </section>
+          <div class="board-wrap">
+            <div class="coords cols" aria-hidden="true"></div>
+            <div class="coords rows" aria-hidden="true"></div>
+            <div class="board" id="playerBoard" role="grid" aria-label="自海域ボード"></div>
+          </div>
+        </article>
+
+        <section class="log-panel" id="logPanel" hidden aria-label="メッセージログ">
+          <h2>LOG</h2>
+          <ol id="logList"></ol>
+        </section>
       </div>
     </section>
 
