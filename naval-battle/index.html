@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Naval Strike</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="topbar">
+      <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">‹</a>
+      <div class="title-block">
+        <p class="eyebrow">TACTICAL FLEET DUEL</p>
+        <h1>NAVAL STRIKE</h1>
+      </div>
+      <div class="status-chip" id="phaseText">艦隊配置中</div>
+    </header>
+
+    <section class="command-panel" aria-label="ゲーム状況">
+      <div class="stat">
+        <span>TURN</span>
+        <strong id="turnText">1</strong>
+      </div>
+      <div class="stat wide">
+        <span>ORDER</span>
+        <strong id="messageText">ランダム配置して開始してください</strong>
+      </div>
+      <button class="secondary" id="restartButton" type="button">RESTART</button>
+    </section>
+
+    <section class="setup-panel" id="setupPanel" aria-label="艦隊配置">
+      <button class="primary" id="randomButton" type="button">ランダム配置</button>
+      <button class="secondary" id="directionButton" type="button">向き: 横</button>
+      <button class="primary start" id="startButton" type="button">ゲーム開始</button>
+    </section>
+
+    <details class="rules">
+      <summary>ルール</summary>
+      <p>敵海域をタップして攻撃します。艦の全マスに命中すると撃沈です。攻撃カードは残数があり、範囲外のマスは無視されます。</p>
+    </details>
+
+    <section class="cards" id="cards" aria-label="攻撃カード"></section>
+
+    <section class="boards" aria-label="海域ボード">
+      <article class="board-panel enemy-panel">
+        <div class="board-heading">
+          <div>
+            <p>ENEMY WATERS</p>
+            <h2>敵海域</h2>
+          </div>
+          <span id="enemyFleetText">5 ships</span>
+        </div>
+        <div class="board-wrap">
+          <div class="coords cols" aria-hidden="true"></div>
+          <div class="coords rows" aria-hidden="true"></div>
+          <div class="board" id="enemyBoard" role="grid" aria-label="敵海域ボード"></div>
+        </div>
+      </article>
+
+      <article class="board-panel own-panel">
+        <div class="board-heading">
+          <div>
+            <p>HOME WATERS</p>
+            <h2>自海域</h2>
+          </div>
+          <span id="playerFleetText">5 ships</span>
+        </div>
+        <div class="board-wrap">
+          <div class="coords cols" aria-hidden="true"></div>
+          <div class="coords rows" aria-hidden="true"></div>
+          <div class="board" id="playerBoard" role="grid" aria-label="自海域ボード"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="log-panel" aria-label="メッセージログ">
+      <h2>LOG</h2>
+      <ol id="logList"></ol>
+    </section>
+
+    <section class="result-overlay" id="resultOverlay" aria-live="polite">
+      <div class="result-box">
+        <p class="eyebrow">BATTLE RESULT</p>
+        <h2 id="resultTitle">勝利</h2>
+        <p id="resultMessage">敵艦隊を撃沈しました。</p>
+        <button class="primary" id="resultRestartButton" type="button">再スタート</button>
+      </div>
+    </section>
+  </main>
+  <script src="main.js"></script>
+</body>
+</html>
