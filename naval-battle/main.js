@@ -30,6 +30,8 @@ const BOARD_SIZE = 10;
 const SPRITE_SIZE = 32;
 const SPRITE_SHEET_WIDTH = 384;
 const SPRITE_SHEET_HEIGHT = 192;
+const SPRITE_SHEET_COLUMNS = SPRITE_SHEET_WIDTH / SPRITE_SIZE;
+const SPRITE_SHEET_ROWS = SPRITE_SHEET_HEIGHT / SPRITE_SIZE;
 const GAME_PATH = "rooms/navalBattle";
 const ROOM_TTL_MS = 1000 * 60 * 60 * 12;
 
@@ -491,8 +493,8 @@ function applySpriteToCellButton(button, cell, showShips) {
   const layer = document.createElement("span");
   layer.className = "sprite-layer";
   layer.style.backgroundImage = 'url("assets/naval_sprites.png")';
-  layer.style.backgroundSize = `${SPRITE_SHEET_WIDTH}px ${SPRITE_SHEET_HEIGHT}px`;
-  layer.style.backgroundPosition = `-${sprite.x}px -${sprite.y}px`;
+  layer.style.backgroundSize = `${SPRITE_SHEET_COLUMNS * 100}% ${SPRITE_SHEET_ROWS * 100}%`;
+  layer.style.backgroundPosition = getSpriteBackgroundPosition(sprite);
 
   if (
     showShips &&
@@ -504,6 +506,14 @@ function applySpriteToCellButton(button, cell, showShips) {
   }
 
   button.appendChild(layer);
+}
+
+function getSpriteBackgroundPosition(sprite) {
+  const column = sprite.x / SPRITE_SIZE;
+  const row = sprite.y / SPRITE_SIZE;
+  const x = SPRITE_SHEET_COLUMNS <= 1 ? 0 : (column / (SPRITE_SHEET_COLUMNS - 1)) * 100;
+  const y = SPRITE_SHEET_ROWS <= 1 ? 0 : (row / (SPRITE_SHEET_ROWS - 1)) * 100;
+  return `${x}% ${y}%`;
 }
 
 function renderCards() {
