@@ -29,21 +29,23 @@ body {
 }
 
 button,
+input,
 a {
   font: inherit;
   touch-action: manipulation;
 }
 
 .app {
+  position: relative;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   width: 100%;
-  max-width: 520px;
+  max-width: 540px;
   height: 100vh;
   height: 100dvh;
   margin: 0 auto;
-  padding: calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
-  gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top)) 10px calc(8px + env(safe-area-inset-bottom));
+  gap: 7px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
     #182118;
@@ -53,12 +55,12 @@ a {
   display: grid;
   grid-template-columns: 58px 1fr;
   align-items: center;
-  min-height: 48px;
+  min-height: 44px;
   color: #f8f5df;
 }
 
 .back-link {
-  min-height: 42px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   color: #d5dcc9;
@@ -76,18 +78,28 @@ a {
   letter-spacing: 0.14em;
 }
 
-h1 {
+h1,
+h2 {
   margin: 0;
-  font-size: clamp(1.65rem, 8vw, 2.45rem);
-  line-height: 1;
   letter-spacing: 0;
+}
+
+h1 {
+  font-size: clamp(1.55rem, 8vw, 2.35rem);
+  line-height: 1;
+}
+
+h2 {
+  color: #f8f5df;
+  font-size: 1.55rem;
+  line-height: 1.2;
 }
 
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 5px;
-  padding: 7px;
+  padding: 6px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
   background: var(--panel);
@@ -96,7 +108,7 @@ h1 {
 
 .stat {
   min-width: 0;
-  padding: 6px 6px 5px;
+  padding: 5px 6px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #fffdf1;
@@ -106,7 +118,7 @@ h1 {
   display: block;
   overflow: hidden;
   color: var(--muted);
-  font-size: 0.57rem;
+  font-size: 0.56rem;
   font-weight: 800;
   line-height: 1.1;
   text-overflow: ellipsis;
@@ -117,7 +129,7 @@ h1 {
   display: block;
   margin-top: 3px;
   overflow: hidden;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.05;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -132,20 +144,23 @@ h1 {
   grid-row: 2 / 4;
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 42px;
   margin: 0;
   padding: 7px;
   border-radius: 6px;
   color: #fbf8e7;
   background: var(--panel-dark);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
   line-height: 1.35;
 }
 
 .world-wrap {
+  width: min(var(--canvas-width, 100%), 100%);
+  height: min(var(--canvas-height, 500px), 100%);
   min-height: 0;
   overflow: hidden;
+  justify-self: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   background:
@@ -164,38 +179,59 @@ canvas {
 
 .controls {
   display: grid;
+  gap: 6px;
+}
+
+.control-group {
+  display: grid;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.control-group > span {
+  align-self: center;
+  color: #d8e2cb;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.speed-group {
+  grid-template-columns: 32px repeat(5, 1fr);
+}
+
+.add-group {
+  grid-template-columns: 32px repeat(3, 1fr);
+}
+
+.action-group {
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  padding: 0;
+  background: transparent;
 }
 
 button {
-  min-height: 46px;
+  min-height: 40px;
   border: 0;
   border-radius: 8px;
   color: #182118;
   background: #f2edd1;
-  font-size: 0.92rem;
+  font-size: 0.82rem;
   font-weight: 900;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
 }
 
 button:active { transform: translateY(1px); }
 
-.speed-group {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  min-height: 46px;
-  padding: 4px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.22);
+.control-group button {
+  min-height: 36px;
+  box-shadow: none;
 }
 
 .speed-group button {
-  min-height: 38px;
-  box-shadow: none;
   background: rgba(242, 237, 209, 0.78);
-  font-size: 0.82rem;
 }
 
 .speed-group button.is-active {
@@ -205,17 +241,96 @@ button:active { transform: translateY(1px); }
 
 #pause { background: #a8d86f; }
 #add-grass { background: #d7f3c5; }
+#add-herb { background: #c6f0ec; }
+#add-predator { background: #ffd6ce; }
 
-@media (max-height: 720px) {
+.setup {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: calc(18px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom));
+  background: rgba(12, 17, 12, 0.84);
+  backdrop-filter: blur(10px);
+}
+
+.setup.is-hidden {
+  display: none;
+}
+
+.setup-panel {
+  width: calc(100vw - 28px);
+  max-width: 360px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: #1b251b;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.36);
+}
+
+.setup-grid {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+label {
+  display: grid;
+  gap: 5px;
+  color: #d8e2cb;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  color: #172016;
+  background: #fffdf1;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.start-button {
+  width: 100%;
+  min-height: 50px;
+  background: var(--gold);
+  font-size: 1rem;
+}
+
+@media (max-height: 740px) {
   .app {
-    gap: 6px;
-    padding-top: calc(7px + env(safe-area-inset-top));
-    padding-bottom: calc(7px + env(safe-area-inset-bottom));
+    gap: 5px;
+    padding-top: calc(6px + env(safe-area-inset-top));
+    padding-bottom: calc(6px + env(safe-area-inset-bottom));
   }
 
-  .topbar { min-height: 42px; }
-  h1 { font-size: 1.55rem; }
+  .topbar { min-height: 38px; }
+  h1 { font-size: 1.45rem; }
   .stats { padding: 5px; }
-  .stat { padding: 5px; }
-  button { min-height: 42px; }
+  .stat { padding: 4px 5px; }
+  .control-group button { min-height: 34px; }
+  button { min-height: 38px; }
+}
+
+@media (max-width: 380px) {
+  .speed-group {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+
+  .speed-group > span {
+    display: none;
+  }
+
+  .add-group {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .add-group > span {
+    display: none;
+  }
 }

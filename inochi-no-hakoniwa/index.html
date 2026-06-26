@@ -22,27 +22,54 @@
     <section class="stats" aria-label="生態系の統計">
       <div class="stat"><span>時間</span><strong id="time">0:00</strong></div>
       <div class="stat"><span>最大世代</span><strong id="generation">1</strong></div>
-      <div class="stat grass"><span>草</span><strong id="grass-count">150</strong></div>
-      <div class="stat herb"><span>草食</span><strong id="herb-count">25</strong></div>
-      <div class="stat pred"><span>肉食</span><strong id="pred-count">6</strong></div>
+      <div class="stat grass"><span>草</span><strong id="grass-count">0</strong></div>
+      <div class="stat herb"><span>草食</span><strong id="herb-count">0</strong></div>
+      <div class="stat pred"><span>肉食</span><strong id="pred-count">0</strong></div>
       <div class="stat"><span>草食 速/視</span><strong id="herb-avg">-- / --</strong></div>
       <div class="stat"><span>肉食 速/視</span><strong id="pred-avg">-- / --</strong></div>
-      <p class="comment" id="comment">新しい箱庭が動き出しました</p>
+      <p class="comment" id="comment">開始設定を選んでください</p>
     </section>
 
-    <section class="world-wrap" aria-label="生態系の表示">
-      <canvas id="world" width="390" height="480"></canvas>
+    <section class="world-wrap" id="world-wrap" aria-label="生態系の表示">
+      <canvas id="world" width="390" height="500"></canvas>
     </section>
 
     <section class="controls" aria-label="操作">
-      <button id="reset" type="button">リセット</button>
-      <button id="pause" type="button">一時停止</button>
-      <div class="speed-group" role="group" aria-label="シミュレーション速度">
+      <div class="control-group speed-group" role="group" aria-label="シミュレーション速度">
+        <span>速度</span>
+        <button class="speed" data-speed="0.2" type="button">x0.2</button>
+        <button class="speed" data-speed="0.5" type="button">x0.5</button>
         <button class="speed is-active" data-speed="1" type="button">x1</button>
         <button class="speed" data-speed="2" type="button">x2</button>
         <button class="speed" data-speed="5" type="button">x5</button>
       </div>
-      <button id="add-grass" type="button">草を追加</button>
+
+      <div class="control-group add-group" role="group" aria-label="追加">
+        <span>追加</span>
+        <button id="add-grass" type="button">草 +20</button>
+        <button id="add-herb" type="button">草食 +5</button>
+        <button id="add-predator" type="button">肉食 +2</button>
+      </div>
+
+      <div class="control-group action-group" role="group" aria-label="操作">
+        <button id="pause" type="button">一時停止</button>
+        <button id="reset" type="button">リセット</button>
+      </div>
+    </section>
+
+    <section class="setup" id="setup" aria-label="開始設定">
+      <form class="setup-panel" id="setup-form">
+        <p class="kicker">START SETTINGS</p>
+        <h2>開始設定</h2>
+        <div class="setup-grid">
+          <label>Canvas幅<input id="setup-width" type="number" min="280" max="900" step="10"></label>
+          <label>Canvas高さ<input id="setup-height" type="number" min="320" max="1200" step="10" value="500"></label>
+          <label>初期草数<input id="setup-grass" type="number" min="0" max="400" step="10" value="150"></label>
+          <label>初期草食動物数<input id="setup-herbs" type="number" min="0" max="120" step="1" value="25"></label>
+          <label>初期肉食動物数<input id="setup-predators" type="number" min="0" max="50" step="1" value="6"></label>
+        </div>
+        <button class="start-button" type="submit">開始</button>
+      </form>
     </section>
   </main>
   <script src="script.js"></script>
