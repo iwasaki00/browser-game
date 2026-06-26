@@ -747,7 +747,7 @@
     const w = 92;
     const h = 132;
     const x = view.width - w - 10;
-    const y = Math.max(92, view.height - h - 154);
+    const y = Math.max(92, view.height - h - 228);
     const minX = Math.min(...state.course.map((p) => p.x - p.width));
     const maxX = Math.max(...state.course.map((p) => p.x + p.width));
     const pad = 10;

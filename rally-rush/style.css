@@ -86,7 +86,8 @@ body { position: fixed; inset: 0; }
   width: min(100%, 410px);
   bottom: max(14px, env(safe-area-inset-bottom));
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 10px;
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -162,8 +163,8 @@ body { position: fixed; inset: 0; }
   font-size: 27px !important;
 }
 
-.turbo { right: 12px; bottom: 60px; background: linear-gradient(#ff7a28, #d93410); }
-.jump { left: 12px; bottom: 60px; background: linear-gradient(#62d8ff, #1478c9); }
+.turbo { right: 12px; bottom: 44px; background: linear-gradient(#ff7a28, #d93410); }
+.jump { right: 12px; bottom: 134px; background: linear-gradient(#62d8ff, #1478c9); }
 .turbo small { color: #fff4ca; }
 .jump small { color: #e7f8ff; }
 .turbo.engaged { background: linear-gradient(#fff468, #ff701d); color: #3a1608; animation: pulse .18s infinite alternate; }
@@ -225,7 +226,7 @@ h1 em { color: var(--orange); font-style: normal; }
   .turbo,
   .jump { width: 72px; height: 72px; bottom: 58px; }
   .turbo { right: 5px; }
-  .jump { left: 5px; }
+  .jump { right: 5px; bottom: 137px; }
   .panel { padding-inline: 14px; }
   .course-select { gap: 6px; }
   .course-card { padding: 8px 7px; }
