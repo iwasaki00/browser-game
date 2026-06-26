@@ -2,31 +2,52 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
-  <title>ステルス潜入</title>
-  <link rel="stylesheet" href="../menu.css">
+  <title>潜入コード: ゼロ</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="shell">
-    <header class="site-header">
-      <div>
-        <p class="eyebrow">Stealth Action</p>
-        <h1>ステルス潜入</h1>
-      </div>
-      <p class="lead">俯瞰視点で敵の視界を避けながら進む、iPhone向け潜入ゲームの入口です。</p>
-    </header>
+  <main class="game-shell">
+    <canvas id="gameCanvas" width="480" height="720" aria-label="潜入コード: ゼロ"></canvas>
 
-    <section class="menu" aria-label="ステルス潜入">
-      <article class="game-card">
-        <span class="game-meta">Coming Soon</span>
-        <h2>ゲーム本体は準備中</h2>
-        <p>次の作業で、タッチ操作、視界判定、巡回する敵、脱出口を実装します。</p>
-        <a class="game-link" href="../index.html">メニューへ</a>
-      </article>
+    <section class="hud" aria-label="ゲーム情報">
+      <div>
+        <span id="stageLabel">Stage 1</span>
+        <strong id="objectiveLabel">潜入開始</strong>
+      </div>
+      <div class="alert-wrap" aria-label="警戒ゲージ">
+        <span>警戒</span>
+        <meter id="alertMeter" min="0" max="100" value="0"></meter>
+      </div>
+      <div id="itemLabel" class="items">CARD: - / DATA: -</div>
+    </section>
+
+    <button id="debugButton" class="debug-button" type="button" aria-label="デバッグ表示">D</button>
+
+    <section class="touch-layer" aria-label="タッチ操作">
+      <div id="stick" class="stick" aria-label="移動スティック">
+        <div id="stickKnob" class="stick-knob"></div>
+      </div>
+      <div class="actions">
+        <button id="crouchButton" class="round-button secondary" type="button">屈</button>
+        <button id="actionButton" class="round-button primary" type="button">調</button>
+      </div>
+    </section>
+
+    <section id="overlay" class="overlay">
+      <div class="panel">
+        <p class="eyebrow">Top-Down Stealth</p>
+        <h1>潜入コード: ゼロ</h1>
+        <p id="overlayText">敵の視界を避け、端末やカードキーを使って重要データを回収し、脱出口へ向かえ。</p>
+        <button id="startButton" type="button">START</button>
+        <a href="../index.html">メニューへ</a>
+      </div>
     </section>
   </main>
+
+  <script src="main.js"></script>
 </body>
 </html>
