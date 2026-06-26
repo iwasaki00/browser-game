@@ -17,47 +17,82 @@
         <p class="eyebrow">TACTICAL FLEET DUEL</p>
         <h1>NAVAL STRIKE</h1>
       </div>
-      <div class="status-chip" id="phaseText">艦隊配置中</div>
+      <div class="status-chip" id="phaseText">トップ</div>
     </header>
 
-    <section class="command-panel" aria-label="ゲーム状況">
+    <section class="mode-panel" id="modePanel" aria-label="モード選択">
+      <button class="primary" id="cpuModeButton" type="button">CPU対戦</button>
+      <button class="primary start" id="createRoomButton" type="button">オンライン対戦：部屋を作る</button>
+      <div class="join-row">
+        <input id="roomIdInput" inputmode="numeric" maxlength="6" placeholder="部屋ID 6桁" aria-label="部屋ID">
+        <button class="secondary" id="joinRoomButton" type="button">オンライン対戦：部屋に入る</button>
+      </div>
+      <p class="mode-message" id="modeMessage">CPU対戦またはオンライン対戦を選んでください。</p>
+    </section>
+
+    <section class="online-panel" id="onlinePanel" hidden aria-label="オンライン待機">
+      <div class="room-code">
+        <span>ROOM</span>
+        <strong id="roomIdText">------</strong>
+        <button class="secondary" id="copyRoomButton" type="button">コピー</button>
+      </div>
+      <div class="online-grid">
+        <div class="online-stat"><span>ROLE</span><strong id="roleText">-</strong></div>
+        <div class="online-stat"><span>HOST</span><strong id="hostStatusText">未参加</strong></div>
+        <div class="online-stat"><span>GUEST</span><strong id="guestStatusText">未参加</strong></div>
+        <div class="online-stat"><span>SYNC</span><strong id="connectionText">未接続</strong></div>
+      </div>
+      <div class="online-actions">
+        <button class="primary" id="readyButton" type="button">準備完了</button>
+        <button class="secondary" id="leaveRoomButton" type="button">戻る</button>
+      </div>
+      <p class="mode-message" id="onlineMessage">参加者を待っています。</p>
+    </section>
+
+    <section class="command-panel" id="commandPanel" hidden aria-label="ゲーム状況">
       <div class="stat">
         <span>TURN</span>
         <strong id="turnText">1</strong>
       </div>
+      <div class="stat">
+        <span>ROOM</span>
+        <strong id="battleRoomText">CPU</strong>
+      </div>
       <div class="stat wide">
         <span>ORDER</span>
-        <strong id="messageText">ランダム配置して開始してください</strong>
+        <strong id="messageText">モードを選択してください</strong>
       </div>
       <button class="secondary" id="restartButton" type="button">RESTART</button>
     </section>
 
-    <section class="setup-panel" id="setupPanel" aria-label="艦隊配置">
+    <section class="setup-panel" id="setupPanel" hidden aria-label="艦隊配置">
       <button class="primary" id="randomButton" type="button">ランダム配置</button>
+      <button class="secondary" id="clearPlacementButton" type="button">手動配置に戻す</button>
       <button class="secondary" id="directionButton" type="button">向き: 横</button>
       <button class="primary start" id="startButton" type="button">ゲーム開始</button>
+      <p class="setup-help" id="placementText">自海域をタップして艦を配置してください。</p>
     </section>
 
     <details class="rules">
       <summary>ルール</summary>
-      <p>敵海域をタップして攻撃します。艦の全マスに命中すると撃沈です。攻撃カードは残数があり、範囲外のマスは無視されます。</p>
+      <p>敵海域をタップして攻撃します。艦の全マスに命中すると撃沈です。オンラインでは両者が準備完了になるとhostから開始します。</p>
     </details>
 
-    <section class="cards" id="cards" aria-label="攻撃カード"></section>
+    <section class="cards" id="cards" hidden aria-label="攻撃カード"></section>
 
-    <section class="boards" aria-label="海域ボード">
-      <article class="board-panel enemy-panel">
+    <section class="boards" id="boards" hidden aria-label="海域ボード">
+      <article class="board-panel enemy-panel" id="enemyPanel">
         <div class="board-heading">
           <div>
             <p>ENEMY WATERS</p>
-            <h2>敵海域</h2>
+            <h2>相手海域</h2>
           </div>
-          <span id="enemyFleetText">5 ships</span>
+          <span id="enemyFleetText">0 ships</span>
         </div>
         <div class="board-wrap">
           <div class="coords cols" aria-hidden="true"></div>
           <div class="coords rows" aria-hidden="true"></div>
-          <div class="board" id="enemyBoard" role="grid" aria-label="敵海域ボード"></div>
+          <div class="board" id="enemyBoard" role="grid" aria-label="相手海域ボード"></div>
         </div>
       </article>
 
@@ -67,7 +102,7 @@
             <p>HOME WATERS</p>
             <h2>自海域</h2>
           </div>
-          <span id="playerFleetText">5 ships</span>
+          <span id="playerFleetText">0 ships</span>
         </div>
         <div class="board-wrap">
           <div class="coords cols" aria-hidden="true"></div>
@@ -77,7 +112,7 @@
       </article>
     </section>
 
-    <section class="log-panel" aria-label="メッセージログ">
+    <section class="log-panel" id="logPanel" hidden aria-label="メッセージログ">
       <h2>LOG</h2>
       <ol id="logList"></ol>
     </section>
@@ -91,6 +126,8 @@
       </div>
     </section>
   </main>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
