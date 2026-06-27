@@ -19,6 +19,8 @@ const GuardState = {
 const GUARD_PATROL_SPEED = 56;
 const GUARD_CHASE_SPEED = 92;
 const GUARD_SEARCH_SPEED = 48;
+const HUD_CLEARANCE_PORTRAIT = 76;
+const HUD_CLEARANCE_LANDSCAPE = 50;
 
 const SPRITES = {
   player: {
@@ -203,6 +205,7 @@ let debug = false;
 let systemsOff = false;
 let lastDKeyTap = 0;
 let dKeyDownAt = 0;
+let lastTouchEnd = 0;
 
 const input = {
   x: 0,
@@ -364,6 +367,10 @@ function canGuardMoveTo(x, y) {
   return points.every(([px, py]) => !isBlockingTile(tileAt(Math.floor(px / TILE), Math.floor(py / TILE))));
 }
 
+function isTileWalkable(tx, ty) {
+  return !isBlockingTile(tileAt(tx, ty));
+}
+
 function updatePlayer(dt) {
   let ix = input.x;
   let iy = input.y;
@@ -519,14 +526,67 @@ function moveGuardToward(guard, targetX, targetY, speed, dt) {
   const dy = targetY - guard.y;
   const dist = Math.hypot(dx, dy);
   if (dist < 3) return true;
-  const stepX = (dx / dist) * speed * dt;
-  const stepY = (dy / dist) * speed * dt;
+  const pathPoint = findNextPathPoint(guard.x, guard.y, targetX, targetY);
+  const moveTargetX = pathPoint ? pathPoint.x : targetX;
+  const moveTargetY = pathPoint ? pathPoint.y : targetY;
+  const moveDx = moveTargetX - guard.x;
+  const moveDy = moveTargetY - guard.y;
+  const moveDist = Math.hypot(moveDx, moveDy);
+  if (moveDist < 1) return false;
+  const stepX = (moveDx / moveDist) * speed * dt;
+  const stepY = (moveDy / moveDist) * speed * dt;
   const nx = guard.x + stepX;
   const ny = guard.y + stepY;
   if (canGuardMoveTo(nx, guard.y)) guard.x = nx;
   if (canGuardMoveTo(guard.x, ny)) guard.y = ny;
-  guard.dir = directionFromVector(dx, dy);
+  guard.dir = directionFromVector(moveDx, moveDy);
   return Math.hypot(targetX - guard.x, targetY - guard.y) < 3;
+}
+
+function findNextPathPoint(fromX, fromY, targetX, targetY) {
+  const start = { x: Math.floor(fromX / TILE), y: Math.floor(fromY / TILE) };
+  const goal = { x: Math.floor(targetX / TILE), y: Math.floor(targetY / TILE) };
+  if (start.x === goal.x && start.y === goal.y) return { x: targetX, y: targetY };
+  if (!isTileWalkable(goal.x, goal.y)) return null;
+
+  const queue = [start];
+  const cameFrom = new Map();
+  const startKey = tileKey(start.x, start.y);
+  const goalKey = tileKey(goal.x, goal.y);
+  cameFrom.set(startKey, null);
+
+  for (let head = 0; head < queue.length; head += 1) {
+    const current = queue[head];
+    if (tileKey(current.x, current.y) === goalKey) break;
+    const neighbors = [
+      { x: current.x + 1, y: current.y },
+      { x: current.x - 1, y: current.y },
+      { x: current.x, y: current.y + 1 },
+      { x: current.x, y: current.y - 1 }
+    ];
+    for (const next of neighbors) {
+      const key = tileKey(next.x, next.y);
+      if (cameFrom.has(key) || !isTileWalkable(next.x, next.y)) continue;
+      cameFrom.set(key, current);
+      queue.push(next);
+    }
+  }
+
+  if (!cameFrom.has(goalKey)) return null;
+  let step = goal;
+  let previous = cameFrom.get(goalKey);
+  while (previous && !(previous.x === start.x && previous.y === start.y)) {
+    step = previous;
+    previous = cameFrom.get(tileKey(step.x, step.y));
+  }
+  return {
+    x: step.x * TILE + TILE / 2,
+    y: step.y * TILE + TILE / 2
+  };
+}
+
+function tileKey(x, y) {
+  return `${x},${y}`;
 }
 
 function rotateGuardLook(guard) {
@@ -699,20 +759,28 @@ function rayBlocked(ax, ay, bx, by) {
 function cameraView() {
   const mapW = map[0].length * TILE;
   const mapH = map.length * TILE;
+  const top = worldTopClearance();
+  const viewH = Math.max(1, screenH - top);
   return {
     x: clamp(player.x - screenW / 2, 0, Math.max(0, mapW - screenW)),
-    y: clamp(player.y - screenH / 2, 0, Math.max(0, mapH - screenH))
+    y: clamp(player.y - viewH / 2, 0, Math.max(0, mapH - viewH)),
+    top,
+    height: viewH
   };
 }
 
 function draw() {
   ctx.clearRect(0, 0, screenW, screenH);
+  drawBackdrop();
   if (!stage) {
-    drawBackdrop();
     return;
   }
   const cam = cameraView();
   ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, cam.top, screenW, cam.height);
+  ctx.clip();
+  ctx.translate(0, cam.top);
   ctx.translate(-Math.floor(cam.x), -Math.floor(cam.y));
   drawMap(cam);
   drawVision();
@@ -723,6 +791,10 @@ function draw() {
   ctx.restore();
   drawMinimap();
   drawMessage();
+}
+
+function worldTopClearance() {
+  return screenH <= 520 || screenW > screenH ? HUD_CLEARANCE_LANDSCAPE : HUD_CLEARANCE_PORTRAIT;
 }
 
 function drawBackdrop() {
@@ -867,7 +939,7 @@ function drawMinimap() {
   const w = map[0].length * scale;
   const h = map.length * scale;
   const x0 = screenW - w - 12;
-  const y0 = screenH > 520 ? 86 : 54;
+  const y0 = worldTopClearance() + 8;
   ctx.fillStyle = "rgba(5, 7, 8, 0.68)";
   ctx.fillRect(x0 - 6, y0 - 6, w + 12, h + 12);
   for (let y = 0; y < map.length; y += 1) {
@@ -893,7 +965,7 @@ function drawMessage() {
   if (!message || messageTimer <= 0) return;
   const width = Math.min(screenW - 24, 420);
   const x = (screenW - width) / 2;
-  const y = Math.max(72, screenH * 0.13);
+  const y = worldTopClearance() + 10;
   ctx.fillStyle = "rgba(8, 10, 11, 0.82)";
   ctx.fillRect(x, y, width, 38);
   ctx.strokeStyle = "rgba(238, 242, 232, 0.24)";
@@ -1062,6 +1134,12 @@ startButton.addEventListener("click", () => {
 window.addEventListener("resize", resize);
 window.addEventListener("orientationchange", resize);
 document.addEventListener("gesturestart", (event) => event.preventDefault());
+document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
+document.addEventListener("touchend", (event) => {
+  const now = performance.now();
+  if (now - lastTouchEnd < 350) event.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
 
 resize();
 setupTouchControls();
