@@ -13,19 +13,37 @@
     uiIcons: "ui_icons",
     logoTitle: "logo_title"
   });
+  const SPRITE_SHEET = Object.freeze({
+    url: "./assets/suika-style-game_sprits.png",
+    cell: 32,
+    padding: 2
+  });
+  const SPRITE_COORDS = Object.freeze({
+    fruit_01: { cx: 2, cy: 2, cw: 1, ch: 1 },
+    fruit_02: { cx: 5, cy: 2, cw: 1, ch: 1 },
+    fruit_03: { cx: 8, cy: 2, cw: 1, ch: 1 },
+    fruit_04: { cx: 11, cy: 2, cw: 1, ch: 1 },
+    fruit_05: { cx: 14, cy: 2, cw: 1, ch: 1 },
+    fruit_06: { cx: 17, cy: 2, cw: 1, ch: 1 },
+    fruit_07: { cx: 20, cy: 2, cw: 1, ch: 1 },
+    fruit_08: { cx: 23, cy: 2, cw: 1, ch: 1 },
+    fruit_09: { cx: 26, cy: 2, cw: 1, ch: 1 },
+    fruit_10: { cx: 29, cy: 2, cw: 1, ch: 1 },
+    fruit_11: { cx: 32, cy: 2, cw: 1, ch: 1 }
+  });
 
   const FRUIT_DEFS = Object.freeze([
-    { id: ASSET_IDS.fruits[0], name: "さくらんぼ", emoji: "🍒", radius: 15, color: "#f04461", score: 2 },
-    { id: ASSET_IDS.fruits[1], name: "いちご", emoji: "🍓", radius: 19, color: "#e8354f", score: 4 },
-    { id: ASSET_IDS.fruits[2], name: "ぶどう", emoji: "🍇", radius: 23, color: "#8b5cf6", score: 8 },
-    { id: ASSET_IDS.fruits[3], name: "デコポン", emoji: "🍊", radius: 27, color: "#f59e0b", score: 16 },
-    { id: ASSET_IDS.fruits[4], name: "かき", emoji: "🟠", radius: 32, color: "#fb923c", score: 32 },
-    { id: ASSET_IDS.fruits[5], name: "りんご", emoji: "🍎", radius: 38, color: "#ef4444", score: 64 },
-    { id: ASSET_IDS.fruits[6], name: "なし", emoji: "🍐", radius: 45, color: "#d9e76c", score: 128 },
-    { id: ASSET_IDS.fruits[7], name: "もも", emoji: "🍑", radius: 52, color: "#fb8fb1", score: 256 },
-    { id: ASSET_IDS.fruits[8], name: "パイン", emoji: "🍍", radius: 60, color: "#facc15", score: 512 },
-    { id: ASSET_IDS.fruits[9], name: "メロン", emoji: "🍈", radius: 69, color: "#86efac", score: 1024 },
-    { id: ASSET_IDS.fruits[10], name: "スイカ", emoji: "🍉", radius: 80, color: "#22c55e", score: 2048 }
+    { id: ASSET_IDS.fruits[0], name: "Cherry", radius: 15, color: "#f04461", score: 2 },
+    { id: ASSET_IDS.fruits[1], name: "Strawberry", radius: 19, color: "#e8354f", score: 4 },
+    { id: ASSET_IDS.fruits[2], name: "Grape", radius: 23, color: "#8b5cf6", score: 8 },
+    { id: ASSET_IDS.fruits[3], name: "Orange", radius: 27, color: "#f59e0b", score: 16 },
+    { id: ASSET_IDS.fruits[4], name: "Peach", radius: 32, color: "#fb8fb1", score: 32 },
+    { id: ASSET_IDS.fruits[5], name: "Pear", radius: 38, color: "#84cc16", score: 64 },
+    { id: ASSET_IDS.fruits[6], name: "Apple", radius: 45, color: "#ef4444", score: 128 },
+    { id: ASSET_IDS.fruits[7], name: "Pineapple", radius: 52, color: "#facc15", score: 256 },
+    { id: ASSET_IDS.fruits[8], name: "Melon", radius: 60, color: "#a3e635", score: 512 },
+    { id: ASSET_IDS.fruits[9], name: "Pumpkin", radius: 69, color: "#fb923c", score: 1024 },
+    { id: ASSET_IDS.fruits[10], name: "Watermelon", radius: 80, color: "#22c55e", score: 2048 }
   ]);
 
   class StorageManager {
@@ -252,6 +270,20 @@
       this.width = 0;
       this.height = 0;
       this.ratio = 1;
+      this.spriteImage = this.loadSpriteSheet();
+      this.spriteReady = false;
+    }
+
+    loadSpriteSheet() {
+      const image = new Image();
+      image.onload = () => {
+        this.spriteReady = true;
+      };
+      image.onerror = () => {
+        this.spriteReady = false;
+      };
+      image.src = SPRITE_SHEET.url;
+      return image;
     }
 
     resize(width, height) {
@@ -313,6 +345,8 @@
     }
 
     drawFruitShape(ctx, def, x, y, radius) {
+      if (this.drawSprite(ctx, def.id, x, y, radius)) return;
+
       const highlight = Math.max(4, radius * 0.22);
       ctx.beginPath();
       ctx.fillStyle = "rgba(0,0,0,0.28)";
@@ -336,7 +370,41 @@
       ctx.font = `${Math.max(13, radius * 0.58)}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(def.emoji || def.name, x, y + radius * 0.04);
+      ctx.fillText(def.name.slice(0, 2), x, y + radius * 0.04);
+    }
+
+    drawSprite(ctx, assetId, x, y, radius) {
+      const frame = SPRITE_COORDS[assetId];
+      if (!this.spriteReady || !frame) return false;
+
+      const source = this.frameToSource(frame);
+      const size = radius * 2.28;
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(0,0,0,0.26)";
+      ctx.ellipse(x, y + radius * 0.74, radius * 0.78, radius * 0.18, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.drawImage(
+        this.spriteImage,
+        source.x,
+        source.y,
+        source.w,
+        source.h,
+        x - size / 2,
+        y - size / 2,
+        size,
+        size
+      );
+      return true;
+    }
+
+    frameToSource(frame) {
+      const stride = SPRITE_SHEET.cell + SPRITE_SHEET.padding;
+      return {
+        x: frame.cx * stride + SPRITE_SHEET.padding,
+        y: frame.cy * stride + SPRITE_SHEET.padding,
+        w: frame.cw * SPRITE_SHEET.cell + (frame.cw - 1) * SPRITE_SHEET.padding,
+        h: frame.ch * SPRITE_SHEET.cell + (frame.ch - 1) * SPRITE_SHEET.padding
+      };
     }
 
     drawNextFruit(level) {

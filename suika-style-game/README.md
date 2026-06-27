@@ -39,4 +39,4 @@ suika-style-game/
 - ui_icons
 - logo_title
 
-初期版では画像と効果音は使用していません。フルーツ定義に `assetId` を持たせ、後から画像スプライトへ差し替えやすい構成にしています。`AudioManager` は将来の効果音追加用の空実装です。
+フルーツ画像は `assets/suika-style-game_sprits.png` の `fruit_01` ～ `fruit_11` を使用します。画像読み込みに失敗した場合は Canvas の円描画へフォールバックします。`AudioManager` は将来の効果音追加用の空実装です。
