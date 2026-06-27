@@ -9,6 +9,17 @@ const GameState = {
   ALL_CLEAR: "all_clear"
 };
 
+const GuardState = {
+  PATROL: "patrol",
+  SUSPICIOUS: "suspicious",
+  CHASE: "chase",
+  SEARCH: "search"
+};
+
+const GUARD_PATROL_SPEED = 56;
+const GUARD_CHASE_SPEED = 92;
+const GUARD_SEARCH_SPEED = 48;
+
 const SPRITES = {
   player: {
     down: [{ x: 1, y: 1 }, { x: 2, y: 1 }],
@@ -271,6 +282,12 @@ function createGuard(definition) {
     pause: 0.4,
     alert: 0,
     spotted: false,
+    state: GuardState.PATROL,
+    lastSeenX: null,
+    lastSeenY: null,
+    lostTimer: 0,
+    searchTimer: 0,
+    lookTimer: 0,
     anim: 0
   };
 }
@@ -300,10 +317,10 @@ function hideOverlay() {
 
 function updateHud() {
   if (!stage) return;
-  stageLabel.textContent = stage.name;
-  objectiveLabel.textContent = message || stage.objective;
+  stageLabel.textContent = `STAGE ${stageIndex + 1}`;
+  objectiveLabel.textContent = `目的: ${message || stage.objective}`;
   alertMeter.value = player.alert;
-  itemLabel.textContent = `CARD: ${player.hasKey ? "OK" : "-"} / DATA: ${player.hasData ? "OK" : "-"}`;
+  itemLabel.textContent = `CARD:${player.hasKey ? "OK" : "-"} DATA:${player.hasData ? "OK" : "-"}`;
 }
 
 function tileAt(tx, ty) {
@@ -327,6 +344,17 @@ function blocksVision(ch) {
 
 function canMoveTo(x, y) {
   const half = player.crouch ? 7 : 9;
+  const points = [
+    [x - half, y - half],
+    [x + half, y - half],
+    [x - half, y + half],
+    [x + half, y + half]
+  ];
+  return points.every(([px, py]) => !isBlockingTile(tileAt(Math.floor(px / TILE), Math.floor(py / TILE))));
+}
+
+function canGuardMoveTo(x, y) {
+  const half = 9;
   const points = [
     [x - half, y - half],
     [x + half, y - half],
@@ -381,30 +409,130 @@ function updatePlayer(dt) {
 function updateGuards(dt) {
   for (const guard of guards) {
     guard.anim += dt * 7;
-    guard.spotted = false;
-    if (guard.pause > 0) {
-      guard.pause -= dt;
+
+    const sightRange = guard.state === GuardState.CHASE ? 210 : 166;
+    const seen = canSee(guard.x, guard.y, angleForDirection(guard.dir), Math.PI * 0.46, sightRange);
+    if (seen) {
+      guard.lastSeenX = player.x;
+      guard.lastSeenY = player.y;
+      guard.lostTimer = 0;
+      guard.alert = clamp(guard.alert + dt * 90, 0, 100);
     } else {
-      const target = guard.route[guard.index];
-      const dx = target.x - guard.x;
-      const dy = target.y - guard.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 3) {
-        guard.index = (guard.index + 1) % guard.route.length;
-        guard.pause = guard.wait;
-      } else {
-        const speed = 56;
-        guard.x += (dx / dist) * speed * dt;
-        guard.y += (dy / dist) * speed * dt;
-        guard.dir = directionFromVector(dx, dy);
-      }
+      guard.lostTimer += dt;
+      guard.alert = clamp(guard.alert - dt * 20, 0, 100);
     }
 
-    const seen = canSee(guard.x, guard.y, angleForDirection(guard.dir), Math.PI * 0.46, 166);
-    guard.spotted = seen;
-    guard.alert = clamp(guard.alert + (seen ? dt * 80 : -dt * 35), 0, 100);
-    player.alert += seen ? dt * (player.crouch ? 16 : 31) : 0;
+    if (guard.state === GuardState.PATROL) {
+      updateGuardPatrol(guard, dt);
+      if (guard.alert > 75 && seen) {
+        guard.state = GuardState.CHASE;
+      } else if (guard.alert > 35) {
+        guard.state = GuardState.SUSPICIOUS;
+        guard.lookTimer = 0;
+      }
+    } else if (guard.state === GuardState.SUSPICIOUS) {
+      updateGuardSuspicious(guard, seen, dt);
+    } else if (guard.state === GuardState.CHASE) {
+      updateGuardChase(guard, seen, dt);
+    } else if (guard.state === GuardState.SEARCH) {
+      updateGuardSearch(guard, seen, dt);
+    }
+
+    guard.spotted = seen || guard.state === GuardState.CHASE;
+    if (seen) player.alert += dt * (player.crouch ? 18 : 34);
   }
+}
+
+function updateGuardPatrol(guard, dt) {
+  if (guard.pause > 0) {
+    guard.pause -= dt;
+    return;
+  }
+  const target = guard.route[guard.index];
+  if (moveGuardToward(guard, target.x, target.y, GUARD_PATROL_SPEED, dt)) {
+    guard.index = (guard.index + 1) % guard.route.length;
+    guard.pause = guard.wait;
+  }
+}
+
+function updateGuardSuspicious(guard, seen, dt) {
+  guard.lookTimer += dt;
+  if (seen && guard.alert > 65) {
+    guard.state = GuardState.CHASE;
+    return;
+  }
+  if (guard.lastSeenX != null) {
+    const arrived = moveGuardToward(guard, guard.lastSeenX, guard.lastSeenY, GUARD_SEARCH_SPEED, dt);
+    if (arrived && guard.lookTimer > 0.8) {
+      rotateGuardLook(guard);
+      guard.lookTimer = 0;
+    }
+  }
+  if (!seen && guard.lostTimer > 2.0) {
+    guard.state = GuardState.SEARCH;
+    guard.searchTimer = 3.0;
+    guard.lookTimer = 0;
+  }
+}
+
+function updateGuardChase(guard, seen, dt) {
+  moveGuardToward(guard, player.x, player.y, GUARD_CHASE_SPEED, dt);
+  player.alert += dt * 42;
+  if (Math.hypot(guard.x - player.x, guard.y - player.y) < 24) {
+    player.alert += dt * 120;
+  }
+  if (!seen && guard.lostTimer > 1.2) {
+    guard.state = GuardState.SEARCH;
+    guard.searchTimer = 4.0;
+    guard.lookTimer = 0;
+  }
+}
+
+function updateGuardSearch(guard, seen, dt) {
+  guard.searchTimer -= dt;
+  guard.lookTimer += dt;
+  if (seen) {
+    guard.state = GuardState.CHASE;
+    return;
+  }
+  if (guard.lastSeenX != null) {
+    const offsetAngle = guard.lookTimer * 2.6;
+    const targetX = guard.lastSeenX + Math.cos(offsetAngle) * 24;
+    const targetY = guard.lastSeenY + Math.sin(offsetAngle) * 24;
+    moveGuardToward(guard, targetX, targetY, GUARD_SEARCH_SPEED, dt);
+    if (guard.lookTimer > 0.9) {
+      rotateGuardLook(guard);
+      guard.lookTimer = 0;
+    }
+  }
+  if (guard.searchTimer <= 0) {
+    guard.state = GuardState.PATROL;
+    guard.alert = 0;
+    guard.lostTimer = 0;
+    guard.pause = 0.2;
+  }
+}
+
+function moveGuardToward(guard, targetX, targetY, speed, dt) {
+  if (targetX == null || targetY == null) return false;
+  const dx = targetX - guard.x;
+  const dy = targetY - guard.y;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 3) return true;
+  const stepX = (dx / dist) * speed * dt;
+  const stepY = (dy / dist) * speed * dt;
+  const nx = guard.x + stepX;
+  const ny = guard.y + stepY;
+  if (canGuardMoveTo(nx, guard.y)) guard.x = nx;
+  if (canGuardMoveTo(guard.x, ny)) guard.y = ny;
+  guard.dir = directionFromVector(dx, dy);
+  return Math.hypot(targetX - guard.x, targetY - guard.y) < 3;
+}
+
+function rotateGuardLook(guard) {
+  const order = ["down", "left", "up", "right"];
+  const current = order.indexOf(guard.dir);
+  guard.dir = order[(current + 1 + order.length) % order.length];
 }
 
 function updateCameras(dt) {
@@ -654,7 +782,8 @@ function drawObjects() {
 
 function drawVision() {
   for (const guard of guards) {
-    drawCone(guard.x, guard.y, angleForDirection(guard.dir), Math.PI * 0.46, 166, guard.spotted ? "red" : guard.alert > 20 ? "amber" : "green");
+    const range = guard.state === GuardState.CHASE ? 210 : 166;
+    drawCone(guard.x, guard.y, angleForDirection(guard.dir), Math.PI * 0.46, range, guardVisionColor(guard));
   }
   if (!systemsOff) {
     for (const camera of cameras) {
@@ -667,6 +796,7 @@ function drawCone(x, y, angle, fov, range, color) {
   const colors = {
     green: "rgba(91, 227, 77, 0.18)",
     amber: "rgba(246, 189, 75, 0.20)",
+    orange: "rgba(255, 139, 40, 0.22)",
     red: "rgba(255, 63, 57, 0.24)"
   };
   ctx.fillStyle = colors[color];
@@ -682,8 +812,10 @@ function drawActors() {
     const frames = SPRITES.guard[guard.dir] || SPRITES.guard.down;
     const sprite = frames[Math.floor(guard.anim) % frames.length];
     drawSprite(sprite, guard.x - 16, guard.y - 21);
-    if (guard.spotted) drawSprite(SPRITES.guard.found, guard.x - 16, guard.y - 52);
-    else if (guard.alert > 12) drawSprite(SPRITES.guard.alert, guard.x - 16, guard.y - 52);
+    if (guard.state === GuardState.CHASE) drawSprite(SPRITES.guard.found, guard.x - 16, guard.y - 52);
+    else if (guard.state === GuardState.SUSPICIOUS || guard.state === GuardState.SEARCH || guard.alert > 12) {
+      drawSprite(SPRITES.guard.alert, guard.x - 16, guard.y - 52);
+    }
   }
 
   const frames = player.crouch
@@ -693,6 +825,13 @@ function drawActors() {
   ctx.globalAlpha = player.hidden ? 0.45 : 1;
   drawSprite(sprite, player.x - 16, player.y - 21);
   ctx.globalAlpha = 1;
+}
+
+function guardVisionColor(guard) {
+  if (guard.state === GuardState.CHASE) return "red";
+  if (guard.state === GuardState.SEARCH) return "orange";
+  if (guard.state === GuardState.SUSPICIOUS) return "amber";
+  return "green";
 }
 
 function drawWorldEffects() {

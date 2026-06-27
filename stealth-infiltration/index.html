@@ -13,16 +13,18 @@
   <main class="game-shell">
     <canvas id="gameCanvas" width="480" height="720" aria-label="潜入コード: ゼロ"></canvas>
 
-    <section class="hud" aria-label="ゲーム情報">
-      <div>
+    <section id="hud" class="hud" aria-label="ゲーム情報">
+      <div class="hud-main">
         <span id="stageLabel">Stage 1</span>
-        <strong id="objectiveLabel">潜入開始</strong>
+        <strong id="objectiveLabel">目的: 潜入開始</strong>
       </div>
-      <div class="alert-wrap" aria-label="警戒ゲージ">
-        <span>警戒</span>
-        <meter id="alertMeter" min="0" max="100" value="0"></meter>
+      <div id="hudSub" class="hud-sub">
+        <span id="itemLabel" class="items">CARD:- DATA:-</span>
+        <span class="alert-wrap" aria-label="警戒ゲージ">
+          <span>警戒</span>
+          <meter id="alertMeter" min="0" max="100" value="0"></meter>
+        </span>
       </div>
-      <div id="itemLabel" class="items">CARD: - / DATA: -</div>
     </section>
 
     <button id="debugButton" class="debug-button" type="button" aria-label="デバッグ表示">D</button>
