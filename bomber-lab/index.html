@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Bomber Lab</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hud" aria-label="Game status">
+      <a class="back-link" href="../index.html" aria-label="Back to menu">←</a>
+      <div class="hud-item"><span>HP</span><strong id="hpText">3/3</strong></div>
+      <div class="hud-item"><span>Score</span><strong id="scoreText">0</strong></div>
+      <div class="hud-item"><span>Stage</span><strong id="stageText">1</strong></div>
+      <div class="hud-item"><span>Enemy</span><strong id="enemyText">0</strong></div>
+      <div class="hud-item"><span>Bomb</span><strong id="bombText">1</strong></div>
+      <div class="hud-item"><span>Blast</span><strong id="blastText">2</strong></div>
+      <div class="hud-item sp-meter"><span>SP</span><strong id="spText">0%</strong><i id="spFill"></i></div>
+    </header>
+
+    <section class="arena-wrap" aria-label="Bomber Lab arena">
+      <canvas id="gameCanvas" width="960" height="720"></canvas>
+    </section>
+
+    <section class="touch-ui" aria-label="Touch controls">
+      <div id="stick" class="stick" aria-label="Move stick"><div id="stickKnob"></div></div>
+      <div class="action-pad">
+        <button id="spButton" class="action-button sp" type="button">SP</button>
+        <button id="dashButton" class="action-button dash" type="button">Dash</button>
+        <button id="bombButton" class="action-button bomb" type="button">Bomb</button>
+      </div>
+    </section>
+  </main>
+
+  <section id="titleScreen" class="overlay show">
+    <div class="panel title-panel">
+      <p class="eyebrow">Grid Action Roguelite</p>
+      <h1>Bomber Lab</h1>
+      <p class="copy">爆風で木箱と敵を突破し、研究施設の出口を探す1人用アクション。</p>
+      <div class="sp-choice" id="spChoice" aria-label="SP select">
+        <button class="select-card active" data-sp="mega" type="button"><strong>Mega Bomb</strong><span>周囲をまとめて爆破</span></button>
+        <button class="select-card" data-sp="freeze" type="button"><strong>Time Stop</strong><span>敵を数秒止める</span></button>
+        <button class="select-card" data-sp="shield" type="button"><strong>Shield</strong><span>爆風ダメージ無効</span></button>
+      </div>
+      <div class="records">
+        <span>High Score <strong id="bestScoreText">0</strong></span>
+        <span>Best Stage <strong id="bestStageText">1</strong></span>
+      </div>
+      <button id="startButton" class="primary" type="button">Start</button>
+      <p class="help">PC: WASD/Arrow move, Space bomb, Shift dash, E SP. Mobile: stick and buttons.</p>
+    </div>
+  </section>
+
+  <section id="upgradeScreen" class="overlay">
+    <div class="panel">
+      <p class="eyebrow">Stage Clear</p>
+      <h2>Choose One Upgrade</h2>
+      <div id="upgradeChoices" class="upgrade-grid"></div>
+    </div>
+  </section>
+
+  <section id="gameOverScreen" class="overlay">
+    <div class="panel">
+      <p class="eyebrow">Experiment Failed</p>
+      <h2>Game Over</h2>
+      <div class="result-row"><span>Score</span><strong id="finalScoreText">0</strong></div>
+      <div class="result-row"><span>Reached Stage</span><strong id="finalStageText">1</strong></div>
+      <div class="button-row">
+        <button id="retryButton" class="primary" type="button">Retry</button>
+        <button id="titleButton" class="secondary" type="button">Title</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="./main.js"></script>
+</body>
+</html>
