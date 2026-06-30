@@ -127,6 +127,19 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
+let lastTouchEnd = 0;
+document.addEventListener("touchmove", (event) => {
+  event.preventDefault();
+}, { passive: false });
+document.addEventListener("touchend", (event) => {
+  const now = performance.now();
+  if (now - lastTouchEnd < 360) event.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
+document.addEventListener("gesturestart", (event) => {
+  event.preventDefault();
+}, { passive: false });
+
 function pressAction(action, event) {
   input[action] = true;
   if (event) event.preventDefault();
@@ -288,6 +301,7 @@ function updatePlayer(dt) {
     ay /= len;
     input.lastAxis = Math.abs(ax) > Math.abs(ay) ? { x: Math.sign(ax), y: 0 } : { x: 0, y: Math.sign(ay) };
     moveEntity(p, ax * p.speed * dt, ay * p.speed * dt, true);
+    updatePlayerBombPassThrough();
   }
   if (input.dash) {
     input.dash = false;
@@ -325,6 +339,11 @@ function tryMove(ent, dx, dy, canKick) {
   const ny = ent.y + dy;
   const blockedBomb = bombAt(nx, ny);
   if (blockedBomb) {
+    if (ent === state.player && blockedBomb.passThroughPlayer) {
+      ent.x = nx;
+      ent.y = ny;
+      return;
+    }
     if (canKick && state.player.kick > 0) kickBomb(blockedBomb, Math.sign(dx), Math.sign(dy));
     return;
   }
@@ -358,7 +377,17 @@ function bombAt(x, y) {
 function kickBomb(bomb, dx, dy) {
   if (!dx && !dy) return;
   bomb.slide = { x: dx, y: dy };
+  bomb.passThroughPlayer = false;
   makeFloat(bomb.x + 0.5, bomb.y + 0.2, "Kick");
+}
+
+function updatePlayerBombPassThrough() {
+  const pTile = tileAt(state.player.x, state.player.y);
+  for (const bomb of state.bombs) {
+    if (bomb.passThroughPlayer && (bomb.x !== pTile.x || bomb.y !== pTile.y)) {
+      bomb.passThroughPlayer = false;
+    }
+  }
 }
 
 // Bombs and flames
@@ -376,7 +405,7 @@ function placeBomb() {
   const t = tileAt(p.x, p.y);
   if (state.bombs.filter((b) => b.owner === "player" && !b.exploded).length >= p.bombMax) return;
   if (state.bombs.some((b) => b.x === t.x && b.y === t.y)) return;
-  state.bombs.push({ x: t.x, y: t.y, timer: p.remote > 0 ? 8 : 2.25, blast: p.blast, owner: "player", remote: p.remote > 0, exploded: false, slide: null });
+  state.bombs.push({ x: t.x, y: t.y, timer: p.remote > 0 ? 8 : 2.25, blast: p.blast, owner: "player", remote: p.remote > 0, exploded: false, slide: null, passThroughPlayer: true });
   playSound("place");
 }
 

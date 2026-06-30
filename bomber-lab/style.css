@@ -26,11 +26,18 @@ body {
   background: linear-gradient(180deg, #263848 0%, var(--bg) 100%);
   font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
   touch-action: none;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
 }
 
 button,
 canvas {
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 button {
