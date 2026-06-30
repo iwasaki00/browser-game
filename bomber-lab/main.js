@@ -38,85 +38,101 @@ const ITEM_LABELS = {
 };
 
 // Sprite management
-// Coordinates are intentionally centralized here because the AI-generated sheet
-// is not perfectly grid-aligned. Adjust only these rectangles when replacing art.
-const SPRITE_SIZE = 32;
+const SPRITE_CELL = 32;
 const SPRITE_SHEET_SRC = "./assets/bomber_sprites.png";
-const SPRITE_MAP = {
-  // Player: walking, dash, hurt, and invincible frames.
-  playerDown: [{ x: 29, y: 71, w: 48, h: 85 }, { x: 94, y: 71, w: 47, h: 84 }, { x: 158, y: 71, w: 47, h: 85 }],
-  playerLeft: [{ x: 243, y: 69, w: 42, h: 87 }, { x: 305, y: 69, w: 42, h: 86 }, { x: 367, y: 69, w: 45, h: 87 }],
-  playerRight: [{ x: 428, y: 69, w: 43, h: 87 }, { x: 486, y: 69, w: 43, h: 86 }],
-  playerUp: [{ x: 486, y: 69, w: 43, h: 86 }, { x: 486, y: 69, w: 43, h: 86 }],
-  playerDashDown: [{ x: 557, y: 70, w: 48, h: 87 }, { x: 616, y: 70, w: 66, h: 87 }],
-  playerDashLeft: [{ x: 694, y: 72, w: 55, h: 86 }, { x: 763, y: 72, w: 66, h: 86 }],
-  playerDashRight: [{ x: 844, y: 72, w: 54, h: 87 }, { x: 908, y: 72, w: 62, h: 88 }],
-  playerDashUp: [{ x: 982, y: 72, w: 50, h: 87 }, { x: 1049, y: 72, w: 45, h: 86 }],
-  playerHurt: [{ x: 1154, y: 96, w: 72, h: 56 }],
-  playerInvincible: [{ x: 29, y: 71, w: 48, h: 85 }, { x: 94, y: 71, w: 47, h: 84 }],
+const DEBUG_SPRITE_DEST = false;
 
-  // Enemies: slime normal, skeleton chaser, robot future bomber, ghost dodger, boss future use.
-  slime: [{ x: 45, y: 318, w: 58, h: 38 }, { x: 128, y: 318, w: 58, h: 38 }, { x: 210, y: 322, w: 58, h: 34 }, { x: 286, y: 322, w: 58, h: 34 }],
-  skeleton: [{ x: 342, y: 292, w: 44, h: 72 }, { x: 424, y: 292, w: 44, h: 72 }, { x: 506, y: 292, w: 44, h: 72 }],
-  robot: [{ x: 604, y: 294, w: 54, h: 70 }, { x: 684, y: 294, w: 54, h: 70 }, { x: 764, y: 294, w: 54, h: 70 }, { x: 842, y: 314, w: 60, h: 50 }],
-  ghost: [{ x: 908, y: 300, w: 58, h: 58 }, { x: 986, y: 300, w: 58, h: 58 }, { x: 1064, y: 300, w: 58, h: 58 }],
-  bossPurple: [{ x: 1165, y: 278, w: 90, h: 90 }, { x: 1256, y: 278, w: 90, h: 90 }, { x: 1346, y: 278, w: 90, h: 90 }, { x: 1430, y: 278, w: 90, h: 90 }],
+function spriteCell(col, row, w = 1, h = 1) {
+  return {
+    x: col * SPRITE_CELL,
+    y: row * SPRITE_CELL,
+    w: w * SPRITE_CELL,
+    h: h * SPRITE_CELL
+  };
+}
+
+function spriteRow(startCol, row, count) {
+  return Array.from({ length: count }, (_, i) => spriteCell(startCol + i, row));
+}
+
+const SPRITE_MAP = {
+  // Player.
+  playerDown: spriteRow(0, 0, 4),
+  playerLeft: spriteRow(0, 1, 4),
+  playerRight: spriteRow(0, 2, 4),
+  playerUp: spriteRow(0, 3, 4),
+  playerDashDown: spriteRow(4, 0, 4),
+  playerDashLeft: spriteRow(4, 1, 4),
+  playerDashRight: spriteRow(4, 2, 4),
+  playerDashUp: spriteRow(4, 3, 4),
+  playerHurt: spriteRow(8, 0, 2),
+  playerInvincible: spriteRow(8, 1, 2),
+
+  // Enemies.
+  slime: spriteRow(0, 4, 4),
+  skeleton: spriteRow(4, 4, 4),
+  robot: spriteRow(8, 4, 4),
+  ghost: spriteRow(12, 4, 4),
+  bossPurple: [
+    spriteCell(16, 4, 2, 2),
+    spriteCell(18, 4, 2, 2)
+  ],
 
   // Items.
-  itemBomb: [{ x: 78, y: 448, w: 56, h: 56 }],
-  itemBlast: [{ x: 216, y: 448, w: 58, h: 58 }],
-  itemSpeed: [{ x: 346, y: 446, w: 58, h: 58 }],
-  itemHp: [{ x: 458, y: 448, w: 58, h: 56 }],
-  itemSp: [{ x: 590, y: 446, w: 58, h: 58 }],
-  itemRemote: [{ x: 730, y: 448, w: 76, h: 58 }],
-  itemKick: [{ x: 860, y: 448, w: 76, h: 58 }],
-  itemShield: [{ x: 1008, y: 448, w: 58, h: 58 }],
-  itemCoin: [{ x: 1132, y: 448, w: 58, h: 58 }],
-  itemKey: [{ x: 1266, y: 446, w: 58, h: 58 }],
-  itemHeart: [{ x: 1380, y: 448, w: 62, h: 58 }],
+  itemBomb: [spriteCell(0, 6)],
+  itemBlast: [spriteCell(1, 6)],
+  itemSpeed: [spriteCell(2, 6)],
+  itemHp: [spriteCell(3, 6)],
+  itemSp: [spriteCell(4, 6)],
+  itemRemote: [spriteCell(5, 6)],
+  itemKick: [spriteCell(6, 6)],
+  itemShield: [spriteCell(7, 6)],
+  itemCoin: [spriteCell(8, 6)],
+  itemKey: [spriteCell(9, 6)],
+  itemHeart: [spriteCell(10, 6)],
 
-  // Tiles and objects.
-  wallSolid: [{ x: 68, y: 586, w: 52, h: 52 }],
-  wallCrate: [{ x: 186, y: 586, w: 52, h: 52 }],
-  wallCrateBreak: [{ x: 268, y: 586, w: 62, h: 52 }],
-  floorGrass: [{ x: 374, y: 586, w: 58, h: 58 }],
-  floorSand: [{ x: 448, y: 586, w: 58, h: 58 }],
-  water: [{ x: 548, y: 586, w: 62, h: 58 }],
-  ice: [{ x: 654, y: 586, w: 62, h: 58 }],
-  lava: [{ x: 766, y: 586, w: 62, h: 58 }],
-  grassBush: [{ x: 880, y: 586, w: 58, h: 58 }],
-  switchOff: [{ x: 1002, y: 586, w: 62, h: 58 }],
-  switchOn: [{ x: 1112, y: 586, w: 62, h: 58 }],
-  exit: [{ x: 1238, y: 586, w: 90, h: 58 }],
-  warpGate: [{ x: 1392, y: 586, w: 66, h: 66 }],
+  // Blocks and floors.
+  wallSolid: [spriteCell(0, 7)],
+  wallCrate: [spriteCell(1, 7)],
+  wallCrateBreak: [spriteCell(2, 7)],
+  floorGrass: [spriteCell(3, 7)],
+  floorSand: [spriteCell(4, 7)],
+  water: [spriteCell(5, 7)],
+  ice: [spriteCell(6, 7)],
+  lava: [spriteCell(7, 7)],
+  grassBush: [spriteCell(8, 7)],
+  switchOff: [spriteCell(9, 7)],
+  switchOn: [spriteCell(10, 7)],
+  exit: [spriteCell(11, 7)],
+  warpGate: [spriteCell(12, 7)],
 
   // Bombs and explosions.
-  bomb: [{ x: 80, y: 704, w: 48, h: 48 }, { x: 146, y: 704, w: 48, h: 48 }, { x: 212, y: 698, w: 58, h: 58 }],
-  remoteBomb: [{ x: 306, y: 704, w: 48, h: 48 }, { x: 382, y: 704, w: 48, h: 48 }],
-  explosion: [{ x: 486, y: 698, w: 62, h: 62 }, { x: 558, y: 690, w: 72, h: 72 }, { x: 642, y: 686, w: 82, h: 82 }, { x: 732, y: 686, w: 82, h: 82 }, { x: 808, y: 700, w: 62, h: 62 }],
-  flameCenter: [{ x: 922, y: 696, w: 62, h: 62 }],
-  flameUp: [{ x: 922, y: 696, w: 62, h: 62 }],
-  flameDown: [{ x: 1042, y: 696, w: 62, h: 62 }],
-  flameLeft: [{ x: 1160, y: 696, w: 62, h: 62 }],
-  flameRight: [{ x: 1314, y: 696, w: 62, h: 62 }],
+  bomb: spriteRow(0, 8, 3),
+  remoteBomb: spriteRow(3, 8, 2),
+  explosion: spriteRow(5, 8, 5),
+  flameCenter: [spriteCell(10, 8)],
+  flameUp: [spriteCell(11, 8)],
+  flameDown: [spriteCell(12, 8)],
+  flameLeft: [spriteCell(13, 8)],
+  flameRight: [spriteCell(14, 8)],
 
   // Effects.
-  smoke: [{ x: 40, y: 816, w: 44, h: 44 }, { x: 84, y: 816, w: 44, h: 44 }, { x: 132, y: 816, w: 44, h: 44 }, { x: 180, y: 816, w: 44, h: 44 }],
-  spark: [{ x: 298, y: 820, w: 36, h: 36 }, { x: 350, y: 820, w: 36, h: 36 }, { x: 402, y: 820, w: 36, h: 36 }],
-  star: [{ x: 488, y: 818, w: 42, h: 42 }, { x: 534, y: 818, w: 42, h: 42 }],
-  freeze: [{ x: 642, y: 812, w: 48, h: 48 }, { x: 702, y: 812, w: 48, h: 48 }, { x: 762, y: 812, w: 48, h: 48 }],
-  thunder: [{ x: 834, y: 812, w: 48, h: 48 }, { x: 888, y: 812, w: 48, h: 48 }, { x: 944, y: 812, w: 48, h: 48 }],
-  blackHole: [{ x: 1018, y: 808, w: 58, h: 58 }, { x: 1092, y: 808, w: 58, h: 58 }, { x: 1168, y: 808, w: 58, h: 58 }, { x: 1244, y: 808, w: 58, h: 58 }],
-  shakeLine: [{ x: 1302, y: 812, w: 160, h: 44 }],
-  dashEffect: [{ x: 728, y: 942, w: 70, h: 30 }, { x: 806, y: 942, w: 70, h: 30 }, { x: 884, y: 942, w: 70, h: 30 }],
-  damageNumber: [{ x: 942, y: 930, w: 44, h: 32 }, { x: 1002, y: 930, w: 54, h: 32 }, { x: 1084, y: 930, w: 54, h: 32 }],
+  smoke: spriteRow(0, 9, 4),
+  spark: spriteRow(4, 9, 3),
+  star: spriteRow(7, 9, 3),
+  freeze: spriteRow(10, 9, 3),
+  thunder: spriteRow(13, 9, 3),
+  blackHole: spriteRow(16, 9, 3),
+  shakeLine: [spriteCell(19, 9)],
+  dashEffect: spriteRow(20, 9, 3),
+  damageNumber: spriteRow(23, 9, 3),
 
-  // UI icons, currently reserved for later HUD work.
-  uiHeart: [{ x: 20, y: 932, w: 42, h: 42 }, { x: 70, y: 932, w: 42, h: 42 }, { x: 120, y: 932, w: 42, h: 42 }, { x: 170, y: 932, w: 42, h: 42 }],
-  uiBombCount: [{ x: 250, y: 932, w: 44, h: 44 }, { x: 302, y: 932, w: 44, h: 44 }, { x: 354, y: 932, w: 44, h: 44 }, { x: 406, y: 932, w: 44, h: 44 }, { x: 458, y: 932, w: 44, h: 44 }],
-  uiSpGauge: [{ x: 520, y: 932, w: 184, h: 44 }],
-  uiDigits: [{ x: 1212, y: 932, w: 28, h: 32 }, { x: 1240, y: 932, w: 28, h: 32 }, { x: 1268, y: 932, w: 28, h: 32 }, { x: 1296, y: 932, w: 28, h: 32 }, { x: 1324, y: 932, w: 28, h: 32 }, { x: 1352, y: 932, w: 28, h: 32 }, { x: 1380, y: 932, w: 28, h: 32 }, { x: 1408, y: 932, w: 28, h: 32 }, { x: 1436, y: 932, w: 28, h: 32 }, { x: 1464, y: 932, w: 28, h: 32 }],
-  uiBang: [{ x: 1508, y: 932, w: 20, h: 44 }]
+  // UI.
+  uiHeart: spriteRow(0, 10, 4),
+  uiBombCount: spriteRow(4, 10, 5),
+  uiSpGauge: spriteRow(9, 10, 6),
+  uiDigits: spriteRow(15, 10, 10),
+  uiBang: [spriteCell(25, 10)]
 };
 const sprites = SPRITE_MAP;
 
@@ -158,7 +174,7 @@ const state = {
 const spriteImage = new Image();
 let spriteSource = spriteImage;
 spriteImage.onload = () => {
-  spriteSource = makeTransparentSpriteSource(spriteImage);
+  spriteSource = spriteImage;
   state.spritesReady = true;
   draw();
 };
@@ -855,6 +871,13 @@ function drawSprite(name, frameIndex, dx, dy, dw = TILE, dh = TILE, options = {}
   const oldAlpha = ctx.globalAlpha;
   if (options.alpha !== undefined) ctx.globalAlpha = options.alpha;
   ctx.drawImage(spriteSource, frame.x, frame.y, frame.w, frame.h, dx, dy, dw, dh);
+  if (DEBUG_SPRITE_DEST) {
+    ctx.save();
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(dx, dy, dw, dh);
+    ctx.restore();
+  }
   ctx.globalAlpha = oldAlpha;
   return true;
 }
@@ -991,7 +1014,7 @@ function drawPlayer() {
   if (p.hp <= 0) spriteName = "playerHurt";
   if (p.invuln > 0 && Math.floor(state.gameFrame / 6) % 2 === 0) spriteName = "playerInvincible";
   const frameIndex = p.moving || p.dashTimer > 0 || spriteName === "playerInvincible" ? Math.floor(state.gameFrame / 8) : 0;
-  if (drawSprite(spriteName, frameIndex, px - 26, py - 30, 52, 58)) {
+  if (drawSprite(spriteName, frameIndex, px - 24, py - 28, 48, 48)) {
     ctx.globalAlpha = 1;
     return;
   }
@@ -1011,8 +1034,7 @@ function drawEnemies() {
     const px = e.x * TILE;
     const py = e.y * TILE;
     const spriteName = e.skin || (e.type === "normal" ? "slime" : e.type === "chaser" ? "skeleton" : "ghost");
-    const size = spriteName === "skeleton" || spriteName === "robot" ? 54 : 50;
-    if (drawAnimatedSprite(spriteName, e.animationSpeed || 10, px - size / 2, py - size / 2, size, size)) continue;
+    if (drawAnimatedSprite(spriteName, e.animationSpeed || 10, px - 24, py - 24, 48, 48)) continue;
     ctx.fillStyle = e.type === "normal" ? "#ff9f1c" : e.type === "chaser" ? "#ef476f" : "#7b61ff";
     ctx.fillRect(px - 16, py - 16, 32, 32);
     ctx.fillStyle = "#fff";
@@ -1025,10 +1047,8 @@ function drawBombs() {
   for (const b of state.bombs) {
     const px = (b.x + 0.5) * TILE;
     const py = (b.y + 0.5) * TILE;
-    const pulse = 1 + Math.sin(performance.now() / 85) * 0.08;
-    const size = TILE * 0.82 * pulse;
     const spriteName = b.remote ? "remoteBomb" : "bomb";
-    if (drawAnimatedSprite(spriteName, 10, px - size / 2, py - size / 2, size, size)) continue;
+    if (drawAnimatedSprite(spriteName, 10, b.x * TILE, b.y * TILE, TILE, TILE)) continue;
     ctx.fillStyle = b.remote ? "#2d3142" : "#15191f";
     ctx.beginPath();
     ctx.arc(px, py + 3, 16 + Math.sin(performance.now() / 90) * 1.5, 0, Math.PI * 2);
@@ -1057,7 +1077,7 @@ function drawItems() {
     const px = item.x * TILE;
     const py = item.y * TILE;
     const bob = Math.sin((state.gameFrame + item.x * 13 + item.y * 7) / 16) * 4;
-    if (drawSprite(itemSpriteName(item.type), 0, px + 4, py + 2 + bob, TILE - 8, TILE - 8)) continue;
+    if (drawSprite(itemSpriteName(item.type), 0, px, py + bob, TILE, TILE)) continue;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(px + 10, py + 10, TILE - 20, TILE - 20);
     ctx.strokeStyle = "#2f80ed";
