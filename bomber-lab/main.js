@@ -44,16 +44,16 @@ const SPRITE_SIZE = 32;
 const SPRITE_SHEET_SRC = "./assets/bomber_sprites.png";
 const SPRITE_MAP = {
   // Player: walking, dash, hurt, and invincible frames.
-  playerDown: [{ x: 88, y: 82, w: 54, h: 68 }, { x: 168, y: 82, w: 54, h: 68 }, { x: 248, y: 82, w: 54, h: 68 }, { x: 328, y: 82, w: 54, h: 68 }],
-  playerLeft: [{ x: 88, y: 130, w: 54, h: 58 }, { x: 168, y: 130, w: 54, h: 58 }, { x: 248, y: 130, w: 54, h: 58 }, { x: 328, y: 130, w: 54, h: 58 }],
-  playerRight: [{ x: 88, y: 174, w: 54, h: 58 }, { x: 168, y: 174, w: 54, h: 58 }, { x: 248, y: 174, w: 54, h: 58 }, { x: 328, y: 174, w: 54, h: 58 }],
-  playerUp: [{ x: 88, y: 198, w: 54, h: 50 }, { x: 168, y: 198, w: 54, h: 50 }, { x: 248, y: 198, w: 54, h: 50 }, { x: 328, y: 198, w: 54, h: 50 }],
-  playerDashDown: [{ x: 614, y: 82, w: 66, h: 68 }, { x: 696, y: 82, w: 66, h: 68 }, { x: 778, y: 82, w: 66, h: 68 }, { x: 858, y: 82, w: 66, h: 68 }],
-  playerDashLeft: [{ x: 614, y: 130, w: 66, h: 58 }, { x: 696, y: 130, w: 66, h: 58 }, { x: 778, y: 130, w: 66, h: 58 }, { x: 858, y: 130, w: 66, h: 58 }],
-  playerDashRight: [{ x: 614, y: 174, w: 66, h: 58 }, { x: 696, y: 174, w: 66, h: 58 }, { x: 778, y: 174, w: 66, h: 58 }, { x: 858, y: 174, w: 66, h: 58 }],
-  playerDashUp: [{ x: 614, y: 198, w: 66, h: 50 }, { x: 696, y: 198, w: 66, h: 50 }, { x: 778, y: 198, w: 66, h: 50 }, { x: 858, y: 198, w: 66, h: 50 }],
-  playerHurt: [{ x: 1010, y: 88, w: 54, h: 64 }, { x: 1090, y: 88, w: 54, h: 64 }, { x: 1190, y: 88, w: 88, h: 64 }],
-  playerInvincible: [{ x: 1010, y: 150, w: 54, h: 70 }, { x: 1090, y: 150, w: 54, h: 70 }],
+  playerDown: [{ x: 29, y: 71, w: 48, h: 85 }, { x: 94, y: 71, w: 47, h: 84 }, { x: 158, y: 71, w: 47, h: 85 }],
+  playerLeft: [{ x: 243, y: 69, w: 42, h: 87 }, { x: 305, y: 69, w: 42, h: 86 }, { x: 367, y: 69, w: 45, h: 87 }],
+  playerRight: [{ x: 428, y: 69, w: 43, h: 87 }, { x: 486, y: 69, w: 43, h: 86 }],
+  playerUp: [{ x: 486, y: 69, w: 43, h: 86 }, { x: 486, y: 69, w: 43, h: 86 }],
+  playerDashDown: [{ x: 557, y: 70, w: 48, h: 87 }, { x: 616, y: 70, w: 66, h: 87 }],
+  playerDashLeft: [{ x: 694, y: 72, w: 55, h: 86 }, { x: 763, y: 72, w: 66, h: 86 }],
+  playerDashRight: [{ x: 844, y: 72, w: 54, h: 87 }, { x: 908, y: 72, w: 62, h: 88 }],
+  playerDashUp: [{ x: 982, y: 72, w: 50, h: 87 }, { x: 1049, y: 72, w: 45, h: 86 }],
+  playerHurt: [{ x: 1154, y: 96, w: 72, h: 56 }],
+  playerInvincible: [{ x: 29, y: 71, w: 48, h: 85 }, { x: 94, y: 71, w: 47, h: 84 }],
 
   // Enemies: slime normal, skeleton chaser, robot future bomber, ghost dodger, boss future use.
   slime: [{ x: 45, y: 318, w: 58, h: 38 }, { x: 128, y: 318, w: 58, h: 38 }, { x: 210, y: 322, w: 58, h: 34 }, { x: 286, y: 322, w: 58, h: 34 }],
