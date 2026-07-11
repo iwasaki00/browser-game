@@ -1,0 +1,2 @@
+import { distanceMeters } from "./utils.js";
+export function captureState(detective, criminal, settings, since, now){ const fresh=p=>p&&now-p.timestamp<10000&&p.accuracy<=50; if(!fresh(detective)||!fresh(criminal))return {valid:false,progress:0,distance:Infinity}; const d=distanceMeters(detective,criminal); if(d>settings.captureDistanceMeters)return {valid:false,progress:0,distance:d}; return {valid:true,progress:Math.min(1,(now-(since||now))/(settings.captureHoldSeconds*1000)),distance:d}; }
