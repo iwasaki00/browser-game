@@ -29,9 +29,9 @@ HTTP サーバーで確認したい場合は、任意の静的サーバーをこ
 
 各ゲームのURL例:
 
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/paint-battle/`
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/trace-escape/`
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/disappearing-tictactoe/`
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/himopack-battle/`
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/gomoku/`
-- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/SwordAndPoker/poker-dungeon/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/012_paint-battle/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/004_trace-escape/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/008_disappearing-tictactoe/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/002_himopack-battle/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/001_gomoku/`
+- `https://<GitHubユーザー名>.github.io/<リポジトリ名>/003_SwordAndPoker/poker-dungeon/`

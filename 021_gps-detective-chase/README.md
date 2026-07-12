@@ -55,7 +55,7 @@ ES Modulesと位置情報を使うため、ファイルを直接開かずHTTPサ
 python -m http.server 8000
 ```
 
-`http://localhost:8000/gps-detective-chase/` をPCの2ウィンドウで開き、部屋作成・参加・準備・開始・再戦を確認します。位置情報の実機確認はHTTPSのGitHub Pagesへ公開し、iPhone Safariで行います。
+`http://localhost:8000/021_gps-detective-chase/` をPCの2ウィンドウで開き、部屋作成・参加・準備・開始・再戦を確認します。位置情報の実機確認はHTTPSのGitHub Pagesへ公開し、iPhone Safariで行います。
 
 実機では次を確認してください。
 

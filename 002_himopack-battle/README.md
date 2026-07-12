@@ -25,7 +25,7 @@ Matter.js を使ったブラウザ向け 2D 物理アクションゲームです
 ## ローカルでの起動方法
 
 - `index.html` をブラウザで開く
-- もしくは任意の静的サーバーで `himopack-battle/` を配信する
+- もしくは任意の静的サーバーで `002_himopack-battle/` を配信する
 
 ## GitHub Pages での公開方法
 
