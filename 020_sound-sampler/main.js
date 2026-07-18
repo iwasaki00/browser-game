@@ -257,7 +257,7 @@ class SamplerApp {
     this.sounds = []; this.defaults.clear();
     let definitions = [];
     this.updateLoadingProgress(0, 0, "音源一覧を取得しています", "sounds.json");
-    try { const response = await withTimeout(fetch("assets/sounds/sounds.json"), 10000, "音源一覧の取得がタイムアウトしました"); if (!response.ok) throw new Error(`HTTP ${response.status}`); definitions = await response.json(); if (!Array.isArray(definitions)) throw new Error("配列ではありません"); }
+    try { const response = await withTimeout(fetch("assets/sounds/sounds.json", { cache: "no-store" }), 10000, "音源一覧の取得がタイムアウトしました"); if (!response.ok) throw new Error(`HTTP ${response.status}`); definitions = await response.json(); if (!Array.isArray(definitions)) throw new Error("配列ではありません"); }
     catch (error) { console.error("sounds.jsonを読み込めません", error); this.status("デフォルト音源一覧を読み込めませんでした", true, true); }
     const overrides = new Map((await this.storage.getAll(STORES.overrides) || []).map((item) => [item.id, item]));
     definitions.forEach((definition, order) => {

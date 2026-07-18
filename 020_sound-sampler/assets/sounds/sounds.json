@@ -1,154 +1,98 @@
 [
-    {
-        "id":  "default-001",
-        "file":  "cancel.wav",
-        "name":  "Cancel",
-        "category":  "操作音",
-        "color":  "#3b82f6",
-        "loop":  false
-    },
-    {
-        "id":  "default-005",
-        "file":  "coin.wav",
-        "name":  "Coin",
-        "category":  "アイテム",
-        "color":  "#22c55e",
-        "loop":  false
-    },
-    {
-        "id":  "default-009",
-        "file":  "damage.wav",
-        "name":  "Damage",
-        "category":  "戦闘",
-        "color":  "#ef4444",
-        "loop":  false
-    },
-    {
-        "id":  "default-013",
-        "file":  "decision.wav",
-        "name":  "Decision",
-        "category":  "操作音",
-        "color":  "#3b82f6",
-        "loop":  false
-    },
-    {
-        "id":  "default-017",
-        "file":  "explosion.wav",
-        "name":  "Explosion",
-        "category":  "戦闘",
-        "color":  "#ef4444",
-        "loop":  false
-    },
-    {
-        "id":  "default-021",
-        "file":  "gameover.wav",
-        "name":  "Gameover",
-        "category":  "ジングル",
-        "color":  "#a855f7",
-        "loop":  false
-    },
-    {
-        "id":  "default-025",
-        "file":  "heal.wav",
-        "name":  "Heal",
-        "category":  "アイテム",
-        "color":  "#22c55e",
-        "loop":  false
-    },
-    {
-        "id":  "default-028",
-        "file":  "hit.wav",
-        "name":  "Hit",
-        "category":  "戦闘",
-        "color":  "#ef4444",
-        "loop":  false
-    },
-    {
-        "id":  "default-031",
-        "file":  "item_get.wav",
-        "name":  "Item Get",
-        "category":  "アイテム",
-        "color":  "#22c55e",
-        "loop":  false
-    },
-    {
-        "id":  "default-034",
-        "file":  "jump.wav",
-        "name":  "Jump",
-        "category":  "アクション",
-        "color":  "#f59e0b",
-        "loop":  false
-    },
-    {
-        "id":  "default-038",
-        "file":  "laser.wav",
-        "name":  "Laser",
-        "category":  "戦闘",
-        "color":  "#ef4444",
-        "loop":  false
-    },
-    {
-        "id":  "default-041",
-        "file":  "level_clear.wav",
-        "name":  "Level Clear",
-        "category":  "ジングル",
-        "color":  "#a855f7",
-        "loop":  false
-    },
-    {
-        "id":  "default-042",
-        "file":  "level_clear_arcade.wav",
-        "name":  "Level Clear Arcade",
-        "category":  "ジングル",
-        "color":  "#a855f7",
-        "loop":  false
-    },
-    {
-        "id":  "default-043",
-        "file":  "level_clear_soft.wav",
-        "name":  "Level Clear Soft",
-        "category":  "ジングル",
-        "color":  "#a855f7",
-        "loop":  false
-    },
-    {
-        "id":  "default-044",
-        "file":  "powerup.wav",
-        "name":  "Powerup",
-        "category":  "アイテム",
-        "color":  "#22c55e",
-        "loop":  false
-    },
-    {
-        "id":  "default-048",
-        "file":  "select_blip.wav",
-        "name":  "Select Blip",
-        "category":  "操作音",
-        "color":  "#3b82f6",
-        "loop":  false
-    },
-    {
-        "id":  "default-051",
-        "file":  "seq_clap.wav",
-        "name":  "Seq Clap",
-        "category":  "シーケンス",
-        "color":  "#06b6d4",
-        "loop":  false
-    },
-    {
-        "id":  "default-072",
-        "file":  "shot.wav",
-        "name":  "Shot",
-        "category":  "戦闘",
-        "color":  "#ef4444",
-        "loop":  false
-    },
-    {
-        "id":  "default-075",
-        "file":  "start_fanfare.wav",
-        "name":  "Start Fanfare",
-        "category":  "ジングル",
-        "color":  "#a855f7",
-        "loop":  false
-    }
+  {
+    "id": "default-101",
+    "file": "Xファイルのテーマ.wav",
+    "name": "Xファイルのテーマ",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-102",
+    "file": "コナン_ひらめき.wav",
+    "name": "コナン ひらめき",
+    "category": "ひらめき",
+    "color": "#f59e0b",
+    "loop": false
+  },
+  {
+    "id": "default-103",
+    "file": "コナン_終盤.wav",
+    "name": "コナン 終盤",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-104",
+    "file": "コナン_推理中.wav",
+    "name": "コナン 推理中",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-105",
+    "file": "チーン.wav",
+    "name": "チーン",
+    "category": "コミカル",
+    "color": "#64748b",
+    "loop": false
+  },
+  {
+    "id": "default-106",
+    "file": "ドッキリ大成功.wav",
+    "name": "ドッキリ大成功",
+    "category": "コミカル",
+    "color": "#ec4899",
+    "loop": false
+  },
+  {
+    "id": "default-107",
+    "file": "ドラえもん_道具古.wav",
+    "name": "ドラえもん 道具（旧）",
+    "category": "ひらめき",
+    "color": "#0ea5e9",
+    "loop": false
+  },
+  {
+    "id": "default-108",
+    "file": "ドラえもん_道具新.wav",
+    "name": "ドラえもん 道具（新）",
+    "category": "ひらめき",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-109",
+    "file": "パチンコ_キュイン.wav",
+    "name": "パチンコ キュイン",
+    "category": "決め音",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-110",
+    "file": "ワンピース_どん！.wav",
+    "name": "ワンピース どん！",
+    "category": "決め音",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-111",
+    "file": "火曜サスペンス劇場.wav",
+    "name": "火曜サスペンス劇場",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-112",
+    "file": "笑ってはいけない_デデーン.wav",
+    "name": "笑ってはいけない デデーン",
+    "category": "コミカル",
+    "color": "#f97316",
+    "loop": false
+  }
 ]
