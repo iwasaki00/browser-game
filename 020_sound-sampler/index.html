@@ -14,6 +14,7 @@
     html,body{touch-action:manipulation}
     input,select,textarea{font-size:16px}
     .favorite-button{position:absolute;top:5px;right:5px;margin:0}
+    .pad-stop-button{position:absolute;z-index:4;right:5px;bottom:5px;display:grid;place-items:center;width:30px;height:30px;padding:0;color:inherit;background:rgba(5,8,14,.62);border:1px solid rgba(255,255,255,.28);border-radius:8px;font-size:.65rem}.pad-stop-button:active{transform:scale(.9);background:rgba(5,8,14,.85)}.pad.looping:after{right:39px;left:auto}
     @media (max-width:699px){.pad-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.pad{border-radius:11px}.pad-main{padding:9px 6px 7px}.pad-file{font-size:.52rem}.pad-category{font-size:.56rem}}
     .sheet.fallback-open{display:block!important;position:fixed;z-index:40;inset:auto 8px 0;max-width:none;margin:0 auto}.dialog-fallback-backdrop{position:fixed;z-index:39;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
     .trim-editor{margin:12px 0;padding:12px;background:#0e111a;border:1px solid var(--line);border-radius:12px}.trim-editor h3{margin:0;font-size:.9rem}.trim-editor>p{margin:5px 0 10px;color:var(--muted);font-size:.68rem;line-height:1.5}.trim-editor label{grid-template-columns:1fr auto}.trim-editor label input{grid-column:1/-1}.trim-summary{display:flex;justify-content:space-between;color:var(--muted);font-size:.7rem}.trim-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.trim-actions button{min-height:44px}.asset-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.asset-actions button{min-height:44px;color:var(--accent);background:var(--surface2);border:1px solid var(--line);border-radius:11px;font-weight:800}
@@ -134,6 +135,6 @@
   <dialog id="dataDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>データ管理</h2><button class="close-button" data-close="dataDialog" type="button">×</button></header><div class="storage-card"><span>概算使用量</span><strong id="storageUsage">計算中…</strong></div><div class="data-actions"><button id="exportButton" type="button">設定をエクスポート</button><label class="button-label">設定をインポート<input id="importInput" type="file" accept="application/json,.json"></label><button id="deleteUploadsButton" class="danger" type="button">追加音源をすべて削除</button><button id="deleteRecordingsButton" class="danger" type="button">録音音源をすべて削除</button><button id="resetSettingsButton" type="button">パッド設定を初期化</button><button id="resetAllButton" class="danger" type="button">すべてのデータを初期化</button></div></dialog>
 
   <script src="rhythm.js?v=20260719-1"></script>
-  <script src="main.js?v=20260719-8"></script>
+  <script src="main.js?v=20260719-9"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@ class StorageManager {
 }
 
 class AudioManager {
-  constructor() { this.context = null; this.master = null; this.sources = new Set(); this.loops = new Map(); this.previewSource = null; }
+  constructor() { this.context = null; this.master = null; this.sources = new Set(); this.sourcesBySound = new Map(); this.loops = new Map(); this.previewSource = null; }
   async start(volume) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) throw new Error("Web Audio APIに対応していません");
@@ -98,9 +98,12 @@ class AudioManager {
     gain.gain.value = sound.volume;
     source.connect(gain).connect(this.master);
     this.sources.add(source);
-    source.addEventListener("ended", () => { this.sources.delete(source); if (this.loops.get(sound.id) === source) this.loops.delete(sound.id); if (this.previewSource === source) this.previewSource = null; }, { once: true });
+    if (!this.sourcesBySound.has(sound.id)) this.sourcesBySound.set(sound.id, new Set());
+    this.sourcesBySound.get(sound.id).add(source);
+    source.addEventListener("ended", () => { this.unregisterSource(sound.id, source); if (this.loops.get(sound.id) === source) this.loops.delete(sound.id); if (this.previewSource === source) this.previewSource = null; }, { once: true });
     return source;
   }
+  unregisterSource(id, source) { this.sources.delete(source); const group = this.sourcesBySound.get(id); group?.delete(source); if (group?.size === 0) this.sourcesBySound.delete(id); }
   async play(sound) {
     await this.resume();
     if (!sound.audioBuffer) throw new Error("音声を読み込めませんでした");
@@ -112,9 +115,9 @@ class AudioManager {
     const source = this.createSource(sound), region = soundRegion(sound); source.start(0, region.start, region.duration); return true;
   }
   async preview(sound) { await this.resume(); this.stopPreview(); const source = this.createSource({ ...sound, loop: false }); const region = soundRegion(sound); this.previewSource = source; source.start(0, region.start, region.duration); }
-  stopPreview() { if (this.previewSource) { try { this.previewSource.stop(); } catch (_) {} this.sources.delete(this.previewSource); this.previewSource = null; } }
-  stopSound(id) { const source = this.loops.get(id); if (source) { try { source.stop(); } catch (_) {} this.loops.delete(id); } }
-  stopAll() { for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.loops.clear(); }
+  stopPreview() { if (this.previewSource) { try { this.previewSource.stop(); } catch (_) {} this.previewSource = null; } }
+  stopSound(id) { const group = this.sourcesBySound.get(id); if (group) for (const source of [...group]) { try { source.stop(); } catch (_) {} this.unregisterSource(id, source); } this.loops.delete(id); }
+  stopAll() { for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.sourcesBySound.clear(); this.loops.clear(); this.previewSource = null; }
 }
 
 class RecordingManager {
@@ -334,6 +337,7 @@ class SamplerApp {
       const favorite = document.createElement("button"); favorite.type = "button"; favorite.className = `favorite-button${sound.favorite ? " active" : ""}`; favorite.textContent = "★"; favorite.setAttribute("aria-label", `${sound.displayName}のお気に入りを切り替え`); favorite.addEventListener("click", (event) => { event.stopPropagation(); this.toggleFavorite(sound); });
       pad.append(favorite);
     }
+    const stopButton = document.createElement("button"); stopButton.type = "button"; stopButton.className = "pad-stop-button"; stopButton.textContent = "■"; stopButton.setAttribute("aria-label", `${sound.displayName}だけを停止`); stopButton.addEventListener("click", (event) => { event.stopPropagation(); this.stopPadSound(sound, pad); }); pad.append(stopButton);
     this.bindPadGesture(main, sound, pad); pad.addEventListener("contextmenu", (event) => event.preventDefault()); return pad;
   }
   bindPadGesture(button, sound, pad) {
@@ -344,6 +348,7 @@ class SamplerApp {
     button.addEventListener("pointerup", finish); button.addEventListener("pointercancel", () => clearTimeout(timer));
   }
   async play(sound, pad) { try { this.rhythm.duck(); const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
+  stopPadSound(sound, pad) { this.audio.stopSound(sound.id); pad.classList.remove("looping", "playing"); this.status(`「${sound.displayName}」を停止しました`); }
   textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 155 ? "#07111a" : "#ffffff"; }
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
   toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; this.renderPads(); }
