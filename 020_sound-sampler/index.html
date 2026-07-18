@@ -2,39 +2,77 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#10111a">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090b12">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
   <title>効果音サンプラー</title>
   <link rel="stylesheet" href="style.css">
+  <style>.favorite-button{position:absolute;top:5px;right:5px;margin:0}</style>
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <a class="back-link" href="../">← ゲームメニュー</a>
-      <p class="eyebrow">SOUND TOOL</p>
+  <div id="startScreen" class="start-screen">
+    <div class="start-card">
+      <span class="start-icon">◉</span>
+      <p class="eyebrow">POCKET SOUND LAB</p>
       <h1>効果音サンプラー</h1>
-      <p class="description">パッドをタップして、好きなタイミングで効果音を鳴らそう。</p>
-    </header>
-    <section id="startPanel" class="start-panel" aria-labelledby="startTitle">
-      <div><h2 id="startTitle">音を鳴らす準備</h2><p>iPhoneでは、最初にボタンを押してオーディオを有効にしてください。</p></div>
+      <p>低遅延サウンドパッドを起動します。iPhoneでは最初の操作が必要です。</p>
       <button id="startButton" class="primary-button" type="button">サンプラー開始</button>
-    </section>
-    <section class="toolbar" aria-label="サンプラー操作">
-      <label class="volume-control" for="volume"><span>音量</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.8"><output id="volumeValue" for="volume">80%</output></label>
-      <div class="actions">
-        <button id="stopButton" class="tool-button stop-button" type="button" disabled>■ 全体停止</button>
-        <button id="addButton" class="tool-button add-button" type="button">＋ 効果音を追加</button>
-        <input id="fileInput" class="visually-hidden" type="file" accept="audio/*,.mp3,.wav,.m4a" multiple>
+      <small>音が鳴らない場合は、マナーモードと端末音量も確認してください。</small>
+    </div>
+  </div>
+
+  <main id="app" class="app" hidden>
+    <header class="topbar">
+      <div><a href="../" class="back-link">← メニュー</a><h1>効果音サンプラー</h1></div>
+      <button id="editButton" class="icon-button" type="button" aria-pressed="false">編集</button>
+    </header>
+
+    <section class="master-panel" aria-label="全体操作">
+      <button id="stopButton" class="stop-button" type="button">■ 全停止</button>
+      <label class="master-volume" for="masterVolume"><span>全体音量</span><input id="masterVolume" type="range" min="0" max="1" step="0.01" value="0.8"><output id="masterVolumeValue">80%</output></label>
+      <div class="quick-actions">
+        <button id="addButton" type="button">＋ 音源追加</button>
+        <button id="recordButton" type="button">● 録音</button>
+        <button id="dataButton" type="button">⚙ データ</button>
       </div>
+      <input id="fileInput" class="visually-hidden" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" multiple>
     </section>
-    <div id="status" class="status" role="status" aria-live="polite">サンプラーを開始してください</div>
-    <section aria-labelledby="padsTitle">
+
+    <div id="status" class="status" role="status" aria-live="polite" hidden><span id="statusText"></span><button id="statusClose" type="button" aria-label="閉じる">×</button></div>
+    <nav id="categoryTabs" class="category-tabs" aria-label="カテゴリ"></nav>
+
+    <section class="pads-section" aria-labelledby="padsTitle">
       <div class="section-heading"><h2 id="padsTitle">サウンドパッド</h2><span id="soundCount">0 sounds</span></div>
+      <div id="editBanner" class="edit-banner" hidden>編集中：パッドをタップすると設定を開きます</div>
       <div id="padGrid" class="pad-grid"></div>
+      <div id="emptyState" class="empty-state" hidden>このカテゴリに音源はありません。</div>
     </section>
   </main>
+
+  <dialog id="settingsDialog" class="sheet">
+    <form id="settingsForm" method="dialog">
+      <div class="sheet-handle"></div>
+      <header><div><p class="eyebrow">PAD SETTINGS</p><h2>パッド設定</h2></div><button class="close-button" value="cancel" aria-label="閉じる">×</button></header>
+      <input id="settingId" type="hidden">
+      <label>表示名<input id="settingName" maxlength="80" required></label>
+      <p class="file-info">ファイル：<span id="settingFile"></span></p>
+      <label>カテゴリ<input id="settingCategory" list="categoryList" maxlength="40"><datalist id="categoryList"></datalist></label>
+      <fieldset><legend>パッド色</legend><div class="color-row"><input id="settingColor" type="color"><div id="colorPresets" class="color-presets"></div><button id="resetColorButton" type="button">初期色</button></div></fieldset>
+      <div class="toggle-grid"><label><input id="settingFavorite" type="checkbox"> ★ お気に入り</label><label><input id="settingLoop" type="checkbox"> ↻ ループ</label></div>
+      <label>個別音量 <output id="settingVolumeValue">100%</output><input id="settingVolume" type="range" min="0" max="1" step="0.01"></label>
+      <label>再生速度 <output id="settingRateValue">1.0×</output><input id="settingRate" type="range" min="0.5" max="2" step="0.1"></label>
+      <fieldset><legend>並び順</legend><div class="order-actions"><button data-move="first" type="button">先頭</button><button data-move="prev" type="button">前へ</button><button data-move="next" type="button">後ろへ</button><button data-move="last" type="button">最後</button></div></fieldset>
+      <div class="sheet-actions"><button id="resetPadButton" type="button">設定を初期化</button><button id="deletePadButton" class="danger" type="button">削除</button><button class="primary-button" value="save">保存</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="addDialog" class="sheet small-sheet"><form id="addForm" method="dialog"><div class="sheet-handle"></div><header><h2>音源を追加</h2><button class="close-button" value="cancel">×</button></header><p id="addFileSummary"></p><label>表示名<input id="addName" maxlength="80"></label><label>カテゴリ<input id="addCategory" list="categoryList" value="未分類"></label><label>パッド色<input id="addColor" type="color" value="#3b82f6"></label><div class="toggle-grid"><label><input id="addFavorite" type="checkbox"> ★ お気に入り</label><label><input id="addLoop" type="checkbox"> ↻ ループ</label></div><div class="sheet-actions"><button value="cancel">キャンセル</button><button class="primary-button" value="save">追加</button></div></form></dialog>
+
+  <dialog id="recordDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>マイク録音</h2><button id="recordClose" class="close-button" type="button">×</button></header><div id="recordIdle" class="record-stage"><div class="record-orb">●</div><p>最大30秒まで録音できます</p><button id="recordStart" class="record-action" type="button">録音開始</button></div><div id="recordActive" class="record-stage" hidden><div class="record-orb active">●</div><strong id="recordTimer">00:00</strong><div class="meter"><span id="recordMeter"></span></div><button id="recordStop" class="record-action" type="button">録音停止</button><button id="recordCancel" type="button">キャンセル</button></div><div id="recordPreview" class="record-stage" hidden><audio id="recordAudio" controls></audio><label>表示名<input id="recordName" value="録音音源"></label><label>カテゴリ<input id="recordCategory" list="categoryList" value="録音"></label><label>パッド色<input id="recordColor" type="color" value="#ef4444"></label><div class="toggle-grid"><label><input id="recordFavorite" type="checkbox"> ★ お気に入り</label><label><input id="recordLoop" type="checkbox"> ↻ ループ</label></div><div class="sheet-actions"><button id="recordRetry" type="button">録り直し</button><button id="recordSave" class="primary-button" type="button">保存</button></div></div></dialog>
+
+  <dialog id="dataDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>データ管理</h2><button class="close-button" data-close="dataDialog" type="button">×</button></header><div class="storage-card"><span>概算使用量</span><strong id="storageUsage">計算中…</strong></div><div class="data-actions"><button id="exportButton" type="button">設定をエクスポート</button><label class="button-label">設定をインポート<input id="importInput" type="file" accept="application/json,.json"></label><button id="deleteUploadsButton" class="danger" type="button">追加音源をすべて削除</button><button id="deleteRecordingsButton" class="danger" type="button">録音音源をすべて削除</button><button id="resetSettingsButton" type="button">パッド設定を初期化</button><button id="resetAllButton" class="danger" type="button">すべてのデータを初期化</button></div></dialog>
+
   <script src="main.js"></script>
 </body>
 </html>

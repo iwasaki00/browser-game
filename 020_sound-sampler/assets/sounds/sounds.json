@@ -1,0 +1,619 @@
+[
+  {
+    "id": "default-001",
+    "file": "cancel.wav",
+    "name": "Cancel",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-002",
+    "file": "cancel_click.wav",
+    "name": "Cancel Click",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-003",
+    "file": "cancel_low.wav",
+    "name": "Cancel Low",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-004",
+    "file": "cancel_soft.wav",
+    "name": "Cancel Soft",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-005",
+    "file": "coin.wav",
+    "name": "Coin",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-006",
+    "file": "coin_arcade.wav",
+    "name": "Coin Arcade",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-007",
+    "file": "coin_high.wav",
+    "name": "Coin High",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-008",
+    "file": "coin_soft.wav",
+    "name": "Coin Soft",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-009",
+    "file": "damage.wav",
+    "name": "Damage",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-010",
+    "file": "damage_heavy.wav",
+    "name": "Damage Heavy",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-011",
+    "file": "damage_light.wav",
+    "name": "Damage Light",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-012",
+    "file": "damage_shock.wav",
+    "name": "Damage Shock",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-013",
+    "file": "decision.wav",
+    "name": "Decision",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-014",
+    "file": "decision_bright.wav",
+    "name": "Decision Bright",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-015",
+    "file": "decision_retro.wav",
+    "name": "Decision Retro",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-016",
+    "file": "decision_soft.wav",
+    "name": "Decision Soft",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-017",
+    "file": "explosion.wav",
+    "name": "Explosion",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-018",
+    "file": "explosion_deep.wav",
+    "name": "Explosion Deep",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-019",
+    "file": "explosion_pop.wav",
+    "name": "Explosion Pop",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-020",
+    "file": "explosion_short.wav",
+    "name": "Explosion Short",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-021",
+    "file": "gameover.wav",
+    "name": "Gameover",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-022",
+    "file": "gameover_dark.wav",
+    "name": "Gameover Dark",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-023",
+    "file": "gameover_retro.wav",
+    "name": "Gameover Retro",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-024",
+    "file": "gameover_short.wav",
+    "name": "Gameover Short",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-025",
+    "file": "heal.wav",
+    "name": "Heal",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-026",
+    "file": "heal_pulse.wav",
+    "name": "Heal Pulse",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-027",
+    "file": "heal_soft.wav",
+    "name": "Heal Soft",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-028",
+    "file": "hit.wav",
+    "name": "Hit",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-029",
+    "file": "hit_metal.wav",
+    "name": "Hit Metal",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-030",
+    "file": "hit_wood.wav",
+    "name": "Hit Wood",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-031",
+    "file": "item_get.wav",
+    "name": "Item Get",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-032",
+    "file": "item_get_magic.wav",
+    "name": "Item Get Magic",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-033",
+    "file": "item_get_rare.wav",
+    "name": "Item Get Rare",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-034",
+    "file": "jump.wav",
+    "name": "Jump",
+    "category": "アクション",
+    "color": "#f59e0b",
+    "loop": false
+  },
+  {
+    "id": "default-035",
+    "file": "jump_heavy.wav",
+    "name": "Jump Heavy",
+    "category": "アクション",
+    "color": "#f59e0b",
+    "loop": false
+  },
+  {
+    "id": "default-036",
+    "file": "jump_short.wav",
+    "name": "Jump Short",
+    "category": "アクション",
+    "color": "#f59e0b",
+    "loop": false
+  },
+  {
+    "id": "default-037",
+    "file": "jump_spring.wav",
+    "name": "Jump Spring",
+    "category": "アクション",
+    "color": "#f59e0b",
+    "loop": false
+  },
+  {
+    "id": "default-038",
+    "file": "laser.wav",
+    "name": "Laser",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-039",
+    "file": "laser_charge.wav",
+    "name": "Laser Charge",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-040",
+    "file": "laser_high.wav",
+    "name": "Laser High",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-041",
+    "file": "level_clear.wav",
+    "name": "Level Clear",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-042",
+    "file": "level_clear_arcade.wav",
+    "name": "Level Clear Arcade",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-043",
+    "file": "level_clear_soft.wav",
+    "name": "Level Clear Soft",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-044",
+    "file": "powerup.wav",
+    "name": "Powerup",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-045",
+    "file": "powerup_fast.wav",
+    "name": "Powerup Fast",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-046",
+    "file": "powerup_magic.wav",
+    "name": "Powerup Magic",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-047",
+    "file": "powerup_retro.wav",
+    "name": "Powerup Retro",
+    "category": "アイテム",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-048",
+    "file": "select_blip.wav",
+    "name": "Select Blip",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-049",
+    "file": "select_move.wav",
+    "name": "Select Move",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-050",
+    "file": "select_tick.wav",
+    "name": "Select Tick",
+    "category": "操作音",
+    "color": "#3b82f6",
+    "loop": false
+  },
+  {
+    "id": "default-051",
+    "file": "seq_clap.wav",
+    "name": "Seq Clap",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-052",
+    "file": "seq_hat_closed.wav",
+    "name": "Seq Hat Closed",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-053",
+    "file": "seq_hat_open.wav",
+    "name": "Seq Hat Open",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-054",
+    "file": "seq_hat_tick.wav",
+    "name": "Seq Hat Tick",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-055",
+    "file": "seq_kick_deep.wav",
+    "name": "Seq Kick Deep",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-056",
+    "file": "seq_kick_soft.wav",
+    "name": "Seq Kick Soft",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-057",
+    "file": "seq_kick_tight.wav",
+    "name": "Seq Kick Tight",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-058",
+    "file": "seq_snare_crisp.wav",
+    "name": "Seq Snare Crisp",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-059",
+    "file": "seq_snare_noise.wav",
+    "name": "Seq Snare Noise",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-060",
+    "file": "seq_snare_soft.wav",
+    "name": "Seq Snare Soft",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-061",
+    "file": "seq_synth_bass_c.wav",
+    "name": "Seq Synth Bass C",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-062",
+    "file": "seq_synth_bass_g.wav",
+    "name": "Seq Synth Bass G",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-063",
+    "file": "seq_synth_drop.wav",
+    "name": "Seq Synth Drop",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-064",
+    "file": "seq_synth_pluck_c.wav",
+    "name": "Seq Synth Pluck C",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-065",
+    "file": "seq_synth_pluck_e.wav",
+    "name": "Seq Synth Pluck E",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-066",
+    "file": "seq_synth_pluck_g.wav",
+    "name": "Seq Synth Pluck G",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-067",
+    "file": "seq_synth_rise.wav",
+    "name": "Seq Synth Rise",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-068",
+    "file": "seq_synth_stab_amin.wav",
+    "name": "Seq Synth Stab Amin",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-069",
+    "file": "seq_synth_stab_cmaj.wav",
+    "name": "Seq Synth Stab Cmaj",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-070",
+    "file": "seq_tom_low.wav",
+    "name": "Seq Tom Low",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-071",
+    "file": "seq_tom_mid.wav",
+    "name": "Seq Tom Mid",
+    "category": "シーケンス",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-072",
+    "file": "shot.wav",
+    "name": "Shot",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-073",
+    "file": "shot_heavy.wav",
+    "name": "Shot Heavy",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-074",
+    "file": "shot_soft.wav",
+    "name": "Shot Soft",
+    "category": "戦闘",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-075",
+    "file": "start_fanfare.wav",
+    "name": "Start Fanfare",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-076",
+    "file": "start_retro.wav",
+    "name": "Start Retro",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-077",
+    "file": "start_soft.wav",
+    "name": "Start Soft",
+    "category": "ジングル",
+    "color": "#a855f7",
+    "loop": false
+  }
+]
+
