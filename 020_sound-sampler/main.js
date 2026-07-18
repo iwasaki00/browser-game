@@ -295,8 +295,12 @@ class SamplerApp {
     const typeBadge = sound.sourceType === "recorded" ? "REC" : sound.sourceType === "uploaded" ? "ADD" : "";
     main.innerHTML = `<span class="pad-top"><span class="pad-badges">${typeBadge ? `<span class="badge">${typeBadge}</span>` : ""}${sound.loop ? '<span class="badge">LOOP</span>' : ""}</span></span><span><strong class="pad-name"></strong><small class="pad-file"></small></span><span class="pad-category"></span>`;
     main.querySelector(".pad-name").textContent = sound.displayName; main.querySelector(".pad-file").textContent = sound.fileName; main.querySelector(".pad-file").title = sound.fileName; main.querySelector(".pad-category").textContent = sound.category;
-    const favorite = document.createElement("button"); favorite.type = "button"; favorite.className = `favorite-button${sound.favorite ? " active" : ""}`; favorite.textContent = "★"; favorite.setAttribute("aria-label", "お気に入り切替"); favorite.addEventListener("click", (event) => { event.stopPropagation(); this.toggleFavorite(sound); });
-    pad.append(main, favorite); this.bindPadGesture(main, sound, pad); pad.addEventListener("contextmenu", (event) => event.preventDefault()); return pad;
+    pad.append(main);
+    if (this.editing) {
+      const favorite = document.createElement("button"); favorite.type = "button"; favorite.className = `favorite-button${sound.favorite ? " active" : ""}`; favorite.textContent = "★"; favorite.setAttribute("aria-label", `${sound.displayName}のお気に入りを切り替え`); favorite.addEventListener("click", (event) => { event.stopPropagation(); this.toggleFavorite(sound); });
+      pad.append(favorite);
+    }
+    this.bindPadGesture(main, sound, pad); pad.addEventListener("contextmenu", (event) => event.preventDefault()); return pad;
   }
   bindPadGesture(button, sound, pad) {
     let timer, startX, startY, longPressed = false;
@@ -308,7 +312,7 @@ class SamplerApp {
   async play(sound, pad) { try { this.rhythm.duck(); const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
   textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 155 ? "#07111a" : "#ffffff"; }
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
-  toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; }
+  toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; this.renderPads(); }
   renderColorPresets() { $("#colorPresets").replaceChildren(...COLORS.map((color) => { const button = document.createElement("button"); button.type = "button"; button.className = "color-preset"; button.style.setProperty("--color", color); button.setAttribute("aria-label", color); button.addEventListener("click", () => $("#settingColor").value = color); return button; })); }
   openSettings(id) {
     const sound = this.find(id); if (!sound) return;
