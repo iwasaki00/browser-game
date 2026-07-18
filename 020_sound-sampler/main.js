@@ -99,6 +99,7 @@ class RecordingManager {
     return options.find((type) => window.MediaRecorder?.isTypeSupported(type)) || "";
   }
   async start(onTick, onAutoStop) {
+    if (!window.isSecureContext) throw new Error("マイク録音にはHTTPS接続が必要です");
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) throw new Error("この環境ではマイク録音を利用できません");
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false });
     const type = this.mimeType();
@@ -326,14 +327,29 @@ class SamplerApp {
     }
     this.pendingFiles = []; this.render(); this.status(`${added}件追加しました${failed ? `（${failed}件失敗）` : ""}`, failed > 0, failed > 0);
   }
-  openRecorder() { this.resetRecorder(); $("#recordDialog").showModal(); }
+  openDialog(dialog) {
+    try {
+      if (typeof dialog.showModal === "function") { dialog.showModal(); return; }
+    } catch (error) { console.warn("ネイティブダイアログを開けません。フォールバック表示を使用します", error); }
+    dialog.setAttribute("open", ""); dialog.classList.add("fallback-open");
+    const backdrop = document.createElement("div"); backdrop.className = "dialog-fallback-backdrop"; backdrop.dataset.forDialog = dialog.id;
+    document.body.append(backdrop);
+  }
+  closeDialog(dialog) {
+    if (dialog.classList.contains("fallback-open")) { dialog.removeAttribute("open"); dialog.classList.remove("fallback-open"); document.querySelector(`[data-for-dialog="${dialog.id}"]`)?.remove(); }
+    else if (typeof dialog.close === "function" && dialog.open) dialog.close();
+  }
+  openRecorder() {
+    try { this.resetRecorder(); this.openDialog($("#recordDialog")); }
+    catch (error) { console.error("録音画面を開けません", error); this.status(`録音画面を開けません：${error.message}`, true, true); }
+  }
   resetRecorder() { this.recording.cancel(); if (this.recordBlob) URL.revokeObjectURL($("#recordAudio").src); this.recordBlob = null; $("#recordIdle").hidden = false; $("#recordActive").hidden = true; $("#recordPreview").hidden = true; $("#recordTimer").textContent = "00:00"; }
   async startRecording() {
     try { await this.recording.start((seconds) => $("#recordTimer").textContent = `00:${String(seconds).padStart(2, "0")}`, () => this.stopRecording()); $("#recordIdle").hidden = true; $("#recordActive").hidden = false; }
-    catch (error) { console.error(error); this.status(error.name === "NotAllowedError" ? "マイクの使用が許可されませんでした" : error.message, true, true); $("#recordDialog").close(); }
+    catch (error) { console.error(error); this.status(error.name === "NotAllowedError" ? "マイクの使用が許可されませんでした。iPhoneの設定でブラウザのマイク権限を確認してください" : error.message, true, true); this.closeDialog($("#recordDialog")); }
   }
   async stopRecording() { if ($("#recordActive").hidden) return; this.recordBlob = await this.recording.stop(); $("#recordActive").hidden = true; $("#recordPreview").hidden = false; $("#recordAudio").src = URL.createObjectURL(this.recordBlob); }
-  closeRecorder() { this.resetRecorder(); $("#recordDialog").close(); }
+  closeRecorder() { this.resetRecorder(); this.closeDialog($("#recordDialog")); }
   async saveRecording() {
     if (!this.recordBlob || !this.storage.available) return this.status("録音音源を保存できません", true, true);
     try {

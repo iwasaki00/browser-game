@@ -12,6 +12,7 @@
     [hidden]{display:none!important}
     .favorite-button{position:absolute;top:5px;right:5px;margin:0}
     @media (max-width:699px){.pad-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.pad{border-radius:11px}.pad-main{padding:9px 6px 7px}.pad-file{font-size:.52rem}.pad-category{font-size:.56rem}}
+    .sheet.fallback-open{display:block!important;position:fixed;z-index:40;inset:auto 8px 0;max-width:none;margin:0 auto}.dialog-fallback-backdrop{position:fixed;z-index:39;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
     .load-progress{margin-top:14px;text-align:left}.load-progress progress{display:block;width:100%;height:10px;margin:8px 0;overflow:hidden;accent-color:var(--accent);border:0;border-radius:99px;background:#1c2231}.load-progress progress::-webkit-progress-bar{background:#1c2231;border-radius:99px}.load-progress progress::-webkit-progress-value{background:var(--accent);border-radius:99px}.load-progress-row{display:flex;justify-content:space-between;gap:12px;color:#c7d0df;font-size:.76rem;font-weight:800}.load-progress-detail{display:block;overflow:hidden;color:#768196;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem}
   </style>
 </head>
@@ -83,6 +84,6 @@
 
   <dialog id="dataDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>データ管理</h2><button class="close-button" data-close="dataDialog" type="button">×</button></header><div class="storage-card"><span>概算使用量</span><strong id="storageUsage">計算中…</strong></div><div class="data-actions"><button id="exportButton" type="button">設定をエクスポート</button><label class="button-label">設定をインポート<input id="importInput" type="file" accept="application/json,.json"></label><button id="deleteUploadsButton" class="danger" type="button">追加音源をすべて削除</button><button id="deleteRecordingsButton" class="danger" type="button">録音音源をすべて削除</button><button id="resetSettingsButton" type="button">パッド設定を初期化</button><button id="resetAllButton" class="danger" type="button">すべてのデータを初期化</button></div></dialog>
 
-  <script src="main.js"></script>
+  <script src="main.js?v=20260719-3"></script>
 </body>
 </html>
