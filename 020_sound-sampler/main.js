@@ -128,7 +128,7 @@ class RecordingManager {
       this.recorder.stop();
     });
   }
-  cancel() { if (this.recorder?.state !== "inactive") this.recorder.stop(); this.cleanup(); }
+  cancel() { if (this.recorder && this.recorder.state !== "inactive") this.recorder.stop(); this.cleanup(); }
   cleanup() { clearInterval(this.timer); cancelAnimationFrame(this.analyserFrame); this.stream?.getTracks().forEach((track) => track.stop()); this.meterContext?.close(); this.stream = null; }
 }
 
