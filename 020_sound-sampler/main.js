@@ -137,14 +137,16 @@ class SamplerApp {
   constructor() {
     this.storage = new StorageManager(); this.audio = new AudioManager();
     this.recording = new RecordingManager((level) => { $("#recordMeter").style.width = `${Math.round(level * 100)}%`; });
+    this.rhythm = new RhythmManager(this.audio, { onBeat: (beat) => this.showBeat(beat), onStep: (step) => this.showRhythmStep(step), onState: (playing) => this.showRhythmState(playing) });
     this.sounds = []; this.defaults = new Map(); this.category = "すべて"; this.editing = false; this.pendingFiles = []; this.recordBlob = null; this.statusTimer = null;
+    this.rhythmReady = false; this.tapTimes = [];
   }
   async init() {
     this.bindUI(); this.renderColorPresets();
     $("#startButton").addEventListener("click", () => this.start());
   }
   bindUI() {
-    $("#stopButton").addEventListener("click", () => { this.audio.stopAll(); this.renderPads(); this.status("すべての音を停止しました"); });
+    $("#stopButton").addEventListener("click", () => this.stopEverything());
     $("#masterVolume").addEventListener("input", (e) => { const value = Number(e.target.value); $("#masterVolumeValue").value = `${Math.round(value * 100)}%`; this.audio.setMasterVolume(value); this.storage.setSetting("masterVolume", value); });
     $("#addButton").addEventListener("click", () => $("#fileInput").click());
     $("#fileInput").addEventListener("change", (e) => this.prepareFiles(e.target.files));
@@ -166,6 +168,17 @@ class SamplerApp {
     $("#recordRetry").addEventListener("click", () => this.resetRecorder());
     $("#recordSave").addEventListener("click", () => this.saveRecording());
     $("#dataButton").addEventListener("click", () => this.openData());
+    $("#rhythmButton").addEventListener("click", () => this.openRhythmScreen());
+    $("#rhythmBack").addEventListener("click", () => this.closeRhythmScreen());
+    $("#rhythmStart").addEventListener("click", () => this.startRhythm());
+    $("#rhythmStop").addEventListener("click", () => { this.rhythm.stop(); this.rhythmMessage("リズムを停止しました"); });
+    $("#tapTempo").addEventListener("click", () => this.tapTempo());
+    $("#bpm").addEventListener("input", (event) => { this.rhythm.config.bpm = Number(event.target.value); $("#bpmValue").value = event.target.value; this.saveRhythmConfig(); });
+    $("#rhythmPattern").addEventListener("change", (event) => { this.rhythm.config.pattern = event.target.value; $("#sequencerSection").hidden = event.target.value !== "custom"; this.renderSequencer(); this.saveRhythmConfig(); });
+    for (const [id, key] of [["rhythmVolume","volume"],["drumVolume","drumVolume"],["bassVolume","bassVolume"]]) $("#" + id).addEventListener("input", (event) => { this.rhythm.config[key] = Number(event.target.value); $("#" + id + "Value").value = `${Math.round(event.target.value * 100)}%`; this.rhythm.updateGains(); this.saveRhythmConfig(); });
+    for (const [id, key] of [["drumEnabled","drumEnabled"],["bassEnabled","bassEnabled"],["countIn","countIn"],["ducking","ducking"]]) $("#" + id).addEventListener("change", (event) => { this.rhythm.config[key] = event.target.checked; this.saveRhythmConfig(); });
+    $("#bassNote").addEventListener("change", (event) => { this.rhythm.config.bassNote = event.target.value; this.saveRhythmConfig(); });
+    $("#clearSequence").addEventListener("click", () => this.clearSequence());
     $("[data-close=dataDialog]").addEventListener("click", () => $("#dataDialog").close());
     $("#exportButton").addEventListener("click", () => this.exportSettings());
     $("#importInput").addEventListener("change", (e) => this.importSettings(e.target.files[0]));
@@ -173,7 +186,7 @@ class SamplerApp {
     $("#deleteRecordingsButton").addEventListener("click", () => this.deleteByType("recorded"));
     $("#resetSettingsButton").addEventListener("click", () => this.resetAllSettings());
     $("#resetAllButton").addEventListener("click", () => this.resetAllData());
-    document.addEventListener("visibilitychange", () => { if (document.hidden) { this.audio.stopAll(); this.renderPads(); } });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) this.stopEverything(false); });
   }
   async start() {
     const button = $("#startButton"); button.disabled = true; button.textContent = "読み込み中…";
@@ -187,6 +200,10 @@ class SamplerApp {
       this.category = await this.storage.getSetting("lastCategory", "すべて");
       this.audio.setMasterVolume(volume);
       const result = await this.loadSounds();
+      this.updateLoadingProgress(result.loaded + result.failed, result.loaded + result.failed, "リズム機能を準備しています", "バックリズム音源を確認中…");
+      const rhythmConfig = await this.storage.getSetting("rhythmConfig", {});
+      const rhythmResult = await this.rhythm.init(rhythmConfig); this.rhythmReady = true; this.setupRhythmUI();
+      if (rhythmResult.fallback.length) { console.info(`内蔵リズム音を使用: ${rhythmResult.fallback.join(", ")}`); this.rhythmMessage("専用音源がないトラックは内蔵リズム音で再生します"); }
       this.updateLoadingProgress(result.loaded + result.failed, result.loaded + result.failed, "読み込み完了", `${result.loaded}件成功・${result.failed}件失敗`);
       $("#startScreen").hidden = true; $("#app").hidden = false;
       this.render();
@@ -288,7 +305,7 @@ class SamplerApp {
     const finish = () => { clearTimeout(timer); if (!longPressed) this.editing ? this.openSettings(sound.id) : this.play(sound, pad); longPressed = false; };
     button.addEventListener("pointerup", finish); button.addEventListener("pointercancel", () => clearTimeout(timer));
   }
-  async play(sound, pad) { try { const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
+  async play(sound, pad) { try { this.rhythm.duck(); const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
   textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 155 ? "#07111a" : "#ffffff"; }
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
   toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; }
@@ -327,6 +344,53 @@ class SamplerApp {
     }
     this.pendingFiles = []; this.render(); this.status(`${added}件追加しました${failed ? `（${failed}件失敗）` : ""}`, failed > 0, failed > 0);
   }
+  setupRhythmUI() {
+    const config = this.rhythm.config;
+    $("#rhythmPattern").replaceChildren(...Object.entries(RHYTHM_PATTERNS).map(([value, pattern]) => Object.assign(document.createElement("option"), { value, textContent: pattern.name })));
+    $("#rhythmPattern").value = config.pattern; $("#bpm").value = config.bpm; $("#bpmValue").value = config.bpm;
+    for (const [id, key] of [["rhythmVolume","volume"],["drumVolume","drumVolume"],["bassVolume","bassVolume"]]) { $("#" + id).value = config[key]; $("#" + id + "Value").value = `${Math.round(config[key] * 100)}%`; }
+    for (const [id, key] of [["drumEnabled","drumEnabled"],["bassEnabled","bassEnabled"],["countIn","countIn"],["ducking","ducking"]]) $("#" + id).checked = config[key];
+    $("#bassNote").value = config.bassNote; $("#sequencerSection").hidden = config.pattern !== "custom";
+    const labels = { kick: "KICK", snare: "SNARE", hihat: "HI-HAT", clap: "CLAP", bass: "BASS", metronome: "CLICK" };
+    $("#trackControls").replaceChildren(...Object.entries(labels).map(([track, label]) => {
+      const box = document.createElement("div"); box.className = "track-control";
+      const row = document.createElement("label"), enabled = document.createElement("input"), name = document.createElement("span"), range = document.createElement("input");
+      enabled.type = "checkbox"; enabled.checked = config.trackEnabled[track] !== false; name.textContent = label; range.type = "range"; range.min = "0"; range.max = "1"; range.step = ".01"; range.value = config.trackVolumes[track] ?? 1;
+      enabled.addEventListener("change", () => { config.trackEnabled[track] = enabled.checked; this.saveRhythmConfig(); });
+      range.addEventListener("input", () => { config.trackVolumes[track] = Number(range.value); this.rhythm.updateGains(); this.saveRhythmConfig(); });
+      row.append(name, enabled); box.append(row, range); return box;
+    }));
+    this.renderSequencer();
+  }
+  openRhythmScreen() { $("#app").hidden = true; $("#rhythmScreen").hidden = false; window.scrollTo(0, 0); }
+  closeRhythmScreen() { $("#rhythmScreen").hidden = true; $("#app").hidden = false; window.scrollTo(0, 0); this.renderPads(); }
+  async startRhythm() {
+    if (!this.rhythmReady) return this.rhythmMessage("リズム機能をまだ準備できていません", true);
+    try { await this.rhythm.start(); this.rhythmMessage(this.rhythm.config.countIn ? "4拍のカウントイン後に開始します" : "バックリズムを開始しました"); }
+    catch (error) { console.error(error); this.rhythmMessage(`リズムを開始できません：${error.message}`, true); }
+  }
+  stopEverything(showStatus = true) { this.audio.stopAll(); this.rhythm.stop(); this.renderPads(); if (showStatus) this.status("パッド、ループ、バックリズムをすべて停止しました"); }
+  showRhythmState(playing) { $("#rhythmStart").classList.toggle("active", playing); $("#rhythmStart").textContent = playing ? "▶ 再生中" : "▶ リズム開始"; $("#rhythmRunningBadge").hidden = !playing; }
+  showBeat(beat) { document.querySelectorAll(".beat-lamps i").forEach((lamp, index) => lamp.classList.toggle("active", index === beat)); }
+  showRhythmStep(step) { document.querySelectorAll(".seq-step").forEach((cell) => cell.classList.toggle("current", Number(cell.dataset.step) === step)); }
+  rhythmMessage(message, error = false) { $("#rhythmStatus").textContent = message; $("#rhythmStatus").classList.toggle("error", error); }
+  saveRhythmConfig() { this.storage.setSetting("rhythmConfig", this.rhythm.config).catch((error) => console.warn("リズム設定を保存できません", error)); }
+  tapTempo() {
+    const now = performance.now(); if (this.tapTimes.length && now - this.tapTimes[this.tapTimes.length - 1] > 2000) this.tapTimes = [];
+    this.tapTimes.push(now); this.tapTimes = this.tapTimes.slice(-8); if (this.tapTimes.length < 2) return this.rhythmMessage("続けてTAPしてください");
+    const intervals = this.tapTimes.slice(1).map((time, index) => time - this.tapTimes[index]);
+    const bpm = clamp(Math.round(60000 / (intervals.reduce((sum, value) => sum + value, 0) / intervals.length)), 60, 200);
+    this.rhythm.config.bpm = bpm; $("#bpm").value = bpm; $("#bpmValue").value = bpm; this.saveRhythmConfig(); this.rhythmMessage(`タップテンポ：${bpm} BPM`);
+  }
+  renderSequencer() {
+    const pattern = RHYTHM_PATTERNS.custom, tracks = [["kick","KICK"],["snare","SNARE"],["hihat","HI-HAT"],["clap","CLAP"],["bass","BASS"]], fragment = document.createDocumentFragment();
+    for (const [track, label] of tracks) {
+      const heading = document.createElement("span"); heading.className = "seq-label"; heading.textContent = label; fragment.append(heading);
+      for (let step = 0; step < 16; step++) { const button = document.createElement("button"); button.type = "button"; button.className = `seq-step${pattern[track][step] ? " on" : ""}`; button.dataset.step = step; button.setAttribute("aria-label", `${label} ステップ${step + 1}`); button.addEventListener("click", () => { pattern[track][step] = pattern[track][step] ? 0 : 1; button.classList.toggle("on", Boolean(pattern[track][step])); this.rhythm.config.customPattern = pattern; this.saveRhythmConfig(); }); fragment.append(button); }
+    }
+    $("#sequencer").replaceChildren(fragment);
+  }
+  clearSequence() { if (!confirm("カスタムパターンをすべて消去しますか？")) return; for (const track of ["kick","snare","hihat","clap","bass"]) RHYTHM_PATTERNS.custom[track] = Array(16).fill(0); this.rhythm.config.customPattern = RHYTHM_PATTERNS.custom; this.renderSequencer(); this.saveRhythmConfig(); }
   openDialog(dialog) {
     try {
       if (typeof dialog.showModal === "function") { dialog.showModal(); return; }
@@ -363,7 +427,7 @@ class SamplerApp {
   async importSettings(file) { if (!file) return; try { const data = JSON.parse(await file.text()); if (!Array.isArray(data.settings) || !Array.isArray(data.overrides)) throw new Error("形式が不正です"); await Promise.all(data.settings.map((item) => this.storage.put(STORES.settings, item))); await Promise.all(data.overrides.map((item) => this.storage.put(STORES.overrides, item))); if (Array.isArray(data.userSettings)) { for (const imported of data.userSettings) { const sound = this.find(imported.id); if (sound && sound.sourceType !== "default") { Object.assign(sound, imported, { blob: sound.blob, audioBuffer: sound.audioBuffer }); await this.persistSound(sound); } } } this.status("設定をインポートしました。再読み込みすると反映されます"); } catch (error) { console.error(error); this.status("設定ファイルを読み込めませんでした", true, true); } }
   async deleteByType(type) { const label = type === "recorded" ? "録音音源" : "追加音源"; if (!confirm(`${label}をすべて削除しますか？`)) return; const targets = this.sounds.filter((s) => s.sourceType === type); await Promise.all(targets.map((s) => this.storage.delete(STORES.sounds, s.dbKey ?? s.id))); this.sounds = this.sounds.filter((s) => s.sourceType !== type); this.render(); this.status(`${label}を削除しました`); }
   async resetAllSettings() { if (!confirm("すべてのパッド設定を初期化しますか？")) return; await this.storage.clear(STORES.overrides); for (const sound of this.sounds) { this.audio.stopSound(sound.id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(sound.id), { audioBuffer: buffer, loadFailed: failed }); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1 }); await this.persistSound(sound); } } this.render(); this.status("パッド設定を初期化しました"); }
-  async resetAllData() { if (!confirm("追加・録音音源と設定をすべて削除しますか？この操作は元に戻せません。")) return; this.audio.stopAll(); await Promise.all(Object.values(STORES).map((store) => this.storage.clear(store))); location.reload(); }
+  async resetAllData() { if (!confirm("追加・録音音源と設定をすべて削除しますか？この操作は元に戻せません。")) return; this.stopEverything(false); await Promise.all(Object.values(STORES).map((store) => this.storage.clear(store))); location.reload(); }
   status(message, error = false, persistent = false) { clearTimeout(this.statusTimer); $("#statusText").textContent = message; $("#status").classList.toggle("error", error); $("#status").hidden = false; if (!persistent) this.statusTimer = setTimeout(() => $("#status").hidden = true, 4500); }
 }
 

@@ -8,6 +8,7 @@
   <meta name="format-detection" content="telephone=no">
   <title>効果音サンプラー</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="rhythm.css">
   <style>
     [hidden]{display:none!important}
     .favorite-button{position:absolute;top:5px;right:5px;margin:0}
@@ -43,6 +44,7 @@
       <button id="stopButton" class="stop-button" type="button">■ 全停止</button>
       <label class="master-volume" for="masterVolume"><span>全体音量</span><input id="masterVolume" type="range" min="0" max="1" step="0.01" value="0.8"><output id="masterVolumeValue">80%</output></label>
       <div class="quick-actions">
+        <button id="rhythmButton" type="button">♬ リズム</button>
         <button id="addButton" type="button">＋ 音源追加</button>
         <button id="recordButton" type="button">● 録音</button>
         <button id="dataButton" type="button">⚙ データ</button>
@@ -60,6 +62,42 @@
       <div id="emptyState" class="empty-state" hidden>このカテゴリに音源はありません。</div>
     </section>
   </main>
+
+  <section id="rhythmScreen" class="rhythm-screen" hidden>
+    <header class="rhythm-header">
+      <button id="rhythmBack" class="rhythm-back" type="button">← パッドへ戻る</button>
+      <div><p class="eyebrow">BACK RHYTHM</p><h1>バックリズム</h1></div>
+      <span id="rhythmRunningBadge" class="running-badge" hidden>PLAYING</span>
+    </header>
+
+    <div class="transport-card">
+      <div class="beat-lamps" aria-label="現在の拍"><i data-beat="0"></i><i data-beat="1"></i><i data-beat="2"></i><i data-beat="3"></i></div>
+      <div class="transport-actions"><button id="rhythmStart" class="rhythm-play" type="button">▶ リズム開始</button><button id="rhythmStop" type="button">■ 停止</button><button id="tapTempo" type="button">TAP</button></div>
+      <label class="rhythm-range">テンポ <strong><output id="bpmValue">120</output> BPM</strong><input id="bpm" type="range" min="60" max="200" step="1" value="120"></label>
+      <label class="rhythm-field">パターン<select id="rhythmPattern"></select></label>
+      <label class="rhythm-range">リズム音量 <output id="rhythmVolumeValue">70%</output><input id="rhythmVolume" type="range" min="0" max="1" step="0.01" value="0.7"></label>
+      <div class="track-switches"><label><input id="drumEnabled" type="checkbox" checked><span>DRUM</span></label><label><input id="bassEnabled" type="checkbox" checked><span>BASS</span></label></div>
+    </div>
+
+    <details class="rhythm-details">
+      <summary>詳細設定</summary>
+      <div class="detail-grid">
+        <label class="rhythm-range">ドラム音量 <output id="drumVolumeValue">85%</output><input id="drumVolume" type="range" min="0" max="1" step="0.01" value="0.85"></label>
+        <label class="rhythm-range">ベース音量 <output id="bassVolumeValue">70%</output><input id="bassVolume" type="range" min="0" max="1" step="0.01" value="0.7"></label>
+        <label class="rhythm-field">ベース音程<select id="bassNote"><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>A</option><option>B</option></select></label>
+        <label class="check-row"><input id="countIn" type="checkbox"> 1小節カウントイン</label>
+        <label class="check-row"><input id="ducking" type="checkbox"> パッド再生時にダッキング</label>
+      </div>
+      <h2>トラック</h2><div id="trackControls" class="track-controls"></div>
+    </details>
+
+    <section id="sequencerSection" class="sequencer-card" hidden>
+      <div><p class="eyebrow">CUSTOM PATTERN</p><h2>16ステップ・シーケンサー</h2></div>
+      <div id="sequencer" class="sequencer"></div>
+      <button id="clearSequence" type="button">パターンをクリア</button>
+    </section>
+    <div id="rhythmStatus" class="rhythm-status" role="status">リズム音源は開始時に準備されます。</div>
+  </section>
 
   <dialog id="settingsDialog" class="sheet">
     <form id="settingsForm" method="dialog">
@@ -84,6 +122,7 @@
 
   <dialog id="dataDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>データ管理</h2><button class="close-button" data-close="dataDialog" type="button">×</button></header><div class="storage-card"><span>概算使用量</span><strong id="storageUsage">計算中…</strong></div><div class="data-actions"><button id="exportButton" type="button">設定をエクスポート</button><label class="button-label">設定をインポート<input id="importInput" type="file" accept="application/json,.json"></label><button id="deleteUploadsButton" class="danger" type="button">追加音源をすべて削除</button><button id="deleteRecordingsButton" class="danger" type="button">録音音源をすべて削除</button><button id="resetSettingsButton" type="button">パッド設定を初期化</button><button id="resetAllButton" class="danger" type="button">すべてのデータを初期化</button></div></dialog>
 
-  <script src="main.js?v=20260719-3"></script>
+  <script src="rhythm.js?v=20260719-1"></script>
+  <script src="main.js?v=20260719-4"></script>
 </body>
 </html>
