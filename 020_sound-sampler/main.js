@@ -146,6 +146,9 @@ class SamplerApp {
     $("#startButton").addEventListener("click", () => this.start());
   }
   bindUI() {
+    document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
+    document.addEventListener("gesturechange", (event) => event.preventDefault(), { passive: false });
+    document.addEventListener("touchmove", (event) => { if (event.touches.length > 1) event.preventDefault(); }, { passive: false });
     $("#stopButton").addEventListener("click", () => this.stopEverything());
     $("#masterVolume").addEventListener("input", (e) => { const value = Number(e.target.value); $("#masterVolumeValue").value = `${Math.round(value * 100)}%`; this.audio.setMasterVolume(value); this.storage.setSetting("masterVolume", value); });
     $("#addButton").addEventListener("click", () => $("#fileInput").click());
