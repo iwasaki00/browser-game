@@ -11,10 +11,31 @@ const $ = (selector) => document.querySelector(selector);
 const uid = () => `user-${Date.now()}-${crypto.getRandomValues(new Uint32Array(1))[0]}`;
 const fileStem = (name) => name.replace(/\.[^.]+$/, "").replaceAll("_", " ");
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const soundRegion = (sound) => {
+  const duration = sound.audioBuffer?.duration || 0;
+  const start = clamp(Number(sound.trimStart || 0), 0, Math.max(0, duration - .01));
+  const requestedEnd = sound.trimEnd == null ? duration : Number(sound.trimEnd);
+  const end = clamp(requestedEnd, Math.min(duration, start + .01), duration);
+  return { start, end, duration: Math.max(.01, end - start) };
+};
 const withTimeout = (promise, milliseconds, message) => Promise.race([
   promise,
   new Promise((_, reject) => setTimeout(() => reject(new Error(message)), milliseconds))
 ]);
+function audioBufferToWav(buffer, startSeconds = 0, endSeconds = buffer.duration) {
+  const sampleRate = buffer.sampleRate, channels = buffer.numberOfChannels;
+  const startFrame = clamp(Math.floor(startSeconds * sampleRate), 0, buffer.length - 1);
+  const endFrame = clamp(Math.ceil(endSeconds * sampleRate), startFrame + 1, buffer.length);
+  const frames = endFrame - startFrame, bytesPerSample = 2, blockAlign = channels * bytesPerSample;
+  const output = new ArrayBuffer(44 + frames * blockAlign), view = new DataView(output);
+  const text = (offset, value) => { for (let i = 0; i < value.length; i++) view.setUint8(offset + i, value.charCodeAt(i)); };
+  text(0, "RIFF"); view.setUint32(4, 36 + frames * blockAlign, true); text(8, "WAVE"); text(12, "fmt ");
+  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, channels, true); view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * blockAlign, true); view.setUint16(32, blockAlign, true); view.setUint16(34, 16, true); text(36, "data"); view.setUint32(40, frames * blockAlign, true);
+  let offset = 44;
+  for (let frame = startFrame; frame < endFrame; frame++) for (let channel = 0; channel < channels; channel++) { const sample = clamp(buffer.getChannelData(channel)[frame], -1, 1); view.setInt16(offset, sample < 0 ? sample * 32768 : sample * 32767, true); offset += 2; }
+  return new Blob([output], { type: "audio/wav" });
+}
 
 class StorageManager {
   constructor() { this.db = null; this.available = false; }
@@ -54,7 +75,7 @@ class StorageManager {
 }
 
 class AudioManager {
-  constructor() { this.context = null; this.master = null; this.sources = new Set(); this.loops = new Map(); }
+  constructor() { this.context = null; this.master = null; this.sources = new Set(); this.loops = new Map(); this.previewSource = null; }
   async start(volume) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) throw new Error("Web Audio APIに対応していません");
@@ -71,11 +92,13 @@ class AudioManager {
     const gain = this.context.createGain();
     source.buffer = sound.audioBuffer;
     source.loop = looping;
+    const region = soundRegion(sound);
+    if (looping) { source.loopStart = region.start; source.loopEnd = region.end; }
     source.playbackRate.value = sound.playbackRate;
     gain.gain.value = sound.volume;
     source.connect(gain).connect(this.master);
     this.sources.add(source);
-    source.addEventListener("ended", () => { this.sources.delete(source); if (this.loops.get(sound.id) === source) this.loops.delete(sound.id); }, { once: true });
+    source.addEventListener("ended", () => { this.sources.delete(source); if (this.loops.get(sound.id) === source) this.loops.delete(sound.id); if (this.previewSource === source) this.previewSource = null; }, { once: true });
     return source;
   }
   async play(sound) {
@@ -84,10 +107,12 @@ class AudioManager {
     if (sound.loop) {
       const current = this.loops.get(sound.id);
       if (current) { current.stop(); this.loops.delete(sound.id); return false; }
-      const source = this.createSource(sound, true); this.loops.set(sound.id, source); source.start(); return true;
+      const source = this.createSource(sound, true), region = soundRegion(sound); this.loops.set(sound.id, source); source.start(0, region.start); return true;
     }
-    const source = this.createSource(sound); source.start(); return true;
+    const source = this.createSource(sound), region = soundRegion(sound); source.start(0, region.start, region.duration); return true;
   }
+  async preview(sound) { await this.resume(); this.stopPreview(); const source = this.createSource({ ...sound, loop: false }); const region = soundRegion(sound); this.previewSource = source; source.start(0, region.start, region.duration); }
+  stopPreview() { if (this.previewSource) { try { this.previewSource.stop(); } catch (_) {} this.sources.delete(this.previewSource); this.previewSource = null; } }
   stopSound(id) { const source = this.loops.get(id); if (source) { try { source.stop(); } catch (_) {} this.loops.delete(id); } }
   stopAll() { for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.loops.clear(); }
 }
@@ -155,9 +180,15 @@ class SamplerApp {
     $("#fileInput").addEventListener("change", (e) => this.prepareFiles(e.target.files));
     $("#editButton").addEventListener("click", () => this.toggleEdit());
     $("#statusClose").addEventListener("click", () => $("#status").hidden = true);
-    $("#settingsDialog").addEventListener("close", () => { if ($("#settingsDialog").returnValue === "save") this.savePadSettings(); });
+    $("#settingsDialog").addEventListener("close", () => { this.audio.stopPreview(); if ($("#settingsDialog").returnValue === "save") this.savePadSettings(); });
     $("#settingVolume").addEventListener("input", (e) => $("#settingVolumeValue").value = `${Math.round(e.target.value * 100)}%`);
     $("#settingRate").addEventListener("input", (e) => $("#settingRateValue").value = `${Number(e.target.value).toFixed(1)}×`);
+    $("#trimStart").addEventListener("input", () => this.updateTrimEditor("start"));
+    $("#trimEnd").addEventListener("input", () => this.updateTrimEditor("end"));
+    $("#trimPreview").addEventListener("click", () => this.previewTrim());
+    $("#trimPreviewStop").addEventListener("click", () => this.audio.stopPreview());
+    $("#duplicatePadButton").addEventListener("click", () => this.duplicatePad($("#settingId").value));
+    $("#downloadPadButton").addEventListener("click", () => this.downloadPad($("#settingId").value));
     $("#resetColorButton").addEventListener("click", () => { const sound = this.find($("#settingId").value); $("#settingColor").value = sound.defaultData?.color || DEFAULT_COLOR; });
     $("#resetPadButton").addEventListener("click", () => this.resetPad($("#settingId").value));
     $("#deletePadButton").addEventListener("click", () => this.deletePad($("#settingId").value));
@@ -272,7 +303,7 @@ class SamplerApp {
     }
     sound.audioBuffer = await this.audio.decode(data);
   }
-  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
+  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), trimStart: Number(sound.trimStart || 0), trimEnd: sound.trimEnd == null ? null : Number(sound.trimEnd), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
   find(id) { return this.sounds.find((sound) => sound.id === id); }
   sortSounds() { this.sounds.sort((a, b) => a.order - b.order); this.sounds.forEach((sound, index) => sound.order = index); }
   render() { this.renderCategories(); this.renderPads(); }
@@ -319,12 +350,52 @@ class SamplerApp {
   renderColorPresets() { $("#colorPresets").replaceChildren(...COLORS.map((color) => { const button = document.createElement("button"); button.type = "button"; button.className = "color-preset"; button.style.setProperty("--color", color); button.setAttribute("aria-label", color); button.addEventListener("click", () => $("#settingColor").value = color); return button; })); }
   openSettings(id) {
     const sound = this.find(id); if (!sound) return;
-    $("#settingId").value = id; $("#settingName").value = sound.displayName; $("#settingFile").textContent = sound.fileName; $("#settingCategory").value = sound.category; $("#settingColor").value = sound.color; $("#settingFavorite").checked = sound.favorite; $("#settingLoop").checked = sound.loop; $("#settingVolume").value = sound.volume; $("#settingVolumeValue").value = `${Math.round(sound.volume * 100)}%`; $("#settingRate").value = sound.playbackRate; $("#settingRateValue").value = `${sound.playbackRate.toFixed(1)}×`; $("#deletePadButton").hidden = sound.sourceType === "default"; $("#settingsDialog").showModal();
+    $("#settingId").value = id; $("#settingName").value = sound.displayName; $("#settingFile").textContent = sound.fileName; $("#settingCategory").value = sound.category; $("#settingColor").value = sound.color; $("#settingFavorite").checked = sound.favorite; $("#settingLoop").checked = sound.loop; $("#settingVolume").value = sound.volume; $("#settingVolumeValue").value = `${Math.round(sound.volume * 100)}%`; $("#settingRate").value = sound.playbackRate; $("#settingRateValue").value = `${sound.playbackRate.toFixed(1)}×`; $("#deletePadButton").hidden = sound.sourceType === "default";
+    const isRecorded = sound.sourceType === "recorded" && sound.audioBuffer;
+    $("#trimEditor").hidden = !isRecorded;
+    if (isRecorded) {
+      const duration = sound.audioBuffer.duration, region = soundRegion(sound);
+      $("#trimStart").max = Math.max(0, duration - .01); $("#trimEnd").max = duration; $("#trimStart").value = region.start; $("#trimEnd").value = region.end; $("#trimDuration").value = `${duration.toFixed(2)}秒`; this.updateTrimEditor();
+    }
+    const dialog = $("#settingsDialog"); dialog.returnValue = ""; dialog.showModal();
+  }
+  updateTrimEditor(changed = "") {
+    const sound = this.find($("#settingId").value); if (!sound?.audioBuffer) return;
+    const duration = sound.audioBuffer.duration; let start = Number($("#trimStart").value), end = Number($("#trimEnd").value);
+    if (changed === "start" && start > end - .01) { end = Math.min(duration, start + .01); $("#trimEnd").value = end; }
+    if (changed === "end" && end < start + .01) { start = Math.max(0, end - .01); $("#trimStart").value = start; }
+    start = clamp(start, 0, Math.max(0, duration - .01)); end = clamp(end, start + .01, duration);
+    $("#trimStartValue").value = `${start.toFixed(2)}秒`; $("#trimEndValue").value = `${end.toFixed(2)}秒`; $("#trimLength").value = `${(end - start).toFixed(2)}秒`; this.audio.stopPreview();
+  }
+  async previewTrim() {
+    const sound = this.find($("#settingId").value); if (!sound?.audioBuffer) return;
+    try { await this.audio.preview({ ...sound, trimStart: Number($("#trimStart").value), trimEnd: Number($("#trimEnd").value) }); }
+    catch (error) { console.error(error); this.status("指定区間を試聴できませんでした", true, true); }
   }
   async savePadSettings() {
     const sound = this.find($("#settingId").value); if (!sound) return;
     Object.assign(sound, { displayName: $("#settingName").value.trim() || sound.fileName, category: $("#settingCategory").value.trim() || "未分類", color: $("#settingColor").value, favorite: $("#settingFavorite").checked, loop: $("#settingLoop").checked, volume: Number($("#settingVolume").value), playbackRate: Number($("#settingRate").value) });
+    if (sound.sourceType === "recorded" && sound.audioBuffer) { sound.trimStart = Number($("#trimStart").value); sound.trimEnd = Number($("#trimEnd").value); }
     if (!sound.loop) this.audio.stopSound(sound.id); await this.persistSound(sound); this.render(); this.status("パッド設定を保存しました");
+  }
+  async duplicatePad(id) {
+    const sound = this.find(id); if (!sound?.audioBuffer) return this.status("読み込めていない音源は複製できません", true, true);
+    if (!this.storage.available) return this.status("一時利用モードでは音源を複製できません", true, true);
+    try {
+      let blob = sound.blob;
+      if (!blob) { const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`); if (!response.ok) throw new Error(`HTTP ${response.status}`); blob = await response.blob(); }
+      const copy = this.normalize({ ...this.serializable(sound), id: uid(), dbKey: null, sourceType: sound.sourceType === "default" ? "uploaded" : sound.sourceType, fileName: `copy-${sound.fileName}`, displayName: `${sound.displayName} コピー`, blob, audioBuffer: sound.audioBuffer, order: this.sounds.length });
+      copy.dbKey = copy.id; await this.persistSound(copy); this.sounds.push(copy); this.closeDialog($("#settingsDialog")); this.render(); this.status("音源を複製しました");
+    } catch (error) { console.error(error); this.status("音源を複製できませんでした。保存容量も確認してください", true, true); }
+  }
+  downloadPad(id) {
+    const sound = this.find(id); if (!sound?.audioBuffer) return this.status("読み込めていない音源は保存できません", true, true);
+    try {
+      const useDraft = sound.sourceType === "recorded" && !$("#trimEditor").hidden;
+      const region = useDraft ? { start: Number($("#trimStart").value), end: Number($("#trimEnd").value) } : soundRegion(sound);
+      const blob = audioBufferToWav(sound.audioBuffer, region.start, region.end); const url = URL.createObjectURL(blob), link = document.createElement("a");
+      link.href = url; link.download = `${sound.displayName.replace(/[\\/:*?"<>|]/g, "_") || "sound"}.wav`; link.rel = "noopener"; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); this.status("WAVファイルを作成しました");
+    } catch (error) { console.error(error); this.status("WAVファイルを作成できませんでした", true, true); }
   }
   serializable(sound, includeBlob = true) { const { audioBuffer, loadFailed, defaultData, ...data } = sound; if (!includeBlob) delete data.blob; return data; }
   async persistSound(sound) {
@@ -335,7 +406,7 @@ class SamplerApp {
       await this.storage.put(STORES.sounds, this.serializable(sound));
     }
   }
-  async resetPad(id) { const sound = this.find(id); if (!sound || !confirm("このパッドの設定を初期化しますか？")) return; this.audio.stopSound(id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(id), { audioBuffer: buffer, loadFailed: failed }); await this.storage.delete(STORES.overrides, id); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1 }); await this.persistSound(sound); } $("#settingsDialog").close(); this.render(); this.status("設定を初期化しました"); }
+  async resetPad(id) { const sound = this.find(id); if (!sound || !confirm("このパッドの設定を初期化しますか？")) return; this.audio.stopSound(id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(id), { audioBuffer: buffer, loadFailed: failed }); await this.storage.delete(STORES.overrides, id); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1, trimStart: 0, trimEnd: null }); await this.persistSound(sound); } $("#settingsDialog").close(); this.render(); this.status("設定を初期化しました"); }
   async deletePad(id) { const sound = this.find(id); if (!sound || sound.sourceType === "default" || !confirm(`「${sound.displayName}」を削除しますか？`)) return; this.audio.stopSound(id); await this.storage.delete(STORES.sounds, sound.dbKey ?? sound.id); this.sounds = this.sounds.filter((item) => item.id !== id); $("#settingsDialog").close(); this.render(); this.status("音源を削除しました"); }
   async movePad(id, direction) { this.sortSounds(); const index = this.sounds.findIndex((sound) => sound.id === id); if (index < 0) return; let target = direction === "first" ? 0 : direction === "last" ? this.sounds.length - 1 : clamp(index + (direction === "prev" ? -1 : 1), 0, this.sounds.length - 1); const [sound] = this.sounds.splice(index, 1); this.sounds.splice(target, 0, sound); this.sounds.forEach((item, order) => item.order = order); await Promise.all(this.sounds.map((item) => this.persistSound(item))); this.render(); }
   prepareFiles(fileList) { this.pendingFiles = [...fileList]; if (!this.pendingFiles.length) return; const first = this.pendingFiles[0]; $("#addFileSummary").textContent = this.pendingFiles.length === 1 ? first.name : `${first.name} ほか${this.pendingFiles.length - 1}件`; $("#addName").value = this.pendingFiles.length === 1 ? fileStem(first.name) : ""; $("#addDialog").showModal(); $("#fileInput").value = ""; }
@@ -433,7 +504,7 @@ class SamplerApp {
   async exportSettings() { const data = { version: 1, exportedAt: new Date().toISOString(), settings: await this.storage.getAll(STORES.settings) || [], overrides: await this.storage.getAll(STORES.overrides) || [], userSettings: this.sounds.filter((s) => s.sourceType !== "default").map((s) => this.serializable(s, false)) }; const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }); const link = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "sound-sampler-settings.json" }); link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000); }
   async importSettings(file) { if (!file) return; try { const data = JSON.parse(await file.text()); if (!Array.isArray(data.settings) || !Array.isArray(data.overrides)) throw new Error("形式が不正です"); await Promise.all(data.settings.map((item) => this.storage.put(STORES.settings, item))); await Promise.all(data.overrides.map((item) => this.storage.put(STORES.overrides, item))); if (Array.isArray(data.userSettings)) { for (const imported of data.userSettings) { const sound = this.find(imported.id); if (sound && sound.sourceType !== "default") { Object.assign(sound, imported, { blob: sound.blob, audioBuffer: sound.audioBuffer }); await this.persistSound(sound); } } } this.status("設定をインポートしました。再読み込みすると反映されます"); } catch (error) { console.error(error); this.status("設定ファイルを読み込めませんでした", true, true); } }
   async deleteByType(type) { const label = type === "recorded" ? "録音音源" : "追加音源"; if (!confirm(`${label}をすべて削除しますか？`)) return; const targets = this.sounds.filter((s) => s.sourceType === type); await Promise.all(targets.map((s) => this.storage.delete(STORES.sounds, s.dbKey ?? s.id))); this.sounds = this.sounds.filter((s) => s.sourceType !== type); this.render(); this.status(`${label}を削除しました`); }
-  async resetAllSettings() { if (!confirm("すべてのパッド設定を初期化しますか？")) return; await this.storage.clear(STORES.overrides); for (const sound of this.sounds) { this.audio.stopSound(sound.id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(sound.id), { audioBuffer: buffer, loadFailed: failed }); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1 }); await this.persistSound(sound); } } this.render(); this.status("パッド設定を初期化しました"); }
+  async resetAllSettings() { if (!confirm("すべてのパッド設定を初期化しますか？")) return; await this.storage.clear(STORES.overrides); for (const sound of this.sounds) { this.audio.stopSound(sound.id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(sound.id), { audioBuffer: buffer, loadFailed: failed }); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1, trimStart: 0, trimEnd: null }); await this.persistSound(sound); } } this.render(); this.status("パッド設定を初期化しました"); }
   async resetAllData() { if (!confirm("追加・録音音源と設定をすべて削除しますか？この操作は元に戻せません。")) return; this.stopEverything(false); await Promise.all(Object.values(STORES).map((store) => this.storage.clear(store))); location.reload(); }
   status(message, error = false, persistent = false) { clearTimeout(this.statusTimer); $("#statusText").textContent = message; $("#status").classList.toggle("error", error); $("#status").hidden = false; if (!persistent) this.statusTimer = setTimeout(() => $("#status").hidden = true, 4500); }
 }
