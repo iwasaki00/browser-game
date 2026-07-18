@@ -11,6 +11,10 @@ const $ = (selector) => document.querySelector(selector);
 const uid = () => `user-${Date.now()}-${crypto.getRandomValues(new Uint32Array(1))[0]}`;
 const fileStem = (name) => name.replace(/\.[^.]+$/, "").replaceAll("_", " ");
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const withTimeout = (promise, milliseconds, message) => Promise.race([
+  promise,
+  new Promise((_, reject) => setTimeout(() => reject(new Error(message)), milliseconds))
+]);
 
 class StorageManager {
   constructor() { this.db = null; this.available = false; }
@@ -61,7 +65,7 @@ class AudioManager {
   }
   async resume() { if (this.context?.state === "suspended") await this.context.resume(); }
   setMasterVolume(value) { if (this.master) this.master.gain.setValueAtTime(Number(value), this.context.currentTime); }
-  async decode(data) { return this.context.decodeAudioData(data.slice ? data.slice(0) : data); }
+  async decode(data) { return withTimeout(this.context.decodeAudioData(data.slice ? data.slice(0) : data), 15000, "音声デコードがタイムアウトしました"); }
   createSource(sound, looping = false) {
     const source = this.context.createBufferSource();
     const gain = this.context.createGain();
@@ -172,22 +176,36 @@ class SamplerApp {
   }
   async start() {
     const button = $("#startButton"); button.disabled = true; button.textContent = "読み込み中…";
+    $("#loadProgress").hidden = false;
     try {
-      try { await this.storage.open(); } catch (error) { console.warn("IndexedDB:", error); this.status("保存機能を利用できないため、一時利用モードで起動します", true, true); }
+      this.updateLoadingProgress(0, 0, "音声機能を開始しています", "AudioContextを有効化中…");
+      await this.audio.start(.8);
+      this.updateLoadingProgress(0, 0, "保存データを確認しています", "IndexedDBを読み込み中…");
+      try { await withTimeout(this.storage.open(), 8000, "保存データの読み込みがタイムアウトしました"); } catch (error) { console.warn("IndexedDB:", error); this.status("保存機能を利用できないため、一時利用モードで起動します", true, true); }
       const volume = await this.storage.getSetting("masterVolume", .8); $("#masterVolume").value = volume; $("#masterVolumeValue").value = `${Math.round(volume * 100)}%`;
       this.category = await this.storage.getSetting("lastCategory", "すべて");
-      await this.audio.start(volume);
+      this.audio.setMasterVolume(volume);
       const result = await this.loadSounds();
+      this.updateLoadingProgress(result.loaded + result.failed, result.loaded + result.failed, "読み込み完了", `${result.loaded}件成功・${result.failed}件失敗`);
       $("#startScreen").hidden = true; $("#app").hidden = false;
       this.render();
       const storageNote = this.storage.available ? "" : "／保存機能なし（一時利用モード）";
       this.status(`音声機能を開始しました：${result.loaded}件成功、${result.failed}件失敗${storageNote}`, result.failed > 0 || !this.storage.available, result.failed > 0 || !this.storage.available);
-    } catch (error) { console.error(error); button.disabled = false; button.textContent = "もう一度試す"; this.showStartError(error.message); }
+    } catch (error) { console.error(error); button.disabled = false; button.textContent = "もう一度試す"; this.updateLoadingProgress(0, 0, "開始できませんでした", error.message); this.showStartError(error.message); }
   }
   showStartError(message) { const note = document.querySelector(".start-card small"); note.textContent = message; note.style.color = "#fecdd3"; }
+  updateLoadingProgress(current, total, label, detail) {
+    $("#loadProgressText").textContent = label;
+    $("#loadProgressCount").textContent = total ? `${current} / ${total}` : "準備中";
+    $("#loadProgressBar").max = Math.max(total, 1);
+    $("#loadProgressBar").value = total ? current : 0;
+    $("#loadProgressDetail").textContent = detail || "";
+  }
   async loadSounds() {
+    this.sounds = []; this.defaults.clear();
     let definitions = [];
-    try { const response = await fetch("assets/sounds/sounds.json"); if (!response.ok) throw new Error(`HTTP ${response.status}`); definitions = await response.json(); if (!Array.isArray(definitions)) throw new Error("配列ではありません"); }
+    this.updateLoadingProgress(0, 0, "音源一覧を取得しています", "sounds.json");
+    try { const response = await withTimeout(fetch("assets/sounds/sounds.json"), 10000, "音源一覧の取得がタイムアウトしました"); if (!response.ok) throw new Error(`HTTP ${response.status}`); definitions = await response.json(); if (!Array.isArray(definitions)) throw new Error("配列ではありません"); }
     catch (error) { console.error("sounds.jsonを読み込めません", error); this.status("デフォルト音源一覧を読み込めませんでした", true, true); }
     const overrides = new Map((await this.storage.getAll(STORES.overrides) || []).map((item) => [item.id, item]));
     definitions.forEach((definition, order) => {
@@ -201,15 +219,37 @@ class SamplerApp {
     });
     this.sortSounds();
     let loaded = 0, failed = 0;
-    await Promise.all(this.sounds.map(async (sound) => {
-      try {
-        let data;
-        if (sound.sourceType === "default") { const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`); if (!response.ok) throw new Error(`HTTP ${response.status}`); data = await response.arrayBuffer(); }
-        else data = await sound.blob.arrayBuffer();
-        sound.audioBuffer = await this.audio.decode(data); loaded++;
-      } catch (error) { sound.loadFailed = true; failed++; console.error(`音声読み込み失敗: ${sound.fileName}`, error); }
-    }));
+    const total = this.sounds.length;
+    this.updateLoadingProgress(0, total, "効果音を読み込んでいます", "開始します…");
+    let cursor = 0, completed = 0;
+    const worker = async () => {
+      while (cursor < total) {
+        const sound = this.sounds[cursor++];
+        try { await this.loadOneSound(sound); loaded++; }
+        catch (error) { sound.loadFailed = true; failed++; console.error(`音声読み込み失敗: ${sound.fileName}`, error); }
+        completed++;
+        this.updateLoadingProgress(completed, total, "効果音を読み込んでいます", `${sound.fileName}${sound.loadFailed ? "（読み込み失敗・続行します）" : ""}`);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(3, total) }, () => worker()));
     return { loaded, failed };
+  }
+  async loadOneSound(sound) {
+    let data;
+    if (sound.sourceType === "default") {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { signal: controller.signal });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        data = await response.arrayBuffer();
+      } finally { clearTimeout(timer); }
+    } else {
+      if (!sound.blob) throw new Error("保存された音声データがありません");
+      data = await withTimeout(sound.blob.arrayBuffer(), 10000, "保存音源の読み込みがタイムアウトしました");
+    }
+    sound.audioBuffer = await this.audio.decode(data);
   }
   normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
   find(id) { return this.sounds.find((sound) => sound.id === id); }

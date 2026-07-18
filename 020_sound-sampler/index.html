@@ -8,7 +8,10 @@
   <meta name="format-detection" content="telephone=no">
   <title>効果音サンプラー</title>
   <link rel="stylesheet" href="style.css">
-  <style>.favorite-button{position:absolute;top:5px;right:5px;margin:0}</style>
+  <style>
+    .favorite-button{position:absolute;top:5px;right:5px;margin:0}
+    .load-progress{margin-top:14px;text-align:left}.load-progress progress{display:block;width:100%;height:10px;margin:8px 0;overflow:hidden;accent-color:var(--accent);border:0;border-radius:99px;background:#1c2231}.load-progress progress::-webkit-progress-bar{background:#1c2231;border-radius:99px}.load-progress progress::-webkit-progress-value{background:var(--accent);border-radius:99px}.load-progress-row{display:flex;justify-content:space-between;gap:12px;color:#c7d0df;font-size:.76rem;font-weight:800}.load-progress-detail{display:block;overflow:hidden;color:#768196;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem}
+  </style>
 </head>
 <body>
   <div id="startScreen" class="start-screen">
@@ -18,6 +21,11 @@
       <h1>効果音サンプラー</h1>
       <p>低遅延サウンドパッドを起動します。iPhoneでは最初の操作が必要です。</p>
       <button id="startButton" class="primary-button" type="button">サンプラー開始</button>
+      <div id="loadProgress" class="load-progress" hidden>
+        <div class="load-progress-row"><span id="loadProgressText">準備中…</span><span id="loadProgressCount">0 / 0</span></div>
+        <progress id="loadProgressBar" max="1" value="0"></progress>
+        <span id="loadProgressDetail" class="load-progress-detail">音声機能を準備しています</span>
+      </div>
       <small>音が鳴らない場合は、マナーモードと端末音量も確認してください。</small>
     </div>
   </div>
