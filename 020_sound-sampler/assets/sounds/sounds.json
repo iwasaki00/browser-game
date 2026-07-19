@@ -134,5 +134,37 @@
     "category": "演出",
     "color": "#22c55e",
     "loop": false
+  },
+  {
+    "id": "default-118",
+    "file": "サイコ_ショッキングシーン.wav",
+    "name": "サイコ ショッキングシーン",
+    "category": "演出",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-119",
+    "file": "ジョジョ_tobeContinued.wav",
+    "name": "ジョジョ To Be Continued",
+    "category": "演出",
+    "color": "#c77800",
+    "loop": false
+  },
+  {
+    "id": "default-120",
+    "file": "世にも奇妙な物語テーマ.wav",
+    "name": "世にも奇妙な物語 テーマ",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-121",
+    "file": "踊る大捜査線テーマ.wav",
+    "name": "踊る大捜査線 テーマ",
+    "category": "BGM",
+    "color": "#0ea5e9",
+    "loop": false
   }
 ]
