@@ -259,9 +259,22 @@ class SamplerApp {
   async loadSounds() {
     this.sounds = []; this.defaults.clear();
     let definitions = [];
-    this.updateLoadingProgress(0, 0, "音源一覧を取得しています", "sounds.json");
-    try { const response = await withTimeout(fetch("assets/sounds/sounds.json", { cache: "no-store" }), 10000, "音源一覧の取得がタイムアウトしました"); if (!response.ok) throw new Error(`HTTP ${response.status}`); definitions = await response.json(); if (!Array.isArray(definitions)) throw new Error("配列ではありません"); }
-    catch (error) { console.error("sounds.jsonを読み込めません", error); this.status("デフォルト音源一覧を読み込めませんでした", true, true); }
+    const manifests = [
+      { url: "assets/sounds/sounds.json", assetBase: "assets/sounds", label: "sounds.json", category: null, required: true },
+      { url: "assets/drums/drums.json", assetBase: "assets/drums", label: "drums.json", category: "ドラム", required: false }
+    ];
+    for (const manifest of manifests) {
+      this.updateLoadingProgress(0, 0, "音源一覧を取得しています", manifest.label);
+      try {
+        const response = await withTimeout(fetch(manifest.url, { cache: "no-store" }), 10000, `${manifest.label}の取得がタイムアウトしました`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const entries = await response.json(); if (!Array.isArray(entries)) throw new Error("配列ではありません");
+        definitions.push(...entries.map((entry) => ({ ...entry, category: manifest.category || entry.category, assetBase: manifest.assetBase })));
+      } catch (error) {
+        console.error(`${manifest.label}を読み込めません`, error);
+        if (manifest.required) this.status("デフォルト音源一覧を読み込めませんでした", true, true);
+      }
+    }
     const overrides = new Map((await this.storage.getAll(STORES.overrides) || []).map((item) => [item.id, item]));
     definitions.forEach((definition, order) => {
       const base = this.normalize({ ...definition, sourceType: "default", fileName: definition.file, order });
@@ -296,7 +309,7 @@ class SamplerApp {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 15000);
       try {
-        const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { signal: controller.signal, cache: "no-store" });
+        const response = await fetch(`${sound.assetBase}/${encodeURIComponent(sound.fileName)}`, { signal: controller.signal, cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         data = await response.arrayBuffer();
       } finally { clearTimeout(timer); }
@@ -306,23 +319,26 @@ class SamplerApp {
     }
     sound.audioBuffer = await this.audio.decode(data);
   }
-  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), trimStart: Number(sound.trimStart || 0), trimEnd: sound.trimEnd == null ? null : Number(sound.trimEnd), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
+  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", assetBase: sound.assetBase || "assets/sounds", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), trimStart: Number(sound.trimStart || 0), trimEnd: sound.trimEnd == null ? null : Number(sound.trimEnd), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
   find(id) { return this.sounds.find((sound) => sound.id === id); }
   sortSounds() { this.sounds.sort((a, b) => a.order - b.order); this.sounds.forEach((sound, index) => sound.order = index); }
   render() { this.renderCategories(); this.renderPads(); }
   categories() { return [...new Set(this.sounds.map((sound) => sound.category || "未分類"))].sort((a, b) => a.localeCompare(b, "ja")); }
   renderCategories() {
-    const categories = ["すべて", "お気に入り", "未分類", ...this.categories().filter((value) => value !== "未分類")];
+    const fixedCategories = ["すべて", "お気に入り", "録音", "ドラム", "未分類"];
+    const categories = [...fixedCategories, ...this.categories().filter((value) => !fixedCategories.includes(value))];
     if (!categories.includes(this.category)) this.category = "すべて";
     $("#categoryTabs").replaceChildren(...categories.map((category) => {
       const button = document.createElement("button"); button.type = "button"; button.className = `category-tab${category === this.category ? " active" : ""}`; button.textContent = category;
       button.addEventListener("click", () => { this.category = category; this.storage.setSetting("lastCategory", category); this.render(); }); return button;
     }));
-    $("#categoryList").replaceChildren(...this.categories().map((category) => Object.assign(document.createElement("option"), { value: category })));
+    const editableCategories = [...new Set(["録音", "ドラム", "未分類", ...this.categories()])];
+    $("#categoryList").replaceChildren(...editableCategories.map((category) => Object.assign(document.createElement("option"), { value: category })));
   }
   visibleSounds() { return this.sounds.filter((sound) => this.category === "すべて" || (this.category === "お気に入り" ? sound.favorite : (sound.category || "未分類") === this.category)); }
   renderPads() {
     const visible = this.visibleSounds(); const fragment = document.createDocumentFragment();
+    $("#padGrid").classList.toggle("drum-layout", this.category === "ドラム");
     visible.forEach((sound) => fragment.append(this.createPad(sound))); $("#padGrid").replaceChildren(fragment);
     $("#soundCount").textContent = `${visible.length} / ${this.sounds.length} sounds`; $("#emptyState").hidden = visible.length > 0;
   }
@@ -388,7 +404,7 @@ class SamplerApp {
     if (!this.storage.available) return this.status("一時利用モードでは音源を複製できません", true, true);
     try {
       let blob = sound.blob;
-      if (!blob) { const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { cache: "no-store" }); if (!response.ok) throw new Error(`HTTP ${response.status}`); blob = await response.blob(); }
+      if (!blob) { const response = await fetch(`${sound.assetBase}/${encodeURIComponent(sound.fileName)}`, { cache: "no-store" }); if (!response.ok) throw new Error(`HTTP ${response.status}`); blob = await response.blob(); }
       const copy = this.normalize({ ...this.serializable(sound), id: uid(), dbKey: null, sourceType: sound.sourceType === "default" ? "uploaded" : sound.sourceType, fileName: `copy-${sound.fileName}`, displayName: `${sound.displayName} コピー`, blob, audioBuffer: sound.audioBuffer, order: this.sounds.length });
       copy.dbKey = copy.id; await this.persistSound(copy); this.sounds.push(copy); this.closeDialog($("#settingsDialog")); this.render(); this.status("音源を複製しました");
     } catch (error) { console.error(error); this.status("音源を複製できませんでした。保存容量も確認してください", true, true); }
