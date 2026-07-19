@@ -21,6 +21,7 @@
     .sheet.fallback-open{display:block!important;position:fixed;z-index:40;inset:auto 8px 0;max-width:none;margin:0 auto}.dialog-fallback-backdrop{position:fixed;z-index:39;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
     .trim-editor{margin:12px 0;padding:12px;background:#0e111a;border:1px solid var(--line);border-radius:12px}.trim-editor h3{margin:0;font-size:.9rem}.trim-editor>p{margin:5px 0 10px;color:var(--muted);font-size:.68rem;line-height:1.5}.trim-editor label{grid-template-columns:1fr auto}.trim-editor label input{grid-column:1/-1}.trim-summary{display:flex;justify-content:space-between;color:var(--muted);font-size:.7rem}.trim-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.trim-actions button{min-height:44px}.asset-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.asset-actions button{min-height:44px;color:var(--accent);background:var(--surface2);border:1px solid var(--line);border-radius:11px;font-weight:800}
     .load-progress{margin-top:14px;text-align:left}.load-progress progress{display:block;width:100%;height:10px;margin:8px 0;overflow:hidden;accent-color:var(--accent);border:0;border-radius:99px;background:#1c2231}.load-progress progress::-webkit-progress-bar{background:#1c2231;border-radius:99px}.load-progress progress::-webkit-progress-value{background:var(--accent);border-radius:99px}.load-progress-row{display:flex;justify-content:space-between;gap:12px;color:#c7d0df;font-size:.76rem;font-weight:800}.load-progress-detail{display:block;overflow:hidden;color:#768196;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem}
+    .playback-rate-summary{display:flex;align-items:center;justify-content:space-between;gap:10px}.playback-rate-summary output{color:var(--accent);font-size:1rem;font-weight:900;font-variant-numeric:tabular-nums}.playback-rate-summary small{color:var(--muted);font-size:.68rem}.playback-rate-inputs{display:grid;grid-template-columns:minmax(0,1fr) 7rem;align-items:center;gap:10px;margin-top:7px}.playback-rate-inputs>input[type=range]{min-width:0;min-height:46px}.playback-rate-number{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px}.sheet .playback-rate-number input[type=number]{min-width:0;min-height:46px;padding:0 8px;text-align:right;font-variant-numeric:tabular-nums}.playback-rate-number span{color:var(--muted);font-weight:900}
   </style>
 </head>
 <body>
@@ -116,7 +117,14 @@
       <fieldset><legend>パッド色</legend><div class="color-row"><input id="settingColor" type="color"><div id="colorPresets" class="color-presets"></div><button id="resetColorButton" type="button">初期色</button></div></fieldset>
       <div class="toggle-grid"><label><input id="settingFavorite" type="checkbox"> ★ お気に入り</label><label><input id="settingLoop" type="checkbox"> ↻ ループ</label></div>
       <label>個別音量 <output id="settingVolumeValue">100%</output><input id="settingVolume" type="range" min="0" max="1" step="0.01"></label>
-      <label>再生速度 <output id="settingRateValue">1.0×</output><input id="settingRate" type="range" min="0.5" max="2" step="0.1"></label>
+      <fieldset class="playback-rate-control">
+        <legend>再生速度</legend>
+        <div class="playback-rate-summary"><output id="settingRateValue" for="settingRate settingRateNumber">1.00×</output><small>0.50～2.00倍・0.01刻み</small></div>
+        <div class="playback-rate-inputs">
+          <input id="settingRate" type="range" min="0.5" max="2" step="0.01" value="1" aria-label="再生速度スライダー" aria-valuetext="1.00倍">
+          <span class="playback-rate-number"><input id="settingRateNumber" type="number" min="0.5" max="2" step="0.01" value="1.00" inputmode="decimal" aria-label="再生速度の数値"><span aria-hidden="true">×</span></span>
+        </div>
+      </fieldset>
       <section id="trimEditor" class="trim-editor" hidden>
         <h3>使用する録音区間</h3><p>元の録音は残したまま、パッドで鳴らす開始・終了位置を指定します。</p>
         <label>開始位置 <output id="trimStartValue">0.00秒</output><input id="trimStart" type="range" min="0" max="1" step="0.01" value="0"></label>
@@ -137,6 +145,6 @@
   <dialog id="dataDialog" class="sheet small-sheet"><div class="sheet-handle"></div><header><h2>データ管理</h2><button class="close-button" data-close="dataDialog" type="button">×</button></header><div class="storage-card"><span>概算使用量</span><strong id="storageUsage">計算中…</strong></div><div class="data-actions"><button id="exportButton" type="button">設定をエクスポート</button><label class="button-label">設定をインポート<input id="importInput" type="file" accept="application/json,.json"></label><button id="deleteUploadsButton" class="danger" type="button">追加音源をすべて削除</button><button id="deleteRecordingsButton" class="danger" type="button">録音音源をすべて削除</button><button id="resetSettingsButton" type="button">パッド設定を初期化</button><button id="resetAllButton" class="danger" type="button">すべてのデータを初期化</button></div></dialog>
 
   <script src="rhythm.js?v=20260719-1"></script>
-  <script src="main.js?v=20260719-14"></script>
+  <script src="main.js?v=20260719-15"></script>
 </body>
 </html>

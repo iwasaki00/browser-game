@@ -6,11 +6,18 @@ const STORES = { sounds: "sounds", overrides: "overrides", settings: "settings" 
 const DEFAULT_COLOR = "#3b82f6";
 const COLORS = ["#3b82f6", "#ef4444", "#22c55e", "#a855f7", "#f59e0b", "#06b6d4", "#ec4899", "#64748b"];
 const LONG_PRESS_MS = 600;
+const PLAYBACK_RATE_MIN = .5;
+const PLAYBACK_RATE_MAX = 2;
 
 const $ = (selector) => document.querySelector(selector);
 const uid = () => `user-${Date.now()}-${crypto.getRandomValues(new Uint32Array(1))[0]}`;
 const fileStem = (name) => name.replace(/\.[^.]+$/, "").replaceAll("_", " ");
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const normalizePlaybackRate = (value, fallback = 1) => {
+  const numeric = Number(value), fallbackNumber = Number(fallback);
+  const safeValue = Number.isFinite(numeric) ? numeric : Number.isFinite(fallbackNumber) ? fallbackNumber : 1;
+  return Math.round(clamp(safeValue, PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX) * 100) / 100;
+};
 const soundRegion = (sound) => {
   const duration = sound.audioBuffer?.duration || 0;
   const start = clamp(Number(sound.trimStart || 0), 0, Math.max(0, duration - .01));
@@ -94,7 +101,7 @@ class AudioManager {
     source.loop = looping;
     const region = soundRegion(sound);
     if (looping) { source.loopStart = region.start; source.loopEnd = region.end; }
-    source.playbackRate.value = sound.playbackRate;
+    source.playbackRate.value = normalizePlaybackRate(sound.playbackRate);
     gain.gain.value = sound.volume;
     source.connect(gain).connect(this.master);
     this.sources.add(source);
@@ -116,6 +123,7 @@ class AudioManager {
   }
   async preview(sound) { await this.resume(); this.stopPreview(); const source = this.createSource({ ...sound, loop: false }); const region = soundRegion(sound); this.previewSource = source; source.start(0, region.start, region.duration); }
   stopPreview() { if (this.previewSource) { try { this.previewSource.stop(); } catch (_) {} this.previewSource = null; } }
+  setSoundPlaybackRate(id, value) { const time = this.context?.currentTime || 0, rate = normalizePlaybackRate(value); for (const source of this.sourcesBySound.get(id) || []) source.playbackRate.setValueAtTime(rate, time); }
   stopSound(id) { const group = this.sourcesBySound.get(id); if (group) for (const source of [...group]) { try { source.stop(); } catch (_) {} this.unregisterSource(id, source); } this.loops.delete(id); }
   stopAll() { for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.sourcesBySound.clear(); this.loops.clear(); this.previewSource = null; }
 }
@@ -185,7 +193,9 @@ class SamplerApp {
     $("#statusClose").addEventListener("click", () => this.hideStatus());
     $("#settingsDialog").addEventListener("close", () => { this.audio.stopPreview(); if ($("#settingsDialog").returnValue === "save") this.savePadSettings(); });
     $("#settingVolume").addEventListener("input", (e) => $("#settingVolumeValue").value = `${Math.round(e.target.value * 100)}%`);
-    $("#settingRate").addEventListener("input", (e) => $("#settingRateValue").value = `${Number(e.target.value).toFixed(1)}×`);
+    $("#settingRate").addEventListener("input", (event) => { this.showPlaybackRate(event.target.value); this.audio.stopPreview(); });
+    $("#settingRateNumber").addEventListener("input", (event) => { if (event.target.value !== "" && Number.isFinite(event.target.valueAsNumber)) { this.showPlaybackRate(event.target.valueAsNumber, false); this.audio.stopPreview(); } });
+    $("#settingRateNumber").addEventListener("change", (event) => { this.showPlaybackRate(event.target.value === "" ? $("#settingRate").value : event.target.value); this.audio.stopPreview(); });
     $("#trimStart").addEventListener("input", () => this.updateTrimEditor("start"));
     $("#trimEnd").addEventListener("input", () => this.updateTrimEditor("end"));
     $("#trimPreview").addEventListener("click", () => this.previewTrim());
@@ -319,7 +329,7 @@ class SamplerApp {
     }
     sound.audioBuffer = await this.audio.decode(data);
   }
-  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", assetBase: sound.assetBase || "assets/sounds", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: Number(sound.playbackRate ?? 1), trimStart: Number(sound.trimStart || 0), trimEnd: sound.trimEnd == null ? null : Number(sound.trimEnd), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
+  normalize(sound) { return { id: sound.id || uid(), dbKey: sound.dbKey ?? sound.id, sourceType: sound.sourceType || "uploaded", assetBase: sound.assetBase || "assets/sounds", fileName: sound.fileName || sound.file || "sound", displayName: sound.displayName || sound.name || fileStem(sound.fileName || sound.file || "sound"), category: sound.category || "未分類", color: sound.color || DEFAULT_COLOR, favorite: Boolean(sound.favorite), loop: Boolean(sound.loop), volume: Number(sound.volume ?? 1), playbackRate: normalizePlaybackRate(sound.playbackRate ?? 1), trimStart: Number(sound.trimStart || 0), trimEnd: sound.trimEnd == null ? null : Number(sound.trimEnd), order: Number(sound.order ?? this.sounds.length), blob: sound.blob || null, audioBuffer: sound.audioBuffer || null, loadFailed: Boolean(sound.loadFailed) }; }
   find(id) { return this.sounds.find((sound) => sound.id === id); }
   sortSounds() { this.sounds.sort((a, b) => a.order - b.order); this.sounds.forEach((sound, index) => sound.order = index); }
   render() { this.renderCategories(); this.renderPads(); }
@@ -369,9 +379,16 @@ class SamplerApp {
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
   toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; this.renderPads(); }
   renderColorPresets() { $("#colorPresets").replaceChildren(...COLORS.map((color) => { const button = document.createElement("button"); button.type = "button"; button.className = "color-preset"; button.style.setProperty("--color", color); button.setAttribute("aria-label", color); button.addEventListener("click", () => $("#settingColor").value = color); return button; })); }
+  showPlaybackRate(value, updateNumber = true) {
+    const rate = normalizePlaybackRate(value, $("#settingRate").value || 1), formatted = rate.toFixed(2);
+    $("#settingRate").value = formatted; $("#settingRate").setAttribute("aria-valuetext", `${formatted}倍`);
+    if (updateNumber) $("#settingRateNumber").value = formatted;
+    $("#settingRateValue").value = `${formatted}×`; return rate;
+  }
+  currentPlaybackRate() { const raw = $("#settingRateNumber").value.trim(); return this.showPlaybackRate(raw === "" ? $("#settingRate").value : raw); }
   openSettings(id) {
     const sound = this.find(id); if (!sound) return;
-    $("#settingId").value = id; $("#settingName").value = sound.displayName; $("#settingFile").textContent = sound.fileName; $("#settingCategory").value = sound.category; $("#settingColor").value = sound.color; $("#settingFavorite").checked = sound.favorite; $("#settingLoop").checked = sound.loop; $("#settingVolume").value = sound.volume; $("#settingVolumeValue").value = `${Math.round(sound.volume * 100)}%`; $("#settingRate").value = sound.playbackRate; $("#settingRateValue").value = `${sound.playbackRate.toFixed(1)}×`; $("#deletePadButton").hidden = sound.sourceType === "default";
+    $("#settingId").value = id; $("#settingName").value = sound.displayName; $("#settingFile").textContent = sound.fileName; $("#settingCategory").value = sound.category; $("#settingColor").value = sound.color; $("#settingFavorite").checked = sound.favorite; $("#settingLoop").checked = sound.loop; $("#settingVolume").value = sound.volume; $("#settingVolumeValue").value = `${Math.round(sound.volume * 100)}%`; this.showPlaybackRate(sound.playbackRate); $("#deletePadButton").hidden = sound.sourceType === "default";
     const isRecorded = sound.sourceType === "recorded" && sound.audioBuffer;
     $("#trimEditor").hidden = !isRecorded;
     if (isRecorded) {
@@ -390,14 +407,14 @@ class SamplerApp {
   }
   async previewTrim() {
     const sound = this.find($("#settingId").value); if (!sound?.audioBuffer) return;
-    try { await this.audio.preview({ ...sound, trimStart: Number($("#trimStart").value), trimEnd: Number($("#trimEnd").value) }); }
+    try { await this.audio.preview({ ...sound, playbackRate: this.currentPlaybackRate(), trimStart: Number($("#trimStart").value), trimEnd: Number($("#trimEnd").value) }); }
     catch (error) { console.error(error); this.status("指定区間を試聴できませんでした", true, true); }
   }
   async savePadSettings() {
     const sound = this.find($("#settingId").value); if (!sound) return;
-    Object.assign(sound, { displayName: $("#settingName").value.trim() || sound.fileName, category: $("#settingCategory").value.trim() || "未分類", color: $("#settingColor").value, favorite: $("#settingFavorite").checked, loop: $("#settingLoop").checked, volume: Number($("#settingVolume").value), playbackRate: Number($("#settingRate").value) });
+    Object.assign(sound, { displayName: $("#settingName").value.trim() || sound.fileName, category: $("#settingCategory").value.trim() || "未分類", color: $("#settingColor").value, favorite: $("#settingFavorite").checked, loop: $("#settingLoop").checked, volume: Number($("#settingVolume").value), playbackRate: this.currentPlaybackRate() });
     if (sound.sourceType === "recorded" && sound.audioBuffer) { sound.trimStart = Number($("#trimStart").value); sound.trimEnd = Number($("#trimEnd").value); }
-    if (!sound.loop) this.audio.stopSound(sound.id); await this.persistSound(sound); this.render(); this.status("パッド設定を保存しました");
+    this.audio.setSoundPlaybackRate(sound.id, sound.playbackRate); if (!sound.loop) this.audio.stopSound(sound.id); await this.persistSound(sound); this.render(); this.status("パッド設定を保存しました");
   }
   async duplicatePad(id) {
     const sound = this.find(id); if (!sound?.audioBuffer) return this.status("読み込めていない音源は複製できません", true, true);
