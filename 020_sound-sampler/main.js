@@ -296,7 +296,7 @@ class SamplerApp {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 15000);
       try {
-        const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { signal: controller.signal });
+        const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { signal: controller.signal, cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         data = await response.arrayBuffer();
       } finally { clearTimeout(timer); }
@@ -388,7 +388,7 @@ class SamplerApp {
     if (!this.storage.available) return this.status("一時利用モードでは音源を複製できません", true, true);
     try {
       let blob = sound.blob;
-      if (!blob) { const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`); if (!response.ok) throw new Error(`HTTP ${response.status}`); blob = await response.blob(); }
+      if (!blob) { const response = await fetch(`assets/sounds/${encodeURIComponent(sound.fileName)}`, { cache: "no-store" }); if (!response.ok) throw new Error(`HTTP ${response.status}`); blob = await response.blob(); }
       const copy = this.normalize({ ...this.serializable(sound), id: uid(), dbKey: null, sourceType: sound.sourceType === "default" ? "uploaded" : sound.sourceType, fileName: `copy-${sound.fileName}`, displayName: `${sound.displayName} コピー`, blob, audioBuffer: sound.audioBuffer, order: this.sounds.length });
       copy.dbKey = copy.id; await this.persistSound(copy); this.sounds.push(copy); this.closeDialog($("#settingsDialog")); this.render(); this.status("音源を複製しました");
     } catch (error) { console.error(error); this.status("音源を複製できませんでした。保存容量も確認してください", true, true); }
