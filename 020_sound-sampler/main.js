@@ -182,7 +182,7 @@ class SamplerApp {
     $("#addButton").addEventListener("click", () => $("#fileInput").click());
     $("#fileInput").addEventListener("change", (e) => this.prepareFiles(e.target.files));
     $("#editButton").addEventListener("click", () => this.toggleEdit());
-    $("#statusClose").addEventListener("click", () => $("#status").hidden = true);
+    $("#statusClose").addEventListener("click", () => this.hideStatus());
     $("#settingsDialog").addEventListener("close", () => { this.audio.stopPreview(); if ($("#settingsDialog").returnValue === "save") this.savePadSettings(); });
     $("#settingVolume").addEventListener("input", (e) => $("#settingVolumeValue").value = `${Math.round(e.target.value * 100)}%`);
     $("#settingRate").addEventListener("input", (e) => $("#settingRateValue").value = `${Number(e.target.value).toFixed(1)}×`);
@@ -349,7 +349,7 @@ class SamplerApp {
   }
   async play(sound, pad) { try { this.rhythm.duck(); const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
   stopPadSound(sound, pad) { this.audio.stopSound(sound.id); pad.classList.remove("looping", "playing"); this.status(`「${sound.displayName}」を停止しました`); }
-  textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 155 ? "#07111a" : "#ffffff"; }
+  textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 170 ? "#07111a" : "#ffffff"; }
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
   toggleEdit() { this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; this.renderPads(); }
   renderColorPresets() { $("#colorPresets").replaceChildren(...COLORS.map((color) => { const button = document.createElement("button"); button.type = "button"; button.className = "color-preset"; button.style.setProperty("--color", color); button.setAttribute("aria-label", color); button.addEventListener("click", () => $("#settingColor").value = color); return button; })); }
@@ -511,7 +511,8 @@ class SamplerApp {
   async deleteByType(type) { const label = type === "recorded" ? "録音音源" : "追加音源"; if (!confirm(`${label}をすべて削除しますか？`)) return; const targets = this.sounds.filter((s) => s.sourceType === type); await Promise.all(targets.map((s) => this.storage.delete(STORES.sounds, s.dbKey ?? s.id))); this.sounds = this.sounds.filter((s) => s.sourceType !== type); this.render(); this.status(`${label}を削除しました`); }
   async resetAllSettings() { if (!confirm("すべてのパッド設定を初期化しますか？")) return; await this.storage.clear(STORES.overrides); for (const sound of this.sounds) { this.audio.stopSound(sound.id); if (sound.sourceType === "default") { const buffer = sound.audioBuffer, failed = sound.loadFailed; Object.assign(sound, this.defaults.get(sound.id), { audioBuffer: buffer, loadFailed: failed }); } else { Object.assign(sound, { displayName: fileStem(sound.fileName), category: "未分類", color: DEFAULT_COLOR, favorite: false, loop: false, volume: 1, playbackRate: 1, trimStart: 0, trimEnd: null }); await this.persistSound(sound); } } this.render(); this.status("パッド設定を初期化しました"); }
   async resetAllData() { if (!confirm("追加・録音音源と設定をすべて削除しますか？この操作は元に戻せません。")) return; this.stopEverything(false); await Promise.all(Object.values(STORES).map((store) => this.storage.clear(store))); location.reload(); }
-  status(message, error = false, persistent = false) { clearTimeout(this.statusTimer); $("#statusText").textContent = message; $("#status").classList.toggle("error", error); $("#status").hidden = false; if (!persistent) this.statusTimer = setTimeout(() => $("#status").hidden = true, 4500); }
+  hideStatus() { const element = $("#status"); element.classList.add("is-hidden"); element.setAttribute("aria-hidden", "true"); }
+  status(message, error = false, persistent = false) { clearTimeout(this.statusTimer); $("#statusText").textContent = message; $("#status").classList.toggle("error", error); $("#status").classList.remove("is-hidden"); $("#status").setAttribute("aria-hidden", "false"); if (!persistent) this.statusTimer = setTimeout(() => this.hideStatus(), 4500); }
 }
 
 new SamplerApp().init();

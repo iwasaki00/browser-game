@@ -12,7 +12,7 @@
     "file": "コナン_ひらめき.wav",
     "name": "コナン ひらめき",
     "category": "ひらめき",
-    "color": "#f59e0b",
+    "color": "#c77800",
     "loop": false
   },
   {
@@ -93,6 +93,46 @@
     "name": "笑ってはいけない デデーン",
     "category": "コミカル",
     "color": "#f97316",
+    "loop": false
+  },
+  {
+    "id": "default-113",
+    "file": "エヴァ_ヤシマ作戦.wav",
+    "name": "エヴァ ヤシマ作戦",
+    "category": "BGM",
+    "color": "#7c3aed",
+    "loop": false
+  },
+  {
+    "id": "default-114",
+    "file": "エヴァ_次回予告.wav",
+    "name": "エヴァ 次回予告",
+    "category": "演出",
+    "color": "#ef4444",
+    "loop": false
+  },
+  {
+    "id": "default-115",
+    "file": "ガンダム_ニュータイプ.wav",
+    "name": "ガンダム ニュータイプ",
+    "category": "演出",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-116",
+    "file": "ごっつ_やすしくん.wav",
+    "name": "ごっつ やすしくん",
+    "category": "コミカル",
+    "color": "#f97316",
+    "loop": false
+  },
+  {
+    "id": "default-117",
+    "file": "ルパン_タイプライター.wav",
+    "name": "ルパン タイプライター",
+    "category": "演出",
+    "color": "#22c55e",
     "loop": false
   }
 ]
