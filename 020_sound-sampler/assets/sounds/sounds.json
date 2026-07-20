@@ -166,5 +166,53 @@
     "category": "BGM",
     "color": "#0ea5e9",
     "loop": false
+  },
+  {
+    "id": "default-122",
+    "file": "セクシー_いやーん.wav",
+    "name": "セクシー いやーん",
+    "category": "コミカル",
+    "color": "#ec4899",
+    "loop": false
+  },
+  {
+    "id": "default-123",
+    "file": "セクシー_ワーオ.wav",
+    "name": "セクシー ワーオ",
+    "category": "コミカル",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-124",
+    "file": "ちいかわ_なんとかなれ.wav",
+    "name": "ちいかわ なんとかなれ",
+    "category": "コミカル",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-125",
+    "file": "ちいかわ栗まんじゅう.wav",
+    "name": "ちいかわ 栗まんじゅう",
+    "category": "コミカル",
+    "color": "#c77800",
+    "loop": false
+  },
+  {
+    "id": "default-126",
+    "file": "ドリフ_くしゃみ.wav",
+    "name": "ドリフ くしゃみ",
+    "category": "コミカル",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-127",
+    "file": "ドリフ_だめだこりゃ.wav",
+    "name": "ドリフ だめだこりゃ",
+    "category": "コミカル",
+    "color": "#ef4444",
+    "loop": false
   }
 ]
