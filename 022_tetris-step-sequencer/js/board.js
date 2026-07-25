@@ -1,6 +1,6 @@
 import { getAbsoluteCells } from "./piece.js";
 
-export const DEFAULT_BOARD_WIDTH = 10;
+export const DEFAULT_BOARD_WIDTH = 16;
 export const DEFAULT_BOARD_HEIGHT = 20;
 
 function makeEmptyRow(width) {
@@ -67,7 +67,7 @@ export class Board {
     const cells = getAbsoluteCells(piece);
     let topOut = false;
 
-    for (const { x, y } of cells) {
+    for (const { x, y, sound } of cells) {
       if (y < 0) {
         topOut = true;
         continue;
@@ -76,12 +76,16 @@ export class Board {
         topOut = true;
         continue;
       }
-      this.grid[y][x] = { type: piece.type };
+      this.grid[y][x] = { type: piece.type, sound: Boolean(sound) };
     }
 
     return {
       topOut,
-      cells: cells.map(({ x, y }) => ({ x, y })),
+      cells: cells.map(({ x, y, sound }) => ({
+        x,
+        y,
+        sound: Boolean(sound),
+      })),
     };
   }
 
@@ -113,7 +117,11 @@ export class Board {
 
   snapshot() {
     return this.grid.map((row) => (
-      row.map((cell) => (cell ? { type: cell.type } : null))
+      row.map((cell) => (
+        cell
+          ? { type: cell.type, sound: Boolean(cell.sound) }
+          : null
+      ))
     ));
   }
 }

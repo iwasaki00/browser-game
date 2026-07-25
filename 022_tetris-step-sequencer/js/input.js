@@ -1,14 +1,11 @@
 const ACTION_ALIASES = Object.freeze({
   left: ["left", "moveLeft"],
   right: ["right", "moveRight"],
-  down: ["down", "softDrop"],
-  "soft-drop": ["softDrop", "down"],
   rotate: ["rotate", "rotateCW", "rotateRight"],
   "rotate-cw": ["rotateCW", "rotate", "rotateRight"],
   "rotate-ccw": ["rotateCCW", "rotateLeft"],
   drop: ["drop", "hardDrop"],
   "hard-drop": ["hardDrop", "drop"],
-  hold: ["hold"],
   pause: ["pause", "togglePause"],
   start: ["start"],
   restart: ["restart"],
@@ -16,7 +13,7 @@ const ACTION_ALIASES = Object.freeze({
   "close-options": ["closeOptions"],
 });
 
-const REPEATABLE_ACTIONS = new Set(["left", "right", "down"]);
+const REPEATABLE_ACTIONS = new Set(["left", "right"]);
 
 function isEditableTarget(target) {
   if (!target) return false;
@@ -71,6 +68,7 @@ export class InputController {
     this._listeners = [];
     this._repeatTimers = new Map();
     this._gesture = null;
+    this._lastTap = null;
     this._surfaceTouchAction = this.surface?.style?.touchAction ?? "";
     this._surfaceUserSelect = this.surface?.style?.userSelect ?? "";
 
@@ -181,7 +179,7 @@ export class InputController {
         this._emit(action, sourceEvent);
         state.interval = setInterval(
           () => this._emit(action, sourceEvent),
-          action === "down" ? 55 : 80,
+          80,
         );
       }, 260),
       interval: null,
@@ -211,12 +209,9 @@ export class InputController {
     const keyMap = {
       ArrowLeft: "left",
       ArrowRight: "right",
-      ArrowDown: "down",
-      ArrowUp: "drop",
+      ArrowDown: "rotate-ccw",
+      ArrowUp: "rotate-cw",
       Space: "drop",
-      KeyC: "hold",
-      ShiftLeft: "hold",
-      ShiftRight: "hold",
       KeyZ: "rotate-ccw",
       KeyX: "rotate-cw",
       KeyP: "pause",
@@ -288,10 +283,20 @@ export class InputController {
       distance <= this.tapThreshold &&
       duration <= 420
     ) {
-      this._emit("rotate", event);
+      const now = performance.now();
+      const previous = this._lastTap;
+      const isDoubleTap =
+        previous &&
+        now - previous.time <= 320 &&
+        Math.hypot(event.clientX - previous.x, event.clientY - previous.y) <= 42;
+      this._lastTap = isDoubleTap
+        ? null
+        : { time: now, x: event.clientX, y: event.clientY };
+      if (isDoubleTap) this._emit("drop", event);
       return;
     }
 
+    this._lastTap = null;
     if (distance < this.swipeThreshold) return;
 
     if (Math.abs(dx) > Math.abs(dy)) {
@@ -305,15 +310,10 @@ export class InputController {
     }
 
     if (dy < 0) {
-      this._emit("drop", event);
+      this._emit("rotate-cw", event);
       return;
     }
-
-    const drops = Math.min(
-      5,
-      Math.max(1, Math.round(Math.abs(dy) / this.swipeThreshold)),
-    );
-    for (let index = 0; index < drops; index += 1) this._emit("down", event);
+    this._emit("rotate-ccw", event);
   }
 
   _cancelGesture(event) {

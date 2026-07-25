@@ -1,8 +1,9 @@
 /**
  * Tetromino definitions and small, side-effect-free piece helpers.
  *
- * A piece stores only its type, board position and rotation. Its occupied cells
- * are looked up here so the board, game and renderer all share one definition.
+ * A piece stores its type, board position, rotation and a four-entry sound
+ * mask. The mask follows the cell index through rotations, so note markers
+ * move together with the tetromino.
  */
 
 export const PIECE_TYPES = Object.freeze(["I", "O", "T", "S", "Z", "J", "L"]);
@@ -89,7 +90,26 @@ export function getPieceCells(type, rotation = 0) {
   return SHAPES[type][normalizeRotation(rotation)];
 }
 
-export function createPiece(type, boardWidth = 10) {
+export function createSoundMask(random = Math.random) {
+  const safeRandom = () => {
+    const value = Number(random());
+    return Number.isFinite(value)
+      ? Math.min(0.9999999999999999, Math.max(0, value))
+      : 0;
+  };
+  const soundCount = Math.floor(safeRandom() * 5);
+  const indexes = [0, 1, 2, 3];
+
+  for (let index = indexes.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(safeRandom() * (index + 1));
+    [indexes[index], indexes[swapIndex]] = [indexes[swapIndex], indexes[index]];
+  }
+
+  const enabled = new Set(indexes.slice(0, soundCount));
+  return indexes.map((_, index) => enabled.has(index));
+}
+
+export function createPiece(type, boardWidth = 16, random = Math.random) {
   if (!isPieceType(type)) {
     throw new TypeError(`Unknown tetromino type: ${String(type)}`);
   }
@@ -101,6 +121,7 @@ export function createPiece(type, boardWidth = 10) {
     x: Math.floor((boardWidth - 4) / 2),
     y: SPAWN_Y[type],
     rotation: 0,
+    soundMask: createSoundMask(random),
   };
 }
 
@@ -111,6 +132,10 @@ export function clonePiece(piece) {
     x: piece.x,
     y: piece.y,
     rotation: normalizeRotation(piece.rotation),
+    soundMask: Array.from(
+      { length: 4 },
+      (_, index) => Boolean(piece.soundMask?.[index]),
+    ),
   };
 }
 
@@ -119,9 +144,10 @@ export function getAbsoluteCells(piece, overrides = {}) {
   const y = overrides.y ?? piece.y;
   const rotation = overrides.rotation ?? piece.rotation;
 
-  return getPieceCells(piece.type, rotation).map(([cellX, cellY]) => ({
+  return getPieceCells(piece.type, rotation).map(([cellX, cellY], index) => ({
     x: x + cellX,
     y: y + cellY,
+    sound: Boolean(piece.soundMask?.[index]),
   }));
 }
 
@@ -148,6 +174,7 @@ export default {
   isPieceType,
   normalizeRotation,
   getPieceCells,
+  createSoundMask,
   createPiece,
   clonePiece,
   getAbsoluteCells,

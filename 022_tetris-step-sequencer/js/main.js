@@ -130,7 +130,9 @@ function normalizeSettings(value = {}) {
 const storage = new GameStorage();
 const audio = new AudioEngine(DEFAULT_SETTINGS);
 const effects = new EffectsManager();
-const renderer = new BoardRenderer(elements.boardCanvas, effects);
+const renderer = new BoardRenderer(elements.boardCanvas, effects, {
+  columns: STEP_COUNT,
+});
 const ui = new GameUI(document);
 
 let settings = {
@@ -182,14 +184,11 @@ const input = new InputController({
   actions: {
     left: () => runGameAction(() => game.move(-1)),
     right: () => runGameAction(() => game.move(1)),
-    softDrop: () => runGameAction(() => game.softDrop()),
-    down: () => runGameAction(() => game.softDrop()),
     hardDrop: () => runGameAction(() => game.hardDrop()),
     drop: () => runGameAction(() => game.hardDrop()),
     rotate: () => runGameAction(() => game.rotate(1)),
     rotateCW: () => runGameAction(() => game.rotate(1)),
     rotateCCW: () => runGameAction(() => game.rotate(-1)),
-    hold: () => runGameAction(() => game.hold()),
     pause: () => {
       if (!gameStarted) return;
       if (settingsOpen) {
@@ -252,7 +251,6 @@ function syncUi(state = latestState) {
     highScore: Math.max(highScore, state.score ?? 0),
   });
   ui.setNext(state.next);
-  ui.setHold(state.hold);
 }
 
 function handleGameEvent(type, detail, state) {
@@ -292,7 +290,7 @@ function handleGameEvent(type, detail, state) {
   }
 }
 
-function columnStep(column, width = 10) {
+function columnStep(column, width = STEP_COUNT) {
   const position = ((column + 0.5) / width) * STEP_COUNT - 0.5;
   return Math.max(0, Math.min(STEP_COUNT - 1, Math.round(position)));
 }
@@ -300,7 +298,7 @@ function columnStep(column, width = 10) {
 function getStepCells(step) {
   const board = latestState?.board;
   if (!Array.isArray(board)) return [];
-  const width = latestState?.width ?? board[0]?.length ?? 10;
+  const width = latestState?.width ?? board[0]?.length ?? STEP_COUNT;
   const cells = [];
 
   for (let y = 0; y < board.length; y += 1) {
@@ -308,8 +306,8 @@ function getStepCells(step) {
     if (!Array.isArray(row)) continue;
     for (let x = 0; x < row.length; x += 1) {
       const cell = row[x];
-      if (!cell || columnStep(x, width) !== step) continue;
-      cells.push({ x, y, type: cell.type });
+      if (!cell?.sound || columnStep(x, width) !== step) continue;
+      cells.push({ x, y, type: cell.type, sound: true });
     }
   }
   return cells;

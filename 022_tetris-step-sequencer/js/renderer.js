@@ -1,4 +1,4 @@
-const BOARD_COLUMNS = 10;
+const BOARD_COLUMNS = 16;
 const BOARD_ROWS = 20;
 const SEQUENCER_STEPS = 16;
 
@@ -141,6 +141,7 @@ function cellsFromPiece(piece) {
         ? pieceType(piece)
         : pieceType(cell, pieceType(piece)),
       color: (Array.isArray(cell) ? null : cell?.color) ?? piece?.color,
+      sound: Boolean(Array.isArray(cell) ? false : cell?.sound),
     }));
   }
 
@@ -169,7 +170,7 @@ function isOccupied(cell) {
 }
 
 /**
- * Canvas renderer for the 10x20 board.
+ * Canvas renderer for the 16x20 board.
  *
  * Accepted state aliases make the class easy to connect to either a plain
  * object or a Board/Piece model:
@@ -383,6 +384,7 @@ export class BoardRenderer {
           visibleY,
           cellColor(cell, type),
           flashMap.get(`${x}:${visibleY}`),
+          Boolean(cell?.sound),
         );
       }
     }
@@ -404,6 +406,7 @@ export class BoardRenderer {
         cell.y,
         cellColor(cell, type),
         flashMap.get(`${cell.x}:${cell.y}`),
+        Boolean(cell.sound),
       );
     }
   }
@@ -472,7 +475,7 @@ export class BoardRenderer {
     ctx.restore();
   }
 
-  _drawBlock(column, row, color, flash = null) {
+  _drawBlock(column, row, color, flash = null, sound = false) {
     const { context: ctx, layout } = this;
     const cell = layout.cellSize;
     const gap = Math.max(1, cell * 0.055);
@@ -526,6 +529,21 @@ export class BoardRenderer {
     if (flash) {
       roundRectPath(ctx, x, y, size, size, radius);
       ctx.fillStyle = `rgba(255,255,255,${0.78 * flash.alpha})`;
+      ctx.fill();
+    }
+
+    if (sound) {
+      ctx.beginPath();
+      ctx.arc(
+        x + size / 2,
+        y + size / 2,
+        Math.max(2, size * 0.16),
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = "#020409";
+      ctx.shadowColor = "rgba(255,255,255,.28)";
+      ctx.shadowBlur = Math.max(1, cell * 0.08);
       ctx.fill();
     }
     ctx.restore();

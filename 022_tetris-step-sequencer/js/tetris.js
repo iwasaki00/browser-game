@@ -21,14 +21,14 @@ const LINE_SCORES = Object.freeze([0, 100, 300, 500, 800]);
 // A small, deterministic "gallery" of all seven tetromino types. Keeping this
 // as data makes the debug fixture easy to adjust without coupling it to Board.
 const DEBUG_DEMO_ROWS = Object.freeze([
-  "......OO..",
-  "IIII..OO..",
-  "..........",
-  ".T....SS..",
-  "TTT..SS...",
-  "..........",
-  "ZZ.J....L.",
-  ".ZZJJJLLL.",
+  "......OO........",
+  "....IIOOII......",
+  "................",
+  "...T....SS......",
+  "..TTT..SS.......",
+  "................",
+  "..ZZ.J......L...",
+  "...ZZJJJ...LLL..",
 ]);
 
 // Small wall/floor kicks keep rotations friendly without implementing SRS.
@@ -51,8 +51,6 @@ export class TetrisGame {
 
     this.activePiece = null;
     this.queue = [];
-    this.holdType = null;
-    this.canHold = true;
     this.score = 0;
     this.level = 1;
     this.lines = 0;
@@ -70,8 +68,6 @@ export class TetrisGame {
     this.board.reset();
     this.activePiece = null;
     this.queue = [];
-    this.holdType = null;
-    this.canHold = true;
     this.score = 0;
     this.level = 1;
     this.lines = 0;
@@ -148,20 +144,6 @@ export class TetrisGame {
     return true;
   }
 
-  softDrop() {
-    if (!this._canControl()) return false;
-
-    const nextY = this.activePiece.y + 1;
-    if (!this.board.canPlace(this.activePiece, { y: nextY })) return false;
-
-    this.activePiece.y = nextY;
-    this.score += 1;
-    this.gravityElapsed = 0;
-    this.lockElapsed = 0;
-    this._stateChanged();
-    return true;
-  }
-
   hardDrop() {
     if (!this._canControl()) return false;
 
@@ -199,31 +181,6 @@ export class TetrisGame {
     }
 
     return false;
-  }
-
-  hold() {
-    if (!this._canControl() || !this.canHold) return false;
-
-    const outgoingType = this.activePiece.type;
-    const incomingType = this.holdType;
-    this.holdType = outgoingType;
-    this.activePiece = null;
-
-    if (incomingType === null) {
-      this._spawnNext();
-    } else {
-      this._spawn(incomingType);
-    }
-
-    this.canHold = false;
-    this.gravityElapsed = 0;
-    this.lockElapsed = 0;
-    this._emit("hold", {
-      hold: this.holdType,
-      active: this.activePiece?.type ?? null,
-    });
-    this._stateChanged();
-    return this.status === "running";
   }
 
   setPaused(paused = true) {
@@ -281,10 +238,13 @@ export class TetrisGame {
         const type = sourceRow[sourceX];
         const boardX = startX + sourceX;
         if (type === "." || boardX < 0 || boardX >= this.board.width) continue;
-        boardRow[boardX] = { type };
+        boardRow[boardX] = {
+          type,
+          sound: (sourceX + rowOffset) % 3 === 0,
+        };
       }
 
-      // The standard 10-column fixture is already open on every row. This
+      // The standard 16-column fixture is already open on every row. This
       // guard keeps that invariant if a narrower custom Board is injected.
       if (boardRow.every((cell) => cell !== null)) {
         boardRow[this.board.width - 1] = null;
@@ -309,15 +269,21 @@ export class TetrisGame {
     const fillerTypes = ["J", "T", "L", "O", "S", "Z"];
     let fillerIndex = 0;
 
+    const preparedPiece = createPiece("I", this.board.width);
+    const gapStart = preparedPiece.x;
+    const gapEnd = gapStart + 3;
+
     for (let x = 0; x < this.board.width; x += 1) {
-      if (x >= 3 && x <= 6) continue;
+      if (x >= gapStart && x <= gapEnd) continue;
       bottomRow[x] = {
         type: fillerTypes[fillerIndex % fillerTypes.length],
+        sound: fillerIndex % 3 === 0,
       };
       fillerIndex += 1;
     }
 
-    this.activePiece = createPiece("I", this.board.width);
+    preparedPiece.soundMask = [true, false, true, false];
+    this.activePiece = preparedPiece;
     this.gravityElapsed = 0;
     this.lockElapsed = 0;
 
@@ -342,7 +308,11 @@ export class TetrisGame {
           cells: getPieceCells(
             this.activePiece.type,
             this.activePiece.rotation,
-          ).map(([x, y]) => [x, y]),
+          ).map(([x, y], index) => ({
+            x,
+            y,
+            sound: Boolean(this.activePiece.soundMask?.[index]),
+          })),
         }
       : null;
 
@@ -355,8 +325,6 @@ export class TetrisGame {
         ? this.board.getGhostY(this.activePiece)
         : null,
       next: this.queue.slice(0, NEXT_COUNT),
-      hold: this.holdType,
-      canHold: this.canHold,
       score: this.score,
       level: this.level,
       lines: this.lines,
@@ -440,7 +408,6 @@ export class TetrisGame {
       });
     }
 
-    this.canHold = true;
     this._spawnNext();
     this._stateChanged();
     return true;

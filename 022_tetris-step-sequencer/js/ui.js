@@ -94,13 +94,6 @@ const PREVIEW_IDS = Object.freeze({
     "nextPreviewDesktop",
     "next-preview-desktop",
   ],
-  hold: ["holdPreview", "hold-preview", "holdCanvas", "hold-canvas"],
-  holdDesktop: [
-    "holdPreviewDesktop",
-    "hold-preview-desktop",
-    "holdCanvasDesktop",
-    "hold-canvas-desktop",
-  ],
 });
 
 function firstByIds(root, ids) {
@@ -261,10 +254,6 @@ export class GameUI {
       ...PREVIEW_IDS.next,
       ...PREVIEW_IDS.nextDesktop,
     ]);
-    this.elements.holdPreviews = allByIds(this.root, [
-      ...PREVIEW_IDS.hold,
-      ...PREVIEW_IDS.holdDesktop,
-    ]);
     return this.elements;
   }
 
@@ -300,17 +289,6 @@ export class GameUI {
 
   updateNext(pieces) {
     this.setNext(pieces);
-  }
-
-  setHold(piece) {
-    const list = piece ? [piece] : [];
-    for (const target of this.elements.holdPreviews ?? []) {
-      this._renderPreviewTarget(target, list, false);
-    }
-  }
-
-  updateHold(piece) {
-    this.setHold(piece);
   }
 
   setLoading(value, message) {

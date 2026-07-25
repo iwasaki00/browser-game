@@ -124,11 +124,11 @@
             <span>9</span><i></i><i></i><i></i>
             <span>13</span><i></i><i></i><i></i>
           </div>
-          <canvas id="boardCanvas" width="300" height="600" aria-label="テトリスのゲーム盤"></canvas>
+          <canvas id="boardCanvas" width="480" height="600" aria-label="16列×20行のテトリスゲーム盤"></canvas>
           <div class="board-corners" aria-hidden="true"></div>
           <div id="readyOverlay" class="board-message">
             <p>READY</p>
-            <span>盤面をタップして回転</span>
+            <span>上下スワイプで回転・ダブルタップで落下</span>
           </div>
         </div>
 
@@ -136,12 +136,6 @@
           <section class="mini-card">
             <div class="mini-card__title"><span>NEXT</span><small>QUEUE</small></div>
             <div id="nextList" class="next-list" aria-label="次のミノ"></div>
-          </section>
-          <section class="mini-card mini-card--hold">
-            <div class="mini-card__title"><span>HOLD</span><small>STASH</small></div>
-            <div id="holdPreview" class="hold-preview" aria-label="ホールド中のミノ">
-              <span class="empty-piece">EMPTY</span>
-            </div>
           </section>
         </div>
       </section>
@@ -151,13 +145,6 @@
           <div class="mini-card__title"><span>NEXT</span><small>QUEUE</small></div>
           <div id="nextListDesktop" class="next-list" aria-label="次のミノ"></div>
         </section>
-        <section class="mini-card mini-card--hold desktop-card">
-          <div class="mini-card__title"><span>HOLD</span><small>STASH</small></div>
-          <div id="holdPreviewDesktop" class="hold-preview" aria-label="ホールド中のミノ">
-            <span class="empty-piece">EMPTY</span>
-          </div>
-        </section>
-
         <section class="sound-map">
           <header>
             <span>SOUND MAP</span>
@@ -183,22 +170,19 @@
       <button class="control control--move" type="button" data-action="right" aria-label="右へ移動">
         <span>→</span><small>RIGHT</small>
       </button>
-      <button class="control" type="button" data-action="softDrop" aria-label="ソフトドロップ">
-        <span>↓</span><small>SOFT</small>
+      <button class="control control--rotate" type="button" data-action="rotateCW" aria-label="右回転">
+        <span>↑</span><small>TURN R</small>
       </button>
-      <button class="control control--rotate" type="button" data-action="rotate" aria-label="回転">
-        <span>↻</span><small>ROTATE</small>
+      <button class="control control--rotate" type="button" data-action="rotateCCW" aria-label="左回転">
+        <span>↓</span><small>TURN L</small>
       </button>
       <button class="control control--drop" type="button" data-action="hardDrop" aria-label="ハードドロップ">
         <span>⇣</span><small>DROP</small>
       </button>
-      <button class="control control--hold" type="button" data-action="hold" aria-label="ホールド">
-        <span>H</span><small>HOLD</small>
-      </button>
     </section>
 
     <p id="gestureHint" class="gesture-hint">
-      <span>SWIPE</span> 左右：移動　下：ソフト　上：ドロップ　タップ：回転
+      <span>SWIPE</span> 左右：移動　上：右回転　下：左回転　ダブルタップ：落下
     </p>
   </main>
 
@@ -285,8 +269,8 @@
 
       <div class="settings-help">
         <b>KEYBOARD</b>
-        <span>← → 移動</span><span>↓ ソフト</span><span>↑ / Space ドロップ</span>
-        <span>Z / X 回転</span><span>C / Shift ホールド</span>
+        <span>← → 移動</span><span>↑ 右回転</span><span>↓ 左回転</span>
+        <span>Space 落下</span><span>Z / X 回転</span>
       </div>
 
       <button id="saveSettingsButton" class="save-settings" type="button">設定を保存して戻る</button>
