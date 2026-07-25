@@ -18,6 +18,19 @@ const MIN_GRAVITY_MS = 70;
 
 const LINE_SCORES = Object.freeze([0, 100, 300, 500, 800]);
 
+// A small, deterministic "gallery" of all seven tetromino types. Keeping this
+// as data makes the debug fixture easy to adjust without coupling it to Board.
+const DEBUG_DEMO_ROWS = Object.freeze([
+  "......OO..",
+  "IIII..OO..",
+  "..........",
+  ".T....SS..",
+  "TTT..SS...",
+  "..........",
+  "ZZ.J....L.",
+  ".ZZJJJLLL.",
+]);
+
 // Small wall/floor kicks keep rotations friendly without implementing SRS.
 const ROTATION_KICKS = Object.freeze([
   [0, 0],
@@ -231,6 +244,96 @@ export class TetrisGame {
     return false;
   }
 
+  /**
+   * Development helpers intentionally work only during an active session.
+   * They preserve the current score/progression unless normal gameplay caused
+   * a change (for example, dropping the prepared I piece clears a line).
+   */
+  debugClearBoard() {
+    if (!this._canDebug()) return false;
+
+    this.board.reset();
+    this._emit("debug", { action: "clearBoard" });
+    this._stateChanged();
+    return true;
+  }
+
+  debugLoadDemoBoard() {
+    if (!this._canDebug()) return false;
+
+    this.board.reset();
+
+    // Keep four spawn rows clear even if a non-default, shorter board is used.
+    const rowCount = Math.min(
+      DEBUG_DEMO_ROWS.length,
+      Math.max(0, this.board.height - 4),
+    );
+    const sourceRows = DEBUG_DEMO_ROWS.slice(DEBUG_DEMO_ROWS.length - rowCount);
+    const startY = this.board.height - sourceRows.length;
+    const startX = Math.max(
+      0,
+      Math.floor((this.board.width - DEBUG_DEMO_ROWS[0].length) / 2),
+    );
+
+    sourceRows.forEach((sourceRow, rowOffset) => {
+      const boardRow = this.board.grid[startY + rowOffset];
+      for (let sourceX = 0; sourceX < sourceRow.length; sourceX += 1) {
+        const type = sourceRow[sourceX];
+        const boardX = startX + sourceX;
+        if (type === "." || boardX < 0 || boardX >= this.board.width) continue;
+        boardRow[boardX] = { type };
+      }
+
+      // The standard 10-column fixture is already open on every row. This
+      // guard keeps that invariant if a narrower custom Board is injected.
+      if (boardRow.every((cell) => cell !== null)) {
+        boardRow[this.board.width - 1] = null;
+      }
+    });
+
+    const activeType = this.activePiece?.type ?? "I";
+    this.activePiece = createPiece(activeType, this.board.width);
+    this.gravityElapsed = 0;
+    this.lockElapsed = 0;
+
+    this._emit("debug", { action: "loadDemoBoard" });
+    this._stateChanged();
+    return true;
+  }
+
+  debugPrepareLineClear() {
+    if (!this._canDebug()) return false;
+
+    this.board.reset();
+    const bottomRow = this.board.grid[this.board.height - 1];
+    const fillerTypes = ["J", "T", "L", "O", "S", "Z"];
+    let fillerIndex = 0;
+
+    for (let x = 0; x < this.board.width; x += 1) {
+      if (x >= 3 && x <= 6) continue;
+      bottomRow[x] = {
+        type: fillerTypes[fillerIndex % fillerTypes.length],
+      };
+      fillerIndex += 1;
+    }
+
+    this.activePiece = createPiece("I", this.board.width);
+    this.gravityElapsed = 0;
+    this.lockElapsed = 0;
+
+    this._emit("debug", { action: "prepareLineClear" });
+    this._stateChanged();
+    return true;
+  }
+
+  debugForceGameOver() {
+    if (!this._canDebug()) return false;
+
+    this._emit("debug", { action: "forceGameOver" });
+    this._gameOver("debug");
+    return true;
+  }
+
   getState() {
     const board = this.board.snapshot();
     const active = this.activePiece
@@ -267,6 +370,10 @@ export class TetrisGame {
 
   _canControl() {
     return this.status === "running" && this.activePiece !== null;
+  }
+
+  _canDebug() {
+    return this.status === "running" || this.status === "paused";
   }
 
   _gravityInterval() {

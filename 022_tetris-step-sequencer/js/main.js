@@ -6,12 +6,16 @@ import EffectsManager from "./effects.js";
 import BoardRenderer from "./renderer.js";
 import InputController from "./input.js";
 import GameUI from "./ui.js";
+import DebugController from "./debug.js";
 
 window.__BEAT_STACK_READY__ = true;
 
 const BPM_VALUES = Object.freeze([80, 100, 120, 140, 160]);
 const STEP_COUNT = 16;
 const BAR_SPEEDS = Object.freeze([0.5, 1, 2]);
+const DEBUG_FROM_URL = /^(1|true|on)$/i.test(
+  new URLSearchParams(location.search).get("debug") ?? "",
+);
 
 const byId = (id) => document.getElementById(id);
 const elements = {
@@ -42,6 +46,7 @@ const elements = {
   barSpeedInput: byId("barSpeedInput"),
   controlModeInput: byId("controlModeInput"),
   swipeToggle: byId("swipeToggle"),
+  debugModeToggle: byId("debugModeToggle"),
   gestureHint: byId("gestureHint"),
   gameOverOverlay: byId("gameOverOverlay"),
   retryButton: byId("retryButton"),
@@ -115,6 +120,10 @@ function normalizeSettings(value = {}) {
     barSpeed: BAR_SPEEDS.includes(requestedSpeed)
       ? requestedSpeed
       : DEFAULT_SETTINGS.barSpeed,
+    debugMode:
+      typeof value.debugMode === "boolean"
+        ? value.debugMode
+        : DEFAULT_SETTINGS.debugMode,
   };
 }
 
@@ -124,7 +133,10 @@ const effects = new EffectsManager();
 const renderer = new BoardRenderer(elements.boardCanvas, effects);
 const ui = new GameUI(document);
 
-let settings = { ...DEFAULT_SETTINGS };
+let settings = {
+  ...DEFAULT_SETTINGS,
+  debugMode: DEBUG_FROM_URL || DEFAULT_SETTINGS.debugMode,
+};
 let highScore = 0;
 let latestState = null;
 let gameStarted = false;
@@ -138,6 +150,12 @@ let toastTimer = 0;
 let readyTimer = 0;
 let gameOverTimer = 0;
 let backgroundResume = null;
+let debugPaused = false;
+let debugStepOverride = null;
+let debugFrameCount = 0;
+let debugFps = 0;
+let debugFpsStartedAt = performance.now();
+let lastDebugUpdateAt = 0;
 const scheduledStepCells = new Map();
 
 const game = new TetrisGame({ onEvent: handleGameEvent });
@@ -189,11 +207,25 @@ const input = new InputController({
   },
 });
 
+const debug = new DebugController({
+  root: document,
+  enabled: settings.debugMode,
+  actions: {
+    pause: toggleDebugPause,
+    action: runDebugAction,
+    sound: playDebugSound,
+    step: setDebugStep,
+  },
+});
+
 const storedStatePromise = storage
   .loadState()
   .then((state) => {
     highScore = state.highScore;
-    settings = normalizeSettings(state.settings);
+    settings = normalizeSettings({
+      ...state.settings,
+      ...(DEBUG_FROM_URL ? { debugMode: true } : {}),
+    });
     applySettings(settings);
     syncUi(latestState);
     return state;
@@ -241,6 +273,9 @@ function handleGameEvent(type, detail, state) {
     case "gameOver":
       sequencer.stop();
       scheduledStepCells.clear();
+      debugPaused = false;
+      debugStepOverride = null;
+      debug.setPaused(false);
       currentVisualStep = -1;
       elements.stepValue.textContent = "--";
       elements.transportStatus.textContent = "SESSION ENDED";
@@ -316,7 +351,102 @@ function showVisualStep(step, when) {
   effects.flashCells(cells);
 }
 
+function setDebugPaused(paused) {
+  if (!gameStarted || latestState?.status === "gameover") return false;
+  const shouldPause = Boolean(paused);
+  if (shouldPause === debugPaused) return true;
+
+  debugPaused = shouldPause;
+  if (shouldPause) {
+    if (latestState?.status === "running") game.setPaused(true);
+    sequencer.stop();
+    scheduledStepCells.clear();
+    debugStepOverride = currentVisualStep >= 0 ? currentVisualStep : 0;
+    elements.transportStatus.textContent = "DEBUG PAUSED";
+  } else {
+    debugStepOverride = null;
+    if (latestState?.status === "paused") game.setPaused(false);
+    sequencer.start();
+    elements.transportStatus.textContent = "SEQUENCER PLAYING";
+  }
+  debug.setPaused(debugPaused);
+  return true;
+}
+
+function toggleDebugPause() {
+  return setDebugPaused(!debugPaused);
+}
+
+function runDebugAction(action) {
+  if (!settings.debugMode || !gameStarted) return false;
+  let completed = false;
+
+  switch (action) {
+    case "clear":
+      completed = game.debugClearBoard();
+      if (completed) {
+        effects.reset();
+        showToast("DEBUG: 盤面を全消去");
+      }
+      break;
+    case "demo":
+      completed = game.debugLoadDemoBoard();
+      if (completed) {
+        effects.reset();
+        showToast("DEBUG: デモ盤面を配置");
+      }
+      break;
+    case "prepare-line":
+      completed = game.debugPrepareLineClear();
+      if (completed) {
+        effects.reset();
+        showToast("DEBUG: DROPで1ライン消去");
+      }
+      break;
+    case "line-effect":
+      effects.lineClear([17, 18, 19]);
+      audio.playEvent("lineClear");
+      showToast("DEBUG: ライン演出");
+      completed = true;
+      break;
+    case "game-over":
+      completed = game.debugForceGameOver();
+      break;
+    case "reset":
+      beginGame();
+      showToast("DEBUG: ゲームをリセット");
+      completed = true;
+      break;
+    default:
+      break;
+  }
+
+  if (!completed && action !== "game-over") {
+    showToast("ゲーム開始後に利用できます");
+  }
+  return completed;
+}
+
+function playDebugSound(type) {
+  if (!settings.debugMode) return;
+  void audio.unlock().then(() => {
+    audio.playPiece(type);
+    showToast(`SOUND TEST: ${type}`);
+  });
+}
+
+function setDebugStep(value) {
+  if (!settings.debugMode || !gameStarted) return;
+  const step = Math.max(0, Math.min(STEP_COUNT - 1, Math.round(Number(value) || 0)));
+  if (!debugPaused) setDebugPaused(true);
+  debugStepOverride = step;
+  currentVisualStep = step;
+  elements.stepValue.textContent = String(step + 1).padStart(2, "0");
+  effects.flashCells(getStepCells(step));
+}
+
 function applySettings(nextSettings) {
+  const wasDebugEnabled = Boolean(settings.debugMode);
   settings = normalizeSettings(nextSettings);
   audio.setSequencerVolume(settings.sequencerVolume);
   audio.setSeVolume(settings.seVolume);
@@ -327,6 +457,13 @@ function applySettings(nextSettings) {
     settings.controlMode !== "buttons" && settings.swipeEnabled;
   input.setSwipeEnabled(swipeActive);
   elements.gestureHint.hidden = !swipeActive;
+  if (!settings.debugMode && debugPaused) setDebugPaused(false);
+  debug.setEnabled(settings.debugMode, {
+    open: settings.debugMode && debug.open,
+  });
+  if (settings.debugMode && !wasDebugEnabled && gameStarted) {
+    debug.setOpen(true);
+  }
 
   ui.updateSettings({
     ...settings,
@@ -369,6 +506,9 @@ function beginGame() {
   ui.hideGameOver();
   effects.reset();
   scheduledStepCells.clear();
+  debugPaused = false;
+  debugStepOverride = null;
+  debug.setPaused(false);
   currentVisualStep = -1;
   visualStepStartedAt = performance.now();
   gameStarted = true;
@@ -381,6 +521,7 @@ function beginGame() {
   elements.transportLamp.classList.add("is-running");
   elements.stepValue.textContent = "01";
   showReadyMessage();
+  if (settings.debugMode) debug.setOpen(true);
   requestAnimationFrame(() => renderer.resize());
 }
 
@@ -500,6 +641,7 @@ async function closeSettings(save = true) {
     controlMode: values.controlMethod,
     swipeEnabled: values.swipeEnabled,
     barSpeed: values.barSpeed,
+    debugMode: values.debugMode,
   });
   if (save) {
     await storage.saveSettings(settings);
@@ -594,16 +736,32 @@ elements.controlModeInput.addEventListener("change", () => {
   applySettings({ ...settings, controlMode: elements.controlModeInput.value });
 });
 
+elements.debugModeToggle.addEventListener("change", () => {
+  applySettings({
+    ...settings,
+    debugMode: elements.debugModeToggle.checked,
+  });
+});
+
 function animationFrame(now) {
   const delta = Math.min(100, Math.max(0, now - lastFrameAt));
   lastFrameAt = now;
+  debugFrameCount += 1;
+  const fpsElapsed = now - debugFpsStartedAt;
+  if (fpsElapsed >= 500) {
+    debugFps = Math.round((debugFrameCount * 1000) / fpsElapsed);
+    debugFrameCount = 0;
+    debugFpsStartedAt = now;
+  }
 
   if (gameStarted && latestState?.status === "running") {
     game.update(delta);
   }
 
   let stepPosition;
-  if (sequencer.isRunning && currentVisualStep >= 0) {
+  if (debugStepOverride !== null) {
+    stepPosition = debugStepOverride + 0.5;
+  } else if (sequencer.isRunning && currentVisualStep >= 0) {
     const progress =
       (now - visualStepStartedAt) / (sequencer.secondsPerStep * 1000);
     stepPosition = currentVisualStep + 0.5 + Math.max(0, progress);
@@ -612,6 +770,24 @@ function animationFrame(now) {
     now,
     stepPosition,
   });
+
+  if (settings.debugMode && now - lastDebugUpdateAt >= 200) {
+    lastDebugUpdateAt = now;
+    debug.update({
+      status: debugPaused
+        ? "PAUSED"
+        : String(latestState?.status ?? "idle").toUpperCase(),
+      fps: `${debugFps || "--"} FPS`,
+      viewport: `${window.innerWidth}×${window.innerHeight} @${Math.min(
+        window.devicePixelRatio || 1,
+        3,
+      ).toFixed(1)}`,
+      audioState: String(audio.context?.state ?? "unsupported").toUpperCase(),
+      step:
+        debugStepOverride ??
+        (currentVisualStep >= 0 ? currentVisualStep : 0),
+    });
+  }
   requestAnimationFrame(animationFrame);
 }
 requestAnimationFrame(animationFrame);

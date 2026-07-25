@@ -72,6 +72,7 @@ const ID_ALIASES = Object.freeze({
   swipeEnabled: ["swipeEnabled", "swipe-enabled", "swipeToggle"],
   controlMethod: ["controlMethod", "control-method", "controlModeInput"],
   barSpeed: ["barSpeed", "bar-speed", "barSpeedInput"],
+  debugMode: ["debugMode", "debug-mode", "debugModeToggle"],
   bgmVolumeValue: [
     "bgmVolumeValue",
     "bgm-volume-value",
@@ -463,6 +464,9 @@ export class GameUI {
     if (settings.barSpeed !== undefined) {
       writeValue(this.elements.barSpeed, settings.barSpeed);
     }
+    if (settings.debugMode !== undefined && this.elements.debugMode) {
+      this.elements.debugMode.checked = Boolean(settings.debugMode);
+    }
     this._updateVolumeLabels();
   }
 
@@ -476,6 +480,7 @@ export class GameUI {
       swipeEnabled: Boolean(this.elements.swipeEnabled?.checked),
       controlMethod: this.elements.controlMethod?.value ?? "swipe",
       barSpeed: Number(this.elements.barSpeed?.value) || 1,
+      debugMode: Boolean(this.elements.debugMode?.checked),
     };
   }
 

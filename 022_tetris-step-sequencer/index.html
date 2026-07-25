@@ -83,9 +83,14 @@
         </div>
       </div>
 
-      <button id="optionsButton" class="icon-button" type="button" aria-label="オプションを開く">
-        <span aria-hidden="true">⚙</span>
-      </button>
+      <div class="topbar-actions">
+        <button id="debugPanelButton" class="icon-button debug-launcher" type="button" aria-label="デバッグパネルを開く" hidden>
+          <span aria-hidden="true">DBG</span>
+        </button>
+        <button id="optionsButton" class="icon-button" type="button" aria-label="オプションを開く">
+          <span aria-hidden="true">⚙</span>
+        </button>
+      </div>
     </header>
 
     <section class="transport" aria-label="シーケンサー設定">
@@ -271,6 +276,11 @@
           <input id="swipeToggle" type="checkbox" checked>
           <i aria-hidden="true"></i>
         </label>
+        <label class="toggle-setting debug-mode-setting">
+          <span><b>デバッグモード</b><small>盤面・演出・サウンドの開発ツール</small></span>
+          <input id="debugModeToggle" type="checkbox">
+          <i aria-hidden="true"></i>
+        </label>
       </div>
 
       <div class="settings-help">
@@ -282,6 +292,61 @@
       <button id="saveSettingsButton" class="save-settings" type="button">設定を保存して戻る</button>
     </div>
   </section>
+
+  <aside id="debugPanel" class="debug-panel" hidden aria-labelledby="debugPanelTitle">
+    <header class="debug-panel__header">
+      <div>
+        <p class="eyebrow">DEVELOPER TOOLS</p>
+        <h2 id="debugPanelTitle">DEBUG MODE <span>DEV</span></h2>
+      </div>
+      <button id="debugCloseButton" class="debug-close" type="button" aria-label="デバッグパネルを閉じる">×</button>
+    </header>
+
+    <div class="debug-monitor" aria-label="実行状態">
+      <p><span>STATE</span><strong id="debugStatus">IDLE</strong></p>
+      <p><span>FPS</span><strong id="debugFps">--</strong></p>
+      <p><span>VIEW</span><strong id="debugViewport">--</strong></p>
+      <p><span>AUDIO</span><strong id="debugAudioState">--</strong></p>
+    </div>
+
+    <section class="debug-group" aria-labelledby="debugGameTitle">
+      <h3 id="debugGameTitle">GAME STATE</h3>
+      <div class="debug-actions debug-actions--primary">
+        <button id="debugPauseButton" class="debug-action debug-action--pause" type="button">Ⅱ 一時停止</button>
+        <button class="debug-action debug-action--danger" type="button" data-debug-action="clear">全部消す</button>
+      </div>
+      <div class="debug-actions">
+        <button class="debug-action" type="button" data-debug-action="demo">デモ盤面</button>
+        <button class="debug-action" type="button" data-debug-action="prepare-line">1ライン準備</button>
+        <button class="debug-action" type="button" data-debug-action="reset">リセット</button>
+        <button class="debug-action" type="button" data-debug-action="game-over">GAME OVER</button>
+      </div>
+    </section>
+
+    <section class="debug-group" aria-labelledby="debugVisualTitle">
+      <h3 id="debugVisualTitle">VISUAL TEST</h3>
+      <button class="debug-action debug-action--wide" type="button" data-debug-action="line-effect">ライン消去演出</button>
+      <label class="debug-step" for="debugStepInput">
+        <span>リズムバー位置 <output id="debugStepValue">01</output> / 16</span>
+        <input id="debugStepInput" type="range" min="0" max="15" step="1" value="0">
+      </label>
+    </section>
+
+    <section class="debug-group" aria-labelledby="debugSoundTitle">
+      <h3 id="debugSoundTitle">SOUND TEST</h3>
+      <div class="debug-sounds">
+        <button class="piece-i" type="button" data-debug-sound="I">I</button>
+        <button class="piece-o" type="button" data-debug-sound="O">O</button>
+        <button class="piece-t" type="button" data-debug-sound="T">T</button>
+        <button class="piece-s" type="button" data-debug-sound="S">S</button>
+        <button class="piece-z" type="button" data-debug-sound="Z">Z</button>
+        <button class="piece-j" type="button" data-debug-sound="J">J</button>
+        <button class="piece-l" type="button" data-debug-sound="L">L</button>
+      </div>
+    </section>
+
+    <p class="debug-hint">URLに <code>?debug=1</code> を付けても起動できます</p>
+  </aside>
 
   <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 

@@ -5,6 +5,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   controlMode: "hybrid",
   swipeEnabled: true,
   barSpeed: 1,
+  debugMode: false,
 });
 
 const DB_NAME = "tetris-step-sequencer";
@@ -53,6 +54,10 @@ const normalizeSettings = (value = {}, base = DEFAULT_SETTINGS) => {
         ? input.swipeEnabled
         : base.swipeEnabled,
     barSpeed: ALLOWED_BAR_SPEEDS.includes(speed) ? speed : base.barSpeed,
+    debugMode:
+      typeof input.debugMode === "boolean"
+        ? input.debugMode
+        : base.debugMode,
   };
 };
 
