@@ -342,6 +342,15 @@ select:focus-visible {
 .load-panel progress::-webkit-progress-bar { background: #17202d; }
 .load-panel progress::-webkit-progress-value { background: linear-gradient(90deg, #18a9c0, var(--cyan)); }
 
+.load-panel.is-error {
+  border-color: rgba(255, 83, 108, .42);
+  box-shadow: inset 0 0 24px rgba(255, 83, 108, .05);
+}
+
+.load-panel.is-error .load-panel__label span:first-child {
+  color: #ff7b8f;
+}
+
 .start-log {
   display: grid;
   gap: 4px;

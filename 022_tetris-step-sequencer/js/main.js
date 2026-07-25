@@ -7,6 +7,8 @@ import BoardRenderer from "./renderer.js";
 import InputController from "./input.js";
 import GameUI from "./ui.js";
 
+window.__BEAT_STACK_READY__ = true;
+
 const BPM_VALUES = Object.freeze([80, 100, 120, 140, 160]);
 const STEP_COUNT = 16;
 const BAR_SPEEDS = Object.freeze([0.5, 1, 2]);
