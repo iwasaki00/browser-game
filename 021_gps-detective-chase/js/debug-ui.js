@@ -15,5 +15,5 @@ export function mountDebugUI(actions){
   document.querySelector("#debugToggle").onclick=()=>{panel.classList.toggle("open");actions.setting("open",panel.classList.contains("open"))};
   panel.addEventListener("click",e=>{const cmd=e.target.dataset.debug,b=e.target.dataset.bearing;if(cmd)actions.command(cmd);if(b)actions.nudge(b)});
   document.querySelector("#virtualGps").onchange=e=>actions.virtual(e.target.checked);document.querySelector("#virtualMode").onchange=e=>actions.setting("moveMode",e.target.value);document.querySelector("#showTruth").onchange=e=>actions.truth(e.target.checked);
-  return {panel,bots:document.querySelector("#debugBots"),json:document.querySelector("#debugJson"),log:document.querySelector("#debugLog"),capture:document.querySelector("#debugCaptureState")};
+  return {panel,badge:document.querySelector("#debugBadge"),toggle:document.querySelector("#debugToggle"),bots:document.querySelector("#debugBots"),json:document.querySelector("#debugJson"),log:document.querySelector("#debugLog"),capture:document.querySelector("#debugCaptureState")};
 }
