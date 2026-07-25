@@ -84,6 +84,9 @@
       </div>
 
       <div class="topbar-actions">
+        <button id="listenButton" class="listen-button" type="button">
+          <span aria-hidden="true">◉</span><b>PAUSE & LISTEN</b>
+        </button>
         <button id="debugPanelButton" class="icon-button debug-launcher" type="button" aria-label="デバッグパネルを開く" hidden>
           <span aria-hidden="true">DBG</span>
         </button>
@@ -114,6 +117,25 @@
         <strong><b id="stepValue">01</b> / 16</strong>
       </div>
     </section>
+
+    <section class="performance-strip" aria-label="演奏状態">
+      <p><span>CHORD</span><strong id="chordValue">Cmaj</strong></p>
+      <p><span>GROOVE</span><strong id="grooveValue">CHAOS</strong></p>
+      <p><span>SCORE</span><strong id="multiplierValue">×1.0</strong></p>
+      <p><span>COMBO</span><strong id="comboValue">×0</strong></p>
+      <p><span>BAR</span><strong id="loopValue">1 / 4</strong></p>
+    </section>
+
+    <ol id="stepIndicator" class="step-indicator" aria-label="16ステップの演奏状態">
+      <li class="is-accent"><span>1</span></li><li><span>2</span></li>
+      <li><span>3</span></li><li><span>4</span></li>
+      <li class="is-accent"><span>5</span></li><li><span>6</span></li>
+      <li><span>7</span></li><li><span>8</span></li>
+      <li class="is-accent"><span>9</span></li><li><span>10</span></li>
+      <li><span>11</span></li><li><span>12</span></li>
+      <li class="is-accent"><span>13</span></li><li><span>14</span></li>
+      <li><span>15</span></li><li><span>16</span></li>
+    </ol>
 
     <div class="play-layout">
       <section class="board-section" aria-label="テトリス盤面">
@@ -203,6 +225,10 @@
         <span class="start-button__icon">↻</span>
         <span><strong>PLAY AGAIN</strong><small>新しいビートを作る</small></span>
       </button>
+      <button id="playbackButton" class="playback-button" type="button">
+        <span aria-hidden="true">▶</span>
+        <span><strong>PLAYBACK</strong><small>直前の演奏を聴く</small></span>
+      </button>
     </div>
   </section>
 
@@ -216,20 +242,54 @@
         <button id="closeSettingsButton" class="close-button" type="button" aria-label="閉じる">×</button>
       </header>
 
-      <div class="settings-group">
-        <label class="range-setting">
-          <span><b>BGM / シーケンサー音量</b><output id="sequencerVolumeValue">80%</output></span>
-          <small>ブロックが奏でるリズム</small>
-          <input id="sequencerVolumeInput" type="range" min="0" max="1" value="0.8" step="0.01">
-        </label>
-        <label class="range-setting">
-          <span><b>SE音量</b><output id="seVolumeValue">80%</output></span>
-          <small>開始・ライン消去・ゲームオーバー</small>
-          <input id="seVolumeInput" type="range" min="0" max="1" value="0.8" step="0.01">
-        </label>
+      <div class="settings-group mixer-settings">
+        <header><b>MIXER</b><small>各チャンネルの音量とミュート</small></header>
+        <div class="mixer-channel" data-mixer-bus="master">
+          <span><b>MASTER</b><output id="masterVolumeValue">80%</output></span>
+          <div><input id="masterVolumeInput" type="range" min="0" max="1" value="0.8" step="0.01"><button type="button" data-mixer-mute="master">MUTE</button></div>
+        </div>
+        <div class="mixer-channel" data-mixer-bus="drum">
+          <span><b>DRUM</b><output id="sequencerVolumeValue">80%</output></span>
+          <div><input id="sequencerVolumeInput" type="range" min="0" max="1" value="0.8" step="0.01"><button type="button" data-mixer-mute="drum">MUTE</button></div>
+        </div>
+        <div class="mixer-channel" data-mixer-bus="bass">
+          <span><b>BASS</b><output id="bassVolumeValue">45%</output></span>
+          <div><input id="bassVolumeInput" type="range" min="0" max="1" value="0.45" step="0.01"><button type="button" data-mixer-mute="bass">MUTE</button></div>
+        </div>
+        <div class="mixer-channel" data-mixer-bus="chord">
+          <span><b>CHORD</b><output id="chordVolumeValue">35%</output></span>
+          <div><input id="chordVolumeInput" type="range" min="0" max="1" value="0.35" step="0.01"><button type="button" data-mixer-mute="chord">MUTE</button></div>
+        </div>
+        <div class="mixer-channel" data-mixer-bus="event">
+          <span><b>EVENT SE</b><output id="seVolumeValue">50%</output></span>
+          <div><input id="seVolumeInput" type="range" min="0" max="1" value="0.5" step="0.01"><button type="button" data-mixer-mute="event">MUTE</button></div>
+        </div>
       </div>
 
       <div class="settings-group">
+        <p class="progression-preview">
+          <span>CHORD PROGRESSION</span>
+          <strong>Cmaj → Cmaj → Amin → Amin</strong>
+        </p>
+        <label class="toggle-setting">
+          <span><b>コードモード</b><small>Cmaj → Cmaj → Amin → Amin</small></span>
+          <input id="chordModeToggle" type="checkbox" checked>
+          <i aria-hidden="true"></i>
+        </label>
+        <label class="select-setting" for="bassModeInput">
+          <span><b>ベースパターン</b><small>コードに合わせて自動演奏</small></span>
+          <select id="bassModeInput">
+            <option value="OFF">OFF</option>
+            <option value="BASIC" selected>BASIC</option>
+            <option value="FOUR ON FLOOR">FOUR ON FLOOR</option>
+            <option value="SYNCOPATION">SYNCOPATION</option>
+          </select>
+        </label>
+        <label class="toggle-setting">
+          <span><b>リプレイ記録</b><small>直前の最大64ステップを再生</small></span>
+          <input id="replayRecordToggle" type="checkbox" checked>
+          <i aria-hidden="true"></i>
+        </label>
         <label class="select-setting" for="settingsBpm">
           <span><b>BPM</b><small>ゲーム中も変更できます</small></span>
           <select id="settingsBpm">

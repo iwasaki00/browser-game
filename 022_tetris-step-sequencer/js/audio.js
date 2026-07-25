@@ -56,9 +56,35 @@ const clampVolume = (value, fallback) => {
  * `unlock()` must be called directly from the first pointer/touch interaction.
  */
 export class AudioEngine {
-  constructor({ sequencerVolume = 0.8, seVolume = 0.9 } = {}) {
-    this._sequencerVolume = clampVolume(sequencerVolume, 0.8);
-    this._seVolume = clampVolume(seVolume, 0.9);
+  constructor(options = {}) {
+    const {
+      masterVolume = 0.8,
+      sequencerVolume,
+      drumVolume = sequencerVolume ?? 0.8,
+      bassVolume = 0.45,
+      chordVolume = 0.35,
+      seVolume,
+      eventVolume = seVolume ?? 0.5,
+      muted = {},
+      maxVoices = 32,
+    } = options;
+    this._volumes = {
+      master: clampVolume(masterVolume, 0.8),
+      drum: clampVolume(drumVolume, 0.8),
+      bass: clampVolume(bassVolume, 0.45),
+      chord: clampVolume(chordVolume, 0.35),
+      event: clampVolume(eventVolume, 0.5),
+    };
+    this._muted = {
+      master: Boolean(muted.master),
+      drum: Boolean(muted.drum),
+      bass: Boolean(muted.bass),
+      chord: Boolean(muted.chord),
+      event: Boolean(muted.event),
+    };
+    this._sequencerVolume = this._volumes.drum;
+    this._seVolume = this._volumes.event;
+    this.maxVoices = Math.max(8, Math.floor(Number(maxVoices) || 32));
     this._buffers = new Map();
     this._activeSources = new Set();
     this._progressListeners = new Set();
@@ -66,6 +92,9 @@ export class AudioEngine {
     this._closed = false;
 
     this.context = null;
+    this.masterGain = null;
+    this.compressor = null;
+    this.busGains = {};
     this.sequencerGain = null;
     this.seGain = null;
 
@@ -118,12 +147,33 @@ export class AudioEngine {
       }
     }
 
-    this.sequencerGain = this.context.createGain();
-    this.seGain = this.context.createGain();
-    this.sequencerGain.gain.value = this._sequencerVolume;
-    this.seGain.gain.value = this._seVolume;
-    this.sequencerGain.connect(this.context.destination);
-    this.seGain.connect(this.context.destination);
+    this.masterGain = this.context.createGain();
+    this.compressor = this.context.createDynamicsCompressor?.() ?? null;
+    this.busGains = {
+      drum: this.context.createGain(),
+      bass: this.context.createGain(),
+      chord: this.context.createGain(),
+      event: this.context.createGain(),
+    };
+
+    if (this.compressor) {
+      this.compressor.threshold.value = -10;
+      this.compressor.knee.value = 18;
+      this.compressor.ratio.value = 5;
+      this.compressor.attack.value = 0.003;
+      this.compressor.release.value = 0.18;
+      this.masterGain.connect(this.compressor);
+      this.compressor.connect(this.context.destination);
+    } else {
+      this.masterGain.connect(this.context.destination);
+    }
+
+    for (const gain of Object.values(this.busGains)) {
+      gain.connect(this.masterGain);
+    }
+    this.sequencerGain = this.busGains.drum;
+    this.seGain = this.busGains.event;
+    this._applyAllBusGains(false);
   }
 
   /**
@@ -240,7 +290,7 @@ export class AudioEngine {
   playPiece(type, when = this.currentTime, gain = 1) {
     const filename = PIECE_SOUND_MAP[String(type).toUpperCase()];
     return filename
-      ? this._playBuffer(filename, this.sequencerGain, when, gain)
+      ? this.playFile(filename, { bus: "drum", when, gain })
       : null;
   }
 
@@ -248,8 +298,17 @@ export class AudioEngine {
     const normalizedName = EVENT_ALIASES[name] ?? name;
     const filename = EVENT_SOUND_MAP[normalizedName];
     return filename
-      ? this._playBuffer(filename, this.seGain, when, 1)
+      ? this.playFile(filename, { bus: "event", when, gain: 1 })
       : null;
+  }
+
+  playFile(filename, {
+    bus = "event",
+    when = this.currentTime,
+    gain = 1,
+  } = {}) {
+    const destination = this.busGains[bus] ?? this.seGain;
+    return this._playBuffer(filename, destination, when, gain);
   }
 
   _playBuffer(filename, destination, when, gain) {
@@ -265,6 +324,17 @@ export class AudioEngine {
     const buffer = this._buffers.get(filename);
     if (!buffer) return null;
 
+    while (this._activeSources.size >= this.maxVoices) {
+      const oldest = this._activeSources.values().next().value;
+      if (!oldest) break;
+      this._activeSources.delete(oldest);
+      try {
+        oldest.stop();
+      } catch {
+        // The voice may have completed while the limiter was running.
+      }
+    }
+
     const source = this.context.createBufferSource();
     const voiceGain = this.context.createGain();
     const startTime = Number.isFinite(Number(when))
@@ -272,7 +342,7 @@ export class AudioEngine {
       : this.context.currentTime;
 
     source.buffer = buffer;
-    voiceGain.gain.value = Math.max(0, Number(gain) || 0);
+    voiceGain.gain.value = Math.min(1.25, Math.max(0, Number(gain) || 0));
     source.connect(voiceGain);
     voiceGain.connect(destination);
     this._activeSources.add(source);
@@ -288,15 +358,49 @@ export class AudioEngine {
   }
 
   setSequencerVolume(value) {
-    this._sequencerVolume = clampVolume(value, this._sequencerVolume);
-    this._setGain(this.sequencerGain, this._sequencerVolume);
+    this._sequencerVolume = this.setBusVolume("drum", value);
     return this._sequencerVolume;
   }
 
   setSeVolume(value) {
-    this._seVolume = clampVolume(value, this._seVolume);
-    this._setGain(this.seGain, this._seVolume);
+    this._seVolume = this.setBusVolume("event", value);
     return this._seVolume;
+  }
+
+  setBusVolume(bus, value) {
+    if (!(bus in this._volumes)) return 0;
+    this._volumes[bus] = clampVolume(value, this._volumes[bus]);
+    this._applyBusGain(bus);
+    return this._volumes[bus];
+  }
+
+  setBusMuted(bus, muted) {
+    if (!(bus in this._muted)) return false;
+    this._muted[bus] = Boolean(muted);
+    this._applyBusGain(bus);
+    return this._muted[bus];
+  }
+
+  getMixerState() {
+    return {
+      volumes: { ...this._volumes },
+      muted: { ...this._muted },
+    };
+  }
+
+  _applyAllBusGains(smooth = true) {
+    for (const bus of Object.keys(this._volumes)) {
+      this._applyBusGain(bus, smooth);
+    }
+  }
+
+  _applyBusGain(bus, smooth = true) {
+    const gainNode = bus === "master"
+      ? this.masterGain
+      : this.busGains[bus];
+    const value = this._muted[bus] ? 0 : this._volumes[bus];
+    if (smooth) this._setGain(gainNode, value);
+    else if (gainNode) gainNode.gain.value = value;
   }
 
   _setGain(gainNode, value) {
@@ -318,8 +422,9 @@ export class AudioEngine {
     }
     this._activeSources.clear();
 
-    this.sequencerGain?.disconnect();
-    this.seGain?.disconnect();
+    for (const gain of Object.values(this.busGains)) gain?.disconnect();
+    this.masterGain?.disconnect();
+    this.compressor?.disconnect();
 
     if (this.context && this.context.state !== "closed") {
       await this.context.close();

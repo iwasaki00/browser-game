@@ -1,4 +1,4 @@
-const DEFAULT_COLUMNS = 10;
+const DEFAULT_COLUMNS = 16;
 
 const clamp = (value, min = 0, max = 1) =>
   Math.min(max, Math.max(min, value));
@@ -14,6 +14,7 @@ function normalizeCell(cell) {
     x: Number(cell?.x ?? cell?.col ?? cell?.column),
     y: Number(cell?.y ?? cell?.row),
     color: cell?.color,
+    type: cell?.type,
   };
 }
 
@@ -39,6 +40,8 @@ export class EffectsManager {
     this.particles = [];
     this.shakeEffect = null;
     this.gameOverStartedAt = null;
+    this.screenFlashStartedAt = null;
+    this.screenFlashDuration = 220;
     this.frame = this._emptyFrame();
   }
 
@@ -90,7 +93,8 @@ export class EffectsManager {
 
         // Two light fragments per cell keep the effect readable on small
         // iPhone screens without creating an expensive particle system.
-        for (let fragment = 0; fragment < 2; fragment += 1) {
+        const fragments = Math.max(2, Math.floor(options.fragments ?? 2));
+        for (let fragment = 0; fragment < fragments; fragment += 1) {
           this.particles.push({
             x: x + 0.5 + (Math.random() - 0.5) * 0.42,
             y: row + 0.5 + (Math.random() - 0.5) * 0.32,
@@ -128,6 +132,11 @@ export class EffectsManager {
     }
   }
 
+  screenFlash(now = this._now(), duration = 220) {
+    this.screenFlashStartedAt = now;
+    this.screenFlashDuration = Math.max(80, Number(duration) || 220);
+  }
+
   /**
    * Advances effect lifetimes and returns an immutable-by-convention frame.
    * Call once immediately before drawing.
@@ -146,9 +155,11 @@ export class EffectsManager {
         x: flash.x,
         y: flash.y,
         color: flash.color,
+        type: flash.type,
         progress: visibleProgress,
         alpha: Math.pow(1 - visibleProgress, 1.7),
-        scale: 1 + Math.sin(visibleProgress * Math.PI) * 0.14,
+        scale: 1 + Math.sin(visibleProgress * Math.PI) * 0.1,
+        bounce: -Math.sin(visibleProgress * Math.PI) * 0.12,
       });
     }
 
@@ -210,6 +221,13 @@ export class EffectsManager {
         : clamp(
             (now - this.gameOverStartedAt) / this.gameOverFadeDuration,
           ) * 0.68;
+    let screenFlashAlpha = 0;
+    if (this.screenFlashStartedAt !== null) {
+      const progress =
+        (now - this.screenFlashStartedAt) / this.screenFlashDuration;
+      if (progress >= 1) this.screenFlashStartedAt = null;
+      else screenFlashAlpha = Math.pow(1 - clamp(progress), 2) * 0.72;
+    }
 
     this.frame = {
       flashes,
@@ -217,11 +235,13 @@ export class EffectsManager {
       particles,
       shake,
       gameOverAlpha,
+      screenFlashAlpha,
       active:
         flashes.length > 0 ||
         lineFlashes.length > 0 ||
         particles.length > 0 ||
         Boolean(this.shakeEffect) ||
+        screenFlashAlpha > 0 ||
         (this.gameOverStartedAt !== null && gameOverAlpha < 0.68),
     };
 
@@ -239,6 +259,7 @@ export class EffectsManager {
       particles: [],
       shake: { x: 0, y: 0 },
       gameOverAlpha: 0,
+      screenFlashAlpha: 0,
       active: false,
     };
   }

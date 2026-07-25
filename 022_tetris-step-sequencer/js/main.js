@@ -1,5 +1,5 @@
 import TetrisGame from "./tetris.js";
-import { AudioEngine } from "./audio.js";
+import { AudioEngine, PIECE_SOUND_MAP } from "./audio.js";
 import { StepSequencer } from "./sequencer.js";
 import { GameStorage, DEFAULT_SETTINGS } from "./storage.js";
 import EffectsManager from "./effects.js";
@@ -7,6 +7,11 @@ import BoardRenderer from "./renderer.js";
 import InputController from "./input.js";
 import GameUI from "./ui.js";
 import DebugController from "./debug.js";
+import MusicEngine, { ACCENT_STEPS } from "./musicEngine.js";
+import GrooveEvaluator from "./grooveEvaluator.js";
+import PerformanceRecorder from "./performanceRecorder.js";
+import ReplayPlayer from "./replay.js";
+import Mixer from "./mixer.js";
 
 window.__BEAT_STACK_READY__ = true;
 
@@ -33,6 +38,13 @@ const elements = {
   transportStatus: byId("transportStatus"),
   transportLamp: byId("transportLamp"),
   stepValue: byId("stepValue"),
+  chordValue: byId("chordValue"),
+  grooveValue: byId("grooveValue"),
+  multiplierValue: byId("multiplierValue"),
+  comboValue: byId("comboValue"),
+  loopValue: byId("loopValue"),
+  stepIndicator: byId("stepIndicator"),
+  listenButton: byId("listenButton"),
   bpmButtons: byId("bpmButtons"),
   optionsButton: byId("optionsButton"),
   settingsOverlay: byId("settingsOverlay"),
@@ -40,6 +52,12 @@ const elements = {
   saveSettingsButton: byId("saveSettingsButton"),
   sequencerVolumeInput: byId("sequencerVolumeInput"),
   sequencerVolumeValue: byId("sequencerVolumeValue"),
+  masterVolumeInput: byId("masterVolumeInput"),
+  masterVolumeValue: byId("masterVolumeValue"),
+  bassVolumeInput: byId("bassVolumeInput"),
+  bassVolumeValue: byId("bassVolumeValue"),
+  chordVolumeInput: byId("chordVolumeInput"),
+  chordVolumeValue: byId("chordVolumeValue"),
   seVolumeInput: byId("seVolumeInput"),
   seVolumeValue: byId("seVolumeValue"),
   settingsBpm: byId("settingsBpm"),
@@ -47,9 +65,13 @@ const elements = {
   controlModeInput: byId("controlModeInput"),
   swipeToggle: byId("swipeToggle"),
   debugModeToggle: byId("debugModeToggle"),
+  chordModeToggle: byId("chordModeToggle"),
+  bassModeInput: byId("bassModeInput"),
+  replayRecordToggle: byId("replayRecordToggle"),
   gestureHint: byId("gestureHint"),
   gameOverOverlay: byId("gameOverOverlay"),
   retryButton: byId("retryButton"),
+  playbackButton: byId("playbackButton"),
   toast: byId("toast"),
 };
 
@@ -105,13 +127,55 @@ function normalizeSettings(value = {}) {
 
   return {
     bpm: BPM_VALUES.includes(requestedBpm) ? requestedBpm : DEFAULT_SETTINGS.bpm,
-    sequencerVolume: clamp(
-      value.sequencerVolume ?? value.bgmVolume,
+    masterVolume: clamp(
+      value.masterVolume,
       0,
       1,
-      DEFAULT_SETTINGS.sequencerVolume,
+      DEFAULT_SETTINGS.masterVolume,
     ),
-    seVolume: clamp(value.seVolume, 0, 1, DEFAULT_SETTINGS.seVolume),
+    drumVolume: clamp(
+      value.drumVolume ?? value.sequencerVolume ?? value.bgmVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.drumVolume,
+    ),
+    bassVolume: clamp(
+      value.bassVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.bassVolume,
+    ),
+    chordVolume: clamp(
+      value.chordVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.chordVolume,
+    ),
+    eventVolume: clamp(
+      value.eventVolume ?? value.seVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.eventVolume,
+    ),
+    muted: Object.fromEntries(
+      ["master", "drum", "bass", "chord", "event"].map((bus) => [
+        bus,
+        Boolean(value.muted?.[bus]),
+      ]),
+    ),
+    chordMode:
+      typeof value.chordMode === "boolean"
+        ? value.chordMode
+        : DEFAULT_SETTINGS.chordMode,
+    bassMode: ["OFF", "BASIC", "FOUR ON FLOOR", "SYNCOPATION"].includes(
+      value.bassMode,
+    )
+      ? value.bassMode
+      : DEFAULT_SETTINGS.bassMode,
+    replayRecord:
+      typeof value.replayRecord === "boolean"
+        ? value.replayRecord
+        : DEFAULT_SETTINGS.replayRecord,
     controlMode: requestedMode === "buttons" ? "buttons" : "hybrid",
     swipeEnabled:
       typeof value.swipeEnabled === "boolean"
@@ -124,6 +188,19 @@ function normalizeSettings(value = {}) {
       typeof value.debugMode === "boolean"
         ? value.debugMode
         : DEFAULT_SETTINGS.debugMode,
+    // Legacy aliases stay synchronized for older saved settings and UI code.
+    sequencerVolume: clamp(
+      value.drumVolume ?? value.sequencerVolume ?? value.bgmVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.drumVolume,
+    ),
+    seVolume: clamp(
+      value.eventVolume ?? value.seVolume,
+      0,
+      1,
+      DEFAULT_SETTINGS.eventVolume,
+    ),
   };
 }
 
@@ -132,11 +209,19 @@ const audio = new AudioEngine(DEFAULT_SETTINGS);
 const effects = new EffectsManager();
 const renderer = new BoardRenderer(elements.boardCanvas, effects, {
   columns: STEP_COUNT,
+  accentSteps: ACCENT_STEPS,
 });
 const ui = new GameUI(document);
+const mixer = new Mixer(audio, DEFAULT_SETTINGS);
+const music = new MusicEngine(DEFAULT_SETTINGS);
+const grooveEvaluator = new GrooveEvaluator({ accentSteps: ACCENT_STEPS });
+const recorder = new PerformanceRecorder({
+  enabled: DEFAULT_SETTINGS.replayRecord,
+});
 
 let settings = {
   ...DEFAULT_SETTINGS,
+  muted: { ...DEFAULT_SETTINGS.muted },
   debugMode: DEBUG_FROM_URL || DEFAULT_SETTINGS.debugMode,
 };
 let highScore = 0;
@@ -147,6 +232,16 @@ let settingsOpen = false;
 let resumeAfterSettings = false;
 let currentVisualStep = -1;
 let visualStepStartedAt = performance.now();
+let visualStepAudioTime = 0;
+let currentLoop = 0;
+let currentChord = "Cmaj";
+let grooveResult = grooveEvaluator.last;
+let listenMode = false;
+let replayMode = false;
+let lineClearedSinceLoop = false;
+let hitStopUntil = 0;
+let lastRiserAt = -Infinity;
+let lastLevel = 1;
 let lastFrameAt = performance.now();
 let toastTimer = 0;
 let readyTimer = 0;
@@ -175,6 +270,11 @@ const sequencer = new StepSequencer(sequencerClock, {
   speed: settings.barSpeed,
   onSchedule: scheduleStepAudio,
   onVisualStep: showVisualStep,
+});
+
+const replay = new ReplayPlayer(audio, {
+  onVisualStep: showReplayStep,
+  onEnd: finishReplay,
 });
 
 const input = new InputController({
@@ -259,14 +359,35 @@ function handleGameEvent(type, detail, state) {
   switch (type) {
     case "gameStart":
       audio.playEvent("start");
+      lastRiserAt = audio.currentTime;
       break;
     case "pieceLock":
       effects.shake(1.2, 55);
       break;
     case "lineClear":
-      effects.lineClear(detail.rows);
-      audio.playEvent("lineClear");
-      showToast(`${detail.count} LINE CLEAR`);
+      effects.lineClear(detail.rows, {
+        columns: STEP_COUNT,
+        fragments: detail.count === 4 ? 5 : 2,
+      });
+      playLineClearMusic(detail.count);
+      lineClearedSinceLoop = true;
+      updateGroove(state, { lineCleared: true });
+      if (detail.count === 4) {
+        effects.screenFlash();
+        effects.shake(12, 260);
+        hitStopUntil = performance.now() + 120;
+        music.queueLineClear(4);
+        tryPlayRiser("TETRIS");
+      }
+      if (state.level > lastLevel) {
+        lastLevel = state.level;
+        tryPlayRiser("LEVEL UP");
+      }
+      showToast(
+        grooveResult.recoveryBonus
+          ? `${detail.count} LINE CLEAR · RECOVERY BONUS`
+          : `${detail.count} LINE CLEAR`,
+      );
       break;
     case "gameOver":
       sequencer.stop();
@@ -275,15 +396,19 @@ function handleGameEvent(type, detail, state) {
       debugStepOverride = null;
       debug.setPaused(false);
       currentVisualStep = -1;
+      listenMode = false;
       elements.stepValue.textContent = "--";
       elements.transportStatus.textContent = "SESSION ENDED";
       elements.transportLamp.classList.remove("is-running");
       effects.gameOver();
       audio.playEvent("gameOver");
+      elements.playbackButton.disabled = recorder.createReplay(64).length === 0;
+      updateListenButton();
       void finishGame(detail);
       break;
     case "stateChange":
       syncUi(state);
+      if (isDangerousBoard(state.board)) tryPlayRiser("DANGER");
       break;
     default:
       break;
@@ -315,38 +440,317 @@ function getStepCells(step) {
 
 function scheduleStepAudio(step, when) {
   if (!gameStarted || latestState?.status === "gameover") return;
+  const loop = music.loopNumber;
+  const chord = music.getChord(loop);
+  const accented = music.isAccent(step);
   const cells = getStepCells(step);
   const scheduleKey = `${step}@${Number(when).toFixed(6)}`;
-  scheduledStepCells.set(scheduleKey, cells);
-  while (scheduledStepCells.size > STEP_COUNT * 2) {
+  const stackReduction = cells.length >= 4
+    ? Math.sqrt(3 / cells.length)
+    : 1;
+
+  for (const cell of cells) {
+    const heightRatio = Math.max(
+      0,
+      Math.min(1, cell.y / Math.max(1, (latestState?.height ?? 20) - 1)),
+    );
+    const heightVelocity = 0.45 + heightRatio * 0.55;
+    const velocity = Math.min(
+      1,
+      heightVelocity * (accented ? 1.1 : 1) * stackReduction,
+    );
+    audio.playPiece(cell.type, when, velocity);
+    recorder.record({
+      playedAt: when,
+      loop,
+      step,
+      filename: PIECE_SOUND_MAP[cell.type],
+      bus: "drum",
+      kind: "note",
+      pieceType: cell.type,
+      velocity,
+      chord: chord.name,
+      cells: [cell],
+    });
+  }
+
+  const musicEvents = music.getStepEvents(step, loop);
+  for (const event of musicEvents) {
+    audio.playFile(event.filename, {
+      bus: event.bus,
+      when,
+      gain: event.gain,
+    });
+    recorder.record({
+      ...event,
+      playedAt: when,
+      loop,
+      step,
+      velocity: event.gain,
+      chord: event.chord ?? chord.name,
+    });
+  }
+
+  scheduledStepCells.set(scheduleKey, {
+    cells,
+    loop,
+    chord: chord.name,
+    accented,
+    musicEvents,
+  });
+  while (scheduledStepCells.size > STEP_COUNT * 4) {
     scheduledStepCells.delete(scheduledStepCells.keys().next().value);
   }
-  if (!cells.length) return;
-
-  const voices = new Map();
-  for (const cell of cells) {
-    const voice = voices.get(cell.type) ?? { count: 0 };
-    voice.count += 1;
-    voices.set(cell.type, voice);
-  }
-
-  const voiceGain = Math.max(0.32, 0.72 / Math.sqrt(voices.size));
-  for (const [type, voice] of voices) {
-    const stackAccent = Math.min(1.12, 0.9 + Math.log2(voice.count + 1) * 0.06);
-    audio.playPiece(type, when, voiceGain * stackAccent);
-  }
+  music.completeStep(step);
 }
 
 function showVisualStep(step, when) {
   if (!gameStarted || latestState?.status === "gameover") return;
   currentVisualStep = step;
+  visualStepAudioTime = Number(when) || audio.currentTime;
   visualStepStartedAt = performance.now();
   elements.stepValue.textContent = String(step + 1).padStart(2, "0");
-  elements.transportStatus.textContent = "SEQUENCER PLAYING";
   const scheduleKey = `${step}@${Number(when).toFixed(6)}`;
-  const cells = scheduledStepCells.get(scheduleKey) ?? getStepCells(step);
+  const scheduled = scheduledStepCells.get(scheduleKey) ?? {
+    cells: getStepCells(step),
+    loop: currentLoop,
+    chord: currentChord,
+    accented: music.isAccent(step),
+  };
   scheduledStepCells.delete(scheduleKey);
+  currentLoop = scheduled.loop;
+  currentChord = scheduled.chord;
+  effects.flashCells(scheduled.cells);
+  updateStepIndicator(step);
+  updateMusicStatus();
+
+  if (step === 0) {
+    updateGroove(latestState, {
+      advanceLoop: true,
+      lineCleared: lineClearedSinceLoop,
+    });
+    lineClearedSinceLoop = false;
+  }
+
+  elements.transportStatus.textContent = listenMode
+    ? "PAUSE & LISTEN"
+    : "SEQUENCER PLAYING";
+}
+
+function updateStepIndicator(step = currentVisualStep) {
+  const items = elements.stepIndicator?.children ?? [];
+  const noteSteps = new Set();
+  for (let index = 0; index < STEP_COUNT; index += 1) {
+    if (getStepCells(index).length) noteSteps.add(index);
+  }
+  Array.from(items).forEach((item, index) => {
+    item.classList.toggle("is-current", index === step);
+    item.classList.toggle("has-note", noteSteps.has(index));
+    item.classList.toggle("is-accent", ACCENT_STEPS.includes(index));
+    item.setAttribute(
+      "aria-label",
+      `ステップ${index + 1}${noteSteps.has(index) ? " 音あり" : " 無音"}${
+        ACCENT_STEPS.includes(index) ? " アクセント" : ""
+      }`,
+    );
+  });
+}
+
+function updateMusicStatus() {
+  elements.chordValue.textContent = settings.chordMode ? currentChord : "OFF";
+  elements.loopValue.textContent = `${(currentLoop % 4) + 1} / 4`;
+  elements.grooveValue.textContent = grooveResult.grade;
+  elements.multiplierValue.textContent =
+    `×${Number(grooveResult.multiplier.toFixed(2))}`;
+  elements.comboValue.textContent = `×${grooveResult.combo}`;
+}
+
+function updateGroove(state = latestState, options = {}) {
+  const previousGrade = grooveResult.grade;
+  const previousCombo = grooveResult.combo;
+  grooveResult = grooveEvaluator.evaluate(state?.board ?? [], options);
+  game.setScoreMultiplier(grooveResult.multiplier);
+  updateMusicStatus();
+
+  if (grooveResult.grade !== previousGrade && gameStarted) {
+    showToast(
+      `${grooveResult.grade}!  SCORE ×${grooveResult.multiplier}`,
+    );
+  } else if (grooveResult.combo > previousCombo) {
+    showToast(`GROOVE COMBO ×${grooveResult.combo}`);
+  }
+  if (grooveResult.recoveryBonus) showToast("RECOVERY BONUS");
+  if (grooveResult.combo >= 5) tryPlayRiser("COMBO");
+  return grooveResult;
+}
+
+function playLineClearMusic(count) {
+  const sounds = {
+    1: [["seq_synth_pluck_c.wav", 0.55]],
+    2: [
+      ["seq_synth_pluck_e.wav", 0.42],
+      ["seq_synth_pluck_g.wav", 0.42],
+    ],
+    3: [["seq_synth_stab_cmaj.wav", 0.55]],
+  }[Number(count)] ?? [];
+  const when = audio.currentTime + 0.01;
+  for (const [filename, velocity] of sounds) {
+    audio.playFile(filename, { bus: "event", when, gain: velocity });
+    recorder.record({
+      playedAt: when,
+      loop: currentLoop,
+      step: Math.max(0, currentVisualStep),
+      filename,
+      bus: "event",
+      kind: "lineClear",
+      velocity,
+      chord: currentChord,
+      lineCount: count,
+    });
+  }
+  if (Number(count) === 4) {
+    recorder.record({
+      playedAt: when,
+      loop: currentLoop,
+      step: Math.max(0, currentVisualStep),
+      kind: "lineClear",
+      bus: "event",
+      velocity: 0,
+      chord: currentChord,
+      lineCount: 4,
+    });
+  }
+}
+
+function tryPlayRiser(reason) {
+  const now = audio.currentTime || performance.now() / 1000;
+  if (now - lastRiserAt < 10) return false;
+  lastRiserAt = now;
+  audio.playFile("seq_synth_rise.wav", {
+    bus: "event",
+    when: now + 0.01,
+    gain: 0.5,
+  });
+  recorder.record({
+    playedAt: now + 0.01,
+    loop: currentLoop,
+    step: Math.max(0, currentVisualStep),
+    filename: "seq_synth_rise.wav",
+    bus: "event",
+    kind: "riser",
+    velocity: 0.5,
+    chord: currentChord,
+  });
+  showToast(`${reason} RISER`);
+  return true;
+}
+
+function isDangerousBoard(board = []) {
+  const firstOccupiedRow = board.findIndex((row) => row?.some(Boolean));
+  return firstOccupiedRow >= 0 && firstOccupiedRow <= 4;
+}
+
+async function toggleListenMode() {
+  if (!gameStarted || settingsOpen) return;
+  if (replayMode) {
+    stopReplay();
+    return;
+  }
+  if (latestState?.status === "gameover") return;
+
+  if (!listenMode && latestState?.status === "running") {
+    listenMode = true;
+    game.setPaused(true);
+    elements.transportStatus.textContent = "PAUSE & LISTEN";
+  } else if (listenMode && latestState?.status === "paused") {
+    await audio.unlock().catch(() => false);
+    listenMode = false;
+    game.setPaused(false);
+    elements.transportStatus.textContent = "SEQUENCER PLAYING";
+  }
+  updateListenButton();
+}
+
+function updateListenButton() {
+  const icon = elements.listenButton?.querySelector("span");
+  const label = elements.listenButton?.querySelector("b");
+  if (!icon || !label) return;
+  if (replayMode) {
+    icon.textContent = "■";
+    label.textContent = "STOP PLAYBACK";
+    elements.listenButton.setAttribute("aria-label", "リプレイを停止");
+  } else if (listenMode) {
+    icon.textContent = "▶";
+    label.textContent = "RESUME";
+    elements.listenButton.setAttribute("aria-label", "ゲームを再開");
+  } else {
+    icon.textContent = "◉";
+    label.textContent = "PAUSE & LISTEN";
+    elements.listenButton.setAttribute("aria-label", "盤面を固定して試聴");
+  }
+  elements.listenButton.classList.toggle(
+    "is-active",
+    replayMode || listenMode,
+  );
+}
+
+async function startReplay() {
+  const frames = recorder.createReplay(64);
+  if (!frames.length) {
+    showToast("再生できる演奏履歴がありません");
+    return;
+  }
+  await audio.unlock().catch(() => false);
+  sequencer.stop();
+  scheduledStepCells.clear();
+  replayMode = true;
+  listenMode = false;
+  ui.hideGameOver();
+  effects.reset();
+  elements.transportLamp.classList.add("is-running");
+  elements.transportStatus.textContent = "PLAYBACK";
+  updateListenButton();
+  replay.start(frames, {
+    bpm: settings.bpm,
+    speed: settings.barSpeed,
+  });
+}
+
+function showReplayStep(frame) {
+  if (!replayMode) return;
+  currentVisualStep = frame.step;
+  visualStepAudioTime = audio.currentTime;
+  visualStepStartedAt = performance.now();
+  currentLoop = frame.loop;
+  const chordEvent = frame.events.find((event) => event.chord);
+  if (chordEvent?.chord) currentChord = chordEvent.chord;
+  const cells = frame.events.flatMap((event) => event.cells ?? []);
   effects.flashCells(cells);
+  elements.stepValue.textContent = String(frame.step + 1).padStart(2, "0");
+  updateStepIndicator(frame.step);
+  updateMusicStatus();
+}
+
+function stopReplay() {
+  replay.stop(false);
+  finishReplay();
+}
+
+function finishReplay() {
+  if (!replayMode) return;
+  replayMode = false;
+  currentVisualStep = -1;
+  elements.transportLamp.classList.remove("is-running");
+  elements.transportStatus.textContent = "PLAYBACK COMPLETE";
+  elements.stepValue.textContent = "--";
+  updateListenButton();
+  ui.showGameOver({
+    score: latestState?.score ?? 0,
+    level: latestState?.level ?? 1,
+    lines: latestState?.lines ?? 0,
+    highScore,
+    isHighScore: false,
+  });
 }
 
 function setDebugPaused(paused) {
@@ -363,9 +767,11 @@ function setDebugPaused(paused) {
     elements.transportStatus.textContent = "DEBUG PAUSED";
   } else {
     debugStepOverride = null;
-    if (latestState?.status === "paused") game.setPaused(false);
+    if (latestState?.status === "paused" && !listenMode) game.setPaused(false);
     sequencer.start();
-    elements.transportStatus.textContent = "SEQUENCER PLAYING";
+    elements.transportStatus.textContent = listenMode
+      ? "PAUSE & LISTEN"
+      : "SEQUENCER PLAYING";
   }
   debug.setPaused(debugPaused);
   return true;
@@ -446,8 +852,13 @@ function setDebugStep(value) {
 function applySettings(nextSettings) {
   const wasDebugEnabled = Boolean(settings.debugMode);
   settings = normalizeSettings(nextSettings);
-  audio.setSequencerVolume(settings.sequencerVolume);
-  audio.setSeVolume(settings.seVolume);
+  mixer.apply(settings);
+  music.configure({
+    chordMode: settings.chordMode,
+    bassMode: settings.bassMode,
+    accentSteps: ACCENT_STEPS,
+  });
+  recorder.setEnabled(settings.replayRecord);
   sequencer.setBpm(settings.bpm);
   sequencer.setSpeed(settings.barSpeed);
 
@@ -465,7 +876,7 @@ function applySettings(nextSettings) {
 
   ui.updateSettings({
     ...settings,
-    bgmVolume: settings.sequencerVolume,
+    bgmVolume: settings.drumVolume,
     controlMethod: settings.controlMode,
   });
   ui.updateStats({ bpm: settings.bpm, highScore });
@@ -476,14 +887,50 @@ function applySettings(nextSettings) {
       Number(button.dataset.bpm) === settings.bpm,
     );
   }
+  syncSettingsControls();
+  updateMusicStatus();
   updateVolumeLabels();
 }
 
+function syncSettingsControls() {
+  const inputValues = [
+    [elements.masterVolumeInput, settings.masterVolume],
+    [elements.sequencerVolumeInput, settings.drumVolume],
+    [elements.bassVolumeInput, settings.bassVolume],
+    [elements.chordVolumeInput, settings.chordVolume],
+    [elements.seVolumeInput, settings.eventVolume],
+  ];
+  for (const [input, value] of inputValues) {
+    if (input) input.value = String(value);
+  }
+  if (elements.chordModeToggle) {
+    elements.chordModeToggle.checked = settings.chordMode;
+  }
+  if (elements.bassModeInput) elements.bassModeInput.value = settings.bassMode;
+  if (elements.replayRecordToggle) {
+    elements.replayRecordToggle.checked = settings.replayRecord;
+  }
+  for (const button of document.querySelectorAll("[data-mixer-mute]")) {
+    const muted = Boolean(settings.muted[button.dataset.mixerMute]);
+    button.classList.toggle("is-muted", muted);
+    button.textContent = muted ? "ON" : "MUTE";
+    button.setAttribute("aria-pressed", String(muted));
+  }
+}
+
 function updateVolumeLabels() {
-  elements.sequencerVolumeValue.textContent =
-    `${Math.round(Number(elements.sequencerVolumeInput.value) * 100)}%`;
-  elements.seVolumeValue.textContent =
-    `${Math.round(Number(elements.seVolumeInput.value) * 100)}%`;
+  const pairs = [
+    [elements.masterVolumeInput, elements.masterVolumeValue],
+    [elements.sequencerVolumeInput, elements.sequencerVolumeValue],
+    [elements.bassVolumeInput, elements.bassVolumeValue],
+    [elements.chordVolumeInput, elements.chordVolumeValue],
+    [elements.seVolumeInput, elements.seVolumeValue],
+  ];
+  for (const [input, output] of pairs) {
+    if (input && output) {
+      output.textContent = `${Math.round(Number(input.value) * 100)}%`;
+    }
+  }
 }
 
 function showReadyMessage() {
@@ -501,14 +948,27 @@ function showReadyMessage() {
 
 function beginGame() {
   clearTimeout(gameOverTimer);
+  replay.stop(false);
   ui.hideGameOver();
   effects.reset();
   scheduledStepCells.clear();
+  recorder.reset();
+  music.reset();
+  grooveResult = grooveEvaluator.reset();
   debugPaused = false;
+  listenMode = false;
+  replayMode = false;
+  lineClearedSinceLoop = false;
+  hitStopUntil = 0;
+  currentLoop = 0;
+  currentChord = music.getChord(0).name;
+  lastLevel = 1;
+  lastRiserAt = -Infinity;
   debugStepOverride = null;
   debug.setPaused(false);
   currentVisualStep = -1;
   visualStepStartedAt = performance.now();
+  visualStepAudioTime = audio.currentTime;
   gameStarted = true;
   game.restart();
   sequencer.stop();
@@ -518,6 +978,9 @@ function beginGame() {
   elements.transportStatus.textContent = "SEQUENCER PLAYING";
   elements.transportLamp.classList.add("is-running");
   elements.stepValue.textContent = "01";
+  updateMusicStatus();
+  updateStepIndicator(-1);
+  updateListenButton();
   showReadyMessage();
   if (settings.debugMode) debug.setOpen(true);
   requestAnimationFrame(() => renderer.resize());
@@ -623,9 +1086,10 @@ function openSettings() {
   if (resumeAfterSettings) game.setPaused(true);
   ui.openSettings({
     ...settings,
-    bgmVolume: settings.sequencerVolume,
+    bgmVolume: settings.drumVolume,
     controlMethod: settings.controlMode,
   });
+  syncSettingsControls();
   window.setTimeout(() => elements.closeSettingsButton?.focus(), 0);
 }
 
@@ -634,8 +1098,15 @@ async function closeSettings(save = true) {
   const values = ui.readSettings();
   applySettings({
     bpm: values.bpm,
-    sequencerVolume: values.sequencerVolume,
-    seVolume: values.seVolume,
+    masterVolume: Number(elements.masterVolumeInput.value),
+    drumVolume: values.sequencerVolume,
+    bassVolume: Number(elements.bassVolumeInput.value),
+    chordVolume: Number(elements.chordVolumeInput.value),
+    eventVolume: values.seVolume,
+    muted: { ...settings.muted },
+    chordMode: elements.chordModeToggle.checked,
+    bassMode: elements.bassModeInput.value,
+    replayRecord: elements.replayRecordToggle.checked,
     controlMode: values.controlMethod,
     swipeEnabled: values.swipeEnabled,
     barSpeed: values.barSpeed,
@@ -647,7 +1118,11 @@ async function closeSettings(save = true) {
   }
   ui.closeSettings(save ? "save" : "cancel");
   settingsOpen = false;
-  if (resumeAfterSettings && latestState?.status === "paused") {
+  if (
+    resumeAfterSettings &&
+    latestState?.status === "paused" &&
+    !listenMode
+  ) {
     game.setPaused(false);
   }
   resumeAfterSettings = false;
@@ -678,6 +1153,12 @@ elements.startButton.addEventListener("click", () => {
 elements.retryButton.addEventListener("click", () => {
   void restartGame();
 });
+elements.playbackButton.addEventListener("click", () => {
+  void startReplay();
+});
+elements.listenButton.addEventListener("click", () => {
+  void toggleListenMode();
+});
 
 elements.optionsButton.addEventListener("click", openSettings);
 elements.closeSettingsButton.addEventListener("click", () => {
@@ -696,26 +1177,31 @@ elements.bpmButtons.addEventListener("click", (event) => {
   setBpm(button.dataset.bpm);
 });
 
-elements.sequencerVolumeInput.addEventListener("input", () => {
-  settings.sequencerVolume = clamp(
-    elements.sequencerVolumeInput.value,
-    0,
-    1,
-    settings.sequencerVolume,
-  );
-  audio.setSequencerVolume(settings.sequencerVolume);
-  updateVolumeLabels();
-});
+const mixerInputs = [
+  [elements.masterVolumeInput, "master", "masterVolume"],
+  [elements.sequencerVolumeInput, "drum", "drumVolume"],
+  [elements.bassVolumeInput, "bass", "bassVolume"],
+  [elements.chordVolumeInput, "chord", "chordVolume"],
+  [elements.seVolumeInput, "event", "eventVolume"],
+];
+for (const [input, bus, settingKey] of mixerInputs) {
+  input.addEventListener("input", () => {
+    const value = clamp(input.value, 0, 1, settings[settingKey]);
+    settings[settingKey] = value;
+    if (bus === "drum") settings.sequencerVolume = value;
+    if (bus === "event") settings.seVolume = value;
+    mixer.setVolume(bus, value);
+    updateVolumeLabels();
+  });
+}
 
-elements.seVolumeInput.addEventListener("input", () => {
-  settings.seVolume = clamp(
-    elements.seVolumeInput.value,
-    0,
-    1,
-    settings.seVolume,
-  );
-  audio.setSeVolume(settings.seVolume);
-  updateVolumeLabels();
+elements.settingsOverlay.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-mixer-mute]");
+  if (!button) return;
+  const bus = button.dataset.mixerMute;
+  const muted = mixer.toggleMute(bus);
+  settings.muted = { ...settings.muted, [bus]: muted };
+  syncSettingsControls();
 });
 
 elements.settingsBpm.addEventListener("change", () => {
@@ -740,6 +1226,18 @@ elements.debugModeToggle.addEventListener("change", () => {
     debugMode: elements.debugModeToggle.checked,
   });
 });
+elements.chordModeToggle.addEventListener("change", () => {
+  applySettings({ ...settings, chordMode: elements.chordModeToggle.checked });
+});
+elements.bassModeInput.addEventListener("change", () => {
+  applySettings({ ...settings, bassMode: elements.bassModeInput.value });
+});
+elements.replayRecordToggle.addEventListener("change", () => {
+  applySettings({
+    ...settings,
+    replayRecord: elements.replayRecordToggle.checked,
+  });
+});
 
 function animationFrame(now) {
   const delta = Math.min(100, Math.max(0, now - lastFrameAt));
@@ -752,21 +1250,37 @@ function animationFrame(now) {
     debugFpsStartedAt = now;
   }
 
-  if (gameStarted && latestState?.status === "running") {
+  if (
+    gameStarted &&
+    latestState?.status === "running" &&
+    now >= hitStopUntil
+  ) {
     game.update(delta);
   }
 
   let stepPosition;
   if (debugStepOverride !== null) {
     stepPosition = debugStepOverride + 0.5;
-  } else if (sequencer.isRunning && currentVisualStep >= 0) {
-    const progress =
-      (now - visualStepStartedAt) / (sequencer.secondsPerStep * 1000);
+  } else if (
+    (sequencer.isRunning || replay.running) &&
+    currentVisualStep >= 0
+  ) {
+    const stepDuration = replay.running
+      ? replay.secondsPerStep
+      : sequencer.secondsPerStep;
+    const elapsed = audio.context?.state === "running"
+      ? audio.currentTime - visualStepAudioTime
+      : (now - visualStepStartedAt) / 1000;
+    const progress = elapsed / stepDuration;
     stepPosition = currentVisualStep + 0.5 + Math.max(0, progress);
   }
-  renderer.render(latestState ?? game.getState(), {
+  const renderState = replayMode && latestState
+    ? { ...latestState, status: "replay" }
+    : latestState ?? game.getState();
+  renderer.render(renderState, {
     now,
     stepPosition,
+    accented: music.isAccent(currentVisualStep),
   });
 
   if (settings.debugMode && now - lastDebugUpdateAt >= 200) {
@@ -797,9 +1311,25 @@ document.addEventListener("visibilitychange", () => {
     backgroundResume = {
       gameWasRunning: latestState?.status === "running",
       sequencerWasRunning: sequencer.isRunning,
+      replayWasRunning: replay.running,
     };
     if (backgroundResume.gameWasRunning) game.setPaused(true);
     sequencer.stop();
+    if (replay.running) {
+      replay.stop(false);
+      replayMode = false;
+      currentVisualStep = -1;
+      elements.stepValue.textContent = "--";
+      elements.transportLamp.classList.remove("is-running");
+      elements.transportStatus.textContent = "PLAYBACK STOPPED";
+      updateListenButton();
+      ui.showGameOver({
+        score: latestState?.score ?? 0,
+        level: latestState?.level ?? 1,
+        lines: latestState?.lines ?? 0,
+        highScore,
+      });
+    }
     scheduledStepCells.clear();
     void audio.context?.suspend?.().catch(() => {});
     return;
@@ -832,4 +1362,5 @@ document.addEventListener("visibilitychange", () => {
 
 window.addEventListener("pagehide", () => {
   sequencer.stop();
+  replay.stop(false);
 });

@@ -1,7 +1,22 @@
 export const DEFAULT_SETTINGS = Object.freeze({
   bpm: 100,
+  masterVolume: 0.8,
+  drumVolume: 0.8,
+  bassVolume: 0.45,
+  chordVolume: 0.35,
+  eventVolume: 0.5,
   sequencerVolume: 0.8,
-  seVolume: 0.9,
+  seVolume: 0.5,
+  muted: Object.freeze({
+    master: false,
+    drum: false,
+    bass: false,
+    chord: false,
+    event: false,
+  }),
+  chordMode: true,
+  bassMode: "BASIC",
+  replayRecord: true,
   controlMode: "hybrid",
   swipeEnabled: true,
   barSpeed: 1,
@@ -14,6 +29,12 @@ const STORE_NAME = "state";
 const SETTINGS_KEY = "settings";
 const HIGH_SCORE_KEY = "highScore";
 const ALLOWED_BAR_SPEEDS = Object.freeze([0.5, 1, 2]);
+const ALLOWED_BASS_MODES = Object.freeze([
+  "OFF",
+  "BASIC",
+  "FOUR ON FLOOR",
+  "SYNCOPATION",
+]);
 
 // Shared by instances so the fallback remains useful for the page lifetime.
 const memoryState = {
@@ -23,7 +44,10 @@ const memoryState = {
 
 const copyState = () => ({
   highScore: memoryState.highScore,
-  settings: { ...memoryState.settings },
+  settings: {
+    ...memoryState.settings,
+    muted: { ...memoryState.settings.muted },
+  },
 });
 
 const finiteNumber = (value, fallback, min, max) => {
@@ -38,13 +62,55 @@ const normalizeSettings = (value = {}, base = DEFAULT_SETTINGS) => {
 
   return {
     bpm: finiteNumber(input.bpm, base.bpm, 40, 300),
+    masterVolume: finiteNumber(
+      input.masterVolume,
+      base.masterVolume,
+      0,
+      1,
+    ),
+    drumVolume: finiteNumber(
+      input.drumVolume ?? input.sequencerVolume,
+      base.drumVolume,
+      0,
+      1,
+    ),
+    bassVolume: finiteNumber(input.bassVolume, base.bassVolume, 0, 1),
+    chordVolume: finiteNumber(input.chordVolume, base.chordVolume, 0, 1),
+    eventVolume: finiteNumber(
+      input.eventVolume ?? input.seVolume,
+      base.eventVolume,
+      0,
+      1,
+    ),
     sequencerVolume: finiteNumber(
-      input.sequencerVolume,
+      input.drumVolume ?? input.sequencerVolume,
       base.sequencerVolume,
       0,
       1,
     ),
-    seVolume: finiteNumber(input.seVolume, base.seVolume, 0, 1),
+    seVolume: finiteNumber(
+      input.eventVolume ?? input.seVolume,
+      base.seVolume,
+      0,
+      1,
+    ),
+    muted: Object.fromEntries(
+      ["master", "drum", "bass", "chord", "event"].map((bus) => [
+        bus,
+        Boolean(input.muted?.[bus] ?? base.muted?.[bus]),
+      ]),
+    ),
+    chordMode:
+      typeof input.chordMode === "boolean"
+        ? input.chordMode
+        : base.chordMode,
+    bassMode: ALLOWED_BASS_MODES.includes(input.bassMode)
+      ? input.bassMode
+      : base.bassMode,
+    replayRecord:
+      typeof input.replayRecord === "boolean"
+        ? input.replayRecord
+        : base.replayRecord,
     controlMode:
       typeof input.controlMode === "string" && input.controlMode.trim()
         ? input.controlMode
@@ -151,7 +217,10 @@ export class GameStorage {
         }
       }
 
-      return { ...memoryState.settings };
+      return {
+        ...memoryState.settings,
+        muted: { ...memoryState.settings.muted },
+      };
     });
 
     this._saveQueue = operation.then(

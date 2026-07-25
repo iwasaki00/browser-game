@@ -54,6 +54,7 @@ export class TetrisGame {
     this.score = 0;
     this.level = 1;
     this.lines = 0;
+    this.scoreMultiplier = 1;
     this.status = "idle";
 
     this.gravityElapsed = 0;
@@ -71,6 +72,7 @@ export class TetrisGame {
     this.score = 0;
     this.level = 1;
     this.lines = 0;
+    this.scoreMultiplier = 1;
     this.status = "running";
     this.gravityElapsed = 0;
     this.lockElapsed = 0;
@@ -150,7 +152,7 @@ export class TetrisGame {
     const targetY = this.board.getGhostY(this.activePiece);
     const distance = Math.max(0, targetY - this.activePiece.y);
     this.activePiece.y = targetY;
-    this.score += distance * 2;
+    this.score += Math.round(distance * 2 * this.scoreMultiplier);
     this._lockActivePiece();
     return true;
   }
@@ -199,6 +201,13 @@ export class TetrisGame {
       return true;
     }
     return false;
+  }
+
+  setScoreMultiplier(value = 1) {
+    const multiplier = Number(value);
+    if (!Number.isFinite(multiplier)) return this.scoreMultiplier;
+    this.scoreMultiplier = Math.min(4, Math.max(1, multiplier));
+    return this.scoreMultiplier;
   }
 
   /**
@@ -328,6 +337,7 @@ export class TetrisGame {
       score: this.score,
       level: this.level,
       lines: this.lines,
+      scoreMultiplier: this.scoreMultiplier,
       status: this.status,
       running: this.status === "running",
       paused: this.status === "paused",
@@ -399,7 +409,11 @@ export class TetrisGame {
     const clearedRows = this.board.clearFullLines();
     if (clearedRows.length > 0) {
       const scoringLevel = this.level;
-      this.score += (LINE_SCORES[clearedRows.length] ?? 0) * scoringLevel;
+      this.score += Math.round(
+        (LINE_SCORES[clearedRows.length] ?? 0)
+          * scoringLevel
+          * this.scoreMultiplier,
+      );
       this.lines += clearedRows.length;
       this.level = Math.floor(this.lines / 10) + 1;
       this._emit("lineClear", {

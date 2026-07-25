@@ -192,6 +192,7 @@ export class BoardRenderer {
     this.columns = options.columns ?? BOARD_COLUMNS;
     this.rows = options.rows ?? BOARD_ROWS;
     this.steps = options.steps ?? SEQUENCER_STEPS;
+    this.accentSteps = options.accentSteps ?? [0, 4, 8, 12];
     this.maxPixelRatio = options.maxPixelRatio ?? 3;
     this.background = options.background ?? "#07101f";
     this._lastState = null;
@@ -281,6 +282,7 @@ export class BoardRenderer {
       particles: [],
       shake: { x: 0, y: 0 },
       gameOverAlpha: 0,
+      screenFlashAlpha: 0,
     };
 
     ctx.setTransform(layout.pixelRatio, 0, 0, layout.pixelRatio, 0, 0);
@@ -304,6 +306,7 @@ export class BoardRenderer {
     );
 
     this._drawLockedCells(grid, flashMap);
+    this._drawDetachedFlashes(grid, flashMap);
     this._drawLineFlashes(effectFrame.lineFlashes ?? []);
 
     const activePiece =
@@ -323,6 +326,13 @@ export class BoardRenderer {
 
     this._drawBorder();
     ctx.restore();
+
+    if (effectFrame.screenFlashAlpha > 0) {
+      ctx.save();
+      ctx.fillStyle = `rgba(224, 252, 255, ${effectFrame.screenFlashAlpha})`;
+      ctx.fillRect(layout.x, layout.y, layout.width, layout.height);
+      ctx.restore();
+    }
 
     const overlayAlpha = Math.max(
       effectFrame.gameOverAlpha ?? 0,
@@ -350,6 +360,16 @@ export class BoardRenderer {
     gradient.addColorStop(1, this.background);
     ctx.fillStyle = gradient;
     ctx.fillRect(layout.x, layout.y, layout.width, layout.height);
+
+    for (const step of this.accentSteps) {
+      ctx.fillStyle = "rgba(39, 230, 255, 0.035)";
+      ctx.fillRect(
+        layout.x + step * layout.cellSize,
+        layout.y,
+        layout.cellSize,
+        layout.height,
+      );
+    }
 
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgba(148, 190, 233, 0.075)";
@@ -407,6 +427,28 @@ export class BoardRenderer {
         cellColor(cell, type),
         flashMap.get(`${cell.x}:${cell.y}`),
         Boolean(cell.sound),
+      );
+    }
+  }
+
+  _drawDetachedFlashes(grid, flashMap) {
+    for (const flash of flashMap.values()) {
+      if (
+        flash.x < 0 ||
+        flash.x >= this.columns ||
+        flash.y < 0 ||
+        flash.y >= this.rows ||
+        isOccupied(grid[flash.y]?.[flash.x])
+      ) {
+        continue;
+      }
+      const type = pieceType(flash);
+      this._drawBlock(
+        flash.x,
+        flash.y,
+        cellColor(flash, type),
+        flash,
+        false,
       );
     }
   }
@@ -480,7 +522,8 @@ export class BoardRenderer {
     const cell = layout.cellSize;
     const gap = Math.max(1, cell * 0.055);
     const baseX = layout.x + column * cell + gap;
-    const baseY = layout.y + row * cell + gap;
+    const baseY =
+      layout.y + row * cell + gap + (flash?.bounce ?? 0) * cell;
     const baseSize = cell - gap * 2;
     const scale = flash?.scale ?? 1;
     const size = baseSize * scale;
@@ -605,9 +648,18 @@ export class BoardRenderer {
 
     ctx.save();
     ctx.shadowColor = "#bdf7ff";
-    ctx.shadowBlur = Math.max(10, layout.cellSize * 0.8);
+    const stepIndex = Math.floor(wrapped);
+    const accented =
+      options.accented ?? this.accentSteps.includes(stepIndex);
+    ctx.shadowBlur = Math.max(
+      accented ? 16 : 10,
+      layout.cellSize * (accented ? 1.15 : 0.8),
+    );
     ctx.strokeStyle = "rgba(230, 254, 255, 0.98)";
-    ctx.lineWidth = Math.max(1.5, layout.cellSize * 0.065);
+    ctx.lineWidth = Math.max(
+      accented ? 2.2 : 1.5,
+      layout.cellSize * (accented ? 0.09 : 0.065),
+    );
     ctx.beginPath();
     ctx.moveTo(x, layout.y);
     ctx.lineTo(x, layout.y + layout.height);
