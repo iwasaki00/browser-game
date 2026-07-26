@@ -1308,29 +1308,325 @@
         font-size: 10px;
       }
     }
+
+    /* Compact transport and settings panel. */
+    .topbar {
+      grid-template-columns:
+        44px
+        minmax(88px, 120px)
+        minmax(72px, 100px)
+        minmax(64px, 90px)
+        minmax(180px, 1fr);
+      grid-template-rows: 44px;
+      grid-template-areas: "play random clear settings tempo";
+      gap: 6px;
+      min-height: 44px;
+    }
+
+    .topbar > * {
+      min-width: 0;
+    }
+
+    .topbar .main-button,
+    .topbar .tool-button {
+      width: 100%;
+      min-height: 44px;
+      height: 44px;
+    }
+
+    #play {
+      grid-area: play;
+    }
+
+    #randomAll {
+      grid-area: random;
+    }
+
+    #clearAll {
+      grid-area: clear;
+    }
+
+    #openSettings {
+      grid-area: settings;
+    }
+
+    .topbar .tempo {
+      grid-column: auto;
+      grid-row: auto;
+      grid-area: tempo;
+    }
+
+    .topbar #randomAll,
+    .topbar #clearAll {
+      font-size: 13px;
+    }
+
+    .topbar #randomAll::after,
+    .topbar #clearAll::after {
+      content: none;
+    }
+
+    .settings-dialog {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      width: min(
+        420px,
+        calc(
+          100vw - 24px - env(safe-area-inset-left) -
+            env(safe-area-inset-right)
+        )
+      );
+      max-width: none;
+      max-height: min(
+        560px,
+        calc(
+          100vh - 24px - env(safe-area-inset-top) -
+            env(safe-area-inset-bottom)
+        )
+      );
+      max-height: min(
+        560px,
+        calc(
+          100dvh - 24px - env(safe-area-inset-top) -
+            env(safe-area-inset-bottom)
+        )
+      );
+      margin: auto;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.58);
+      backdrop-filter: blur(18px);
+    }
+
+    .settings-dialog[open] {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .settings-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.66);
+      backdrop-filter: blur(4px);
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 56px;
+      padding: 6px 8px 6px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .settings-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .settings-close {
+      width: 44px;
+      min-width: 44px;
+      height: 44px;
+      padding: 0;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .settings-content {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .settings-field {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .settings-dialog .theme-select {
+      grid-column: auto;
+      grid-row: auto;
+      width: 100%;
+      min-height: 44px;
+      height: 44px;
+      font-size: 16px;
+    }
+
+    .settings-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .settings-dialog #savePattern,
+    .settings-dialog #loadPattern {
+      grid-column: auto;
+      grid-row: auto;
+      width: 100%;
+      min-height: 44px;
+      height: 44px;
+      padding-inline: 10px;
+      font-size: 14px;
+    }
+
+    .settings-dialog #savePattern::after,
+    .settings-dialog #loadPattern::after {
+      content: none;
+    }
+
+    .settings-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* iPhone portrait: all 16 steps stay in one horizontal row. */
+    @media (orientation: portrait) and (max-width: 640px) {
+      .topbar {
+        grid-template-columns: 44px repeat(3, minmax(0, 1fr));
+        grid-template-rows: 44px 44px;
+        grid-template-areas:
+          "play random clear settings"
+          "tempo tempo tempo tempo";
+        gap: 4px;
+      }
+
+      .topbar .tool-button {
+        padding-inline: 3px;
+        font-size: 12px;
+      }
+
+      .topbar .tempo {
+        grid-template-columns: 58px minmax(0, 1fr);
+        min-height: 44px;
+      }
+
+      .lanes,
+      .lanes.sparse {
+        grid-template-rows: none;
+        grid-auto-rows: minmax(148px, auto);
+      }
+
+      .lane {
+        min-height: 148px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        grid-template-rows: 44px;
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        gap: 2px;
+        overflow: hidden;
+        scroll-snap-type: none;
+      }
+
+      .step {
+        min-width: 0;
+        min-height: 44px;
+        scroll-snap-align: none;
+      }
+    }
+
+    /* iPhone landscape: mixer and all 16 steps share the visible width. */
+    @media (orientation: landscape) and (max-height: 560px) {
+      .topbar {
+        grid-template-columns:
+          44px
+          minmax(72px, 100px)
+          minmax(64px, 90px)
+          minmax(56px, 76px)
+          minmax(150px, 1fr);
+        grid-template-rows: 44px;
+        grid-template-areas: "play random clear settings tempo";
+        gap: 3px;
+      }
+
+      .topbar .main-button,
+      .topbar .tool-button {
+        min-width: 0;
+        min-height: 44px;
+        height: 44px;
+      }
+
+      .topbar .tool-button {
+        padding-inline: 3px;
+        font-size: 11px;
+      }
+
+      .topbar .tempo {
+        grid-template-columns: 52px minmax(0, 1fr);
+        min-height: 44px;
+      }
+
+      .lanes,
+      .lanes.sparse {
+        grid-template-rows: none;
+        grid-auto-rows: minmax(98px, auto);
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      .lane {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 44px 44px;
+        width: 100%;
+        min-width: 0;
+        min-height: 98px;
+      }
+
+      .lane-head {
+        position: static;
+        grid-template-columns:
+          minmax(68px, 0.8fr)
+          minmax(104px, 1fr)
+          52px
+          52px
+          minmax(132px, 1.25fr);
+        grid-template-rows: minmax(44px, 1fr);
+        grid-template-areas: "title sound random clear volume";
+        padding-right: 0;
+      }
+
+      .steps {
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        gap: 2px;
+        overflow: hidden;
+      }
+
+      .step {
+        min-width: 0;
+        min-height: 44px;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="app" id="app" data-theme="neo-grid">
     <section class="topbar" aria-label="操作">
-      <div class="title">WAVシーケンサ</div>
       <button class="main-button" id="play" type="button" aria-label="再生">▶</button>
-      <button class="tool-button" id="randomAll" type="button">全ランダム</button>
-      <button class="tool-button" id="savePattern" type="button">セーブ</button>
-      <button class="tool-button" id="loadPattern" type="button">ロード</button>
-      <button class="tool-button" id="clearAll" type="button">全クリア</button>
+      <button class="tool-button" id="randomAll" type="button">ランダム</button>
+      <button class="tool-button" id="clearAll" type="button">クリア</button>
+      <button class="tool-button settings-button" id="openSettings" type="button" aria-haspopup="dialog" aria-controls="settingsDialog">設定</button>
       <label class="tempo">
         <strong><span id="bpmValue">120</span>BPM</strong>
         <input id="bpm" type="range" min="70" max="170" value="120" step="1" aria-label="BPM">
       </label>
-      <select class="theme-select" id="theme" aria-label="見た目">
-        <option value="neo-grid">Neo Grid</option>
-        <option value="cyber-console">Cyber Console</option>
-        <option value="minimal-pro">Minimal Pro</option>
-        <option value="retro-arcade">Retro Arcade / ファミコン風</option>
-        <option value="glass-synth">Glass Synth</option>
-        <option value="modular-rack">Modular Rack</option>
-      </select>
     </section>
 
     <section class="bankbar" aria-label="ジャンルと楽器バンク">
@@ -1341,6 +1637,31 @@
 
     <section class="lanes" id="lanes" aria-label="シーケンサー"></section>
     <div class="status" id="status" aria-live="polite"></div>
+
+    <dialog class="settings-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+      <header class="settings-header">
+        <h2 id="settingsTitle">設定</h2>
+        <button class="settings-close" id="closeSettings" type="button" aria-label="設定を閉じる">×</button>
+      </header>
+      <div class="settings-content">
+        <label class="settings-field">
+          <span>デザイン変更</span>
+          <select class="theme-select" id="theme" aria-label="デザイン">
+            <option value="neo-grid">Neo Grid</option>
+            <option value="cyber-console">Cyber Console</option>
+            <option value="minimal-pro">Minimal Pro</option>
+            <option value="retro-arcade">Retro Arcade / ファミコン風</option>
+            <option value="glass-synth">Glass Synth</option>
+            <option value="modular-rack">Modular Rack</option>
+          </select>
+        </label>
+        <div class="settings-actions">
+          <button class="tool-button" id="savePattern" type="button">セーブ</button>
+          <button class="tool-button" id="loadPattern" type="button">ロード</button>
+        </div>
+        <p class="settings-note">編集内容は自動保存されます。</p>
+      </div>
+    </dialog>
   </main>
 
   <script src="genre-data.js"></script>

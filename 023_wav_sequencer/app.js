@@ -15,6 +15,9 @@
   const lanesEl = document.querySelector("#lanes");
   const playButton = document.querySelector("#play");
   const randomAllButton = document.querySelector("#randomAll");
+  const openSettingsButton = document.querySelector("#openSettings");
+  const settingsDialog = document.querySelector("#settingsDialog");
+  const closeSettingsButton = document.querySelector("#closeSettings");
   const savePatternButton = document.querySelector("#savePattern");
   const loadPatternButton = document.querySelector("#loadPattern");
   const clearAllButton = document.querySelector("#clearAll");
@@ -119,9 +122,39 @@
       mono: "minimal-pro",
     };
     const normalized = aliases[theme] || theme || "neo-grid";
-    return Array.from(themeSelect.options).some((option) => option.value === normalized)
+    return !themeSelect || Array.from(themeSelect.options).some((option) => option.value === normalized)
       ? normalized
       : "neo-grid";
+  }
+
+  function isSettingsOpen() {
+    return Boolean(
+      settingsDialog
+      && (settingsDialog.open || settingsDialog.hasAttribute("open")),
+    );
+  }
+
+  function openSettings() {
+    if (!settingsDialog || isSettingsOpen()) {
+      return;
+    }
+    if (typeof settingsDialog.showModal === "function") {
+      settingsDialog.showModal();
+    } else {
+      settingsDialog.setAttribute("open", "");
+    }
+  }
+
+  function closeSettings() {
+    if (!settingsDialog || !isSettingsOpen()) {
+      return;
+    }
+    if (typeof settingsDialog.close === "function") {
+      settingsDialog.close();
+    } else {
+      settingsDialog.removeAttribute("open");
+    }
+    openSettingsButton?.focus();
   }
 
   async function unlockAudio() {
@@ -443,7 +476,7 @@
       const randomButton = document.createElement("button");
       randomButton.className = "lane-action lane-random";
       randomButton.type = "button";
-      randomButton.textContent = "ランダム";
+      randomButton.textContent = "RND";
       randomButton.setAttribute("aria-label", `${track.name}をランダム配置`);
       randomButton.addEventListener("click", () => {
         randomizeTrack(track);
@@ -455,7 +488,7 @@
       const clearButton = document.createElement("button");
       clearButton.className = "lane-action clear";
       clearButton.type = "button";
-      clearButton.textContent = "クリア";
+      clearButton.textContent = "CLR";
       clearButton.setAttribute("aria-label", `${track.name}をクリア`);
       clearButton.addEventListener("click", () => {
         clearTrack(track.id);
@@ -584,7 +617,7 @@
       genre: currentGenreId,
       bank: currentBankId,
       bpm: Number(bpmInput.value),
-      theme: themeSelect.value,
+      theme: themeSelect?.value || app.dataset.theme || "neo-grid",
       sounds: Object.fromEntries(session.sounds),
       volumes: Object.fromEntries(session.volumes),
       steps: Object.fromEntries(
@@ -727,7 +760,9 @@
 
       if (saved.theme) {
         const theme = normalizeTheme(saved.theme);
-        themeSelect.value = theme;
+        if (themeSelect) {
+          themeSelect.value = theme;
+        }
         app.dataset.theme = theme;
         writeStorage(themeKey, theme);
       }
@@ -954,7 +989,7 @@
     }
     renderLanes();
     scheduleAutoSave();
-    setStatus(`${currentGenre().name}を全ランダム配置`);
+    setStatus(`${currentGenre().name}をランダム配置`);
   });
 
   clearAllButton.addEventListener("click", () => {
@@ -963,15 +998,51 @@
     }
     renderLanes();
     scheduleAutoSave();
-    setStatus(`${currentGenre().name}を全クリア`);
+    setStatus(`${currentGenre().name}をクリア`);
   });
 
-  savePatternButton.addEventListener("click", savePattern);
-  loadPatternButton.addEventListener("click", () => {
+  openSettingsButton?.addEventListener("click", openSettings);
+  closeSettingsButton?.addEventListener("click", closeSettings);
+  settingsDialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeSettings();
+  });
+  settingsDialog?.addEventListener("click", (event) => {
+    if (event.target === settingsDialog) {
+      closeSettings();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape"
+      && isSettingsOpen()
+      && typeof settingsDialog.showModal !== "function"
+    ) {
+      event.preventDefault();
+      closeSettings();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (
+      isSettingsOpen()
+      && typeof settingsDialog.showModal !== "function"
+      && event.target !== openSettingsButton
+      && !settingsDialog.contains(event.target)
+    ) {
+      closeSettings();
+    }
+  });
+
+  savePatternButton?.addEventListener("click", () => {
+    savePattern();
+    closeSettings();
+  });
+  loadPatternButton?.addEventListener("click", () => {
     if (isPlaying || isStarting) {
       stop({ announce: false });
     }
     loadPattern();
+    closeSettings();
   });
 
   bpmInput.addEventListener("input", () => {
@@ -980,7 +1051,7 @@
     scheduleAutoSave();
   });
 
-  themeSelect.addEventListener("change", () => {
+  themeSelect?.addEventListener("change", () => {
     app.dataset.theme = themeSelect.value;
     writeStorage(themeKey, themeSelect.value);
     scheduleAutoSave();
@@ -1016,7 +1087,9 @@
   if (storedTheme.value) {
     const theme = normalizeTheme(storedTheme.value);
     app.dataset.theme = theme;
-    themeSelect.value = theme;
+    if (themeSelect) {
+      themeSelect.value = theme;
+    }
   }
 
   const didRestore = loadPattern({
