@@ -82,7 +82,7 @@ class StorageManager {
 }
 
 class AudioManager {
-  constructor() { this.context = null; this.master = null; this.sources = new Set(); this.sourcesBySound = new Map(); this.loops = new Map(); this.previewSource = null; }
+  constructor(onActivityChange = () => {}) { this.context = null; this.master = null; this.sources = new Set(); this.sourcesBySound = new Map(); this.sourceSoundIds = new WeakMap(); this.loops = new Map(); this.previewSource = null; this.onActivityChange = onActivityChange; }
   async start(volume) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) throw new Error("Web Audio APIに対応していません");
@@ -107,25 +107,30 @@ class AudioManager {
     this.sources.add(source);
     if (!this.sourcesBySound.has(sound.id)) this.sourcesBySound.set(sound.id, new Set());
     this.sourcesBySound.get(sound.id).add(source);
+    this.sourceSoundIds.set(source, sound.id); this.notifyActivity(sound.id);
     source.addEventListener("ended", () => { this.unregisterSource(sound.id, source); if (this.loops.get(sound.id) === source) this.loops.delete(sound.id); if (this.previewSource === source) this.previewSource = null; }, { once: true });
     return source;
   }
-  unregisterSource(id, source) { this.sources.delete(source); const group = this.sourcesBySound.get(id); group?.delete(source); if (group?.size === 0) this.sourcesBySound.delete(id); }
+  activeSourceCount(id) { return this.sourcesBySound.get(id)?.size || 0; }
+  isSoundActive(id) { return this.activeSourceCount(id) > 0; }
+  notifyActivity(id) { if (id != null) { const count = this.activeSourceCount(id); this.onActivityChange(id, count > 0, count); } }
+  unregisterSource(id, source) { const removed = this.sources.delete(source), group = this.sourcesBySound.get(id), removedFromGroup = group?.delete(source) || false; this.sourceSoundIds.delete(source); if (group?.size === 0) this.sourcesBySound.delete(id); if (removed || removedFromGroup) this.notifyActivity(id); }
+  startSource(id, source, ...args) { try { source.start(...args); } catch (error) { if (this.loops.get(id) === source) this.loops.delete(id); if (this.previewSource === source) this.previewSource = null; this.unregisterSource(id, source); throw error; } }
   async play(sound) {
     await this.resume();
     if (!sound.audioBuffer) throw new Error("音声を読み込めませんでした");
     if (sound.loop) {
       const current = this.loops.get(sound.id);
-      if (current) { current.stop(); this.loops.delete(sound.id); return false; }
-      const source = this.createSource(sound, true), region = soundRegion(sound); this.loops.set(sound.id, source); source.start(0, region.start); return true;
+      if (current) { current.stop(); this.unregisterSource(sound.id, current); this.loops.delete(sound.id); return false; }
+      const source = this.createSource(sound, true), region = soundRegion(sound); this.loops.set(sound.id, source); this.startSource(sound.id, source, 0, region.start); return true;
     }
-    const source = this.createSource(sound), region = soundRegion(sound); source.start(0, region.start, region.duration); return true;
+    const source = this.createSource(sound), region = soundRegion(sound); this.startSource(sound.id, source, 0, region.start, region.duration); return true;
   }
-  async preview(sound) { await this.resume(); this.stopPreview(); const source = this.createSource({ ...sound, loop: false }); const region = soundRegion(sound); this.previewSource = source; source.start(0, region.start, region.duration); }
-  stopPreview() { if (this.previewSource) { try { this.previewSource.stop(); } catch (_) {} this.previewSource = null; } }
+  async preview(sound) { await this.resume(); this.stopPreview(); const source = this.createSource({ ...sound, loop: false }); const region = soundRegion(sound); this.previewSource = source; this.startSource(sound.id, source, 0, region.start, region.duration); }
+  stopPreview() { if (this.previewSource) { const source = this.previewSource, id = this.sourceSoundIds.get(source); try { source.stop(); } catch (_) {} this.previewSource = null; this.unregisterSource(id, source); } }
   setSoundPlaybackRate(id, value) { const time = this.context?.currentTime || 0, rate = normalizePlaybackRate(value); for (const source of this.sourcesBySound.get(id) || []) source.playbackRate.setValueAtTime(rate, time); }
   stopSound(id) { const group = this.sourcesBySound.get(id); if (group) for (const source of [...group]) { try { source.stop(); } catch (_) {} this.unregisterSource(id, source); } this.loops.delete(id); }
-  stopAll() { for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.sourcesBySound.clear(); this.loops.clear(); this.previewSource = null; }
+  stopAll() { const ids = [...this.sourcesBySound.keys()]; for (const source of this.sources) { try { source.stop(); } catch (_) {} } this.sources.clear(); this.sourcesBySound.clear(); this.loops.clear(); this.previewSource = null; ids.forEach((id) => this.notifyActivity(id)); }
 }
 
 class RecordingManager {
@@ -171,7 +176,7 @@ class RecordingManager {
 
 class SamplerApp {
   constructor() {
-    this.storage = new StorageManager(); this.audio = new AudioManager();
+    this.storage = new StorageManager(); this.audio = new AudioManager((id, active, count) => this.updatePadPlaybackState(id, active, count));
     this.recording = new RecordingManager((level) => { $("#recordMeter").style.width = `${Math.round(level * 100)}%`; });
     this.rhythm = new RhythmManager(this.audio, { onBeat: (beat) => this.showBeat(beat), onStep: (step) => this.showRhythmStep(step), onState: (playing) => this.showRhythmState(playing) });
     this.sounds = []; this.defaults = new Map(); this.category = "すべて"; this.editing = false; this.pendingFiles = []; this.recordBlob = null; this.statusTimer = null; this.padDrag = null;
@@ -368,13 +373,29 @@ class SamplerApp {
     visible.forEach((sound) => fragment.append(this.createPad(sound))); $("#padGrid").replaceChildren(fragment);
     $("#soundCount").textContent = `${visible.length} / ${this.sounds.length} sounds`; $("#emptyState").hidden = visible.length > 0;
   }
+  padActionLabel(sound, activeCount = this.audio.activeSourceCount(sound.id)) {
+    if (this.editing) return `${sound.displayName}の設定を開く`;
+    if (!activeCount) return `${sound.displayName}を再生`;
+    if (sound.loop) return `${sound.displayName}をループ再生中。タップして停止`;
+    return `${sound.displayName}を再生中${activeCount > 1 ? `（${activeCount}音）` : ""}。タップして重ねて再生`;
+  }
+  updatePadPlaybackState(id, active, count) {
+    const sound = this.find(id); if (!sound) return;
+    document.querySelectorAll(".pad[data-sound-id]").forEach((pad) => {
+      if (pad.dataset.soundId !== String(id)) return;
+      pad.classList.toggle("is-playing", active); if (active) pad.dataset.activeCount = String(count); else delete pad.dataset.activeCount;
+      const indicator = pad.querySelector(".pad-playing-indicator"); if (indicator) { indicator.title = count > 1 ? `再生中（${count}音）` : "再生中"; if (count > 1) indicator.dataset.count = String(count); else delete indicator.dataset.count; }
+      pad.querySelector(".pad-main")?.setAttribute("aria-label", this.padActionLabel(sound, count));
+    });
+  }
   createPad(sound) {
-    const pad = document.createElement("article"); pad.className = `pad${sound.loadFailed ? " failed" : ""}${this.audio.loops.has(sound.id) ? " looping" : ""}`; pad.dataset.soundId = sound.id; pad.style.setProperty("--pad-color", sound.color); pad.style.setProperty("--pad-text", this.textColor(sound.color));
-    const main = document.createElement("button"); main.type = "button"; main.className = "pad-main"; main.setAttribute("aria-label", this.editing ? `${sound.displayName}の設定を開く` : `${sound.displayName}を再生`);
+    const activeCount = this.audio.activeSourceCount(sound.id), pad = document.createElement("article"); pad.className = `pad${sound.loadFailed ? " failed" : ""}${this.audio.loops.has(sound.id) ? " looping" : ""}${activeCount ? " is-playing" : ""}`; pad.dataset.soundId = sound.id; if (activeCount) pad.dataset.activeCount = String(activeCount); pad.style.setProperty("--pad-color", sound.color); pad.style.setProperty("--pad-text", this.textColor(sound.color));
+    const main = document.createElement("button"); main.type = "button"; main.className = "pad-main"; main.setAttribute("aria-label", this.padActionLabel(sound, activeCount));
     const typeBadge = sound.sourceType === "recorded" ? "REC" : sound.sourceType === "uploaded" ? "ADD" : "";
     main.innerHTML = `<span class="pad-top"><span class="pad-badges">${typeBadge ? `<span class="badge">${typeBadge}</span>` : ""}${sound.loop ? '<span class="badge">LOOP</span>' : ""}</span></span><span><strong class="pad-name"></strong><small class="pad-file"></small></span><span class="pad-category"></span>`;
     main.querySelector(".pad-name").textContent = sound.displayName; main.querySelector(".pad-file").textContent = sound.fileName; main.querySelector(".pad-file").title = sound.fileName; main.querySelector(".pad-category").textContent = sound.category;
-    pad.append(main);
+    const playingIndicator = document.createElement("span"); playingIndicator.className = "pad-playing-indicator"; playingIndicator.title = activeCount > 1 ? `再生中（${activeCount}音）` : "再生中"; playingIndicator.setAttribute("aria-hidden", "true"); playingIndicator.innerHTML = "<i></i><i></i><i></i>"; if (activeCount > 1) playingIndicator.dataset.count = String(activeCount);
+    pad.append(main, playingIndicator);
     if (this.editing) {
       const favorite = document.createElement("button"); favorite.type = "button"; favorite.className = `favorite-button${sound.favorite ? " active" : ""}`; favorite.textContent = "★"; favorite.setAttribute("aria-label", `${sound.displayName}のお気に入りを切り替え`); favorite.addEventListener("click", (event) => { event.stopPropagation(); this.toggleFavorite(sound); });
       const dragHandle = document.createElement("button"); dragHandle.type = "button"; dragHandle.className = "pad-drag-handle"; dragHandle.textContent = "⠿"; dragHandle.title = "ドラッグして並べ替え"; dragHandle.setAttribute("aria-label", `${sound.displayName}をドラッグして並べ替え`);
@@ -486,7 +507,7 @@ class SamplerApp {
     try { await this.applyVisiblePadOrder(ids); this.renderPads(); this.status(this.storage.available ? "パッドの並び順を保存しました" : "パッドを並べ替えました（一時利用モードのため次回は復元されません）", !this.storage.available, !this.storage.available); } catch (error) { console.error(error); this.status("並び順を保存できませんでした", true, true); }
   }
   async play(sound, pad) { try { this.rhythm.duck(); const active = await this.audio.play(sound); pad.classList.toggle("looping", sound.loop && active); if (!sound.loop) { pad.classList.add("playing"); setTimeout(() => pad.classList.remove("playing"), 130); } } catch (error) { console.error(error); this.status(`${sound.displayName}を再生できません`, true, true); } }
-  stopPadSound(sound, pad) { this.audio.stopSound(sound.id); pad.classList.remove("looping", "playing"); this.status(`「${sound.displayName}」を停止しました`); }
+  stopPadSound(sound, pad) { this.audio.stopSound(sound.id); pad.classList.remove("looping", "playing", "is-playing"); this.status(`「${sound.displayName}」を停止しました`); }
   textColor(hex) { const value = hex.replace("#", ""); const r = parseInt(value.slice(0, 2), 16), g = parseInt(value.slice(2, 4), 16), b = parseInt(value.slice(4, 6), 16); return (r * 299 + g * 587 + b * 114) / 1000 > 170 ? "#07111a" : "#ffffff"; }
   async toggleFavorite(sound) { sound.favorite = !sound.favorite; await this.persistSound(sound); this.render(); }
   toggleEdit() { this.cancelPadDrag(); this.editing = !this.editing; $("#editButton").classList.toggle("active", this.editing); $("#editButton").setAttribute("aria-pressed", this.editing); $("#editButton").textContent = this.editing ? "完了" : "編集"; $("#editBanner").hidden = !this.editing; this.renderPads(); }
