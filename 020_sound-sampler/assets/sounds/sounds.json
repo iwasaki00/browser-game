@@ -214,5 +214,61 @@
     "category": "演出",
     "color": "#64748b",
     "loop": false
+  },
+  {
+    "id": "default-129",
+    "file": "Awwww.wav",
+    "name": "Awwww",
+    "category": "コミカル",
+    "color": "#ec4899",
+    "loop": false
+  },
+  {
+    "id": "default-130",
+    "file": "DuckToy.wav",
+    "name": "DuckToy",
+    "category": "コミカル",
+    "color": "#06b6d4",
+    "loop": false
+  },
+  {
+    "id": "default-131",
+    "file": "Hone.wav",
+    "name": "Hone",
+    "category": "演出",
+    "color": "#64748b",
+    "loop": false
+  },
+  {
+    "id": "default-132",
+    "file": "イーヤッホー.wav",
+    "name": "イーヤッホー",
+    "category": "コミカル",
+    "color": "#f97316",
+    "loop": false
+  },
+  {
+    "id": "default-133",
+    "file": "イヨォーッポン.wav",
+    "name": "イヨォーッポン",
+    "category": "決め音",
+    "color": "#22c55e",
+    "loop": false
+  },
+  {
+    "id": "default-134",
+    "file": "エンジェル.wav",
+    "name": "エンジェル",
+    "category": "演出",
+    "color": "#a855f7",
+    "loop": false
+  },
+  {
+    "id": "default-135",
+    "file": "スパイダーマン登場.wav",
+    "name": "スパイダーマン登場",
+    "category": "演出",
+    "color": "#ef4444",
+    "loop": false
   }
 ]
