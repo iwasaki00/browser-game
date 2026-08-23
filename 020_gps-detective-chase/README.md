@@ -55,7 +55,7 @@ ES Modulesと位置情報を使うため、ファイルを直接開かずHTTPサ
 python -m http.server 8000
 ```
 
-`http://localhost:8000/021_gps-detective-chase/` をPCの2ウィンドウで開き、部屋作成・参加・準備・開始・再戦を確認します。位置情報の実機確認はHTTPSのGitHub Pagesへ公開し、iPhone Safariで行います。
+`http://localhost:8000/020_gps-detective-chase/` をPCの2ウィンドウで開き、部屋作成・参加・準備・開始・再戦を確認します。位置情報の実機確認はHTTPSのGitHub Pagesへ公開し、iPhone Safariで行います。
 
 実機では次を確認してください。
 
@@ -72,8 +72,8 @@ python -m http.server 8000
 URLへ `?debug=1` を追加する従来の起動方法も利用できます。こちらは実際のFirebaseルームへCPUやデバッグ状態を同期したい場合の開発者向けモードです。
 
 ```text
-http://localhost:8000/021_gps-detective-chase/?debug=1
-https://<user>.github.io/<repo>/021_gps-detective-chase/?debug=1
+http://localhost:8000/020_gps-detective-chase/?debug=1
+https://<user>.github.io/<repo>/020_gps-detective-chase/?debug=1
 ```
 
 画面の「DEBUG MODE」表示と右下のDEBUGボタンが目印です。通常URLでもトップ画面から明示的に選択できますが、選択するまではデバッグ用JavaScriptとCSSを読み込まず、CPU、仮想GPS、真の位置、強制勝敗操作を実行しません。
