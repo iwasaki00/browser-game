@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#f6efe2">
+  <meta name="description" content="部品を置いて、試して、直して。2Dの工作台で連鎖装置を作る物理パズルゲーム。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="コロコロ工作所 | 2Dピタゴラ装置パズル">
+  <meta property="og:description" content="部品を置いて、試して、直して。ボールやドミノをつなぐ2D物理パズル。">
+  <meta property="og:image" content="./assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="コロコロ工作所 | 2Dピタゴラ装置パズル">
+  <meta name="twitter:description" content="部品を置いて、試して、直して。ボールやドミノをつなぐ2D物理パズル。">
+  <meta name="twitter:image" content="./assets/og.png">
+  <title>コロコロ工作所 | 2Dピタゴラ装置パズル</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <section id="homeScreen" class="screen home-screen" aria-labelledby="gameTitle">
+      <div class="home-backdrop" aria-hidden="true">
+        <span class="toy toy-ball"></span>
+        <span class="toy toy-plank"></span>
+        <span class="toy toy-domino toy-domino-a"></span>
+        <span class="toy toy-domino toy-domino-b"></span>
+        <span class="toy toy-spring"></span>
+      </div>
+
+      <header class="home-header">
+        <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
+        <div class="brand-lockup">
+          <p class="eyebrow">ROLL · LINK · CLICK!</p>
+          <h1 id="gameTitle"><span>コロコロ</span>工作所</h1>
+          <p class="home-copy">置いて、試して、ちょっと直す。<br>ひらめきが動き出す物理パズル。</p>
+        </div>
+        <button id="homeSettingsButton" class="icon-button" type="button" aria-label="設定を開く">⚙</button>
+      </header>
+
+      <section class="mode-panel" aria-label="遊び方を選ぶ">
+        <div class="mode-heading">
+          <div>
+            <p class="section-kicker">PUZZLE DRAWER</p>
+            <h2>挑戦する</h2>
+          </div>
+          <span id="progressText" class="progress-chip">0 / 5 CLEAR</span>
+        </div>
+        <div id="stageList" class="stage-list"></div>
+      </section>
+
+      <section class="free-panel" aria-labelledby="freeTitle">
+        <div class="free-copy">
+          <p class="section-kicker">OPEN WORKBENCH</p>
+          <h2 id="freeTitle">自由工作</h2>
+          <p>全部品が使い放題。好きな連鎖を組み立てよう。</p>
+        </div>
+        <button id="newFreeButton" class="big-action secondary-action" type="button">
+          <span class="action-icon">＋</span>
+          <span>新しい工作</span>
+        </button>
+        <div id="savedWorks" class="saved-works" aria-label="保存した工作"></div>
+      </section>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" hidden aria-label="工作台">
+      <header class="game-hud">
+        <button id="homeButton" class="icon-button hud-home" type="button" aria-label="タイトルへ戻る">⌂</button>
+        <div class="stage-heading">
+          <span id="stageNumber" class="stage-number">STAGE 1</span>
+          <h2 id="stageName">坂道を作ろう</h2>
+          <p id="stageDescription">ボールをゴールへ届けよう</p>
+        </div>
+        <dl class="stats-strip">
+          <div><dt>PARTS</dt><dd id="partsStat">0 / 1</dd></div>
+          <div id="chainStatBox"><dt>CHAIN</dt><dd id="chainStat">0</dd></div>
+          <div><dt>TIME</dt><dd id="timeStat">00:00</dd></div>
+        </dl>
+        <button id="settingsButton" class="icon-button hud-settings" type="button" aria-label="設定を開く">⚙</button>
+      </header>
+
+      <section id="fieldShell" class="field-shell" aria-label="2D工作フィールド">
+        <canvas id="gameCanvas" width="760" height="440" aria-label="部品を配置して実験する工作台"></canvas>
+        <div id="modeBadge" class="mode-badge is-edit"><span></span>編集モード</div>
+        <div id="chainPop" class="chain-pop" aria-live="polite"></div>
+        <div id="fieldHint" class="field-hint" aria-live="polite">下の坂道をタップして置いてみよう</div>
+
+        <section id="partInspector" class="part-inspector" hidden aria-label="選択部品の編集">
+          <div class="inspector-title">
+            <span id="selectedPartIcon" class="mini-part-icon">▰</span>
+            <div><strong id="selectedPartName">坂道</strong><small id="selectedPartPosition">X 000 · Y 000 · 0°</small></div>
+          </div>
+          <div class="inspector-actions">
+            <button type="button" data-part-action="rotate-left" aria-label="左へ15度回転">↶<small>15°</small></button>
+            <button type="button" data-part-action="rotate-right" aria-label="右へ15度回転">↷<small>15°</small></button>
+            <button type="button" data-part-action="duplicate" aria-label="部品を複製">⧉<small>複製</small></button>
+            <button class="danger-button" type="button" data-part-action="delete" aria-label="部品を削除">×<small>削除</small></button>
+          </div>
+        </section>
+
+        <pre id="debugPanel" class="debug-panel" hidden aria-label="デバッグ情報"></pre>
+      </section>
+
+      <nav class="transport-bar" aria-label="実験操作">
+        <button id="startButton" class="transport-button start-button" type="button"><span>▶</span><b>実験</b></button>
+        <button id="stopButton" class="transport-button" type="button" disabled><span>■</span><b>停止</b></button>
+        <button id="resetButton" class="transport-button" type="button"><span>↻</span><b>リセット</b></button>
+        <span class="transport-divider" aria-hidden="true"></span>
+        <button id="undoButton" class="transport-button" type="button" disabled><span>↶</span><b>Undo</b></button>
+        <button id="redoButton" class="transport-button" type="button" disabled><span>↷</span><b>Redo</b></button>
+        <label class="speed-control" aria-label="実験速度">
+          <span>SPEED</span>
+          <select id="speedSelect">
+            <option value="0.25">×0.25</option>
+            <option value="0.5">×0.5</option>
+            <option value="1" selected>×1</option>
+            <option value="2">×2</option>
+          </select>
+        </label>
+        <button id="saveWorkButton" class="transport-button save-button" type="button" hidden><span>⌑</span><b>保存</b></button>
+      </nav>
+
+      <section class="palette-shell" aria-labelledby="paletteTitle">
+        <div class="palette-label">
+          <span class="drawer-grip" aria-hidden="true"></span>
+          <h3 id="paletteTitle">部品箱</h3>
+          <span id="paletteHelp">タップで追加</span>
+        </div>
+        <div id="partsPalette" class="parts-palette"></div>
+      </section>
+    </section>
+  </main>
+
+  <section id="settingsOverlay" class="overlay" hidden aria-labelledby="settingsTitle">
+    <div class="dialog settings-dialog">
+      <header class="dialog-header">
+        <div><p class="section-kicker">WORKBENCH SETTINGS</p><h2 id="settingsTitle">工作台の設定</h2></div>
+        <button class="close-button" type="button" data-close-overlay="settingsOverlay" aria-label="設定を閉じる">×</button>
+      </header>
+      <div class="setting-list">
+        <label><span><b>グリッド</b><small>方眼を表示する</small></span><input id="gridToggle" type="checkbox" checked><i></i></label>
+        <label><span><b>スナップ</b><small>10px単位で揃える</small></span><input id="snapToggle" type="checkbox" checked><i></i></label>
+        <label><span><b>効果音</b><small>工作の音を鳴らす</small></span><input id="soundToggle" type="checkbox" checked><i></i></label>
+        <label id="debugSetting" hidden><span><b>DEBUG</b><small>物理情報を表示する</small></span><input id="debugToggle" type="checkbox"><i></i></label>
+      </div>
+      <button id="restartTutorialButton" class="dialog-secondary" type="button">操作説明をもう一度見る</button>
+    </div>
+  </section>
+
+  <section id="tutorialOverlay" class="overlay tutorial-overlay" hidden aria-labelledby="tutorialTitle">
+    <div class="tutorial-card">
+      <span id="tutorialCount" class="tutorial-count">1 / 6</span>
+      <div id="tutorialVisual" class="tutorial-visual" aria-hidden="true">▰</div>
+      <p class="section-kicker">QUICK GUIDE</p>
+      <h2 id="tutorialTitle">部品を選ぶ</h2>
+      <p id="tutorialText">下の部品箱から、使いたい部品をタップします。</p>
+      <div class="tutorial-actions">
+        <button id="skipTutorialButton" class="text-button" type="button">スキップ</button>
+        <button id="nextTutorialButton" class="dialog-primary" type="button">次へ</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="clearOverlay" class="overlay" hidden aria-labelledby="clearTitle">
+    <div class="dialog clear-dialog">
+      <div class="clear-burst" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="section-kicker">EXPERIMENT COMPLETE!</p>
+      <h2 id="clearTitle">連鎖成功！</h2>
+      <div id="starRating" class="star-rating" aria-label="評価">★★★</div>
+      <dl class="result-stats">
+        <div><dt>部品</dt><dd id="resultParts">0</dd></div>
+        <div><dt>CHAIN</dt><dd id="resultChain">0</dd></div>
+        <div><dt>TIME</dt><dd id="resultTime">00:00</dd></div>
+      </dl>
+      <div class="clear-actions">
+        <button id="replayButton" class="dialog-secondary" type="button">▶ もう一度見る</button>
+        <button id="nextStageButton" class="dialog-primary" type="button">次のステージ</button>
+        <button id="returnToEditButton" class="text-button" type="button">工作台へ戻る</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="saveOverlay" class="overlay" hidden aria-labelledby="saveTitle">
+    <form id="saveForm" class="dialog save-dialog">
+      <header class="dialog-header">
+        <div><p class="section-kicker">SAVE WORK</p><h2 id="saveTitle">工作を保存</h2></div>
+        <button class="close-button" type="button" data-close-overlay="saveOverlay" aria-label="保存画面を閉じる">×</button>
+      </header>
+      <label class="name-field">工作名<input id="workNameInput" type="text" maxlength="24" inputmode="text" placeholder="例：スーパー連鎖1号" required></label>
+      <button class="dialog-primary" type="submit">この工作を保存</button>
+    </form>
+  </section>
+
+  <div id="toast" class="toast" hidden role="status"></div>
+  <div id="fatalError" class="fatal-error" hidden role="alert">
+    <strong>工作台を起動できませんでした</strong>
+    <span>必要なゲームファイルを読み込めませんでした。ページを開き直してください。</span>
+  </div>
+
+  <script src="./vendor/matter.min.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/stages.js"></script>
+  <script src="./js/parts.js"></script>
+  <script src="./js/physics.js"></script>
+  <script src="./js/renderer.js"></script>
+  <script src="./js/history.js"></script>
+  <script src="./js/storage.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/game.js"></script>
+  <script src="./js/input.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
