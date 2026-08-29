@@ -13,6 +13,7 @@
       this.finished = false;
       this.last = 0;
       this.elapsed = 0;
+      this.fps = 60;
       this.score = 0;
       this.hp = 3;
       this.cameraX = 0;
@@ -97,6 +98,7 @@
       if (!this.running) return;
       const dt = Math.min(.034, (time - this.last) / 1000);
       this.last = time;
+      this.fps += (1 / Math.max(.001, dt) - this.fps) * .08;
       this.update(dt);
       this.draw();
       requestAnimationFrame(this.boundLoop);
@@ -215,7 +217,7 @@
     }
 
     getHudState() { return { score: this.score, hp: this.hp, maxHp: 3, mode: "action" }; }
-    getDebugState() { const p = this.player; return { game: "action", playerState: p.state, fps: this.last ? Math.round(1 / Math.max(.001, (performance.now() - this.last) / 1000)) : 0, x: Math.round(p.x), y: Math.round(p.y), grounded: p.onGround, enemies: this.enemies.filter((enemy) => !enemy.dead).length }; }
+    getDebugState() { const p = this.player; return { game: "action", playerState: p.state, fps: Math.round(this.fps), x: Math.round(p.x), y: Math.round(p.y), grounded: p.onGround, enemies: this.enemies.filter((enemy) => !enemy.dead).length }; }
 
     draw() {
       const ctx = this.ctx, sy = this.scaleY;
