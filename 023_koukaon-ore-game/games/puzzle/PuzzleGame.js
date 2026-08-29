@@ -47,6 +47,7 @@
     async trySwap(first, second) {
       if (!this.canInput() || !this.board.adjacent(first, second)) return;
       this.idleTime = 0; this.hint = null; this.state = "SWAPPING"; this.board.swap(first, second); this.sound.play("puzzleSwap"); await this.wait(130);
+      if (!this.running) return;
       const matches = this.board.findMatches();
       if (!matches.groups.length) { this.board.swap(first, second); this.sound.play("puzzleInvalid"); this.banner = "NO MATCH"; this.bannerTimer = .45; await this.wait(150); this.state = this.timeUp ? "GAME_OVER" : "IDLE"; if (this.timeUp) this.finish(); return; }
       await this.resolveChains([first, second]);
@@ -67,11 +68,14 @@
         const gained = this.calculateScore(clearedCount, this.chain); this.score += gained; this.stats.totalCleared += clearedCount;
         const center = this.centerOf(expanded.positions); this.popups.push({ x: center.x, y: center.y, score: gained, life: 1 });
         await this.wait(this.chainDelay); this.board.clear(expanded.positions, specialPlans); this.clearing = null;
+        if (!this.running) return;
         this.state = "FALLING"; this.board.collapse(); await this.wait(this.fallDelay);
+        if (!this.running) return;
         this.state = "REFILLING"; this.board.refill(); await this.wait(this.fallDelay);
+        if (!this.running) return;
         matches = this.board.findMatches(); preferred = [];
       }
-      if (!this.board.findValidMoves(1).length) { this.state = "SHUFFLING"; this.banner = "SHUFFLE"; this.bannerTimer = .8; await this.wait(350); this.board.shuffle(); await this.wait(300); }
+      if (!this.board.findValidMoves(1).length) { this.state = "SHUFFLING"; this.banner = "SHUFFLE"; this.bannerTimer = .8; await this.wait(350); if (!this.running) return; this.board.shuffle(); await this.wait(300); if (!this.running) return; }
       this.chain = 0; this.state = this.timeUp ? "GAME_OVER" : "IDLE"; this.idleTime = 0;
       if (this.timeUp) this.finish();
     }

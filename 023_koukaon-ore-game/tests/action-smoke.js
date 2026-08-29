@@ -8,7 +8,7 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 
 const sounds = ["actionJump", "actionLand", "actionAttack", "actionEnemyHit", "actionEnemyDestroy", "actionDamage", "actionItem", "actionFall", "actionCheckpoint", "actionClear", "actionGameOver", "actionDash", "actionPowerUp"];
 for (const id of sounds) {
-  if (!config.includes(`${id}: { id: "${id}"`)) throw new Error(`Missing action sound definition: ${id}`);
+  if (!new RegExp(`${id}\\s*:\\s*{\\s*id\\s*:\\s*"${id}"`).test(config)) throw new Error(`Missing action sound definition: ${id}`);
   if (!action.includes(`"${id}"`) && !["actionDash"].includes(id)) throw new Error(`ActionGame does not use sound: ${id}`);
 }
 for (const method of ["registerGame", "startGame", "getGameDefinition"]) {

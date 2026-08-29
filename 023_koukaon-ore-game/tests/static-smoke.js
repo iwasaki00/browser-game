@@ -20,7 +20,7 @@ for (const id of selectors) {
 const requiredSounds = ["shot", "enemyShot", "enemyDestroy", "explosion", "damage", "item", "boss", "gameOver", "clear"];
 const config = fs.readFileSync(path.join(root, "js", "config.js"), "utf8");
 for (const sound of requiredSounds) {
-  if (!config.includes(`id: "${sound}"`)) throw new Error(`Missing required sound category: ${sound}`);
+  if (!new RegExp(`id\\s*:\\s*"${sound}"`).test(config)) throw new Error(`Missing required sound category: ${sound}`);
 }
 
 console.log(`Static smoke passed: ${refs.length} assets, ${selectors.size} UI bindings, ${requiredSounds.length} sound categories.`);
