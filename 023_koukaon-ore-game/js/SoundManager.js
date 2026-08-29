@@ -9,6 +9,7 @@
       this.buffers = new Map();
       this.counts = {};
       this.loops = new Map();
+      this.loadGeneration = 0;
       this.settings = { ...config.defaultSettings };
       this.currentPack = null;
     }
@@ -46,7 +47,8 @@
     async loadPack(pack, soundIds = null) {
       this.ensureContext();
       this.stopAllLoops();
-      this.currentPack = pack;
+      const generation = ++this.loadGeneration;
+      const nextBuffers = new Map();
       this.buffers.clear();
       const definitions = soundIds ? soundIds.map((id) => this.config.soundCatalog[id]).filter(Boolean) : this.config.soundDefinitions;
       for (const definition of definitions) {
@@ -58,7 +60,10 @@
           try { decoded.push(await this.context.decodeAudioData(await blob.arrayBuffer())); }
           catch (error) { console.warn(`Could not decode ${definition.id}`, error); }
         }
-        if (decoded.length) this.buffers.set(definition.id, decoded);
+        if (decoded.length) nextBuffers.set(definition.id, decoded);
+      }
+      if (generation === this.loadGeneration) {
+        this.currentPack = pack; this.buffers = nextBuffers;
       }
     }
 

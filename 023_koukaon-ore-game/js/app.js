@@ -184,8 +184,16 @@
 
   async function acceptRecording() {
     if (!state.pendingBlob || !state.recordingId) return;
-    state.currentPack.sounds = { ...(state.currentPack.sounds || {}), [state.recordingId]: state.pendingBlob };
-    await storage.savePack(state.currentPack); await sound.loadPack(state.currentPack, gameDef().sounds); recorder.release(); showScreen("studioScreen"); renderAll(); toast("オレ効果音に登録しました");
+    const button = $("#acceptRecordingButton"); if (button.disabled) return; button.disabled = true;
+    try {
+      state.currentPack.sounds = { ...(state.currentPack.sounds || {}), [state.recordingId]: state.pendingBlob };
+      await storage.savePack(state.currentPack);
+      const pack = state.currentPack; const soundIds = [...gameDef().sounds];
+      state.pendingBlob = null; state.recordingId = null; recorder.release();
+      showScreen("studioScreen"); renderAll(); toast("オレ効果音に登録しました");
+      sound.loadPack(pack, soundIds).catch((error) => { logError(error); toast("音声はゲーム開始時に再読込します"); });
+    } catch (error) { showError(error); }
+    finally { button.disabled = false; }
   }
 
   async function resetRecordedSound(id) {
@@ -196,8 +204,8 @@
     delete sounds[id];
     state.currentPack.sounds = sounds;
     await storage.savePack(state.currentPack);
-    await sound.loadPack(state.currentPack, gameDef().sounds);
-    renderAll(); toast(`${definition.label}を初期音に戻しました`);
+    const pack = state.currentPack; const soundIds = [...gameDef().sounds]; renderAll(); toast(`${definition.label}を初期音に戻しました`);
+    sound.loadPack(pack, soundIds).catch(logError);
   }
 
   async function gameCountdown() {
