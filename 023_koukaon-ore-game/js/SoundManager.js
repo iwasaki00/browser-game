@@ -12,7 +12,7 @@
       this.currentPack = null;
     }
 
-    async unlock() {
+    ensureContext() {
       if (!this.context) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         if (!AudioContextClass) throw new Error("Web Audio API is not supported");
@@ -20,6 +20,12 @@
         this.master = this.context.createGain();
         this.master.connect(this.context.destination);
       }
+      this.applyVolume();
+      return this.context;
+    }
+
+    async unlock() {
+      this.ensureContext();
       if (this.context.state === "suspended") await this.context.resume();
       this.applyVolume();
       return this.context;
@@ -29,7 +35,7 @@
     setSettings(settings) { this.settings = { ...this.settings, ...settings }; this.applyVolume(); }
 
     async loadPack(pack, soundIds = null) {
-      await this.unlock();
+      this.ensureContext();
       this.currentPack = pack;
       this.buffers.clear();
       const definitions = soundIds ? soundIds.map((id) => this.config.soundCatalog[id]).filter(Boolean) : this.config.soundDefinitions;

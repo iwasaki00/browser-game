@@ -11,6 +11,7 @@
     .registerGame("puzzle", window.PuzzleGame);
   const state = {
     packs: [], currentPack: null, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
+    ready: false,
     recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null
   };
@@ -70,6 +71,7 @@
     state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
     sound.setSettings(state.settings);
     await sound.loadPack(state.currentPack, gameDef().sounds);
+    state.ready = true;
     renderAll();
   }
 
@@ -84,7 +86,8 @@
   function renderGameModes() {
     $("#gameModeList").innerHTML = games.getGameDefinitions().map((definition) => {
       const selected = definition.id === state.selectedGameId;
-      return `<button class="mode-card ${definition.playable ? "is-ready" : ""} ${selected ? "is-selected" : ""}" type="button" data-select-game="${definition.id}" ${definition.playable ? "" : "disabled"}>
+      const enabled = definition.playable && state.ready;
+      return `<button class="mode-card ${definition.playable ? "is-ready" : ""} ${selected ? "is-selected" : ""}" type="button" data-select-game="${definition.id}" ${enabled ? "" : "disabled"}>
         <span>${String(definition.order).padStart(2, "0")}</span><div><b>${definition.name}</b><small>${definition.playable ? "PLAY" : "COMING SOON"}</small></div><i>${selected ? "✓" : definition.playable ? "→" : ""}</i>
       </button>`;
     }).join("");
@@ -317,8 +320,10 @@
 
   async function init() {
     bindEvents();
+    renderGameModes();
+    showScreen("titleScreen");
     try { await storage.init(); await loadState(); }
-    catch (error) { logError(error); state.currentPack = { id: config.defaultPackId, name: "オレ基本セット", sounds: {} }; renderAll(); toast("保存機能なしで起動しました"); }
+    catch (error) { logError(error); state.currentPack = { id: config.defaultPackId, name: "オレ基本セット", sounds: {} }; state.ready = true; renderAll(); toast("保存機能なしで起動しました"); }
     showScreen("titleScreen");
   }
 
