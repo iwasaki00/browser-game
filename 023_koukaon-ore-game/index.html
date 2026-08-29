@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#080b14">
+  <meta name="description" content="自分で録音した声や音が、そのままゲームの効果音になる縦スクロールシューティング。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="効果音全部オレゲーム">
+  <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶ縦スクロールシューティング。">
+  <meta property="og:image" content="./assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="効果音全部オレゲーム">
+  <meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶ縦スクロールシューティング。">
+  <meta name="twitter:image" content="./assets/og.png">
+  <title>効果音全部オレゲーム</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <section id="titleScreen" class="screen title-screen" aria-labelledby="gameTitle">
+      <header class="topbar">
+        <a class="back-button" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
+        <span class="top-label">ORE SOUND ARCADE</span>
+        <button class="icon-button" type="button" data-nav="settingsScreen" aria-label="設定">⚙</button>
+      </header>
+      <div class="hero">
+        <div class="mic-mark" aria-hidden="true"><span>●</span></div>
+        <p class="hero-kicker">RECORD IT. PLAY IT. LAUGH.</p>
+        <h1 id="gameTitle">効果音<br><strong>全部オレ</strong>ゲーム</h1>
+        <p class="tagline">ゲームの音、全部オレ。</p>
+      </div>
+      <section class="start-panel" aria-label="ゲームを始める">
+        <div class="pack-now"><span>使用中</span><b id="currentPackName">オレ基本セット</b><i id="homeProgress">0 / 9 オレ済み</i></div>
+        <p class="record-prompt">まずは、あなたの「ピュン！」を聞かせて。</p>
+        <button id="recordStartButton" class="primary-button" type="button"><span class="button-icon">●</span><span><small>おすすめ</small>全部録音して遊ぶ</span></button>
+        <button id="quickStartButton" class="secondary-button" type="button"><span>▶</span><span>すぐ遊ぶ <small>仮の効果音を使用</small></span></button>
+      </section>
+      <section class="mode-preview" aria-label="収録ゲーム">
+        <article class="mode-card is-ready"><span>01</span><div><b>シューティング</b><small>PLAYABLE</small></div><i>→</i></article>
+        <article class="mode-card"><span>02</span><div><b>アクション</b><small>COMING SOON</small></div></article>
+        <article class="mode-card"><span>03</span><div><b>パズル</b><small>COMING SOON</small></div></article>
+      </section>
+      <button id="studioShortcut" class="studio-shortcut" type="button">♫ サウンドスタジオを開く</button>
+      <p class="safe-note">録音はこの端末の中だけに保存されます</p>
+    </section>
+
+    <section id="studioScreen" class="screen content-screen" hidden aria-labelledby="studioTitle">
+      <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen" aria-label="タイトルへ戻る">←</button><div><p>SOUND STUDIO</p><h2 id="studioTitle">オレ効果音を録る</h2></div><button class="icon-button" type="button" data-nav="packsScreen" aria-label="サウンドパック">♫</button></header>
+      <section class="progress-panel"><div><b id="studioProgressText">0 / 9 録音済み</b><span>全部録ると本領発揮！</span></div><div class="progress-track"><i id="studioProgressBar"></i></div></section>
+      <div id="soundList" class="sound-list"></div>
+      <button id="studioGameButton" class="sticky-game-button" type="button">この音でゲーム開始 →</button>
+    </section>
+
+    <section id="recordScreen" class="screen record-screen" hidden aria-labelledby="recordSoundName">
+      <button id="cancelRecordingButton" class="close-record" type="button" aria-label="録音を閉じる">×</button>
+      <div class="record-heading"><p>NOW RECORDING</p><h2 id="recordSoundName">自機ショット</h2><strong id="recordExample">「ピュン！」</strong><span id="recordMax">最大 1 秒</span></div>
+      <section id="countdown" class="countdown"><small>声の準備はいい？</small><b id="countdownNumber">3</b></section>
+      <section id="recordLive" class="record-live" hidden><div class="rec-orb"><span>● REC</span></div><b id="recordTimer">0.0 / 1.0 秒</b><div class="meter-shell"><i id="recordMeterBar"></i></div><small>マイクの音量</small><button id="stopRecordingButton" class="stop-button" type="button">■ 停止</button></section>
+      <section id="recordReview" class="record-review" hidden><div class="success-mark">✓</div><h3>いい音、録れました。</h3><p id="reviewSize">0 KB</p><button id="previewRecordingButton" class="preview-button" type="button">▶ 試聴する</button><div class="review-actions"><button id="retryRecordingButton" type="button">↻ 録り直し</button><button id="acceptRecordingButton" type="button">✓ この音を使う</button></div></section>
+    </section>
+
+    <section id="testScreen" class="screen content-screen" hidden aria-labelledby="testTitle">
+      <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen">←</button><div><p>ORE SOUND CHECK</p><h2 id="testTitle">オレ効果音チェック</h2></div><span class="header-spacer"></span></header>
+      <p class="page-intro">押す。鳴る。連打する。それだけでちょっと楽しい。</p>
+      <div id="padGrid" class="pad-grid"></div>
+      <button id="playGameButton" class="primary-wide" type="button">このサウンドでゲーム開始 →</button>
+    </section>
+
+    <section id="packsScreen" class="screen content-screen" hidden aria-labelledby="packsTitle">
+      <header class="page-header"><button class="back-button" type="button" data-nav="studioScreen">←</button><div><p>SOUND PACKS</p><h2 id="packsTitle">サウンドパック</h2></div><span class="header-spacer"></span></header>
+      <div id="packList" class="pack-list"></div>
+      <form id="newPackForm" class="pack-form"><label>新しいパック名<input id="newPackName" maxlength="24" placeholder="例：全部ネコ" required></label><button type="submit">＋ 新規作成</button></form>
+      <section class="pack-actions"><label>現在のパック名<input id="packActionName" maxlength="24"></label><div><button id="renamePackButton" type="button">名前変更</button><button id="duplicatePackButton" type="button">複製</button><button id="deletePackButton" class="danger-button" type="button">削除</button></div></section>
+      <section class="challenge-panel"><p>RECORDING CHALLENGE</p><h3>録音縛りモード</h3><div><span class="challenge-ready">自由 <b>SELECTED</b></span><span>口だけ <b>SOON</b></span><span>小声だけ <b>SOON</b></span><span>全部動物 <b>SOON</b></span><span>ボディパーカッション <b>SOON</b></span></div></section>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" hidden aria-label="縦スクロールシューティング">
+      <header class="game-hud"><button id="gameQuitButton" type="button" aria-label="ゲーム終了">×</button><div><small>SCORE</small><b id="gameScore">000000</b></div><div><small>HP</small><b id="gameHp">♥ ♥ ♥</b></div></header>
+      <div id="bossBar" class="boss-bar" hidden><span>BOSS</span><i><b id="bossBarFill"></b></i></div>
+      <canvas id="gameCanvas" aria-label="指で自機を動かすシューティングゲーム"></canvas>
+      <p class="game-tip">指より少し上に自機が動きます</p>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" hidden aria-labelledby="resultTitle">
+      <p id="resultLabel" class="result-label">GAME OVER</p><h2 id="resultTitle">今回も全部オレでした。</h2>
+      <dl class="score-board"><div><dt>SCORE</dt><dd id="resultScore">0</dd></div><div><dt>BEST</dt><dd id="resultBest">0</dd></div></dl>
+      <section class="top-sound"><p>今回、一番働いたオレ</p><b id="topSoundName">SHOT</b><strong id="topSoundCount">0 回</strong></section>
+      <details class="count-details"><summary>今回の効果音再生回数</summary><div id="resultCounts"></div></details>
+      <div class="result-actions"><button id="replayButton" class="primary-wide" type="button">▶ もう一度</button><button id="resultStudioButton" type="button">● 効果音を変更</button><button id="resultHomeButton" type="button">タイトルへ</button></div>
+    </section>
+
+    <section id="settingsScreen" class="screen content-screen" hidden aria-labelledby="settingsTitle">
+      <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen">←</button><div><p>SETTINGS</p><h2 id="settingsTitle">設定</h2></div><span class="header-spacer"></span></header>
+      <div class="settings-list">
+        <label><span><b>マスター音量</b><small>ゲーム全体の音量</small></span><input id="masterVolume" class="settings-input" type="range" min="0" max="1" step="0.05"></label>
+        <label><span><b>効果音音量</b><small>オレ効果音の音量</small></span><input id="effectVolume" class="settings-input" type="range" min="0" max="1" step="0.05"></label>
+        <label><span><b>自動トリミング</b><small>録音前後の静かな部分を短くする準備設定</small></span><input id="autoTrim" class="settings-input toggle" type="checkbox"></label>
+        <label><span><b>自動連射</b><small>指で移動中もショット</small></span><input id="autoFire" class="settings-input toggle" type="checkbox"></label>
+        <label id="vibrationSetting"><span><b>振動</b><small>対応端末のみ</small></span><input id="vibration" class="settings-input toggle" type="checkbox"></label>
+      </div>
+      <button id="resumeAudioButton" class="secondary-wide" type="button">♫ サウンドを再開</button>
+      <button id="debugToggleButton" class="debug-button" type="button">開発情報を表示</button>
+      <dl id="debugPanel" class="debug-panel" hidden><div id="debugInfo"></div></dl>
+    </section>
+  </main>
+
+  <nav id="bottomNav" class="bottom-nav" aria-label="メインメニュー">
+    <button type="button" data-nav="titleScreen"><span>⌂</span>ホーム</button><button type="button" data-nav="studioScreen"><span>●</span>録音</button><button type="button" data-nav="testScreen"><span>▦</span>チェック</button><button type="button" data-nav="packsScreen"><span>♫</span>パック</button><button type="button" data-nav="settingsScreen"><span>⚙</span>設定</button>
+  </nav>
+
+  <button id="audioResumeNotice" class="audio-notice" type="button" hidden>タップしてサウンドを再開</button>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <section id="errorDialog" class="overlay" hidden role="alertdialog" aria-labelledby="errorTitle"><div class="dialog"><span class="error-icon">!</span><h2 id="errorTitle">マイクを使用できませんでした</h2><p id="errorMessage"></p><details><summary>詳細情報</summary><pre id="errorDetail"></pre></details><button id="closeErrorButton" class="primary-wide" type="button">確認しました</button></div></section>
+
+  <script src="./js/config.js"></script>
+  <script src="./js/StorageManager.js"></script>
+  <script src="./js/SoundManager.js"></script>
+  <script src="./js/RecorderManager.js"></script>
+  <script src="./games/shooter/ShooterGame.js"></script>
+  <script src="./js/GameManager.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
