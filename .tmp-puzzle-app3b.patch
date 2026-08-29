@@ -1,0 +1,43 @@
+﻿diff --git a/023_koukaon-ore-game/js/app.js b/023_koukaon-ore-game/js/app.js
+--- a/023_koukaon-ore-game/js/app.js
++++ b/023_koukaon-ore-game/js/app.js
+@@ -188,5 +188,7 @@
+     overlay.hidden = true;
+   }
+ 
++  function bestScoreFor(id) { return id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
++
+   async function startSelectedGame() {
+     try {
+@@ -194,9 +196,13 @@
+       const definition = gameDef(); state.lastGameId = definition.id;
+       await sound.unlock(); await sound.loadPack(state.currentPack, definition.sounds);
+       showScreen("gameScreen");
+       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
++      $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
+       $("#actionControls").hidden = definition.id !== "action";
+-      $("#bossBar").hidden = true; $("#gameModeLabel").textContent = definition.name.toUpperCase(); $("#gameScore").textContent = "000000"; $("#gameHp").textContent = "♥ ♥ ♥";
++      $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
++      $("#gameAuxLabel").textContent = definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
++      $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
+       await gameCountdown();
+-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: $("#actionControls") });
++      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: $("#actionControls"), bestScore: state.puzzleBest });
+       clearInterval(state.hudTimer);
+       state.hudTimer = setInterval(updateGameHud, 100);
+@@ -207,6 +213,13 @@
+     if (!games.current?.running) return clearInterval(state.hudTimer);
+     const current = games.current; const hud = current.getHudState?.() || { score: current.score, hp: current.hp, maxHp: 3 };
+     $("#gameScore").textContent = String(hud.score || 0).padStart(6, "0");
+-    $("#gameHp").textContent = Array.from({ length: hud.maxHp || 3 }, (_, i) => i < hud.hp ? "♥" : "♡").join(" ");
++    if (hud.time != null) {
++      $("#gameAuxLabel").textContent = "TIME"; $("#gameHp").textContent = String(Math.ceil(hud.time));
++      $("#gameAuxPanel").classList.toggle("is-warning", hud.time <= 5);
++    } else {
++      $("#gameAuxLabel").textContent = "HP"; $("#gameHp").textContent = Array.from({ length: hud.maxHp || 3 }, (_, i) => i < hud.hp ? "♥" : "♡").join(" ");
++      $("#gameAuxPanel").classList.remove("is-warning");
++    }
++    $("#gameBest").textContent = String(hud.best ?? bestScoreFor(games.currentId)).padStart(6, "0");
+     $("#bossBar").hidden = !current.boss;
+     if (current.boss) $("#bossBarFill").style.width = `${current.boss.hp / current.boss.maxHp * 100}%`;
+

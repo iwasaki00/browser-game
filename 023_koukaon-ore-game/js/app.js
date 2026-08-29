@@ -7,10 +7,11 @@
   const recorder = new window.RecorderManager(sound);
   const games = new window.GameManager(sound, config.gameDefinitions)
     .registerGame("shooter", window.ShooterGame)
-    .registerGame("action", window.ActionGame);
+    .registerGame("action", window.ActionGame)
+    .registerGame("puzzle", window.PuzzleGame);
   const state = {
     packs: [], currentPack: null, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
-    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null,
+    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null
   };
 
@@ -64,6 +65,9 @@
     state.shooterBest = await storage.getState("bestScore", 0);
     state.actionBest = await storage.getState("actionBestScore", 0);
     state.actionBestTime = await storage.getState("actionBestTime", null);
+    state.puzzleBest = await storage.getState("puzzleBestScore", 0);
+    state.puzzleBestChain = await storage.getState("puzzleBestChain", 0);
+    state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
     sound.setSettings(state.settings);
     await sound.loadPack(state.currentPack, gameDef().sounds);
     renderAll();
@@ -123,6 +127,7 @@
 
   function renderPads() {
     $("#testGameName").textContent = gameDef().subtitle;
+    $("#puzzleChainTest").hidden = state.selectedGameId !== "puzzle";
     $("#padGrid").innerHTML = gameSounds().map((definition, index) => {
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<button class="sound-pad pad-${index % 4} ${done ? "is-recorded" : ""}" type="button" data-pad="${definition.id}"><span>${definition.short}</span><small>${done ? "✓ オレ済み" : "仮サウンド"}</small></button>`;

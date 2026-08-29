@@ -12,7 +12,7 @@
   <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta property="og:image" content="./assets/og.png">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="効果音全部オレゲーム"><meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta name="twitter:image" content="./assets/og.png">
   <title>効果音全部オレゲーム</title>
-  <link rel="stylesheet" href="./css/style.css"><link rel="stylesheet" href="./css/action.css">
+  <link rel="stylesheet" href="./css/style.css"><link rel="stylesheet" href="./css/action.css"><link rel="stylesheet" href="./css/puzzle.css">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -46,7 +46,7 @@
 
     <section id="testScreen" class="screen content-screen" hidden aria-labelledby="testTitle">
       <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen">←</button><div><p>ORE SOUND CHECK</p><h2 id="testTitle">オレ効果音チェック</h2></div><span class="header-spacer"></span></header>
-      <p id="testGameName" class="game-context-chip">横スクロールアクション</p><p class="page-intro">押す。鳴る。連打する。それだけでちょっと楽しい。</p><div id="padGrid" class="pad-grid"></div><button id="playGameButton" class="primary-wide" type="button">このサウンドでゲーム開始 →</button>
+      <p id="testGameName" class="game-context-chip">横スクロールアクション</p><p class="page-intro">押す。鳴る。連打する。それだけでちょっと楽しい。</p><section id="puzzleChainTest" class="puzzle-chain-test" hidden><p>ORE CHAIN TEST</p><h3>オレ連鎖テスト</h3><span>連鎖の声が段階的に盛り上がるか確認しよう。</span><b id="chainTestStatus" class="chain-test-status">1 → 2 → 3 → 4 → 5+</b><button id="chainTestButton" type="button">▶ START</button></section><div id="padGrid" class="pad-grid"></div><button id="playGameButton" class="primary-wide" type="button">このサウンドでゲーム開始 →</button>
     </section>
 
     <section id="packsScreen" class="screen content-screen" hidden aria-labelledby="packsTitle">
@@ -57,9 +57,9 @@
     </section>
 
     <section id="gameScreen" class="screen game-screen" hidden aria-label="全部オレゲーム プレイ画面">
-      <header class="game-hud"><button id="gameQuitButton" type="button" aria-label="ゲーム終了">×</button><div><small id="gameModeLabel">ACTION</small><b id="gameScore">000000</b></div><div><small>HP</small><b id="gameHp">♥ ♥ ♥</b></div><button id="gameDebugButton" type="button" aria-label="開発情報">DEV</button></header>
+      <header class="game-hud"><button id="gameQuitButton" type="button" aria-label="ゲーム終了">×</button><div><small id="gameModeLabel">SCORE</small><b id="gameScore">000000</b></div><div id="gameAuxPanel"><small id="gameAuxLabel">HP</small><b id="gameHp">♥ ♥ ♥</b></div><div id="gameBestPanel" class="best-hud"><small>BEST</small><b id="gameBest">000000</b></div><button id="gameDebugButton" type="button" aria-label="開発情報">DEV</button></header>
       <div id="bossBar" class="boss-bar" hidden><span>BOSS</span><i><b id="bossBarFill"></b></i></div>
-      <canvas id="gameCanvas" aria-label="ゲーム画面"></canvas><p class="game-tip">シューティングはドラッグ移動 · アクションは下のボタンで操作</p>
+      <canvas id="gameCanvas" aria-label="ゲーム画面"></canvas><p class="game-tip">シューティングはドラッグ · アクションはボタン · パズルはスワイプかタップ</p>
       <div id="gameCountdown" class="game-countdown" hidden><b id="gameCountdownText">3</b></div><pre id="gameDebugOverlay" class="game-debug-overlay" hidden></pre>
       <nav id="actionControls" class="action-controls" hidden aria-label="アクション操作">
         <div class="move-controls"><button type="button" data-action-control="left" aria-label="左へ移動">←</button><button type="button" data-action-control="right" aria-label="右へ移動">→</button></div>
@@ -71,8 +71,11 @@
       <p id="resultLabel" class="result-label">STAGE CLEAR</p><h2 id="resultTitle">このステージの音は全部あなたでした。</h2>
       <dl class="score-board"><div><dt>SCORE</dt><dd id="resultScore">0</dd></div><div><dt>BEST</dt><dd id="resultBest">0</dd></div></dl>
       <dl id="actionResultStats" class="action-result-stats" hidden><div><dt>TIME</dt><dd id="resultTime">00:00.0</dd></div><div><dt>FASTEST</dt><dd id="resultFastest">--:--</dd></div><div><dt>敵撃破</dt><dd id="resultKills">0</dd></div><div><dt>アイテム</dt><dd id="resultItems">0</dd></div><div><dt>ダメージ</dt><dd id="resultDamage">0</dd></div><div><dt>落下</dt><dd id="resultFalls">0</dd></div></dl>
+      <dl id="puzzleResultStats" class="action-result-stats puzzle-result-stats" hidden><div><dt>最大連鎖</dt><dd id="resultMaxChain">0</dd></div><div><dt>総消去数</dt><dd id="resultTotalCleared">0</dd></div><div><dt>特殊生成</dt><dd id="resultSpecialCreated">0</dd></div><div><dt>特殊発動</dt><dd id="resultSpecialActivated">0</dd></div><div><dt>大量消去</dt><dd id="resultBigClears">0</dd></div><div><dt>BEST連鎖</dt><dd id="resultBestChain">0</dd></div></dl>
+      <p id="puzzleResultMessage" class="puzzle-result-message" hidden>まだ静かなオレ。</p>
       <section class="top-sound"><p>今回、一番働いたオレ</p><b id="topSoundName">攻撃</b><strong id="topSoundCount">0 回</strong></section>
       <details class="count-details"><summary>今回のオレ効果音使用回数</summary><div id="resultCounts"></div></details>
+      <button id="directChainRerecordButton" class="direct-rerecord" type="button" hidden>最大連鎖音を録り直す</button>
       <div class="result-actions result-actions-four"><button id="replayButton" class="primary-wide" type="button">▶ もう一度</button><button id="resultStudioButton" type="button">● 効果音を録り直す</button><button id="resultTestButton" type="button">▦ オレ効果音チェック</button><button id="resultHomeButton" type="button">ゲーム選択へ</button></div>
     </section>
 
@@ -88,6 +91,6 @@
   <section id="errorDialog" class="overlay" hidden role="alertdialog" aria-labelledby="errorTitle"><div class="dialog"><span class="error-icon">!</span><h2 id="errorTitle">マイクを使用できませんでした</h2><p id="errorMessage"></p><details><summary>詳細情報</summary><pre id="errorDetail"></pre></details><button id="closeErrorButton" class="primary-wide" type="button">確認しました</button></div></section>
 
   <script src="./js/config.js"></script><script src="./js/StorageManager.js"></script><script src="./js/SoundManager.js"></script><script src="./js/RecorderManager.js"></script>
-  <script src="./games/shooter/ShooterGame.js"></script><script src="./games/action/ActionGame.js"></script><script src="./js/GameManager.js"></script><script src="./js/app.js"></script>
+  <script src="./games/shooter/ShooterGame.js"></script><script src="./games/action/ActionGame.js"></script><script src="./games/puzzle/PuzzleBoard.js"></script><script src="./games/puzzle/PuzzleRenderer.js"></script><script src="./games/puzzle/PuzzleGame.js"></script><script src="./js/GameManager.js"></script><script src="./js/app.js"></script>
 </body>
 </html>

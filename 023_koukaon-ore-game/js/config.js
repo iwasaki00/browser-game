@@ -1,60 +1,15 @@
 (function () {
   "use strict";
-
   const soundCatalog = {
-    shot: { id: "shot", label: "自機ショット", short: "SHOT", example: "ピュン！", max: 1 },
-    enemyShot: { id: "enemyShot", label: "敵ショット", short: "ENEMY SHOT", example: "ビビッ！", max: 1 },
-    enemyDestroy: { id: "enemyDestroy", label: "敵撃破", short: "ENEMY", example: "バシュッ！", max: 1.5 },
-    explosion: { id: "explosion", label: "爆発", short: "BOOM", example: "ドカーン！", max: 2 },
-    damage: { id: "damage", label: "プレイヤーダメージ", short: "DAMAGE", example: "いてっ！", max: 1.5 },
-    item: { id: "item", label: "アイテム取得", short: "ITEM", example: "キラーン！", max: 1.5 },
-    boss: { id: "boss", label: "ボス登場", short: "BOSS", example: "デデーン！", max: 2.5 },
-    gameOver: { id: "gameOver", label: "ゲームオーバー", short: "GAME OVER", example: "終わったー！", max: 3 },
-    clear: { id: "clear", label: "ステージクリア", short: "CLEAR", example: "やったー！", max: 3 },
-    actionJump: { id: "actionJump", label: "ジャンプ", short: "JUMP", example: "よいしょ！", max: 1.5 },
-    actionLand: { id: "actionLand", label: "着地", short: "LAND", example: "ドスン！", max: 1.5 },
-    actionAttack: { id: "actionAttack", label: "攻撃", short: "ATTACK", example: "とうっ！", max: 1.5 },
-    actionEnemyHit: { id: "actionEnemyHit", label: "敵に攻撃命中", short: "HIT", example: "バシッ！", max: 1.2 },
-    actionEnemyDestroy: { id: "actionEnemyDestroy", label: "敵撃破", short: "K.O.", example: "やった！", max: 1.8 },
-    actionDamage: { id: "actionDamage", label: "プレイヤーダメージ", short: "DAMAGE", example: "いてっ！", max: 1.5 },
-    actionItem: { id: "actionItem", label: "アイテム取得", short: "ITEM", example: "いただき！", max: 1.5 },
-    actionFall: { id: "actionFall", label: "穴へ落下", short: "FALL", example: "うわぁぁぁ！", max: 3 },
-    actionCheckpoint: { id: "actionCheckpoint", label: "チェックポイント", short: "CHECK", example: "ここから！", max: 2 },
-    actionClear: { id: "actionClear", label: "ステージクリア", short: "CLEAR", example: "イェーイ！", max: 3 },
-    actionGameOver: { id: "actionGameOver", label: "ゲームオーバー", short: "GAME OVER", example: "もうダメだ！", max: 3 },
-    actionDash: { id: "actionDash", label: "ダッシュ", short: "DASH", example: "ビューン！", max: 1.2 },
-    actionPowerUp: { id: "actionPowerUp", label: "パワーアップ", short: "POWER UP", example: "パワー全開！", max: 2 }
+    shot:{id:"shot",label:"自機ショット",short:"SHOT",example:"ピュン！",max:1},enemyShot:{id:"enemyShot",label:"敵ショット",short:"ENEMY SHOT",example:"ビビッ！",max:1},enemyDestroy:{id:"enemyDestroy",label:"敵撃破",short:"ENEMY",example:"バシュッ！",max:1.5},explosion:{id:"explosion",label:"爆発",short:"BOOM",example:"ドカーン！",max:2},damage:{id:"damage",label:"プレイヤーダメージ",short:"DAMAGE",example:"いてっ！",max:1.5},item:{id:"item",label:"アイテム取得",short:"ITEM",example:"キラーン！",max:1.5},boss:{id:"boss",label:"ボス登場",short:"BOSS",example:"デデーン！",max:2.5},gameOver:{id:"gameOver",label:"ゲームオーバー",short:"GAME OVER",example:"終わったー！",max:3},clear:{id:"clear",label:"ステージクリア",short:"CLEAR",example:"やったー！",max:3},
+    actionJump:{id:"actionJump",label:"ジャンプ",short:"JUMP",example:"よいしょ！",max:1.5},actionLand:{id:"actionLand",label:"着地",short:"LAND",example:"ドスン！",max:1.5},actionAttack:{id:"actionAttack",label:"攻撃",short:"ATTACK",example:"とうっ！",max:1.5},actionEnemyHit:{id:"actionEnemyHit",label:"敵に攻撃命中",short:"HIT",example:"バシッ！",max:1.2},actionEnemyDestroy:{id:"actionEnemyDestroy",label:"敵撃破",short:"K.O.",example:"やった！",max:1.8},actionDamage:{id:"actionDamage",label:"プレイヤーダメージ",short:"DAMAGE",example:"いてっ！",max:1.5},actionItem:{id:"actionItem",label:"アイテム取得",short:"ITEM",example:"いただき！",max:1.5},actionFall:{id:"actionFall",label:"穴へ落下",short:"FALL",example:"うわぁぁぁ！",max:3},actionCheckpoint:{id:"actionCheckpoint",label:"チェックポイント",short:"CHECK",example:"ここから！",max:2},actionClear:{id:"actionClear",label:"ステージクリア",short:"CLEAR",example:"イェーイ！",max:3},actionGameOver:{id:"actionGameOver",label:"ゲームオーバー",short:"GAME OVER",example:"もうダメだ！",max:3},actionDash:{id:"actionDash",label:"ダッシュ",short:"DASH",example:"ビューン！",max:1.2},actionPowerUp:{id:"actionPowerUp",label:"パワーアップ",short:"POWER UP",example:"パワー全開！",max:2},
+    puzzleSwap:{id:"puzzleSwap",label:"ピース交換",short:"SWAP",example:"シュッ！",max:1},puzzleInvalid:{id:"puzzleInvalid",label:"無効な交換",short:"NO MATCH",example:"ブブー！",max:1},puzzleMatch:{id:"puzzleMatch",label:"通常消去・1連鎖",short:"MATCH 1",example:"ポン！",max:1},puzzleChain2:{id:"puzzleChain2",label:"2連鎖",short:"CHAIN 2",example:"おっ！",max:1.2},puzzleChain3:{id:"puzzleChain3",label:"3連鎖",short:"CHAIN 3",example:"きた！",max:1.5},puzzleChain4:{id:"puzzleChain4",label:"4連鎖",short:"CHAIN 4",example:"うおお！",max:1.8},puzzleChain5:{id:"puzzleChain5",label:"5連鎖以上",short:"CHAIN 5+",example:"うおおおお！！",max:2.5},puzzleSpecialCreate:{id:"puzzleSpecialCreate",label:"特殊ピース生成",short:"SPECIAL +",example:"できた！",max:1.5},puzzleSpecialActivate:{id:"puzzleSpecialActivate",label:"特殊ピース発動",short:"SPECIAL!",example:"ドカーン！",max:2},puzzleBigClear:{id:"puzzleBigClear",label:"大量消去",short:"BIG CLEAR",example:"全部いけー！",max:2.5},puzzleItem:{id:"puzzleItem",label:"ボーナス取得",short:"BONUS",example:"いただき！",max:1.5},puzzleWarning:{id:"puzzleWarning",label:"残り時間警告",short:"WARNING",example:"あと少し！",max:2},puzzleClear:{id:"puzzleClear",label:"目標クリア",short:"CLEAR",example:"やったー！",max:3},puzzleGameOver:{id:"puzzleGameOver",label:"タイムアップ",short:"TIME UP",example:"終わったー！",max:3}
   };
-
   const gameDefinitions = {
-    shooter: {
-      id: "shooter", order: 1, name: "シューティング", subtitle: "縦スクロールシューティング",
-      description: "声のショットを連射して、敵とボスを吹き飛ばそう。", playable: true,
-      sounds: ["shot", "enemyShot", "enemyDestroy", "explosion", "damage", "item", "boss", "gameOver", "clear"]
-    },
-    action: {
-      id: "action", order: 2, name: "アクション", subtitle: "横スクロールアクション",
-      description: "ジャンプも攻撃も落下もオレ。声だらけの1ステージを駆け抜けよう。", playable: true,
-      sounds: ["actionJump", "actionLand", "actionAttack", "actionEnemyHit", "actionEnemyDestroy", "actionDamage", "actionItem", "actionFall", "actionCheckpoint", "actionClear", "actionGameOver", "actionDash", "actionPowerUp"]
-    },
-    puzzle: {
-      id: "puzzle", order: 3, name: "パズル", subtitle: "パズルゲーム",
-      description: "ひらめきの音まで全部オレ。", playable: false, sounds: []
-    }
+    shooter:{id:"shooter",order:1,name:"シューティング",subtitle:"縦スクロールシューティング",description:"声のショットを連射して、敵とボスを吹き飛ばそう。",playable:true,sounds:["shot","enemyShot","enemyDestroy","explosion","damage","item","boss","gameOver","clear"]},
+    action:{id:"action",order:2,name:"アクション",subtitle:"横スクロールアクション",description:"ジャンプも攻撃も落下もオレ。声だらけの1ステージを駆け抜けよう。",playable:true,sounds:["actionJump","actionLand","actionAttack","actionEnemyHit","actionEnemyDestroy","actionDamage","actionItem","actionFall","actionCheckpoint","actionClear","actionGameOver","actionDash","actionPowerUp"]},
+    puzzle:{id:"puzzle",order:3,name:"3マッチパズル",subtitle:"効果音全部オレ 3マッチ",description:"消すたび、連鎖するたび、オレがどんどん騒がしくなる60秒スコアアタック。",playable:true,sounds:["puzzleSwap","puzzleInvalid","puzzleMatch","puzzleChain2","puzzleChain3","puzzleChain4","puzzleChain5","puzzleSpecialCreate","puzzleSpecialActivate","puzzleBigClear","puzzleItem","puzzleWarning","puzzleClear","puzzleGameOver"]},
+    racing:{id:"racing",order:4,name:"レース",subtitle:"レースゲーム",description:"エンジン音まで全部オレ。",playable:false,sounds:[]}
   };
-
-  window.ORE_CONFIG = {
-    dbName: "ore-sound-arcade",
-    dbVersion: 1,
-    defaultPackId: "ore-default",
-    defaultGameId: "shooter",
-    soundCatalog,
-    soundDefinitions: Object.values(soundCatalog),
-    gameDefinitions,
-    getGameSounds(gameId) {
-      const game = gameDefinitions[gameId] || gameDefinitions.shooter;
-      return game.sounds.map((id) => soundCatalog[id]);
-    },
-    defaultSettings: { masterVolume: 0.9, effectVolume: 0.9, autoTrim: true, autoFire: true, vibration: true }
-  };
+  window.ORE_CONFIG={dbName:"ore-sound-arcade",dbVersion:1,defaultPackId:"ore-default",defaultGameId:"shooter",soundCatalog,soundDefinitions:Object.values(soundCatalog),gameDefinitions,getGameSounds(gameId){const game=gameDefinitions[gameId]||gameDefinitions.shooter;return game.sounds.map((id)=>soundCatalog[id]);},defaultSettings:{masterVolume:.9,effectVolume:.9,autoTrim:true,autoFire:true,vibration:true}};
 })();
