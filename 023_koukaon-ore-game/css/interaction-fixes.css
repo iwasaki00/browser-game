@@ -1,0 +1,13 @@
+html,
+body,
+.app-shell,
+button,
+a,
+input,
+label {
+  touch-action: manipulation;
+}
+
+.game-countdown {
+  background: radial-gradient(circle at 50% 45%, #18203a 0%, #080b14 58%, #050710 100%);
+}

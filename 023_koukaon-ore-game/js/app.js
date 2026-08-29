@@ -23,7 +23,7 @@
   const gameSounds = (id = state.selectedGameId) => config.getGameSounds(id);
 
   function showScreen(id) {
-    if (id !== "gameScreen") games.stop();
+    if (id !== "gameScreen") { games.stop(); sound.stopAllLoops(); }
     screens.forEach((screen) => { screen.hidden = screen.id !== id; });
     $("#bottomNav").hidden = id === "gameScreen" || id === "recordScreen";
     $$(`[data-nav]`).forEach((button) => button.classList.toggle("is-active", button.dataset.nav === id));
@@ -117,7 +117,7 @@
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<article class="sound-row ${done ? "is-recorded" : ""}" data-sound-id="${definition.id}">
         <span class="sound-number">${String(index + 1).padStart(2, "0")}</span>
-        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒</small></div>
+        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒</small>${done ? `<button class="reset-sound-button" type="button" data-reset-sound="${definition.id}">録音を削除して初期音に戻す</button>` : ""}</div>
         <span class="status-chip">${done ? "✓ オレ済み" : "○ まだ"}</span>
         <button class="mini-play" type="button" data-play="${definition.id}" aria-label="${definition.label}を再生">▶</button>
         <button class="record-button" type="button" data-record="${definition.id}">${done ? "録り直す" : "● 録音"}</button>
@@ -188,6 +188,18 @@
     await storage.savePack(state.currentPack); await sound.loadPack(state.currentPack, gameDef().sounds); recorder.release(); showScreen("studioScreen"); renderAll(); toast("オレ効果音に登録しました");
   }
 
+  async function resetRecordedSound(id) {
+    const definition = config.soundCatalog[id];
+    if (!definition || !state.currentPack?.sounds?.[id]) return;
+    if (!confirm(`「${definition.label}」の録音を削除して初期音に戻しますか？`)) return;
+    const sounds = { ...state.currentPack.sounds };
+    delete sounds[id];
+    state.currentPack.sounds = sounds;
+    await storage.savePack(state.currentPack);
+    await sound.loadPack(state.currentPack, gameDef().sounds);
+    renderAll(); toast(`${definition.label}を初期音に戻しました`);
+  }
+
   async function gameCountdown() {
     const overlay = $("#gameCountdown"); overlay.hidden = false;
     for (const value of ["3", "2", "1", "全部オレ！"]) { $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await new Promise((resolve) => setTimeout(resolve, value === "全部オレ！" ? 700 : 540)); }
@@ -200,15 +212,19 @@
     try {
       const definition = gameDef(); state.lastGameId = definition.id;
       await sound.unlock(); await sound.loadPack(state.currentPack, definition.sounds);
-      showScreen("gameScreen");
+      games.stop(); sound.stopAllLoops();
       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
       $("#actionControls").hidden = definition.id !== "action";
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
       $("#gameAuxLabel").textContent = definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
       $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
+      const canvas = $("#gameCanvas"); const context = canvas.getContext("2d");
+      context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
+      showScreen("gameScreen");
       await gameCountdown();
       await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: $("#actionControls"), bestScore: state.puzzleBest });
+      await sound.startLoop(definition.bgm, { gain: .35 });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
     } catch (error) { showScreen("titleScreen"); showError(error); }
@@ -234,6 +250,7 @@
 
   async function finishGame(result) {
     clearInterval(state.hudTimer);
+    sound.stopAllLoops();
     if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
       await storage.setState("puzzleBestScore", state.puzzleBest); await storage.setState("puzzleBestChain", state.puzzleBestChain); await storage.setState("puzzlePlayCount", state.puzzlePlays);
@@ -288,6 +305,7 @@
       const nav = event.target.closest("[data-nav]"); if (nav) showScreen(nav.dataset.nav);
       const game = event.target.closest("[data-select-game]"); if (game) selectGame(game.dataset.selectGame);
       const recordButton = event.target.closest("[data-record]"); if (recordButton) startRecording(recordButton.dataset.record);
+      const resetButton = event.target.closest("[data-reset-sound]"); if (resetButton) resetRecordedSound(resetButton.dataset.resetSound);
       const playButton = event.target.closest("[data-play]"); if (playButton) sound.play(playButton.dataset.play);
       const pad = event.target.closest("[data-pad]"); if (pad) { pad.classList.remove("is-hit"); void pad.offsetWidth; pad.classList.add("is-hit"); sound.play(pad.dataset.pad); }
       const pack = event.target.closest("[data-pack]"); if (pack) choosePack(pack.dataset.pack);

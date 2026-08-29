@@ -8,6 +8,7 @@
       this.master = null;
       this.buffers = new Map();
       this.counts = {};
+      this.loops = new Map();
       this.settings = { ...config.defaultSettings };
       this.currentPack = null;
     }
@@ -36,6 +37,7 @@
 
     async loadPack(pack, soundIds = null) {
       this.ensureContext();
+      this.stopAllLoops();
       this.currentPack = pack;
       this.buffers.clear();
       const definitions = soundIds ? soundIds.map((id) => this.config.soundCatalog[id]).filter(Boolean) : this.config.soundDefinitions;
@@ -72,6 +74,38 @@
         return;
       }
       this.playFallback(id, options.gain ?? 1);
+    }
+
+    async startLoop(id, options = {}) {
+      if (!id) return false;
+      this.stopLoop(id);
+      await this.unlock();
+      const entries = this.buffers.get(id);
+      if (!entries?.length) return false;
+      this.counts[id] = (this.counts[id] || 0) + 1;
+      const source = this.context.createBufferSource();
+      const gain = this.context.createGain();
+      source.buffer = entries[Math.floor(Math.random() * entries.length)];
+      source.loop = true;
+      gain.gain.value = options.gain ?? .35;
+      source.connect(gain).connect(this.master);
+      const loop = { source, gain };
+      source.onended = () => { if (this.loops.get(id) === loop) this.loops.delete(id); };
+      this.loops.set(id, loop);
+      source.start();
+      return true;
+    }
+
+    stopLoop(id) {
+      const loop = this.loops.get(id);
+      if (!loop) return;
+      loop.source.onended = null;
+      try { loop.source.stop(); } catch (error) { console.warn(`Could not stop loop ${id}`, error); }
+      this.loops.delete(id);
+    }
+
+    stopAllLoops() {
+      [...this.loops.keys()].forEach((id) => this.stopLoop(id));
     }
 
     playFallback(id, gainValue) {

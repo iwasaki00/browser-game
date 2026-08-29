@@ -1,0 +1,16 @@
+.reset-sound-button {
+  min-height: 32px;
+  margin-top: 9px;
+  padding: 5px 9px;
+  color: #ff9ab1;
+  background: rgba(255, 59, 104, 0.08);
+  border: 1px dashed rgba(255, 59, 104, 0.45);
+  border-radius: 9px;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.reset-sound-button:active {
+  transform: scale(0.97);
+  background: rgba(255, 59, 104, 0.16);
+}
