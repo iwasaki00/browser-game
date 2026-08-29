@@ -30,10 +30,16 @@ const manager = new windowObject.SoundManager(config);
 
   const initStart = appSource.indexOf("async function init()");
   const firstAwait = appSource.indexOf("await storage.init()", initStart);
-  const earlyRender = appSource.indexOf("renderGameModes()", initStart);
+  const earlyRender = appSource.indexOf("renderAll()", initStart);
   const earlyScreen = appSource.indexOf('showScreen("titleScreen")', initStart);
   if (initStart < 0 || earlyRender < initStart || earlyRender > firstAwait || earlyScreen > firstAwait) {
-    throw new Error("Game modes and title screen must render before asynchronous storage initialization");
+    throw new Error("All interactive UI and the title screen must render before asynchronous storage initialization");
+  }
+  if (!appSource.includes("ready: true") || !appSource.includes("packs: [initialPack], currentPack: initialPack")) {
+    throw new Error("A usable in-memory sound pack must exist before storage initialization");
+  }
+  if (!appSource.includes("const enabled = definition.playable;")) {
+    throw new Error("Playable game buttons must not depend on asynchronous initialization");
   }
 
   console.log("iPhone initial render passed: game list is immediate and audio resume waits for a user action.");

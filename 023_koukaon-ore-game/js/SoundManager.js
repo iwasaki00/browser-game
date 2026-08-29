@@ -46,26 +46,23 @@
     setSettings(settings) { this.settings = { ...this.settings, ...settings }; this.applyVolume(); }
 
     async loadPack(pack, soundIds = null) {
-      this.ensureContext();
-      this.stopAllLoops();
-      const generation = ++this.loadGeneration;
-      const nextBuffers = new Map();
-      this.buffers.clear();
-      const definitions = soundIds ? soundIds.map((id) => this.config.soundCatalog[id]).filter(Boolean) : this.config.soundDefinitions;
-      for (const definition of definitions) {
-        const stored = pack.sounds && pack.sounds[definition.id];
-        if (!stored) continue;
-        const blobs = Array.isArray(stored) ? stored : [stored];
-        const decoded = [];
-        for (const blob of blobs) {
-          try { decoded.push(await this.context.decodeAudioData(await blob.arrayBuffer())); }
-          catch (error) { console.warn(`Could not decode ${definition.id}`, error); }
-        }
-        if (decoded.length) nextBuffers.set(definition.id, decoded);
-      }
-      if (generation === this.loadGeneration) {
-        this.currentPack = pack; this.buffers = nextBuffers;
-      }
+      this.ensureContext(); this.stopAllLoops(); const generation=++this.loadGeneration,nextBuffers=new Map(); this.buffers.clear();
+      const definitions=soundIds?soundIds.map(id=>this.config.soundCatalog[id]).filter(Boolean):this.config.soundDefinitions;
+      await Promise.all(definitions.map(async definition=>{
+        const stored=pack.sounds&&pack.sounds[definition.id];if(!stored)return;const blobs=Array.isArray(stored)?stored:[stored];
+        const decoded=(await Promise.all(blobs.map(async blob=>{
+          try{
+            const decoding=this.context.decodeAudioData(await blob.arrayBuffer());
+            if(typeof setTimeout!=="function")return await decoding;
+            return await Promise.race([
+              decoding,
+            new Promise((_,reject)=>setTimeout(()=>reject(new Error("Audio decode timeout")),2500))
+            ]);
+          }catch(error){console.warn(`Could not decode ${definition.id}`,error);return null;}
+        }))).filter(Boolean);
+        if(decoded.length)nextBuffers.set(definition.id,decoded);
+      }));
+      if(generation===this.loadGeneration){this.currentPack=pack;this.buffers=nextBuffers;}
     }
 
     resetPlayStats() { this.counts = {}; this.loopStats = {}; }

@@ -10,9 +10,10 @@
     .registerGame("action", window.ActionGame)
     .registerGame("puzzle", window.PuzzleGame)
     .registerGame("race", window.RaceGame);
+  const initialPack = { id: config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} };
   const state = {
-    packs: [], currentPack: null, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
-    ready: false,
+    packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
+    ready: true,
     recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null
   };
@@ -72,9 +73,9 @@
     state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
     state.raceBest = await storage.getState("raceBestScore", 0);
     sound.setSettings(state.settings);
-    await sound.loadPack(state.currentPack, gameDef().sounds);
-    state.ready = true;
-    renderAll();
+    state.ready = true; renderAll();
+    sound.loadPack(state.currentPack, gameDef().sounds).catch(logError);
+
   }
 
   function recordedCount(pack = state.currentPack, gameId = state.selectedGameId) {
@@ -88,7 +89,7 @@
   function renderGameModes() {
     $("#gameModeList").innerHTML = games.getGameDefinitions().map((definition) => {
       const selected = definition.id === state.selectedGameId;
-      const enabled = definition.playable && state.ready;
+      const enabled = definition.playable;
       return `<button class="mode-card ${definition.playable ? "is-ready" : ""} ${selected ? "is-selected" : ""}" type="button" data-select-game="${definition.id}" ${enabled ? "" : "disabled"}>
         <span>${String(definition.order).padStart(2, "0")}</span><div><b>${definition.name}</b><small>${definition.playable ? "PLAY" : "COMING SOON"}</small></div><i>${selected ? "✓" : definition.playable ? "→" : ""}</i>
       </button>`;
@@ -106,7 +107,8 @@
 
   async function selectGame(id, announce = true) {
     const definition = gameDef(id); if (!definition?.playable) return;
-    state.selectedGameId = id; await storage.setState("selectedGameId", id); await sound.loadPack(state.currentPack, definition.sounds); renderAll();
+    state.selectedGameId = id; renderAll();
+    storage.setState("selectedGameId", id).catch(logError); sound.loadPack(state.currentPack, definition.sounds).catch(logError);
     if (announce) toast(`${definition.name}を選びました`);
   }
 
@@ -399,10 +401,10 @@
 
   async function init() {
     bindEvents();
-    renderGameModes();
+    renderAll();
     showScreen("titleScreen");
     try { await storage.init(); await loadState(); }
-    catch (error) { logError(error); state.currentPack = { id: config.defaultPackId, name: "オレ基本セット", sounds: {} }; state.ready = true; renderAll(); toast("保存機能なしで起動しました"); }
+    catch (error) { logError(error); renderAll(); toast("保存機能なしで起動しました"); }
     showScreen("titleScreen");
   }
 
