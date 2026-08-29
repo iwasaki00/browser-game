@@ -8,12 +8,13 @@
   const games = new window.GameManager(sound, config.gameDefinitions)
     .registerGame("shooter", window.ShooterGame)
     .registerGame("action", window.ActionGame)
-    .registerGame("puzzle", window.PuzzleGame);
+    .registerGame("puzzle", window.PuzzleGame)
+    .registerGame("race", window.RaceGame);
   const state = {
     packs: [], currentPack: null, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
     ready: false,
-    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, lastPuzzleChainKey: "puzzleMatch",
-    lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null
+    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, lastPuzzleChainKey: "puzzleMatch",
+    lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null
   };
 
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -69,6 +70,7 @@
     state.puzzleBest = await storage.getState("puzzleBestScore", 0);
     state.puzzleBestChain = await storage.getState("puzzleBestChain", 0);
     state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
+    state.raceBest = await storage.getState("raceBestScore", 0);
     sound.setSettings(state.settings);
     await sound.loadPack(state.currentPack, gameDef().sounds);
     state.ready = true;
@@ -115,9 +117,10 @@
     $("#studioProgressBar").style.width = `${definitions.length ? count / definitions.length * 100 : 0}%`;
     $("#soundList").innerHTML = definitions.map((definition, index) => {
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
+      const canCopy = Object.keys(state.currentPack?.sounds || {}).some((id) => id !== definition.id && config.soundCatalog[id]);
       return `<article class="sound-row ${done ? "is-recorded" : ""}" data-sound-id="${definition.id}">
         <span class="sound-number">${String(index + 1).padStart(2, "0")}</span>
-        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒</small>${done ? `<button class="reset-sound-button" type="button" data-reset-sound="${definition.id}">録音を削除して初期音に戻す</button>` : ""}</div>
+        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒</small><div class="sound-copy-actions"><button class="copy-sound-button" type="button" data-copy-sound="${definition.id}" ${canCopy ? "" : "disabled"}>他の音と同じにする</button>${done ? `<button class="reset-sound-button" type="button" data-reset-sound="${definition.id}">録音を削除して初期音に戻す</button>` : ""}</div></div>
         <span class="status-chip">${done ? "✓ オレ済み" : "○ まだ"}</span>
         <button class="mini-play" type="button" data-play="${definition.id}" aria-label="${definition.label}を再生">▶</button>
         <button class="record-button" type="button" data-record="${definition.id}">${done ? "録り直す" : "● 録音"}</button>
@@ -131,6 +134,7 @@
   function renderPads() {
     $("#testGameName").textContent = gameDef().subtitle;
     $("#puzzleChainTest").hidden = state.selectedGameId !== "puzzle";
+    $("#raceEngineTest").hidden = state.selectedGameId !== "race";
     $("#padGrid").innerHTML = gameSounds().map((definition, index) => {
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<button class="sound-pad pad-${index % 4} ${done ? "is-recorded" : ""}" type="button" data-pad="${definition.id}"><span>${definition.short}</span><small>${done ? "✓ オレ済み" : "仮サウンド"}</small></button>`;
@@ -208,13 +212,45 @@
     sound.loadPack(pack, soundIds).catch(logError);
   }
 
+  function copySourceOptions(targetId) {
+    return Object.keys(state.currentPack?.sounds || {}).filter((id) => id !== targetId && config.soundCatalog[id]).map((id) => {
+      const definition = config.soundCatalog[id];
+      const owner = Object.values(config.gameDefinitions).find((game) => game.sounds.includes(id));
+      return { id, label: `${owner?.name || "共通"} / ${definition.label}` };
+    });
+  }
+
+  function openCopySound(targetId) {
+    const target = config.soundCatalog[targetId]; const sources = copySourceOptions(targetId);
+    if (!target || !sources.length) { toast("先にコピー元の音を録音してください"); return; }
+    state.copyTargetId = targetId; $("#copySoundTarget").textContent = `「${target.label}」へコピーします`;
+    $("#copySoundSource").innerHTML = sources.map((source) => `<option value="${source.id}">${escapeHtml(source.label)}</option>`).join("");
+    $("#copySoundDialog").hidden = false;
+  }
+
+  async function copyRecordedSound() {
+    const targetId = state.copyTargetId; const sourceId = $("#copySoundSource").value;
+    const stored = state.currentPack?.sounds?.[sourceId]; const target = config.soundCatalog[targetId];
+    if (!target || !stored || sourceId === targetId) return;
+    const button = $("#confirmCopySoundButton"); if (button.disabled) return; button.disabled = true;
+    try {
+      const copied = Array.isArray(stored) ? [...stored] : stored;
+      state.currentPack.sounds = { ...(state.currentPack.sounds || {}), [targetId]: copied };
+      await storage.savePack(state.currentPack);
+      const pack = state.currentPack; const soundIds = [...gameDef().sounds];
+      state.copyTargetId = null; $("#copySoundDialog").hidden = true; renderAll(); toast(`${target.label}を同じ音にしました`);
+      sound.loadPack(pack, soundIds).catch(logError);
+    } catch (error) { showError(error); }
+    finally { button.disabled = false; }
+  }
+
   async function gameCountdown() {
     const overlay = $("#gameCountdown"); overlay.hidden = false;
     for (const value of ["3", "2", "1", "全部オレ！"]) { $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await new Promise((resolve) => setTimeout(resolve, value === "全部オレ！" ? 700 : 540)); }
     overlay.hidden = true;
   }
 
-  function bestScoreFor(id) { return id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
+  function bestScoreFor(id) { return id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
     try {
@@ -223,7 +259,9 @@
       games.stop(); sound.stopAllLoops();
       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
+      $("#gameScreen").classList.toggle("is-race", definition.id === "race");
       $("#actionControls").hidden = definition.id !== "action";
+      $("#raceControls").hidden = definition.id !== "race";
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
       $("#gameAuxLabel").textContent = definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
       $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
@@ -231,7 +269,7 @@
       context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
       showScreen("gameScreen");
       await gameCountdown();
-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: $("#actionControls"), bestScore: state.puzzleBest });
+      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id) });
       await sound.startLoop(definition.bgm, { gain: .35 });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
@@ -259,7 +297,8 @@
   async function finishGame(result) {
     clearInterval(state.hudTimer);
     sound.stopAllLoops();
-    if (result.mode === "puzzle") {
+    if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
+    else if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
       await storage.setState("puzzleBestScore", state.puzzleBest); await storage.setState("puzzleBestChain", state.puzzleBestChain); await storage.setState("puzzlePlayCount", state.puzzlePlays);
     } else if (result.mode === "action") {
@@ -273,11 +312,14 @@
     $("#resultBest").textContent = bestScoreFor(result.mode || "shooter").toLocaleString();
     const action = result.mode === "action";
     const puzzle = result.mode === "puzzle";
+    const race = result.mode === "race";
     $("#actionResultStats").hidden = !action;
     if (action) {
       $("#resultTime").textContent = formatTime(result.stats.time); $("#resultKills").textContent = result.stats.kills; $("#resultItems").textContent = result.stats.items;
       $("#resultDamage").textContent = result.stats.damage; $("#resultFalls").textContent = result.stats.falls; $("#resultFastest").textContent = state.actionBestTime ? formatTime(state.actionBestTime) : "--:--";
     }
+    $("#raceResultStats").hidden=!race; $("#raceResultMessage").hidden=!race; $("#directEngineRerecordButton").hidden=!race;
+    if(race){$("#raceResultTime").textContent=formatTime(result.stats.time);$("#raceResultMaxSpeed").textContent=`${Math.round(result.stats.maxSpeed)} km/h`;$("#raceResultAvgSpeed").textContent=`${Math.round(result.stats.averageSpeed)} km/h`;$("#raceResultOvertakes").textContent=result.stats.overtakes;$("#raceResultCrashes").textContent=result.stats.crashes;$("#raceResultBoosts").textContent=result.stats.boosts;$("#raceResultMessage").textContent=result.stats.crashes===0?"安全運転のオレ。":result.stats.crashes>=5?"だいぶオレがぶつかりました。":result.stats.overtakes>=20?"今日のオレ、かなり強気。":"今日もオレが走りました。";}
     $("#puzzleResultStats").hidden = !puzzle; $("#puzzleResultMessage").hidden = !puzzle; $("#directChainRerecordButton").hidden = !puzzle;
     if (puzzle) {
       $("#resultMaxChain").textContent = result.stats.maxChain; $("#resultTotalCleared").textContent = result.stats.totalCleared; $("#resultSpecialCreated").textContent = result.stats.specialsCreated; $("#resultSpecialActivated").textContent = result.stats.specialsActivated; $("#resultBigClears").textContent = result.stats.bigClears; $("#resultBestChain").textContent = state.puzzleBestChain;
@@ -299,6 +341,7 @@
     const common = [
       ["UserAgent", navigator.userAgent], ["MediaRecorder", window.MediaRecorder ? "対応" : "非対応"], ["getUserMedia", navigator.mediaDevices?.getUserMedia ? "対応" : "非対応"],
       ["現在のゲーム", live.game || state.selectedGameId], ["FPS", live.fps ?? "--"], ["AudioContext", sound.context?.state || "未開始"], ["ロード済み効果音", sound.getLoadedBufferCount()]
+
     ];
     const gameRows = live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
     return [...common, ...gameRows, ["IndexedDB", storage.db ? "接続済み" : "未接続"], ["現在のパック", state.currentPack?.name || "なし"], ["登録済み音声", `${recordedCount()} / ${gameDef().sounds.length}`], ["録音形式", recorder.preferredMimeType?.() || "ブラウザ既定"], ["エラー履歴", state.errors.join("\n") || "なし"]];
@@ -308,14 +351,17 @@
   function renderLiveDebug() { $("#gameDebugOverlay").textContent = debugRows().slice(3, 11).map(([key, value]) => `${key}: ${value}`).join("\n"); }
   async function runChainTest() { const button = $("#chainTestButton"); if (button.disabled) return; button.disabled = true; await sound.unlock(); const sequence = [["puzzleMatch", "1連鎖 ポン！"], ["puzzleChain2", "2連鎖 おっ！"], ["puzzleChain3", "3連鎖 きた！"], ["puzzleChain4", "4連鎖 うおお！"], ["puzzleChain5", "5連鎖 全部オレ！！"]]; for (const [id, label] of sequence) { $("#chainTestStatus").textContent = label; await sound.play(id); await new Promise((resolve) => setTimeout(resolve, 720)); } $("#chainTestStatus").textContent = "1 → 2 → 3 → 4 → 5+"; button.disabled = false; button.textContent = "▶ もう一度"; }
 
+  async function runEngineTest(){const b=$("#engineTestButton");if(b.disabled)return;b.disabled=true;await sound.startLoop("raceEngine",{gain:.55,playbackRate:.85});for(const[label,rate,speed]of [["LOW",.85,80],["MID",1,120],["HIGH",1.15,180],["BOOST",1.3,220]]){$("#engineTestStatus").textContent=`${label} · ${speed} km/h`;sound.setLoopPlaybackRate("raceEngine",rate);await new Promise(r=>setTimeout(r,1250));}sound.stopLoop("raceEngine");$("#engineTestStatus").textContent="LOW → MID → HIGH → BOOST";b.disabled=false;}
+
   function bindEvents() {
     document.addEventListener("click", (event) => {
       const nav = event.target.closest("[data-nav]"); if (nav) showScreen(nav.dataset.nav);
       const game = event.target.closest("[data-select-game]"); if (game) selectGame(game.dataset.selectGame);
       const recordButton = event.target.closest("[data-record]"); if (recordButton) startRecording(recordButton.dataset.record);
       const resetButton = event.target.closest("[data-reset-sound]"); if (resetButton) resetRecordedSound(resetButton.dataset.resetSound);
+      const copyButton = event.target.closest("[data-copy-sound]"); if (copyButton) openCopySound(copyButton.dataset.copySound);
       const playButton = event.target.closest("[data-play]"); if (playButton) sound.play(playButton.dataset.play);
-      const pad = event.target.closest("[data-pad]"); if (pad) { pad.classList.remove("is-hit"); void pad.offsetWidth; pad.classList.add("is-hit"); sound.play(pad.dataset.pad); }
+      const pad = event.target.closest("[data-pad]"); if (pad) { pad.classList.remove("is-hit"); void pad.offsetWidth; pad.classList.add("is-hit"); if(pad.dataset.pad==="raceEngine"){if(sound.isLoopPlaying("raceEngine"))sound.stopLoop("raceEngine");else sound.startLoop("raceEngine",{gain:.55});}else sound.play(pad.dataset.pad); }
       const pack = event.target.closest("[data-pack]"); if (pack) choosePack(pack.dataset.pack);
     });
     $("#recordStartButton").addEventListener("click", () => showScreen("studioScreen")); $("#studioShortcut").addEventListener("click", () => showScreen("studioScreen"));
@@ -331,13 +377,17 @@
     $("#resultHomeButton").addEventListener("click", () => showScreen("titleScreen"));
     $("#chainTestButton").addEventListener("click", runChainTest);
     $("#directChainRerecordButton").addEventListener("click", async () => { await selectGame("puzzle", false); startRecording(state.lastPuzzleChainKey); });
+    $("#directEngineRerecordButton").addEventListener("click",async()=>{await selectGame("race",false);startRecording("raceEngine")});
     $("#newPackForm").addEventListener("submit", async (event) => { event.preventDefault(); const input = $("#newPackName"); const name = input.value.trim(); if (!name) return; const pack = { id: `pack-${Date.now()}`, name, createdAt: Date.now(), updatedAt: Date.now(), sounds: {} }; await storage.savePack(pack); state.packs.push(pack); input.value = ""; await choosePack(pack.id); });
     $("#renamePackButton").addEventListener("click", async () => { const name = $("#packActionName").value.trim(); if (!name) return; state.currentPack.name = name; await storage.savePack(state.currentPack); renderAll(); toast("パック名を変更しました"); });
     $("#duplicatePackButton").addEventListener("click", async () => { const copy = await storage.duplicatePack(state.currentPack.id, `${state.currentPack.name} コピー`); state.packs.push(copy); await choosePack(copy.id); });
     $("#deletePackButton").addEventListener("click", async () => { if (state.packs.length <= 1 || !confirm(`「${state.currentPack.name}」を削除しますか？`)) return; await storage.deletePack(state.currentPack.id); state.packs = state.packs.filter((pack) => pack.id !== state.currentPack.id); await choosePack(state.packs[0].id); });
     $$(`.settings-input`).forEach((input) => input.addEventListener("change", saveSettings));
     $("#debugToggleButton").addEventListener("click", () => { renderDebug(); $("#debugPanel").hidden = !$("#debugPanel").hidden; });
+    $("#engineTestButton").addEventListener("click",runEngineTest);
     $("#closeErrorButton").addEventListener("click", () => { $("#errorDialog").hidden = true; });
+    $("#cancelCopySoundButton").addEventListener("click", () => { state.copyTargetId = null; $("#copySoundDialog").hidden = true; });
+    $("#confirmCopySoundButton").addEventListener("click", copyRecordedSound);
     const recoverAudio = async (force = false) => { try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; return false; } };
     $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());

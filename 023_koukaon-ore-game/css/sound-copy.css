@@ -1,0 +1,66 @@
+.sound-copy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.sound-copy-actions .reset-sound-button,
+.copy-sound-button {
+  min-height: 32px;
+  margin-top: 0;
+  padding: 5px 9px;
+  border-radius: 9px;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.copy-sound-button {
+  color: var(--cyan);
+  background: rgba(72, 233, 225, 0.08);
+  border: 1px dashed rgba(72, 233, 225, 0.45);
+}
+
+.copy-sound-button:disabled {
+  opacity: 0.38;
+}
+
+.copy-sound-dialog label {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-align: left;
+}
+
+.copy-sound-dialog select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #090d18;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.copy-sound-dialog .dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.copy-sound-dialog .dialog-actions button {
+  color: var(--ink);
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.copy-sound-dialog .dialog-actions button:last-child {
+  color: #071215;
+  background: var(--cyan);
+  border: 0;
+  font-weight: 900;
+}

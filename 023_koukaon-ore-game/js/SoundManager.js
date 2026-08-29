@@ -9,6 +9,7 @@
       this.buffers = new Map();
       this.counts = {};
       this.loops = new Map();
+      this.loopStats = {};
       this.loadGeneration = 0;
       this.settings = { ...config.defaultSettings };
       this.currentPack = null;
@@ -67,7 +68,7 @@
       }
     }
 
-    resetPlayStats() { this.counts = {}; }
+    resetPlayStats() { this.counts = {}; this.loopStats = {}; }
     getPlayStats() { return { ...this.counts }; }
     resetCounts() { this.resetPlayStats(); }
     getCounts() { return this.getPlayStats(); }
@@ -90,30 +91,24 @@
     }
 
     async startLoop(id, options = {}) {
-      if (!id) return false;
-      this.stopLoop(id);
-      await this.unlock();
-      const entries = this.buffers.get(id);
-      if (!entries?.length) return false;
-      this.counts[id] = (this.counts[id] || 0) + 1;
-      const source = this.context.createBufferSource();
-      const gain = this.context.createGain();
-      source.buffer = entries[Math.floor(Math.random() * entries.length)];
-      source.loop = true;
-      gain.gain.value = options.gain ?? .35;
-      source.connect(gain).connect(this.master);
-      const loop = { source, gain };
-      source.onended = () => { if (this.loops.get(id) === loop) this.loops.delete(id); };
-      this.loops.set(id, loop);
-      source.start();
-      return true;
+      if (!id) return false; if(this.loops.has(id)){this.setLoopVolume(id,options.gain??.35);this.setLoopPlaybackRate(id,options.playbackRate??1);return true;}
+      await this.unlock(); const entries=this.buffers.get(id); if(!entries?.length)return false;
+      this.counts[id]=(this.counts[id]||0)+1; const source=this.context.createBufferSource(),gain=this.context.createGain();
+      source.buffer=entries[Math.floor(Math.random()*entries.length)];source.loop=true;if(source.playbackRate)source.playbackRate.value=options.playbackRate??1;gain.gain.value=options.gain??.35;source.connect(gain).connect(this.master);
+      const loop={source,gain,startedAt:this.context.currentTime};source.onended=()=>{if(this.loops.get(id)===loop)this.loops.delete(id)};this.loops.set(id,loop);source.start();return true;
     }
+    setLoopVolume(id,value){const loop=this.loops.get(id);if(loop)loop.gain.gain.value=Math.max(0,Math.min(1,value));}
+    setLoopPlaybackRate(id,value){const loop=this.loops.get(id);if(loop?.source.playbackRate)loop.source.playbackRate.value=Math.max(.5,Math.min(2,value));}
+    isLoopPlaying(id){return this.loops.has(id);}
+    getLoopStats(){const result={...this.loopStats};for(const[id,loop]of this.loops){const old=result[id]||{count:this.counts[id]||0,duration:0};result[id]={count:old.count,duration:old.duration+Math.max(0,this.context.currentTime-loop.startedAt)};}return result;}
 
     stopLoop(id) {
       const loop = this.loops.get(id);
       if (!loop) return;
       loop.source.onended = null;
       try { loop.source.stop(); } catch (error) { console.warn(`Could not stop loop ${id}`, error); }
+      const duration=Math.max(0,this.context.currentTime-loop.startedAt),old=this.loopStats[id]||{count:this.counts[id]||0,duration:0};
+      this.loopStats[id]={count:old.count,duration:old.duration+duration};
       this.loops.delete(id);
     }
 
