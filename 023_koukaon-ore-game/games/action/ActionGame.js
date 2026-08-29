@@ -23,7 +23,7 @@
       this.pressed = { jump: false, attack: false };
       this.cleanup = [];
       this.stats = { kills: 0, items: 0, damage: 0, falls: 0 };
-      this.player = { x: 90, y: 320, w: 30, h: 44, vx: 0, vy: 0, onGround: false, wasGrounded: false, airtime: 0, facing: 1, invincible: 0, attackTimer: 0, attackHit: false, state: "idle", checkpointX: 90, respawning: 0 };
+      this.player = { x: 90, y: 320, w: 30, h: 44, vx: 0, vy: 0, onGround: false, wasGrounded: false, airtime: 0, jumpsUsed: 0, maxJumps: 2, facing: 1, invincible: 0, attackTimer: 0, attackHit: false, state: "idle", checkpointX: 90, respawning: 0 };
       this.platforms = [
         { x: 0, y: 430, w: 610, h: 90 }, { x: 735, y: 430, w: 580, h: 90 },
         { x: 1435, y: 430, w: 780, h: 90 }, { x: 2340, y: 430, w: 760, h: 90 },
@@ -118,7 +118,7 @@
 
       if (this.pressed.jump) {
         this.pressed.jump = false;
-        if (p.onGround) { p.vy = -480; p.onGround = false; p.airtime = 0; p.state = "jump"; this.sound.play("actionJump"); }
+        if (p.onGround || p.jumpsUsed < p.maxJumps) { p.jumpsUsed = p.onGround ? 1 : p.jumpsUsed + 1; p.vy = p.jumpsUsed === 1 ? -480 : -440; p.onGround = false; p.airtime = 0; p.state = p.jumpsUsed === 2 ? "double-jump" : "jump"; this.sound.play("actionJump"); }
       }
       if (this.pressed.attack) {
         this.pressed.attack = false;
@@ -141,9 +141,10 @@
           }
         }
       }
+      if (p.onGround) p.jumpsUsed = 0;
       if (!p.onGround) p.airtime += dt;
       if (p.onGround && !p.wasGrounded && p.airtime > .16) { this.sound.play("actionLand"); p.airtime = 0; }
-      if (p.attackTimer <= 0) p.state = p.onGround ? (Math.abs(p.vx) > 18 ? "walk" : "idle") : "jump";
+      if (p.attackTimer <= 0) p.state = p.onGround ? (Math.abs(p.vx) > 18 ? "walk" : "idle") : p.jumpsUsed === 2 ? "double-jump" : "jump";
 
       this.updateEnemies(dt);
       this.collectItems();
@@ -206,7 +207,7 @@
 
     restoreCheckpoint() {
       const p = this.player;
-      p.x = p.checkpointX; p.y = 330; p.vx = 0; p.vy = 0; p.invincible = 1; p.state = "idle";
+      p.x = p.checkpointX; p.y = 330; p.vx = 0; p.vy = 0; p.jumpsUsed = 0; p.invincible = 1; p.state = "idle";
     }
 
     finish(clear) {

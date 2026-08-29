@@ -330,10 +330,13 @@
     $$(`.settings-input`).forEach((input) => input.addEventListener("change", saveSettings));
     $("#debugToggleButton").addEventListener("click", () => { renderDebug(); $("#debugPanel").hidden = !$("#debugPanel").hidden; });
     $("#closeErrorButton").addEventListener("click", () => { $("#errorDialog").hidden = true; });
-    $("#resumeAudioButton").addEventListener("click", async () => { await sound.unlock(); toast("サウンドを再開しました"); });
+    const recoverAudio = async (force = false) => { try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; return false; } };
+    $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());
-    document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context?.state === "suspended") $("#audioResumeNotice").hidden = false; });
-    $("#audioResumeNotice").addEventListener("click", async () => { await sound.unlock(); $("#audioResumeNotice").hidden = true; });
+    document.addEventListener("pointerdown", () => { if (sound.context && sound.context.state !== "running") recoverAudio(); }, { capture: true });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
+    window.addEventListener("pageshow", () => { if (sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
+    $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
   }
 
   async function init() {

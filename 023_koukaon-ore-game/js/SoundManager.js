@@ -25,12 +25,20 @@
       return this.context;
     }
 
-    async unlock() {
-      this.ensureContext();
-      if (this.context.state === "suspended") await this.context.resume();
-      this.applyVolume();
-      return this.context;
+    async unlock(forceRestart = false) {
+      if (this.unlockPromise) return this.unlockPromise;
+      this.unlockPromise = (async () => {
+        this.ensureContext();
+        if (forceRestart && this.context.state === "running" && this.context.suspend) await this.context.suspend();
+        if (this.context.state !== "running") await this.context.resume();
+        this.applyVolume();
+        return this.context;
+      })();
+      try { return await this.unlockPromise; }
+      finally { this.unlockPromise = null; }
     }
+
+    recover() { return this.unlock(true); }
 
     applyVolume() { if (this.master) this.master.gain.value = this.settings.masterVolume * this.settings.effectVolume; }
     setSettings(settings) { this.settings = { ...this.settings, ...settings }; this.applyVolume(); }

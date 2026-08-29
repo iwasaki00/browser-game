@@ -19,11 +19,14 @@ function createGame() {
 
 const jump = createGame();
 jump.game.player.x = 90; jump.game.player.y = 408; jump.game.player.onGround = true; jump.game.pressed.jump = true;
-jump.game.update(.016); jump.game.update(.016);
-if (jump.played.filter((id) => id === "actionJump").length !== 1) throw new Error("Jump sound must play exactly once per jump");
+jump.game.update(.016);
+jump.game.pressed.jump = true; jump.game.update(.016);
+if (jump.played.filter((id) => id === "actionJump").length !== 2 || jump.game.player.state !== "double-jump") throw new Error("A second airborne press must perform exactly one double jump");
+jump.game.pressed.jump = true; jump.game.update(.016);
+if (jump.played.filter((id) => id === "actionJump").length !== 2) throw new Error("A third jump before landing must be rejected");
 
 for (let i = 0; i < 90 && !jump.game.player.onGround; i++) jump.game.update(.016);
-if (jump.played.filter((id) => id === "actionLand").length !== 1) throw new Error("Landing sound must play once on touchdown");
+if (jump.played.filter((id) => id === "actionLand").length !== 1 || jump.game.player.jumpsUsed !== 0) throw new Error("Landing must play once and reset the double jump");
 
 const attack = createGame();
 attack.game.player.x = 390; attack.game.player.y = 408; attack.game.player.onGround = true; attack.game.pressed.attack = true;
@@ -40,4 +43,4 @@ const clear = createGame();
 clear.game.running = true; clear.game.player.x = 2930; clear.game.player.y = 408; clear.game.player.onGround = true; clear.game.update(.016);
 if (!clear.played.includes("actionClear") || !clear.result()?.clear) throw new Error("Goal must finish with actionClear");
 
-console.log("Action logic passed: jump/land, attack/hit/destroy, fall, and clear events.");
+console.log("Action logic passed: double jump/land, attack/hit/destroy, fall, and clear events.");
