@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  const startupStatus = (label, detail, tone = "loading") => window.ORE_BOOT?.status(label, detail, tone);
+  startupStatus("アプリを準備中", "メインプログラムを開始しました", "loading");
   const config = window.ORE_CONFIG;
   const storage = new window.StorageManager(config);
   const sound = new window.SoundManager(config);
@@ -74,7 +76,10 @@
     state.raceBest = await storage.getState("raceBestScore", 0);
     sound.setSettings(state.settings);
     state.ready = true; renderAll();
-    sound.loadPack(state.currentPack, gameDef().sounds).catch(logError);
+    startupStatus("操作できます", "録音音声を読み込み中…", "loading");
+    sound.loadPack(state.currentPack, gameDef().sounds)
+      .then(() => startupStatus("起動完了・操作できます", `${gameDef().name}・録音 ${recordedCount()} / ${gameDef().sounds.length}`, "ready"))
+      .catch((error) => { logError(error); startupStatus("操作できます（音声読込エラー）", error?.message || String(error), "warning"); });
 
   }
 
@@ -257,8 +262,9 @@
   async function startSelectedGame() {
     try {
       const definition = gameDef(); state.lastGameId = definition.id;
-      await sound.unlock(); await sound.loadPack(state.currentPack, definition.sounds);
+      startupStatus("ゲームを準備中", `${definition.name}を開始しています…`, "loading");
       games.stop(); sound.stopAllLoops();
+      const audioReady = sound.unlock().then(() => sound.loadPack(state.currentPack, definition.sounds)).then(() => true).catch((error) => { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("ゲーム起動済み（音声エラー）", error?.message || String(error), "warning"); return false; });
       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
       $("#gameScreen").classList.toggle("is-race", definition.id === "race");
@@ -272,10 +278,10 @@
       showScreen("gameScreen");
       await gameCountdown();
       await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id) });
-      await sound.startLoop(definition.bgm, { gain: .35 });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
-    } catch (error) { showScreen("titleScreen"); showError(error); }
+      audioReady.then((ready) => { if (ready && games.current?.running && state.lastGameId === definition.id) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
+    } catch (error) { startupStatus("ゲーム開始エラー", error?.message || String(error), "error"); showScreen("titleScreen"); showError(error); }
   }
 
   function updateGameHud() {
@@ -400,11 +406,17 @@
   }
 
   async function init() {
+    startupStatus("画面を準備中", "ボタン操作を有効にしています…", "loading");
     bindEvents();
     renderAll();
     showScreen("titleScreen");
-    try { await storage.init(); await loadState(); }
-    catch (error) { logError(error); renderAll(); toast("保存機能なしで起動しました"); }
+    startupStatus("操作できます", "保存領域に接続中…", "loading");
+    try {
+      await storage.init();
+      startupStatus("操作できます", "保存データを読み込み中…", "loading");
+      await loadState();
+    }
+    catch (error) { logError(error); renderAll(); startupStatus("操作できます（保存機能なし）", error?.message || String(error), "warning"); toast("保存機能なしで起動しました"); }
     showScreen("titleScreen");
   }
 

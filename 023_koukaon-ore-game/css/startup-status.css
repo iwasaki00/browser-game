@@ -1,0 +1,76 @@
+.startup-panel {
+  margin: 0 18px 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(72, 233, 225, 0.35);
+  border-radius: 14px;
+  background: rgba(10, 16, 31, 0.92);
+  box-shadow: inset 0 0 18px rgba(72, 233, 225, 0.06);
+}
+
+.startup-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+
+.version-badge {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 228, 93, 0.48);
+  border-radius: 999px;
+  color: #ffe45d;
+  font: 700 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.04em;
+}
+
+.startup-state {
+  color: #dce7ff;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.startup-state::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #48e9e1;
+  box-shadow: 0 0 10px rgba(72, 233, 225, 0.8);
+}
+
+.startup-panel[data-tone="loading"] .startup-state::before {
+  animation: startup-pulse 0.9s ease-in-out infinite alternate;
+}
+
+.startup-panel[data-tone="ready"] .startup-state::before {
+  background: #75f59b;
+  box-shadow: 0 0 10px rgba(117, 245, 155, 0.75);
+}
+
+.startup-panel[data-tone="warning"] .startup-state::before,
+.startup-panel[data-tone="error"] .startup-state::before {
+  background: #ff7a8a;
+  box-shadow: 0 0 10px rgba(255, 122, 138, 0.75);
+}
+
+.startup-detail {
+  margin: 0;
+  color: #99a3bb;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@keyframes startup-pulse {
+  from { opacity: 0.35; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .startup-panel[data-tone="loading"] .startup-state::before { animation: none; }
+}

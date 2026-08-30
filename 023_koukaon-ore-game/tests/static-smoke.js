@@ -7,7 +7,7 @@ const app = fs.readFileSync(path.join(root, "js", "app.js"), "utf8");
 
 const refs = [...html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)].map((match) => match[1]);
 for (const ref of refs) {
-  const file = path.resolve(root, ref);
+  const file = path.resolve(root, ref.split(/[?#]/)[0]);
   if (!fs.existsSync(file)) throw new Error(`Missing referenced file: ${ref}`);
 }
 

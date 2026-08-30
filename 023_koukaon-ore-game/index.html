@@ -12,7 +12,7 @@
   <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta property="og:image" content="./assets/og.png">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="効果音全部オレゲーム"><meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta name="twitter:image" content="./assets/og.png">
   <title>効果音全部オレゲーム</title>
-  <link rel="stylesheet" href="./css/style.css"><link rel="stylesheet" href="./css/action.css"><link rel="stylesheet" href="./css/puzzle.css"><link rel="stylesheet" href="./css/race.css"><link rel="stylesheet" href="./css/sound-reset.css"><link rel="stylesheet" href="./css/sound-copy.css"><link rel="stylesheet" href="./css/interaction-fixes.css">
+  <link rel="stylesheet" href="./css/style.css?v=20260830-1"><link rel="stylesheet" href="./css/action.css?v=20260830-1"><link rel="stylesheet" href="./css/puzzle.css?v=20260830-1"><link rel="stylesheet" href="./css/race.css?v=20260830-1"><link rel="stylesheet" href="./css/sound-reset.css?v=20260830-1"><link rel="stylesheet" href="./css/sound-copy.css?v=20260830-1"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260830-1"><link rel="stylesheet" href="./css/startup-status.css?v=20260830-1">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -20,6 +20,12 @@
       <header class="topbar"><a class="back-button" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a><span class="top-label">ORE SOUND ARCADE</span><button class="icon-button" type="button" data-nav="settingsScreen" aria-label="設定">⚙</button></header>
       <div class="hero"><div class="mic-mark" aria-hidden="true"><span>●</span></div><p class="hero-kicker">RECORD IT. PLAY IT. LAUGH.</p><h1 id="gameTitle">効果音<br><strong>全部オレ</strong>ゲーム</h1><p class="tagline">ゲームの音、全部オレ。</p></div>
       <section class="selected-game-panel" aria-live="polite"><span>SELECTED GAME</span><h2 id="selectedGameName">縦スクロールシューティング</h2><p id="selectedGameDescription"></p></section>
+      <section id="startupPanel" class="startup-panel" data-tone="loading" aria-live="polite">
+        <div class="startup-heading">
+          <span id="appVersion" class="version-badge">VERSION 2026.08.30-1</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
+        </div>
+        <p id="startupDetail" class="startup-detail">JavaScriptを読み込んでいます…</p>
+      </section>
       <section class="start-panel" aria-label="ゲームを始める">
         <div class="pack-now"><span>使用中</span><b id="currentPackName">オレ基本セット</b><i id="homeProgress">0 / 9 オレ済み</i></div>
         <button id="recordStartButton" class="primary-button" type="button"><span class="button-icon">●</span><span><small>必要なオレ</small>録音して遊ぶ</span></button>
@@ -96,7 +102,29 @@
   <section id="errorDialog" class="overlay" hidden role="alertdialog" aria-labelledby="errorTitle"><div class="dialog"><span class="error-icon">!</span><h2 id="errorTitle">マイクを使用できませんでした</h2><p id="errorMessage"></p><details><summary>詳細情報</summary><pre id="errorDetail"></pre></details><button id="closeErrorButton" class="primary-wide" type="button">確認しました</button></div></section>
   <section id="copySoundDialog" class="overlay copy-sound-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="copySoundTitle"><div class="dialog"><h2 id="copySoundTitle">他の録音と同じ音にする</h2><p id="copySoundTarget"></p><label>コピー元の録音<select id="copySoundSource"></select></label><p>コピー元の録音はそのまま残ります。</p><div class="dialog-actions"><button id="cancelCopySoundButton" type="button">キャンセル</button><button id="confirmCopySoundButton" type="button">この音と同じにする</button></div></div></section>
 
-  <script src="./js/config.js"></script><script src="./js/bgm-config.js"></script><script src="./js/race-config.js"></script><script src="./js/StorageManager.js"></script><script src="./js/SoundManager.js"></script><script src="./js/RecorderManager.js"></script>
-  <script src="./games/shooter/ShooterGame.js"></script><script src="./games/action/ActionGame.js"></script><script src="./games/puzzle/PuzzleBoard.js"></script><script src="./games/puzzle/PuzzleRenderer.js"></script><script src="./games/puzzle/PuzzleGame.js"></script><script src="./games/race/RaceGame.js"></script><script src="./js/GameManager.js"></script><script src="./js/app.js"></script>
+  <script>
+    window.ORE_APP_VERSION = "2026.08.30-1";
+    (function () {
+      const panel = document.getElementById("startupPanel");
+      const state = document.getElementById("startupState");
+      const detail = document.getElementById("startupDetail");
+      function status(label, message, tone) {
+        if (state) state.textContent = label;
+        if (detail) detail.textContent = message || "";
+        if (panel) panel.dataset.tone = tone || "loading";
+      }
+      window.ORE_BOOT = { version: window.ORE_APP_VERSION, status };
+      window.addEventListener("error", function (event) {
+        const source = event.filename || event.target && (event.target.src || event.target.href) || "不明なファイル";
+        status("起動エラー", `${event.message || "ファイルを読み込めませんでした"} / ${source}`, "error");
+      }, true);
+      window.addEventListener("unhandledrejection", function (event) {
+        const reason = event.reason && (event.reason.message || event.reason) || "不明なエラー";
+        status("起動エラー", String(reason), "error");
+      });
+    })();
+  </script>
+  <script src="./js/config.js?v=20260830-1"></script><script src="./js/bgm-config.js?v=20260830-1"></script><script src="./js/race-config.js?v=20260830-1"></script><script src="./js/StorageManager.js?v=20260830-1"></script><script src="./js/SoundManager.js?v=20260830-1"></script><script src="./js/RecorderManager.js?v=20260830-1"></script>
+  <script src="./games/shooter/ShooterGame.js?v=20260830-1"></script><script src="./games/action/ActionGame.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleGame.js?v=20260830-1"></script><script src="./games/race/RaceGame.js?v=20260830-1"></script><script src="./js/GameManager.js?v=20260830-1"></script><script src="./js/app.js?v=20260830-1"></script>
 </body>
 </html>
