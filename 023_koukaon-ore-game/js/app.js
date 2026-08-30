@@ -17,7 +17,7 @@
   const state = {
     packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
     ready: true,
-    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
+    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null, rhythmTimers: [], metronomeTimer: null, calibration: null
   };
 
@@ -78,6 +78,8 @@
     state.rhythmBest = await storage.getState("rhythmBestScore", 0);
     state.rhythmBestAccuracy = await storage.getState("rhythmBestAccuracy", 0);
     state.rhythmMaxCombo = await storage.getState("rhythmMaxCombo", 0);
+    state.rhythmBestByStage = await storage.getState("rhythmBestByStage", {});
+    state.rhythmAccuracyByStage = await storage.getState("rhythmAccuracyByStage", {});
     state.rhythmStage = await storage.getState("rhythmStage", "eight");
     sound.setSettings(state.settings);
     state.ready = true; renderAll();
@@ -270,7 +272,7 @@
     overlay.hidden = true;
   }
 
-  function bestScoreFor(id) { return id === "rhythm" ? state.rhythmBest : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
+  function bestScoreFor(id) { return id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
     try {
@@ -323,7 +325,7 @@
   async function finishGame(result) {
     clearInterval(state.hudTimer);
     sound.stopAllLoops();
-    if (result.mode === "rhythm") { state.rhythmBest=Math.max(state.rhythmBest,result.score);state.rhythmBestAccuracy=Math.max(state.rhythmBestAccuracy,result.stats.accuracy);state.rhythmMaxCombo=Math.max(state.rhythmMaxCombo,result.stats.maxCombo);await storage.setState("rhythmBestScore",state.rhythmBest);await storage.setState("rhythmBestAccuracy",state.rhythmBestAccuracy);await storage.setState("rhythmMaxCombo",state.rhythmMaxCombo); }
+    if (result.mode === "rhythm") { const stage=result.stats.stageId;state.rhythmBest=Math.max(state.rhythmBest,result.score);state.rhythmBestAccuracy=Math.max(state.rhythmBestAccuracy,result.stats.accuracy);state.rhythmMaxCombo=Math.max(state.rhythmMaxCombo,result.stats.maxCombo);state.rhythmBestByStage={...state.rhythmBestByStage,[stage]:Math.max(state.rhythmBestByStage[stage]||0,result.score)};state.rhythmAccuracyByStage={...state.rhythmAccuracyByStage,[stage]:Math.max(state.rhythmAccuracyByStage[stage]||0,result.stats.accuracy)};await storage.setState("rhythmBestScore",state.rhythmBest);await storage.setState("rhythmBestAccuracy",state.rhythmBestAccuracy);await storage.setState("rhythmMaxCombo",state.rhythmMaxCombo);await storage.setState("rhythmBestByStage",state.rhythmBestByStage);await storage.setState("rhythmAccuracyByStage",state.rhythmAccuracyByStage); }
     else if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
     else if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
@@ -385,7 +387,7 @@
 
   function bindEvents() {
     document.addEventListener("click", (event) => {
-      const nav = event.target.closest("[data-nav]"); if (nav) showScreen(nav.dataset.nav);
+      const nav = event.target.closest("[data-nav]"); if (nav) { if(nav.dataset.nav!=="testScreen")stopRhythmTools();showScreen(nav.dataset.nav); }
       const game = event.target.closest("[data-select-game]"); if (game) selectGame(game.dataset.selectGame);
       const recordButton = event.target.closest("[data-record]"); if (recordButton) startRecording(recordButton.dataset.record);
       const resetButton = event.target.closest("[data-reset-sound]"); if (resetButton) resetRecordedSound(resetButton.dataset.resetSound);
@@ -398,7 +400,7 @@
   async function runRhythmBeatTest(){stopRhythmTools();await sound.unlock();const pattern=[0,2,1,2,0,2,1,3,0,2,1,2,0,3,1,3],step=250;pattern.forEach((lane,index)=>state.rhythmTimers.push(setTimeout(()=>sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]),index*step)));state.rhythmTimers.push(setTimeout(()=>{$("#rhythmBeatTestButton").textContent="▶ もう一度";},pattern.length*step));}
   function hitDrumPad(lane,button){button?.classList.add("is-hit");setTimeout(()=>button?.classList.remove("is-hit"),90);sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]);}
   function toggleMetronome(){if(state.metronomeTimer){stopRhythmTools();return;}const bpm=Number($("#rhythmMetronomeBpm").value)||120,interval=60000/bpm;state.settings.rhythmMetronomeBpm=bpm;storage.setState("settings",state.settings).catch(logError);$("#rhythmMetronome").classList.add("is-running");$("#rhythmMetronomeButton").textContent=`停止 · BPM ${bpm}`;const tick=()=>{sound.play("rhythmHiHat");state.metronomeTimer=setTimeout(tick,interval);};tick();}
-  function startCalibration(){const start=performance.now()+1000,expected=Array.from({length:8},(_,i)=>start+i*500);state.calibration={expected,taps:[],suggested:0};$("#calibrationTapButton").disabled=false;$("#calibrationApplyButton").disabled=true;$("#calibrationStatus").textContent="光に合わせてタップ";expected.forEach(time=>{state.rhythmTimers.push(setTimeout(()=>{$("#calibrationLight").classList.add("is-beat");setTimeout(()=>$("#calibrationLight").classList.remove("is-beat"),110);},Math.max(0,time-performance.now())));});}
+  function startCalibration(){stopRhythmTools();const start=performance.now()+1000,expected=Array.from({length:8},(_,i)=>start+i*500);state.calibration={expected,taps:[],suggested:0};$("#calibrationTapButton").disabled=false;$("#calibrationApplyButton").disabled=true;$("#calibrationStatus").textContent="光に合わせてタップ";expected.forEach(time=>{state.rhythmTimers.push(setTimeout(()=>{$("#calibrationLight").classList.add("is-beat");setTimeout(()=>$("#calibrationLight").classList.remove("is-beat"),110);},Math.max(0,time-performance.now())));});}
   function calibrationTap(){const c=state.calibration;if(!c||c.taps.length>=c.expected.length)return;const index=c.taps.length,offset=performance.now()-c.expected[index];c.taps.push(offset);$("#calibrationStatus").textContent=`${c.taps.length} / 8 · ${offset>=0?"+":""}${Math.round(offset)}ms`;if(c.taps.length===8){const avg=c.taps.reduce((a,b)=>a+b,0)/c.taps.length;c.suggested=Math.max(-200,Math.min(200,Math.round(-avg/10)*10));$("#calibrationStatus").textContent=`平均 ${avg>=0?"+":""}${Math.round(avg)}ms · 推奨 ${c.suggested}ms`;$("#calibrationTapButton").disabled=true;$("#calibrationApplyButton").disabled=false;}}
   function applyCalibration(){if(!state.calibration)return;$("#rhythmOffset").value=state.calibration.suggested;$("#rhythmOffsetValue").textContent=`${state.calibration.suggested}ms`;saveSettings();toast("推奨タイミングを設定しました");}
     $("#recordStartButton").addEventListener("click", () => showScreen("studioScreen")); $("#studioShortcut").addEventListener("click", () => showScreen("studioScreen"));
