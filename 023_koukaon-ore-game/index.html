@@ -12,7 +12,7 @@
   <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta property="og:image" content="./assets/og.png">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="効果音全部オレゲーム"><meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta name="twitter:image" content="./assets/og.png">
   <title>効果音全部オレゲーム</title>
-  <link rel="stylesheet" href="./css/style.css?v=20260830-1"><link rel="stylesheet" href="./css/action.css?v=20260830-1"><link rel="stylesheet" href="./css/puzzle.css?v=20260830-1"><link rel="stylesheet" href="./css/race.css?v=20260830-1"><link rel="stylesheet" href="./css/sound-reset.css?v=20260830-1"><link rel="stylesheet" href="./css/sound-copy.css?v=20260830-1"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260830-1"><link rel="stylesheet" href="./css/startup-status.css?v=20260830-1">
+  <link rel="stylesheet" href="./css/style.css?v=20260830-2"><link rel="stylesheet" href="./css/action.css?v=20260830-2"><link rel="stylesheet" href="./css/puzzle.css?v=20260830-2"><link rel="stylesheet" href="./css/race.css?v=20260830-2"><link rel="stylesheet" href="./css/sound-reset.css?v=20260830-2"><link rel="stylesheet" href="./css/sound-copy.css?v=20260830-2"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260830-2"><link rel="stylesheet" href="./css/startup-status.css?v=20260830-2">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -22,7 +22,7 @@
       <section class="selected-game-panel" aria-live="polite"><span>SELECTED GAME</span><h2 id="selectedGameName">縦スクロールシューティング</h2><p id="selectedGameDescription"></p></section>
       <section id="startupPanel" class="startup-panel" data-tone="loading" aria-live="polite">
         <div class="startup-heading">
-          <span id="appVersion" class="version-badge">VERSION 2026.08.30-1</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
+          <span id="appVersion" class="version-badge">VERSION 2026.08.30-2</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
         </div>
         <p id="startupDetail" class="startup-detail">JavaScriptを読み込んでいます…</p>
       </section>
@@ -103,7 +103,7 @@
   <section id="copySoundDialog" class="overlay copy-sound-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="copySoundTitle"><div class="dialog"><h2 id="copySoundTitle">他の録音と同じ音にする</h2><p id="copySoundTarget"></p><label>コピー元の録音<select id="copySoundSource"></select></label><p>コピー元の録音はそのまま残ります。</p><div class="dialog-actions"><button id="cancelCopySoundButton" type="button">キャンセル</button><button id="confirmCopySoundButton" type="button">この音と同じにする</button></div></div></section>
 
   <script>
-    window.ORE_APP_VERSION = "2026.08.30-1";
+    window.ORE_APP_VERSION = "2026.08.30-2";
     (function () {
       const panel = document.getElementById("startupPanel");
       const state = document.getElementById("startupState");
@@ -124,7 +124,7 @@
       });
     })();
   </script>
-  <script src="./js/config.js?v=20260830-1"></script><script src="./js/bgm-config.js?v=20260830-1"></script><script src="./js/race-config.js?v=20260830-1"></script><script src="./js/StorageManager.js?v=20260830-1"></script><script src="./js/SoundManager.js?v=20260830-1"></script><script src="./js/RecorderManager.js?v=20260830-1"></script>
-  <script src="./games/shooter/ShooterGame.js?v=20260830-1"></script><script src="./games/action/ActionGame.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260830-1"></script><script src="./games/puzzle/PuzzleGame.js?v=20260830-1"></script><script src="./games/race/RaceGame.js?v=20260830-1"></script><script src="./js/GameManager.js?v=20260830-1"></script><script src="./js/app.js?v=20260830-1"></script>
+  <script src="./js/config.js?v=20260830-2"></script><script src="./js/bgm-config.js?v=20260830-2"></script><script src="./js/race-config.js?v=20260830-2"></script><script src="./js/StorageManager.js?v=20260830-2"></script><script src="./js/SoundManager.js?v=20260830-2"></script><script src="./js/RecorderManager.js?v=20260830-2"></script>
+  <script src="./games/shooter/ShooterGame.js?v=20260830-2"></script><script src="./games/action/ActionGame.js?v=20260830-2"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260830-2"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260830-2"></script><script src="./games/puzzle/PuzzleGame.js?v=20260830-2"></script><script src="./games/race/RaceGame.js?v=20260830-2"></script><script src="./js/GameManager.js?v=20260830-2"></script><script src="./js/app.js?v=20260830-2"></script>
 </body>
 </html>

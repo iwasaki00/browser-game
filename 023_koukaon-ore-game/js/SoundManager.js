@@ -13,6 +13,11 @@
       this.loadGeneration = 0;
       this.settings = { ...config.defaultSettings };
       this.currentPack = null;
+      this.userActivated = false;
+      this.pendingPack = null;
+      this.pendingLoadPromise = null;
+      const navigatorInfo = window.navigator || {};
+      this.requiresGestureContext = /iPad|iPhone|iPod/.test(navigatorInfo.userAgent || "") || (navigatorInfo.platform === "MacIntel" && navigatorInfo.maxTouchPoints > 1);
     }
 
     ensureContext() {
@@ -27,14 +32,48 @@
       return this.context;
     }
 
+    rebuildContext() {
+      this.stopAllLoops();
+      const previous = this.context;
+      this.context = null;
+      this.master = null;
+      if (previous?.close) {
+        try { const closing = previous.close(); closing?.catch?.(() => {}); }
+        catch (error) { console.warn("Could not close the previous AudioContext", error); }
+      }
+      return this.ensureContext();
+    }
+
+    primeContext(context = this.context) {
+      if (!context?.createBuffer || !context?.createBufferSource || !this.master) return;
+      try {
+        const buffer = context.createBuffer(1, 1, 22050);
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(this.master);
+        source.start(0);
+      } catch (error) { console.warn("Could not prime AudioContext", error); }
+    }
+
+    loadPendingPack() {
+      if (!this.pendingPack) return;
+      const pending = this.pendingPack;
+      this.pendingPack = null;
+      this.pendingLoadPromise = this.loadPack(pending.pack, pending.soundIds).catch((error) => console.warn("Could not load deferred audio", error));
+    }
+
     async unlock(forceRestart = false) {
       if (this.unlockPromise) return this.unlockPromise;
+      this.userActivated = true;
       this.unlockPromise = (async () => {
-        this.ensureContext();
-        if (forceRestart && this.context.state === "running" && this.context.suspend) await this.context.suspend();
-        if (this.context.state !== "running") await this.context.resume();
+        if (forceRestart || this.context?.state === "closed") this.rebuildContext();
+        const context = this.ensureContext();
+        const resumePromise = context.state !== "running" && context.resume ? context.resume() : null;
+        this.primeContext(context);
+        if (resumePromise) await resumePromise;
         this.applyVolume();
-        return this.context;
+        this.loadPendingPack();
+        return context;
       })();
       try { return await this.unlockPromise; }
       finally { this.unlockPromise = null; }
@@ -46,6 +85,11 @@
     setSettings(settings) { this.settings = { ...this.settings, ...settings }; this.applyVolume(); }
 
     async loadPack(pack, soundIds = null) {
+      if (this.requiresGestureContext && !this.userActivated && !this.context) {
+        this.currentPack = pack;
+        this.pendingPack = { pack, soundIds: soundIds ? [...soundIds] : null };
+        return false;
+      }
       this.ensureContext(); this.stopAllLoops(); const generation=++this.loadGeneration,nextBuffers=new Map(); this.buffers.clear();
       const definitions=soundIds?soundIds.map(id=>this.config.soundCatalog[id]).filter(Boolean):this.config.soundDefinitions;
       await Promise.all(definitions.map(async definition=>{
@@ -63,6 +107,7 @@
         if(decoded.length)nextBuffers.set(definition.id,decoded);
       }));
       if(generation===this.loadGeneration){this.currentPack=pack;this.buffers=nextBuffers;}
+      return generation===this.loadGeneration;
     }
 
     resetPlayStats() { this.counts = {}; this.loopStats = {}; }

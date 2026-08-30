@@ -78,7 +78,7 @@
     state.ready = true; renderAll();
     startupStatus("操作できます", "録音音声を読み込み中…", "loading");
     sound.loadPack(state.currentPack, gameDef().sounds)
-      .then(() => startupStatus("起動完了・操作できます", `${gameDef().name}・録音 ${recordedCount()} / ${gameDef().sounds.length}`, "ready"))
+      .then((loaded) => startupStatus(loaded === false ? "起動完了・音声は最初のタップで有効化" : "起動完了・操作できます", `${gameDef().name}・録音 ${recordedCount()} / ${gameDef().sounds.length}`, "ready"))
       .catch((error) => { logError(error); startupStatus("操作できます（音声読込エラー）", error?.message || String(error), "warning"); });
 
   }
@@ -396,10 +396,10 @@
     $("#closeErrorButton").addEventListener("click", () => { $("#errorDialog").hidden = true; });
     $("#cancelCopySoundButton").addEventListener("click", () => { state.copyTargetId = null; $("#copySoundDialog").hidden = true; });
     $("#confirmCopySoundButton").addEventListener("click", copyRecordedSound);
-    const recoverAudio = async (force = false) => { try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; return false; } };
+    const recoverAudio = async (force = false) => { try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; startupStatus("起動完了・音声有効", `${gameDef().name}のサウンドを再生できます`, "ready"); return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("音声を有効にできません", error?.message || String(error), "warning"); return false; } };
     $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());
-    document.addEventListener("pointerdown", () => { if (sound.context && sound.context.state !== "running") recoverAudio(); }, { capture: true });
+    document.addEventListener("pointerdown", () => { if (!sound.context || sound.context.state !== "running") recoverAudio(); }, { capture: true });
     document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
     window.addEventListener("pageshow", () => { if (sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
     $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
