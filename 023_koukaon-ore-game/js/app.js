@@ -146,6 +146,7 @@
     const ready = count === definitions.length;
     $("#studioGameButton").classList.toggle("is-ready", ready);
     $("#studioGameButton").textContent = ready ? "全部オレ済み！ ゲーム開始 →" : "この音でゲーム開始 →";
+    $("#rhythmChallengeHints").hidden = state.selectedGameId !== "rhythm";
   }
 
   function renderPads() {
@@ -155,9 +156,9 @@
     $("#padGrid").innerHTML = gameSounds().map((definition, index) => {
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<button class="sound-pad pad-${index % 4} ${done ? "is-recorded" : ""}" type="button" data-pad="${definition.id}"><span>${definition.short}</span><small>${done ? "✓ オレ済み" : "仮サウンド"}</small></button>`;
+    }).join("");
     $("#rhythmTools").hidden = state.selectedGameId !== "rhythm";
     $("#rhythmMetronomeBpm").value = String(state.settings.rhythmMetronomeBpm || 120);
-    }).join("");
   }
 
   function renderPacks() {
