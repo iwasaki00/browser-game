@@ -19,10 +19,10 @@ if (windowObject.ORE_CONFIG.defaultSettings.specialMoveName !== "オレファイ
 
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
-for (const token of ["fight-config.js","FightGame.js","fightWorkshop","fightChallengeHints","fightControls","fightResumeButton","fightResultStats","fightResultActions"]) {
+for (const token of ["fight-config.js","FightGame.js","fightWorkshop","fightChallengeHints","fightControls","fightResumeButton","fightResultStats","fightResultActions","fightDebugTools","fightDebugCpuButton","fightDebugPlayerInvincibleButton","fightDebugCpuInvincibleButton"]) {
   if (!html.includes(token)) throw Error(`Fight HTML integration missing ${token}`);
 }
-for (const token of ['registerGame("fight"',"runFightSpecialTest","fightBestScore",'classList.toggle("is-fight"',"fightSpecialCall","fightDamage"]) {
+for (const token of ['registerGame("fight"',"runFightSpecialTest","fightBestScore",'classList.toggle("is-fight"',"fightSpecialCall","fightDamage","toggleDebugOption","renderFightDebugTools"]) {
   if (!app.includes(token)) throw Error(`Fight app integration missing ${token}`);
 }
 const regions = {

@@ -50,4 +50,16 @@ if (game.state !== windowObject.FightGame.STATES.PAUSED) throw Error("Visibility
 game.resume();
 if (game.state !== windowObject.FightGame.STATES.FIGHTING) throw Error("Resume must restore the match state");
 
-console.log("Fight logic passed: one-hit attacks, guard/break, named delayed special, KO guard, and pause/resume.");
+game.resetCharacter(game.player,140,1);game.resetCharacter(game.cpu,190,-1);game.cpu.moveIntent=0;game.cpuDecision=0;
+game.toggleDebugOption("cpu");game.updateCPU(.1);
+if (game.cpuEnabled || game.cpuAI !== "OFF" || game.cpu.moveIntent !== 0) throw Error("Debug CPU switch must freeze the AI");
+game.toggleDebugOption("playerInvincible");const playerHp=game.player.hp;
+game.applyHit(game.cpu,game.player,{type:"kick",damage:12,guardDamage:28});
+if (game.player.hp !== playerHp) throw Error("Player invincibility must block normal damage");
+game.toggleDebugOption("cpuInvincible");const cpuHp=game.cpu.hp;
+game.applySpecialHit(game.player,game.cpu);
+if (game.cpu.hp !== cpuHp) throw Error("CPU invincibility must block special damage");
+const debugOptions=game.getDebugOptions();
+if (debugOptions.cpuEnabled || !debugOptions.playerInvincible || !debugOptions.cpuInvincible) throw Error("Debug option state must be observable");
+
+console.log("Fight logic passed: attacks, guard/break, delayed special, KO, pause/resume, CPU stop, and invincibility.");

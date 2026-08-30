@@ -17,7 +17,7 @@
       this.input={left:false,right:false,guard:false}; this.pressed={punch:false,kick:false,special:false,jump:false}; this.cleanup=[];
       this.projectiles=[]; this.particles=[]; this.specialBanner={text:"",timer:0}; this.comboBanner={text:"",timer:0};
       this.stats={damageDealt:0,damageTaken:0,punchHits:0,kickHits:0,maxCombo:0,specialUses:0,specialHits:0,guards:0,counters:0};
-      this.cpuAI="WAIT"; this.cpuDecision=0; this.boundLoop=time=>this.loop(time);
+      this.cpuAI="WAIT"; this.cpuDecision=0; this.cpuEnabled=true; this.boundLoop=time=>this.loop(time);
       this.resumeButton=this.controlsRoot.querySelector?.("#fightResumeButton")||null;
     }
 
@@ -104,6 +104,7 @@
 
     updateCPU(dt){
       const cpu=this.cpu,player=this.player;cpu.guardHeld=false;cpu.moveIntent=0;this.cpuDecision-=dt;
+      if(!this.cpuEnabled){this.cpuAI="OFF";return;}
       if(this.cpuDecision>0){if(this.cpuAI==="APPROACH")cpu.moveIntent=Math.sign(player.x-cpu.x);if(this.cpuAI==="GUARD")cpu.guardHeld=true;return;}
       const easy=this.difficulty==="easy",distance=Math.abs(player.x-cpu.x),roll=Math.random();this.cpuDecision=(easy?.38:.2)+Math.random()*(easy?.42:.28);
       if(cpu.special>=100&&roll>(easy?.82:.65)){this.cpuAI="SPECIAL";this.startSpecial(cpu);return;}
@@ -162,6 +163,7 @@
     attackBox(character,attack){const x=character.facing>0?character.x+character.w*.3:character.x-character.w*.3-attack.reach;return{x,y:character.y-character.h*.72,w:attack.reach,h:attack.type==="kick"?34:27};}
 
     applyHit(attacker,target,attack){
+      if(target.invincible){this.comboBanner={text:"INVINCIBLE",timer:.45};this.play("fightGuard");return;}
       const counter=target.attack&&target.attack.elapsed<target.attack.activeStart;
       if(counter){this.comboBanner={text:"COUNTER!",timer:.7};this.play("fightCounter");if(attacker===this.player)this.stats.counters+=1;}
       const guarding=target.state==="GUARD"&&target.facing===-attacker.facing;
@@ -201,6 +203,7 @@
     }
 
     applySpecialHit(owner,target){
+      if(target.invincible){this.comboBanner={text:"INVINCIBLE",timer:.45};this.play("fightGuard");return;}
       const guarding=target.state==="GUARD"&&target.facing===-owner.facing;const damage=guarding?7:25;
       target.hp=Math.max(0,target.hp-damage);target.guard=guarding?Math.max(0,target.guard-45):target.guard;target.vx=owner.facing*245;target.state=guarding?"GUARD":"DOWN";target.stateTimer=guarding?.25:.85;target.attack=null;
       this.play(guarding?"fightGuard":"fightSpecialHit");if(!guarding){this.play("fightDamage");this.play("fightDown");}
@@ -230,8 +233,16 @@
     spawnHitParticles(x,y,color,count=10){for(let index=0;index<count;index+=1)this.particles.push({x,y,vx:(Math.random()-.5)*220,vy:(Math.random()-.5)*180,life:.25+Math.random()*.35,size:3+Math.random()*5,color});if(this.particles.length>100)this.particles.splice(0,this.particles.length-100);}
     updateParticles(dt){this.particles.forEach(p=>{p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=240*dt;});this.particles=this.particles.filter(p=>p.life>0);}
 
+    toggleDebugOption(option){
+      if(option==="cpu")this.cpuEnabled=!this.cpuEnabled;
+      if(option==="playerInvincible"&&this.player)this.player.invincible=!this.player.invincible;
+      if(option==="cpuInvincible"&&this.cpu)this.cpu.invincible=!this.cpu.invincible;
+      return this.getDebugOptions();
+    }
+    getDebugOptions(){return{cpuEnabled:this.cpuEnabled,playerInvincible:Boolean(this.player?.invincible),cpuInvincible:Boolean(this.cpu?.invincible)};}
+
     getHudState(){return{mode:"fight",score:this.score+Math.round(this.stats.damageDealt*100),time:this.time,best:this.bestScore};}
-    getDebugState(){return{game:"fight",playerState:this.player?.state||this.state,cpuState:this.cpu?.state||"--",fps:Math.round(this.fps),playerHp:this.player?.hp??0,cpuHp:this.cpu?.hp??0,playerX:Math.round(this.player?.x||0),cpuX:Math.round(this.cpu?.x||0),special:Math.round(this.player?.special||0),cpuAI:this.cpuAI,round:this.round,time:this.time.toFixed(1),attacks:Number(Boolean(this.player?.attack))+Number(Boolean(this.cpu?.attack)),projectiles:this.projectiles.length};}
+    getDebugState(){return{game:"fight",playerState:this.player?.state||this.state,cpuState:this.cpu?.state||"--",fps:Math.round(this.fps),playerHp:this.player?.hp??0,cpuHp:this.cpu?.hp??0,playerX:Math.round(this.player?.x||0),cpuX:Math.round(this.cpu?.x||0),special:Math.round(this.player?.special||0),cpuAI:this.cpuEnabled?this.cpuAI:"OFF",playerInvincible:Boolean(this.player?.invincible),cpuInvincible:Boolean(this.cpu?.invincible),round:this.round,time:this.time.toFixed(1),attacks:Number(Boolean(this.player?.attack))+Number(Boolean(this.cpu?.attack)),projectiles:this.projectiles.length};}
 
     draw(){
       const ctx=this.ctx,w=this.width,h=this.height;ctx.save();ctx.clearRect(0,0,w,h);if(this.shake>0)ctx.translate((Math.random()-.5)*9,(Math.random()-.5)*6);

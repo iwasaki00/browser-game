@@ -14,12 +14,13 @@
     .registerGame("race", window.RaceGame)
     .registerGame("rhythm", window.RhythmGame)
     .registerGame("breakout", window.BreakoutGame)
-    .registerGame("fight", window.FightGame);
+    .registerGame("fight", window.FightGame)
+    .registerGame("pinball", window.PinballGame);
   const initialPack = { id: config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} };
   const state = {
     packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
     ready: true,
-    recordingId: null, recordingMode: "slot", libraryRecordingName: "", pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, breakoutBest: 0, fightBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
+    recordingId: null, recordingMode: "slot", libraryRecordingName: "", pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, breakoutBest: 0, fightBest: 0, pinballBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null, rhythmTimers: [], metronomeTimer: null, calibration: null
   };
 
@@ -88,6 +89,7 @@
     state.raceBest = await storage.getState("raceBestScore", 0);
     state.breakoutBest = await storage.getState("breakoutBestScore", 0);
     state.fightBest = await storage.getState("fightBestScore", 0);
+    state.pinballBest = await storage.getState("pinballBestScore", 0);
     state.rhythmBest = await storage.getState("rhythmBestScore", 0);
     state.rhythmBestAccuracy = await storage.getState("rhythmBestAccuracy", 0);
     state.rhythmMaxCombo = await storage.getState("rhythmMaxCombo", 0);
@@ -136,6 +138,7 @@
     const breakout = definition.id === "breakout";
     $("#breakoutChallengeHints").hidden = !breakout;
     $("#fightChallengeHints").hidden = definition.id !== "fight";
+    $("#pinballChallengeHints").hidden = definition.id !== "pinball";
     $("#rhythmStagePanel").hidden = !rhythm;
     if (rhythm) { const stage = window.RhythmChart.stages().find((entry) => entry.id === state.rhythmStage) || window.RhythmChart.stages()[1]; $("#rhythmStageSelect").value = stage.id; $("#rhythmStageCopy").textContent = `${stage.difficulty} · BPM ${stage.bpm} · ${stage.description}`; }
   }
@@ -169,6 +172,7 @@
     $("#rhythmChallengeHints").hidden = state.selectedGameId !== "rhythm";
     $("#breakoutChallengeHints").hidden = state.selectedGameId !== "breakout";
     $("#fightChallengeHints").hidden = state.selectedGameId !== "fight";
+    $("#pinballChallengeHints").hidden = state.selectedGameId !== "pinball";
   }
 
   function renderPads() {
@@ -176,6 +180,7 @@
     $("#puzzleChainTest").hidden = state.selectedGameId !== "puzzle";
     $("#raceEngineTest").hidden = state.selectedGameId !== "race";
     $("#breakoutSoundTests").hidden = state.selectedGameId !== "breakout";
+    $("#pinballSoundTests").hidden = state.selectedGameId !== "pinball";
     const fight = state.selectedGameId === "fight";
     $("#fightWorkshop").hidden = !fight;
     if (fight) {
@@ -322,11 +327,12 @@
 
   async function gameCountdown() {
     const overlay = $("#gameCountdown"); overlay.hidden = false;
-    for (const value of ["3", "2", "1", "全部オレ！"]) { $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await new Promise((resolve) => setTimeout(resolve, value === "全部オレ！" ? 700 : 540)); }
+    const values=state.selectedGameId==="pinball"?["PINBALL","3","2","1","全部オレ！"]:["3","2","1","全部オレ！"];
+    for (const value of values) { $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await new Promise((resolve) => setTimeout(resolve, value === "全部オレ！" ? 700 : 540)); }
     overlay.hidden = true;
   }
 
-  function bestScoreFor(id) { return id === "fight" ? state.fightBest : id === "breakout" ? state.breakoutBest : id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
+  function bestScoreFor(id) { return id === "pinball" ? state.pinballBest : id === "fight" ? state.fightBest : id === "breakout" ? state.breakoutBest : id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
     try {
@@ -339,22 +345,26 @@
       $("#gameScreen").classList.toggle("is-race", definition.id === "race");
       $("#gameScreen").classList.toggle("is-rhythm", definition.id === "rhythm");
       $("#gameScreen").classList.toggle("is-fight", definition.id === "fight");
+      $("#gameScreen").classList.toggle("is-pinball", definition.id === "pinball");
       $("#actionControls").hidden = definition.id !== "action";
       $("#raceControls").hidden = definition.id !== "race";
       $("#gameScreen").classList.toggle("is-breakout", definition.id === "breakout");
       $("#rhythmControls").hidden = definition.id !== "rhythm";
       $("#fightControls").hidden = definition.id !== "fight";
       $("#fightResumeButton").hidden = true;
+      $("#pinballControls").hidden = definition.id !== "pinball";
+      $("#pinballResumeButton").hidden = true;
+      $("#pinballDebugTools").hidden = true;
       await library.refresh(state.currentPack, definition.id);
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
-      $("#gameTip").textContent = definition.id === "fight" ? "← →で移動 · Aパンチ · Sキック · Dガード · F必殺 · Spaceジャンプ" : definition.id === "breakout" ? "下部を左右ドラッグ · タップで発射 · Pでポーズ" : "シューティングはドラッグ · アクションはボタン · パズルはスワイプ · リズムは4パッド";
-      $("#gameAuxLabel").textContent = definition.id === "rhythm" ? "COMBO" : definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "rhythm" ? "0" : definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
+      $("#gameTip").textContent = definition.id === "pinball" ? "下部左右でフリッパー · 右レーンを下へ引いて発射 · NでNUDGE" : definition.id === "fight" ? "← →で移動 · Aパンチ · Sキック · Dガード · F必殺 · Spaceジャンプ" : definition.id === "breakout" ? "下部を左右ドラッグ · タップで発射 · Pでポーズ" : "シューティングはドラッグ · アクションはボタン · パズルはスワイプ · リズムは4パッド";
+      $("#gameAuxLabel").textContent = definition.id === "pinball" ? "BALL" : definition.id === "rhythm" ? "COMBO" : definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "pinball" ? "3 · ×1" : definition.id === "rhythm" ? "0" : definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
       $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
       const canvas = $("#gameCanvas"); const context = canvas.getContext("2d");
       context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
       showScreen("gameScreen");
       await gameCountdown();
-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: ["breakout", "fight"].includes(definition.id) ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
+      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: ["breakout", "fight", "pinball"].includes(definition.id) ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
       audioReady.then((ready) => { if (ready && games.current?.running && state.lastGameId === definition.id) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
@@ -365,7 +375,10 @@
     if (!games.current?.running) return clearInterval(state.hudTimer);
     const current = games.current; const hud = current.getHudState?.() || { score: current.score, hp: current.hp, maxHp: 3 };
     $("#gameScore").textContent = String(hud.score || 0).padStart(6, "0");
-    if (hud.combo != null) {
+    if (hud.balls != null) {
+      $("#gameAuxLabel").textContent = "BALL · MULTI"; $("#gameHp").textContent = `${hud.balls} · ×${hud.multiplier}`;
+      $("#gameAuxPanel").classList.toggle("is-warning", hud.balls <= 1);
+    } else if (hud.combo != null) {
       $("#gameAuxLabel").textContent = "COMBO"; $("#gameHp").textContent = String(hud.combo);
       $("#gameAuxPanel").classList.toggle("is-warning", hud.combo >= 30);
     } else if (hud.time != null) {
@@ -389,6 +402,7 @@
     else if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
     else if (result.mode === "breakout") { state.breakoutBest=Math.max(state.breakoutBest,result.score); await storage.setState("breakoutBestScore",state.breakoutBest); }
     else if (result.mode === "fight") { state.fightBest=Math.max(state.fightBest,result.score); await storage.setState("fightBestScore",state.fightBest); }
+    else if (result.mode === "pinball") { state.pinballBest=Math.max(state.pinballBest,result.score); await storage.setState("pinballBestScore",state.pinballBest); }
     else if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
       await storage.setState("puzzleBestScore", state.puzzleBest); await storage.setState("puzzleBestChain", state.puzzleBestChain); await storage.setState("puzzlePlayCount", state.puzzlePlays);
@@ -428,6 +442,17 @@
       $("#fightResultSpecials").textContent=result.stats.specialUses; $("#fightResultSpecialHits").textContent=result.stats.specialHits;
       $("#fightResultAccuracy").textContent=`${result.stats.specialAccuracy.toFixed(0)}%`; $("#fightResultGuards").textContent=result.stats.guards;
       $("#fightResultMessage").textContent=result.stats.specialUses>=3?"必殺技を叫びたかっただけ説。":result.stats.maxCombo>=5?"オレの声で華麗な連続技。":"殴る音も負け声も全部オレ。";
+    }
+    const pinball = result.mode === "pinball";
+    $("#pinballResultStats").hidden=!pinball;$("#pinballResultMessage").hidden=!pinball;$("#pinballResultActions").hidden=!pinball;
+    if(pinball){
+      $("#resultLabel").textContent="GAME OVER";$("#resultTitle").textContent="跳ねた音も落ちた声も、台ごと全部オレでした。";
+      $("#pinballResultJackpots").textContent=result.stats.jackpots;$("#pinballResultMultiball").textContent=result.stats.maxMultiball;
+      $("#pinballResultBumpers").textContent=result.stats.bumperHits;$("#pinballResultTargets").textContent=result.stats.targetHits;
+      $("#pinballResultOre").textContent=result.stats.oreCompletes;$("#pinballResultExtra").textContent=result.stats.extraBalls;
+      $("#pinballResultDrains").textContent=result.stats.drains;$("#pinballResultTotalOre").textContent=result.stats.totalOre;
+      $("#pinballResultPeakOre").textContent=`${result.stats.maxOrePerSecond}オレ / 秒`;$("#pinballResultDensity").textContent=`${result.stats.oreDensity.toFixed(2)}オレ / 秒`;
+      $("#pinballResultMessage").innerHTML=result.stats.jackpots?`JACKPOT ${result.stats.jackpots}回。<strong>今日のオレ、大当たり。</strong>`:result.stats.bumperHits>=30?"今日のオレ、バンパーで大活躍。":"今日のオレ、カチャカチャしすぎ。";
     }
     $("#breakoutResultStats").hidden=!breakout; $("#breakoutResultMessage").hidden=!breakout; $("#breakoutResultActions").hidden=!breakout;
     if (breakout) {
@@ -469,12 +494,25 @@
       ["UserAgent", navigator.userAgent], ["MediaRecorder", window.MediaRecorder ? "対応" : "非対応"], ["getUserMedia", navigator.mediaDevices?.getUserMedia ? "対応" : "非対応"],
       ["現在のゲーム", live.game || state.selectedGameId], ["FPS", live.fps ?? "--"], ["AudioContext", sound.context?.state || "未開始"], ["ロード済み効果音", sound.getLoadedBufferCount()], ["SoundAsset総数", library.assets.length], ["使用中SoundAsset数", new Set(library.allAssignments.flatMap(item=>item.assetIds||[])).size], ["未使用SoundAsset数", library.assets.filter(asset=>!library.usages(asset.id).length).length], ["AudioBufferキャッシュ数", sound.getAssetCacheCount()], ["SoundAssignment総数", library.allAssignments.length], ["一時割当", sound.hasTemporaryAssignments()?"あり":"なし"], ["IndexedDBバージョン", storage.db?.version||"--"]
     ];
-    const gameRows = live.game === "fight" ? [["試合状態",live.playerState||"READY"],["CPU状態",live.cpuState||"--"],["ラウンド",live.round??1],["残り時間",live.time??"--"],["プレイヤーHP",live.playerHp??0],["CPU HP",live.cpuHp??0],["必殺ゲージ",`${live.special??0}%`],["CPU思考",live.cpuAI||"--"],["飛び道具",live.projectiles??0]] : live.game === "breakout" ? [["ゲーム状態",live.playerState||"READY"],["ボール数",live.balls??0],["ボール速度",live.speed??0],["パドル位置",live.paddleX??"--"],["残ブロック数",live.remaining??"--"],["破壊可能ブロック数",live.destructible??"--"],["現在コンボ",live.combo??0],["最大コンボ",live.maxCombo??0],["現在アイテム数",live.items??0]] : live.game === "rhythm" ? [["BPM",live.bpm??"--"],["譜面位置",live.position??"--"],["Audio現在時刻",live.audioTime??"--"],["開始AudioTime",live.startAudioTime??"--"],["ノーツ",`${live.pending??"--"} / ${live.notes??"--"}`],["入力オフセット",`${live.offset??0}ms`],["平均判定ズレ",`${live.averageOffset??0}ms`],["直近判定",live.lastJudge?JSON.stringify(live.lastJudge):"--"]] : live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
+    const gameRows = live.game === "pinball" ? [["ゲーム状態",live.playerState||"READY"],["ボール数",live.balls??0],["ボール座標",live.ballPositions||"--"],["ボール速度",live.ballSpeeds||"--"],["フリッパー角度",live.flippers||"--"],["現在BALL",live.currentBall??1],["MULTIPLIER",`×${live.multiplier??1}`],["ORE点灯",live.ore||"---"],["BALL SAVE",live.ballSave||"0"],["MULTIBALL",live.multiball?"ON":"OFF"],["JACKPOT",live.jackpot?"READY":"OFF"],["物理sub-step",live.substeps??1],["物理速度",`×${live.timeScale??1}`],["最大オレ密度",`${live.maxOre??0}/秒`]] : live.game === "fight" ? [["試合状態",live.playerState||"READY"],["CPU状態",live.cpuState||"--"],["ラウンド",live.round??1],["残り時間",live.time??"--"],["プレイヤーHP",live.playerHp??0],["CPU HP",live.cpuHp??0],["必殺ゲージ",`${live.special??0}%`],["CPU思考",live.cpuAI||"--"],["飛び道具",live.projectiles??0]] : live.game === "breakout" ? [["ゲーム状態",live.playerState||"READY"],["ボール数",live.balls??0],["ボール速度",live.speed??0],["パドル位置",live.paddleX??"--"],["残ブロック数",live.remaining??"--"],["破壊可能ブロック数",live.destructible??"--"],["現在コンボ",live.combo??0],["最大コンボ",live.maxCombo??0],["現在アイテム数",live.items??0]] : live.game === "rhythm" ? [["BPM",live.bpm??"--"],["譜面位置",live.position??"--"],["Audio現在時刻",live.audioTime??"--"],["開始AudioTime",live.startAudioTime??"--"],["ノーツ",`${live.pending??"--"} / ${live.notes??"--"}`],["入力オフセット",`${live.offset??0}ms`],["平均判定ズレ",`${live.averageOffset??0}ms`],["直近判定",live.lastJudge?JSON.stringify(live.lastJudge):"--"]] : live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
     return [...common, ...gameRows, ["IndexedDB", storage.db ? "接続済み" : "未接続"], ["現在のパック", state.currentPack?.name || "なし"], ["登録済み音声", `${recordedCount()} / ${gameDef().sounds.length}`], ["録音形式", recorder.preferredMimeType?.() || "ブラウザ既定"], ["エラー履歴", state.errors.join("\n") || "なし"]];
   }
 
   function renderDebug() { $("#debugInfo").innerHTML = debugRows().map(([key, value]) => `<div><dt>${key}</dt><dd>${escapeHtml(String(value))}</dd></div>`).join(""); }
   function renderLiveDebug() { $("#gameDebugOverlay").textContent = debugRows().slice(3, 11).map(([key, value]) => `${key}: ${value}`).join("\n"); }
+  function renderFightDebugTools() {
+    const tools=$("#fightDebugTools"),fight=games.currentId==="fight"&&games.current;
+    tools.hidden=!fight||$("#gameDebugOverlay").hidden;if(!fight)return;
+    const options=games.current.getDebugOptions();
+    $("#fightDebugCpuButton").textContent=`CPU AI: ${options.cpuEnabled?"ON":"OFF"}`;
+    $("#fightDebugPlayerInvincibleButton").textContent=`PLAYER無敵: ${options.playerInvincible?"ON":"OFF"}`;
+    $("#fightDebugCpuInvincibleButton").textContent=`CPU無敵: ${options.cpuInvincible?"ON":"OFF"}`;
+  }
+  function renderPinballDebugTools(){
+    const tools=$("#pinballDebugTools"),pinball=games.currentId==="pinball"&&games.current;
+    tools.hidden=!pinball||$("#gameDebugOverlay").hidden;if(!pinball)return;
+    $("#pinballDebugSpeedButton").textContent=`PHYSICS: ×${games.current.timeScale}`;
+  }
   async function runChainTest() { const button = $("#chainTestButton"); if (button.disabled) return; button.disabled = true; await sound.unlock(); const sequence = [["puzzleMatch", "1連鎖 ポン！"], ["puzzleChain2", "2連鎖 おっ！"], ["puzzleChain3", "3連鎖 きた！"], ["puzzleChain4", "4連鎖 うおお！"], ["puzzleChain5", "5連鎖 全部オレ！！"]]; for (const [id, label] of sequence) { $("#chainTestStatus").textContent = label; await sound.play(id); await new Promise((resolve) => setTimeout(resolve, 720)); } $("#chainTestStatus").textContent = "1 → 2 → 3 → 4 → 5+"; button.disabled = false; button.textContent = "▶ もう一度"; }
 
   async function runEngineTest(){const b=$("#engineTestButton");if(b.disabled)return;b.disabled=true;await sound.startLoop("raceEngine",{gain:.55,playbackRate:.85});for(const[label,rate,speed]of [["LOW",.85,80],["MID",1,120],["HIGH",1.15,180],["BOOST",1.3,220]]){$("#engineTestStatus").textContent=`${label} · ${speed} km/h`;sound.setLoopPlaybackRate("raceEngine",rate);await new Promise(r=>setTimeout(r,1250));}sound.stopLoop("raceEngine");$("#engineTestStatus").textContent="LOW → MID → HIGH → BOOST";b.disabled=false;}
@@ -491,6 +529,8 @@
       await new Promise(resolve=>setTimeout(resolve,750));
     } finally { $("#fightSpecialPreview").className="fight-special-preview";$("#fightSpecialTestStatus").textContent="技名ボイス → 0.45秒 → 発射音";button.disabled=false; }
   }
+  async function runPinballRushTest(){const button=$("#pinballRushTestButton");if(button.disabled)return;button.disabled=true;await sound.unlock();const sequence=[["pinballLaunch","LAUNCH"],["pinballWall","WALL"],["pinballBumper","BUMPER"],["pinballBumper","BUMPER"],["pinballFlipper","FLIPPER"],["pinballTarget","TARGET"],["pinballBell","BELL"],["pinballBonus","BONUS"],["pinballJackpot","JACKPOT"]];for(const[id,label]of sequence){$("#pinballTestStatus").textContent=label;sound.play(id);await new Promise(resolve=>setTimeout(resolve,260));}$("#pinballTestStatus").textContent="台全体が全部オレ！";button.disabled=false;}
+  async function runPinballMultiTest(){const button=$("#pinballMultiTestButton");if(button.disabled)return;button.disabled=true;await sound.unlock();sound.play("pinballMultiBall");const ids=["pinballWall","pinballBumper","pinballTarget","pinballFlipper","pinballBell"];for(let i=0;i<18;i+=1){$("#pinballTestStatus").textContent=`MULTIBALL ${i+1} / 18`;sound.play(ids[Math.floor(Math.random()*ids.length)]);await new Promise(resolve=>setTimeout(resolve,85));}sound.play("pinballJackpot");$("#pinballTestStatus").textContent="JACKPOT! · オレ大渋滞";button.disabled=false;}
   function bindEvents() {
     document.addEventListener("click", (event) => {
       const nav = event.target.closest("[data-nav]"); if (nav) { if(nav.dataset.nav!=="testScreen")stopRhythmTools();showScreen(nav.dataset.nav); }
@@ -515,7 +555,7 @@
     $("#retryRecordingButton").addEventListener("click", () => startRecording(state.recordingId)); $("#acceptRecordingButton").addEventListener("click", acceptRecording);
     $("#cancelRecordingButton").addEventListener("click", () => { const target=state.recordingMode==="library"?"libraryScreen":"studioScreen";state.recordingMode="slot";recorder.release();showScreen(target); });
     $("#playGameButton").addEventListener("click", startSelectedGame); $("#gameQuitButton").addEventListener("click", () => showScreen("titleScreen"));
-    $("#gameDebugButton").addEventListener("click", () => { $("#gameDebugOverlay").hidden = !$("#gameDebugOverlay").hidden; if(["breakout","fight"].includes(games.currentId))games.current.debugHitboxes=!$("#gameDebugOverlay").hidden; renderLiveDebug(); });
+    $("#gameDebugButton").addEventListener("click", () => { $("#gameDebugOverlay").hidden = !$("#gameDebugOverlay").hidden; if(["breakout","fight","pinball"].includes(games.currentId))games.current.debugHitboxes=!$("#gameDebugOverlay").hidden; renderLiveDebug();renderFightDebugTools();renderPinballDebugTools(); });
     $("#replayButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); startSelectedGame(); });
     $("#resultStudioButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); showScreen("studioScreen"); });
     $("#resultTestButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); showScreen("testScreen"); });
@@ -564,6 +604,14 @@
     $("#fightResultDamageButton").addEventListener("click",async()=>{await selectGame("fight",false);startRecording("fightDamage");});
     $("#fightResultTestButton").addEventListener("click",async()=>{await selectGame("fight",false);showScreen("testScreen");runFightSpecialTest();});
     $("#fightResultSoundsButton").addEventListener("click",async()=>{await selectGame("fight",false);showScreen("studioScreen");});
+    [["#fightDebugCpuButton","cpu"],["#fightDebugPlayerInvincibleButton","playerInvincible"],["#fightDebugCpuInvincibleButton","cpuInvincible"]].forEach(([selector,option])=>$(selector).addEventListener("click",()=>{if(games.currentId!=="fight")return;games.current.toggleDebugOption(option);renderFightDebugTools();renderLiveDebug();}));
+    $("#pinballRushTestButton").addEventListener("click",runPinballRushTest);$("#pinballMultiTestButton").addEventListener("click",runPinballMultiTest);
+    $("#pinballResultBumperButton").addEventListener("click",async()=>{await selectGame("pinball",false);startRecording("pinballBumper");});
+    $("#pinballResultRushButton").addEventListener("click",async()=>{await selectGame("pinball",false);showScreen("testScreen");runPinballRushTest();});
+    $("#pinballResultMultiButton").addEventListener("click",async()=>{await selectGame("pinball",false);showScreen("testScreen");runPinballMultiTest();});
+    $("#pinballResultSoundsButton").addEventListener("click",async()=>{await selectGame("pinball",false);showScreen("studioScreen");});
+    $("#pinballDebugSpeedButton").addEventListener("click",()=>{if(games.currentId!=="pinball")return;games.current.toggleDebugSpeed();renderPinballDebugTools();renderLiveDebug();});
+    $("#pinballDebugMultiButton").addEventListener("click",()=>{if(games.currentId!=="pinball")return;games.current.debugMultiball();renderLiveDebug();});
     $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
   }
 
