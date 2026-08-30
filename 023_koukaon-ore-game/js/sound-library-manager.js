@@ -16,6 +16,7 @@
       this.assetBreakdown = {};
       this.currentGameId = config.defaultGameId;
       this.previewSource = null;
+      this.lastSoundPlayAt = new Map();
     }
 
     setAssetLibrary(assets, assignments, gameId) {
@@ -108,8 +109,19 @@
       return source;
     }
 
+    canPlayNow(id) {
+      const interval = Number(this.config.soundCatalog?.[id]?.minInterval) || 0;
+      if (!interval) return true;
+      const now = Date.now();
+      const previous = this.lastSoundPlayAt.get(id) || 0;
+      if (now - previous < interval) return false;
+      this.lastSoundPlayAt.set(id, now);
+      return true;
+    }
+
     async play(id, options = {}) {
       if (!this.context || this.context.state !== "running") await this.unlock();
+      if (!this.canPlayNow(id)) return false;
       const assetId = this.chooseAssetId(id);
       const buffer = assetId ? (this.assetBuffers.get(assetId) || await this.decodeAsset(assetId)) : null;
       if (!buffer) return super.play(id, options);
