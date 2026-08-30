@@ -167,7 +167,7 @@
 
     async play(id, options = {}) {
       this.counts[id] = (this.counts[id] || 0) + 1;
-      await this.unlock();
+      if (!this.context || this.context.state !== "running") await this.unlock();
       const entries = this.buffers.get(id);
       if (entries?.length) {
         const source = this.context.createBufferSource();
@@ -211,7 +211,8 @@
       const profiles = {
         shot:[620,180,.09,"square"],enemyShot:[220,420,.12,"sawtooth"],enemyDestroy:[260,80,.17,"square"],explosion:[110,34,.35,"sawtooth"],damage:[150,72,.24,"square"],item:[520,1040,.28,"sine"],boss:[95,48,.7,"sawtooth"],gameOver:[260,65,.8,"triangle"],clear:[440,990,.75,"sine"],
         actionJump:[330,720,.18,"square"],actionLand:[105,55,.15,"triangle"],actionAttack:[480,120,.14,"sawtooth"],actionEnemyHit:[210,85,.1,"square"],actionEnemyDestroy:[310,70,.25,"sawtooth"],actionDamage:[135,68,.28,"square"],actionItem:[570,1140,.3,"sine"],actionFall:[380,42,.85,"sawtooth"],actionCheckpoint:[420,840,.42,"sine"],actionClear:[440,1320,.8,"sine"],actionGameOver:[240,48,.9,"triangle"],actionDash:[220,760,.13,"sawtooth"],actionPowerUp:[280,1240,.55,"square"],
-        puzzleSwap:[410,610,.08,"square"],puzzleInvalid:[150,90,.2,"sawtooth"],puzzleMatch:[520,760,.12,"sine"],puzzleChain2:[560,850,.2,"sine"],puzzleChain3:[620,980,.28,"square"],puzzleChain4:[700,1180,.36,"sawtooth"],puzzleChain5:[760,1520,.6,"square"],puzzleSpecialCreate:[420,1060,.35,"sine"],puzzleSpecialActivate:[150,42,.42,"sawtooth"],puzzleBigClear:[100,28,.65,"sawtooth"],puzzleItem:[650,1300,.3,"sine"],puzzleWarning:[260,180,.45,"square"],puzzleClear:[520,1560,.8,"sine"],puzzleGameOver:[250,45,.9,"triangle"]
+        puzzleSwap:[410,610,.08,"square"],puzzleInvalid:[150,90,.2,"sawtooth"],puzzleMatch:[520,760,.12,"sine"],puzzleChain2:[560,850,.2,"sine"],puzzleChain3:[620,980,.28,"square"],puzzleChain4:[700,1180,.36,"sawtooth"],puzzleChain5:[760,1520,.6,"square"],puzzleSpecialCreate:[420,1060,.35,"sine"],puzzleSpecialActivate:[150,42,.42,"sawtooth"],puzzleBigClear:[100,28,.65,"sawtooth"],puzzleItem:[650,1300,.3,"sine"],puzzleWarning:[260,180,.45,"square"],puzzleClear:[520,1560,.8,"sine"],puzzleGameOver:[250,45,.9,"triangle"],
+        rhythmKick:[92,48,.16,"sine"],rhythmSnare:[240,72,.11,"sawtooth"],rhythmHiHat:[1800,700,.055,"square"],rhythmClap:[620,170,.09,"square"],rhythmGood:[440,620,.18,"sine"],rhythmGreat:[520,820,.22,"sine"],rhythmPerfect:[660,1100,.28,"sine"],rhythmMiss:[150,70,.24,"sawtooth"],rhythmCombo10:[440,700,.3,"square"],rhythmCombo30:[520,920,.38,"square"],rhythmCombo50:[620,1300,.5,"sawtooth"],rhythmFever:[300,1500,.65,"sawtooth"],rhythmStart:[440,880,.45,"square"],rhythmFinish:[520,1560,.8,"sine"],rhythmGameOver:[230,45,.8,"triangle"]
       };
       const [start,end,duration,type] = profiles[id] || profiles.shot;
       const now = this.context.currentTime;

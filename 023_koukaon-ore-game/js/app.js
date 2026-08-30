@@ -11,13 +11,14 @@
     .registerGame("shooter", window.ShooterGame)
     .registerGame("action", window.ActionGame)
     .registerGame("puzzle", window.PuzzleGame)
-    .registerGame("race", window.RaceGame);
+    .registerGame("race", window.RaceGame)
+    .registerGame("rhythm", window.RhythmGame);
   const initialPack = { id: config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} };
   const state = {
     packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
     ready: true,
-    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, lastPuzzleChainKey: "puzzleMatch",
-    lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null
+    recordingId: null, pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
+    lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null, rhythmTimers: [], metronomeTimer: null, calibration: null
   };
 
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -74,6 +75,10 @@
     state.puzzleBestChain = await storage.getState("puzzleBestChain", 0);
     state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
     state.raceBest = await storage.getState("raceBestScore", 0);
+    state.rhythmBest = await storage.getState("rhythmBestScore", 0);
+    state.rhythmBestAccuracy = await storage.getState("rhythmBestAccuracy", 0);
+    state.rhythmMaxCombo = await storage.getState("rhythmMaxCombo", 0);
+    state.rhythmStage = await storage.getState("rhythmStage", "eight");
     sound.setSettings(state.settings);
     state.ready = true; renderAll();
     startupStatus("操作できます", "録音音声を読み込み中…", "loading");
@@ -108,6 +113,9 @@
     $("#selectedGameName").textContent = definition.subtitle;
     $("#selectedGameDescription").textContent = definition.description;
     $("#recordStartButton").querySelector("small").textContent = `${definition.name} · 必要なオレ ${total}種類`;
+    const rhythm = definition.id === "rhythm";
+    $("#rhythmStagePanel").hidden = !rhythm;
+    if (rhythm) { const stage = window.RhythmChart.stages().find((entry) => entry.id === state.rhythmStage) || window.RhythmChart.stages()[1]; $("#rhythmStageSelect").value = stage.id; $("#rhythmStageCopy").textContent = `${stage.difficulty} · BPM ${stage.bpm} · ${stage.description}`; }
   }
 
   async function selectGame(id, announce = true) {
@@ -127,7 +135,7 @@
       const canCopy = Object.keys(state.currentPack?.sounds || {}).some((id) => id !== definition.id && config.soundCatalog[id]);
       return `<article class="sound-row ${done ? "is-recorded" : ""}" data-sound-id="${definition.id}">
         <span class="sound-number">${String(index + 1).padStart(2, "0")}</span>
-        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒</small><div class="sound-copy-actions"><button class="copy-sound-button" type="button" data-copy-sound="${definition.id}" ${canCopy ? "" : "disabled"}>他の音と同じにする</button>${done ? `<button class="reset-sound-button" type="button" data-reset-sound="${definition.id}">録音を削除して初期音に戻す</button>` : ""}</div></div>
+        <div class="sound-copy"><b>${definition.label}</b><small>おすすめ「${definition.example}」 · 最大${definition.max}秒${definition.description ? ` · ${definition.description}` : ""}</small><div class="sound-copy-actions"><button class="copy-sound-button" type="button" data-copy-sound="${definition.id}" ${canCopy ? "" : "disabled"}>他の音と同じにする</button>${done ? `<button class="reset-sound-button" type="button" data-reset-sound="${definition.id}">録音を削除して初期音に戻す</button>` : ""}</div></div>
         <span class="status-chip">${done ? "✓ オレ済み" : "○ まだ"}</span>
         <button class="mini-play" type="button" data-play="${definition.id}" aria-label="${definition.label}を再生">▶</button>
         <button class="record-button" type="button" data-record="${definition.id}">${done ? "録り直す" : "● 録音"}</button>
@@ -145,6 +153,8 @@
     $("#padGrid").innerHTML = gameSounds().map((definition, index) => {
       const done = Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<button class="sound-pad pad-${index % 4} ${done ? "is-recorded" : ""}" type="button" data-pad="${definition.id}"><span>${definition.short}</span><small>${done ? "✓ オレ済み" : "仮サウンド"}</small></button>`;
+    $("#rhythmTools").hidden = state.selectedGameId !== "rhythm";
+    $("#rhythmMetronomeBpm").value = String(state.settings.rhythmMetronomeBpm || 120);
     }).join("");
   }
 
@@ -163,7 +173,10 @@
   }
 
   async function saveSettings() {
-    state.settings = { masterVolume: Number($("#masterVolume").value), effectVolume: Number($("#effectVolume").value), autoTrim: $("#autoTrim").checked, autoFire: $("#autoFire").checked, vibration: navigator.vibrate ? $("#vibration").checked : false };
+    $("#rhythmJudgeVoice").value = state.settings.rhythmJudgeVoice || "important";
+    $("#rhythmOffset").value = state.settings.rhythmOffset || 0;
+    $("#rhythmOffsetValue").textContent = `${Number(state.settings.rhythmOffset) || 0}ms`;
+    state.settings = { ...state.settings, masterVolume: Number($("#masterVolume").value), effectVolume: Number($("#effectVolume").value), autoTrim: $("#autoTrim").checked, autoFire: $("#autoFire").checked, vibration: navigator.vibrate ? $("#vibration").checked : false, rhythmJudgeVoice: $("#rhythmJudgeVoice").value, rhythmOffset: Number($("#rhythmOffset").value), rhythmMetronomeBpm: Number($("#rhythmMetronomeBpm").value || state.settings.rhythmMetronomeBpm || 120) };
     sound.setSettings(state.settings); await storage.setState("settings", state.settings);
   }
 
@@ -257,7 +270,7 @@
     overlay.hidden = true;
   }
 
-  function bestScoreFor(id) { return id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
+  function bestScoreFor(id) { return id === "rhythm" ? state.rhythmBest : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
     try {
@@ -268,16 +281,18 @@
       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
       $("#gameScreen").classList.toggle("is-race", definition.id === "race");
+      $("#gameScreen").classList.toggle("is-rhythm", definition.id === "rhythm");
       $("#actionControls").hidden = definition.id !== "action";
       $("#raceControls").hidden = definition.id !== "race";
+      $("#rhythmControls").hidden = definition.id !== "rhythm";
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
-      $("#gameAuxLabel").textContent = definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
+      $("#gameAuxLabel").textContent = definition.id === "rhythm" ? "COMBO" : definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "rhythm" ? "0" : definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
       $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
       const canvas = $("#gameCanvas"); const context = canvas.getContext("2d");
       context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
       showScreen("gameScreen");
       await gameCountdown();
-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id) });
+      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
       audioReady.then((ready) => { if (ready && games.current?.running && state.lastGameId === definition.id) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
@@ -288,7 +303,10 @@
     if (!games.current?.running) return clearInterval(state.hudTimer);
     const current = games.current; const hud = current.getHudState?.() || { score: current.score, hp: current.hp, maxHp: 3 };
     $("#gameScore").textContent = String(hud.score || 0).padStart(6, "0");
-    if (hud.time != null) {
+    if (hud.combo != null) {
+      $("#gameAuxLabel").textContent = "COMBO"; $("#gameHp").textContent = String(hud.combo);
+      $("#gameAuxPanel").classList.toggle("is-warning", hud.combo >= 30);
+    } else if (hud.time != null) {
       $("#gameAuxLabel").textContent = "TIME"; $("#gameHp").textContent = String(Math.ceil(hud.time));
       $("#gameAuxPanel").classList.toggle("is-warning", hud.time <= 5);
     } else {
@@ -305,7 +323,8 @@
   async function finishGame(result) {
     clearInterval(state.hudTimer);
     sound.stopAllLoops();
-    if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
+    if (result.mode === "rhythm") { state.rhythmBest=Math.max(state.rhythmBest,result.score);state.rhythmBestAccuracy=Math.max(state.rhythmBestAccuracy,result.stats.accuracy);state.rhythmMaxCombo=Math.max(state.rhythmMaxCombo,result.stats.maxCombo);await storage.setState("rhythmBestScore",state.rhythmBest);await storage.setState("rhythmBestAccuracy",state.rhythmBestAccuracy);await storage.setState("rhythmMaxCombo",state.rhythmMaxCombo); }
+    else if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
     else if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
       await storage.setState("puzzleBestScore", state.puzzleBest); await storage.setState("puzzleBestChain", state.puzzleBestChain); await storage.setState("puzzlePlayCount", state.puzzlePlays);
@@ -329,12 +348,15 @@
     $("#raceResultStats").hidden=!race; $("#raceResultMessage").hidden=!race; $("#directEngineRerecordButton").hidden=!race;
     if(race){$("#raceResultTime").textContent=formatTime(result.stats.time);$("#raceResultMaxSpeed").textContent=`${Math.round(result.stats.maxSpeed)} km/h`;$("#raceResultAvgSpeed").textContent=`${Math.round(result.stats.averageSpeed)} km/h`;$("#raceResultOvertakes").textContent=result.stats.overtakes;$("#raceResultCrashes").textContent=result.stats.crashes;$("#raceResultBoosts").textContent=result.stats.boosts;$("#raceResultMessage").textContent=result.stats.crashes===0?"安全運転のオレ。":result.stats.crashes>=5?"だいぶオレがぶつかりました。":result.stats.overtakes>=20?"今日のオレ、かなり強気。":"今日もオレが走りました。";}
     $("#puzzleResultStats").hidden = !puzzle; $("#puzzleResultMessage").hidden = !puzzle; $("#directChainRerecordButton").hidden = !puzzle;
+    const rhythm = result.mode === "rhythm";
     if (puzzle) {
       $("#resultMaxChain").textContent = result.stats.maxChain; $("#resultTotalCleared").textContent = result.stats.totalCleared; $("#resultSpecialCreated").textContent = result.stats.specialsCreated; $("#resultSpecialActivated").textContent = result.stats.specialsActivated; $("#resultBigClears").textContent = result.stats.bigClears; $("#resultBestChain").textContent = state.puzzleBestChain;
       $("#puzzleResultMessage").textContent = result.stats.maxChain >= 7 ? "ほぼオレ祭り。" : result.stats.maxChain >= 5 ? "今回かなりオレが騒ぎました。" : result.stats.maxChain >= 4 ? "だいぶオレが騒がしい。" : "まだ静かなオレ。";
       state.lastPuzzleChainKey = result.stats.maxChain >= 5 ? "puzzleChain5" : result.stats.maxChain === 4 ? "puzzleChain4" : result.stats.maxChain === 3 ? "puzzleChain3" : result.stats.maxChain === 2 ? "puzzleChain2" : "puzzleMatch";
       $("#directChainRerecordButton").textContent = `${config.soundCatalog[state.lastPuzzleChainKey].label}を録り直す`;
     }
+    $("#rhythmResultStats").hidden=!rhythm;$("#rhythmResultBanner").hidden=!rhythm;$("#rhythmResultActions").hidden=!rhythm;
+    if(rhythm){$("#resultLabel").textContent=result.stats.allPerfect?"ALL PERFECT":result.stats.fullCombo?"FULL COMBO!":"RHYTHM FINISH";$("#resultTitle").textContent=result.stats.fullCombo?"全部オレ！！ 完璧なリズム！":"自分の声だけでリズムが生まれました。";$("#rhythmResultCombo").textContent=result.stats.maxCombo;$("#rhythmResultAccuracy").textContent=`${result.stats.accuracy.toFixed(1)}%`;$("#rhythmResultPerfect").textContent=result.stats.perfect;$("#rhythmResultGreat").textContent=result.stats.great;$("#rhythmResultGood").textContent=result.stats.good;$("#rhythmResultMiss").textContent=result.stats.miss;$("#rhythmResultBanner").textContent=result.stats.allPerfect?"ALL PERFECT · 今日のオレ、完全無欠。":result.stats.fullCombo?"FULL COMBO · 全部オレ！！":`${result.stats.stageName} · 平均判定ズレ ${result.stats.averageOffsetMs>=0?"+":""}${result.stats.averageOffsetMs}ms`;}
     const ranked = Object.entries(result.counts).filter(([id]) => definitions.some((definition) => definition.id === id)).sort((a, b) => b[1] - a[1]);
     const top = ranked[0] || [definitions[0]?.id, 0]; const topDef = config.soundCatalog[top[0]];
     $("#topSoundName").textContent = topDef?.label || top[0]; $("#topSoundCount").textContent = `${top[1]} 回`;
@@ -351,7 +373,7 @@
       ["現在のゲーム", live.game || state.selectedGameId], ["FPS", live.fps ?? "--"], ["AudioContext", sound.context?.state || "未開始"], ["ロード済み効果音", sound.getLoadedBufferCount()]
 
     ];
-    const gameRows = live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
+    const gameRows = live.game === "rhythm" ? [["BPM",live.bpm??"--"],["譜面位置",live.position??"--"],["Audio現在時刻",live.audioTime??"--"],["開始AudioTime",live.startAudioTime??"--"],["ノーツ",`${live.pending??"--"} / ${live.notes??"--"}`],["入力オフセット",`${live.offset??0}ms`],["平均判定ズレ",`${live.averageOffset??0}ms`],["直近判定",live.lastJudge?JSON.stringify(live.lastJudge):"--"]] : live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
     return [...common, ...gameRows, ["IndexedDB", storage.db ? "接続済み" : "未接続"], ["現在のパック", state.currentPack?.name || "なし"], ["登録済み音声", `${recordedCount()} / ${gameDef().sounds.length}`], ["録音形式", recorder.preferredMimeType?.() || "ブラウザ既定"], ["エラー履歴", state.errors.join("\n") || "なし"]];
   }
 
@@ -372,6 +394,13 @@
       const pad = event.target.closest("[data-pad]"); if (pad) { pad.classList.remove("is-hit"); void pad.offsetWidth; pad.classList.add("is-hit"); if(pad.dataset.pad==="raceEngine"){if(sound.isLoopPlaying("raceEngine"))sound.stopLoop("raceEngine");else sound.startLoop("raceEngine",{gain:.55});}else sound.play(pad.dataset.pad); }
       const pack = event.target.closest("[data-pack]"); if (pack) choosePack(pack.dataset.pack);
     });
+  function stopRhythmTools(){state.rhythmTimers.splice(0).forEach(clearTimeout);if(state.metronomeTimer){clearTimeout(state.metronomeTimer);state.metronomeTimer=null;}$("#rhythmMetronome").classList.remove("is-running");$("#rhythmMetronomeButton").textContent="オレメトロノーム";}
+  async function runRhythmBeatTest(){stopRhythmTools();await sound.unlock();const pattern=[0,2,1,2,0,2,1,3,0,2,1,2,0,3,1,3],step=250;pattern.forEach((lane,index)=>state.rhythmTimers.push(setTimeout(()=>sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]),index*step)));state.rhythmTimers.push(setTimeout(()=>{$("#rhythmBeatTestButton").textContent="▶ もう一度";},pattern.length*step));}
+  function hitDrumPad(lane,button){button?.classList.add("is-hit");setTimeout(()=>button?.classList.remove("is-hit"),90);sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]);}
+  function toggleMetronome(){if(state.metronomeTimer){stopRhythmTools();return;}const bpm=Number($("#rhythmMetronomeBpm").value)||120,interval=60000/bpm;state.settings.rhythmMetronomeBpm=bpm;storage.setState("settings",state.settings).catch(logError);$("#rhythmMetronome").classList.add("is-running");$("#rhythmMetronomeButton").textContent=`停止 · BPM ${bpm}`;const tick=()=>{sound.play("rhythmHiHat");state.metronomeTimer=setTimeout(tick,interval);};tick();}
+  function startCalibration(){const start=performance.now()+1000,expected=Array.from({length:8},(_,i)=>start+i*500);state.calibration={expected,taps:[],suggested:0};$("#calibrationTapButton").disabled=false;$("#calibrationApplyButton").disabled=true;$("#calibrationStatus").textContent="光に合わせてタップ";expected.forEach(time=>{state.rhythmTimers.push(setTimeout(()=>{$("#calibrationLight").classList.add("is-beat");setTimeout(()=>$("#calibrationLight").classList.remove("is-beat"),110);},Math.max(0,time-performance.now())));});}
+  function calibrationTap(){const c=state.calibration;if(!c||c.taps.length>=c.expected.length)return;const index=c.taps.length,offset=performance.now()-c.expected[index];c.taps.push(offset);$("#calibrationStatus").textContent=`${c.taps.length} / 8 · ${offset>=0?"+":""}${Math.round(offset)}ms`;if(c.taps.length===8){const avg=c.taps.reduce((a,b)=>a+b,0)/c.taps.length;c.suggested=Math.max(-200,Math.min(200,Math.round(-avg/10)*10));$("#calibrationStatus").textContent=`平均 ${avg>=0?"+":""}${Math.round(avg)}ms · 推奨 ${c.suggested}ms`;$("#calibrationTapButton").disabled=true;$("#calibrationApplyButton").disabled=false;}}
+  function applyCalibration(){if(!state.calibration)return;$("#rhythmOffset").value=state.calibration.suggested;$("#rhythmOffsetValue").textContent=`${state.calibration.suggested}ms`;saveSettings();toast("推奨タイミングを設定しました");}
     $("#recordStartButton").addEventListener("click", () => showScreen("studioScreen")); $("#studioShortcut").addEventListener("click", () => showScreen("studioScreen"));
     $("#quickStartButton").addEventListener("click", startSelectedGame); $("#studioGameButton").addEventListener("click", startSelectedGame);
     $("#stopRecordingButton").addEventListener("click", () => recorder.stop()); $("#previewRecordingButton").addEventListener("click", previewPending);
@@ -406,6 +435,15 @@
     document.addEventListener("click", unlockAudioOnGesture, { capture: true });
     document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
     window.addEventListener("pageshow", () => { if (sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
+    $("#rhythmStageSelect").addEventListener("change",async(event)=>{state.rhythmStage=event.target.value;await storage.setState("rhythmStage",state.rhythmStage);updateSelectionCopy();});
+    $("#rhythmBeatTestButton").addEventListener("click",runRhythmBeatTest);$("#rhythmBeatStopButton").addEventListener("click",stopRhythmTools);$("#rhythmMetronomeButton").addEventListener("click",toggleMetronome);
+    $("#oreDrumPads").querySelectorAll("[data-rhythm-drum]").forEach(button=>button.addEventListener("pointerdown",event=>{event.preventDefault();hitDrumPad(Number(button.dataset.rhythmDrum),button);}));
+    $("#rhythmOffset").addEventListener("input",()=>{$("#rhythmOffsetValue").textContent=`${$("#rhythmOffset").value}ms`;});
+    $("#calibrationStartButton").addEventListener("click",startCalibration);$("#calibrationTapButton").addEventListener("pointerdown",event=>{event.preventDefault();calibrationTap();});$("#calibrationApplyButton").addEventListener("click",applyCalibration);
+    $("#resultRhythmDrumButton").addEventListener("click",async()=>{await selectGame("rhythm",false);showScreen("testScreen");});
+    $("#resultRhythmBeatButton").addEventListener("click",async()=>{await selectGame("rhythm",false);showScreen("testScreen");runRhythmBeatTest();});
+    $("#resultRhythmSongsButton").addEventListener("click",async()=>{await selectGame("rhythm",false);showScreen("titleScreen");});
+    $("#resultRhythmInstrumentsButton").addEventListener("click",async()=>{await selectGame("rhythm",false);showScreen("studioScreen");setTimeout(()=>document.querySelector('[data-sound-id="rhythmKick"]')?.scrollIntoView({behavior:"smooth"}),50);});
     $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
   }
 
