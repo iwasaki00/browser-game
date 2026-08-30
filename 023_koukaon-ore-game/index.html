@@ -12,8 +12,9 @@
   <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta property="og:image" content="./assets/og.png">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="効果音全部オレゲーム"><meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta name="twitter:image" content="./assets/og.png">
   <title>効果音全部オレゲーム</title>
-  <link rel="stylesheet" href="./css/style.css?v=20260830-6"><link rel="stylesheet" href="./css/action.css?v=20260830-6"><link rel="stylesheet" href="./css/puzzle.css?v=20260830-6"><link rel="stylesheet" href="./css/race.css?v=20260830-6"><link rel="stylesheet" href="./css/sound-reset.css?v=20260830-6"><link rel="stylesheet" href="./css/sound-copy.css?v=20260830-6"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260830-6"><link rel="stylesheet" href="./css/startup-status.css?v=20260830-6">
-  <link rel="stylesheet" href="./css/rhythm.css?v=20260830-6">
+  <link rel="stylesheet" href="./css/style.css?v=20260830-7"><link rel="stylesheet" href="./css/action.css?v=20260830-7"><link rel="stylesheet" href="./css/puzzle.css?v=20260830-7"><link rel="stylesheet" href="./css/race.css?v=20260830-7"><link rel="stylesheet" href="./css/sound-reset.css?v=20260830-7"><link rel="stylesheet" href="./css/sound-copy.css?v=20260830-7"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260830-7"><link rel="stylesheet" href="./css/startup-status.css?v=20260830-7">
+  <link rel="stylesheet" href="./css/rhythm.css?v=20260830-7">
+  <link rel="stylesheet" href="./css/sound-library.css?v=20260830-7">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -24,7 +25,7 @@
       <section id="rhythmStagePanel" class="rhythm-stage-panel" hidden><label>RHYTHM STAGE<select id="rhythmStageSelect"><option value="four">EASY · オレ4つ打ち · BPM 100</option><option value="eight">NORMAL · オレ8ビート · BPM 120</option><option value="rush">HARD · オレラッシュ · BPM 140</option></select></label><p id="rhythmStageCopy" class="rhythm-stage-copy">キック、スネア、ハイハットを刻む王道パターン</p></section>
       <section id="startupPanel" class="startup-panel" data-tone="loading" aria-live="polite">
         <div class="startup-heading">
-          <span id="appVersion" class="version-badge">VERSION 2026.08.30-6</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
+          <span id="appVersion" class="version-badge">VERSION 2026.08.30-7</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
         </div>
         <p id="startupDetail" class="startup-detail">JavaScriptを読み込んでいます…</p>
       </section>
@@ -34,7 +35,7 @@
         <button id="quickStartButton" class="secondary-button" type="button"><span>▶</span><span>すぐ遊ぶ <small>未録音は仮サウンド</small></span></button>
       </section>
       <section id="gameModeList" class="mode-preview" aria-label="ゲームを選択"></section>
-      <button id="studioShortcut" class="studio-shortcut" type="button">♫ サウンドスタジオを開く</button><p class="safe-note">録音はこの端末の中だけに保存されます</p>
+      <button id="studioShortcut" class="studio-shortcut" type="button">♫ サウンドスタジオを開く</button><button id="libraryShortcut" class="studio-shortcut" type="button" data-nav="libraryScreen">♬ オレ音ライブラリを開く</button><p class="safe-note">録音はこの端末の中だけに保存されます</p>
     </section>
 
     <section id="studioScreen" class="screen content-screen" hidden aria-labelledby="studioTitle">
@@ -49,7 +50,7 @@
       <div class="record-heading"><p>NOW RECORDING</p><h2 id="recordSoundName">ジャンプ</h2><strong id="recordExample">「よいしょ！」</strong><span id="recordMax">最大 1.5 秒</span></div>
       <section id="countdown" class="countdown"><small>声の準備はいい？</small><b id="countdownNumber">3</b></section>
       <section id="recordLive" class="record-live" hidden><div class="rec-orb"><span>● REC</span></div><b id="recordTimer">0.0 / 1.5 秒</b><div class="meter-shell"><i id="recordMeterBar"></i></div><small>マイクの音量</small><button id="stopRecordingButton" class="stop-button" type="button">■ 停止</button></section>
-      <section id="recordReview" class="record-review" hidden><div class="success-mark">✓</div><h3>いい音、録れました。</h3><p id="reviewSize">0 KB</p><button id="previewRecordingButton" class="preview-button" type="button">▶ 試聴する</button><div class="review-actions"><button id="retryRecordingButton" type="button">↻ 録り直し</button><button id="acceptRecordingButton" type="button">✓ この音を使う</button></div></section>
+      <section id="recordReview" class="record-review" hidden><div class="success-mark">✓</div><h3>いい音、録れました。</h3><p id="reviewSize">0 KB</p><button id="previewRecordingButton" class="preview-button" type="button">▶ 試聴する</button><div id="libraryRecordMetadata" class="library-record-metadata" hidden><label>録音名<input id="libraryRecordName" maxlength="40" placeholder="オレ音 001"></label><label>タグ<input id="libraryRecordTags" placeholder="声, 動物, かわいい"></label></div><div class="review-actions"><button id="retryRecordingButton" type="button">↻ 録り直し</button><button id="acceptRecordingButton" type="button">✓ この音を使う</button></div></section>
     </section>
 
     <section id="testScreen" class="screen content-screen" hidden aria-labelledby="testTitle">
@@ -57,6 +58,23 @@
       <p id="testGameName" class="game-context-chip">横スクロールアクション</p><p class="page-intro">押す。鳴る。連打する。それだけでちょっと楽しい。</p><section id="puzzleChainTest" class="puzzle-chain-test" hidden><p>ORE CHAIN TEST</p><h3>オレ連鎖テスト</h3><span>連鎖の声が段階的に盛り上がるか確認しよう。</span><b id="chainTestStatus" class="chain-test-status">1 → 2 → 3 → 4 → 5+</b><button id="chainTestButton" type="button">▶ START</button></section><div id="padGrid" class="pad-grid"></div><button id="playGameButton" class="primary-wide" type="button">このサウンドでゲーム開始 →</button>
       <section id="raceEngineTest" class="puzzle-chain-test" hidden><p>ORE ENGINE TEST</p><h3>オレエンジンテスト</h3><span>速度に合わせて声の高さを変えます。</span><b id="engineTestStatus" class="chain-test-status">LOW → MID → HIGH → BOOST</b><button id="engineTestButton" type="button">▶ エンジンテスト開始</button></section>
       <section id="rhythmTools" class="rhythm-tools" hidden><h3>オレドラム &amp; オレビートテスト</h3><p>4音を自由に叩くか、BPM 120の全部オレビートを聴こう。</p><div class="rhythm-tool-actions"><button id="rhythmBeatTestButton" type="button">▶ ビートを聴く</button><button id="rhythmBeatStopButton" type="button">■ 停止</button></div><div id="oreDrumPads" class="ore-drum-pads"><button type="button" data-rhythm-drum="0">KICK<small>D</small></button><button type="button" data-rhythm-drum="1">SNARE<small>F</small></button><button type="button" data-rhythm-drum="2">HI-HAT<small>J</small></button><button type="button" data-rhythm-drum="3">CLAP<small>K</small></button></div><div id="rhythmMetronome" class="rhythm-metronome"><select id="rhythmMetronomeBpm" aria-label="メトロノームBPM"><option>80</option><option>100</option><option selected>120</option><option>140</option><option>160</option></select><button id="rhythmMetronomeButton" type="button">オレメトロノーム</button></div></section>
+    </section>
+
+    <section id="libraryScreen" class="screen content-screen library-screen" hidden aria-labelledby="libraryTitle">
+      <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen">←</button><div><p>ORE SOUND LIBRARY</p><h2 id="libraryTitle">オレ音ライブラリ</h2></div><button id="libraryViewToggle" class="icon-button" type="button">▦ 図鑑表示</button></header>
+      <section class="library-toolbar">
+        <input id="librarySearch" type="search" placeholder="名前・タグを検索" aria-label="オレ音を検索">
+        <div class="library-filter-row"><select id="libraryTagFilter" aria-label="タグ絞り込み"><option value="">すべてのタグ</option></select><select id="librarySort" aria-label="並び替え"><option value="new">新しい順</option><option value="old">古い順</option><option value="name">名前順</option><option value="usage">使用回数順</option><option value="favorite">お気に入り優先</option><option value="plays">再生回数順</option></select></div>
+        <div class="library-filter-row"><button id="libraryFavoriteFilter" type="button">☆ お気に入り</button><button id="libraryUnusedFilter" type="button">未使用オレ音</button></div>
+        <div class="library-action-row"><button id="libraryShuffleButton" type="button">⤨ オレ音シャッフル</button><button id="libraryDeleteSelected" type="button">選択を削除</button></div>
+        <span id="librarySummary" class="library-summary">0 オレ音</span><small id="libraryStorage">推定録音容量 0MB</small>
+      </section>
+      <aside id="temporarySoundBanner" class="temporary-sound-banner" hidden>一時割り当てで再生します <button id="temporaryUndoButton" type="button">元に戻す</button><button id="temporarySaveButton" type="button">この設定を保存</button></aside>
+      <div id="soundLibraryList" class="asset-grid"></div>
+      <section class="library-stats"><h3>オレ音ランキング</h3><dl id="libraryStats"></dl><ol id="libraryRanking"></ol></section>
+      <section class="library-history"><h3>最近録音したオレ音</h3><ul id="libraryHistory"></ul></section>
+      <section class="library-stats"><button id="libraryDiagnosticButton" type="button">録音データ診断</button><pre id="libraryDiagnosticResult" class="library-diagnostic">未診断</pre></section>
+      <button id="newLibraryRecordingButton" class="library-fab" type="button">＋ 新しいオレ音</button>
     </section>
 
     <section id="packsScreen" class="screen content-screen" hidden aria-labelledby="packsTitle">
@@ -92,12 +110,13 @@
       <p id="rhythmResultBanner" class="rhythm-result-banner" hidden>自分の声だけでリズムが生まれました。</p>
       <section class="top-sound"><p>今回、一番働いたオレ</p><b id="topSoundName">攻撃</b><strong id="topSoundCount">0 回</strong></section>
       <details class="count-details"><summary>今回のオレ効果音使用回数</summary><div id="resultCounts"></div></details>
+      <details class="count-details"><summary>今回使われたオレ音の内訳</summary><div id="resultAssetCounts" class="result-asset-counts"></div></details>
+      <div id="rhythmResultActions" class="rhythm-result-actions" hidden><button id="resultRhythmDrumButton" type="button">オレドラム</button><button id="resultRhythmBeatButton" type="button">オレビートテスト</button><button id="resultRhythmSongsButton" type="button">曲選択</button><button id="resultRhythmInstrumentsButton" type="button">楽器音を作り直す</button></div>
       <button id="directChainRerecordButton" class="direct-rerecord" type="button" hidden>最大連鎖音を録り直す</button>
       <button id="directEngineRerecordButton" class="direct-rerecord" type="button" hidden>エンジン音を録り直す</button>
       <div class="result-actions result-actions-four"><button id="replayButton" class="primary-wide" type="button">▶ もう一度</button><button id="resultStudioButton" type="button">● 効果音を録り直す</button><button id="resultTestButton" type="button">▦ オレ効果音チェック</button><button id="resultHomeButton" type="button">ゲーム選択へ</button></div>
     </section>
 
-      <div id="rhythmResultActions" class="rhythm-result-actions" hidden><button id="resultRhythmDrumButton" type="button">オレドラム</button><button id="resultRhythmBeatButton" type="button">オレビートテスト</button><button id="resultRhythmSongsButton" type="button">曲選択</button><button id="resultRhythmInstrumentsButton" type="button">楽器音を作り直す</button></div>
     <section id="settingsScreen" class="screen content-screen" hidden aria-labelledby="settingsTitle">
       <header class="page-header"><button class="back-button" type="button" data-nav="titleScreen">←</button><div><p>SETTINGS</p><h2 id="settingsTitle">設定</h2></div><span class="header-spacer"></span></header>
       <div class="settings-list"><label><span><b>マスター音量</b><small>ゲーム全体の音量</small></span><input id="masterVolume" class="settings-input" type="range" min="0" max="1" step="0.05"></label><label><span><b>効果音音量</b><small>オレ効果音の音量</small></span><input id="effectVolume" class="settings-input" type="range" min="0" max="1" step="0.05"></label><label><span><b>自動トリミング</b><small>録音前後の静かな部分を短くする準備設定</small></span><input id="autoTrim" class="settings-input toggle" type="checkbox"></label><label><span><b>自動連射</b><small>シューティング用</small></span><input id="autoFire" class="settings-input toggle" type="checkbox"></label><label id="vibrationSetting"><span><b>振動</b><small>対応端末のみ</small></span><input id="vibration" class="settings-input toggle" type="checkbox"></label></div>
@@ -107,13 +126,29 @@
       <section class="calibration-panel"><h3>タイミングテスト</h3><p>光に合わせて8回タップすると推奨値を計算します。</p><i id="calibrationLight" class="calibration-light"></i><p id="calibrationStatus">未測定</p><button id="calibrationStartButton" type="button">測定開始</button><button id="calibrationTapButton" type="button" disabled>ここをタップ</button><button id="calibrationApplyButton" type="button" disabled>この値を設定</button></section>
   </main>
 
-  <nav id="bottomNav" class="bottom-nav" aria-label="メインメニュー"><button type="button" data-nav="titleScreen"><span>⌂</span>ゲーム</button><button type="button" data-nav="studioScreen"><span>●</span>録音</button><button type="button" data-nav="testScreen"><span>▦</span>チェック</button><button type="button" data-nav="packsScreen"><span>♫</span>パック</button><button type="button" data-nav="settingsScreen"><span>⚙</span>設定</button></nav>
+  <nav id="bottomNav" class="bottom-nav" aria-label="メインメニュー"><button type="button" data-nav="titleScreen"><span>⌂</span>ゲーム</button><button type="button" data-nav="studioScreen"><span>●</span>録音</button><button type="button" data-nav="libraryScreen"><span>♬</span>ライブラリ</button><button type="button" data-nav="testScreen"><span>▦</span>チェック</button><button type="button" data-nav="packsScreen"><span>♫</span>パック</button><button type="button" data-nav="settingsScreen"><span>⚙</span>設定</button></nav>
   <button id="audioResumeNotice" class="audio-notice" type="button" hidden>タップしてサウンドを再開</button><div id="toast" class="toast" role="status" hidden></div>
   <section id="errorDialog" class="overlay" hidden role="alertdialog" aria-labelledby="errorTitle"><div class="dialog"><span class="error-icon">!</span><h2 id="errorTitle">マイクを使用できませんでした</h2><p id="errorMessage"></p><details><summary>詳細情報</summary><pre id="errorDetail"></pre></details><button id="closeErrorButton" class="primary-wide" type="button">確認しました</button></div></section>
   <section id="copySoundDialog" class="overlay copy-sound-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="copySoundTitle"><div class="dialog"><h2 id="copySoundTitle">他の録音と同じ音にする</h2><p id="copySoundTarget"></p><label>コピー元の録音<select id="copySoundSource"></select></label><p>コピー元の録音はそのまま残ります。</p><div class="dialog-actions"><button id="cancelCopySoundButton" type="button">キャンセル</button><button id="confirmCopySoundButton" type="button">この音と同じにする</button></div></div></section>
+  <section id="assignmentDialog" class="overlay assignment-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="assignmentTitle"><div class="dialog">
+    <h2 id="assignmentTitle">オレ音を割り当て</h2><input id="assignmentSearch" type="search" placeholder="名前・タグを検索">
+    <label>再生モード<select id="assignmentMode"><option value="fixed">固定</option><option value="random">ランダム</option><option value="sequence">順番</option><option value="randomNoRepeat">ランダム（直前と違う）</option></select></label>
+    <div id="assignmentAssetList" class="assignment-list"></div>
+    <div class="dialog-actions"><button id="assignmentCancel" type="button">キャンセル</button><button id="assignmentSave" type="button">選択を保存</button></div>
+  </div></section>
+  <section id="assetDetailDialog" class="overlay asset-detail-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="assetDetailName"><div class="dialog">
+    <div class="asset-detail-head"><input id="assetDetailName" aria-label="録音名"><p id="assetDetailMeta" class="asset-detail-meta"></p></div>
+    <label>タグ（カンマ区切り）<input id="assetDetailTags" list="assetTagSuggestions" placeholder="声, 動物, かわいい"></label>
+    <datalist id="assetTagSuggestions"><option value="声"><option value="口効果音"><option value="手拍子"><option value="指パッチン"><option value="身体音"><option value="物音"><option value="動物"><option value="機械"><option value="爆発"><option value="攻撃"><option value="かわいい"><option value="変"><option value="低い"><option value="高い"><option value="短い"><option value="長い"><option value="リズム"><option value="その他"></datalist>
+    <h3>使用中</h3><ul id="assetUsageList" class="asset-usage-list"></ul>
+    <label>素材音量<input id="assetDetailVolume" type="range" min="0.1" max="2" step="0.1" value="1"></label>
+    <label>再生速度<input id="assetDetailRate" type="range" min="0.5" max="2" step="0.1" value="1"></label>
+    <div class="asset-detail-actions"><button id="assetDetailPlay" type="button">▶ 再生</button><button id="assetDetailLoop" type="button">🔁 ループ確認</button><button id="assetDetailFavorite" type="button">☆ お気に入り</button><button id="assetDetailDuplicate" type="button">📋 複製</button><button id="assetDetailSame" type="button">全部このオレ</button><button id="assetDetailDelete" class="danger-button" type="button">🗑 削除</button></div>
+    <div class="dialog-actions"><button id="assetDetailClose" type="button">閉じる</button><button id="assetDetailSave" type="button">変更を保存</button></div>
+  </div></section>
 
   <script>
-    window.ORE_APP_VERSION = "2026.08.30-6";
+    window.ORE_APP_VERSION = "2026.08.30-7";
     (function () {
       const panel = document.getElementById("startupPanel");
       const state = document.getElementById("startupState");
@@ -128,15 +163,16 @@
         const source = event.filename || event.target && (event.target.src || event.target.href) || "不明なファイル";
         status("起動エラー", `${event.message || "ファイルを読み込めませんでした"} / ${source}`, "error");
       }, true);
+
       window.addEventListener("unhandledrejection", function (event) {
         const reason = event.reason && (event.reason.message || event.reason) || "不明なエラー";
         status("起動エラー", String(reason), "error");
       });
     })();
   </script>
-  <script src="./js/config.js?v=20260830-6"></script><script src="./js/bgm-config.js?v=20260830-6"></script><script src="./js/race-config.js?v=20260830-6"></script><script src="./js/StorageManager.js?v=20260830-6"></script><script src="./js/SoundManager.js?v=20260830-6"></script><script src="./js/RecorderManager.js?v=20260830-6"></script>
-  <script src="./js/rhythm-config.js?v=20260830-6"></script>
-  <script src="./games/rhythm/RhythmChart.js?v=20260830-6"></script><script src="./games/rhythm/RhythmJudge.js?v=20260830-6"></script><script src="./games/rhythm/RhythmRenderer.js?v=20260830-6"></script><script src="./games/rhythm/RhythmGame.js?v=20260830-6"></script>
-  <script src="./games/shooter/ShooterGame.js?v=20260830-6"></script><script src="./games/action/ActionGame.js?v=20260830-6"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260830-6"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260830-6"></script><script src="./games/puzzle/PuzzleGame.js?v=20260830-6"></script><script src="./games/race/RaceGame.js?v=20260830-6"></script><script src="./js/GameManager.js?v=20260830-6"></script><script src="./js/app.js?v=20260830-6"></script>
+  <script src="./js/config.js?v=20260830-7"></script><script src="./js/bgm-config.js?v=20260830-7"></script><script src="./js/race-config.js?v=20260830-7"></script><script src="./js/StorageManager.js?v=20260830-7"></script><script src="./js/sound-library-storage.js?v=20260830-7"></script><script src="./js/SoundManager.js?v=20260830-7"></script><script src="./js/sound-library-manager.js?v=20260830-7"></script><script src="./js/RecorderManager.js?v=20260830-7"></script><script src="./js/SoundLibraryController.js?v=20260830-7"></script>
+  <script src="./js/rhythm-config.js?v=20260830-7"></script>
+  <script src="./games/rhythm/RhythmChart.js?v=20260830-7"></script><script src="./games/rhythm/RhythmJudge.js?v=20260830-7"></script><script src="./games/rhythm/RhythmRenderer.js?v=20260830-7"></script><script src="./games/rhythm/RhythmGame.js?v=20260830-7"></script>
+  <script src="./games/shooter/ShooterGame.js?v=20260830-7"></script><script src="./games/action/ActionGame.js?v=20260830-7"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260830-7"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260830-7"></script><script src="./games/puzzle/PuzzleGame.js?v=20260830-7"></script><script src="./games/race/RaceGame.js?v=20260830-7"></script><script src="./js/GameManager.js?v=20260830-7"></script><script src="./js/app.js?v=20260830-7"></script>
 </body>
 </html>
