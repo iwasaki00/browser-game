@@ -13,12 +13,13 @@
     .registerGame("puzzle", window.PuzzleGame)
     .registerGame("race", window.RaceGame)
     .registerGame("rhythm", window.RhythmGame)
-    .registerGame("breakout", window.BreakoutGame);
+    .registerGame("breakout", window.BreakoutGame)
+    .registerGame("fight", window.FightGame);
   const initialPack = { id: config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} };
   const state = {
     packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
     ready: true,
-    recordingId: null, recordingMode: "slot", libraryRecordingName: "", pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, breakoutBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
+    recordingId: null, recordingMode: "slot", libraryRecordingName: "", pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, breakoutBest: 0, fightBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null, rhythmTimers: [], metronomeTimer: null, calibration: null
   };
 
@@ -86,6 +87,7 @@
     state.puzzlePlays = await storage.getState("puzzlePlayCount", 0);
     state.raceBest = await storage.getState("raceBestScore", 0);
     state.breakoutBest = await storage.getState("breakoutBestScore", 0);
+    state.fightBest = await storage.getState("fightBestScore", 0);
     state.rhythmBest = await storage.getState("rhythmBestScore", 0);
     state.rhythmBestAccuracy = await storage.getState("rhythmBestAccuracy", 0);
     state.rhythmMaxCombo = await storage.getState("rhythmMaxCombo", 0);
@@ -133,6 +135,7 @@
     const rhythm = definition.id === "rhythm";
     const breakout = definition.id === "breakout";
     $("#breakoutChallengeHints").hidden = !breakout;
+    $("#fightChallengeHints").hidden = definition.id !== "fight";
     $("#rhythmStagePanel").hidden = !rhythm;
     if (rhythm) { const stage = window.RhythmChart.stages().find((entry) => entry.id === state.rhythmStage) || window.RhythmChart.stages()[1]; $("#rhythmStageSelect").value = stage.id; $("#rhythmStageCopy").textContent = `${stage.difficulty} · BPM ${stage.bpm} · ${stage.description}`; }
   }
@@ -165,6 +168,7 @@
     $("#studioGameButton").textContent = ready ? "全部オレ済み！ ゲーム開始 →" : "この音でゲーム開始 →";
     $("#rhythmChallengeHints").hidden = state.selectedGameId !== "rhythm";
     $("#breakoutChallengeHints").hidden = state.selectedGameId !== "breakout";
+    $("#fightChallengeHints").hidden = state.selectedGameId !== "fight";
   }
 
   function renderPads() {
@@ -172,6 +176,13 @@
     $("#puzzleChainTest").hidden = state.selectedGameId !== "puzzle";
     $("#raceEngineTest").hidden = state.selectedGameId !== "race";
     $("#breakoutSoundTests").hidden = state.selectedGameId !== "breakout";
+    const fight = state.selectedGameId === "fight";
+    $("#fightWorkshop").hidden = !fight;
+    if (fight) {
+      $("#fightSpecialName").value = state.settings.specialMoveName || "オレファイヤー";
+      $("#fightEffect").value = state.settings.fightEffect || "fire";
+      $("#fightDifficulty").value = state.settings.fightDifficulty || "easy";
+    }
     $("#padGrid").innerHTML = gameSounds().map((definition, index) => {
       const done = library.hasAssignment(definition.id) || Boolean(state.currentPack?.sounds?.[definition.id]);
       return `<button class="sound-pad pad-${index % 4} ${done ? "is-recorded" : ""}" type="button" data-pad="${definition.id}"><span>${definition.short}</span><small>${done ? "✓ オレ済み" : "仮サウンド"}</small></button>`;
@@ -198,7 +209,7 @@
     $("#rhythmJudgeVoice").value = state.settings.rhythmJudgeVoice || "important";
     $("#rhythmOffset").value = state.settings.rhythmOffset || 0;
     $("#rhythmOffsetValue").textContent = `${Number(state.settings.rhythmOffset) || 0}ms`;
-    state.settings = { ...state.settings, masterVolume: Number($("#masterVolume").value), effectVolume: Number($("#effectVolume").value), autoTrim: $("#autoTrim").checked, autoFire: $("#autoFire").checked, vibration: navigator.vibrate ? $("#vibration").checked : false, rhythmJudgeVoice: $("#rhythmJudgeVoice").value, rhythmOffset: Number($("#rhythmOffset").value), rhythmMetronomeBpm: Number($("#rhythmMetronomeBpm").value || state.settings.rhythmMetronomeBpm || 120) };
+    state.settings = { ...state.settings, masterVolume: Number($("#masterVolume").value), effectVolume: Number($("#effectVolume").value), autoTrim: $("#autoTrim").checked, autoFire: $("#autoFire").checked, vibration: navigator.vibrate ? $("#vibration").checked : false, rhythmJudgeVoice: $("#rhythmJudgeVoice").value, rhythmOffset: Number($("#rhythmOffset").value), rhythmMetronomeBpm: Number($("#rhythmMetronomeBpm").value || state.settings.rhythmMetronomeBpm || 120), specialMoveName: $("#fightSpecialName")?.value.trim() || "オレファイヤー", fightEffect: $("#fightEffect")?.value || "fire", fightDifficulty: $("#fightDifficulty")?.value || "easy" };
     sound.setSettings(state.settings); await storage.setState("settings", state.settings);
   }
 
@@ -315,7 +326,7 @@
     overlay.hidden = true;
   }
 
-  function bestScoreFor(id) { return id === "breakout" ? state.breakoutBest : id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
+  function bestScoreFor(id) { return id === "fight" ? state.fightBest : id === "breakout" ? state.breakoutBest : id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
     try {
@@ -327,20 +338,23 @@
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
       $("#gameScreen").classList.toggle("is-race", definition.id === "race");
       $("#gameScreen").classList.toggle("is-rhythm", definition.id === "rhythm");
+      $("#gameScreen").classList.toggle("is-fight", definition.id === "fight");
       $("#actionControls").hidden = definition.id !== "action";
       $("#raceControls").hidden = definition.id !== "race";
       $("#gameScreen").classList.toggle("is-breakout", definition.id === "breakout");
       $("#rhythmControls").hidden = definition.id !== "rhythm";
+      $("#fightControls").hidden = definition.id !== "fight";
+      $("#fightResumeButton").hidden = true;
       await library.refresh(state.currentPack, definition.id);
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
-      $("#gameTip").textContent = definition.id === "breakout" ? "下部を左右ドラッグ · タップで発射 · Pでポーズ" : "シューティングはドラッグ · アクションはボタン · パズルはスワイプ · リズムは4パッド";
+      $("#gameTip").textContent = definition.id === "fight" ? "← →で移動 · Aパンチ · Sキック · Dガード · F必殺 · Spaceジャンプ" : definition.id === "breakout" ? "下部を左右ドラッグ · タップで発射 · Pでポーズ" : "シューティングはドラッグ · アクションはボタン · パズルはスワイプ · リズムは4パッド";
       $("#gameAuxLabel").textContent = definition.id === "rhythm" ? "COMBO" : definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "rhythm" ? "0" : definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
       $("#gameBest").textContent = String(bestScoreFor(definition.id)).padStart(6, "0"); $("#gameAuxPanel").classList.remove("is-warning");
       const canvas = $("#gameCanvas"); const context = canvas.getContext("2d");
       context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
       showScreen("gameScreen");
       await gameCountdown();
-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: definition.id === "breakout" ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
+      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: ["breakout", "fight"].includes(definition.id) ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
       audioReady.then((ready) => { if (ready && games.current?.running && state.lastGameId === definition.id) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
@@ -374,6 +388,7 @@
     if (result.mode === "rhythm") { const stage=result.stats.stageId;state.rhythmBest=Math.max(state.rhythmBest,result.score);state.rhythmBestAccuracy=Math.max(state.rhythmBestAccuracy,result.stats.accuracy);state.rhythmMaxCombo=Math.max(state.rhythmMaxCombo,result.stats.maxCombo);state.rhythmBestByStage={...state.rhythmBestByStage,[stage]:Math.max(state.rhythmBestByStage[stage]||0,result.score)};state.rhythmAccuracyByStage={...state.rhythmAccuracyByStage,[stage]:Math.max(state.rhythmAccuracyByStage[stage]||0,result.stats.accuracy)};await storage.setState("rhythmBestScore",state.rhythmBest);await storage.setState("rhythmBestAccuracy",state.rhythmBestAccuracy);await storage.setState("rhythmMaxCombo",state.rhythmMaxCombo);await storage.setState("rhythmBestByStage",state.rhythmBestByStage);await storage.setState("rhythmAccuracyByStage",state.rhythmAccuracyByStage); }
     else if (result.mode === "race") { state.raceBest=Math.max(state.raceBest,result.score); await storage.setState("raceBestScore",state.raceBest); }
     else if (result.mode === "breakout") { state.breakoutBest=Math.max(state.breakoutBest,result.score); await storage.setState("breakoutBestScore",state.breakoutBest); }
+    else if (result.mode === "fight") { state.fightBest=Math.max(state.fightBest,result.score); await storage.setState("fightBestScore",state.fightBest); }
     else if (result.mode === "puzzle") {
       state.puzzleBest = Math.max(state.puzzleBest, result.score); state.puzzleBestChain = Math.max(state.puzzleBestChain, result.stats.maxChain); state.puzzlePlays += 1;
       await storage.setState("puzzleBestScore", state.puzzleBest); await storage.setState("puzzleBestChain", state.puzzleBestChain); await storage.setState("puzzlePlayCount", state.puzzlePlays);
@@ -402,6 +417,18 @@
     $("#puzzleResultStats").hidden = !puzzle; $("#puzzleResultMessage").hidden = !puzzle; $("#directChainRerecordButton").hidden = !puzzle;
     const rhythm = result.mode === "rhythm";
     const breakout = result.mode === "breakout";
+    const fight = result.mode === "fight";
+    $("#fightResultStats").hidden=!fight; $("#fightResultMessage").hidden=!fight; $("#fightResultActions").hidden=!fight;
+    if (fight) {
+      $("#resultLabel").textContent = result.draw ? "DRAW" : result.clear ? "YOU WIN!" : "YOU LOSE";
+      $("#resultTitle").textContent = result.draw ? "最後まで全部オレの互角勝負。" : result.clear ? "勝った声も必殺技も全部あなたでした。" : "負けても効果音は全部オレでした。";
+      $("#fightResultHp").textContent=result.stats.remainingHp; $("#fightResultDealt").textContent=Math.round(result.stats.damageDealt);
+      $("#fightResultTaken").textContent=Math.round(result.stats.damageTaken); $("#fightResultPunches").textContent=result.stats.punchHits;
+      $("#fightResultKicks").textContent=result.stats.kickHits; $("#fightResultCombo").textContent=result.stats.maxCombo;
+      $("#fightResultSpecials").textContent=result.stats.specialUses; $("#fightResultSpecialHits").textContent=result.stats.specialHits;
+      $("#fightResultAccuracy").textContent=`${result.stats.specialAccuracy.toFixed(0)}%`; $("#fightResultGuards").textContent=result.stats.guards;
+      $("#fightResultMessage").textContent=result.stats.specialUses>=3?"必殺技を叫びたかっただけ説。":result.stats.maxCombo>=5?"オレの声で華麗な連続技。":"殴る音も負け声も全部オレ。";
+    }
     $("#breakoutResultStats").hidden=!breakout; $("#breakoutResultMessage").hidden=!breakout; $("#breakoutResultActions").hidden=!breakout;
     if (breakout) {
       $("#resultLabel").textContent = result.allClear ? "ALL CLEAR!" : result.clear ? "STAGE CLEAR" : "GAME OVER";
@@ -442,7 +469,7 @@
       ["UserAgent", navigator.userAgent], ["MediaRecorder", window.MediaRecorder ? "対応" : "非対応"], ["getUserMedia", navigator.mediaDevices?.getUserMedia ? "対応" : "非対応"],
       ["現在のゲーム", live.game || state.selectedGameId], ["FPS", live.fps ?? "--"], ["AudioContext", sound.context?.state || "未開始"], ["ロード済み効果音", sound.getLoadedBufferCount()], ["SoundAsset総数", library.assets.length], ["使用中SoundAsset数", new Set(library.allAssignments.flatMap(item=>item.assetIds||[])).size], ["未使用SoundAsset数", library.assets.filter(asset=>!library.usages(asset.id).length).length], ["AudioBufferキャッシュ数", sound.getAssetCacheCount()], ["SoundAssignment総数", library.allAssignments.length], ["一時割当", sound.hasTemporaryAssignments()?"あり":"なし"], ["IndexedDBバージョン", storage.db?.version||"--"]
     ];
-    const gameRows = live.game === "breakout" ? [["ゲーム状態",live.playerState||"READY"],["ボール数",live.balls??0],["ボール速度",live.speed??0],["パドル位置",live.paddleX??"--"],["残ブロック数",live.remaining??"--"],["破壊可能ブロック数",live.destructible??"--"],["現在コンボ",live.combo??0],["最大コンボ",live.maxCombo??0],["現在アイテム数",live.items??0]] : live.game === "rhythm" ? [["BPM",live.bpm??"--"],["譜面位置",live.position??"--"],["Audio現在時刻",live.audioTime??"--"],["開始AudioTime",live.startAudioTime??"--"],["ノーツ",`${live.pending??"--"} / ${live.notes??"--"}`],["入力オフセット",`${live.offset??0}ms`],["平均判定ズレ",`${live.averageOffset??0}ms`],["直近判定",live.lastJudge?JSON.stringify(live.lastJudge):"--"]] : live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
+    const gameRows = live.game === "fight" ? [["試合状態",live.playerState||"READY"],["CPU状態",live.cpuState||"--"],["ラウンド",live.round??1],["残り時間",live.time??"--"],["プレイヤーHP",live.playerHp??0],["CPU HP",live.cpuHp??0],["必殺ゲージ",`${live.special??0}%`],["CPU思考",live.cpuAI||"--"],["飛び道具",live.projectiles??0]] : live.game === "breakout" ? [["ゲーム状態",live.playerState||"READY"],["ボール数",live.balls??0],["ボール速度",live.speed??0],["パドル位置",live.paddleX??"--"],["残ブロック数",live.remaining??"--"],["破壊可能ブロック数",live.destructible??"--"],["現在コンボ",live.combo??0],["最大コンボ",live.maxCombo??0],["現在アイテム数",live.items??0]] : live.game === "rhythm" ? [["BPM",live.bpm??"--"],["譜面位置",live.position??"--"],["Audio現在時刻",live.audioTime??"--"],["開始AudioTime",live.startAudioTime??"--"],["ノーツ",`${live.pending??"--"} / ${live.notes??"--"}`],["入力オフセット",`${live.offset??0}ms`],["平均判定ズレ",`${live.averageOffset??0}ms`],["直近判定",live.lastJudge?JSON.stringify(live.lastJudge):"--"]] : live.game === "puzzle" ? [["盤面サイズ", "8 × 8"], ["現在CHAIN", live.chain ?? 0], ["処理状態", live.playerState || "IDLE"], ["有効交換数", live.enemies ?? "--"], ["残り時間", live.time ?? "--"]] : [["プレイヤー状態", live.playerState || "待機"], ["現在座標", live.x == null ? "--" : `${live.x}, ${live.y}`], ["接地状態", live.grounded == null ? "--" : live.grounded ? "接地" : "空中"], ["敵数", live.enemies ?? "--"]];
     return [...common, ...gameRows, ["IndexedDB", storage.db ? "接続済み" : "未接続"], ["現在のパック", state.currentPack?.name || "なし"], ["登録済み音声", `${recordedCount()} / ${gameDef().sounds.length}`], ["録音形式", recorder.preferredMimeType?.() || "ブラウザ既定"], ["エラー履歴", state.errors.join("\n") || "なし"]];
   }
 
@@ -454,6 +481,16 @@
 
   async function runBreakoutReflectTest(){const button=$("#breakoutReflectTestButton");if(button.disabled)return;button.disabled=true;await sound.unlock();for(const[id,label]of [["breakoutPaddle","パドル · ポン！"],["breakoutWall","壁 · カン！"],["breakoutBlock","ブロック · パキッ！"],["breakoutHardBlock","硬いブロック · ガン！"]]){$("#breakoutTestStatus").textContent=label;await sound.play(id);await new Promise(resolve=>setTimeout(resolve,620));}$("#breakoutTestStatus").textContent="パドル → 壁 → ブロック → 硬いブロック";button.disabled=false;}
   async function runBreakoutRushTest(){const button=$("#breakoutRushTestButton");if(button.disabled)return;button.disabled=true;await sound.unlock();for(let index=1;index<=8;index+=1){$("#breakoutTestStatus").textContent=`オレラッシュ ${index} / 8`;sound.play("breakoutBlock");await new Promise(resolve=>setTimeout(resolve,90));}await new Promise(resolve=>setTimeout(resolve,350));$("#breakoutTestStatus").textContent="パキッ！ × 8 · 高速再生OK";button.disabled=false;}
+  async function runFightSpecialTest(){
+    const button=$("#fightSpecialTestButton");if(button.disabled)return;button.disabled=true;
+    try {
+      await saveSettings();await sound.unlock();
+      $("#fightSpecialTestStatus").textContent=state.settings.specialMoveName;$("#fightSpecialPreview").classList.add(`is-${state.settings.fightEffect}`,"is-calling");
+      await sound.play("fightSpecialCall");await new Promise(resolve=>setTimeout(resolve,450));
+      $("#fightSpecialPreview").classList.remove("is-calling");$("#fightSpecialPreview").classList.add("is-firing");sound.play("fightSpecialEffect");
+      await new Promise(resolve=>setTimeout(resolve,750));
+    } finally { $("#fightSpecialPreview").className="fight-special-preview";$("#fightSpecialTestStatus").textContent="技名ボイス → 0.45秒 → 発射音";button.disabled=false; }
+  }
   function bindEvents() {
     document.addEventListener("click", (event) => {
       const nav = event.target.closest("[data-nav]"); if (nav) { if(nav.dataset.nav!=="testScreen")stopRhythmTools();showScreen(nav.dataset.nav); }
@@ -478,7 +515,7 @@
     $("#retryRecordingButton").addEventListener("click", () => startRecording(state.recordingId)); $("#acceptRecordingButton").addEventListener("click", acceptRecording);
     $("#cancelRecordingButton").addEventListener("click", () => { const target=state.recordingMode==="library"?"libraryScreen":"studioScreen";state.recordingMode="slot";recorder.release();showScreen(target); });
     $("#playGameButton").addEventListener("click", startSelectedGame); $("#gameQuitButton").addEventListener("click", () => showScreen("titleScreen"));
-    $("#gameDebugButton").addEventListener("click", () => { $("#gameDebugOverlay").hidden = !$("#gameDebugOverlay").hidden; if(games.currentId==="breakout")games.current.debugHitboxes=!$("#gameDebugOverlay").hidden; renderLiveDebug(); });
+    $("#gameDebugButton").addEventListener("click", () => { $("#gameDebugOverlay").hidden = !$("#gameDebugOverlay").hidden; if(["breakout","fight"].includes(games.currentId))games.current.debugHitboxes=!$("#gameDebugOverlay").hidden; renderLiveDebug(); });
     $("#replayButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); startSelectedGame(); });
     $("#resultStudioButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); showScreen("studioScreen"); });
     $("#resultTestButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); showScreen("testScreen"); });
@@ -521,6 +558,12 @@
     $("#breakoutResultReflectButton").addEventListener("click",async()=>{await selectGame("breakout",false);showScreen("testScreen");runBreakoutReflectTest();});
     $("#breakoutResultRushButton").addEventListener("click",async()=>{await selectGame("breakout",false);showScreen("testScreen");runBreakoutRushTest();});
     $("#breakoutResultSoundsButton").addEventListener("click",async()=>{await selectGame("breakout",false);showScreen("studioScreen");});
+    $("#fightSpecialTestButton").addEventListener("click",runFightSpecialTest);
+    [$("#fightSpecialName"),$("#fightEffect"),$("#fightDifficulty")].forEach(input=>input.addEventListener("change",saveSettings));
+    $("#fightResultSpecialVoiceButton").addEventListener("click",async()=>{await selectGame("fight",false);startRecording("fightSpecialCall");});
+    $("#fightResultDamageButton").addEventListener("click",async()=>{await selectGame("fight",false);startRecording("fightDamage");});
+    $("#fightResultTestButton").addEventListener("click",async()=>{await selectGame("fight",false);showScreen("testScreen");runFightSpecialTest();});
+    $("#fightResultSoundsButton").addEventListener("click",async()=>{await selectGame("fight",false);showScreen("studioScreen");});
     $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
   }
 
