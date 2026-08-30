@@ -55,6 +55,20 @@
       } catch (error) { console.warn("Could not prime AudioContext", error); }
     }
 
+    async waitForResume(context, resumePromise) {
+      if (!resumePromise) return;
+      if (typeof setTimeout !== "function") { await resumePromise; return; }
+      let timeoutId;
+      const timeout = new Promise((resolve) => {
+        timeoutId = setTimeout(resolve, 1200);
+      });
+      try { await Promise.race([resumePromise, timeout]); }
+      finally { clearTimeout(timeoutId); }
+      if (context.state !== "running") {
+        throw new Error(`AudioContext resume timeout (${context.state || "unknown"})`);
+      }
+    }
+
     loadPendingPack() {
       if (!this.pendingPack) return;
       const pending = this.pendingPack;
@@ -70,7 +84,7 @@
         const context = this.ensureContext();
         const resumePromise = context.state !== "running" && context.resume ? context.resume() : null;
         this.primeContext(context);
-        if (resumePromise) await resumePromise;
+        await this.waitForResume(context, resumePromise);
         this.applyVolume();
         this.loadPendingPack();
         return context;

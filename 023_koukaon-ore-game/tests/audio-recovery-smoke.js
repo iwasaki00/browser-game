@@ -19,7 +19,7 @@ class InterruptedAudioContext {
 }
 
 const windowObject = { AudioContext: InterruptedAudioContext };
-vm.runInNewContext(source, { window: windowObject, console, Math });
+vm.runInNewContext(source, { window: windowObject, console, Math, setTimeout, clearTimeout });
 const manager = new windowObject.SoundManager({ defaultSettings: { masterVolume: 1, effectVolume: 1 }, soundCatalog: {}, soundDefinitions: [] });
 
 (async () => {
@@ -36,6 +36,7 @@ const manager = new windowObject.SoundManager({ defaultSettings: { masterVolume:
   await iosManager.unlock();
   if (contextCalls !== beforeDeferredLoad + 1 || iosManager.context.state !== "running" || iosManager.pendingPack) throw new Error("First iPhone tap must create, resume, prime, and begin loading audio");
 
-  if (!appSource.includes('if (!sound.context || sound.context.state !== "running") recoverAudio()')) throw new Error("The first pointer gesture must unlock iPhone audio before click handlers run");
+  for (const eventName of ["pointerdown", "touchstart", "click"]) if (!appSource.includes(`addEventListener("${eventName}", unlockAudioOnGesture`)) throw new Error(`Missing iPhone audio gesture fallback: ${eventName}`);
+  if (!source.includes("AudioContext resume timeout")) throw new Error("A stalled iPhone resume promise must not leave startup status loading forever");
   console.log("Audio recovery passed: iPhone creation is gesture-gated and silent contexts are rebuilt.");
 })().catch((error) => { console.error(error); process.exitCode = 1; });
