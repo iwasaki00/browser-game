@@ -65,6 +65,7 @@
           audio.preload = "auto";
           audio.playsInline = true;
           audio.volume = 0.01;
+          audio.loop = true;
           audio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAACAgICA";
           this.mediaUnlock = audio;
         }
@@ -73,18 +74,31 @@
       } catch (error) { console.warn("Could not prime HTML audio", error); return null; }
     }
 
-    async waitForResume(context, resumePromise) {
-      if (!resumePromise) return;
-      if (typeof setTimeout !== "function") { await resumePromise; return; }
+    async waitForAudioPromise(promise, milliseconds) {
+      if (!promise) return;
+      if (typeof setTimeout !== "function") { await promise; return; }
       let timeoutId;
-      const timeout = new Promise((resolve) => {
-        timeoutId = setTimeout(resolve, 1200);
-      });
-      try { await Promise.race([resumePromise, timeout]); }
+      const timeout = new Promise((resolve) => { timeoutId = setTimeout(resolve, milliseconds); });
+      try { await Promise.race([Promise.resolve(promise).catch(() => false), timeout]); }
       finally { clearTimeout(timeoutId); }
+    }
+
+    async waitForResume(context, resumePromise, mediaPromise) {
+      await this.waitForAudioPromise(resumePromise, 650);
+      if (context.state === "running") return;
+      await this.waitForAudioPromise(mediaPromise, 650);
+      this.primeContext(context);
+      const retryPromise = context.resume ? context.resume() : null;
+      await this.waitForAudioPromise(retryPromise, 1200);
       if (context.state !== "running") {
         throw new Error(`AudioContext resume timeout (${context.state || "unknown"})`);
       }
+    }
+
+    stopMediaUnlock() {
+      if (!this.mediaUnlock) return;
+      try { this.mediaUnlock.pause(); this.mediaUnlock.currentTime = 0; }
+      catch (error) { console.warn("Could not stop HTML audio unlock", error); }
     }
 
     loadPendingPack() {
@@ -104,13 +118,13 @@
         const context = this.ensureContext();
         this.primeContext(context);
         const resumePromise = context.state !== "running" && context.resume ? context.resume() : null;
-        await this.waitForResume(context, resumePromise);
+        await this.waitForResume(context, resumePromise, mediaPromise);
         this.applyVolume();
         this.loadPendingPack();
         return context;
       })();
-      try { const context = await this.unlockPromise; this.lastUnlockFailed = false; mediaPromise?.catch?.(() => {}); return context; }
-      catch (error) { this.lastUnlockFailed = true; throw error; }
+      try { const context = await this.unlockPromise; this.lastUnlockFailed = false; this.stopMediaUnlock(); return context; }
+      catch (error) { this.lastUnlockFailed = true; this.stopMediaUnlock(); throw error; }
       finally { this.unlockPromise = null; }
     }
 
