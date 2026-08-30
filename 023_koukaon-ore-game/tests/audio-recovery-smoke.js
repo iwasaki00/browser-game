@@ -29,6 +29,9 @@ const manager = new windowObject.SoundManager({ defaultSettings: { masterVolume:
   if (contextCalls !== 2 || closeCalls !== 1 || suspendCalls !== 0 || resumeCalls !== 2 || manager.context.state !== "running") throw new Error("Manual recovery must rebuild a silent-running context inside the user gesture");
 
   windowObject.navigator = { userAgent: "iPhone", platform: "iPhone", maxTouchPoints: 5 };
+  let mediaPlayCalls = 0;
+  windowObject.Audio = class { constructor() { this.currentTime = 0; } play() { mediaPlayCalls += 1; return Promise.resolve(); } };
+
   const beforeDeferredLoad = contextCalls;
   const iosManager = new windowObject.SoundManager({ defaultSettings: { masterVolume: 1, effectVolume: 1 }, soundCatalog: {}, soundDefinitions: [] });
   const loadedBeforeTap = await iosManager.loadPack({ sounds: {} }, []);
@@ -36,7 +39,9 @@ const manager = new windowObject.SoundManager({ defaultSettings: { masterVolume:
   await iosManager.unlock();
   if (contextCalls !== beforeDeferredLoad + 1 || iosManager.context.state !== "running" || iosManager.pendingPack) throw new Error("First iPhone tap must create, resume, prime, and begin loading audio");
 
-  for (const eventName of ["pointerdown", "touchstart", "click"]) if (!appSource.includes(`addEventListener("${eventName}", unlockAudioOnGesture`)) throw new Error(`Missing iPhone audio gesture fallback: ${eventName}`);
+  if (mediaPlayCalls !== 1) throw new Error("First iPhone tap must also unlock the HTML audio output route");
+  for (const eventName of ["pointerdown", "touchstart", "touchend", "click"]) if (!appSource.includes(`addEventListener("${eventName}", unlockAudioOnGesture`)) throw new Error(`Missing iPhone audio gesture fallback: ${eventName}`);
+  if (!source.includes("lastUnlockFailed") || !appSource.includes('#resumeAudioButton, #audioResumeNotice')) throw new Error("A failed unlock or manual recovery must rebuild the iPhone audio route on the next gesture");
   if (!source.includes("AudioContext resume timeout")) throw new Error("A stalled iPhone resume promise must not leave startup status loading forever");
   console.log("Audio recovery passed: iPhone creation is gesture-gated and silent contexts are rebuilt.");
 })().catch((error) => { console.error(error); process.exitCode = 1; });

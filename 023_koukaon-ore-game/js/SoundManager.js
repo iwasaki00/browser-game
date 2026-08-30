@@ -16,6 +16,8 @@
       this.userActivated = false;
       this.pendingPack = null;
       this.pendingLoadPromise = null;
+      this.mediaUnlock = null;
+      this.lastUnlockFailed = false;
       const navigatorInfo = window.navigator || {};
       this.requiresGestureContext = /iPad|iPhone|iPod/.test(navigatorInfo.userAgent || "") || (navigatorInfo.platform === "MacIntel" && navigatorInfo.maxTouchPoints > 1);
     }
@@ -55,6 +57,22 @@
       } catch (error) { console.warn("Could not prime AudioContext", error); }
     }
 
+    primeMediaElement() {
+      if (typeof window.Audio !== "function") return null;
+      try {
+        if (!this.mediaUnlock) {
+          const audio = new window.Audio();
+          audio.preload = "auto";
+          audio.playsInline = true;
+          audio.volume = 0.01;
+          audio.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQQAAACAgICA";
+          this.mediaUnlock = audio;
+        }
+        this.mediaUnlock.currentTime = 0;
+        return this.mediaUnlock.play();
+      } catch (error) { console.warn("Could not prime HTML audio", error); return null; }
+    }
+
     async waitForResume(context, resumePromise) {
       if (!resumePromise) return;
       if (typeof setTimeout !== "function") { await resumePromise; return; }
@@ -78,18 +96,21 @@
 
     async unlock(forceRestart = false) {
       if (this.unlockPromise) return this.unlockPromise;
+      if (this.lastUnlockFailed) forceRestart = true;
+      const mediaPromise = this.primeMediaElement();
       this.userActivated = true;
       this.unlockPromise = (async () => {
         if (forceRestart || this.context?.state === "closed") this.rebuildContext();
         const context = this.ensureContext();
-        const resumePromise = context.state !== "running" && context.resume ? context.resume() : null;
         this.primeContext(context);
+        const resumePromise = context.state !== "running" && context.resume ? context.resume() : null;
         await this.waitForResume(context, resumePromise);
         this.applyVolume();
         this.loadPendingPack();
         return context;
       })();
-      try { return await this.unlockPromise; }
+      try { const context = await this.unlockPromise; this.lastUnlockFailed = false; mediaPromise?.catch?.(() => {}); return context; }
+      catch (error) { this.lastUnlockFailed = true; throw error; }
       finally { this.unlockPromise = null; }
     }
 

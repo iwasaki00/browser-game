@@ -399,9 +399,10 @@
     const recoverAudio = async (force = false) => { startupStatus("音声を有効化中", "iPhoneの音声出力を再開しています…", "loading"); try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; startupStatus("起動完了・音声有効", `${gameDef().name}のサウンドを再生できます`, "ready"); return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("音声を有効にできません", error?.message || String(error), "warning"); return false; } };
     $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());
-    const unlockAudioOnGesture = () => { if (!sound.context || sound.context.state !== "running") recoverAudio(); };
+    const unlockAudioOnGesture = (event) => { if (event.target.closest?.("#resumeAudioButton, #audioResumeNotice")) return; if (!sound.context || sound.context.state !== "running") recoverAudio(); };
     document.addEventListener("pointerdown", unlockAudioOnGesture, { capture: true });
     document.addEventListener("touchstart", unlockAudioOnGesture, { capture: true, passive: true });
+    document.addEventListener("touchend", unlockAudioOnGesture, { capture: true, passive: true });
     document.addEventListener("click", unlockAudioOnGesture, { capture: true });
     document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
     window.addEventListener("pageshow", () => { if (sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
