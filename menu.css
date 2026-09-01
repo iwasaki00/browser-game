@@ -173,7 +173,7 @@ h1 span {
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -460,14 +460,6 @@ h1 span {
   to { transform: scaleX(1); }
 }
 
-@media (max-width: 1080px) {
-  .game-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-}
-
-@media (max-width: 860px) {
-  .game-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
 @media (max-width: 620px) {
   .shell {
     width: min(100% - 22px, 100%);
@@ -501,7 +493,7 @@ h1 span {
 }
 
 @media (max-width: 390px) {
-  .game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .gesture-guide { gap: 10px; font-size: 0.66rem; }
   .gesture-guide b { display: none; }
   .detail-panel { grid-template-columns: 1fr; gap: 0; }
