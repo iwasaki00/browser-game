@@ -85,22 +85,35 @@
         const channel = buffer.getChannelData(0);
         const points = 48;
         const waveformData = [];
+        let totalSquares = 0;
+        let totalSamples = 0;
+        let overallPeak = 0;
         for (let point = 0; point < points; point += 1) {
           const start = Math.floor(point * channel.length / points);
           const end = Math.max(start + 1, Math.floor((point + 1) * channel.length / points));
           let peak = 0;
-          for (let index = start; index < end; index += 1) peak = Math.max(peak, Math.abs(channel[index]));
+          for (let index = start; index < end; index += 1) {
+            const absolute = Math.abs(channel[index]);
+            peak = Math.max(peak, absolute);
+            overallPeak = Math.max(overallPeak, absolute);
+            totalSquares += channel[index] * channel[index];
+            totalSamples += 1;
+          }
           waveformData.push(Math.round(peak * 100) / 100);
         }
-        return { duration: buffer.duration, waveformData };
+        const rms = totalSamples ? Math.sqrt(totalSquares / totalSamples) : 0;
+        const safePeakGain = overallPeak ? .95 / overallPeak : 1;
+        const suggestedGain = Math.max(1, Math.min(2, safePeakGain, rms ? .16 / rms : 1));
+        return { duration: buffer.duration, waveformData, suggestedGain: Math.round(suggestedGain * 10) / 10 };
       } catch (error) {
         console.warn("Waveform analysis failed", error);
-        return { duration: 0, waveformData: [] };
+        return { duration: 0, waveformData: [], suggestedGain: 1 };
       }
     }
 
     async createAsset(blob, options = {}) {
       const analysis = await this.analyzeBlob(blob);
+      await this.storage.ensureReady?.();
       const number = String(this.assets.length + 1).padStart(3, "0");
       const asset = {
         id: window.ORE_SOUND_ASSET_ID("asset"),
@@ -111,7 +124,7 @@
         waveformData: analysis.waveformData,
         tags: options.tags || [],
         favorite: false,
-        volume: 1,
+        volume: analysis.suggestedGain || 1,
         playbackRate: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -326,9 +339,9 @@
       if (!asset) return;
       asset.name = document.querySelector("#assetDetailName").value.trim() || asset.name;
       asset.tags = document.querySelector("#assetDetailTags").value.split(/[,、]/).map(value => value.trim()).filter(Boolean);
-      await this.storage.saveSoundAsset(asset);
       asset.volume = Number(document.querySelector("#assetDetailVolume").value) || 1;
       asset.playbackRate = Number(document.querySelector("#assetDetailRate").value) || 1;
+      await this.storage.saveSoundAsset(asset);
       document.querySelector("#assetDetailDialog").hidden = true;
       await this.refresh();
       this.hooks.renderAll?.();

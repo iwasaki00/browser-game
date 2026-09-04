@@ -169,13 +169,19 @@
       source.buffer = buffer;
       source.loop = true;
       if (source.playbackRate) source.playbackRate.value = options.playbackRate ?? 1;
-      gain.gain.value = options.gain ?? .35;
+      const assetVolume = this.soundAssets.get(assetId)?.volume ?? 1;
+      gain.gain.value = (options.gain ?? .35) * assetVolume;
       source.connect(gain).connect(this.master);
-      const loop = { source, gain, assetId, startedAt: this.context.currentTime };
+      const loop = { source, gain, assetId, assetVolume, startedAt: this.context.currentTime };
       source.onended = () => { if (this.loops.get(id) === loop) this.loops.delete(id); };
       this.loops.set(id, loop);
       source.start();
       return true;
+    }
+
+    setLoopVolume(id, value) {
+      const loop = this.loops.get(id);
+      if (loop) loop.gain.gain.value = Math.max(0, Math.min(1, value)) * (loop.assetVolume ?? 1);
     }
   }
 

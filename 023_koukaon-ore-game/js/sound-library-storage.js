@@ -8,7 +8,9 @@
 
   proto.init = async function () {
     if (!window.indexedDB) throw new Error("IndexedDB is not supported");
-    this.db = await new Promise((resolve, reject) => {
+    if (this.db) return this;
+    if (this.openPromise) { this.db = await this.openPromise; return this; }
+    this.openPromise = new Promise((resolve, reject) => {
       const request = indexedDB.open(this.config.dbName, Math.max(3, this.config.dbVersion || 1));
       request.onupgradeneeded = () => {
         const db = request.result;
@@ -32,8 +34,10 @@
         resolve(request.result);
       };
       request.onerror = () => reject(request.error);
-      request.onblocked = () => reject(new Error("保存領域の更新がブロックされています。ほかのタブを閉じてください。"));
+      request.onblocked = () => console.warn("保存領域の更新待ちです。ほかのタブを閉じると続行します。");
     });
+    try { this.db = await this.openPromise; }
+    finally { this.openPromise = null; }
     const packs = await this.getAllPacks();
     if (!packs.length) {
       await this.savePack({ id: this.config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} });
@@ -42,6 +46,11 @@
   };
 
   proto.getAllSoundAssets = function () { return this.request("soundAssets", "readonly", store => store.getAll()); };
+  proto.ensureReady = async function () {
+    if (!this.db) await this.init();
+    if (!this.db) throw new Error("保存領域に接続できませんでした");
+    return this;
+  };
   proto.getSoundAsset = function (id) { return this.request("soundAssets", "readonly", store => store.get(id)); };
   proto.saveSoundAsset = function (asset) {
     const now = Date.now();

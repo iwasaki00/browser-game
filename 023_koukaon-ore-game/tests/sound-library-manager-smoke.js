@@ -56,6 +56,12 @@ for (const asset of assets) sound.assetBuffers.set(asset.id, { id: asset.id });
   if (!stats.a || !stats.b || !stats.c) throw Error("Asset statistics are incomplete");
   console.log("Sound library manager passed: fixed, sequence, no-repeat random, temporary assignment, and asset stats.");
 })().catch(error => {
+const controllerSource=fs.readFileSync(path.resolve(__dirname,"../js/SoundLibraryController.js"),"utf8");
+const recorderSource=fs.readFileSync(path.resolve(__dirname,"../js/RecorderManager.js"),"utf8");
+if(controllerSource.indexOf("asset.volume = Number")>controllerSource.indexOf("await this.storage.saveSoundAsset(asset)"))throw Error("Asset volume must be assigned before it is persisted");
+if(!controllerSource.includes("suggestedGain")||!recorderSource.includes("autoGainControl: true"))throw Error("New recordings must receive safe automatic gain correction");
+if(!fs.readFileSync(path.resolve(__dirname,"../js/sound-library-manager.js"),"utf8").includes("(options.gain ?? .35) * assetVolume"))throw Error("Loop playback must apply recorded asset volume");
+
   console.error(error);
   process.exitCode = 1;
 });

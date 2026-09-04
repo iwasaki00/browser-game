@@ -16,4 +16,6 @@ if (!manager.includes("loadGeneration") || !manager.includes("nextBuffers")) thr
 if (!body.includes('showError(error, "save")')) throw new Error("Recording save failures must not be mislabeled as microphone failures");
 if (!app.includes("録音データはこの画面に残っています")) throw new Error("Save failure guidance must explain that the pending recording is retained");
 
+if (!app.includes("await this.storage.ensureReady?.()") && !fs.readFileSync(path.join(root, "js", "SoundLibraryController.js"), "utf8").includes("await this.storage.ensureReady?.()")) throw new Error("Recording save must wait for IndexedDB readiness");
+if (!app.includes("録音データはこの画面に残っています")) throw new Error("A failed save must retain the pending recording");
 console.log("Record accept passed: save returns to studio immediately and decoding is race-safe.");

@@ -4,6 +4,7 @@
   class StorageManager {
     constructor(config) {
       this.config = config;
+      this.openPromise = null;
       this.db = null;
     }
 
@@ -27,6 +28,7 @@
     }
 
     request(store, mode, operation) {
+      if (!this.db) return Promise.reject(new Error("保存領域に接続されていません"));
       return new Promise((resolve, reject) => {
         const tx = this.db.transaction(store, mode);
         const req = operation(tx.objectStore(store));

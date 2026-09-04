@@ -18,7 +18,7 @@
     get supported() { return Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder); }
 
     audioConstraints() {
-      return { audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } };
+      return { audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } };
     }
 
     async requestPermission() {

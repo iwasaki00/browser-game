@@ -20,6 +20,7 @@ vm.runInNewContext(
   const source = fs.readFileSync(path.resolve(__dirname, "../js/sound-library-storage.js"), "utf8");
   if (!config.includes('dbVersion:3') || !source.includes('Math.max(3,')) {
     throw Error("Sound library stores must upgrade existing v2 databases to schema v3");
+  if (!source.includes("openPromise") || !source.includes("ensureReady")) throw Error("Recording saves must wait for a shared IndexedDB open request");
   }
 
 
