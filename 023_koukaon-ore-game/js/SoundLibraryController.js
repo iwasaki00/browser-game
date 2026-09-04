@@ -21,6 +21,7 @@
       this.sort = "new";
       this.assignmentTarget = null;
       this.detailAssetId = null;
+      this.refreshRevision = 0;
       this.selected = new Set();
       this.bound = false;
       this.temporaryBackup = null;
@@ -48,6 +49,7 @@
 
     async refresh(pack = this.pack, gameId = this.gameId) {
       this.pack = pack;
+      const revision = ++this.refreshRevision;
       this.gameId = gameId;
       if (!pack) return;
       const [assets, assignments, allAssignments, stats] = await Promise.all([
@@ -56,6 +58,7 @@
         this.storage.getAllSoundAssignments(),
         this.storage.getAllSoundStats()
       ]);
+      if (revision !== this.refreshRevision) return false;
       this.assets = assets;
       this.assignments = assignments;
       this.allAssignments = allAssignments;
@@ -63,6 +66,7 @@
       this.sound.setAssetLibrary(assets, assignments, gameId);
       this.render();
       this.decorateStudio();
+      return true;
     }
 
     defaultTags(soundKey) {

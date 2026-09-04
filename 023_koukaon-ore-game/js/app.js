@@ -144,10 +144,15 @@
   }
 
   async function selectGame(id, announce = true) {
-    const definition = gameDef(id); if (!definition?.playable) return;
-    state.selectedGameId = id; await library.refresh(state.currentPack, id); renderAll();
+    const definition = gameDef(id); if (!definition?.playable) return false;
+    state.selectedGameId = id;
+    renderAll();
     storage.setState("selectedGameId", id).catch(logError); sound.loadPack(state.currentPack, definition.sounds).catch(logError);
     if (announce) toast(`${definition.name}を選びました`);
+    library.refresh(state.currentPack, id)
+      .then((applied) => { if (applied !== false && state.selectedGameId === id) renderAll(); })
+      .catch(logError);
+    return true;
   }
 
   function renderStudio() {
