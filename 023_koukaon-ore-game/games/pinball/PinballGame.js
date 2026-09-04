@@ -53,9 +53,9 @@
       this.cleanup.push(()=>{this.canvas.removeEventListener("pointerdown",down);this.canvas.removeEventListener("pointermove",move);this.canvas.removeEventListener("pointerup",up);this.canvas.removeEventListener("pointercancel",up);window.removeEventListener("keydown",keydown);window.removeEventListener("keyup",keyup);document.removeEventListener("visibilitychange",visibility);this.resumeButton?.removeEventListener("click",resume);});
     }
 
-    createBall(x=this.width-36,y=this.table.bottom-40,vx=0,vy=0,state="PLUNGER"){return{id:`ball-${Date.now()}-${Math.random()}`,x,y,vx,vy,r:7,state,active:true,still:0,cooldowns:{},trail:[]};}
+    createBall(x=this.width-36,y=this.table.bottom-40,vx=0,vy=0,state="PLUNGER"){return{id:`ball-${Date.now()}-${Math.random()}`,x,y,vx,vy,r:7,state,active:true,launchLane:state==="PLUNGER",still:0,cooldowns:{},trail:[]};}
     serveBall(initial=false){this.balls=[this.createBall()];this.state=STATES.PLUNGER;this.ballSave=0;this.plungerCharge=.45;this.multiballActive=false;this.jackpotReady=false;this.banner={text:initial?"PINBALL":"BALL READY",sub:`BALL ${this.ballNumber}`,timer:1.4};}
-    launch(charge=.65){const ball=this.balls.find(entry=>entry.state==="PLUNGER");if(this.state!==STATES.PLUNGER||!ball)return false;const power=clamp(charge,.2,1);ball.state="ACTIVE";ball.vx=-18;ball.vy=-(470+power*270);this.state=STATES.PLAYING;this.ballSave=5;this.banner={text:`BALL ${this.ballNumber}`,sub:"BALL SAVE 5 SEC",timer:1};this.play("pinballLaunch");return true;}
+    launch(charge=.65){const ball=this.balls.find(entry=>entry.state==="PLUNGER");if(this.state!==STATES.PLUNGER||!ball)return false;const power=clamp(charge,.2,1);ball.state="ACTIVE";ball.launchLane=true;ball.x=this.width-36;ball.vx=0;ball.vy=-(720+power*180);this.state=STATES.PLAYING;this.ballSave=5;this.banner={text:`BALL ${this.ballNumber}`,sub:"BALL SAVE 5 SEC",timer:1};this.play("pinballLaunch");return true;}
     pause(automatic=false){if(this.state===STATES.PAUSED||this.state===STATES.GAME_OVER)return;this.beforePause=this.state;this.state=STATES.PAUSED;this.autoPaused=automatic;this.flipperInput.left=this.flipperInput.right=false;this.pointerSides.clear();this.plungerPointer=null;if(this.resumeButton)this.resumeButton.hidden=false;}
     resume(){if(this.state!==STATES.PAUSED)return;Promise.resolve(this.sound.unlock?.()).catch(()=>{});this.state=this.beforePause||STATES.PLUNGER;this.last=performance.now();this.autoPaused=false;if(this.resumeButton)this.resumeButton.hidden=true;}
     togglePause(){if(this.state===STATES.PAUSED)this.resume();else this.pause(false);}
@@ -82,15 +82,17 @@
 
     stepBall(ball,dt){
       if(ball.state!=="ACTIVE")return;ball.vy+=245*dt;ball.vx*=Math.pow(.996,dt*60);ball.vy*=Math.pow(.998,dt*60);ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;
-      if(ball.x>this.width-70&&ball.y<this.table.top+48){ball.x=this.width-72;ball.vx=-170;ball.vy=Math.max(105,Math.abs(ball.vy)*.38);this.playCollision(ball,"lane-exit","pinballLane",.2);}
-      for(const wall of this.table.walls)this.collideSegment(ball,wall.a,wall.b,3,.83,"wall:"+wall.id,"pinballWall");
-      for(const bumper of this.table.bumpers)this.collideBumper(ball,bumper);
-      for(const sling of this.table.slings)if(this.collideSegment(ball,sling.a,sling.b,10,.95,"sling:"+sling.id,"pinballSlingshot")){ball.vx+=sling.push*170;ball.vy-=135;this.capSpeed(ball);}
-      for(const target of this.table.targets)this.collideTarget(ball,target);
-      this.collideBell(ball,this.table.bell);
-      for(const lane of this.table.lanes)if(ball.x>lane.x&&ball.x<lane.x+lane.w&&ball.y>lane.y&&ball.y<lane.y+lane.h&&this.playCollision(ball,"lane:"+lane.id,"pinballLane",.35)){this.lanesLit.add(lane.id);this.addScore(250);if(this.lanesLit.size===3){this.lanesLit.clear();this.increaseMultiplier();this.bonus("ALL LANES",2500);}}
-      for(const side of ["left","right"])this.collideFlipper(ball,this.flippers[side],side);
-      const speed=Math.hypot(ball.vx,ball.vy);if(speed>680){ball.vx*=680/speed;ball.vy*=680/speed;}if(speed<42&&ball.y<this.table.bottom-70){ball.still+=dt;if(ball.still>1.8){ball.vx+=(Math.random()-.5)*95;ball.vy-=80;ball.still=0;}}else ball.still=0;
+      if(ball.launchLane&&ball.x>this.width-70&&ball.y<this.table.top+24){ball.launchLane=false;ball.x=this.width-72;ball.vx=-190;ball.vy=Math.max(120,Math.abs(ball.vy)*.38);this.playCollision(ball,"lane-exit","pinballLane",.2);}
+      for(const wall of this.table.walls)if(!ball.launchLane||wall.id==="right"||wall.id==="plungerRail")this.collideSegment(ball,wall.a,wall.b,3,.83,"wall:"+wall.id,"pinballWall");
+      if(!ball.launchLane){
+        for(const bumper of this.table.bumpers)this.collideBumper(ball,bumper);
+        for(const sling of this.table.slings)if(this.collideSegment(ball,sling.a,sling.b,10,.95,"sling:"+sling.id,"pinballSlingshot")){ball.vx+=sling.push*170;ball.vy-=135;this.capSpeed(ball);}
+        for(const target of this.table.targets)this.collideTarget(ball,target);
+        this.collideBell(ball,this.table.bell);
+        for(const lane of this.table.lanes)if(ball.x>lane.x&&ball.x<lane.x+lane.w&&ball.y>lane.y&&ball.y<lane.y+lane.h&&this.playCollision(ball,"lane:"+lane.id,"pinballLane",.35)){this.lanesLit.add(lane.id);this.addScore(250);if(this.lanesLit.size===3){this.lanesLit.clear();this.increaseMultiplier();this.bonus("ALL LANES",2500);}}
+        for(const side of ["left","right"])this.collideFlipper(ball,this.flippers[side],side);
+      }
+      const speed=Math.hypot(ball.vx,ball.vy);this.capSpeed(ball);if(speed<42&&ball.y<this.table.bottom-70){ball.still+=dt;if(ball.still>1.8){ball.vx+=(Math.random()-.5)*95;ball.vy-=80;ball.still=0;}}else ball.still=0;
       ball.trail.push({x:ball.x,y:ball.y,life:.8});while(ball.trail.length>48)ball.trail.shift();for(const point of ball.trail)point.life-=dt;ball.trail=ball.trail.filter(point=>point.life>0);
       if(ball.y-ball.r>this.table.bottom+35){ball.active=false;ball.state="DRAINED";this.stats.drains+=1;this.play("pinballDrain");}
     }
@@ -106,7 +108,7 @@
     collideBell(ball,bell){if(!this.reflectRect(ball,bell,.92))return;if(!this.playCollision(ball,"bell","pinballBell",.28))return;this.stats.bellHits+=1;this.addScore(1000);this.spawnParticles(bell.x+bell.w/2,bell.y+bell.h/2,"#ffe45d",9);if(this.multiballActive&&this.jackpotReady)this.jackpot();}
     flipperEnd(flipper){return{x:flipper.pivot.x+Math.cos(flipper.angle)*flipper.length,y:flipper.pivot.y+Math.sin(flipper.angle)*flipper.length};}
     collideFlipper(ball,flipper,side){const end=this.flipperEnd(flipper);if(!this.collideSegment(ball,flipper.pivot,end,9,.78,"flipper:"+side,null))return;const strength=flipper.active?260+Math.min(180,Math.abs(flipper.angularVelocity)*38):75;ball.vy-=strength;ball.vx+=(side==="left"?1:-1)*(flipper.active?85:25);this.capSpeed(ball);}
-    capSpeed(ball){const speed=Math.hypot(ball.vx,ball.vy);if(speed>680){ball.vx*=680/speed;ball.vy*=680/speed;}}
+    capSpeed(ball){const speed=Math.hypot(ball.vx,ball.vy),limit=ball.launchLane?900:680;if(speed>limit){ball.vx*=limit/speed;ball.vy*=limit/speed;}}
 
     completeORE(){this.stats.oreCompletes+=1;this.targetReset=4;this.addScore(3000);this.play("pinballTargetComplete");this.increaseMultiplier();this.banner={text:"ORE COMPLETE!",sub:`MULTI ×${this.multiplier}`,timer:1.4};this.flash=.22;this.spawnParticles(this.width/2,this.table.top+150,"#ff3b68",20);if(!this.multiballActive)this.startMultiball();else this.jackpotReady=true;if(this.stats.oreCompletes%2===0){this.ballsRemaining+=1;this.stats.extraBalls+=1;this.play("pinballExtraBall");}}
     increaseMultiplier(){if(this.multiplier>=5)return;this.multiplier+=1;this.play("pinballMultiplier");}

@@ -13,6 +13,10 @@ const controls={querySelector(){return null;},querySelectorAll(){return[];}};
 let result=null;const game=new windowObject.PinballGame(canvas,sound,{},value=>{result=value;},{controlsRoot:controls,bestScore:500});game.resize();game.serveBall(true);
 if(game.table.bumpers.length!==4||game.table.targets.length!==3||game.table.lanes.length!==3||game.table.slings.length!==2)throw Error("ORE MACHINE 01 objects are incomplete");
 if(!game.launch(.8)||game.state!==windowObject.PinballGame.STATES.PLAYING||game.balls[0].vy>=-600||!played.includes("pinballLaunch"))throw Error("Plunger must launch with charge and sound");
+const launchedBall=game.balls[0];let exitedLaunchLane=false;
+for(let frame=0;frame<240&&launchedBall.active;frame+=1){game.update(1/120);if(!launchedBall.launchLane){exitedLaunchLane=true;break;}}
+if(!exitedLaunchLane||launchedBall.y>game.table.top+30||launchedBall.vy<=0||launchedBall.x>game.width-70)throw Error(`Plunger ball must reach the top and exit into the playfield: ${JSON.stringify({exitedLaunchLane,x:launchedBall.x,y:launchedBall.y,vx:launchedBall.vx,vy:launchedBall.vy,top:game.table.top})}`);
+
 
 let ball=game.createBall(180,400,20,0,"ACTIVE"),vy=ball.vy;game.stepBall(ball,.01);if(ball.vy<=vy)throw Error("Gravity must accelerate the ball downward");
 ball=game.createBall(21,350,-220,0,"ACTIVE");const leftWall=game.table.walls.find(wall=>wall.id==="left");game.collideSegment(ball,leftWall.a,leftWall.b,3,.83,"wall:test","pinballWall");if(ball.vx<=0)throw Error("Wall collision must reflect the ball");
