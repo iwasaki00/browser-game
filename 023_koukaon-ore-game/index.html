@@ -12,9 +12,9 @@
   <meta property="og:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta property="og:image" content="./assets/og.png">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="効果音全部オレゲーム"><meta name="twitter:description" content="ゲームの音、全部オレ。録音した声で遊ぶミニゲーム集。"><meta name="twitter:image" content="./assets/og.png">
   <title>効果音全部オレゲーム</title>
-  <link rel="stylesheet" href="./css/style.css?v=20260905-7"><link rel="stylesheet" href="./css/action.css?v=20260905-7"><link rel="stylesheet" href="./css/puzzle.css?v=20260905-7"><link rel="stylesheet" href="./css/race.css?v=20260905-7"><link rel="stylesheet" href="./css/sound-reset.css?v=20260905-7"><link rel="stylesheet" href="./css/sound-copy.css?v=20260905-7"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260905-7"><link rel="stylesheet" href="./css/startup-status.css?v=20260905-7">
-  <link rel="stylesheet" href="./css/rhythm.css?v=20260905-7"><link rel="stylesheet" href="./css/breakout.css?v=20260905-7"><link rel="stylesheet" href="./css/fight.css?v=20260905-7"><link rel="stylesheet" href="./css/pinball.css?v=20260905-7">
-  <link rel="stylesheet" href="./css/sound-library.css?v=20260905-7">
+  <link rel="stylesheet" href="./css/style.css?v=20260905-8"><link rel="stylesheet" href="./css/action.css?v=20260905-8"><link rel="stylesheet" href="./css/puzzle.css?v=20260905-8"><link rel="stylesheet" href="./css/race.css?v=20260905-8"><link rel="stylesheet" href="./css/sound-reset.css?v=20260905-8"><link rel="stylesheet" href="./css/sound-copy.css?v=20260905-8"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260905-8"><link rel="stylesheet" href="./css/startup-status.css?v=20260905-8">
+  <link rel="stylesheet" href="./css/rhythm.css?v=20260905-8"><link rel="stylesheet" href="./css/breakout.css?v=20260905-8"><link rel="stylesheet" href="./css/fight.css?v=20260905-8"><link rel="stylesheet" href="./css/pinball.css?v=20260905-8">
+  <link rel="stylesheet" href="./css/sound-library.css?v=20260905-8">
 </head>
 <body>
   <main id="app" class="app-shell">
@@ -25,7 +25,7 @@
       <section id="rhythmStagePanel" class="rhythm-stage-panel" hidden><label>RHYTHM STAGE<select id="rhythmStageSelect"><option value="four">EASY · オレ4つ打ち · BPM 100</option><option value="eight">NORMAL · オレ8ビート · BPM 120</option><option value="rush">HARD · オレラッシュ · BPM 140</option></select></label><p id="rhythmStageCopy" class="rhythm-stage-copy">キック、スネア、ハイハットを刻む王道パターン</p></section>
       <section id="startupPanel" class="startup-panel" data-tone="loading" aria-live="polite">
         <div class="startup-heading">
-          <span id="appVersion" class="version-badge">VERSION 2026.09.05-7</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
+          <span id="appVersion" class="version-badge">VERSION 2026.09.05-8</span><b id="startupState" class="startup-state">HTML読み込み完了</b>
         </div>
         <p id="startupDetail" class="startup-detail">JavaScriptを読み込んでいます…</p>
       </section>
@@ -164,14 +164,14 @@
     <label>タグ（カンマ区切り）<input id="assetDetailTags" list="assetTagSuggestions" placeholder="声, 動物, かわいい"></label>
     <datalist id="assetTagSuggestions"><option value="声"><option value="口効果音"><option value="手拍子"><option value="指パッチン"><option value="身体音"><option value="物音"><option value="動物"><option value="機械"><option value="爆発"><option value="攻撃"><option value="かわいい"><option value="変"><option value="低い"><option value="高い"><option value="短い"><option value="長い"><option value="リズム"><option value="その他"></datalist>
     <h3>使用中</h3><ul id="assetUsageList" class="asset-usage-list"></ul>
-    <label>素材音量<input id="assetDetailVolume" type="range" min="0.1" max="2" step="0.1" value="1"></label>
+    <label>素材音量<input id="assetDetailVolume" type="range" min="0.1" max="4" step="0.1" value="1"></label>
     <label>再生速度<input id="assetDetailRate" type="range" min="0.5" max="2" step="0.1" value="1"></label>
     <div class="asset-detail-actions"><button id="assetDetailPlay" type="button">▶ 再生</button><button id="assetDetailLoop" type="button">🔁 ループ確認</button><button id="assetDetailFavorite" type="button">☆ お気に入り</button><button id="assetDetailDuplicate" type="button">📋 複製</button><button id="assetDetailSame" type="button">全部このオレ</button><button id="assetDetailDelete" class="danger-button" type="button">🗑 削除</button></div>
     <div class="dialog-actions"><button id="assetDetailClose" type="button">閉じる</button><button id="assetDetailSave" type="button">変更を保存</button></div>
   </div></section>
 
   <script>
-    window.ORE_APP_VERSION = "2026.09.05-7";
+    window.ORE_APP_VERSION = "2026.09.05-8";
     (function () {
       const panel = document.getElementById("startupPanel");
       const state = document.getElementById("startupState");
@@ -193,12 +193,12 @@
       });
     })();
   </script>
-  <script src="./js/config.js?v=20260905-7"></script><script src="./js/bgm-config.js?v=20260905-7"></script><script src="./js/race-config.js?v=20260905-7"></script><script src="./js/StorageManager.js?v=20260905-7"></script><script src="./js/sound-library-storage.js?v=20260905-7"></script><script src="./js/SoundManager.js?v=20260905-7"></script><script src="./js/sound-library-manager.js?v=20260905-7"></script><script src="./js/RecorderManager.js?v=20260905-7"></script><script src="./js/SoundLibraryController.js?v=20260905-7"></script>
-  <script src="./js/rhythm-config.js?v=20260905-7"></script><script src="./js/breakout-config.js?v=20260905-7"></script><script src="./js/fight-config.js?v=20260905-7"></script><script src="./js/pinball-config.js?v=20260905-7"></script>
-  <script src="./games/rhythm/RhythmChart.js?v=20260905-7"></script><script src="./games/rhythm/RhythmJudge.js?v=20260905-7"></script><script src="./games/rhythm/RhythmRenderer.js?v=20260905-7"></script><script src="./games/rhythm/RhythmGame.js?v=20260905-7"></script>
-  <script src="./games/breakout/BreakoutLevels.js?v=20260905-7"></script><script src="./games/breakout/BreakoutGame.js?v=20260905-7"></script>
-  <script src="./games/fight/FightGame.js?v=20260905-7"></script>
-  <script src="./games/pinball/PinballTable.js?v=20260905-7"></script><script src="./games/pinball/PinballGame.js?v=20260905-7"></script>
-  <script src="./games/shooter/ShooterGame.js?v=20260905-7"></script><script src="./games/action/ActionGame.js?v=20260905-7"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260905-7"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260905-7"></script><script src="./games/puzzle/PuzzleGame.js?v=20260905-7"></script><script src="./games/race/RaceGame.js?v=20260905-7"></script><script src="./js/GameManager.js?v=20260905-7"></script><script src="./js/app.js?v=20260905-7"></script>
+  <script src="./js/config.js?v=20260905-8"></script><script src="./js/bgm-config.js?v=20260905-8"></script><script src="./js/race-config.js?v=20260905-8"></script><script src="./js/StorageManager.js?v=20260905-8"></script><script src="./js/sound-library-storage.js?v=20260905-8"></script><script src="./js/SoundManager.js?v=20260905-8"></script><script src="./js/sound-library-manager.js?v=20260905-8"></script><script src="./js/RecorderManager.js?v=20260905-8"></script><script src="./js/SoundLibraryController.js?v=20260905-8"></script>
+  <script src="./js/rhythm-config.js?v=20260905-8"></script><script src="./js/breakout-config.js?v=20260905-8"></script><script src="./js/fight-config.js?v=20260905-8"></script><script src="./js/pinball-config.js?v=20260905-8"></script>
+  <script src="./games/rhythm/RhythmChart.js?v=20260905-8"></script><script src="./games/rhythm/RhythmJudge.js?v=20260905-8"></script><script src="./games/rhythm/RhythmRenderer.js?v=20260905-8"></script><script src="./games/rhythm/RhythmGame.js?v=20260905-8"></script>
+  <script src="./games/breakout/BreakoutLevels.js?v=20260905-8"></script><script src="./games/breakout/BreakoutGame.js?v=20260905-8"></script>
+  <script src="./games/fight/FightGame.js?v=20260905-8"></script>
+  <script src="./games/pinball/PinballTable.js?v=20260905-8"></script><script src="./games/pinball/PinballGame.js?v=20260905-8"></script>
+  <script src="./games/shooter/ShooterGame.js?v=20260905-8"></script><script src="./games/action/ActionGame.js?v=20260905-8"></script><script src="./games/puzzle/PuzzleBoard.js?v=20260905-8"></script><script src="./games/puzzle/PuzzleRenderer.js?v=20260905-8"></script><script src="./games/puzzle/PuzzleGame.js?v=20260905-8"></script><script src="./games/race/RaceGame.js?v=20260905-8"></script><script src="./js/GameManager.js?v=20260905-8"></script><script src="./js/app.js?v=20260905-8"></script>
 </body>
 </html>

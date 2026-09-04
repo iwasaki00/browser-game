@@ -277,9 +277,29 @@
     } catch (error) { showScreen(libraryRecording ? "libraryScreen" : "studioScreen"); showError(error, "microphone"); }
   }
 
+  function recordingPreviewGain(buffer) {
+    const channel = buffer.getChannelData(0);
+    let peak = 0; let squares = 0; let samples = 0;
+    const stride = Math.max(1, Math.floor(channel.length / 24000));
+    for (let index = 0; index < channel.length; index += stride) {
+      const sample = channel[index];
+      peak = Math.max(peak, Math.abs(sample));
+      squares += sample * sample; samples += 1;
+    }
+    const rms = samples ? Math.sqrt(squares / samples) : 0;
+    const safePeakGain = peak ? .95 / peak : 1;
+    return Math.max(1, Math.min(4, safePeakGain, rms ? .16 / rms : 1));
+  }
+
   async function previewPending() {
     if (!state.pendingBlob) return;
-    try { await sound.unlock(); const buffer = await sound.context.decodeAudioData(await state.pendingBlob.arrayBuffer()); const source = sound.context.createBufferSource(); source.buffer = buffer; source.connect(sound.master); source.start(); }
+    try {
+      await sound.unlock();
+      const buffer = await sound.context.decodeAudioData(await state.pendingBlob.arrayBuffer());
+      const source = sound.context.createBufferSource(); const gain = sound.context.createGain();
+      source.buffer = buffer; gain.gain.value = recordingPreviewGain(buffer);
+      source.connect(gain).connect(sound.master); source.start();
+    }
     catch (error) { showError(error); }
   }
 

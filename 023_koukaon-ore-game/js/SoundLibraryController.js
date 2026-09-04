@@ -103,7 +103,7 @@
         }
         const rms = totalSamples ? Math.sqrt(totalSquares / totalSamples) : 0;
         const safePeakGain = overallPeak ? .95 / overallPeak : 1;
-        const suggestedGain = Math.max(1, Math.min(2, safePeakGain, rms ? .16 / rms : 1));
+        const suggestedGain = Math.max(1, Math.min(4, safePeakGain, rms ? .16 / rms : 1));
         return { duration: buffer.duration, waveformData, suggestedGain: Math.round(suggestedGain * 10) / 10 };
       } catch (error) {
         console.warn("Waveform analysis failed", error);
