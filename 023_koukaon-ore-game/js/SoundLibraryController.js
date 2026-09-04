@@ -277,12 +277,12 @@
           + [["fixed","固定"],["random","ランダム"],["sequence","順番"],["randomNoRepeat","ランダム（直前と違う）"]].map(([value,label]) => '<option value="' + value + '" ' + ((assignment?.playMode || "fixed") === value ? "selected" : "") + ">" + label + "</option>").join("")
           + '</select><button type="button" data-open-assignment="' + soundKey + '">＋ オレ音を追加</button></div>';
       });
-      this.assignmentDraftIds = new Set(assignment?.assetIds || []);
     }
 
     openAssignment(soundKey) {
       this.assignmentTarget = soundKey;
       const assignment = this.assignment(soundKey);
+      this.assignmentDraftIds = new Set(assignment?.assetIds || []);
       document.querySelector("#assignmentTitle").textContent = (this.definition(soundKey)?.label || soundKey) + "へ割り当て";
       document.querySelector("#assignmentMode").value = assignment?.playMode || "fixed";
       document.querySelector("#assignmentSearch").value = "";
