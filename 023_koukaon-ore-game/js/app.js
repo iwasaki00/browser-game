@@ -228,6 +228,23 @@
     state.currentPack = pack; await storage.setState("currentPackId", pack.id); await library.refresh(pack, state.selectedGameId); await sound.loadPack(pack, gameDef().sounds); renderAll(); toast(`「${pack.name}」に切り替えました`);
   }
 
+  function openRecordingStudio() {
+    showScreen("studioScreen");
+    const status = $("#studioMicStatus");
+    status.dataset.state = "checking";
+    status.textContent = "● マイクの許可を確認しています…";
+    recorder.requestPermission()
+      .then(() => {
+        status.dataset.state = "ready";
+        status.textContent = "✓ マイクを使用できます。録音したい効果音を選んでください。";
+      })
+      .catch((error) => {
+        status.dataset.state = "error";
+        status.textContent = "! マイクを使用できません。Safariのサイト設定を確認してください。";
+        showError(error);
+      });
+  }
+
   async function startRecording(id) {
     const libraryRecording = id === "__library__";
     const definition = libraryRecording ? { id, label: state.libraryRecordingName || "新しいオレ音", example: "好きな音を録音", max: 5 } : config.soundCatalog[id];
@@ -556,7 +573,7 @@
   function startCalibration(){stopRhythmTools();const start=performance.now()+1000,expected=Array.from({length:8},(_,i)=>start+i*500);state.calibration={expected,taps:[],suggested:0};$("#calibrationTapButton").disabled=false;$("#calibrationApplyButton").disabled=true;$("#calibrationStatus").textContent="光に合わせてタップ";expected.forEach(time=>{state.rhythmTimers.push(setTimeout(()=>{$("#calibrationLight").classList.add("is-beat");setTimeout(()=>$("#calibrationLight").classList.remove("is-beat"),110);},Math.max(0,time-performance.now())));});}
   function calibrationTap(){const c=state.calibration;if(!c||c.taps.length>=c.expected.length)return;const index=c.taps.length,offset=performance.now()-c.expected[index];c.taps.push(offset);$("#calibrationStatus").textContent=`${c.taps.length} / 8 · ${offset>=0?"+":""}${Math.round(offset)}ms`;if(c.taps.length===8){const avg=c.taps.reduce((a,b)=>a+b,0)/c.taps.length;c.suggested=Math.max(-200,Math.min(200,Math.round(-avg/10)*10));$("#calibrationStatus").textContent=`平均 ${avg>=0?"+":""}${Math.round(avg)}ms · 推奨 ${c.suggested}ms`;$("#calibrationTapButton").disabled=true;$("#calibrationApplyButton").disabled=false;}}
   function applyCalibration(){if(!state.calibration)return;$("#rhythmOffset").value=state.calibration.suggested;$("#rhythmOffsetValue").textContent=`${state.calibration.suggested}ms`;saveSettings();toast("推奨タイミングを設定しました");}
-    $("#recordStartButton").addEventListener("click", () => showScreen("studioScreen")); $("#studioShortcut").addEventListener("click", () => showScreen("studioScreen"));
+    $("#recordStartButton").addEventListener("click", openRecordingStudio); $("#studioShortcut").addEventListener("click", () => showScreen("studioScreen"));
     $("#quickStartButton").addEventListener("click", startSelectedGame); $("#studioGameButton").addEventListener("click", startSelectedGame);
     $("#stopRecordingButton").addEventListener("click", () => recorder.stop()); $("#previewRecordingButton").addEventListener("click", previewPending);
     $("#retryRecordingButton").addEventListener("click", () => startRecording(state.recordingId)); $("#acceptRecordingButton").addEventListener("click", acceptRecording);
@@ -585,7 +602,7 @@
     const recoverAudio = async (force = false) => { startupStatus("音声を有効化中", "iPhoneの音声出力を再開しています…", "loading"); try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; startupStatus("起動完了・音声有効", `${gameDef().name}のサウンドを再生できます`, "ready"); return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("音声を有効にできません", error?.message || String(error), "warning"); return false; } };
     $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());
-    const unlockAudioOnGesture = (event) => { if (event.target.closest?.("#resumeAudioButton, #audioResumeNotice")) return; if (!sound.context || sound.context.state !== "running") recoverAudio(); };
+    const unlockAudioOnGesture = (event) => { if (event.target.closest?.("#resumeAudioButton, #audioResumeNotice, #recordStartButton, [data-record], #retryRecordingButton, #newLibraryRecordingButton")) return; if (!sound.context || sound.context.state !== "running") recoverAudio(); };
     document.addEventListener("pointerdown", unlockAudioOnGesture, { capture: true });
     document.addEventListener("touchstart", unlockAudioOnGesture, { capture: true, passive: true });
     document.addEventListener("touchend", unlockAudioOnGesture, { capture: true, passive: true });

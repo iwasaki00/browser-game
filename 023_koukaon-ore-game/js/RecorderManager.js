@@ -11,15 +11,33 @@
       this.chunks = [];
       this.timer = null;
       this.meterFrame = 0;
+      this.permissionPromise = null;
       this.startedAt = 0;
     }
 
     get supported() { return Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder); }
 
+    audioConstraints() {
+      return { audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } };
+    }
+
+    async requestPermission() {
+      if (!this.supported) throw new Error("このブラウザは録音機能に対応していません。");
+      if (this.stream?.active) return true;
+      if (this.permissionPromise) return this.permissionPromise;
+      this.permissionPromise = navigator.mediaDevices.getUserMedia(this.audioConstraints())
+        .then((stream) => {
+          stream.getTracks().forEach((track) => track.stop());
+          return true;
+        });
+      try { return await this.permissionPromise; }
+      finally { this.permissionPromise = null; }
+    }
+
     async ensureStream() {
       if (!this.supported) throw new Error("このブラウザは録音機能に対応していません。");
       if (this.stream?.active) return this.stream;
-      this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      this.stream = await navigator.mediaDevices.getUserMedia(this.audioConstraints());
       const context = await this.soundManager.unlock();
       this.source = context.createMediaStreamSource(this.stream);
       this.analyser = context.createAnalyser();

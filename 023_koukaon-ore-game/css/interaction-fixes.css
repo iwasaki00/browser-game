@@ -1,4 +1,5 @@
 html,
+.studio-mic-status{margin:0 0 12px;padding:10px 12px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;font-size:.72rem;line-height:1.5}.studio-mic-status[data-state="checking"]{color:var(--yellow);border-color:rgba(255,228,93,.35)}.studio-mic-status[data-state="ready"]{color:var(--cyan);border-color:rgba(72,233,225,.35)}.studio-mic-status[data-state="error"]{color:#ff8aa4;border-color:rgba(255,59,104,.45)}
 body,
 .app-shell,
 button,
