@@ -30,7 +30,6 @@
   const gameDef = (id = state.selectedGameId) => games.getGameDefinition(id) || games.getGameDefinition(config.defaultGameId);
   const gameSounds = (id = state.selectedGameId) => config.getGameSounds(id);
 
-  function showScreen(id) {
   const library = new window.SoundLibraryController(storage, sound, config, {
     recordLibrary: (name) => beginLibraryRecording(name),
     renderAll: () => renderAll(),
@@ -38,6 +37,7 @@
     toast: (message) => toast(message),
     error: (error) => showError(error)
   });
+  function showScreen(id) {
 
     if (id !== "gameScreen") { games.stop(); sound.stopAllLoops(); }
     screens.forEach((screen) => { screen.hidden = screen.id !== id; });
