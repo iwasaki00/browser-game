@@ -239,7 +239,9 @@
     $("#libraryRecordTags").value = libraryRecording ? "声" : "";
     $("#recordReview").hidden = true; $("#recordLive").hidden = true; $("#countdown").hidden = false; showScreen("recordScreen");
     try {
-      await sound.unlock(); await recorder.ensureStream();
+      $("#recordPermissionStatus").textContent = "マイクの許可を確認しています…";
+      await recorder.ensureStream();
+      $("#recordPermissionStatus").textContent = "マイクを許可しました。声の準備はいい？";
       for (const value of [3, 2, 1]) { $("#countdownNumber").textContent = value; await new Promise((resolve) => setTimeout(resolve, 650)); }
       $("#countdown").hidden = true; $("#recordLive").hidden = false; $("#recordMeterBar").style.width = "0%";
       state.pendingBlob = await recorder.start(definition.max, (level) => { $("#recordMeterBar").style.width = `${Math.round(level * 100)}%`; }, (seconds) => { $("#recordTimer").textContent = `${seconds.toFixed(1)} / ${definition.max.toFixed(1)} 秒`; });

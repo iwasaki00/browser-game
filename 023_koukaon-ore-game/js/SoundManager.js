@@ -70,7 +70,12 @@
           this.mediaUnlock = audio;
         }
         this.mediaUnlock.currentTime = 0;
-        return this.mediaUnlock.play();
+        const playPromise = this.mediaUnlock.play();
+        return playPromise?.catch ? playPromise.catch((error) => {
+          const expectedStop = error?.name === "AbortError" || /interrupted by a call to pause/i.test(error?.message || "");
+          if (!expectedStop) console.warn("Could not prime HTML audio", error);
+          return false;
+        }) : playPromise;
       } catch (error) { console.warn("Could not prime HTML audio", error); return null; }
     }
 

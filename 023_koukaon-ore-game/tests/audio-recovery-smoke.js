@@ -41,6 +41,12 @@ const manager = new windowObject.SoundManager({ defaultSettings: { masterVolume:
   if (contextCalls !== beforeDeferredLoad + 1 || iosManager.context.state !== "running" || iosManager.pendingPack) throw new Error("First iPhone tap must create, resume, prime, and begin loading audio");
 
   if (mediaPlayCalls !== 1 || mediaPauseCalls !== 1) throw new Error("First iPhone tap must open the HTML audio route while Web Audio resumes, then stop the helper");
+  windowObject.Audio = class { constructor() { this.currentTime = 0; } play() { return Promise.reject(Object.assign(new Error("The play() request was interrupted by a call to pause()."), { name: "AbortError" })); } pause() {} };
+  const interruptedMediaManager = new windowObject.SoundManager({ defaultSettings: { masterVolume: 1, effectVolume: 1 }, soundCatalog: {}, soundDefinitions: [] });
+  await interruptedMediaManager.unlock();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  if (interruptedMediaManager.lastUnlockFailed) throw new Error("Stopping the helper audio must not be treated as an audio startup failure");
+
   let retryResumeCalls = 0;
   class RetryAudioContext extends InterruptedAudioContext {
     constructor() { super(); this.state = "suspended"; }

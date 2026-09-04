@@ -1,0 +1,17 @@
+const fs = require("fs");
+const path = require("path");
+const root = path.resolve(__dirname, "..");
+const app = fs.readFileSync(path.join(root, "js/app.js"), "utf8");
+const recorder = fs.readFileSync(path.join(root, "js/RecorderManager.js"), "utf8");
+const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const startAt = app.indexOf("async function startRecording");
+const startBody = app.slice(startAt, app.indexOf("async function previewPending", startAt));
+const streamAt = startBody.indexOf("await recorder.ensureStream()");
+const unlockAt = startBody.indexOf("await sound.unlock()");
+if (startAt < 0 || streamAt < 0) throw new Error("Recording must request a microphone stream");
+if (unlockAt >= 0 && unlockAt < streamAt) throw new Error("Microphone permission must be requested before awaiting audio unlock on iPhone");
+const ensureAt = recorder.indexOf("async ensureStream()");
+const ensureBody = recorder.slice(ensureAt, recorder.indexOf("preferredMimeType", ensureAt));
+if (ensureBody.indexOf("getUserMedia") > ensureBody.indexOf("await this.soundManager.unlock()")) throw new Error("getUserMedia must run directly from the recording gesture");
+if (!html.includes('id="recordPermissionStatus"') || !startBody.includes("マイクの許可を確認しています")) throw new Error("Microphone permission progress must be visible");
+console.log("Microphone permission passed: iPhone requests getUserMedia directly from the recording gesture and shows progress.");
