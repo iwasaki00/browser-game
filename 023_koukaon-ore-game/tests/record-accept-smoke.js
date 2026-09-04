@@ -13,5 +13,7 @@ if (body.includes("await sound.loadPack")) throw new Error("The studio transitio
 if (body.indexOf('showScreen("studioScreen")') > body.indexOf("sound.loadPack")) throw new Error("The studio must appear before background audio decoding starts");
 if (!body.includes("acceptRecordingButton") || !body.includes("button.disabled")) throw new Error("The accept button must prevent duplicate submissions");
 if (!manager.includes("loadGeneration") || !manager.includes("nextBuffers")) throw new Error("Overlapping pack decodes must ignore stale results");
+if (!body.includes('showError(error, "save")')) throw new Error("Recording save failures must not be mislabeled as microphone failures");
+if (!app.includes("録音データはこの画面に残っています")) throw new Error("Save failure guidance must explain that the pending recording is retained");
 
 console.log("Record accept passed: save returns to studio immediately and decoding is race-safe.");

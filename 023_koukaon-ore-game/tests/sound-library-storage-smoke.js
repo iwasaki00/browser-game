@@ -16,13 +16,18 @@ vm.runInNewContext(
   await storage.saveSoundAssignment({ id: "wrong-old-id", packId: "pack-new", soundKey: "actionJump", assetIds: ["a", "a", "b"], playMode: "sequence" });
   if (saved.id !== "pack-new::actionJump") throw Error("Assignment ID must follow pack and sound key");
   if (saved.assetIds.join(",") !== "a,b") throw Error("Duplicate asset references were not removed");
-
+  const config = fs.readFileSync(path.resolve(__dirname, "../js/config.js"), "utf8");
   const source = fs.readFileSync(path.resolve(__dirname, "../js/sound-library-storage.js"), "utf8");
+  if (!config.includes('dbVersion:3') || !source.includes('Math.max(3,')) {
+    throw Error("Sound library stores must upgrade existing v2 databases to schema v3");
+  }
+
+
   for (const store of ["soundAssets", "soundAssignments", "soundStats"]) {
     if (!source.includes('objectStoreNames.contains("' + store + '")')) throw Error("Missing IndexedDB store " + store);
   }
   if (/delete\s+pack\.sounds|deleteObjectStore/.test(source)) throw Error("Migration must not delete legacy recordings or stores");
-  console.log("Sound library storage passed: v2 stores, stable assignment IDs, deduplication, and non-destructive migration.");
+  console.log("Sound library storage passed: v3 upgrade, stable assignment IDs, deduplication, and non-destructive migration.");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

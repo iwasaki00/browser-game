@@ -23,7 +23,7 @@ for (const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) {
 }
 for (const file of ["css/sound-library.css", "js/sound-library-storage.js", "js/sound-library-manager.js", "js/SoundLibraryController.js"]) {
   if (!fs.existsSync(path.resolve(__dirname, "..", file))) throw Error("Missing library asset " + file);
-  if (!html.includes("./" + file + "?v=20260905-4")) throw Error("Unversioned library asset " + file);
+  if (!html.includes("./" + file + "?v=20260905-5")) throw Error("Unversioned library asset " + file);
 }
 
 console.log("Sound library HTML passed: dialog placement, result nesting, unique IDs, inline script, and versioned assets.");

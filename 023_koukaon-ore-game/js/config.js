@@ -11,5 +11,5 @@
     puzzle:{id:"puzzle",order:3,name:"3マッチパズル",subtitle:"効果音全部オレ 3マッチ",description:"消すたび、連鎖するたび、オレがどんどん騒がしくなる60秒スコアアタック。",playable:true,sounds:["puzzleSwap","puzzleInvalid","puzzleMatch","puzzleChain2","puzzleChain3","puzzleChain4","puzzleChain5","puzzleSpecialCreate","puzzleSpecialActivate","puzzleBigClear","puzzleItem","puzzleWarning","puzzleClear","puzzleGameOver"]},
     racing:{id:"racing",order:4,name:"レース",subtitle:"レースゲーム",description:"エンジン音まで全部オレ。",playable:false,sounds:[]}
   };
-  window.ORE_CONFIG={dbName:"ore-sound-arcade",dbVersion:2,defaultPackId:"ore-default",defaultGameId:"shooter",soundCatalog,soundDefinitions:Object.values(soundCatalog),gameDefinitions,getGameSounds(gameId){const game=gameDefinitions[gameId]||gameDefinitions.shooter;return game.sounds.map((id)=>soundCatalog[id]);},defaultSettings:{masterVolume:.9,effectVolume:.9,autoTrim:true,autoFire:true,vibration:true}};
+  window.ORE_CONFIG={dbName:"ore-sound-arcade",dbVersion:3,defaultPackId:"ore-default",defaultGameId:"shooter",soundCatalog,soundDefinitions:Object.values(soundCatalog),gameDefinitions,getGameSounds(gameId){const game=gameDefinitions[gameId]||gameDefinitions.shooter;return game.sounds.map((id)=>soundCatalog[id]);},defaultSettings:{masterVolume:.9,effectVolume:.9,autoTrim:true,autoFire:true,vibration:true}};
 })();

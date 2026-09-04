@@ -9,7 +9,7 @@
   proto.init = async function () {
     if (!window.indexedDB) throw new Error("IndexedDB is not supported");
     this.db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.config.dbName, Math.max(2, this.config.dbVersion || 1));
+      const request = indexedDB.open(this.config.dbName, Math.max(3, this.config.dbVersion || 1));
       request.onupgradeneeded = () => {
         const db = request.result;
         if (!db.objectStoreNames.contains("packs")) db.createObjectStore("packs", { keyPath: "id" });
@@ -27,7 +27,10 @@
         }
         if (!db.objectStoreNames.contains("soundStats")) db.createObjectStore("soundStats", { keyPath: "assetId" });
       };
-      request.onsuccess = () => resolve(request.result);
+      request.onsuccess = () => {
+        request.result.onversionchange = () => request.result.close();
+        resolve(request.result);
+      };
       request.onerror = () => reject(request.error);
       request.onblocked = () => reject(new Error("保存領域の更新がブロックされています。ほかのタブを閉じてください。"));
     });

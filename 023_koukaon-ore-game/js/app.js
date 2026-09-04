@@ -35,7 +35,7 @@
     renderAll: () => renderAll(),
     packs: () => state.packs,
     toast: (message) => toast(message),
-    error: (error) => showError(error)
+    error: (error) => showError(error, "general")
   });
   function showScreen(id) {
 
@@ -68,8 +68,18 @@
     };
   }
 
-  function showError(error) {
-    logError(error); const info = micErrorMessage(error);
+  function showError(error, context = "general") {
+    logError(error);
+    const info = context === "microphone" ? micErrorMessage(error) : context === "save" ? {
+      title: "録音を保存できませんでした",
+      body: error?.name === "QuotaExceededError"
+        ? "端末の保存容量が不足しています。不要な録音を削除して、もう一度お試しください。"
+        : "録音データの保存領域でエラーが発生しました。画面を再読み込みして、もう一度お試しください。録音データはこの画面に残っています。",
+      detail: `${error?.name || "UnknownError"}: ${error?.message || "No details"}`
+    } : {
+      title: "処理を完了できませんでした", body: "もう一度お試しください。問題が続く場合は画面を再読み込みしてください。",
+      detail: `${error?.name || "UnknownError"}: ${error?.message || "No details"}`
+    };
     $("#errorTitle").textContent = info.title; $("#errorMessage").textContent = info.body; $("#errorDetail").textContent = info.detail; $("#errorDialog").hidden = false;
   }
 
@@ -241,7 +251,7 @@
       .catch((error) => {
         status.dataset.state = "error";
         status.textContent = "! マイクを使用できません。Safariのサイト設定を確認してください。";
-        showError(error);
+        showError(error, "microphone");
       });
   }
 
@@ -264,7 +274,7 @@
       state.pendingBlob = await recorder.start(definition.max, (level) => { $("#recordMeterBar").style.width = `${Math.round(level * 100)}%`; }, (seconds) => { $("#recordTimer").textContent = `${seconds.toFixed(1)} / ${definition.max.toFixed(1)} 秒`; });
       $("#recordLive").hidden = true; $("#recordReview").hidden = false;
       $("#reviewSize").textContent = `${Math.max(1, Math.round(state.pendingBlob.size / 1024))} KB · ${state.pendingBlob.type || "audio"}`; toast("録れました！ まずは聞いてみよう");
-    } catch (error) { showScreen(libraryRecording ? "libraryScreen" : "studioScreen"); showError(error); }
+    } catch (error) { showScreen(libraryRecording ? "libraryScreen" : "studioScreen"); showError(error, "microphone"); }
   }
 
   async function previewPending() {
@@ -296,7 +306,7 @@
       state.pendingBlob = null; state.recordingId = null; state.recordingMode = "slot"; recorder.release();
       showScreen("studioScreen"); renderAll(); toast("オレ効果音に登録しました");
       sound.loadPack(pack, soundIds).catch((error) => { logError(error); toast("音声はゲーム開始時に再読込します"); });
-    } catch (error) { showError(error); }
+    } catch (error) { showError(error, "save"); }
     finally { button.disabled = false; }
   }
 
@@ -345,7 +355,7 @@
       const pack = state.currentPack; const soundIds = [...gameDef().sounds];
       state.copyTargetId = null; $("#copySoundDialog").hidden = true; renderAll(); toast(`${target.label}を同じ音にしました`);
       sound.loadPack(pack, soundIds).catch(logError);
-    } catch (error) { showError(error); }
+    } catch (error) { showError(error, "save"); }
     finally { button.disabled = false; }
   }
 
