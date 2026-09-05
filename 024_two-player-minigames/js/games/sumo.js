@@ -4,6 +4,12 @@
     constructor(options) {
       Object.assign(this, options);
       this.context = this.canvas.getContext("2d", { alpha: false });
+      this.sprites = (this.spriteUrls || []).map((url) => {
+        const sprite = new Image();
+        sprite.decoding = "async"; sprite.src = url;
+        sprite.addEventListener("load", () => this.render(), { once: true });
+        return sprite;
+      });
       this.active = false; this.animationId = 0; this.lastFrame = 0; this.fps = 60;
       this.resizeObserver = new ResizeObserver(() => this.resize());
       this.resizeObserver.observe(this.canvas.parentElement);
@@ -107,9 +113,10 @@
       const sand = ctx.createRadialGradient(w / 2, ringY - 10, 2, w / 2, ringY, ringWidth * .45); sand.addColorStop(0, "#e6b86a"); sand.addColorStop(1, "#b7783b");
       ctx.fillStyle = sand; ctx.beginPath(); ctx.ellipse(w / 2, ringY, ringWidth * .48, ringHeight * .42, 0, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = "rgba(255,247,214,.72)"; ctx.lineWidth = 2; ctx.setLineDash([6, 7]); ctx.beginPath(); ctx.moveTo(ringLeft, ringY); ctx.lineTo(ringLeft + ringWidth, ringY); ctx.stroke(); ctx.setLineDash([]);
-      const size = Math.max(28, Math.min(h * .29, w * .09));
-      this.drawWrestler(ctx, this.players[0], w, ringY - size * .15, size, "#27d9e6", "#087e9e", false);
-      this.drawWrestler(ctx, this.players[1], w, ringY - size * .15, size, "#ff5a51", "#a82636", true);
+      const size = Math.max(88, Math.min(h * .58, w * .4));
+      const wrestlerBase = ringY + ringHeight * .24;
+      this.drawWrestler(ctx, this.players[0], w, wrestlerBase, size, 0);
+      this.drawWrestler(ctx, this.players[1], w, wrestlerBase, size, 1);
       if (this.flash > .08 && this.players[1].x - this.players[0].x < .18) this.drawImpact(ctx, w * (this.players[0].x + this.players[1].x) / 2, ringY - size * .75, size * (.3 + this.flash * .25));
       const remaining = Math.max(0, 25 - this.elapsed); ctx.fillStyle = remaining < 6 ? "#ff5a51" : "rgba(255,248,223,.78)";
       ctx.font = `900 ${Math.max(11, h * .042)}px ui-monospace, Consolas, monospace`; ctx.textAlign = "center"; ctx.fillText(remaining.toFixed(1), w / 2, Math.max(18, h * .09)); ctx.restore();
@@ -118,18 +125,17 @@
       ctx.save(); ctx.globalAlpha = .34; ctx.fillStyle = "#27d9e6"; ctx.fillRect(w * .08, 0, w * .08, h * .43); ctx.fillStyle = "#ff5a51"; ctx.fillRect(w * .84, 0, w * .08, h * .43);
       ctx.fillStyle = "rgba(255,255,255,.16)"; for (let i = 0; i < 7; i += 1) ctx.fillRect(w * (.24 + i * .09), h * .09, 2, h * .2); ctx.restore();
     }
-    drawWrestler(ctx, player, width, baseY, size, main, dark, facingLeft) {
-      const x = player.x * width; const squash = player.squash; const bodyWidth = size * (1.12 + squash * .12); const bodyHeight = size * (1.08 - squash * .1);
-      ctx.save(); ctx.translate(x, baseY); ctx.rotate(player.lean * .13); ctx.scale(facingLeft ? -1 : 1, 1);
-      ctx.fillStyle = "rgba(0,0,0,.26)"; ctx.beginPath(); ctx.ellipse(0, size * .66, bodyWidth * .65, size * .19, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "#061522"; ctx.lineWidth = Math.max(3, size * .055); ctx.lineCap = "round"; ctx.fillStyle = main;
-      ctx.beginPath(); ctx.ellipse(0, 0, bodyWidth * .5, bodyHeight * .5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#ffddb1"; ctx.beginPath(); ctx.arc(size * .15, -size * .48, size * .31, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = dark; ctx.beginPath(); ctx.arc(size * .1, -size * .72, size * .14, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(size * .1, -size * .75, size * .09, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = dark; ctx.lineWidth = Math.max(3, size * .085); ctx.beginPath(); ctx.moveTo(-size * .3, -size * .05); ctx.lineTo(-size * .63, size * .1); ctx.moveTo(size * .35, -size * .04); ctx.lineTo(size * .67, size * .05); ctx.stroke();
-      ctx.strokeStyle = "#061522"; ctx.lineWidth = Math.max(2, size * .04); ctx.beginPath(); ctx.moveTo(size * .12, -size * .53); ctx.lineTo(size * .22, -size * .55); ctx.stroke(); ctx.beginPath(); ctx.arc(size * .24, -size * .42, size * .065, .2, Math.PI - .2); ctx.stroke();
-      ctx.strokeStyle = dark; ctx.lineWidth = Math.max(5, size * .13); ctx.beginPath(); ctx.moveTo(-size * .25, size * .34); ctx.lineTo(-size * .3, size * .62); ctx.moveTo(size * .24, size * .34); ctx.lineTo(size * .3, size * .62); ctx.stroke();
-      ctx.fillStyle = "rgba(255,255,255,.23)"; ctx.beginPath(); ctx.ellipse(-size * .18, -size * .16, size * .13, size * .2, -.5, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    drawWrestler(ctx, player, width, baseY, size, spriteIndex) {
+      const x = player.x * width; const sprite = this.sprites[spriteIndex]; const squash = player.squash;
+      ctx.save(); ctx.translate(x, baseY); ctx.rotate(player.lean * .1); ctx.scale(1 + squash * .07, 1 - squash * .055);
+      ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.beginPath(); ctx.ellipse(0, 0, size * .42, size * .09, 0, 0, Math.PI * 2); ctx.fill();
+      if (sprite && sprite.complete && sprite.naturalWidth) {
+        ctx.drawImage(sprite, -size * .5, -size, size, size);
+      } else {
+        ctx.fillStyle = spriteIndex === 0 ? "#27d9e6" : "#ff5a51";
+        ctx.beginPath(); ctx.ellipse(0, -size * .42, size * .42, size * .48, 0, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
     }
     drawImpact(ctx, x, y, radius) {
       ctx.save(); ctx.translate(x, y); ctx.fillStyle = `rgba(255,200,87,${Math.min(1, this.flash)})`; ctx.beginPath();
