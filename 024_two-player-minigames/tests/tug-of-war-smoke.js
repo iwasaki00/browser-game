@@ -5,6 +5,7 @@ const vm = require("node:vm");
 
 global.window = {};
 const source = fs.readFileSync(path.join(__dirname, "..", "js", "games", "tug-of-war.js"), "utf8");
+const managerSource = fs.readFileSync(path.join(__dirname, "..", "js", "game-manager.js"), "utf8");
 vm.runInThisContext(source, { filename: "tug-of-war.js" });
 
 const TugOfWarGame = window.TugOfWarGame;
@@ -12,6 +13,9 @@ const CONFIG = window.TUG_OF_WAR_CONFIG;
 assert.ok(TugOfWarGame);
 assert.strictEqual(CONFIG.STAMINA_MAX, 100);
 assert.ok(CONFIG.GOOD_MIN_INTERVAL < CONFIG.GOOD_MAX_INTERVAL);
+assert.match(managerSource, /tug-puller-cyan\.webp/);
+assert.match(managerSource, /tug-puller-coral\.webp/);
+assert.doesNotMatch(source, /ctx\.ellipse\(0, size \* \.14/);
 
 const classList = { add() {}, remove() {}, toggle() {} };
 const makePlayer = () => ({

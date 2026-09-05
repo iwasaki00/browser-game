@@ -30,10 +30,13 @@
     }
     createGame() {
       if (this.currentGame) this.currentGame.destroy();
-      const GameClass = this.currentGameKey === "tug" ? window.TugOfWarGame : window.SumoGame;
+      const tug = this.currentGameKey === "tug";
+      const GameClass = tug ? window.TugOfWarGame : window.SumoGame;
       this.currentGame = new GameClass({
         canvas: this.elements.canvas, controls: [this.elements.p1Control, this.elements.p2Control],
-        spriteUrls: ["./assets/rikishi-cyan.webp", "./assets/rikishi-coral.webp"],
+        spriteUrls: tug
+          ? ["./assets/tug-puller-cyan.webp", "./assets/tug-puller-coral.webp"]
+          : ["./assets/rikishi-cyan.webp", "./assets/rikishi-coral.webp"],
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
         debugPanel: this.elements.debugPanel, debug: this.debug,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),

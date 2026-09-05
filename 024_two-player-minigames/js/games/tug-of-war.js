@@ -21,10 +21,33 @@
     constructor(options) {
       Object.assign(this, options);
       this.context = this.canvas.getContext("2d", { alpha: false });
+      this.sprites = [];
+      (this.spriteUrls || []).forEach((url, index) => {
+        const image = new Image(); image.decoding = "async";
+        image.addEventListener("load", () => { this.sprites[index] = this.removeLightBackdrop(image); this.render(); }, { once: true });
+        image.src = url;
+      });
       this.active = false; this.animationId = 0; this.lastFrame = 0; this.fps = 60;
       this.resizeObserver = new ResizeObserver(() => this.resize());
       this.resizeObserver.observe(this.canvas.parentElement);
       this.resize(); this.reset(); this.bindInput();
+    }
+
+    removeLightBackdrop(image) {
+      const surface = document.createElement("canvas"); surface.width = image.naturalWidth; surface.height = image.naturalHeight;
+      const context = surface.getContext("2d"); context.drawImage(image, 0, 0);
+      try {
+        const frame = context.getImageData(0, 0, surface.width, surface.height); const pixels = frame.data;
+        for (let offset = 0; offset < pixels.length; offset += 4) {
+          const red = pixels[offset]; const green = pixels[offset + 1]; const blue = pixels[offset + 2];
+          const lightest = Math.max(red, green, blue); const darkest = Math.min(red, green, blue);
+          if (darkest > 224 && lightest - darkest < 18) pixels[offset + 3] = 0;
+        }
+        context.putImageData(frame, 0, 0);
+      } catch (_) {
+        return image;
+      }
+      return surface;
     }
 
     reset() {
@@ -175,7 +198,7 @@
       const winOffset = h * .24; const markerY = h / 2 + (this.ropePosition / CONFIG.WIN_POSITION) * winOffset;
       const ropeX = w / 2; const topY = h * .1; const bottomY = h * .9;
       this.drawRope(ctx, ropeX, topY, bottomY, markerY);
-      const size = Math.max(48, Math.min(w * .2, h * .16, 92));
+      const size = Math.max(72, Math.min(w * .4, h * .24, 168));
       const topSlip = Math.max(0, -this.ropePosition / CONFIG.WIN_POSITION) * h * .055;
       const bottomSlip = Math.max(0, this.ropePosition / CONFIG.WIN_POSITION) * h * .055;
       this.drawPuller(ctx, 0, ropeX, h * .145 + topSlip, size, this.players[0]);
@@ -215,25 +238,21 @@
     }
 
     drawPuller(ctx, index, x, y, size, player) {
-      const color = index === 0 ? "#27d9e6" : "#ff5a51"; const dark = index === 0 ? "#087c9c" : "#a1283d";
       const slip = index === 0 ? Math.max(0, -this.ropePosition / CONFIG.WIN_POSITION) : Math.max(0, this.ropePosition / CONFIG.WIN_POSITION);
       ctx.save(); ctx.translate(x + Math.sin(this.elapsed * 15 + index) * player.pull * 2.5, y); if (index === 0) ctx.rotate(Math.PI);
-      ctx.translate(0, player.pull * 4);
+      ctx.translate(0, player.pull * 5); ctx.scale(1 + player.pull * .035, 1 - player.pull * .025);
       if (slip > .55) {
         ctx.strokeStyle = "rgba(255,200,87,.5)"; ctx.lineWidth = 3;
         for (const offset of [-.34, .34]) { ctx.beginPath(); ctx.moveTo(size * offset, size * .44); ctx.lineTo(size * offset, size * (.62 + slip * .14)); ctx.stroke(); }
       }
-      ctx.strokeStyle = "#d69a72"; ctx.lineWidth = size * .16; ctx.lineCap = "round";
-      ctx.beginPath(); ctx.moveTo(-size * .22, -size * .02); ctx.lineTo(-size * .08, -size * .44); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(size * .22, -size * .02); ctx.lineTo(size * .08, -size * .44); ctx.stroke();
-      ctx.fillStyle = dark;
-      for (const side of [-1, 1]) { ctx.beginPath(); ctx.ellipse(side * size * .25, size * .37, size * .18, size * .12, side * .28, 0, Math.PI * 2); ctx.fill(); }
-      ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(0, size * .14, size * .38, size * .39, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.lineWidth = Math.max(2, size * .035); ctx.beginPath(); ctx.arc(0, size * .14, size * .3, .15, Math.PI - .15); ctx.stroke();
-      ctx.fillStyle = "#dca07c"; ctx.beginPath(); ctx.arc(0, -size * .14, size * .23, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#151d25"; ctx.beginPath(); ctx.arc(0, -size * .2, size * .19, Math.PI, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#f1b187";
-      for (const side of [-1, 1]) { ctx.beginPath(); ctx.arc(side * size * .08, -size * .44, size * .09, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = "rgba(0,0,0,.34)"; ctx.beginPath(); ctx.ellipse(3, size * .17, size * .4, size * .36, 0, 0, Math.PI * 2); ctx.fill();
+      const sprite = this.sprites[index];
+      if (sprite) {
+        ctx.drawImage(sprite, -size * .55, -size * .55, size * 1.1, size * 1.1);
+      } else {
+        ctx.fillStyle = index === 0 ? "#27d9e6" : "#ff5a51";
+        ctx.beginPath(); ctx.arc(0, 0, size * .34, 0, Math.PI * 2); ctx.fill();
+      }
       ctx.restore();
     }
 
