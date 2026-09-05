@@ -114,10 +114,9 @@
       ctx.fillStyle = sand; ctx.beginPath(); ctx.ellipse(w / 2, ringY, ringWidth * .48, ringHeight * .42, 0, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = "rgba(255,247,214,.72)"; ctx.lineWidth = 2; ctx.setLineDash([6, 7]); ctx.beginPath(); ctx.moveTo(ringLeft, ringY); ctx.lineTo(ringLeft + ringWidth, ringY); ctx.stroke(); ctx.setLineDash([]);
       const size = Math.max(88, Math.min(h * .58, w * .4));
-      const wrestlerBase = ringY + ringHeight * .24;
-      this.drawWrestler(ctx, this.players[0], w, wrestlerBase, size, 0);
-      this.drawWrestler(ctx, this.players[1], w, wrestlerBase, size, 1);
-      if (this.flash > .08 && this.players[1].x - this.players[0].x < .18) this.drawImpact(ctx, w * (this.players[0].x + this.players[1].x) / 2, ringY - size * .75, size * (.3 + this.flash * .25));
+      this.drawWrestler(ctx, this.players[0], w, ringY, size, 0);
+      this.drawWrestler(ctx, this.players[1], w, ringY, size, 1);
+      if (this.flash > .08 && this.players[1].x - this.players[0].x < .18) this.drawImpact(ctx, w * (this.players[0].x + this.players[1].x) / 2, ringY, size * (.3 + this.flash * .25));
       const remaining = Math.max(0, 25 - this.elapsed); ctx.fillStyle = remaining < 6 ? "#ff5a51" : "rgba(255,248,223,.78)";
       ctx.font = `900 ${Math.max(11, h * .042)}px ui-monospace, Consolas, monospace`; ctx.textAlign = "center"; ctx.fillText(remaining.toFixed(1), w / 2, Math.max(18, h * .09)); ctx.restore();
     }
@@ -125,15 +124,15 @@
       ctx.save(); ctx.globalAlpha = .34; ctx.fillStyle = "#27d9e6"; ctx.fillRect(w * .08, 0, w * .08, h * .43); ctx.fillStyle = "#ff5a51"; ctx.fillRect(w * .84, 0, w * .08, h * .43);
       ctx.fillStyle = "rgba(255,255,255,.16)"; for (let i = 0; i < 7; i += 1) ctx.fillRect(w * (.24 + i * .09), h * .09, 2, h * .2); ctx.restore();
     }
-    drawWrestler(ctx, player, width, baseY, size, spriteIndex) {
+    drawWrestler(ctx, player, width, centerY, size, spriteIndex) {
       const x = player.x * width; const sprite = this.sprites[spriteIndex]; const squash = player.squash;
-      ctx.save(); ctx.translate(x, baseY); ctx.rotate(player.lean * .1); ctx.scale(1 + squash * .07, 1 - squash * .055);
-      ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.beginPath(); ctx.ellipse(0, 0, size * .42, size * .09, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.save(); ctx.translate(x, centerY); ctx.rotate(player.lean * .1); ctx.scale(1 + squash * .07, 1 - squash * .055);
+      ctx.fillStyle = "rgba(0,0,0,.24)"; ctx.beginPath(); ctx.ellipse(0, size * .04, size * .4, size * .34, 0, 0, Math.PI * 2); ctx.fill();
       if (sprite && sprite.complete && sprite.naturalWidth) {
-        ctx.drawImage(sprite, -size * .5, -size, size, size);
+        ctx.drawImage(sprite, -size * .5, -size * .5, size, size);
       } else {
         ctx.fillStyle = spriteIndex === 0 ? "#27d9e6" : "#ff5a51";
-        ctx.beginPath(); ctx.ellipse(0, -size * .42, size * .42, size * .48, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, 0, size * .42, size * .38, 0, 0, Math.PI * 2); ctx.fill();
       }
       ctx.restore();
     }
