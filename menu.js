@@ -4,12 +4,12 @@
   const games = [
     {
       number: "024",
-      title: "トントン相撲DX",
-      genre: "Two Player / Action",
-      description: "1台のスマートフォンを左右から連打して押し合う、ローカル2人対戦ゲーム。慣性とスタミナを読み、相手を土俵の外へ押し出します。",
-      href: "./024_tonton-sumo-dx/index.html",
-      icon: "./assets/game-icons/024-tonton-sumo-dx.jpg",
-      alt: "青と赤の力士が土俵の中央でぶつかるゲームアイコン"
+      title: "ふたり対戦 ミニゲーム",
+      genre: "Local Multiplayer / Mini games",
+      description: "スマートフォン1台を左右から操作して、その場ですぐ2人で遊べる対戦ミニゲーム集。第1弾は、連打とタイミングで押し合う「トントン相撲DX」です。",
+      href: "./024_two-player-minigames/index.html",
+      icon: "./assets/game-icons/024-two-player-minigames.jpg",
+      alt: "1台のスマートフォンを左右から操作する2人対戦ミニゲーム集のアイコン"
     },
     {
       number: "023",
