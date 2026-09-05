@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071421">
+  <meta name="description" content="1台のスマートフォンを左右からタップして遊ぶ、2人対戦トントン相撲ゲーム。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>トントン相撲DX</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/games/sumo.js" defer></script>
+  <script src="./js/game-manager.js" defer></script>
+  <script src="./js/app.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="menuScreen" class="screen menu-screen" aria-labelledby="collectionTitle">
+      <header class="menu-header">
+        <a class="arcade-link" href="../index.html" aria-label="Browser Game Arcadeへ戻る">← ARCADE</a>
+        <button id="menuMuteButton" class="icon-button" type="button" aria-label="音をミュート">♪</button>
+      </header>
+      <div class="menu-intro">
+        <p>ONE PHONE · TWO PLAYERS</p>
+        <h1 id="collectionTitle">ふたり対戦<br><span>ミニゲーム</span></h1>
+      </div>
+      <div class="game-picker" aria-label="ゲームを選択">
+        <button id="sumoCard" class="game-card" type="button">
+          <span class="game-card-number">01</span>
+          <span class="card-art" aria-hidden="true"><span class="mini-sumo mini-sumo-one"></span><span class="card-impact">×</span><span class="mini-sumo mini-sumo-two"></span></span>
+          <span class="game-card-copy"><small>TAP BATTLE</small><strong>トントン相撲DX</strong><em>左右から連打して押し出せ！</em></span>
+          <span class="play-mark" aria-hidden="true">▶</span>
+        </button>
+        <div class="coming-list" aria-label="今後追加予定">
+          <div><span>02</span><b>綱引きバトル</b><small>COMING SOON</small></div>
+          <div><span>03</span><b>爆弾押し付け</b><small>COMING SOON</small></div>
+          <div><span>04</span><b>押し相撲ロボ</b><small>COMING SOON</small></div>
+        </div>
+      </div>
+    </section>
+    <section id="gameScreen" class="screen game-screen" hidden aria-label="トントン相撲DX 対戦画面">
+      <header class="game-header">
+        <button id="backButton" class="header-button" type="button" aria-label="ゲーム選択へ戻る">‹</button>
+        <div class="score player-one-score"><span>P1</span><strong id="p1Score">0</strong></div>
+        <div class="game-title"><small>TON TON</small><strong>トントン相撲DX</strong></div>
+        <div class="score player-two-score"><strong id="p2Score">0</strong><span>P2</span></div>
+        <button id="muteButton" class="header-button" type="button" aria-label="音をミュート">♪</button>
+      </header>
+      <div class="arena">
+        <canvas id="gameCanvas" aria-label="2人の力士が押し合う土俵"></canvas>
+        <div id="dangerLeft" class="danger danger-left" aria-hidden="true">DANGER</div>
+        <div id="dangerRight" class="danger danger-right" aria-hidden="true">DANGER</div>
+        <div id="countdown" class="countdown" role="status" aria-live="assertive"></div>
+        <div id="debugPanel" class="debug-panel" hidden></div>
+      </div>
+      <div class="controls" aria-label="プレイヤー操作">
+        <button id="p1Control" class="control-zone control-one" type="button"><span class="control-player">PLAYER 1</span><strong>トントン！</strong><span class="energy-track"><i id="p1Energy"></i></span><small>A キーでも操作</small></button>
+        <div class="center-rivet" aria-hidden="true"><span>VS</span></div>
+        <button id="p2Control" class="control-zone control-two" type="button"><span class="control-player">PLAYER 2</span><strong>トントン！</strong><span class="energy-track"><i id="p2Energy"></i></span><small>L キーでも操作</small></button>
+      </div>
+      <div id="resultPanel" class="result-panel" hidden role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+        <div class="result-card"><p>RESULT</p><h2 id="resultTitle">PLAYER 1 WIN!</h2><span id="resultReason">押し出し！</span><div class="result-actions"><button id="replayButton" class="primary-button" type="button">もう一度</button><button id="menuButton" class="secondary-button" type="button">ゲーム選択へ</button></div></div>
+      </div>
+    </section>
+  </main>
+  <aside class="orientation-notice" role="status"><div class="phone-turn" aria-hidden="true">↻</div><strong>横向きにしてください</strong><span>スマートフォンを横に置いて、左右から遊びます</span></aside>
+</body>
+</html>
