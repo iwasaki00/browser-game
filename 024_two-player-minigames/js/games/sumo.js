@@ -16,11 +16,11 @@
       this.resize(); this.reset(); this.bindInput();
     }
     reset() {
-      this.players = [this.makePlayer(.37, 1), this.makePlayer(.63, -1)];
+      this.players = [this.makePlayer(.34, 1), this.makePlayer(.66, -1)];
       this.elapsed = 0; this.lastImpactAt = 0; this.shake = 0; this.flash = 0; this.active = false; this.lastFrame = performance.now();
       this.updateHud(); this.render();
     }
-    makePlayer(x, direction) { return { x, velocity: 0, force: 0, direction, heat: 0, squash: 0, lean: 0, taps: [], lastTap: 0, rhythm: 0 }; }
+    makePlayer(position, direction) { return { position, velocity: 0, force: 0, direction, heat: 0, squash: 0, lean: 0, taps: [], lastTap: 0, rhythm: 0 }; }
     bindInput() {
       this.pointerHandlers = this.controls.map((control, index) => {
         const handler = (event) => {
@@ -69,22 +69,22 @@
       for (const player of this.players) {
         player.velocity *= friction; player.force *= Math.pow(.88, frameScale); player.heat = Math.max(0, player.heat - dt * .43);
         player.rhythm = Math.max(0, player.rhythm - dt * .12); player.squash = Math.max(0, player.squash - dt * 6.5);
-        player.lean *= Math.pow(.82, frameScale); player.taps = player.taps.filter((time) => now - time < 650); player.x += player.velocity * dt * .16;
+        player.lean *= Math.pow(.82, frameScale); player.taps = player.taps.filter((time) => now - time < 650); player.position += player.velocity * dt * .16;
       }
-      const gap = p2.x - p1.x; const minGap = .145;
+      const gap = p2.position - p1.position; const minGap = .145;
       if (gap < minGap) {
-        const center = (p1.x + p2.x) / 2; const forceDifference = p1.force - p2.force; const momentum = (p1.velocity + p2.velocity) * .5;
+        const center = (p1.position + p2.position) / 2; const forceDifference = p1.force - p2.force; const momentum = (p1.velocity + p2.velocity) * .5;
         const overtime = Math.max(0, this.elapsed - 12) * .018; const push = momentum + forceDifference * (.12 + overtime);
-        p1.x = center - minGap / 2 + push * dt; p2.x = center + minGap / 2 + push * dt; p1.velocity = push * .75; p2.velocity = push * .75;
-        p1.lean = Math.max(-1, Math.min(1, forceDifference)); p2.lean = p1.lean; this.shake = Math.min(1, this.shake + Math.abs(forceDifference) * .06);
+        p1.position = center - minGap / 2 + push * dt; p2.position = center + minGap / 2 + push * dt; p1.velocity = push * .75; p2.velocity = push * .75;
+        p1.lean = Math.max(-1, Math.min(1, forceDifference)); p2.lean = -p1.lean; this.shake = Math.min(1, this.shake + Math.abs(forceDifference) * .06);
         if (now - this.lastImpactAt > 260 && Math.abs(forceDifference) > .26) { this.lastImpactAt = now; this.onImpactSound(Math.abs(forceDifference)); }
       }
       this.shake *= Math.pow(.82, frameScale); this.flash *= Math.pow(.78, frameScale);
-      const leftEdge = .13; const rightEdge = .87;
-      this.dangers[0].classList.toggle("visible", p1.x < leftEdge + .09); this.dangers[1].classList.toggle("visible", p2.x > rightEdge - .09);
-      if (p1.x < leftEdge) return this.finish(2, "押し出し！");
-      if (p2.x > rightEdge) return this.finish(1, "押し出し！");
-      if (this.elapsed >= 25) return this.finish((p1.x + p2.x) / 2 >= .5 ? 1 : 2, "判定勝ち！");
+      const blueEdge = .13; const redEdge = .87;
+      this.dangers[0].classList.toggle("visible", p1.position < blueEdge + .09); this.dangers[1].classList.toggle("visible", p2.position > redEdge - .09);
+      if (p1.position < blueEdge) return this.finish(2, "押し出し！");
+      if (p2.position > redEdge) return this.finish(1, "押し出し！");
+      if (this.elapsed >= 25) return this.finish((p1.position + p2.position) / 2 >= .5 ? 1 : 2, "判定勝ち！");
       this.updateHud();
     }
     finish(winner, reason) { if (!this.active) return; this.active = false; this.render(); this.onFinish(winner, reason); }
@@ -103,30 +103,35 @@
     render() {
       if (!this.context || !this.players) return;
       const ctx = this.context; const w = this.width; const h = this.height;
-      ctx.save(); ctx.translate((Math.random() - .5) * this.shake * 5, (Math.random() - .5) * this.shake * 3);
-      const sky = ctx.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, "#0b2b3f"); sky.addColorStop(1, "#07131d");
-      ctx.fillStyle = sky; ctx.fillRect(-8, -8, w + 16, h + 16); this.drawBanners(ctx, w, h);
-      const ringY = h * .67; const ringLeft = w * .13; const ringWidth = w * .74; const ringHeight = Math.max(52, h * .28);
-      ctx.fillStyle = "rgba(0,0,0,.36)"; ctx.beginPath(); ctx.ellipse(w / 2, ringY + ringHeight * .45, ringWidth * .53, ringHeight * .35, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#8a512b"; ctx.beginPath(); ctx.ellipse(w / 2, ringY + 10, ringWidth * .53, ringHeight * .55, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "#ffd27a"; ctx.lineWidth = Math.max(7, h * .035); ctx.stroke();
-      const sand = ctx.createRadialGradient(w / 2, ringY - 10, 2, w / 2, ringY, ringWidth * .45); sand.addColorStop(0, "#e6b86a"); sand.addColorStop(1, "#b7783b");
-      ctx.fillStyle = sand; ctx.beginPath(); ctx.ellipse(w / 2, ringY, ringWidth * .48, ringHeight * .42, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "rgba(255,247,214,.72)"; ctx.lineWidth = 2; ctx.setLineDash([6, 7]); ctx.beginPath(); ctx.moveTo(ringLeft, ringY); ctx.lineTo(ringLeft + ringWidth, ringY); ctx.stroke(); ctx.setLineDash([]);
-      const size = Math.max(88, Math.min(h * .58, w * .4));
-      this.drawWrestler(ctx, this.players[0], w, ringY, size, 0);
-      this.drawWrestler(ctx, this.players[1], w, ringY, size, 1);
-      if (this.flash > .08 && this.players[1].x - this.players[0].x < .18) this.drawImpact(ctx, w * (this.players[0].x + this.players[1].x) / 2, ringY, size * (.3 + this.flash * .25));
-      const remaining = Math.max(0, 25 - this.elapsed); ctx.fillStyle = remaining < 6 ? "#ff5a51" : "rgba(255,248,223,.78)";
-      ctx.font = `900 ${Math.max(11, h * .042)}px ui-monospace, Consolas, monospace`; ctx.textAlign = "center"; ctx.fillText(remaining.toFixed(1), w / 2, Math.max(18, h * .09)); ctx.restore();
+      ctx.save(); ctx.translate((Math.random() - .5) * this.shake * 4, (Math.random() - .5) * this.shake * 4);
+      const field = ctx.createLinearGradient(0, 0, 0, h); field.addColorStop(0, "#093447"); field.addColorStop(.5, "#07131d"); field.addColorStop(1, "#3a1720");
+      ctx.fillStyle = field; ctx.fillRect(-8, -8, w + 16, h + 16); this.drawBanners(ctx, w, h);
+      const ringX = w / 2; const ringY = h / 2; const ringRadius = Math.max(70, Math.min(w * .41, h * .38));
+      ctx.fillStyle = "rgba(0,0,0,.3)"; ctx.beginPath(); ctx.arc(ringX, ringY, ringRadius * 1.08, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#8a512b"; ctx.beginPath(); ctx.arc(ringX, ringY, ringRadius, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#ffd27a"; ctx.lineWidth = Math.max(7, ringRadius * .08); ctx.stroke();
+      const sand = ctx.createRadialGradient(ringX, ringY, 2, ringX, ringY, ringRadius * .9); sand.addColorStop(0, "#e6b86a"); sand.addColorStop(1, "#b7783b");
+      ctx.fillStyle = sand; ctx.beginPath(); ctx.arc(ringX, ringY, ringRadius * .88, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "rgba(255,247,214,.76)"; ctx.lineWidth = Math.max(2, ringRadius * .015); ctx.lineCap = "round";
+      for (const offset of [-.18, .18]) { ctx.beginPath(); ctx.moveTo(ringX - ringRadius * .28, ringY + ringRadius * offset); ctx.lineTo(ringX + ringRadius * .28, ringY + ringRadius * offset); ctx.stroke(); }
+      const mapPositionToY = (position) => ringY + ((position - .5) / .37) * ringRadius * .72;
+      const size = Math.max(78, Math.min(ringRadius * .86, w * .35));
+      const blueY = mapPositionToY(this.players[0].position); const redY = mapPositionToY(this.players[1].position);
+      this.drawWrestler(ctx, this.players[0], ringX, blueY, size, 0);
+      this.drawWrestler(ctx, this.players[1], ringX, redY, size, 1);
+      if (this.flash > .08 && this.players[1].position - this.players[0].position < .18) this.drawImpact(ctx, ringX, (blueY + redY) / 2, size * (.3 + this.flash * .25));
+      const remaining = Math.max(0, 25 - this.elapsed); ctx.fillStyle = remaining < 6 ? "#ff5a51" : "rgba(255,248,223,.82)";
+      ctx.font = "900 " + Math.max(12, Math.min(20, h * .035)) + "px ui-monospace, Consolas, monospace"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.save(); ctx.translate(w / 2, Math.max(18, h * .055)); ctx.rotate(Math.PI); ctx.fillText(remaining.toFixed(1), 0, 0); ctx.restore();
+      ctx.fillText(remaining.toFixed(1), w / 2, h - Math.max(18, h * .055)); ctx.restore();
     }
     drawBanners(ctx, w, h) {
-      ctx.save(); ctx.globalAlpha = .34; ctx.fillStyle = "#27d9e6"; ctx.fillRect(w * .08, 0, w * .08, h * .43); ctx.fillStyle = "#ff5a51"; ctx.fillRect(w * .84, 0, w * .08, h * .43);
-      ctx.fillStyle = "rgba(255,255,255,.16)"; for (let i = 0; i < 7; i += 1) ctx.fillRect(w * (.24 + i * .09), h * .09, 2, h * .2); ctx.restore();
+      ctx.save(); ctx.globalAlpha = .28; ctx.fillStyle = "#27d9e6"; ctx.fillRect(0, 0, w, h * .1); ctx.fillStyle = "#ff5a51"; ctx.fillRect(0, h * .9, w, h * .1);
+      ctx.strokeStyle = "rgba(255,255,255,.2)"; ctx.lineWidth = 2; ctx.setLineDash([5, 9]); ctx.beginPath(); ctx.moveTo(w / 2, h * .12); ctx.lineTo(w / 2, h * .88); ctx.stroke(); ctx.restore();
     }
-    drawWrestler(ctx, player, width, centerY, size, spriteIndex) {
-      const x = player.x * width; const sprite = this.sprites[spriteIndex]; const squash = player.squash;
-      ctx.save(); ctx.translate(x, centerY); ctx.rotate(player.lean * .1); ctx.scale(1 + squash * .07, 1 - squash * .055);
+    drawWrestler(ctx, player, centerX, centerY, size, spriteIndex) {
+      const sprite = this.sprites[spriteIndex]; const squash = player.squash;
+      ctx.save(); ctx.translate(centerX, centerY); ctx.rotate(Math.PI / 2 + player.lean * .08); ctx.scale(1 + squash * .07, 1 - squash * .055);
       ctx.fillStyle = "rgba(0,0,0,.24)"; ctx.beginPath(); ctx.ellipse(0, size * .04, size * .4, size * .34, 0, 0, Math.PI * 2); ctx.fill();
       if (sprite && sprite.complete && sprite.naturalWidth) {
         ctx.drawImage(sprite, -size * .5, -size * .5, size, size);

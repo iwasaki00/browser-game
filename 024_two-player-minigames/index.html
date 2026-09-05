@@ -42,22 +42,19 @@
     <section id="gameScreen" class="screen game-screen" hidden aria-label="トントン相撲DX 対戦画面">
       <header class="game-header">
         <button id="backButton" class="header-button" type="button" aria-label="ゲーム選択へ戻る">‹</button>
-        <div class="score player-one-score"><span>P1</span><strong id="p1Score">0</strong></div>
-        <div class="game-title"><small>TON TON</small><strong>トントン相撲DX</strong></div>
-        <div class="score player-two-score"><strong id="p2Score">0</strong><span>P2</span></div>
         <button id="muteButton" class="header-button" type="button" aria-label="音をミュート">♪</button>
       </header>
       <div class="arena">
         <canvas id="gameCanvas" aria-label="2人の力士が押し合う土俵"></canvas>
-        <div id="dangerLeft" class="danger danger-left" aria-hidden="true">DANGER</div>
-        <div id="dangerRight" class="danger danger-right" aria-hidden="true">DANGER</div>
+        <div id="dangerLeft" class="danger danger-top" aria-hidden="true">DANGER</div>
+        <div id="dangerRight" class="danger danger-bottom" aria-hidden="true">DANGER</div>
         <div id="countdown" class="countdown" role="status" aria-live="assertive"></div>
         <div id="debugPanel" class="debug-panel" hidden></div>
       </div>
       <div class="controls" aria-label="プレイヤー操作">
-        <button id="p1Control" class="control-zone control-one" type="button"><span class="control-player">PLAYER 1</span><strong>トントン！</strong><span class="energy-track"><i id="p1Energy"></i></span><small>A キーでも操作</small></button>
+        <button id="p1Control" class="control-zone control-one" type="button"><span class="control-player">PLAYER 1 <b id="p1Score" class="control-score">0</b></span><strong>トントン！</strong><span class="energy-track"><i id="p1Energy"></i></span><small>A キーでも操作</small></button>
         <div class="center-rivet" aria-hidden="true"><span>VS</span></div>
-        <button id="p2Control" class="control-zone control-two" type="button"><span class="control-player">PLAYER 2</span><strong>トントン！</strong><span class="energy-track"><i id="p2Energy"></i></span><small>L キーでも操作</small></button>
+        <button id="p2Control" class="control-zone control-two" type="button"><span class="control-player">PLAYER 2 <b id="p2Score" class="control-score">0</b></span><strong>トントン！</strong><span class="energy-track"><i id="p2Energy"></i></span><small>L キーでも操作</small></button>
       </div>
       <div id="resultPanel" class="result-panel" hidden role="dialog" aria-modal="true" aria-labelledby="resultTitle">
         <div class="result-card"><p>RESULT</p><h2 id="resultTitle">PLAYER 1 WIN!</h2><span id="resultReason">押し出し！</span><div class="result-actions"><button id="replayButton" class="primary-button" type="button">もう一度</button><button id="menuButton" class="secondary-button" type="button">ゲーム選択へ</button></div></div>
