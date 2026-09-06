@@ -8,7 +8,10 @@
       const params = new URLSearchParams(location.search);
       this.debug = params.get("debug") === "1";
       this.testMode = params.get("test") === "1";
+      this.testSpeed = 1;
       elements.debugPanel.hidden = !this.debug;
+      this.syncTestModeButtons();
+      this.syncTestSpeedButton();
     }
     launchSumo() {
       this.launch("sumo");
@@ -29,6 +32,8 @@
     }
     configureGameScreen() {
       this.elements.debugPanel.hidden = !this.debug;
+      this.elements.testModeButton.hidden = this.currentGameKey !== "boxing";
+      this.elements.testSpeedButton.hidden = this.currentGameKey !== "boxing" || !this.testMode;
       if (this.currentGameKey === "boxing") {
         this.elements.debugPanel.hidden = !(this.debug || this.testMode);
         this.elements.gameScreen.dataset.game = "boxing";
@@ -70,7 +75,8 @@
         spriteUrl: boxing ? "./assets/wobble-boxer-torso.png" : bomb ? "./assets/bomb-topdown.png" : undefined,
         jointButtons: this.elements.jointButtons,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
-        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: boxing && this.testMode,
+        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: boxing && this.testMode, gameSpeed: this.testSpeed,
+        centerRivet: this.elements.centerBadge.parentElement,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
         onGoodSound: (player) => this.playGood(player),
         onChargeSound: (player) => this.playCharge(player),
@@ -114,6 +120,40 @@
       this.muted = !this.muted; const symbol = this.muted ? "×" : "♪"; const label = this.muted ? "音を出す" : "音をミュート";
       [this.elements.muteButton, this.elements.menuMuteButton].forEach((button) => { button.textContent = symbol; button.setAttribute("aria-label", label); });
       if (!this.muted) this.resumeAudio();
+    }
+    toggleTestMode() {
+      this.testMode = !this.testMode;
+      this.syncTestModeButtons();
+      if (!this.currentGame || this.currentGameKey !== "boxing") return;
+      this.currentGame.testMode = this.testMode;
+      this.elements.debugPanel.hidden = !(this.debug || this.testMode);
+      this.elements.testSpeedButton.hidden = !this.testMode;
+      this.currentGame.updateHud();
+      this.currentGame.render();
+    }
+    syncTestModeButtons() {
+      const label = this.testMode ? "TEST ON" : "TEST OFF";
+      const ariaLabel = this.testMode ? "テストモードを無効にする" : "テストモードを有効にする";
+      [this.elements.testModeButton, this.elements.menuTestModeButton].forEach((button) => {
+        button.textContent = label;
+        button.setAttribute("aria-pressed", String(this.testMode));
+        button.setAttribute("aria-label", ariaLabel);
+      });
+    }
+    cycleTestSpeed() {
+      const speeds = [1, .5, .25];
+      const index = speeds.indexOf(this.testSpeed);
+      this.testSpeed = speeds[(index + 1) % speeds.length];
+      this.syncTestSpeedButton();
+      if (this.currentGame && this.currentGameKey === "boxing") {
+        this.currentGame.gameSpeed = this.testSpeed;
+        this.currentGame.updateHud();
+      }
+    }
+    syncTestSpeedButton() {
+      const label = this.testSpeed === 1 ? "1.0x" : `${this.testSpeed}x`;
+      this.elements.testSpeedButton.textContent = label;
+      this.elements.testSpeedButton.setAttribute("aria-label", `テスト速度 ${label}`);
     }
     resumeAudio() {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext; if (!AudioContextClass) return;

@@ -9,6 +9,38 @@
   letter-spacing: .14em;
 }
 
+.chaos-meter {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  color: #708198;
+  font: 700 8px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .08em;
+}
+
+.chaos-meter b {
+  height: 4px;
+  overflow: hidden;
+  background: #202b38;
+  border-radius: 4px;
+}
+
+.chaos-meter i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  opacity: .72;
+  transition: width .12s linear, background .2s;
+}
+
+.chaos-meter.danger i {
+  background: #ffd36b;
+  box-shadow: 0 0 6px #ffd36b;
+}
+
 .pad {
   grid-template-columns: 1fr .82fr 1fr;
 }

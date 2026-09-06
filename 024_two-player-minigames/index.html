@@ -24,7 +24,10 @@
     <section id="menuScreen" class="screen menu-screen" aria-labelledby="collectionTitle">
       <header class="menu-header">
         <a class="arcade-link" href="../index.html" aria-label="Browser Game Arcadeへ戻る">← ARCADE</a>
-        <button id="menuMuteButton" class="icon-button" type="button" aria-label="音をミュート">♪</button>
+        <div class="menu-tools">
+          <button id="menuTestModeButton" class="test-mode-button" type="button" aria-label="ボクシングのテストモードを有効にする" aria-pressed="false">TEST OFF</button>
+          <button id="menuMuteButton" class="icon-button" type="button" aria-label="音をミュート">♪</button>
+        </div>
       </header>
       <div class="menu-intro">
         <p>ONE PHONE · TWO PLAYERS</p>
@@ -59,6 +62,8 @@
     <section id="gameScreen" class="screen game-screen" hidden aria-label="2人対戦ゲーム画面">
       <header class="game-header">
         <button id="backButton" class="header-button" type="button" aria-label="ゲーム選択へ戻る">‹</button>
+        <button id="testSpeedButton" class="header-button test-speed-button" type="button" aria-label="テスト速度 1.0倍" hidden>1.0x</button>
+        <button id="testModeButton" class="header-button test-mode-button" type="button" aria-label="テストモードを有効にする" aria-pressed="false" hidden>TEST OFF</button>
         <button id="muteButton" class="header-button" type="button" aria-label="音をミュート">♪</button>
       </header>
       <div class="arena">

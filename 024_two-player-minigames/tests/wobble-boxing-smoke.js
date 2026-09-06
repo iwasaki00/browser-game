@@ -6,6 +6,9 @@ const vm = require("node:vm");
 global.window = {};
 const source = fs.readFileSync(path.join(__dirname, "..", "js", "games", "wobble-boxing.js"), "utf8");
 const managerSource = fs.readFileSync(path.join(__dirname, "..", "js", "game-manager.js"), "utf8");
+const appSource = fs.readFileSync(path.join(__dirname, "..", "js", "app.js"), "utf8");
+const indexSource = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+const styleSource = fs.readFileSync(path.join(__dirname, "..", "css", "style.css"), "utf8");
 const boxingCss = fs.readFileSync(path.join(__dirname, "..", "css", "boxing.css"), "utf8");
 vm.runInThisContext(source, { filename: "wobble-boxing.js" });
 
@@ -24,6 +27,10 @@ assert.ok(CONFIG.BLOCK_DAMAGE_MULTIPLIER <= .2);
 assert.match(managerSource, /wobble-boxer-torso\.png/);
 assert.match(managerSource, /params\.get\("test"\) === "1"/);
 assert.match(managerSource, /testMode: boxing && this\.testMode/);
+assert.match(indexSource, /id="menuTestModeButton"/);
+assert.match(indexSource, /id="testModeButton"/);
+assert.match(appSource, /manager\.toggleTestMode\(\)/);
+assert.match(styleSource, /\.test-mode-button\[aria-pressed="true"\]/);
 assert.match(source, /removeEventListener\("pointerdown"/);
 assert.doesNotMatch(source, /Matter\./);
 assert.match(boxingCss, /\.countdown\s*\{[\s\S]*?z-index:\s*12/);
@@ -32,6 +39,33 @@ assert.match(boxingCss, /\.joint-grid\s*\{[\s\S]*?position:\s*relative/);
 assert.match(boxingCss, /\.joint-direction\s*\{[\s\S]*?display:\s*none/);
 assert.match(source, /drawGlove\(/);
 assert.doesNotMatch(source, /direction \*= -1/);
+
+global.location = { search: "" };
+vm.runInThisContext(managerSource, { filename: "game-manager.js" });
+const makeToggle = () => ({
+  textContent: "",
+  attributes: {},
+  setAttribute(name, value) { this.attributes[name] = value; }
+});
+const liveTestButton = makeToggle();
+const menuTestButton = makeToggle();
+const debugPanel = { hidden: true };
+const manager = new window.GameManager({ testModeButton: liveTestButton, menuTestModeButton: menuTestButton, debugPanel });
+let hudRefreshes = 0;
+let renders = 0;
+manager.currentGameKey = "boxing";
+manager.currentGame = { testMode: false, updateHud() { hudRefreshes += 1; }, render() { renders += 1; } };
+manager.toggleTestMode();
+assert.strictEqual(manager.testMode, true);
+assert.strictEqual(manager.currentGame.testMode, true);
+assert.strictEqual(liveTestButton.textContent, "TEST ON");
+assert.strictEqual(menuTestButton.attributes["aria-pressed"], "true");
+assert.strictEqual(debugPanel.hidden, false);
+assert.strictEqual(hudRefreshes, 1);
+assert.strictEqual(renders, 1);
+manager.toggleTestMode();
+assert.strictEqual(manager.testMode, false);
+assert.strictEqual(debugPanel.hidden, true);
 
 const game = Object.create(WobbleBoxingGame.prototype);
 game.width = 390;

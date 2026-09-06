@@ -13,19 +13,30 @@
     JOINT_FRICTION: .965,
     RETURN_FRICTION: .91,
     JOINT_EDGE_BOUNCE: .18,
-    SHOULDER_MIN_ANGLE: -1.55,
-    SHOULDER_MAX_ANGLE: 1.55,
-    ELBOW_MIN_ANGLE: -2.55,
-    ELBOW_MAX_ANGLE: 2.55,
-    GUARD_SHOULDER_ANGLE: 1.15,
+    LEFT_SHOULDER_MIN_ANGLE: -.35,
+    LEFT_SHOULDER_MAX_ANGLE: 1.134,
+    RIGHT_SHOULDER_MIN_ANGLE: -1.134,
+    RIGHT_SHOULDER_MAX_ANGLE: .35,
+    LEFT_ELBOW_MIN_ANGLE: -2.53,
+    LEFT_ELBOW_MAX_ANGLE: -.35,
+    RIGHT_ELBOW_MIN_ANGLE: .35,
+    RIGHT_ELBOW_MAX_ANGLE: 2.53,
+    GUARD_SHOULDER_ANGLE: 1.05,
     GUARD_ELBOW_ANGLE: 2.35,
+    PLAYER_START_OFFSET: .05,
+    MAX_PUNCH_LUNGE: .075,
     BODY_ROTATION_FACTOR: .18,
     BODY_MAX_ROTATION: .22,
     BODY_ROTATION_RETURN: 7,
     BODY_ANGULAR_FRICTION: .92,
     PUNCH_BODY_SHIFT: .0045,
     GLOVE_RADIUS: .16,
+    GLOVE_SCALE: .82,
     ARM_RADIUS: .07,
+    SELF_COLLISION_ENABLED: true,
+    COLLISION_MARK_LIFETIME: .38,
+    FIGHT_LOGO_ACTIVE_OPACITY: .15,
+    CENTER_LINE_OPACITY: .16,
     ARM_COLLISION_BOUNCE: .28,
     ARM_COLLISION_COOLDOWN: 110,
     BLOCK_DAMAGE_MULTIPLIER: .1,
@@ -99,6 +110,7 @@
       this.impact = null;
       this.lastClashAt = 0;
       this.armCollisionCooldowns = new Map();
+      this.collisionMarks = [];
       this.blockedPunches = new Set();
       this.players = [this.makePlayer(0), this.makePlayer(1)];
       this.lastFrame = performance.now();
@@ -119,9 +131,9 @@
       return {
         index,
         baseX: .5,
-        baseY: index === 0 ? .32 : .68,
+        baseY: index === 0 ? .32 - CONFIG.PLAYER_START_OFFSET : .68 + CONFIG.PLAYER_START_OFFSET,
         x: .5,
-        y: index === 0 ? .32 : .68,
+        y: index === 0 ? .32 - CONFIG.PLAYER_START_OFFSET : .68 + CONFIG.PLAYER_START_OFFSET,
         vx: 0,
         vy: 0,
         facing: index === 0 ? 0 : Math.PI,
@@ -135,6 +147,7 @@
         lastPunchType: "WEAK",
         lastBlock: false,
         armCollision: false,
+        selfCollision: false,
         feedback: "",
         feedbackUntil: 0
       };
@@ -208,8 +221,18 @@
       return name === "rightShoulder" || name === "leftElbow" ? 1 : -1;
     }
 
+    jointLimits(name) {
+      return {
+        leftShoulder: [CONFIG.LEFT_SHOULDER_MIN_ANGLE, CONFIG.LEFT_SHOULDER_MAX_ANGLE],
+        rightShoulder: [CONFIG.RIGHT_SHOULDER_MIN_ANGLE, CONFIG.RIGHT_SHOULDER_MAX_ANGLE],
+        leftElbow: [CONFIG.LEFT_ELBOW_MIN_ANGLE, CONFIG.LEFT_ELBOW_MAX_ANGLE],
+        rightElbow: [CONFIG.RIGHT_ELBOW_MIN_ANGLE, CONFIG.RIGHT_ELBOW_MAX_ANGLE]
+      }[name];
+    }
+
     start() {
       this.active = true;
+      if (this.centerRivet) this.centerRivet.classList.add("fight-active");
       this.lastFrame = performance.now();
       cancelAnimationFrame(this.animationId);
       this.animationId = requestAnimationFrame((time) => this.frame(time));
@@ -217,6 +240,7 @@
 
     stop() {
       this.active = false;
+      if (this.centerRivet) this.centerRivet.classList.remove("fight-active");
       cancelAnimationFrame(this.animationId);
     }
 
@@ -236,10 +260,11 @@
 
     frame(now) {
       if (!this.active) return;
-      const dt = Math.min(.033, Math.max(.001, (now - this.lastFrame) / 1000));
-      this.fps += ((1 / dt) - this.fps) * .08;
+      const rawDt = Math.min(.033, Math.max(.001, (now - this.lastFrame) / 1000));
+      this.fps += ((1 / rawDt) - this.fps) * .08;
       this.lastFrame = now;
-      this.update(dt, now);
+      const speed = this.testMode ? (this.gameSpeed || 1) : 1;
+      this.update(rawDt * speed, now);
       this.render();
       if (this.active) this.animationId = requestAnimationFrame((time) => this.frame(time));
     }
@@ -253,6 +278,7 @@
         const previousArms = player.arms || this.calculateArms(player);
         player.previousJointAngles = {};
         player.armCollision = false;
+        player.selfCollision = false;
         player.lastBlock = false;
         const wobble = (1 - player.hp / CONFIG.BODY_HP) * .7;
         JOINT_NAMES.forEach((name) => {
@@ -262,8 +288,7 @@
           const speed = shoulder ? CONFIG.SHOULDER_SPEED : CONFIG.ELBOW_SPEED;
           const torque = shoulder ? CONFIG.SHOULDER_TORQUE : CONFIG.ELBOW_TORQUE;
           const returnSpeed = shoulder ? CONFIG.SHOULDER_RETURN_SPEED : CONFIG.ELBOW_RETURN_SPEED;
-          const minimum = name.includes("Shoulder") ? CONFIG.SHOULDER_MIN_ANGLE : CONFIG.ELBOW_MIN_ANGLE;
-          const maximum = name.includes("Shoulder") ? CONFIG.SHOULDER_MAX_ANGLE : CONFIG.ELBOW_MAX_ANGLE;
+          const [minimum, maximum] = this.jointLimits(name);
           if (joint.holding) joint.angularVelocity += this.jointDriveDirection(name) * torque * dt;
           else {
             joint.angularVelocity += (this.guardAngle(name) - joint.angle) * returnSpeed * dt;
@@ -278,8 +303,12 @@
             joint.angularVelocity *= -CONFIG.JOINT_EDGE_BOUNCE;
           }
         });
-        player.vx += (player.baseX - player.x) * CONFIG.BODY_RETURN * dt;
-        player.vy += (player.baseY - player.y) * CONFIG.BODY_RETURN * dt;
+        const lunge = Math.max(this.armExtensionProgress(player, "left"), this.armExtensionProgress(player, "right")) * CONFIG.MAX_PUNCH_LUNGE;
+        const facingForward = { x: Math.sin(player.facing), y: Math.cos(player.facing) };
+        const targetX = player.baseX + facingForward.x * lunge;
+        const targetY = player.baseY + facingForward.y * lunge;
+        player.vx += (targetX - player.x) * CONFIG.BODY_RETURN * dt;
+        player.vy += (targetY - player.y) * CONFIG.BODY_RETURN * dt;
         player.vx *= Math.pow(CONFIG.BODY_FRICTION, frameScale);
         player.vy *= Math.pow(CONFIG.BODY_FRICTION, frameScale);
         player.x += player.vx * dt;
@@ -308,6 +337,7 @@
           }
         }
         player.arms = nextArms;
+        if (CONFIG.SELF_COLLISION_ENABLED) this.resolveSelfCollision(player, previousArms, now);
         if (now > player.feedbackUntil) player.feedback = "";
       });
       this.resolveArmClash(now);
@@ -315,12 +345,21 @@
       this.shake *= Math.pow(.79, frameScale);
       if (this.impact) this.impact.life -= dt * 3.6;
       if (this.impact && this.impact.life <= 0) this.impact = null;
+      this.collisionMarks = (this.collisionMarks || []).filter((mark) => now - mark.at <= CONFIG.COLLISION_MARK_LIFETIME * 1000);
       if (!this.testMode && this.elapsed >= CONFIG.TIME_LIMIT) {
         if (Math.abs(this.players[0].hp - this.players[1].hp) < .5) return this.finish(0, "\u6642\u9593\u5207\u308c\u30fb\u4e92\u89d2\uff01");
         const winner = this.players[0].hp > this.players[1].hp ? 1 : 2;
         return this.finish(winner, "\u6642\u9593\u5207\u308c\u5224\u5b9a\uff01");
       }
       this.updateHud();
+    }
+
+    armExtensionProgress(player, side) {
+      const shoulderName = `${side}Shoulder`;
+      const elbowName = `${side}Elbow`;
+      const shoulderTravel = Math.max(0, (player.joints[shoulderName].angle - this.guardAngle(shoulderName)) * this.jointDriveDirection(shoulderName));
+      const elbowTravel = Math.max(0, (player.joints[elbowName].angle - this.guardAngle(elbowName)) * this.jointDriveDirection(elbowName));
+      return Math.min(1, shoulderTravel / 1.05 * .45 + elbowTravel / 2 * .55);
     }
 
     calculateArms(player) {
@@ -423,6 +462,7 @@
           if (now - previousCollision < CONFIG.ARM_COLLISION_COOLDOWN) continue;
           this.armCollisionCooldowns.set(key, now);
           this.lastClashAt = now;
+          this.addCollisionMark(collision, now, "#9beaf1");
           this.bounceArm(this.players[0], first, -1);
           this.bounceArm(this.players[1], second, 1);
           this.players[0].feedback = "BLOCK!";
@@ -446,6 +486,39 @@
       });
     }
 
+    resolveSelfCollision(player, previousArms, now) {
+      const scale = this.characterScale();
+      const left = player.arms.left;
+      const right = player.arms.right;
+      const glove = scale * CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE;
+      const arm = scale * CONFIG.ARM_RADIUS;
+      const checks = [
+        [this.distance(left.hand, right.hand), glove * 2, left.hand, right.hand],
+        [this.pointSegmentDistance(left.hand, right.shoulder, right.elbow), glove + arm, left.hand, right.elbow],
+        [this.pointSegmentDistance(left.hand, right.elbow, right.hand), glove + arm, left.hand, right.hand],
+        [this.pointSegmentDistance(right.hand, left.shoulder, left.elbow), glove + arm, right.hand, left.elbow],
+        [this.pointSegmentDistance(right.hand, left.elbow, left.hand), glove + arm, right.hand, left.hand],
+        [this.segmentSegmentDistance(left.elbow, left.hand, right.elbow, right.hand), arm * 2, left.elbow, right.elbow]
+      ];
+      const hit = checks.find(([distance, threshold]) => distance <= threshold);
+      if (!hit) return false;
+      JOINT_NAMES.forEach((name) => {
+        const previous = player.previousJointAngles && player.previousJointAngles[name];
+        if (Number.isFinite(previous)) player.joints[name].angle = previous;
+        player.joints[name].angularVelocity *= -CONFIG.ARM_COLLISION_BOUNCE;
+      });
+      player.selfCollision = true;
+      player.armCollision = true;
+      player.arms = previousArms;
+      this.addCollisionMark({ x: (hit[2].x + hit[3].x) / 2, y: (hit[2].y + hit[3].y) / 2 }, now, "#ff75df");
+      return true;
+    }
+
+    addCollisionMark(point, now, color) {
+      if (!this.collisionMarks) this.collisionMarks = [];
+      this.collisionMarks.push({ x: point.x, y: point.y, at: now, color });
+    }
+
     bounceArm(player, side, bodyDirection) {
       for (const name of [`${side}Shoulder`, `${side}Elbow`]) {
         const joint = player.joints[name];
@@ -457,7 +530,7 @@
     }
 
     armCollision(a, b, scale) {
-      const glove = scale * CONFIG.GLOVE_RADIUS;
+      const glove = scale * CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE;
       const arm = scale * CONFIG.ARM_RADIUS;
       const checks = [
         [this.distance(a.hand, b.hand), glove * 2, a.hand, b.hand],
@@ -513,14 +586,15 @@
       return {
         body: { x: player.x * this.width, y: player.y * this.height, radius: scale * .38 },
         head: { x: player.x * this.width + Math.sin(rotation) * scale * .23, y: player.y * this.height + Math.cos(rotation) * scale * .23, radius: scale * .22 },
-        fistRadius: Math.max(9, scale * CONFIG.GLOVE_RADIUS)
+        fistRadius: Math.max(8, scale * CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE)
       };
     }
 
     isGuarded(point, player) {
       const scale = this.characterScale();
-      const armThreshold = scale * (CONFIG.ARM_RADIUS + CONFIG.GLOVE_RADIUS);
-      const gloveThreshold = scale * CONFIG.GLOVE_RADIUS * 2;
+      const gloveRadius = CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE;
+      const armThreshold = scale * (CONFIG.ARM_RADIUS + gloveRadius);
+      const gloveThreshold = scale * gloveRadius * 2;
       return ["left", "right"].some((side) => {
         const arm = player.arms[side];
         return this.distance(point, arm.hand) <= gloveThreshold
@@ -560,7 +634,10 @@
       });
       if (this.debug || this.testMode) {
         const lines = [];
-        if (this.testMode) lines.push("TEST MODE  TIME ∞");
+        if (this.testMode) {
+          lines.push(`TEST MODE  TIME ∞  SPEED ${(this.gameSpeed || 1).toFixed(2)}x`);
+          lines.push(`DIST ${(CONFIG.PLAYER_START_OFFSET * 200).toFixed(0)}%  GLOVE ${(CONFIG.GLOVE_SCALE * 100).toFixed(0)}%  LUNGE ${(CONFIG.MAX_PUNCH_LUNGE * 100).toFixed(1)}%`);
+        }
         this.players.forEach((player, index) => {
           const prefix = `P${index + 1}`;
           if (this.testMode && !this.debug) {
@@ -613,6 +690,7 @@
         { player: this.players[1], color: "#ff5a51" }
       ].sort((a, b) => Math.max(a.player.arms.left.speed, a.player.arms.right.speed) - Math.max(b.player.arms.left.speed, b.player.arms.right.speed));
       drawOrder.forEach(({ player, color }) => this.drawPlayer(ctx, player, color));
+      if (this.testMode) this.drawTestOverlay(ctx);
       if (this.impact) this.drawImpact(ctx, this.impact);
       this.drawFeedback(ctx);
       const remaining = this.testMode ? "∞" : Math.max(0, CONFIG.TIME_LIMIT - this.elapsed).toFixed(0);
@@ -654,12 +732,13 @@
         ctx.stroke();
       });
       ctx.setLineDash([7, 9]);
-      ctx.strokeStyle = "rgba(255,255,255,.28)";
+      ctx.strokeStyle = `rgba(255,255,255,${CONFIG.CENTER_LINE_OPACITY})`;
       ctx.beginPath();
       ctx.moveTo(x + 12, h / 2);
       ctx.lineTo(x + ringWidth - 12, h / 2);
       ctx.stroke();
       ctx.setLineDash([]);
+      ctx.globalAlpha = this.active ? CONFIG.FIGHT_LOGO_ACTIVE_OPACITY : 1;
       ctx.fillStyle = "rgba(5,17,27,.62)";
       ctx.beginPath();
       ctx.arc(w / 2, h / 2, Math.min(27, ringWidth * .075), 0, Math.PI * 2);
@@ -672,6 +751,7 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("FIGHT", w / 2, h / 2);
+      ctx.globalAlpha = 1;
       ctx.restore();
     }
 
@@ -741,30 +821,88 @@
     }
 
     drawGlove(ctx, arm, color, scale) {
+      const gloveScale = CONFIG.GLOVE_SCALE;
       const angle = Math.atan2(arm.hand.y - arm.elbow.y, arm.hand.x - arm.elbow.x);
       ctx.save();
       ctx.translate(arm.hand.x, arm.hand.y);
       ctx.rotate(angle);
       ctx.fillStyle = "rgba(0,0,0,.34)";
       ctx.beginPath();
-      ctx.ellipse(3, 3, scale * .18, scale * .135, 0, 0, Math.PI * 2);
+      ctx.ellipse(3, 3, scale * .18 * gloveScale, scale * .135 * gloveScale, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.ellipse(0, 0, scale * .18, scale * .135, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, scale * .18 * gloveScale, scale * .135 * gloveScale, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.beginPath();
-      ctx.ellipse(-scale * .03, scale * .12, scale * .075, scale * .065, -.35, 0, Math.PI * 2);
+      ctx.ellipse(-scale * .03 * gloveScale, scale * .12 * gloveScale, scale * .075 * gloveScale, scale * .065 * gloveScale, -.35, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = "#fff8df";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.ellipse(0, 0, scale * .18, scale * .135, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, scale * .18 * gloveScale, scale * .135 * gloveScale, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(-scale * .12, 0);
-      ctx.lineTo(scale * .11, 0);
+      ctx.moveTo(-scale * .12 * gloveScale, 0);
+      ctx.lineTo(scale * .11 * gloveScale, 0);
       ctx.stroke();
+      ctx.restore();
+    }
+
+    drawTestOverlay(ctx) {
+      const scale = this.characterScale();
+      const glove = scale * CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE;
+      ctx.save();
+      ctx.lineWidth = 1.25;
+      ctx.setLineDash([4, 5]);
+      this.players.forEach((player, index) => {
+        const color = index === 0 ? "#76f4ff" : "#ff8c86";
+        const geometry = this.targetGeometry(player);
+        const center = { x: player.x * this.width, y: player.y * this.height };
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = .72;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, scale * (CONFIG.UPPER_ARM_LENGTH + CONFIG.FOREARM_LENGTH), 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y - scale * .58);
+        ctx.lineTo(center.x, center.y + scale * .58);
+        ctx.stroke();
+        for (const side of ["left", "right"]) {
+          const arm = player.arms[side];
+          ctx.beginPath();
+          ctx.moveTo(arm.shoulder.x, arm.shoulder.y);
+          ctx.lineTo(arm.elbow.x, arm.elbow.y);
+          ctx.lineTo(arm.hand.x, arm.hand.y);
+          ctx.stroke();
+          for (const point of [arm.shoulder, arm.elbow, arm.hand]) {
+            ctx.fillStyle = point === arm.hand ? "#fff" : color;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, point === arm.hand ? 3.5 : 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.beginPath();
+          ctx.arc(arm.hand.x, arm.hand.y, glove, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(geometry.head.x, geometry.head.y, geometry.head.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(geometry.body.x, geometry.body.y, geometry.body.radius, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+      ctx.lineWidth = 3;
+      (this.collisionMarks || []).forEach((mark) => {
+        ctx.strokeStyle = mark.color;
+        ctx.beginPath();
+        ctx.moveTo(mark.x - 7, mark.y - 7);
+        ctx.lineTo(mark.x + 7, mark.y + 7);
+        ctx.moveTo(mark.x + 7, mark.y - 7);
+        ctx.lineTo(mark.x - 7, mark.y + 7);
+        ctx.stroke();
+      });
       ctx.restore();
     }
 

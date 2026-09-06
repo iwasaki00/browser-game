@@ -25,6 +25,7 @@ for(const weapon of Object.values(WEAPONS))assert(Number.isInteger(weapon.segmen
 for(const id of ['ccw0','lock0','cw0','ccw1','lock1','cw1','weapon0','weapon1'])assert(html.includes('id="'+id+'"'),'Missing control or HUD element: '+id);
 for(const mapping of ["a:[0,'ccw']","s:[0,'lock']","d:[0,'cw']","j:[1,'ccw']","k:[1,'lock']","l:[1,'cw']"])assert(gameSource.includes(mapping),'Missing keyboard mapping: '+mapping);
 for(const token of ['p.nodes.length','weapon.damageMultiplier','WEAPON_IDS[Math.floor(Math.random()','state=\'countdown\'','countdownNumber','setPointerCapture','pointercancel','lostpointercapture','MIN_HIT_SPEED','MAX_DAMAGE_PER_HIT','normalizedPosition','Math.sqrt','hitCooldowns','TIP HIT','CRITICAL'])assert(gameSource.includes(token),'Missing upgraded game behavior: '+token);
+for(const token of ['CHAOS_CONFIG','EVENT_CONFIG','GAME_CONFIG','OVER CHAOS','LOW GRAVITY','REVERSE GRAVITY','spawnBomb','explodeBomb','JOINT BREAK','stepDebris','adaptCpuToHazards'])assert(gameSource.includes(token),'Missing chaos feature: '+token);
 assert(!gameSource.includes("input.swing")&&!gameSource.includes("nodes[3]"),'Legacy one-way or fixed-three-segment physics remains');
 for(const token of ['touch-action:none','user-select:none'])assert(fs.readFileSync(path.join(root,'style.css'),'utf8').includes(token),'Base touch safeguard missing: '+token);
 for(const token of ['safe-area-inset-top','safe-area-inset-bottom','overscroll-behavior'])assert(mobileCss.includes(token),'iPhone safeguard missing: '+token);
