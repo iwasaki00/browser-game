@@ -86,12 +86,13 @@
 
 .weapon-select-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
 .weapon-panel {
   --accent: var(--cyan);
+  min-width: 0;
   padding: 14px;
   background: rgba(8, 17, 29, .92);
   border: 1px solid color-mix(in srgb, var(--accent) 35%, #243042);
@@ -116,9 +117,14 @@
 
 .weapon-switcher {
   display: grid;
-  grid-template-columns: 44px 1fr 44px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 7px;
+}
+
+.weapon-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .weapon-switcher button {

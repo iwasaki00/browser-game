@@ -76,5 +76,6 @@ window.addEventListener('keyup',e=>{const key=keys[e.key.toLowerCase()];if(!key)
 window.addEventListener('blur',()=>{clearInput();if(state==='running')pause();});
 window.addEventListener('pagehide',()=>{clearInput();if(state==='running')pause();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='running')pause();});
-window.addEventListener('resize',()=>{if(state==='running')pause();resize();});
+let viewportWidth=window.innerWidth;
+window.addEventListener('resize',()=>{const nextWidth=window.innerWidth;if(Math.abs(nextWidth-viewportWidth)<2)return;viewportWidth=nextWidth;if(state==='running')pause();resize();});
 bindMenu();resize();requestAnimationFrame(frame);
