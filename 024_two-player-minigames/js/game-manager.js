@@ -5,7 +5,9 @@
       this.elements = elements; this.scores = [0, 0]; this.currentGame = null; this.countdownTimers = [];
       this.currentGameKey = "sumo";
       this.audioContext = null; this.muted = false;
-      this.debug = new URLSearchParams(location.search).get("debug") === "1";
+      const params = new URLSearchParams(location.search);
+      this.debug = params.get("debug") === "1";
+      this.testMode = params.get("test") === "1";
       elements.debugPanel.hidden = !this.debug;
     }
     launchSumo() {
@@ -26,7 +28,9 @@
       this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); });
     }
     configureGameScreen() {
+      this.elements.debugPanel.hidden = !this.debug;
       if (this.currentGameKey === "boxing") {
+        this.elements.debugPanel.hidden = !(this.debug || this.testMode);
         this.elements.gameScreen.dataset.game = "boxing";
         this.elements.gameScreen.setAttribute("aria-label", "\u3088\u308d\u3088\u308d\u30dc\u30af\u30b7\u30f3\u30b0 \u5bfe\u6226\u753b\u9762");
         this.elements.canvas.setAttribute("aria-label", "\u771f\u4e0a\u304b\u3089\u898b\u305f2\u4f53\u306e\u30ed\u30dc\u30c3\u30c8\u30dc\u30af\u30b5\u30fc");
@@ -66,7 +70,7 @@
         spriteUrl: boxing ? "./assets/wobble-boxer-torso.png" : bomb ? "./assets/bomb-topdown.png" : undefined,
         jointButtons: this.elements.jointButtons,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
-        debugPanel: this.elements.debugPanel, debug: this.debug,
+        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: boxing && this.testMode,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
         onGoodSound: (player) => this.playGood(player),
         onChargeSound: (player) => this.playCharge(player),

@@ -111,10 +111,10 @@
 
     makePlayer(index) {
       const joints = {
-        leftShoulder: { angle: -CONFIG.GUARD_SHOULDER_ANGLE, angularVelocity: 0, holding: false },
-        rightShoulder: { angle: CONFIG.GUARD_SHOULDER_ANGLE, angularVelocity: 0, holding: false },
-        leftElbow: { angle: CONFIG.GUARD_ELBOW_ANGLE, angularVelocity: 0, holding: false },
-        rightElbow: { angle: -CONFIG.GUARD_ELBOW_ANGLE, angularVelocity: 0, holding: false }
+        leftShoulder: { angle: CONFIG.GUARD_SHOULDER_ANGLE, angularVelocity: 0, holding: false },
+        rightShoulder: { angle: -CONFIG.GUARD_SHOULDER_ANGLE, angularVelocity: 0, holding: false },
+        leftElbow: { angle: -CONFIG.GUARD_ELBOW_ANGLE, angularVelocity: 0, holding: false },
+        rightElbow: { angle: CONFIG.GUARD_ELBOW_ANGLE, angularVelocity: 0, holding: false }
       };
       return {
         index,
@@ -198,14 +198,14 @@
     }
 
     guardAngle(name) {
-      if (name === "leftShoulder") return -CONFIG.GUARD_SHOULDER_ANGLE;
-      if (name === "rightShoulder") return CONFIG.GUARD_SHOULDER_ANGLE;
-      if (name === "leftElbow") return CONFIG.GUARD_ELBOW_ANGLE;
-      return -CONFIG.GUARD_ELBOW_ANGLE;
+      if (name === "leftShoulder") return CONFIG.GUARD_SHOULDER_ANGLE;
+      if (name === "rightShoulder") return -CONFIG.GUARD_SHOULDER_ANGLE;
+      if (name === "leftElbow") return -CONFIG.GUARD_ELBOW_ANGLE;
+      return CONFIG.GUARD_ELBOW_ANGLE;
     }
 
     jointDriveDirection(name) {
-      return name === "leftShoulder" || name === "rightElbow" ? 1 : -1;
+      return name === "rightShoulder" || name === "leftElbow" ? 1 : -1;
     }
 
     start() {
@@ -286,8 +286,8 @@
         player.y += player.vy * dt;
         player.x = Math.max(.34, Math.min(.66, player.x));
         player.y = player.index === 0 ? Math.max(.22, Math.min(.44, player.y)) : Math.max(.56, Math.min(.78, player.y));
-        const leftDrive = Math.max(0, player.joints.leftShoulder.angle + CONFIG.GUARD_SHOULDER_ANGLE);
-        const rightDrive = Math.max(0, CONFIG.GUARD_SHOULDER_ANGLE - player.joints.rightShoulder.angle);
+        const leftDrive = Math.max(0, CONFIG.GUARD_SHOULDER_ANGLE - player.joints.leftShoulder.angle);
+        const rightDrive = Math.max(0, player.joints.rightShoulder.angle + CONFIG.GUARD_SHOULDER_ANGLE);
         const bodyTarget = Math.max(-CONFIG.BODY_MAX_ROTATION, Math.min(CONFIG.BODY_MAX_ROTATION, (leftDrive - rightDrive) * CONFIG.BODY_ROTATION_FACTOR));
         player.angularVelocity += (bodyTarget - player.bodyAngle) * CONFIG.BODY_ROTATION_RETURN * dt;
         player.angularVelocity *= Math.pow(CONFIG.BODY_ANGULAR_FRICTION, frameScale);
@@ -315,7 +315,7 @@
       this.shake *= Math.pow(.79, frameScale);
       if (this.impact) this.impact.life -= dt * 3.6;
       if (this.impact && this.impact.life <= 0) this.impact = null;
-      if (this.elapsed >= CONFIG.TIME_LIMIT) {
+      if (!this.testMode && this.elapsed >= CONFIG.TIME_LIMIT) {
         if (Math.abs(this.players[0].hp - this.players[1].hp) < .5) return this.finish(0, "\u6642\u9593\u5207\u308c\u30fb\u4e92\u89d2\uff01");
         const winner = this.players[0].hp > this.players[1].hp ? 1 : 2;
         return this.finish(winner, "\u6642\u9593\u5207\u308c\u5224\u5b9a\uff01");
@@ -492,9 +492,8 @@
     classifyPunch(player, side, arm, directionScore) {
       const shoulder = player.joints[`${side}Shoulder`];
       const elbow = player.joints[`${side}Elbow`];
-      const drive = side === "left" ? 1 : -1;
-      const shoulderDrive = Math.max(0, shoulder.angularVelocity * drive);
-      const elbowDrive = Math.max(0, elbow.angularVelocity * -drive);
+      const shoulderDrive = Math.max(0, shoulder.angularVelocity * this.jointDriveDirection(`${side}Shoulder`));
+      const elbowDrive = Math.max(0, elbow.angularVelocity * this.jointDriveDirection(`${side}Elbow`));
       const rotation = player.facing + player.bodyAngle;
       const lateral = Math.abs(arm.vx * Math.cos(rotation) - arm.vy * Math.sin(rotation)) / Math.max(1, arm.speed);
       let type = "WEAK";
@@ -559,10 +558,17 @@
         this.energyBars[index].style.transform = `scaleX(${ratio.toFixed(3)})`;
         this.energyBars[index].classList.toggle("tired", ratio < .3);
       });
-      if (this.debug) {
+      if (this.debug || this.testMode) {
         const lines = [];
+        if (this.testMode) lines.push("TEST MODE  TIME ∞");
         this.players.forEach((player, index) => {
           const prefix = `P${index + 1}`;
+          if (this.testMode && !this.debug) {
+            const degrees = (value) => (value * 180 / Math.PI).toFixed(1);
+            lines.push(`${prefix} 左肩 ${degrees(player.joints.leftShoulder.angle)}°  右肩 ${degrees(player.joints.rightShoulder.angle)}°`);
+            lines.push(`${prefix} 左肘 ${degrees(player.joints.leftElbow.angle)}°  右肘 ${degrees(player.joints.rightElbow.angle)}°`);
+            return;
+          }
           lines.push(`${prefix} LS ${player.joints.leftShoulder.angle.toFixed(2)}  LE ${player.joints.leftElbow.angle.toFixed(2)}`);
           lines.push(`${prefix} RS ${player.joints.rightShoulder.angle.toFixed(2)}  RE ${player.joints.rightElbow.angle.toFixed(2)}`);
           lines.push(`${prefix} L ${player.arms.left.hand.x.toFixed(0)},${player.arms.left.hand.y.toFixed(0)} ${player.arms.left.speed.toFixed(0)}px/s`);
@@ -570,7 +576,7 @@
           lines.push(`${prefix} body ${player.bodyAngle.toFixed(2)}  ${player.lastPunchType}  power ${player.lastHitPower.toFixed(1)}`);
           lines.push(`${prefix} block ${player.lastBlock ? "YES" : "NO"}  arm clash ${player.armCollision ? "YES" : "NO"}`);
         });
-        lines.push(`elapsed ${this.elapsed.toFixed(1)}s`, `FPS ${Math.round(this.fps)}`);
+        if (this.debug) lines.push(`elapsed ${this.elapsed.toFixed(1)}s`, `FPS ${Math.round(this.fps)}`);
         this.debugPanel.textContent = lines.join("\n");
       }
     }
@@ -609,7 +615,7 @@
       drawOrder.forEach(({ player, color }) => this.drawPlayer(ctx, player, color));
       if (this.impact) this.drawImpact(ctx, this.impact);
       this.drawFeedback(ctx);
-      const remaining = Math.max(0, CONFIG.TIME_LIMIT - this.elapsed).toFixed(0);
+      const remaining = this.testMode ? "∞" : Math.max(0, CONFIG.TIME_LIMIT - this.elapsed).toFixed(0);
       ctx.fillStyle = "rgba(255,248,223,.72)";
       ctx.font = `900 ${Math.max(11, Math.min(15, h * .028))}px ui-monospace, Consolas, monospace`;
       ctx.textAlign = "center";
