@@ -4,310 +4,171 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = {};
-const source = fs.readFileSync(path.join(__dirname, "..", "js", "games", "wobble-boxing.js"), "utf8");
-const managerSource = fs.readFileSync(path.join(__dirname, "..", "js", "game-manager.js"), "utf8");
-const appSource = fs.readFileSync(path.join(__dirname, "..", "js", "app.js"), "utf8");
-const indexSource = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-const styleSource = fs.readFileSync(path.join(__dirname, "..", "css", "style.css"), "utf8");
-const boxingCss = fs.readFileSync(path.join(__dirname, "..", "css", "boxing.css"), "utf8");
-vm.runInThisContext(source, { filename: "wobble-boxing.js" });
-
-const WobbleBoxingGame = window.WobbleBoxingGame;
+const read = (file) => fs.readFileSync(path.join(__dirname, "..", file), "utf8");
+const source = read("js/games/wobble-boxing-sideview.js");
+const managerSource = read("js/game-manager.js");
+const appSource = read("js/app.js");
+const indexSource = read("index.html");
+const styleSource = read("css/style.css");
+const boxingCss = read("css/boxing.css");
+vm.runInThisContext(source, { filename: "wobble-boxing-sideview.js" });
+const Game = window.WobbleBoxingGame;
 const CONFIG = window.WOBBLE_BOXING_CONFIG;
-assert.ok(WobbleBoxingGame);
+
+assert.ok(Game && CONFIG);
 assert.strictEqual(CONFIG.BODY_HP, 100);
+assert.ok(CONFIG.GRAVITY > 0 && CONFIG.AUTO_BALANCE > 0);
+assert.ok(CONFIG.FALL_DURATION >= 1000);
 assert.ok(CONFIG.HEAD_DAMAGE_MULTIPLIER > 1);
-assert.ok(CONFIG.MIN_HIT_SPEED > 0);
-assert.ok(CONFIG.SHOULDER_TORQUE > 0);
-assert.ok(CONFIG.ELBOW_TORQUE > CONFIG.SHOULDER_TORQUE);
-assert.ok(CONFIG.JOINT_FRICTION > 0 && CONFIG.JOINT_FRICTION < 1);
-assert.ok(CONFIG.UPPER_ARM_LENGTH <= .62);
-assert.ok(CONFIG.FOREARM_LENGTH <= .6);
-assert.ok(CONFIG.BLOCK_DAMAGE_MULTIPLIER <= .2);
-assert.ok(CONFIG.PLAYER_START_OFFSET >= .05 && CONFIG.PLAYER_START_OFFSET <= .08);
-assert.strictEqual(CONFIG.GLOVE_SCALE, .82);
-assert.strictEqual(CONFIG.SELF_COLLISION_ENABLED, true);
-assert.ok(CONFIG.FIGHT_LOGO_ACTIVE_OPACITY >= .1 && CONFIG.FIGHT_LOGO_ACTIVE_OPACITY <= .2);
-assert.match(managerSource, /wobble-boxer-torso\.png/);
-assert.match(managerSource, /params\.get\("test"\) === "1"/);
-assert.match(managerSource, /testMode: boxing && this\.testMode/);
-assert.match(indexSource, /id="menuTestModeButton"/);
-assert.match(indexSource, /id="testModeButton"/);
+assert.ok(CONFIG.BLOCK_DAMAGE_MULTIPLIER <= .1);
+assert.match(indexSource, /wobble-boxing-sideview\.js/);
+assert.match(indexSource, /data-joint="frontShoulder"/);
+assert.match(indexSource, /data-joint="backElbow"/);
+assert.match(managerSource, /横から見たリング/);
 assert.match(indexSource, /id="testSpeedButton"/);
-assert.match(appSource, /manager\.toggleTestMode\(\)/);
 assert.match(appSource, /manager\.cycleTestSpeed\(\)/);
-assert.match(styleSource, /\.test-mode-button\[aria-pressed="true"\]/);
+assert.match(styleSource, /\.test-speed-button/);
+assert.match(boxingCss, /\.joint-grid\s*\{[\s\S]*?grid-template-columns/);
+assert.match(source, /drawArena\(/);
+assert.match(source, /drawTestOverlay\(/);
 assert.match(source, /removeEventListener\("pointerdown"/);
 assert.doesNotMatch(source, /Matter\./);
-assert.match(boxingCss, /\.countdown\s*\{[\s\S]*?z-index:\s*12/);
-assert.match(boxingCss, /\.control-zone::before\s*\{[\s\S]*?pointer-events:\s*none/);
-assert.match(boxingCss, /\.joint-grid\s*\{[\s\S]*?position:\s*relative/);
-assert.match(boxingCss, /\.joint-direction\s*\{[\s\S]*?display:\s*none/);
-assert.match(source, /drawGlove\(/);
-assert.doesNotMatch(source, /direction \*= -1/);
 
 global.location = { search: "" };
 vm.runInThisContext(managerSource, { filename: "game-manager.js" });
-const makeToggle = () => ({
-  textContent: "",
-  attributes: {},
-  setAttribute(name, value) { this.attributes[name] = value; }
+const button = () => ({ textContent: "", hidden: false, attributes: {}, setAttribute(k, v) { this.attributes[k] = v; } });
+const speedButton = button();
+const manager = new window.GameManager({
+  testModeButton: button(), menuTestModeButton: button(), testSpeedButton: speedButton,
+  debugPanel: { hidden: true }
 });
-const liveTestButton = makeToggle();
-const menuTestButton = makeToggle();
-const speedButton = { ...makeToggle(), hidden: true };
-const debugPanel = { hidden: true };
-const manager = new window.GameManager({ testModeButton: liveTestButton, menuTestModeButton: menuTestButton, testSpeedButton: speedButton, debugPanel });
-let hudRefreshes = 0;
-let renders = 0;
 manager.currentGameKey = "boxing";
-manager.currentGame = { testMode: false, updateHud() { hudRefreshes += 1; }, render() { renders += 1; } };
+manager.currentGame = { testMode: false, gameSpeed: 1, updateHud() {}, render() {} };
 manager.toggleTestMode();
-assert.strictEqual(manager.testMode, true);
-assert.strictEqual(manager.currentGame.testMode, true);
-assert.strictEqual(liveTestButton.textContent, "TEST ON");
-assert.strictEqual(menuTestButton.attributes["aria-pressed"], "true");
-assert.strictEqual(debugPanel.hidden, false);
-assert.strictEqual(hudRefreshes, 1);
-assert.strictEqual(renders, 1);
 assert.strictEqual(speedButton.hidden, false);
 manager.cycleTestSpeed();
-assert.strictEqual(manager.testSpeed, .5);
 assert.strictEqual(manager.currentGame.gameSpeed, .5);
-assert.strictEqual(speedButton.textContent, "0.5x");
-manager.toggleTestMode();
-assert.strictEqual(manager.testMode, false);
-assert.strictEqual(debugPanel.hidden, true);
-assert.strictEqual(speedButton.hidden, true);
+manager.cycleTestSpeed();
+assert.strictEqual(manager.currentGame.gameSpeed, .25);
+manager.cycleTestSpeed();
+assert.strictEqual(manager.currentGame.gameSpeed, 1);
 
-const game = Object.create(WobbleBoxingGame.prototype);
+const game = Object.create(Game.prototype);
 game.width = 390;
 game.height = 520;
 const p1 = game.makePlayer(0);
 const p2 = game.makePlayer(1);
-const first = game.calculateArms(p1);
-const second = game.calculateArms(p2);
-const ownHead = game.targetGeometry(p1).head;
-assert.strictEqual(p1.joints.leftShoulder.angle, CONFIG.GUARD_SHOULDER_ANGLE);
-assert.strictEqual(p1.joints.rightShoulder.angle, -CONFIG.GUARD_SHOULDER_ANGLE);
-assert.ok(first.left.shoulder.x > first.right.shoulder.x, "top player's left arm must be on their own left");
-assert.ok(second.left.shoulder.x < second.right.shoulder.x, "bottom player's left arm must be on their own left");
-assert.ok(game.distance(first.left.hand, ownHead) < game.characterScale() * .5, "left fist must begin beside the head in guard");
-assert.ok(game.distance(first.right.hand, ownHead) < game.characterScale() * .5, "right fist must begin beside the head in guard");
-const gloveDiameter = game.characterScale() * CONFIG.GLOVE_RADIUS * CONFIG.GLOVE_SCALE * 2;
-assert.ok(game.distance(first.left.hand, first.right.hand) > gloveDiameter, "guard fists must not overlap");
-assert.strictEqual(game.armCollision(first.left, second.left, game.characterScale()), null, "players must begin clearly separated");
-p1.joints.leftShoulder.angle += .45;
-const moved = game.calculateArms(p1);
-assert.notStrictEqual(first.left.hand.x, moved.left.hand.x, "shoulder angle must move the fist");
-assert.notStrictEqual(first.left.hand.y, moved.left.hand.y, "two-link arm must update fist coordinates");
+p1.pose = game.calculatePose(p1);
+p2.pose = game.calculatePose(p2);
+assert.strictEqual(p1.facing, 1);
+assert.strictEqual(p2.facing, -1);
+assert.ok(p1.x < p2.x);
+assert.ok(p1.pose.head.y < p1.pose.hip.y);
+assert.ok(p1.pose.feet.every((foot) => Math.abs(foot.y - CONFIG.GROUND_Y * game.height) < .001));
+assert.ok(p1.pose.arms.front.hand.x > p1.pose.arms.front.shoulder.x);
+assert.ok(p2.pose.arms.front.hand.x < p2.pose.arms.front.shoulder.x);
 
 const targetAtRest = game.targetGeometry(p2);
-p1.y = p1.baseY + CONFIG.MAX_PUNCH_LUNGE;
-p1.joints.leftShoulder.angle = 0;
-p1.joints.leftElbow.angle = CONFIG.LEFT_ELBOW_MAX_ANGLE;
-const aimedArm = game.calculateArms(p1).left;
+assert.ok(game.distance(p1.pose.arms.front.hand, targetAtRest.head) > targetAtRest.head.radius + targetAtRest.fistRadius);
+p1.joints.frontShoulder.angle = 0;
+p1.joints.frontElbow.angle = CONFIG.ELBOW_MAX_ANGLE;
+p1.pose = game.calculatePose(p1);
 assert.ok(
-  game.distance(aimedArm.hand, targetAtRest.head) <= targetAtRest.head.radius + targetAtRest.fistRadius,
-  "a fully extended arm must be able to reach the opponent's head"
+  game.distance(p1.pose.arms.front.hand, targetAtRest.head) <= targetAtRest.head.radius + targetAtRest.fistRadius,
+  "coordinated extension must reach"
 );
-for (const [name, joint] of Object.entries(p1.joints)) {
-  const [minimum, maximum] = game.jointLimits(name);
-  assert.ok(joint.angle >= minimum && joint.angle <= maximum, `${name} must stay inside its natural range`);
+
+const makeSimulation = (testMode = false) => {
+  const sim = Object.create(Game.prototype);
+  Object.assign(sim, {
+    width: 390, height: 520, active: true, testMode, elapsed: 0, shake: 0,
+    impact: null, collisionMarks: [], blockedPunches: new Set()
+  });
+  sim.players = [sim.makePlayer(0), sim.makePlayer(1)];
+  sim.players.forEach((player) => { player.pose = sim.calculatePose(player); });
+  sim.resolveHits = () => {};
+  sim.resolveArmClashes = () => {};
+  sim.updateHud = () => {};
+  sim.jointButtons = [[{ classList: { remove() {} } }], [{ classList: { remove() {} } }]];
+  return sim;
+};
+
+const motion = makeSimulation();
+const elbowBefore = motion.players[0].joints.frontElbow.angle;
+motion.players[0].joints.frontElbow.holding = true;
+motion.update(.05, 1000);
+assert.ok(motion.players[0].joints.frontElbow.angle > elbowBefore);
+assert.notStrictEqual(motion.players[0].angularVelocity, 0);
+for (let frame = 0; frame < 180; frame += 1) motion.update(1 / 60, 1100 + frame * 16.7);
+for (const [name, joint] of Object.entries(motion.players[0].joints)) {
+  const [minimum, maximum] = motion.jointLimits(name);
+  assert.ok(joint.angle >= minimum && joint.angle <= maximum);
 }
 
-const motion = Object.create(WobbleBoxingGame.prototype);
-motion.width = 390;
-motion.height = 520;
-motion.active = true;
-motion.elapsed = 0;
-motion.lastClashAt = 0;
-motion.shake = 0;
-motion.impact = null;
-motion.players = [motion.makePlayer(0), motion.makePlayer(1)];
-motion.players.forEach((player) => { player.arms = motion.calculateArms(player); });
-motion.resolveHits = () => {};
-motion.resolveArmClash = () => {};
-motion.updateHud = () => {};
-const shoulderBefore = motion.players[0].joints.leftShoulder.angle;
-motion.players[0].joints.leftShoulder.holding = true;
-motion.update(.1, 1000);
-assert.ok(motion.players[0].joints.leftShoulder.angle < shoulderBefore, "holding a joint control must rotate that joint");
-const poweredAngle = motion.players[0].joints.leftShoulder.angle;
-const poweredVelocity = motion.players[0].joints.leftShoulder.angularVelocity;
-motion.players[0].joints.leftShoulder.holding = false;
-motion.update(.05, 1050);
-assert.ok(motion.players[0].joints.leftShoulder.angle < poweredAngle, "a released joint must keep rotating through inertia");
-assert.ok(
-  motion.players[0].joints.leftShoulder.angularVelocity < 0
-    && motion.players[0].joints.leftShoulder.angularVelocity > poweredVelocity,
-  "joint inertia must decay through friction"
-);
-const releasedDistance = Math.abs(motion.players[0].joints.leftShoulder.angle - motion.guardAngle("leftShoulder"));
-for (let index = 0; index < 120; index += 1) motion.update(1 / 60, 1100 + index * 16.7);
-assert.ok(
-  Math.abs(motion.players[0].joints.leftShoulder.angle - motion.guardAngle("leftShoulder")) < releasedDistance,
-  "a released joint must return toward its guard angle"
-);
+const fallGame = makeSimulation();
+const falling = fallGame.players[0];
+falling.bodyAngle = .95;
+fallGame.updateBody(falling, 1 / 60, 1, 2000);
+assert.strictEqual(falling.state, "FALL");
+fallGame.updateState(falling, falling.stateUntil + 1);
+assert.strictEqual(falling.state, "RECOVER");
 
-const twist = Object.create(WobbleBoxingGame.prototype);
-twist.width = 390;
-twist.height = 520;
-twist.active = true;
-twist.elapsed = 0;
-twist.shake = 0;
-twist.impact = null;
-twist.players = [twist.makePlayer(0), twist.makePlayer(1)];
-twist.players.forEach((player) => { player.arms = twist.calculateArms(player); });
-twist.resolveHits = () => {};
-twist.resolveArmClash = () => {};
-twist.updateHud = () => {};
-twist.players[0].joints.leftShoulder.holding = true;
-for (let index = 0; index < 45; index += 1) twist.update(1 / 60, 1000 + index * 16.7);
-assert.ok(Math.abs(twist.players[0].bodyAngle) > .025, "shoulder drive must rotate the torso");
-assert.ok(Math.abs(twist.players[0].bodyAngle) <= CONFIG.BODY_MAX_ROTATION, "torso rotation must stay subtle");
-
-const punchPlayer = game.makePlayer(0);
-punchPlayer.joints.leftShoulder.angularVelocity = -2;
-punchPlayer.joints.leftElbow.angularVelocity = 3;
-let punch = game.classifyPunch(punchPlayer, "left", { vx: 15, vy: 220, speed: 221 }, .95);
-assert.strictEqual(punch.type, "STRAIGHT", "coordinated shoulder and elbow drive must produce a straight");
-punchPlayer.joints.leftElbow.angle = 1;
-punch = game.classifyPunch(punchPlayer, "left", { vx: 210, vy: 70, speed: 221 }, .35);
-assert.strictEqual(punch.type, "HOOK", "fast lateral motion with a bent elbow must produce a hook");
-
-const testHud = Object.create(WobbleBoxingGame.prototype);
-testHud.width = 390;
-testHud.height = 520;
-testHud.testMode = true;
-testHud.debug = false;
-testHud.players = [testHud.makePlayer(0), testHud.makePlayer(1)];
-testHud.players.forEach((player) => { player.arms = testHud.calculateArms(player); });
-testHud.energyBars = [0, 1].map(() => ({ style: {}, classList: { toggle() {} } }));
-testHud.debugPanel = { textContent: "" };
-testHud.updateHud();
-assert.match(testHud.debugPanel.textContent, /TEST MODE  TIME/);
-assert.ok(testHud.debugPanel.textContent.includes("\u5de6\u80a9"));
-assert.ok(testHud.debugPanel.textContent.includes("\u53f3\u8098"));
-
-const endless = Object.create(WobbleBoxingGame.prototype);
-endless.width = 390;
-endless.height = 520;
-endless.active = true;
-endless.testMode = true;
-endless.elapsed = CONFIG.TIME_LIMIT - .01;
-endless.shake = 0;
-endless.impact = null;
-endless.players = [endless.makePlayer(0), endless.makePlayer(1)];
-endless.players.forEach((player) => { player.arms = endless.calculateArms(player); });
-endless.resolveHits = () => {};
-endless.resolveArmClash = () => {};
-endless.updateHud = () => {};
-let testModeFinished = false;
-endless.finish = () => { testModeFinished = true; };
-endless.update(.05, 1000);
-assert.strictEqual(testModeFinished, false, "test mode must not finish at the normal time limit");
-
-const timed = Object.create(WobbleBoxingGame.prototype);
-Object.assign(timed, {
-  width: 390,
-  height: 520,
-  active: true,
-  testMode: false,
-  elapsed: CONFIG.TIME_LIMIT - .01,
-  shake: 0,
-  impact: null
+const farArm = () => ({
+  shoulder: { x: -500, y: -500 }, elbow: { x: -480, y: -480 }, hand: { x: -460, y: -460 },
+  vx: 0, vy: 0, speed: 0, lastHitAt: 0
 });
-timed.players = [timed.makePlayer(0), timed.makePlayer(1)];
-timed.players.forEach((player) => { player.arms = timed.calculateArms(player); });
-timed.resolveHits = () => {};
-timed.resolveArmClash = () => {};
-timed.updateHud = () => {};
-let normalModeFinished = false;
-timed.finish = () => { normalModeFinished = true; };
-timed.update(.05, 1000);
-assert.strictEqual(normalModeFinished, true, "normal mode must keep the existing time limit");
-
-const crossingA = { shoulder: { x: 100, y: 100 }, elbow: { x: 120, y: 120 }, hand: { x: 200, y: 200 } };
-const crossingB = { shoulder: { x: 200, y: 100 }, elbow: { x: 180, y: 120 }, hand: { x: 100, y: 200 } };
-const quietArm = () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
-assert.ok(game.armCollision(crossingA, crossingB, 100), "crossing upper arms and forearms must collide");
-
-const selfCollision = Object.create(WobbleBoxingGame.prototype);
-selfCollision.width = 390;
-selfCollision.height = 520;
-selfCollision.collisionMarks = [];
-const selfPlayer = selfCollision.makePlayer(0);
-selfPlayer.arms = { left: crossingA, right: crossingB };
-selfPlayer.previousJointAngles = Object.fromEntries(Object.entries(selfPlayer.joints).map(([name, joint]) => [name, joint.angle]));
-selfPlayer.joints.leftShoulder.angle -= .2;
-assert.strictEqual(selfCollision.resolveSelfCollision(selfPlayer, selfCollision.calculateArms(selfPlayer), 1000), true);
-assert.strictEqual(selfPlayer.joints.leftShoulder.angle, selfPlayer.previousJointAngles.leftShoulder, "self collision must restore the previous joint angle");
-assert.strictEqual(selfPlayer.selfCollision, true);
-assert.strictEqual(selfCollision.collisionMarks.length, 1);
-
-const clash = Object.create(WobbleBoxingGame.prototype);
-clash.width = 390;
-clash.height = 520;
-clash.players = [clash.makePlayer(0), clash.makePlayer(1)];
-clash.players.forEach((player) => {
-  player.previousJointAngles = Object.fromEntries(Object.entries(player.joints).map(([name, joint]) => [name, joint.angle]));
-});
-clash.players[0].joints.leftShoulder.angularVelocity = 1;
-clash.players[1].joints.leftShoulder.angularVelocity = -1;
-clash.players[0].arms = { left: { ...crossingA, vx: 80, vy: 80, speed: 113, lastHitAt: 0 }, right: quietArm() };
-clash.players[1].arms = { left: { ...crossingB, vx: -80, vy: 80, speed: 113, lastHitAt: 0 }, right: quietArm() };
-clash.onBlockSound = () => {};
-clash.resolveArmClash(1000);
-assert.ok(clash.blockedPunches.has("0:left") && clash.blockedPunches.has("1:left"), "colliding arms must block both punches");
-assert.ok(clash.players[0].joints.leftShoulder.angularVelocity < 0, "arm collision must bounce the joint back");
-
-const farArm = () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
-const attackArm = (point, speed = 150) => ({ shoulder: { x: point.x, y: point.y - 50 }, elbow: { x: point.x, y: point.y - 25 }, hand: { x: point.x, y: point.y }, vx: 0, vy: speed, speed, lastHitAt: 0 });
-
 const makeCombat = () => {
-  const combat = Object.create(WobbleBoxingGame.prototype);
-  combat.width = 390;
-  combat.height = 520;
-  combat.active = true;
-  combat.players = [combat.makePlayer(0), combat.makePlayer(1)];
-  combat.players.forEach((player) => { player.arms = { left: farArm(), right: farArm() }; });
-  combat.shake = 0;
-  combat.impact = null;
+  const combat = makeSimulation();
+  combat.resolveHits = Game.prototype.resolveHits;
+  combat.players[1].pose.arms = { front: farArm(), back: farArm() };
   combat.onPunchSound = () => {};
   combat.onBlockSound = () => {};
   combat.finish = () => {};
   return combat;
 };
+const attackHead = (combat) => {
+  const target = combat.targetGeometry(combat.players[1]).head;
+  combat.players[0].pose.arms.front = {
+    shoulder: { x: target.x - 60, y: target.y }, elbow: { x: target.x - 30, y: target.y },
+    hand: { x: target.x, y: target.y }, vx: 180, vy: 0, speed: 180, lastHitAt: 0
+  };
+  combat.players[0].joints.frontShoulder.angularVelocity = -2;
+  combat.players[0].joints.frontElbow.angularVelocity = 3;
+  return target;
+};
 
 let combat = makeCombat();
-let target = combat.targetGeometry(combat.players[1]);
-combat.players[0].arms.left = attackArm(target.head);
+attackHead(combat);
 combat.resolveHits(1000);
-const headDamage = CONFIG.BODY_HP - combat.players[1].hp;
-assert.ok(headDamage > 0, "a fast fist should damage the head");
+assert.ok(combat.players[1].hp < CONFIG.BODY_HP);
+assert.ok(combat.players[1].angularVelocity > 0);
 
 combat = makeCombat();
-target = combat.targetGeometry(combat.players[1]);
-const bodyPoint = { x: target.body.x, y: target.body.y + target.body.radius * .7 };
-combat.players[0].arms.left = attackArm(bodyPoint);
-combat.resolveHits(1000);
-const bodyDamage = CONFIG.BODY_HP - combat.players[1].hp;
-assert.ok(bodyDamage > 0, "a fast fist should damage the body");
-assert.ok(headDamage > bodyDamage, "head damage should exceed body damage");
-
-combat = makeCombat();
-target = combat.targetGeometry(combat.players[1]);
-combat.players[0].arms.left = attackArm(target.head);
-combat.players[1].arms.left = {
-  shoulder: { x: target.head.x - 20, y: target.head.y },
-  elbow: { x: target.head.x, y: target.head.y },
-  hand: { x: target.head.x + 20, y: target.head.y },
-  vx: 0, vy: 0, speed: 0, lastHitAt: 0
+const blockPoint = attackHead(combat);
+combat.players[1].pose.arms.front = {
+  shoulder: { x: blockPoint.x - 20, y: blockPoint.y }, elbow: blockPoint,
+  hand: { x: blockPoint.x + 20, y: blockPoint.y }, vx: 0, vy: 0, speed: 0, lastHitAt: 0
 };
 combat.resolveHits(1000);
-const blockedDamage = CONFIG.BODY_HP - combat.players[1].hp;
-assert.ok(blockedDamage <= headDamage * .2, "an arm in front of the target must heavily reduce head damage");
-assert.strictEqual(combat.players[1].lastBlock, true, "an arm-first hit must register as BLOCK");
+assert.strictEqual(combat.players[1].lastBlock, true);
+assert.ok(CONFIG.BODY_HP - combat.players[1].hp < 2);
 
-console.log("wobble-boxing smoke tests passed");
+const hud = Object.create(Game.prototype);
+Object.assign(hud, { width: 390, height: 520, testMode: true, debug: false, gameSpeed: .5, fps: 60, elapsed: 2 });
+hud.players = [hud.makePlayer(0), hud.makePlayer(1)];
+hud.players.forEach((player) => { player.pose = hud.calculatePose(player); });
+hud.energyBars = [0, 1].map(() => ({ style: {}, classList: { toggle() {} } }));
+hud.debugPanel = { textContent: "" };
+hud.updateHud();
+for (const label of ["BODY", "COM", "SUPPORT", "FIST", "POWER", "BLOCK", "STAGGER", "FALL"]) {
+  assert.ok(hud.debugPanel.textContent.includes(label));
+}
+
+const endless = makeSimulation(true);
+endless.elapsed = CONFIG.TIME_LIMIT - .01;
+let finished = false;
+endless.finish = () => { finished = true; };
+endless.update(.05, 1000);
+assert.strictEqual(finished, false);
+
+console.log("side-view wobble-boxing smoke tests passed");
