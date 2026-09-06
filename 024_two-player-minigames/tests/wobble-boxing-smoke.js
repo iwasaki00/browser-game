@@ -123,7 +123,7 @@ assert.strictEqual(punch.type, "HOOK", "fast lateral motion with a bent elbow mu
 
 const crossingA = { shoulder: { x: 100, y: 100 }, elbow: { x: 120, y: 120 }, hand: { x: 200, y: 200 } };
 const crossingB = { shoulder: { x: 200, y: 100 }, elbow: { x: 180, y: 120 }, hand: { x: 100, y: 200 } };
-const quietArm = entsch () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
+const quietArm = () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
 assert.ok(game.armCollision(crossingA, crossingB, 100), "crossing upper arms and forearms must collide");
 
 const clash = Object.create(WobbleBoxingGame.prototype);
