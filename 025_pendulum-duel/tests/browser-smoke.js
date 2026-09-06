@@ -59,6 +59,9 @@ async function main(){
   await evaluate("Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='0').click()");
   assert.strictEqual(await evaluate('readySelections[0]'),true);
   await evaluate("Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='1').click()");
+  assert.strictEqual(await evaluate('state'),'selecting');
+  assert.strictEqual(await evaluate("$('matchStart').disabled"),false);
+  await evaluate("$('matchStart').click()");
   assert.strictEqual(await evaluate('state'),'countdown');
   await wait(3900);
   assert.strictEqual(await evaluate('state'),'running');
@@ -90,7 +93,7 @@ async function main(){
   assert.strictEqual(await evaluate("Boolean($('weapons')&&$('resume')&&$('menu'))"),true);
   await evaluate("$('weapons').click()");
   assert.strictEqual(await evaluate('state'),'selecting');
-  await evaluate("$('weaponBack').click();$('cpu').click();$('start').click();Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='0').click()");
+  await evaluate("$('weaponBack').click();$('cpu').click();$('start').click();Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='0').click();$('matchStart').click()");
   const cpuChoice=await evaluate("({state,weapon:weaponChoices[1],valid:WEAPON_IDS.includes(weaponChoices[1])})");
   assert(cpuChoice.state==='countdown'&&cpuChoice.valid,'CPU random weapon selection failed');
 
@@ -99,6 +102,8 @@ async function main(){
   await retry(async()=>{const ready=await evaluate("document.readyState==='complete'&&typeof WEAPONS==='object'");if(!ready)throw new Error('Mobile page is not ready');return true;});
   const mobile=await evaluate("({innerWidth,scrollWidth:document.documentElement.scrollWidth,bodyOverflow:getComputedStyle(document.body).overflow,touchAction:getComputedStyle($('ccw0')).touchAction,buttons:['ccw0','lock0','cw0','ccw1','lock1','cw1'].every(id=>$(id).getBoundingClientRect().width>0)})");
   assert(mobile.scrollWidth<=mobile.innerWidth&&mobile.bodyOverflow==='hidden'&&mobile.touchAction==='none'&&mobile.buttons,'Mobile layout or touch isolation failed');
+  const mobileSelect=await evaluate("(()=>{$('start').click();Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='0').click();const rect=$('matchStart').getBoundingClientRect();return {enabled:!$('matchStart').disabled,top:rect.top,bottom:rect.bottom,height:innerHeight}})()");
+  assert(mobileSelect.enabled&&mobileSelect.top>=0&&mobileSelect.bottom<=mobileSelect.height,'Mobile match start button is clipped');
   assert.deepStrictEqual(runtimeErrors,[],'Runtime errors: '+runtimeErrors.join('; '));
   console.log('Browser smoke passed: weapon selection, separate loadouts, countdown, inertial reversal, LOCK, CPU random weapon, keyboard, multi-touch, release, replay paths, and 390x844 mobile layout.');
 }
