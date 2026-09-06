@@ -1,0 +1,76 @@
+.joint-grid { display: none; }
+
+.game-screen[data-game="boxing"] {
+  grid-template-rows: clamp(142px, 19vh, 168px) minmax(0, 1fr) clamp(142px, 19vh, 168px);
+}
+
+.game-screen[data-game="boxing"] .control-zone {
+  padding: 7px 12px;
+}
+
+.game-screen[data-game="boxing"] .control-zone > strong,
+.game-screen[data-game="boxing"] .control-zone > small {
+  display: none;
+}
+
+.game-screen[data-game="boxing"] .control-player {
+  margin-bottom: 4px;
+}
+
+.game-screen[data-game="boxing"] .energy-name {
+  margin-bottom: 2px;
+}
+
+.game-screen[data-game="boxing"] .energy-track {
+  width: min(290px, 82%);
+  margin-bottom: 6px;
+}
+
+.game-screen[data-game="boxing"] .joint-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  width: min(360px, 92%);
+}
+
+.joint-grid button {
+  min-height: 44px;
+  padding: 4px 8px;
+  color: #fff;
+  font-size: clamp(.72rem, 2.5vw, .9rem);
+  font-weight: 900;
+  cursor: pointer;
+  background: rgba(2, 11, 18, .34);
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 11px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.joint-grid button.active {
+  color: var(--ink);
+  background: var(--gold);
+  border-color: #fff2bd;
+  transform: scale(.97);
+}
+
+.joint-direction {
+  display: inline-block;
+  min-width: 1.15em;
+  color: var(--gold);
+  font-size: 1.18em;
+  font-style: normal;
+}
+
+.joint-grid button.active .joint-direction {
+  color: var(--ink);
+}
+
+@media (max-height: 620px) {
+  .game-screen[data-game="boxing"] {
+    grid-template-rows: 132px minmax(0, 1fr) 132px;
+  }
+  .joint-grid button { min-height: 40px; }
+}

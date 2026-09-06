@@ -17,12 +17,24 @@
     launchBombPush() {
       this.launch("bomb");
     }
+    launchWobbleBoxing() {
+      this.launch("boxing");
+    }
     launch(gameKey) {
       this.currentGameKey = gameKey; this.configureGameScreen();
       this.resumeAudio(); this.elements.menuScreen.hidden = true; this.elements.gameScreen.hidden = false; this.elements.resultPanel.hidden = true;
       this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); });
     }
     configureGameScreen() {
+      if (this.currentGameKey === "boxing") {
+        this.elements.gameScreen.dataset.game = "boxing";
+        this.elements.gameScreen.setAttribute("aria-label", "\u3088\u308d\u3088\u308d\u30dc\u30af\u30b7\u30f3\u30b0 \u5bfe\u6226\u753b\u9762");
+        this.elements.canvas.setAttribute("aria-label", "\u771f\u4e0a\u304b\u3089\u898b\u305f2\u4f53\u306e\u30ed\u30dc\u30c3\u30c8\u30dc\u30af\u30b5\u30fc");
+        this.elements.controlActions.forEach((element) => { element.textContent = "JOINTS"; });
+        this.elements.energyNames.forEach((element) => { element.textContent = "HP"; });
+        this.elements.centerBadge.textContent = "FIGHT";
+        return;
+      }
       if (this.currentGameKey === "bomb") {
         this.elements.gameScreen.dataset.game = "bomb";
         this.elements.gameScreen.setAttribute("aria-label", "\u7206\u5f3e\u62bc\u3057\u4ed8\u3051 \u5bfe\u6226\u753b\u9762");
@@ -44,13 +56,15 @@
       if (this.currentGame) this.currentGame.destroy();
       const tug = this.currentGameKey === "tug";
       const bomb = this.currentGameKey === "bomb";
-      const GameClass = bomb ? window.BombPushGame : tug ? window.TugOfWarGame : window.SumoGame;
+      const boxing = this.currentGameKey === "boxing";
+      const GameClass = boxing ? window.WobbleBoxingGame : bomb ? window.BombPushGame : tug ? window.TugOfWarGame : window.SumoGame;
       this.currentGame = new GameClass({
         canvas: this.elements.canvas, controls: [this.elements.p1Control, this.elements.p2Control],
         spriteUrls: bomb ? undefined : tug
           ? ["./assets/tug-puller-cyan.webp", "./assets/tug-puller-coral.webp"]
           : ["./assets/rikishi-cyan.webp", "./assets/rikishi-coral.webp"],
-        spriteUrl: bomb ? "./assets/bomb-topdown.png" : undefined,
+        spriteUrl: boxing ? "./assets/wobble-boxer-torso.png" : bomb ? "./assets/bomb-topdown.png" : undefined,
+        jointButtons: this.elements.jointButtons,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
         debugPanel: this.elements.debugPanel, debug: this.debug,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
@@ -58,6 +72,8 @@
         onChargeSound: (player) => this.playCharge(player),
         onFuseSound: (progress) => this.playFuse(progress),
         onExplosionSound: () => this.playExplosion(),
+        onPunchSound: (power, head) => this.playPunch(power, head),
+        onBlockSound: () => this.playBlock(),
         onFinish: (winner, reason) => this.showResult(winner, reason)
       });
     }
@@ -111,6 +127,8 @@
     playCharge(player) { this.resumeAudio(); this.tone(player === 0 ? 92 : 82, .2, "sawtooth", .05); this.tone(58, .24, "square", .035, .035); }
     playFuse(progress) { this.resumeAudio(); this.tone(1250 + progress * 720, .035, "square", .018); }
     playExplosion() { this.resumeAudio(); this.tone(52, .48, "sawtooth", .12); this.tone(34, .62, "square", .08, .02); }
+    playPunch(power, head) { this.resumeAudio(); this.tone((head ? 210 : 105) + power * 90, .11, head ? "square" : "triangle", .045 + power * .035); }
+    playBlock() { this.resumeAudio(); this.tone(720, .055, "square", .028); this.tone(430, .07, "triangle", .022, .02); }
     playCount(start) { this.tone(start ? 470 : 270, start ? .18 : .08, "square", .035); }
     playWin(winner) {
       const base = winner === 1 ? 440 : 392; [0, 4, 7, 12].forEach((step, index) => this.tone(base * (2 ** (step / 12)), .16, "triangle", .04, index * .09));

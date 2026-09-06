@@ -11,9 +11,11 @@
   <title>ふたり対戦 ミニゲーム</title>
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/bomb.css">
+  <link rel="stylesheet" href="./css/boxing.css">
   <script src="./js/games/sumo.js" defer></script>
   <script src="./js/games/tug-of-war.js" defer></script>
   <script src="./js/games/bomb-push.js" defer></script>
+  <script src="./js/games/wobble-boxing.js" defer></script>
   <script src="./js/game-manager.js" defer></script>
   <script src="./js/app.js" defer></script>
 </head>
@@ -44,8 +46,13 @@
           <span class="game-card-copy"><small>TAP &amp; CHARGE</small><strong>爆弾押し付け</strong><em>押し返せ。いつ爆発するかは分からない！</em></span>
           <span class="play-mark" aria-hidden="true">▶</span>
         </button>
+        <button id="boxingCard" class="game-card" type="button">
+          <span class="game-card-number" aria-hidden="true">04</span>
+          <span class="game-card-copy"><small>JOINT CONTROL</small><strong>よろよろボクシング</strong><em>4つの関節を操って、自分でパンチを作れ！</em></span>
+          <span class="play-mark" aria-hidden="true">▶</span>
+        </button>
         <div class="coming-list" aria-label="今後追加予定">
-          <div><span>04</span><b>押し相撲ロボ</b><small>COMING SOON</small></div>
+          <div><span>05</span><b>次の対戦ゲーム</b><small>COMING SOON</small></div>
         </div>
       </div>
     </section>
@@ -62,9 +69,9 @@
         <div id="debugPanel" class="debug-panel" hidden></div>
       </div>
       <div class="controls" aria-label="プレイヤー操作">
-        <button id="p1Control" class="control-zone control-one" type="button"><span class="control-player">PLAYER 1 <b id="p1Score" class="control-score">0</b></span><strong id="p1Action">トントン！</strong><span id="p1EnergyName" class="energy-name">POWER</span><span class="energy-track"><i id="p1Energy"></i></span><small>A キーでも操作</small></button>
+        <div id="p1Control" class="control-zone control-one" role="group" aria-label="PLAYER 1 操作"><span class="control-player">PLAYER 1 <b id="p1Score" class="control-score">0</b></span><strong id="p1Action">トントン！</strong><span id="p1EnergyName" class="energy-name">POWER</span><span class="energy-track"><i id="p1Energy"></i></span><small>A キーでも操作</small><div class="joint-grid" aria-label="PLAYER 1 関節操作"><button type="button" data-player="0" data-joint="leftShoulder">左肩 <i class="joint-direction">↻</i></button><button type="button" data-player="0" data-joint="rightShoulder">右肩 <i class="joint-direction">↺</i></button><button type="button" data-player="0" data-joint="leftElbow">左肘 <i class="joint-direction">↻</i></button><button type="button" data-player="0" data-joint="rightElbow">右肘 <i class="joint-direction">↺</i></button></div></div>
         <div class="center-rivet" aria-hidden="true"><span id="centerBadge">VS</span></div>
-        <button id="p2Control" class="control-zone control-two" type="button"><span class="control-player">PLAYER 2 <b id="p2Score" class="control-score">0</b></span><strong id="p2Action">トントン！</strong><span id="p2EnergyName" class="energy-name">POWER</span><span class="energy-track"><i id="p2Energy"></i></span><small>L キーでも操作</small></button>
+        <div id="p2Control" class="control-zone control-two" role="group" aria-label="PLAYER 2 操作"><span class="control-player">PLAYER 2 <b id="p2Score" class="control-score">0</b></span><strong id="p2Action">トントン！</strong><span id="p2EnergyName" class="energy-name">POWER</span><span class="energy-track"><i id="p2Energy"></i></span><small>L キーでも操作</small><div class="joint-grid" aria-label="PLAYER 2 関節操作"><button type="button" data-player="1" data-joint="leftShoulder">左肩 <i class="joint-direction">↻</i></button><button type="button" data-player="1" data-joint="rightShoulder">右肩 <i class="joint-direction">↺</i></button><button type="button" data-player="1" data-joint="leftElbow">左肘 <i class="joint-direction">↻</i></button><button type="button" data-player="1" data-joint="rightElbow">右肘 <i class="joint-direction">↺</i></button></div></div>
       </div>
       <div id="resultPanel" class="result-panel" hidden role="dialog" aria-modal="true" aria-labelledby="resultTitle">
         <div class="result-card"><p>RESULT</p><h2 id="resultTitle">PLAYER 1 WIN!</h2><span id="resultReason">押し出し！</span><div class="result-actions"><button id="replayButton" class="primary-button" type="button">もう一度</button><button id="menuButton" class="secondary-button" type="button">ゲーム選択へ</button></div></div>
