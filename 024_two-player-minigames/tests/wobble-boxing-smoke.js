@@ -15,6 +15,9 @@ assert.ok(WobbleBoxingGame);
 assert.strictEqual(CONFIG.BODY_HP, 100);
 assert.ok(CONFIG.HEAD_DAMAGE_MULTIPLIER > 1);
 assert.ok(CONFIG.MIN_HIT_SPEED > 0);
+assert.ok(CONFIG.SHOULDER_TORQUE > 0);
+assert.ok(CONFIG.ELBOW_TORQUE > CONFIG.SHOULDER_TORQUE);
+assert.ok(CONFIG.JOINT_FRICTION > 0 && CONFIG.JOINT_FRICTION < 1);
 assert.match(managerSource, /wobble-boxer-torso\.png/);
 assert.match(source, /removeEventListener\("pointerdown"/);
 assert.doesNotMatch(source, /Matter\./);
@@ -33,6 +36,19 @@ const moved = game.calculateArms(p1);
 assert.notStrictEqual(first.left.hand.x, moved.left.hand.x, "shoulder angle must move the fist");
 assert.notStrictEqual(first.left.hand.y, moved.left.hand.y, "two-link arm must update fist coordinates");
 
+const targetAtRest = game.targetGeometry(p2);
+let aimedArm = game.calculateArms(p1).left;
+p1.joints.leftShoulder.angle = Math.atan2(
+  targetAtRest.head.x - aimedArm.shoulder.x,
+  targetAtRest.head.y - aimedArm.shoulder.y
+) - p1.facing;
+p1.joints.leftElbow.angle = 0;
+aimedArm = game.calculateArms(p1).left;
+assert.ok(
+  game.distance(aimedArm.hand, targetAtRest.head) <= targetAtRest.head.radius + targetAtRest.fistRadius,
+  "a fully extended arm must be able to reach the opponent's head"
+);
+
 const motion = Object.create(WobbleBoxingGame.prototype);
 motion.width = 390;
 motion.height = 520;
@@ -50,6 +66,16 @@ const shoulderBefore = motion.players[0].joints.leftShoulder.angle;
 motion.players[0].joints.leftShoulder.holding = true;
 motion.update(.1, 1000);
 assert.ok(motion.players[0].joints.leftShoulder.angle > shoulderBefore, "holding a joint control must rotate that joint");
+const poweredAngle = motion.players[0].joints.leftShoulder.angle;
+const poweredVelocity = motion.players[0].joints.leftShoulder.angularVelocity;
+motion.players[0].joints.leftShoulder.holding = false;
+motion.update(.05, 1050);
+assert.ok(motion.players[0].joints.leftShoulder.angle > poweredAngle, "a released joint must keep rotating through inertia");
+assert.ok(
+  motion.players[0].joints.leftShoulder.angularVelocity > 0
+    && motion.players[0].joints.leftShoulder.angularVelocity < poweredVelocity,
+  "joint inertia must decay through friction"
+);
 
 const farArm = () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
 const attackArm = (point, speed = 150) => ({ shoulder: { x: point.x, y: point.y - 50 }, elbow: { x: point.x, y: point.y - 25 }, hand: { x: point.x, y: point.y }, vx: 0, vy: speed, speed, lastHitAt: 0 });

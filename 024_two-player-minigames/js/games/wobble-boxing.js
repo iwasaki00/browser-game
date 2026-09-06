@@ -2,8 +2,12 @@
   "use strict";
 
   const CONFIG = Object.freeze({
-    SHOULDER_SPEED: 1.85,
-    ELBOW_SPEED: 2.35,
+    SHOULDER_SPEED: 2.9,
+    ELBOW_SPEED: 3.7,
+    SHOULDER_TORQUE: 10.5,
+    ELBOW_TORQUE: 13,
+    JOINT_FRICTION: .955,
+    JOINT_EDGE_BOUNCE: .18,
     SHOULDER_MIN_ANGLE: -1.55,
     SHOULDER_MAX_ANGLE: 1.55,
     ELBOW_MIN_ANGLE: -1.9,
@@ -85,17 +89,17 @@
 
     makePlayer(index) {
       const joints = {
-        leftShoulder: { angle: -.48, direction: 1, holding: false },
-        rightShoulder: { angle: .48, direction: -1, holding: false },
-        leftElbow: { angle: .8, direction: -1, holding: false },
-        rightElbow: { angle: -.8, direction: 1, holding: false }
+        leftShoulder: { angle: -.48, angularVelocity: 0, direction: 1, holding: false },
+        rightShoulder: { angle: .48, angularVelocity: 0, direction: -1, holding: false },
+        leftElbow: { angle: .8, angularVelocity: 0, direction: -1, holding: false },
+        rightElbow: { angle: -.8, angularVelocity: 0, direction: 1, holding: false }
       };
       return {
         index,
         baseX: .5,
-        baseY: index === 0 ? .29 : .71,
+        baseY: index === 0 ? .32 : .68,
         x: .5,
-        y: index === 0 ? .29 : .71,
+        y: index === 0 ? .32 : .68,
         vx: 0,
         vy: 0,
         facing: index === 0 ? 0 : Math.PI,
@@ -214,14 +218,23 @@
       const frameScale = dt * 60;
       this.players.forEach((player) => {
         const previousArms = player.arms || this.calculateArms(player);
-        const wobble = (1 - player.hp / CONFIG.BODY_HP) * .055;
+        const wobble = (1 - player.hp / CONFIG.BODY_HP) * .7;
         JOINT_NAMES.forEach((name) => {
           const joint = player.joints[name];
-          if (!joint.holding) return;
-          const speed = name.includes("Shoulder") ? CONFIG.SHOULDER_SPEED : CONFIG.ELBOW_SPEED;
+          const shoulder = name.includes("Shoulder");
+          const speed = shoulder ? CONFIG.SHOULDER_SPEED : CONFIG.ELBOW_SPEED;
+          const torque = shoulder ? CONFIG.SHOULDER_TORQUE : CONFIG.ELBOW_TORQUE;
           const minimum = name.includes("Shoulder") ? CONFIG.SHOULDER_MIN_ANGLE : CONFIG.ELBOW_MIN_ANGLE;
           const maximum = name.includes("Shoulder") ? CONFIG.SHOULDER_MAX_ANGLE : CONFIG.ELBOW_MAX_ANGLE;
-          joint.angle = Math.max(minimum, Math.min(maximum, joint.angle + joint.direction * speed * dt + Math.sin(now * .015 + player.index) * wobble));
+          if (joint.holding) joint.angularVelocity += joint.direction * torque * dt;
+          joint.angularVelocity += Math.sin(now * .009 + player.index * 2 + name.length) * wobble * dt;
+          joint.angularVelocity *= Math.pow(CONFIG.JOINT_FRICTION, frameScale);
+          joint.angularVelocity = Math.max(-speed, Math.min(speed, joint.angularVelocity));
+          joint.angle += joint.angularVelocity * dt;
+          if (joint.angle <= minimum || joint.angle >= maximum) {
+            joint.angle = Math.max(minimum, Math.min(maximum, joint.angle));
+            joint.angularVelocity *= -CONFIG.JOINT_EDGE_BOUNCE;
+          }
         });
         player.vx += (player.baseX - player.x) * CONFIG.BODY_RETURN * dt;
         player.vy += (player.baseY - player.y) * CONFIG.BODY_RETURN * dt;
@@ -230,7 +243,7 @@
         player.x += player.vx * dt;
         player.y += player.vy * dt;
         player.x = Math.max(.34, Math.min(.66, player.x));
-        player.y = player.index === 0 ? Math.max(.2, Math.min(.4, player.y)) : Math.max(.6, Math.min(.8, player.y));
+        player.y = player.index === 0 ? Math.max(.22, Math.min(.44, player.y)) : Math.max(.56, Math.min(.78, player.y));
         player.angularVelocity += -player.bodyAngle * 5.2 * dt;
         player.angularVelocity *= Math.pow(.86, frameScale);
         player.bodyAngle += player.angularVelocity * dt;
@@ -258,7 +271,7 @@
     }
 
     calculateArms(player) {
-      const scale = Math.max(54, Math.min(this.width * .2, this.height * .17, 108));
+      const scale = Math.max(78, Math.min(this.width * .3, this.height * .22, 132));
       const center = { x: player.x * this.width, y: player.y * this.height };
       const rotation = player.facing + player.bodyAngle;
       const forward = { x: Math.sin(rotation), y: Math.cos(rotation) };
@@ -272,13 +285,13 @@
         };
         const shoulderAngle = rotation + player.joints[`${side}Shoulder`].angle;
         const elbow = {
-          x: shoulder.x + Math.sin(shoulderAngle) * scale * .62,
-          y: shoulder.y + Math.cos(shoulderAngle) * scale * .62
+          x: shoulder.x + Math.sin(shoulderAngle) * scale * .76,
+          y: shoulder.y + Math.cos(shoulderAngle) * scale * .76
         };
         const forearmAngle = shoulderAngle + player.joints[`${side}Elbow`].angle;
         const hand = {
-          x: elbow.x + Math.sin(forearmAngle) * scale * .57,
-          y: elbow.y + Math.cos(forearmAngle) * scale * .57
+          x: elbow.x + Math.sin(forearmAngle) * scale * .7,
+          y: elbow.y + Math.cos(forearmAngle) * scale * .7
         };
         result[side] = { shoulder, elbow, hand, vx: 0, vy: 0, speed: 0, lastHitAt: 0 };
       }
@@ -348,7 +361,7 @@
     }
 
     targetGeometry(player) {
-      const scale = Math.max(54, Math.min(this.width * .2, this.height * .17, 108));
+      const scale = Math.max(78, Math.min(this.width * .3, this.height * .22, 132));
       const rotation = player.facing + player.bodyAngle;
       return {
         body: { x: player.x * this.width, y: player.y * this.height, radius: scale * .38 },
@@ -466,7 +479,7 @@
     }
 
     drawPlayer(ctx, player, color) {
-      const scale = Math.max(54, Math.min(this.width * .2, this.height * .17, 108));
+      const scale = Math.max(78, Math.min(this.width * .3, this.height * .22, 132));
       ctx.save();
       ctx.strokeStyle = "rgba(0,0,0,.42)";
       ctx.lineWidth = scale * .22;
