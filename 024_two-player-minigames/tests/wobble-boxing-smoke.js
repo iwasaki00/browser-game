@@ -18,12 +18,18 @@ assert.ok(CONFIG.MIN_HIT_SPEED > 0);
 assert.ok(CONFIG.SHOULDER_TORQUE > 0);
 assert.ok(CONFIG.ELBOW_TORQUE > CONFIG.SHOULDER_TORQUE);
 assert.ok(CONFIG.JOINT_FRICTION > 0 && CONFIG.JOINT_FRICTION < 1);
+assert.ok(CONFIG.UPPER_ARM_LENGTH <= .62);
+assert.ok(CONFIG.FOREARM_LENGTH <= .6);
+assert.ok(CONFIG.BLOCK_DAMAGE_MULTIPLIER <= .2);
 assert.match(managerSource, /wobble-boxer-torso\.png/);
 assert.match(source, /removeEventListener\("pointerdown"/);
 assert.doesNotMatch(source, /Matter\./);
 assert.match(boxingCss, /\.countdown\s*\{[\s\S]*?z-index:\s*12/);
 assert.match(boxingCss, /\.control-zone::before\s*\{[\s\S]*?pointer-events:\s*none/);
 assert.match(boxingCss, /\.joint-grid\s*\{[\s\S]*?position:\s*relative/);
+assert.match(boxingCss, /\.joint-direction\s*\{[\s\S]*?display:\s*none/);
+assert.match(source, /drawGlove\(/);
+assert.doesNotMatch(source, /direction \*= -1/);
 
 const game = Object.create(WobbleBoxingGame.prototype);
 game.width = 390;
@@ -32,8 +38,11 @@ const p1 = game.makePlayer(0);
 const p2 = game.makePlayer(1);
 const first = game.calculateArms(p1);
 const second = game.calculateArms(p2);
+const ownHead = game.targetGeometry(p1).head;
 assert.ok(first.left.shoulder.x > first.right.shoulder.x, "top player's left arm must be on their own left");
 assert.ok(second.left.shoulder.x < second.right.shoulder.x, "bottom player's left arm must be on their own left");
+assert.ok(game.distance(first.left.hand, ownHead) < game.characterScale() * .5, "left fist must begin beside the head in guard");
+assert.ok(game.distance(first.right.hand, ownHead) < game.characterScale() * .5, "right fist must begin beside the head in guard");
 p1.joints.leftShoulder.angle += .45;
 const moved = game.calculateArms(p1);
 assert.notStrictEqual(first.left.hand.x, moved.left.hand.x, "shoulder angle must move the fist");
@@ -79,6 +88,59 @@ assert.ok(
     && motion.players[0].joints.leftShoulder.angularVelocity < poweredVelocity,
   "joint inertia must decay through friction"
 );
+const releasedDistance = Math.abs(motion.players[0].joints.leftShoulder.angle - motion.guardAngle("leftShoulder"));
+for (let index = 0; index < 120; index += 1) motion.update(1 / 60, 1100 + index * 16.7);
+assert.ok(
+  Math.abs(motion.players[0].joints.leftShoulder.angle - motion.guardAngle("leftShoulder")) < releasedDistance,
+  "a released joint must return toward its guard angle"
+);
+
+const twist = Object.create(WobbleBoxingGame.prototype);
+twist.width = 390;
+twist.height = 520;
+twist.active = true;
+twist.elapsed = 0;
+twist.shake = 0;
+twist.impact = null;
+twist.players = [twist.makePlayer(0), twist.makePlayer(1)];
+twist.players.forEach((player) => { player.arms = twist.calculateArms(player); });
+twist.resolveHits = () => {};
+twist.resolveArmClash = () => {};
+twist.updateHud = () => {};
+twist.players[0].joints.leftShoulder.holding = true;
+for (let index = 0; index < 45; index += 1) twist.update(1 / 60, 1000 + index * 16.7);
+assert.ok(Math.abs(twist.players[0].bodyAngle) > .025, "shoulder drive must rotate the torso");
+assert.ok(Math.abs(twist.players[0].bodyAngle) <= CONFIG.BODY_MAX_ROTATION, "torso rotation must stay subtle");
+
+const punchPlayer = game.makePlayer(0);
+punchPlayer.joints.leftShoulder.angularVelocity = 2;
+punchPlayer.joints.leftElbow.angularVelocity = -3;
+let punch = game.classifyPunch(punchPlayer, "left", { vx: 15, vy: 220, speed: 221 }, .95);
+assert.strictEqual(punch.type, "STRAIGHT", "coordinated shoulder and elbow drive must produce a straight");
+punchPlayer.joints.leftElbow.angle = 1;
+punch = game.classifyPunch(punchPlayer, "left", { vx: 210, vy: 70, speed: 221 }, .35);
+assert.strictEqual(punch.type, "HOOK", "fast lateral motion with a bent elbow must produce a hook");
+
+const crossingA = { shoulder: { x: 100, y: 100 }, elbow: { x: 120, y: 120 }, hand: { x: 200, y: 200 } };
+const crossingB = { shoulder: { x: 200, y: 100 }, elbow: { x: 180, y: 120 }, hand: { x: 100, y: 200 } };
+const quietArm = entsch () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
+assert.ok(game.armCollision(crossingA, crossingB, 100), "crossing upper arms and forearms must collide");
+
+const clash = Object.create(WobbleBoxingGame.prototype);
+clash.width = 390;
+clash.height = 520;
+clash.players = [clash.makePlayer(0), clash.makePlayer(1)];
+clash.players.forEach((player) => {
+  player.previousJointAngles = Object.fromEntries(Object.entries(player.joints).map(([name, joint]) => [name, joint.angle]));
+});
+clash.players[0].joints.leftShoulder.angularVelocity = 1;
+clash.players[1].joints.leftShoulder.angularVelocity = -1;
+clash.players[0].arms = { left: { ...crossingA, vx: 80, vy: 80, speed: 113, lastHitAt: 0 }, right: quietArm() };
+clash.players[1].arms = { left: { ...crossingB, vx: -80, vy: 80, speed: 113, lastHitAt: 0 }, right: quietArm() };
+clash.onBlockSound = () => {};
+clash.resolveArmClash(1000);
+assert.ok(clash.blockedPunches.has("0:left") && clash.blockedPunches.has("1:left"), "colliding arms must block both punches");
+assert.ok(clash.players[0].joints.leftShoulder.angularVelocity < 0, "arm collision must bounce the joint back");
 
 const farArm = () => ({ shoulder: { x: -100, y: -100 }, elbow: { x: -80, y: -80 }, hand: { x: -60, y: -60 }, vx: 0, vy: 0, speed: 0, lastHitAt: 0 });
 const attackArm = (point, speed = 150) => ({ shoulder: { x: point.x, y: point.y - 50 }, elbow: { x: point.x, y: point.y - 25 }, hand: { x: point.x, y: point.y }, vx: 0, vy: speed, speed, lastHitAt: 0 });
@@ -124,6 +186,8 @@ combat.players[1].arms.left = {
   vx: 0, vy: 0, speed: 0, lastHitAt: 0
 };
 combat.resolveHits(1000);
-assert.strictEqual(combat.players[1].hp, CONFIG.BODY_HP, "an arm in front of the target should guard the hit");
+const blockedDamage = CONFIG.BODY_HP - combat.players[1].hp;
+assert.ok(blockedDamage <= headDamage * .2, "an arm in front of the target must heavily reduce head damage");
+assert.strictEqual(combat.players[1].lastBlock, true, "an arm-first hit must register as BLOCK");
 
 console.log("wobble-boxing smoke tests passed");

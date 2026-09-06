@@ -56,6 +56,10 @@ async function main(){
   await evaluate("Array.from(document.querySelectorAll('.weapon-arrow')).find(button=>button.dataset.player==='1'&&button.dataset.direction==='1').click()");
   await evaluate("Array.from(document.querySelectorAll('.weapon-arrow')).find(button=>button.dataset.player==='1'&&button.dataset.direction==='1').click()");
   assert.deepStrictEqual(await evaluate('[weaponChoices[0],weaponChoices[1]]'),['long','heavy']);
+  const idleBefore=await evaluate(`players.map(player=>player.nodes.map(node=>[node.x,node.y]))`);
+  await wait(250);
+  const idleAfter=await evaluate(`players.map(player=>player.nodes.map(node=>[node.x,node.y]))`);
+  assert.deepStrictEqual(idleAfter,idleBefore,'Pendulums moved before the match started');
   await evaluate("Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='0').click()");
   assert.strictEqual(await evaluate('readySelections[0]'),true);
   await evaluate("Array.from(document.querySelectorAll('[data-ready]')).find(button=>button.dataset.ready==='1').click()");
@@ -69,6 +73,9 @@ async function main(){
   assert.strictEqual(match.p0,'long');assert.strictEqual(match.p1,'heavy');
   assert(Math.abs(match.lengthRatio-1.28)<.001&&match.heavyTip>1);
   assert.strictEqual(match.hud0,'LONG');assert.strictEqual(match.hud1,'HEAVY');
+
+  const impact=await evaluate(`(()=>{burst(width/2,height/2,colors[0],24,false,{isTip:true,relativeSpeed:width,massFactor:1,positionMultiplier:1});draw(1/60);return {rings:rings.length,radiusSafe:rings[0].duration===.7}})()`);
+  assert(impact.rings>0&&impact.radiusSafe,'Tip-hit impact rendering failed');
 
   const chaos=await evaluate("(()=>{weaponChoices[0]='chaos';resetPhysics();const p=players[0];return {nodes:p.nodes.length,cooldowns:p.hitCooldowns.length,totalRatio:p.L*p.weapon.segments/(width*.087*3),segments:p.weapon.segments}})()");
   assert(chaos.segments===5&&chaos.nodes===6&&chaos.cooldowns===5&&chaos.totalRatio>=1.1&&chaos.totalRatio<=1.25,'CHAOS generation, constraints, or reach failed');

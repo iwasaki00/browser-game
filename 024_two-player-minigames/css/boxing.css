@@ -54,7 +54,7 @@
   min-height: 44px;
   padding: 4px 8px;
   color: #fff;
-  font-size: clamp(.72rem, 2.5vw, .9rem);
+  font-size: clamp(.875rem, 2.5vw, .95rem);
   font-weight: 900;
   cursor: pointer;
   pointer-events: auto;
@@ -75,7 +75,7 @@
 }
 
 .joint-direction {
-  display: inline-block;
+  display: none;
   min-width: 1.15em;
   color: var(--gold);
   font-size: 1.18em;
