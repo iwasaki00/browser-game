@@ -278,7 +278,7 @@
       const right = { x: Math.cos(rotation), y: -Math.sin(rotation) };
       const result = {};
       for (const side of ["left", "right"]) {
-        const sign = side === "left" ? -1 : 1;
+        const sign = side === "left" ? 1 : -1;
         const shoulder = {
           x: center.x + right.x * sign * scale * .42 + forward.x * scale * .02,
           y: center.y + right.y * sign * scale * .42 + forward.y * scale * .02
