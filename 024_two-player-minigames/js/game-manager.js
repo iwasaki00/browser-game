@@ -14,12 +14,24 @@
     launchTugOfWar() {
       this.launch("tug");
     }
+    launchBombPush() {
+      this.launch("bomb");
+    }
     launch(gameKey) {
       this.currentGameKey = gameKey; this.configureGameScreen();
       this.resumeAudio(); this.elements.menuScreen.hidden = true; this.elements.gameScreen.hidden = false; this.elements.resultPanel.hidden = true;
       this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); });
     }
     configureGameScreen() {
+      if (this.currentGameKey === "bomb") {
+        this.elements.gameScreen.dataset.game = "bomb";
+        this.elements.gameScreen.setAttribute("aria-label", "\u7206\u5f3e\u62bc\u3057\u4ed8\u3051 \u5bfe\u6226\u753b\u9762");
+        this.elements.canvas.setAttribute("aria-label", "\u7206\u5f3e\u3092\u76f8\u624b\u5074\u3078\u62bc\u3057\u8fd4\u3059\u7af6\u6280\u5834");
+        this.elements.controlActions.forEach((element) => { element.textContent = "PUSH!"; });
+        this.elements.energyNames.forEach((element) => { element.textContent = "CHARGE"; });
+        this.elements.centerBadge.textContent = "BOMB";
+        return;
+      }
       const tug = this.currentGameKey === "tug"; const action = tug ? "ひっぱれ！" : "トントン！"; const energyName = tug ? "STAMINA" : "POWER";
       this.elements.gameScreen.dataset.game = this.currentGameKey;
       this.elements.gameScreen.setAttribute("aria-label", tug ? "綱引きバトル 対戦画面" : "トントン相撲DX 対戦画面");
@@ -31,16 +43,21 @@
     createGame() {
       if (this.currentGame) this.currentGame.destroy();
       const tug = this.currentGameKey === "tug";
-      const GameClass = tug ? window.TugOfWarGame : window.SumoGame;
+      const bomb = this.currentGameKey === "bomb";
+      const GameClass = bomb ? window.BombPushGame : tug ? window.TugOfWarGame : window.SumoGame;
       this.currentGame = new GameClass({
         canvas: this.elements.canvas, controls: [this.elements.p1Control, this.elements.p2Control],
-        spriteUrls: tug
+        spriteUrls: bomb ? undefined : tug
           ? ["./assets/tug-puller-cyan.webp", "./assets/tug-puller-coral.webp"]
           : ["./assets/rikishi-cyan.webp", "./assets/rikishi-coral.webp"],
+        spriteUrl: bomb ? "./assets/bomb-topdown.png" : undefined,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
         debugPanel: this.elements.debugPanel, debug: this.debug,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
         onGoodSound: (player) => this.playGood(player),
+        onChargeSound: (player) => this.playCharge(player),
+        onFuseSound: (progress) => this.playFuse(progress),
+        onExplosionSound: () => this.playExplosion(),
         onFinish: (winner, reason) => this.showResult(winner, reason)
       });
     }
@@ -91,6 +108,9 @@
     playTap(power, player) { this.resumeAudio(); this.tone((player === 0 ? 150 : 132) + power * 28, .055, "triangle", .035); }
     playGood(player) { this.resumeAudio(); this.tone(player === 0 ? 560 : 510, .08, "sine", .035); this.tone(player === 0 ? 720 : 660, .09, "triangle", .025, .055); }
     playImpact(power) { this.tone(76 + power * 22, .13, "square", .025); }
+    playCharge(player) { this.resumeAudio(); this.tone(player === 0 ? 92 : 82, .2, "sawtooth", .05); this.tone(58, .24, "square", .035, .035); }
+    playFuse(progress) { this.resumeAudio(); this.tone(1250 + progress * 720, .035, "square", .018); }
+    playExplosion() { this.resumeAudio(); this.tone(52, .48, "sawtooth", .12); this.tone(34, .62, "square", .08, .02); }
     playCount(start) { this.tone(start ? 470 : 270, start ? .18 : .08, "square", .035); }
     playWin(winner) {
       const base = winner === 1 ? 440 : 392; [0, 4, 7, 12].forEach((step, index) => this.tone(base * (2 ** (step / 12)), .16, "triangle", .04, index * .09));

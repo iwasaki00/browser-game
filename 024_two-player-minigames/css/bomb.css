@@ -1,0 +1,3 @@
+.game-screen[data-game="bomb"] .control-zone.charging .energy-track i { background: var(--gold); }
+.game-screen[data-game="bomb"] .control-zone.charged { filter: saturate(1.18) brightness(1.08); }
+.game-screen[data-game="bomb"] .control-zone.charged strong { animation: danger-pulse 360ms ease-in-out infinite alternate; }

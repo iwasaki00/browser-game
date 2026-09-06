@@ -10,8 +10,10 @@
   <meta name="format-detection" content="telephone=no">
   <title>ふたり対戦 ミニゲーム</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/bomb.css">
   <script src="./js/games/sumo.js" defer></script>
   <script src="./js/games/tug-of-war.js" defer></script>
+  <script src="./js/games/bomb-push.js" defer></script>
   <script src="./js/game-manager.js" defer></script>
   <script src="./js/app.js" defer></script>
 </head>
@@ -37,8 +39,12 @@
           <span class="game-card-copy"><small>RHYTHM &amp; STAMINA</small><strong>綱引きバトル</strong><em>リズムよく引いて、相手を勝利線へ！</em></span>
           <span class="play-mark" aria-hidden="true">▶</span>
         </button>
+        <button id="bombCard" class="game-card" type="button">
+          <span class="game-card-number" aria-hidden="true">03</span>
+          <span class="game-card-copy"><small>TAP &amp; CHARGE</small><strong>爆弾押し付け</strong><em>押し返せ。いつ爆発するかは分からない！</em></span>
+          <span class="play-mark" aria-hidden="true">▶</span>
+        </button>
         <div class="coming-list" aria-label="今後追加予定">
-          <div><span>03</span><b>爆弾押し付け</b><small>COMING SOON</small></div>
           <div><span>04</span><b>押し相撲ロボ</b><small>COMING SOON</small></div>
         </div>
       </div>
