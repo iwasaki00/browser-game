@@ -13,29 +13,34 @@
     SHOULDER_MAX_ANGLE: 1.22,
     ELBOW_MIN_ANGLE: -2.48,
     ELBOW_MAX_ANGLE: -.16,
-    FRONT_GUARD_SHOULDER: .65,
-    FRONT_GUARD_ELBOW: -1.55,
-    BACK_GUARD_SHOULDER: .8,
-    BACK_GUARD_ELBOW: -2.1,
-    SHOULDER_TORQUE: 10.4,
-    ELBOW_TORQUE: 13.8,
-    SHOULDER_SPEED: 3,
-    ELBOW_SPEED: 3.8,
-    JOINT_FRICTION: .955,
-    RETURN_FRICTION: .9,
-    SHOULDER_RETURN: 4.2,
-    ELBOW_RETURN: 5.3,
+    ARM1_GUARD_SHOULDER: .65,
+    ARM1_GUARD_ELBOW: -1.55,
+    ARM2_GUARD_SHOULDER: .8,
+    ARM2_GUARD_ELBOW: -2.1,
+    SHOULDER_TORQUE: 23,
+    ELBOW_TORQUE: 37,
+    SHOULDER_SPEED: 6.4,
+    ELBOW_SPEED: 10,
+    JOINT_FRICTION: .968,
+    RETURN_FRICTION: .95,
+    SHOULDER_RETURN: 2.2,
+    ELBOW_RETURN: 2.6,
     GRAVITY: 1.85,
     GROUND_SPRING: 28,
     GROUND_DAMPING: .72,
-    AUTO_BALANCE: 8.4,
-    BALANCE_DAMPING: .9,
-    ARM_REACTION: .012,
+    AUTO_BALANCE: 9.2,
+    BALANCE_DAMPING: .91,
+    ARM_REACTION: .13,
     BODY_FRICTION: .88,
     DISTANCE_RETURN: .42,
     SUPPORT_HALF_WIDTH: .17,
-    STAGGER_ANGLE: .46,
-    FALL_ANGLE: .82,
+    UNSTABLE_ANGLE: .262,
+    STAGGER_ANGLE: .524,
+    FALL_ANGLE: .785,
+    BALANCE_RECOVERY: 15,
+    SHOULDER_BALANCE_COST: 10,
+    ELBOW_BALANCE_COST: 6,
+    DOUBLE_ARM_BALANCE_COST: 22,
     FALL_DURATION: 1450,
     RECOVERY_DURATION: 520,
     HEAD_RADIUS: .2,
@@ -53,8 +58,8 @@
     COLLISION_MARK_LIFETIME: 420
   });
 
-  const LIMBS = ["front", "back"];
-  const JOINT_NAMES = ["frontShoulder", "frontElbow", "backShoulder", "backElbow"];
+  const LIMBS = ["arm1", "arm2"];
+  const JOINT_NAMES = ["arm1Shoulder", "arm1Elbow", "arm2Shoulder", "arm2Elbow"];
 
   class WobbleBoxingGame {
     constructor(options) {
@@ -70,6 +75,7 @@
       this.active = false;
       this.animationId = 0;
       this.lastFrame = 0;
+      this.hitStopUntil = 0;
       this.fps = 60;
       this.resizeObserver = new ResizeObserver(() => this.resize());
       this.resizeObserver.observe(this.canvas.parentElement);
@@ -104,6 +110,7 @@
     reset() {
       this.active = false;
       this.elapsed = 0;
+      this.hitStopUntil = 0;
       this.shake = 0;
       this.impact = null;
       this.collisionMarks = [];
@@ -130,8 +137,10 @@
         bodyAngle: 0,
         angularVelocity: 0,
         hp: CONFIG.BODY_HP,
-        state: "STAND",
+        state: "NORMAL",
         stateUntil: 0,
+        recoveringUntil: 0,
+        balance: 100,
         stagger: 0,
         lastHitPower: 0,
         lastPunchType: "WEAK",
@@ -139,10 +148,14 @@
         feedback: "",
         feedbackUntil: 0,
         joints: {
-          frontShoulder: this.makeJoint(CONFIG.FRONT_GUARD_SHOULDER),
-          frontElbow: this.makeJoint(CONFIG.FRONT_GUARD_ELBOW),
-          backShoulder: this.makeJoint(CONFIG.BACK_GUARD_SHOULDER),
-          backElbow: this.makeJoint(CONFIG.BACK_GUARD_ELBOW)
+          arm1Shoulder: this.makeJoint(CONFIG.ARM1_GUARD_SHOULDER),
+          arm1Elbow: this.makeJoint(CONFIG.ARM1_GUARD_ELBOW),
+          arm2Shoulder: this.makeJoint(CONFIG.ARM2_GUARD_SHOULDER),
+          arm2Elbow: this.makeJoint(CONFIG.ARM2_GUARD_ELBOW)
+        },
+        armTiming: {
+          arm1: this.makeArmTiming(),
+          arm2: this.makeArmTiming()
         },
         pose: null
       };
@@ -152,11 +165,15 @@
       return { angle, angularVelocity: 0, holding: false };
     }
 
+    makeArmTiming() {
+      return { inputStartedAt: 0, shoulderAt: 0, elbowAt: 0, peakSpeed: 0, responseMs: 0, fallingFrames: 0, responseLocked: false };
+    }
+
     guardAngle(name) {
-      if (name === "frontShoulder") return CONFIG.FRONT_GUARD_SHOULDER;
-      if (name === "frontElbow") return CONFIG.FRONT_GUARD_ELBOW;
-      if (name === "backShoulder") return CONFIG.BACK_GUARD_SHOULDER;
-      return CONFIG.BACK_GUARD_ELBOW;
+      if (name === "arm1Shoulder") return CONFIG.ARM1_GUARD_SHOULDER;
+      if (name === "arm1Elbow") return CONFIG.ARM1_GUARD_ELBOW;
+      if (name === "arm2Shoulder") return CONFIG.ARM2_GUARD_SHOULDER;
+      return CONFIG.ARM2_GUARD_ELBOW;
     }
 
     jointLimits(name) {
@@ -176,7 +193,7 @@
           if (!this.active || this.players[playerIndex].state === "FALL" || (event.pointerType === "mouse" && event.button !== 0)) return;
           event.preventDefault();
           event.stopPropagation();
-          this.players[playerIndex].joints[jointName].holding = true;
+          this.beginJointInput(this.players[playerIndex], jointName, performance.now());
           if (button.setPointerCapture) button.setPointerCapture(event.pointerId);
           button.classList.add("active");
         };
@@ -195,16 +212,16 @@
         return { button, down, release };
       }));
       const keyMap = new Map([
-        ["KeyQ", [0, "frontShoulder"]], ["KeyW", [0, "backShoulder"]],
-        ["KeyA", [0, "frontElbow"]], ["KeyS", [0, "backElbow"]],
-        ["KeyO", [1, "frontShoulder"]], ["KeyP", [1, "backShoulder"]],
-        ["KeyK", [1, "frontElbow"]], ["KeyL", [1, "backElbow"]]
+        ["KeyQ", [0, "arm1Shoulder"]], ["KeyW", [0, "arm2Shoulder"]],
+        ["KeyA", [0, "arm1Elbow"]], ["KeyS", [0, "arm2Elbow"]],
+        ["KeyO", [1, "arm1Shoulder"]], ["KeyP", [1, "arm2Shoulder"]],
+        ["KeyK", [1, "arm1Elbow"]], ["KeyL", [1, "arm2Elbow"]]
       ]);
       this.keyDownHandler = (event) => {
         const target = keyMap.get(event.code);
         if (!target || event.repeat || !this.active || this.players[target[0]].state === "FALL") return;
         event.preventDefault();
-        this.players[target[0]].joints[target[1]].holding = true;
+        this.beginJointInput(this.players[target[0]], target[1], performance.now());
       };
       this.keyUpHandler = (event) => {
         const target = keyMap.get(event.code);
@@ -214,6 +231,23 @@
       };
       window.addEventListener("keydown", this.keyDownHandler);
       window.addEventListener("keyup", this.keyUpHandler);
+    }
+
+    beginJointInput(player, jointName, now) {
+      const joint = player.joints[jointName];
+      if (joint.holding) return;
+      joint.holding = true;
+      const limb = jointName.startsWith("arm1") ? "arm1" : "arm2";
+      const timing = player.armTiming[limb];
+      if (!timing.inputStartedAt || now - timing.inputStartedAt > 650) {
+        timing.inputStartedAt = now;
+        timing.peakSpeed = 0;
+        timing.responseMs = 0;
+        timing.fallingFrames = 0;
+        timing.responseLocked = false;
+      }
+      if (jointName.includes("Shoulder")) timing.shoulderAt = now;
+      else timing.elbowAt = now;
     }
 
     preventMenu(event) { event.preventDefault(); }
@@ -248,6 +282,11 @@
 
     frame(now) {
       if (!this.active) return;
+      if (now < this.hitStopUntil) {
+        this.render();
+        this.animationId = requestAnimationFrame((time) => this.frame(time));
+        return;
+      }
       const rawDt = Math.min(.033, Math.max(.001, (now - this.lastFrame) / 1000));
       this.fps += ((1 / rawDt) - this.fps) * .08;
       this.lastFrame = now;
@@ -265,6 +304,9 @@
         player.previousJointAngles = {};
         player.lastBlock = false;
         this.updateState(player, now);
+        const arm1Active = player.joints.arm1Shoulder.holding || player.joints.arm1Elbow.holding;
+        const arm2Active = player.joints.arm2Shoulder.holding || player.joints.arm2Elbow.holding;
+        let balanceCost = 0;
         for (const name of JOINT_NAMES) {
           const joint = player.joints[name];
           player.previousJointAngles[name] = joint.angle;
@@ -275,8 +317,9 @@
           if (player.state !== "FALL" && joint.holding) {
             const acceleration = this.jointDriveDirection(name) * torque * dt;
             joint.angularVelocity += acceleration;
-            const reaction = acceleration * (shoulder ? .48 : .3);
+            const reaction = Math.abs(acceleration) * (shoulder ? .48 : .3);
             player.angularVelocity -= reaction * player.facing * CONFIG.ARM_REACTION;
+            balanceCost += shoulder ? CONFIG.SHOULDER_BALANCE_COST : CONFIG.ELBOW_BALANCE_COST;
           } else {
             joint.angularVelocity += (this.guardAngle(name) - joint.angle) * returnForce * dt;
             joint.angularVelocity *= Math.pow(CONFIG.RETURN_FRICTION, frameScale);
@@ -290,6 +333,12 @@
             joint.angularVelocity *= -.18;
           }
         }
+        if (arm1Active && arm2Active) {
+          balanceCost += CONFIG.DOUBLE_ARM_BALANCE_COST;
+          const chaos = player.joints.arm1Shoulder.angularVelocity - player.joints.arm2Shoulder.angularVelocity;
+          player.angularVelocity += chaos * player.facing * dt * .018;
+        }
+        player.balance = Math.max(0, player.balance - balanceCost * dt);
         this.updateBody(player, dt, frameScale, now);
         player.pose = this.calculatePose(player);
         for (const limb of LIMBS) {
@@ -300,12 +349,27 @@
           arm.speed = Math.hypot(arm.vx, arm.vy);
           arm.lastHitAt = old.lastHitAt || 0;
           const forwardSpeed = arm.vx * player.facing;
+          const timing = player.armTiming[limb];
+          if (timing.inputStartedAt && !timing.responseLocked) {
+            const responseAge = now - timing.inputStartedAt;
+            if (arm.speed >= timing.peakSpeed) {
+              timing.peakSpeed = arm.speed;
+              timing.responseMs = Math.round(responseAge);
+              timing.fallingFrames = 0;
+            } else if (timing.peakSpeed > CONFIG.MIN_HIT_SPEED && arm.speed < timing.peakSpeed * .92) {
+              timing.fallingFrames += 1;
+            }
+            if (timing.fallingFrames >= 2 || responseAge >= 350) timing.responseLocked = true;
+          }
           if (forwardSpeed > CONFIG.MIN_HIT_SPEED) {
             player.vx -= player.facing * forwardSpeed * CONFIG.ARM_REACTION * .0005;
             player.angularVelocity -= player.facing * forwardSpeed * CONFIG.ARM_REACTION * .000018;
+            player.balance = Math.max(0, player.balance - forwardSpeed * .025 * dt);
           }
         }
-        this.resolveSelfCollision(player, previousPose, now);
+        if (!arm1Active && !arm2Active && Math.abs(player.bodyAngle) < CONFIG.UNSTABLE_ANGLE) {
+          player.balance = Math.min(100, player.balance + CONFIG.BALANCE_RECOVERY * dt);
+        }
         if (now > player.feedbackUntil) player.feedback = "";
       }
       this.resolveArmClashes(now);
@@ -324,12 +388,11 @@
 
     updateState(player, now) {
       if (player.state === "FALL" && now >= player.stateUntil) {
-        player.state = "RECOVER";
-        player.stateUntil = now + CONFIG.RECOVERY_DURATION;
+        player.state = "STAGGER";
+        player.recoveringUntil = now + CONFIG.RECOVERY_DURATION;
+        player.bodyAngle = player.facing * .34;
+        player.balance = Math.max(35, player.balance);
         player.angularVelocity = 0;
-      } else if (player.state === "RECOVER" && now >= player.stateUntil) {
-        player.state = "STAND";
-        player.stagger = 0;
       }
     }
 
@@ -337,23 +400,24 @@
       const opponent = this.players[1 - player.index];
       const distanceError = Math.abs(opponent.x - player.x) - this.idealDistance();
       if (Math.abs(distanceError) > .035 && player.state !== "FALL") player.vx += player.facing * distanceError * CONFIG.DISTANCE_RETURN * dt;
-      player.vy += CONFIG.GRAVITY * dt;
       const support = this.supportGeometry(player);
       const centerOfMassX = player.x + Math.sin(player.bodyAngle) * .08;
       const outsideSupport = Math.max(0, Math.abs(centerOfMassX - support.centerX) - support.halfWidth);
       if (player.state === "FALL") {
+        player.vy += CONFIG.GRAVITY * 2.6 * dt;
         const fallTarget = player.facing * 1.28;
         player.angularVelocity += (fallTarget - player.bodyAngle) * 2.8 * dt;
       } else {
-        const balanceStrength = player.state === "RECOVER" ? CONFIG.AUTO_BALANCE * 1.8 : CONFIG.AUTO_BALANCE;
+        const balanceStrength = now < player.recoveringUntil ? CONFIG.AUTO_BALANCE * 1.8 : CONFIG.AUTO_BALANCE;
         player.angularVelocity += -player.bodyAngle * balanceStrength * dt;
         player.angularVelocity += Math.sign(player.bodyAngle || player.facing) * outsideSupport * 12 * dt;
         player.angularVelocity *= Math.pow(CONFIG.BALANCE_DAMPING, frameScale);
-        const instability = Math.abs(player.bodyAngle) + outsideSupport * 4;
-        player.stagger = Math.max(0, player.stagger + (instability - .34) * dt * 1.3);
-        if (Math.abs(player.bodyAngle) > CONFIG.STAGGER_ANGLE || player.stagger > .42) player.state = "STAGGER";
-        else if (player.state === "STAGGER") player.state = "STAND";
-        if (Math.abs(player.bodyAngle) > CONFIG.FALL_ANGLE && outsideSupport > .012) this.fall(player, now);
+        player.balance = Math.max(0, player.balance - outsideSupport * 210 * dt);
+        const angle = Math.abs(player.bodyAngle);
+        if ((angle >= CONFIG.FALL_ANGLE && outsideSupport > .008) || player.balance <= 0) this.fall(player, now);
+        else if (now < player.recoveringUntil || angle >= CONFIG.STAGGER_ANGLE || player.balance <= 20) player.state = "STAGGER";
+        else if (angle >= CONFIG.UNSTABLE_ANGLE || player.balance < 70) player.state = "UNSTABLE";
+        else player.state = "NORMAL";
       }
       const targetY = player.state === "FALL" ? CONFIG.GROUND_Y - .14 : CONFIG.BODY_REST_Y;
       player.vy += (targetY - player.y) * CONFIG.GROUND_SPRING * dt;
@@ -370,6 +434,7 @@
     fall(player, now) {
       if (player.state === "FALL") return;
       player.state = "FALL";
+      player.balance = 0;
       player.stateUntil = now + CONFIG.FALL_DURATION;
       player.feedback = "DOWN!";
       player.feedbackUntil = player.stateUntil;
@@ -399,7 +464,7 @@
       const head = this.offsetPoint(neck, up, scale * .25);
       const arms = {};
       for (const limb of LIMBS) {
-        const depth = limb === "front" ? 1 : -1;
+        const depth = limb === "arm1" ? 1 : -1;
         let shoulder = this.offsetPoint(neck, up, -scale * .05);
         shoulder = this.offsetPoint(shoulder, forward, depth * scale * .035);
         const shoulderAngle = player.joints[`${limb}Shoulder`].angle;
@@ -443,9 +508,9 @@
 
     resolveSelfCollision(player, previousPose, now) {
       const scale = this.characterScale();
-      const front = player.pose.arms.front;
-      const back = player.pose.arms.back;
-      const collision = this.armCollision(front, back, scale, true);
+      const arm1 = player.pose.arms.arm1;
+      const arm2 = player.pose.arms.arm2;
+      const collision = this.armCollision(arm1, arm2, scale, true);
       if (!collision) return false;
       JOINT_NAMES.forEach((name) => {
         player.joints[name].angle = player.previousJointAngles[name];
@@ -534,16 +599,19 @@
           }
           const damage = Math.min(CONFIG.MAX_HIT_DAMAGE, punch.damage * (headHit ? CONFIG.HEAD_DAMAGE_MULTIPLIER : 1));
           target.hp = Math.max(0, target.hp - damage);
+          target.balance = Math.max(0, target.balance - damage * (headHit ? 2.1 : 1.35));
           target.vx += attacker.facing * damage * CONFIG.KNOCKBACK;
           target.angularVelocity += attacker.facing * damage * CONFIG.HIT_ROTATION * (headHit ? 1.35 : .65);
-          target.stagger += damage / 48;
           if (damage > 12) target.state = "STAGGER";
           attacker.vx -= attacker.facing * damage * CONFIG.KNOCKBACK * .22;
+          attacker.angularVelocity -= attacker.facing * damage * .004;
+          attacker.balance = Math.max(0, attacker.balance - damage * .72);
           target.feedback = punch.type === "WEAK" ? (headHit ? "HEAD!" : "HIT!") : `${punch.type}!`;
           target.feedbackUntil = now + 500;
           this.shake = Math.min(1.4, this.shake + damage / 16);
           this.impact = { x: arm.hand.x, y: arm.hand.y, life: 1, color: headHit ? "#ffc857" : "#fff8df" };
           this.addCollisionMark(arm.hand, now, headHit ? "#ffc857" : "#fff");
+          if (damage >= 10) this.hitStopUntil = Math.max(this.hitStopUntil || 0, now + Math.min(60, 30 + damage * 1.5));
           if (this.onPunchSound) this.onPunchSound(damage / CONFIG.MAX_HIT_DAMAGE, headHit);
           if (target.hp <= 0) return this.finish(attackerIndex + 1, headHit ? "ヘッドへ決定打！" : "ボディへ決定打！");
         }
@@ -556,16 +624,30 @@
       const shoulderDrive = Math.max(0, -shoulder.angularVelocity);
       const elbowDrive = Math.max(0, elbow.angularVelocity);
       const forwardSpeed = Math.max(0, arm.vx * player.facing);
-      const posture = Math.max(.22, 1 - Math.max(0, -player.bodyAngle * player.facing) * .8 - Math.abs(player.bodyAngle) * .22);
-      const coordination = Math.min(1, (shoulderDrive / 2.4) * .48 + (elbowDrive / 3) * .52);
-      const bodyDrive = Math.max(0, player.vx * player.facing) * 2.4;
-      const speedPower = Math.min(1, Math.max(0, (arm.speed - CONFIG.MIN_HIT_SPEED) / 190));
-      const power = Math.min(1, speedPower * .5 + coordination * .33 + Math.min(.15, bodyDrive) + Math.min(.12, forwardSpeed / 900)) * posture;
+      const timing = player.armTiming[limb];
+      const now = performance.now();
+      const shoulderRecent = timing.shoulderAt && now - timing.shoulderAt < 600;
+      const elbowRecent = timing.elbowAt && now - timing.elbowAt < 600;
+      let syncFactor = shoulderRecent ? .58 : .42;
+      if (elbowRecent && !shoulderRecent) syncFactor = .66;
+      if (shoulderRecent && elbowRecent) {
+        const delay = timing.elbowAt - timing.shoulderAt;
+        syncFactor = delay >= 35 && delay <= 280 ? 1.4 - Math.abs(delay - 150) / 600 : Math.abs(delay) <= 70 ? 1.08 : .82;
+      }
+      const angle = Math.abs(player.bodyAngle);
+      let balanceFactor = angle < CONFIG.UNSTABLE_ANGLE ? 1 : angle < CONFIG.STAGGER_ANGLE ? .7 : .3;
+      if (player.state === "STAGGER") balanceFactor *= .65;
+      if (player.state === "FALL") balanceFactor = .1;
+      balanceFactor *= .55 + player.balance / 220;
+      const momentumFactor = 1 + Math.min(.22, Math.max(0, player.vx * player.facing) * 2.8);
+      const speedFactor = Math.min(1, forwardSpeed / 330);
+      const power = Math.min(1, speedFactor * syncFactor * balanceFactor * momentumFactor);
+      const coordination = Math.min(1, syncFactor / 1.4);
       const bend = Math.abs(elbow.angle);
       let type = "WEAK";
-      if (coordination > .48 && forwardSpeed > 120 && bend < .7) type = limb === "front" ? "JAB" : "STRAIGHT";
+      if (coordination > .48 && forwardSpeed > 120 && bend < .7) type = limb === "arm1" ? "JAB" : "STRAIGHT";
       else if (shoulderDrive > 1.1 && bend > .7 && Math.abs(arm.vy) > 42) type = "HOOK";
-      return { type, damage: Math.max(.35, power * CONFIG.MAX_HIT_DAMAGE), power, posture, coordination };
+      return { type, damage: Math.max(.35, power * CONFIG.MAX_HIT_DAMAGE), power, balanceFactor, syncFactor, coordination };
     }
 
     armGuardCollision(point, player) {
@@ -645,11 +727,12 @@
         const pose = player.pose || this.calculatePose(player);
         const support = pose.support;
         lines.push(`P${index + 1} BODY ${degrees(player.bodyAngle)}°  X ${player.x.toFixed(3)} Y ${player.y.toFixed(3)}`);
-        lines.push(`P${index + 1} 前肩 ${degrees(player.joints.frontShoulder.angle)}° 前肘 ${degrees(player.joints.frontElbow.angle)}°`);
-        lines.push(`P${index + 1} 後肩 ${degrees(player.joints.backShoulder.angle)}° 後肘 ${degrees(player.joints.backElbow.angle)}°`);
-        lines.push(`P${index + 1} COM ${(pose.centerOfMass.x / this.width).toFixed(3)} SUPPORT ${(support.centerX - support.halfWidth).toFixed(3)}..${(support.centerX + support.halfWidth).toFixed(3)}`);
-        lines.push(`P${index + 1} FIST ${pose.arms.front.speed.toFixed(0)}/${pose.arms.back.speed.toFixed(0)} POWER ${player.lastHitPower.toFixed(1)}`);
-        lines.push(`P${index + 1} BLOCK ${player.lastBlock ? "YES" : "NO"} STAGGER ${player.state === "STAGGER" ? "YES" : "NO"} FALL ${player.state === "FALL" ? "YES" : "NO"}`);
+        lines.push(`P${index + 1} BALANCE ${player.balance.toFixed(0)}  STATE ${player.state}`);
+        lines.push(`P${index + 1} ① SHOULDER ${degrees(player.joints.arm1Shoulder.angle)}°  ELBOW ${degrees(player.joints.arm1Elbow.angle)}°`);
+        lines.push(`P${index + 1} ② SHOULDER ${degrees(player.joints.arm2Shoulder.angle)}°  ELBOW ${degrees(player.joints.arm2Elbow.angle)}°`);
+        lines.push(`P${index + 1} ① FIST ${pose.arms.arm1.speed.toFixed(0)}  RESPONSE ${player.armTiming.arm1.responseMs || "--"}ms`);
+        lines.push(`P${index + 1} ② FIST ${pose.arms.arm2.speed.toFixed(0)}  RESPONSE ${player.armTiming.arm2.responseMs || "--"}ms`);
+        lines.push(`P${index + 1} HIT POWER ${player.lastHitPower.toFixed(1)}  BLOCK ${player.lastBlock ? "YES" : "NO"}`);
       });
       if (this.debug) lines.push(`FPS ${Math.round(this.fps)}  ELAPSED ${this.elapsed.toFixed(1)}s`);
       this.debugPanel.textContent = lines.join("\n");
@@ -730,7 +813,7 @@
     drawPlayer(ctx, player, color) {
       const pose = player.pose;
       const scale = this.characterScale();
-      this.drawArm(ctx, pose.arms.back, color, scale, .62);
+      this.drawArm(ctx, pose.arms.arm2, color, scale, .62);
       ctx.save();
       ctx.strokeStyle = "#16202a";
       ctx.lineWidth = scale * .14;
@@ -774,12 +857,47 @@
       ctx.globalAlpha = .72;
       ctx.fillRect(-scale * .19, -scale * .12, scale * .38, scale * .07);
       ctx.restore();
-      this.drawArm(ctx, pose.arms.front, color, scale, 1);
+      this.drawArm(ctx, pose.arms.arm1, color, scale, 1);
+      this.drawArmLabel(ctx, pose.arms.arm1.elbow, "①", color, scale);
+      this.drawArmLabel(ctx, pose.arms.arm2.elbow, "②", color, scale);
+    }
+
+    drawArmLabel(ctx, point, label, color, scale) {
+      ctx.save();
+      ctx.fillStyle = "rgba(4,15,24,.88)";
+      ctx.beginPath();
+      ctx.arc(point.x, point.y - scale * .15, scale * .105, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "#fff";
+      ctx.font = `900 ${Math.max(12, scale * .13)}px system-ui,sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label, point.x, point.y - scale * .15);
+      ctx.restore();
     }
 
     drawArm(ctx, arm, color, scale, alpha) {
       ctx.save();
       ctx.globalAlpha = alpha;
+      if (arm.speed > 150) {
+        const length = Math.min(scale * .48, arm.speed * .055);
+        const magnitude = Math.max(1, arm.speed);
+        const backX = arm.hand.x - arm.vx / magnitude * length;
+        const backY = arm.hand.y - arm.vy / magnitude * length;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = Math.min(.7, (arm.speed - 120) / 350) * alpha;
+        for (const spread of [-5, 5]) {
+          ctx.beginPath();
+          ctx.moveTo(arm.hand.x, arm.hand.y + spread);
+          ctx.lineTo(backX, backY + spread);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = alpha;
+      }
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.strokeStyle = "rgba(0,0,0,.48)";

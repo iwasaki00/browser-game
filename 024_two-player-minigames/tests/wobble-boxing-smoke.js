@@ -22,8 +22,9 @@ assert.ok(CONFIG.FALL_DURATION >= 1000);
 assert.ok(CONFIG.HEAD_DAMAGE_MULTIPLIER > 1);
 assert.ok(CONFIG.BLOCK_DAMAGE_MULTIPLIER <= .1);
 assert.match(indexSource, /wobble-boxing-sideview\.js/);
-assert.match(indexSource, /data-joint="frontShoulder"/);
-assert.match(indexSource, /data-joint="backElbow"/);
+assert.match(indexSource, /data-joint="arm1Shoulder"/);
+assert.match(indexSource, /data-joint="arm2Elbow"/);
+assert.doesNotMatch(indexSource, />前肩|>後肩|>前肘|>後肘/);
 assert.match(managerSource, /横から見たリング/);
 assert.match(indexSource, /id="testSpeedButton"/);
 assert.match(appSource, /manager\.cycleTestSpeed\(\)/);
@@ -65,16 +66,16 @@ assert.strictEqual(p2.facing, -1);
 assert.ok(p1.x < p2.x);
 assert.ok(p1.pose.head.y < p1.pose.hip.y);
 assert.ok(p1.pose.feet.every((foot) => Math.abs(foot.y - CONFIG.GROUND_Y * game.height) < .001));
-assert.ok(p1.pose.arms.front.hand.x > p1.pose.arms.front.shoulder.x);
-assert.ok(p2.pose.arms.front.hand.x < p2.pose.arms.front.shoulder.x);
+assert.ok(p1.pose.arms.arm1.hand.x > p1.pose.arms.arm1.shoulder.x);
+assert.ok(p2.pose.arms.arm1.hand.x < p2.pose.arms.arm1.shoulder.x);
 
 const targetAtRest = game.targetGeometry(p2);
-assert.ok(game.distance(p1.pose.arms.front.hand, targetAtRest.head) > targetAtRest.head.radius + targetAtRest.fistRadius);
-p1.joints.frontShoulder.angle = 0;
-p1.joints.frontElbow.angle = CONFIG.ELBOW_MAX_ANGLE;
+assert.ok(game.distance(p1.pose.arms.arm1.hand, targetAtRest.head) > targetAtRest.head.radius + targetAtRest.fistRadius);
+p1.joints.arm1Shoulder.angle = 0;
+p1.joints.arm1Elbow.angle = CONFIG.ELBOW_MAX_ANGLE;
 p1.pose = game.calculatePose(p1);
 assert.ok(
-  game.distance(p1.pose.arms.front.hand, targetAtRest.head) <= targetAtRest.head.radius + targetAtRest.fistRadius,
+  game.distance(p1.pose.arms.arm1.hand, targetAtRest.head) <= targetAtRest.head.radius + targetAtRest.fistRadius,
   "coordinated extension must reach"
 );
 
@@ -94,10 +95,10 @@ const makeSimulation = (testMode = false) => {
 };
 
 const motion = makeSimulation();
-const elbowBefore = motion.players[0].joints.frontElbow.angle;
-motion.players[0].joints.frontElbow.holding = true;
+const elbowBefore = motion.players[0].joints.arm1Elbow.angle;
+motion.beginJointInput(motion.players[0], "arm1Elbow", 1000);
 motion.update(.05, 1000);
-assert.ok(motion.players[0].joints.frontElbow.angle > elbowBefore);
+assert.ok(motion.players[0].joints.arm1Elbow.angle > elbowBefore);
 assert.notStrictEqual(motion.players[0].angularVelocity, 0);
 for (let frame = 0; frame < 180; frame += 1) motion.update(1 / 60, 1100 + frame * 16.7);
 for (const [name, joint] of Object.entries(motion.players[0].joints)) {
@@ -105,13 +106,55 @@ for (const [name, joint] of Object.entries(motion.players[0].joints)) {
   assert.ok(joint.angle >= minimum && joint.angle <= maximum);
 }
 
+const idle = makeSimulation();
+for (let frame = 0; frame < 100; frame += 1) idle.update(.1, 1000 + frame * 100);
+idle.players.forEach((player) => {
+  assert.strictEqual(player.y, CONFIG.BODY_REST_Y, "idle boxer must not sink");
+  assert.ok(Math.abs(player.bodyAngle) < .001);
+  assert.strictEqual(player.balance, 100);
+  assert.strictEqual(player.state, "NORMAL");
+});
+
+const response = makeSimulation();
+const responsePlayer = response.players[0];
+response.beginJointInput(responsePlayer, "arm1Shoulder", 1000);
+for (let frame = 1; frame <= 24; frame += 1) {
+  const now = 1000 + frame * 16.667;
+  if (frame === 5) response.beginJointInput(responsePlayer, "arm1Elbow", now);
+  if (frame === 18) {
+    responsePlayer.joints.arm1Shoulder.holding = false;
+    responsePlayer.joints.arm1Elbow.holding = false;
+  }
+  response.update(1 / 60, now);
+}
+assert.ok(responsePlayer.armTiming.arm1.responseMs >= 200 && responsePlayer.armTiming.arm1.responseMs <= 350);
+assert.ok(Math.abs(responsePlayer.bodyAngle) > .04, "coordinated arm movement must visibly rock the torso");
+
+const spam = makeSimulation();
+Object.values(spam.players[0].joints).forEach((joint) => { joint.holding = true; });
+for (let frame = 0; frame < 75; frame += 1) spam.update(1 / 60, 1000 + frame * 16.667);
+assert.ok(spam.players[0].balance < 40, "holding all controls must sharply reduce balance");
+assert.ok(["UNSTABLE", "STAGGER", "FALL"].includes(spam.players[0].state));
+
+const powerPlayer = game.makePlayer(0);
+const powerArm = { vx: 260, vy: 0, speed: 260 };
+powerPlayer.joints.arm1Shoulder.angularVelocity = -4;
+powerPlayer.joints.arm1Elbow.angularVelocity = 6;
+const powerNow = performance.now();
+powerPlayer.armTiming.arm1.shoulderAt = powerNow - 170;
+powerPlayer.armTiming.arm1.elbowAt = powerNow - 30;
+const syncedPower = game.classifyPunch(powerPlayer, "arm1", powerArm).damage;
+powerPlayer.armTiming.arm1.shoulderAt = 0;
+const elbowOnlyPower = game.classifyPunch(powerPlayer, "arm1", powerArm).damage;
+assert.ok(syncedPower > elbowOnlyPower * 1.4, "well-timed shoulder and elbow input must beat elbow-only power");
+
 const fallGame = makeSimulation();
 const falling = fallGame.players[0];
 falling.bodyAngle = .95;
 fallGame.updateBody(falling, 1 / 60, 1, 2000);
 assert.strictEqual(falling.state, "FALL");
 fallGame.updateState(falling, falling.stateUntil + 1);
-assert.strictEqual(falling.state, "RECOVER");
+assert.strictEqual(falling.state, "STAGGER");
 
 const farArm = () => ({
   shoulder: { x: -500, y: -500 }, elbow: { x: -480, y: -480 }, hand: { x: -460, y: -460 },
@@ -120,7 +163,7 @@ const farArm = () => ({
 const makeCombat = () => {
   const combat = makeSimulation();
   combat.resolveHits = Game.prototype.resolveHits;
-  combat.players[1].pose.arms = { front: farArm(), back: farArm() };
+  combat.players[1].pose.arms = { arm1: farArm(), arm2: farArm() };
   combat.onPunchSound = () => {};
   combat.onBlockSound = () => {};
   combat.finish = () => {};
@@ -128,12 +171,12 @@ const makeCombat = () => {
 };
 const attackHead = (combat) => {
   const target = combat.targetGeometry(combat.players[1]).head;
-  combat.players[0].pose.arms.front = {
+  combat.players[0].pose.arms.arm1 = {
     shoulder: { x: target.x - 60, y: target.y }, elbow: { x: target.x - 30, y: target.y },
     hand: { x: target.x, y: target.y }, vx: 180, vy: 0, speed: 180, lastHitAt: 0
   };
-  combat.players[0].joints.frontShoulder.angularVelocity = -2;
-  combat.players[0].joints.frontElbow.angularVelocity = 3;
+  combat.players[0].joints.arm1Shoulder.angularVelocity = -2;
+  combat.players[0].joints.arm1Elbow.angularVelocity = 3;
   return target;
 };
 
@@ -145,7 +188,7 @@ assert.ok(combat.players[1].angularVelocity > 0);
 
 combat = makeCombat();
 const blockPoint = attackHead(combat);
-combat.players[1].pose.arms.front = {
+combat.players[1].pose.arms.arm1 = {
   shoulder: { x: blockPoint.x - 20, y: blockPoint.y }, elbow: blockPoint,
   hand: { x: blockPoint.x + 20, y: blockPoint.y }, vx: 0, vy: 0, speed: 0, lastHitAt: 0
 };
@@ -160,7 +203,7 @@ hud.players.forEach((player) => { player.pose = hud.calculatePose(player); });
 hud.energyBars = [0, 1].map(() => ({ style: {}, classList: { toggle() {} } }));
 hud.debugPanel = { textContent: "" };
 hud.updateHud();
-for (const label of ["BODY", "COM", "SUPPORT", "FIST", "POWER", "BLOCK", "STAGGER", "FALL"]) {
+for (const label of ["BODY", "BALANCE", "①", "②", "FIST", "RESPONSE", "HIT POWER", "BLOCK", "STATE"]) {
   assert.ok(hud.debugPanel.textContent.includes(label));
 }
 
