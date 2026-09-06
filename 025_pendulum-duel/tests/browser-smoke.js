@@ -28,7 +28,7 @@ function send(method,params={}){
 
 async function evaluate(expression){
   const response=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});
-  if(response.exceptionDetails)throw new Error(response.exceptionDetails.text||'Browser evaluation failed');
+  if(response.result.exceptionDetails)throw new Error(response.result.exceptionDetails.exception?.description||response.result.exceptionDetails.text||'Browser evaluation failed');
   return response.result.result.value;
 }
 
@@ -68,7 +68,8 @@ async function main(){
   await evaluate("$('matchStart').click()");
   assert.strictEqual(await evaluate('state'),'countdown');
   await wait(3900);
-  assert.strictEqual(await evaluate('state'),'running');
+  const cpuRunning=await evaluate('state');
+  assert(cpuRunning==='running','CPU countdown stalled in '+cpuRunning+': '+runtimeErrors.join('; '));
   const match=await evaluate("({p0:players[0].weapon.id,p1:players[1].weapon.id,lengthRatio:players[0].L/(width*.087),heavyTip:players[1].weapon.tipSize,hud0:$('weapon0').textContent,hud1:$('weapon1').textContent})");
   assert.strictEqual(match.p0,'long');assert.strictEqual(match.p1,'heavy');
   assert(Math.abs(match.lengthRatio-1.28)<.001&&match.heavyTip>1);
@@ -79,6 +80,10 @@ async function main(){
 
   const hazards=await evaluate(`(()=>{resetHazards();inputs[0].cw=true;for(let i=0;i<1500;i++)updateHazards(1/240);inputs[0].cw=false;const over=hazardState.chaos[0].over>0;resetHazards();hazardState.event.next=1;updateHazards(.01);const warned=hazardState.event.phase==='warning';hazardState.event.next=0;updateHazards(.01);const active=hazardState.event.phase==='active';hazardState.event.time=.001;updateHazards(.01);const restored=hazardState.event.phase==='idle'&&environment().gravity===1;spawnBomb();hazardState.bomb.x=players[0].x;hazardState.bomb.y=players[0].y;players[0].jointHp[1]=1;const hp=players[0].hp;explodeBomb();const result={over,warned,active,restored,bombGone:hazardState.bomb===null,damaged:players[0].hp<hp,broken:players[0].nodes.length<players[0].weapon.segments+1,debris:hazardState.debris.length,eventCount:EVENT_CONFIG.events.length};resetPhysics();resetHazards();return result})()`);
   assert(hazards.over&&hazards.warned&&hazards.active&&hazards.restored&&hazards.bombGone&&hazards.damaged&&hazards.broken&&hazards.debris>0&&hazards.eventCount===6,'CHAOS, bomb, event, or joint-break systems failed');
+  const failsafe=await evaluate(`(()=>{resetHazards();hazardState.event.next=999;hazardState.bombNext=999;hazardState.matchTime=12.99;updateHazards(.02);const warning=hazardState.event.phase==='warning';hazardState.matchTime=14.99;updateHazards(.02);const event=hazardState.event.phase==='active';hazardState.matchTime=17.99;updateHazards(.02);const bomb=Boolean(hazardState.bomb);resetHazards();return {warning,event,bomb}})()`);
+  assert(failsafe.warning&&failsafe.event&&failsafe.bomb,'Hazard failsafe did not force overdue scheduling');
+  const lockedBreak=await evaluate(`(()=>{resetPhysics();resetHazards();const p=players[0];lock(p);breakJoint(p,2);step(1/240,true);const valid=p.chords.every(chord=>chord.a<p.nodes.length&&chord.b<p.nodes.length);resetPhysics();resetHazards();return {valid,nodes:p.nodes.length}})()`);
+  assert(lockedBreak.valid&&lockedBreak.nodes===2,'LOCK constraints referenced a detached joint');
 
   const chaos=await evaluate("(()=>{weaponChoices[0]='chaos';resetPhysics();const p=players[0];return {nodes:p.nodes.length,cooldowns:p.hitCooldowns.length,totalRatio:p.L*p.weapon.segments/(width*.087*3),segments:p.weapon.segments}})()");
   assert(chaos.segments===5&&chaos.nodes===6&&chaos.cooldowns===5&&chaos.totalRatio>=1.1&&chaos.totalRatio<=1.25,'CHAOS generation, constraints, or reach failed');
@@ -107,8 +112,9 @@ async function main(){
   const cpuChoice=await evaluate("({state,weapon:weaponChoices[1],valid:WEAPON_IDS.includes(weaponChoices[1])})");
   assert(cpuChoice.state==='countdown'&&cpuChoice.valid,'CPU random weapon selection failed');
 
-  const endurance=await evaluate(`(()=>{state='running';remaining=60;players=[];resetPhysics();resetHazards();let steps=0;while(state==='running'&&steps<14400){step(1/240,true);steps++;}const finite=players.every(player=>player.nodes.every(node=>Number.isFinite(node.x)&&Number.isFinite(node.y)))&&hazardState.debris.every(part=>Number.isFinite(part.x)&&Number.isFinite(part.y));return {steps,finite,debris:hazardState.debris.length,bomb:Boolean(hazardState.bomb),event:hazardState.event.phase}})()`);
-  assert(endurance.steps>100&&endurance.finite&&endurance.debris<30,'60-second hazard simulation became unstable');
+  const endurance=JSON.parse(await evaluate(`(()=>{const nativeRandom=Math.random;Math.random=()=>.5;state='running';remaining=60;players=[];resetPhysics();players.forEach(player=>player.hp=9999);resetHazards();let steps=0;while(state==='running'&&steps<14400){step(1/240,true);steps++;}const finite=players.every(player=>player.nodes.every(node=>Number.isFinite(node.x)&&Number.isFinite(node.y)))&&hazardState.debris.every(part=>Number.isFinite(part.x)&&Number.isFinite(part.y)),result={steps,finite,debris:hazardState.debris.length,eventStarts:hazardState.event.startCount,bombSpawns:hazardState.bombSpawnCount,firstEvent:hazardState.event.firstStart,firstBomb:hazardState.firstBomb};Math.random=nativeRandom;return JSON.stringify(result)})()`));
+  assert(endurance.steps>14000&&endurance.finite&&endurance.debris<30&&endurance.eventStarts>=3&&endurance.bombSpawns>=2,'60-second hazard simulation failed: '+JSON.stringify(endurance));
+  console.log('Hazard 60-second result: '+JSON.stringify(endurance));
 
   await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:3,mobile:true,screenWidth:390,screenHeight:844});
   await send('Page.reload',{ignoreCache:true});
