@@ -8,6 +8,19 @@
   padding: 7px 12px;
 }
 
+.game-screen[data-game="boxing"] .countdown {
+  z-index: 12;
+}
+
+.game-screen[data-game="boxing"] .center-rivet {
+  z-index: 5;
+}
+
+.game-screen[data-game="boxing"] .control-zone::before {
+  z-index: 0;
+  pointer-events: none;
+}
+
 .game-screen[data-game="boxing"] .control-zone > strong,
 .game-screen[data-game="boxing"] .control-zone > small {
   display: none;
@@ -27,6 +40,8 @@
 }
 
 .game-screen[data-game="boxing"] .joint-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 5px;
@@ -34,12 +49,15 @@
 }
 
 .joint-grid button {
+  position: relative;
+  z-index: 3;
   min-height: 44px;
   padding: 4px 8px;
   color: #fff;
   font-size: clamp(.72rem, 2.5vw, .9rem);
   font-weight: 900;
   cursor: pointer;
+  pointer-events: auto;
   background: rgba(2, 11, 18, .34);
   border: 1px solid rgba(255, 255, 255, .26);
   border-radius: 11px;
