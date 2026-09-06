@@ -158,6 +158,62 @@
   transform: translateX(-45%);
 }
 
+.preview-extra {
+  display: none;
+  position: absolute;
+  left: 50%;
+  width: 3px;
+  height: 21px;
+  background: var(--accent);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.weapon-preview.chaos {
+  height: 104px;
+}
+
+.weapon-preview.chaos .preview-extra {
+  display: block;
+}
+
+.weapon-preview.chaos .extra-one {
+  top: 54px;
+  transform: rotate(-17deg);
+}
+
+.weapon-preview.chaos .extra-two {
+  top: 72px;
+  transform: rotate(24deg);
+}
+
+.weapon-preview.chaos .preview-tip {
+  top: 90px;
+}
+
+.weapon-preview.chaos::before,
+.weapon-preview.chaos::after {
+  position: absolute;
+  left: 50%;
+  width: 3px;
+  height: 21px;
+  content: "";
+  background: var(--accent);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--accent);
+  transform-origin: 2px 2px;
+}
+
+.weapon-preview.chaos::before {
+  top: 54px;
+  transform: rotate(-17deg);
+}
+
+.weapon-preview.chaos::after {
+  top: 72px;
+  transform: rotate(24deg);
+}
+
 .weapon-preview.long {
   --preview-scale: 1.12;
 }

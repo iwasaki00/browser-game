@@ -72,6 +72,24 @@ const WEAPONS = Object.freeze({
     tipSize: .76,
     previewSpeed: 1.45,
     stats: {power:2,speed:5,reach:2,control:5}
+  }),
+  chaos: Object.freeze({
+    id: 'chaos',
+    name: 'CHAOS',
+    label: '5連振り子',
+    description: '5 SEGMENTS・予想外の角度から襲う',
+    segments: 5,
+    segmentLength: .7,
+    segmentMass: .75,
+    tipMass: .9,
+    motorPower: 1.1,
+    damping: .9987,
+    gravity: 1,
+    damageMultiplier: .98,
+    rodWidth: .8,
+    tipSize: .92,
+    previewSpeed: .9,
+    stats: {power:4,speed:3,reach:4,control:1}
   })
 });
 

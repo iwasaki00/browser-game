@@ -67,6 +67,9 @@ async function main(){
   assert(Math.abs(match.lengthRatio-1.28)<.001&&match.heavyTip>1);
   assert.strictEqual(match.hud0,'LONG');assert.strictEqual(match.hud1,'HEAVY');
 
+  const chaos=await evaluate("(()=>{weaponChoices[0]='chaos';resetPhysics();const p=players[0];return {nodes:p.nodes.length,cooldowns:p.hitCooldowns.length,totalRatio:p.L*p.weapon.segments/(width*.087*3),segments:p.weapon.segments}})()");
+  assert(chaos.segments===5&&chaos.nodes===6&&chaos.cooldowns===5&&chaos.totalRatio>=1.1&&chaos.totalRatio<=1.25,'CHAOS generation, constraints, or reach failed');
+
   const inertia=await evaluate("(()=>{clearInput();const p=players[0];for(let j=1;j<p.nodes.length;j++){const node=p.nodes[j];node.x=p.x;node.y=p.y+p.L*j;node.px=node.x+4;node.py=node.y;}const angular=()=>{const node=p.nodes[1],dx=node.x-p.x,dy=node.y-p.y,vx=node.x-node.px,vy=node.y-node.py;return dx*vy-dy*vx;};const before=angular();inputs[0].ccw=true;step(1/240,true);const after=angular();clearInput();return {before,after};})()");
   assert(inertia.before*inertia.after>0,'Opposite torque reversed angular motion instantly instead of braking it');
   const lockState=await evaluate("(()=>{dispatchEvent(new KeyboardEvent('keydown',{key:'s',bubbles:true}));step(1/240,true);const result={locked:players[0].locked,cool:players[0].cool};dispatchEvent(new KeyboardEvent('keyup',{key:'s',bubbles:true}));return result})()");
