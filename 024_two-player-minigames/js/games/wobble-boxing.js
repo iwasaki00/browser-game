@@ -24,7 +24,7 @@
     GUARD_SHOULDER_ANGLE: 1.05,
     GUARD_ELBOW_ANGLE: 2.35,
     PLAYER_START_OFFSET: .05,
-    MAX_PUNCH_LUNGE: .075,
+    MAX_PUNCH_LUNGE: .082,
     BODY_ROTATION_FACTOR: .18,
     BODY_MAX_ROTATION: .22,
     BODY_ROTATION_RETURN: 7,
@@ -105,6 +105,7 @@
 
     reset() {
       this.active = false;
+      if (this.centerRivet) this.centerRivet.classList.remove("fight-active");
       this.elapsed = 0;
       this.shake = 0;
       this.impact = null;
@@ -620,6 +621,7 @@
     finish(winner, reason) {
       if (!this.active) return;
       this.active = false;
+      if (this.centerRivet) this.centerRivet.classList.remove("fight-active");
       cancelAnimationFrame(this.animationId);
       this.jointButtons.flat().forEach((button) => button.classList.remove("active"));
       this.render();
