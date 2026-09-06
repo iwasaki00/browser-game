@@ -12,10 +12,12 @@
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/bomb.css">
   <link rel="stylesheet" href="./css/boxing.css">
+  <link rel="stylesheet" href="./css/hockey.css">
   <script src="./js/games/sumo.js" defer></script>
   <script src="./js/games/tug-of-war.js" defer></script>
   <script src="./js/games/bomb-push.js" defer></script>
   <script src="./js/games/wobble-boxing-sideview.js" defer></script>
+  <script src="./js/games/table-hockey.js" defer></script>
   <script src="./js/game-manager.js" defer></script>
   <script src="./js/app.js" defer></script>
 </head>
@@ -25,7 +27,7 @@
       <header class="menu-header">
         <a class="arcade-link" href="../index.html" aria-label="Browser Game Arcadeへ戻る">← ARCADE</a>
         <div class="menu-tools">
-          <button id="menuTestModeButton" class="test-mode-button" type="button" aria-label="ボクシングのテストモードを有効にする" aria-pressed="false">TEST OFF</button>
+          <button id="menuTestModeButton" class="test-mode-button" type="button" aria-label="対応ゲームのテストモードを有効にする" aria-pressed="false">TEST OFF</button>
           <button id="menuMuteButton" class="icon-button" type="button" aria-label="音をミュート">♪</button>
         </div>
       </header>
@@ -54,8 +56,13 @@
           <span class="game-card-copy"><small>JOINT CONTROL</small><strong>よろよろボクシング</strong><em>4つの関節を操って、自分でパンチを作れ！</em></span>
           <span class="play-mark" aria-hidden="true">▶</span>
         </button>
+        <button id="hockeyCard" class="game-card" type="button">
+          <span class="game-card-number" aria-hidden="true">05</span>
+          <span class="game-card-copy"><small>DIRECT DRAG</small><strong>卓上ホッケー</strong><em>同時にパドルを操って、先に3点を決めろ！</em></span>
+          <span class="play-mark" aria-hidden="true">▶</span>
+        </button>
         <div class="coming-list" aria-label="今後追加予定">
-          <div><span>05</span><b>次の対戦ゲーム</b><small>COMING SOON</small></div>
+          <div><span>06</span><b>次の対戦ゲーム</b><small>COMING SOON</small></div>
         </div>
       </div>
     </section>

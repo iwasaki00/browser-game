@@ -1,0 +1,18 @@
+.game-screen[data-game="hockey"] {
+  grid-template-rows: clamp(82px, 13vh, 112px) minmax(0, 1fr) clamp(82px, 13vh, 112px);
+}
+
+.game-screen[data-game="hockey"] .arena { background: #061924; }
+.game-screen[data-game="hockey"] .control-zone { padding: 6px 12px; cursor: default; }
+.game-screen[data-game="hockey"] .control-zone > small,
+.game-screen[data-game="hockey"] .energy-track { display: none; }
+.game-screen[data-game="hockey"] .control-zone strong { margin: 3px 0; font-size: clamp(1rem, 3vw, 1.45rem); letter-spacing: .08em; }
+.game-screen[data-game="hockey"] .energy-name { margin: 0; color: var(--gold); }
+.game-screen[data-game="hockey"] #gameCanvas { cursor: grab; }
+.game-screen[data-game="hockey"] #gameCanvas:active { cursor: grabbing; }
+.game-screen[data-game="hockey"] .center-rivet { opacity: .22; }
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .game-screen[data-game="hockey"] { grid-template-rows: 68px minmax(0, 1fr) 68px; }
+  .game-screen[data-game="hockey"] .control-zone strong { display: none; }
+}
