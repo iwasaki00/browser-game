@@ -1,3 +1,7 @@
-.game-screen[data-game="bomb"] .control-zone.charging .energy-track i { background: var(--gold); }
-.game-screen[data-game="bomb"] .control-zone.charged { filter: saturate(1.18) brightness(1.08); }
-.game-screen[data-game="bomb"] .control-zone.charged strong { animation: danger-pulse 360ms ease-in-out infinite alternate; }
+.game-screen[data-game="bomb"] .control-zone { transition: filter 160ms ease, box-shadow 160ms ease; }
+.game-screen[data-game="bomb"] .control-zone.owner { z-index: 5; filter: saturate(1.18) brightness(1.1); box-shadow: inset 0 0 42px rgba(255,200,87,.28); }
+.game-screen[data-game="bomb"] .control-zone.owner strong { color: var(--gold); animation: bomb-pass-pulse 620ms ease-in-out infinite alternate; }
+.game-screen[data-game="bomb"] .control-zone.cooldown strong { color: rgba(255,255,255,.58); animation: none; }
+.game-screen[data-game="bomb"] .control-zone:not(.owner) { filter: saturate(.6) brightness(.72); }
+.game-screen[data-game="bomb"] .energy-track i { background: var(--gold); transition: transform 60ms linear; }
+@keyframes bomb-pass-pulse { to { transform: scale(1.06); text-shadow: 0 0 18px rgba(255,200,87,.7); } }

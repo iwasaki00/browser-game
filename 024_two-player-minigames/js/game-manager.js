@@ -5,6 +5,7 @@
       this.elements = elements; this.scores = [0, 0]; this.currentGame = null; this.countdownTimers = [];
       this.currentGameKey = "sumo";
       this.audioContext = null; this.muted = false;
+      this.bombExplosionTime = 0;
       const params = new URLSearchParams(location.search);
       this.debug = params.get("debug") === "1";
       this.testMode = params.get("test") === "1";
@@ -19,7 +20,7 @@
     launchTugOfWar() {
       this.launch("tug");
     }
-    launchBombPush() {
+    launchBombHotPotato() {
       this.launch("bomb");
     }
     launchWobbleBoxing() {
@@ -35,9 +36,10 @@
     }
     configureGameScreen() {
       this.elements.debugPanel.hidden = !this.debug;
-      const testable = this.currentGameKey === "boxing" || this.currentGameKey === "hockey";
+      const testable = this.currentGameKey === "bomb" || this.currentGameKey === "boxing" || this.currentGameKey === "hockey";
       this.elements.testModeButton.hidden = !testable;
-      this.elements.testSpeedButton.hidden = this.currentGameKey !== "boxing" || !this.testMode;
+      this.elements.testSpeedButton.hidden = !this.testMode || (this.currentGameKey !== "boxing" && this.currentGameKey !== "bomb");
+      this.syncTestSpeedButton();
       if (this.currentGameKey === "hockey") {
         this.elements.debugPanel.hidden = !(this.debug || this.testMode);
         this.elements.gameScreen.dataset.game = "hockey";
@@ -59,12 +61,13 @@
         return;
       }
       if (this.currentGameKey === "bomb") {
+        this.elements.debugPanel.hidden = !(this.debug || this.testMode);
         this.elements.gameScreen.dataset.game = "bomb";
-        this.elements.gameScreen.setAttribute("aria-label", "\u7206\u5f3e\u62bc\u3057\u4ed8\u3051 \u5bfe\u6226\u753b\u9762");
-        this.elements.canvas.setAttribute("aria-label", "\u7206\u5f3e\u3092\u76f8\u624b\u5074\u3078\u62bc\u3057\u8fd4\u3059\u7af6\u6280\u5834");
-        this.elements.controlActions.forEach((element) => { element.textContent = "PUSH!"; });
-        this.elements.energyNames.forEach((element) => { element.textContent = "CHARGE"; });
-        this.elements.centerBadge.textContent = "BOMB";
+        this.elements.gameScreen.setAttribute("aria-label", "爆弾ホットポテト 対戦画面");
+        this.elements.canvas.setAttribute("aria-label", "爆弾を相手へ渡すホットポテト競技場");
+        this.elements.controlActions.forEach((element) => { element.textContent = "WAIT"; });
+        this.elements.energyNames.forEach((element) => { element.textContent = "PASS READY"; });
+        this.elements.centerBadge.textContent = "PASS";
         return;
       }
       const tug = this.currentGameKey === "tug"; const action = tug ? "ひっぱれ！" : "トントン！"; const energyName = tug ? "STAMINA" : "POWER";
@@ -81,7 +84,7 @@
       const bomb = this.currentGameKey === "bomb";
       const boxing = this.currentGameKey === "boxing";
       const hockey = this.currentGameKey === "hockey";
-      const GameClass = hockey ? window.TableHockeyGame : boxing ? window.WobbleBoxingGame : bomb ? window.BombPushGame : tug ? window.TugOfWarGame : window.SumoGame;
+      const GameClass = hockey ? window.TableHockeyGame : boxing ? window.WobbleBoxingGame : bomb ? window.BombHotPotatoGame : tug ? window.TugOfWarGame : window.SumoGame;
       this.currentGame = new GameClass({
         canvas: this.elements.canvas, controls: [this.elements.p1Control, this.elements.p2Control],
         spriteUrls: (bomb || hockey) ? undefined : tug
@@ -89,14 +92,16 @@
           : ["./assets/rikishi-cyan.webp", "./assets/rikishi-coral.webp"],
         spriteUrl: boxing ? "./assets/sideview-boxer-torso.png" : bomb ? "./assets/bomb-topdown.png" : undefined,
         jointButtons: this.elements.jointButtons,
+        actionLabels: this.elements.controlActions,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
-        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: (boxing || hockey) && this.testMode, gameSpeed: this.testSpeed,
+        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: (bomb || boxing || hockey) && this.testMode, gameSpeed: this.testSpeed,
+        testExplosionTime: bomb && this.testMode ? this.bombExplosionTime : 0,
         centerRivet: this.elements.centerBadge.parentElement,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
         onGoodSound: (player) => this.playGood(player),
-        onChargeSound: (player) => this.playCharge(player),
         onFuseSound: (progress) => this.playFuse(progress),
         onExplosionSound: () => this.playExplosion(),
+        onPassSound: (player) => this.playBombPass(player),
         onPunchSound: (power, head) => this.playPunch(power, head),
         onBlockSound: () => this.playBlock(),
         onPaddleSound: (power, player) => this.playHockeyPaddle(power, player),
@@ -142,10 +147,15 @@
     toggleTestMode() {
       this.testMode = !this.testMode;
       this.syncTestModeButtons();
-      if (!this.currentGame || (this.currentGameKey !== "boxing" && this.currentGameKey !== "hockey")) return;
+      if (!this.currentGame || !["bomb", "boxing", "hockey"].includes(this.currentGameKey)) return;
       this.currentGame.testMode = this.testMode;
+      if (this.currentGameKey === "bomb") {
+        this.currentGame.testExplosionTime = this.testMode ? this.bombExplosionTime : 0;
+        if (this.testMode && this.currentGame.setTestExplosionTime) this.currentGame.setTestExplosionTime(this.bombExplosionTime);
+      }
       this.elements.debugPanel.hidden = !(this.debug || this.testMode);
-      this.elements.testSpeedButton.hidden = this.currentGameKey !== "boxing" || !this.testMode;
+      this.elements.testSpeedButton.hidden = !this.testMode || (this.currentGameKey !== "boxing" && this.currentGameKey !== "bomb");
+      this.syncTestSpeedButton();
       this.currentGame.updateHud();
       this.currentGame.render();
     }
@@ -159,6 +169,13 @@
       });
     }
     cycleTestSpeed() {
+      if (this.currentGameKey === "bomb") {
+        const times = [0, 3000, 5000, 10000];
+        this.bombExplosionTime = times[(times.indexOf(this.bombExplosionTime) + 1) % times.length];
+        this.syncTestSpeedButton();
+        if (this.currentGame && this.currentGame.setTestExplosionTime) this.currentGame.setTestExplosionTime(this.bombExplosionTime);
+        return;
+      }
       const speeds = [1, .5, .25];
       const index = speeds.indexOf(this.testSpeed);
       this.testSpeed = speeds[(index + 1) % speeds.length];
@@ -169,6 +186,12 @@
       }
     }
     syncTestSpeedButton() {
+      if (this.currentGameKey === "bomb") {
+        const label = this.bombExplosionTime ? (this.bombExplosionTime / 1000) + "s" : "RANDOM";
+        this.elements.testSpeedButton.textContent = label;
+        this.elements.testSpeedButton.setAttribute("aria-label", "爆発時間 " + label);
+        return;
+      }
       const label = this.testSpeed === 1 ? "1.0x" : `${this.testSpeed}x`;
       this.elements.testSpeedButton.textContent = label;
       this.elements.testSpeedButton.setAttribute("aria-label", `テスト速度 ${label}`);
@@ -186,9 +209,9 @@
     playTap(power, player) { this.resumeAudio(); this.tone((player === 0 ? 150 : 132) + power * 28, .055, "triangle", .035); }
     playGood(player) { this.resumeAudio(); this.tone(player === 0 ? 560 : 510, .08, "sine", .035); this.tone(player === 0 ? 720 : 660, .09, "triangle", .025, .055); }
     playImpact(power) { this.tone(76 + power * 22, .13, "square", .025); }
-    playCharge(player) { this.resumeAudio(); this.tone(player === 0 ? 92 : 82, .2, "sawtooth", .05); this.tone(58, .24, "square", .035, .035); }
     playFuse(progress) { this.resumeAudio(); this.tone(1250 + progress * 720, .035, "square", .018); }
     playExplosion() { this.resumeAudio(); this.tone(52, .48, "sawtooth", .12); this.tone(34, .62, "square", .08, .02); }
+    playBombPass(player) { this.resumeAudio(); this.tone(player === 0 ? 620 : 560, .12, "sawtooth", .03); this.tone(player === 0 ? 410 : 450, .07, "triangle", .035, .22); }
     playPunch(power, head) { this.resumeAudio(); this.tone((head ? 210 : 105) + power * 90, .11, head ? "square" : "triangle", .045 + power * .035); }
     playBlock() { this.resumeAudio(); this.tone(720, .055, "square", .028); this.tone(430, .07, "triangle", .022, .02); }
     playHockeyPaddle(power, player) { this.resumeAudio(); this.tone((player === 0 ? 250 : 220) + power * 190, .055, "triangle", .025 + power * .025); }

@@ -14,7 +14,7 @@
   const manager = new window.GameManager(elements);
   elements.sumoCard.addEventListener("click", () => manager.launchSumo());
   elements.tugCard.addEventListener("click", () => manager.launchTugOfWar());
-  elements.bombCard.addEventListener("click", () => manager.launchBombPush());
+  elements.bombCard.addEventListener("click", () => manager.launchBombHotPotato());
   elements.boxingCard.addEventListener("click", () => manager.launchWobbleBoxing());
   elements.hockeyCard.addEventListener("click", () => manager.launchTableHockey());
   elements.replayButton.addEventListener("click", () => manager.replay());
