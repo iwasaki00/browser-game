@@ -6,7 +6,7 @@
       number: "025",
       title: "三重振り子 DUEL",
       genre: "Physics / Action",
-      description: "予測しにくい三重振り子を振り回し、固定と解放のタイミングで相手のコアを狙う物理対戦ゲーム。CPU戦と同じ画面での2人対戦に対応しています。",
+      description: "4種類の武器を選び、左右の回転トルクと固定・解放のタイミングで相手のコアを狙う三重振り子対戦。CPU戦と同じ画面での2人対戦に対応しています。",
       href: "./025_pendulum-duel/index.html",
       icon: "./assets/game-icons/025-pendulum-duel.jpg",
       alt: "シアンとオレンジの三重振り子が激突するゲームアイコン"
