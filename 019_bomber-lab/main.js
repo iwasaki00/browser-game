@@ -38,102 +38,78 @@ const ITEM_LABELS = {
 };
 
 // Sprite management
-const SPRITE_CELL = 32;
 const SPRITE_SHEET_SRC = "./assets/bomber_sprites.png";
 const DEBUG_SPRITE_DEST = false;
 
-function spriteCell(col, row, w = 1, h = 1) {
-  return {
-    x: col * SPRITE_CELL,
-    y: row * SPRITE_CELL,
-    w: w * SPRITE_CELL,
-    h: h * SPRITE_CELL
-  };
-}
-
-function spriteRow(startCol, row, count) {
-  return Array.from({ length: count }, (_, i) => spriteCell(startCol + i, row));
-}
-
+// Source PNG is a labelled 1536 x 1024 illustration, not a 32px tile atlas.
+function rect(x, y, w, h, opaque = false) { return { x, y, w, h, opaque }; }
+function frames(xs, y, w, h) { return xs.map(x => rect(x, y, w, h)); }
 const SPRITE_MAP = {
-  // Player.
-  playerDown: spriteRow(0, 0, 4),
-  playerLeft: spriteRow(0, 1, 4),
-  playerRight: spriteRow(0, 2, 4),
-  playerUp: spriteRow(0, 3, 4),
-  playerDashDown: spriteRow(4, 0, 4),
-  playerDashLeft: spriteRow(4, 1, 4),
-  playerDashRight: spriteRow(4, 2, 4),
-  playerDashUp: spriteRow(4, 3, 4),
-  playerHurt: spriteRow(8, 0, 2),
-  playerInvincible: spriteRow(8, 1, 2),
-
-  // Enemies.
-  slime: spriteRow(0, 4, 4),
-  skeleton: spriteRow(4, 4, 4),
-  robot: spriteRow(8, 4, 4),
-  ghost: spriteRow(12, 4, 4),
-  bossPurple: [
-    spriteCell(16, 4, 2, 2),
-    spriteCell(18, 4, 2, 2)
-  ],
-
-  // Items.
-  itemBomb: [spriteCell(0, 6)],
-  itemBlast: [spriteCell(1, 6)],
-  itemSpeed: [spriteCell(2, 6)],
-  itemHp: [spriteCell(3, 6)],
-  itemSp: [spriteCell(4, 6)],
-  itemRemote: [spriteCell(5, 6)],
-  itemKick: [spriteCell(6, 6)],
-  itemShield: [spriteCell(7, 6)],
-  itemCoin: [spriteCell(8, 6)],
-  itemKey: [spriteCell(9, 6)],
-  itemHeart: [spriteCell(10, 6)],
-
-  // Blocks and floors.
-  wallSolid: [spriteCell(0, 7)],
-  wallCrate: [spriteCell(1, 7)],
-  wallCrateBreak: [spriteCell(2, 7)],
-  floorGrass: [spriteCell(3, 7)],
-  floorSand: [spriteCell(4, 7)],
-  water: [spriteCell(5, 7)],
-  ice: [spriteCell(6, 7)],
-  lava: [spriteCell(7, 7)],
-  grassBush: [spriteCell(8, 7)],
-  switchOff: [spriteCell(9, 7)],
-  switchOn: [spriteCell(10, 7)],
-  exit: [spriteCell(11, 7)],
-  warpGate: [spriteCell(12, 7)],
-
-  // Bombs and explosions.
-  bomb: spriteRow(0, 8, 3),
-  remoteBomb: spriteRow(3, 8, 2),
-  explosion: spriteRow(5, 8, 5),
-  flameCenter: [spriteCell(10, 8)],
-  flameUp: [spriteCell(11, 8)],
-  flameDown: [spriteCell(12, 8)],
-  flameLeft: [spriteCell(13, 8)],
-  flameRight: [spriteCell(14, 8)],
-
-  // Effects.
-  smoke: spriteRow(0, 9, 4),
-  spark: spriteRow(4, 9, 3),
-  star: spriteRow(7, 9, 3),
-  freeze: spriteRow(10, 9, 3),
-  thunder: spriteRow(13, 9, 3),
-  blackHole: spriteRow(16, 9, 3),
-  shakeLine: [spriteCell(19, 9)],
-  dashEffect: spriteRow(20, 9, 3),
-  damageNumber: spriteRow(23, 9, 3),
-
-  // UI.
-  uiHeart: spriteRow(0, 10, 4),
-  uiBombCount: spriteRow(4, 10, 5),
-  uiSpGauge: spriteRow(9, 10, 6),
-  uiDigits: spriteRow(15, 10, 10),
-  uiBang: [spriteCell(25, 10)]
+  playerDown: frames([27, 91, 155], 67, 53, 94),
+  playerLeft: frames([237, 301, 365], 67, 53, 94),
+  playerRight: frames([423, 482], 67, 53, 94),
+  playerDashDown: frames([552, 614], 67, 60, 94),
+  playerDashLeft: frames([685, 755], 67, 70, 94),
+  playerDashRight: frames([837, 907], 67, 70, 94),
+  playerDashUp: frames([983, 1051], 67, 59, 94),
+  playerHurt: [rect(1140, 80, 111, 78)],
+  playerInvincible: [rect(1275, 63, 108, 110)],
+  slime: frames([25, 95, 164, 234], 270, 59, 53),
+  skeleton: frames([324, 403, 483], 237, 61, 87),
+  robot: frames([568, 648, 729], 229, 70, 95),
+  ghost: frames([893, 972, 1050], 248, 67, 76),
+  bossPurple: frames([1141, 1245, 1343, 1439], 233, 83, 91),
+  itemBomb: [rect(45, 407, 89, 67)],
+  itemBlast: [rect(175, 404, 76, 72)],
+  itemSpeed: [rect(310, 409, 88, 64)],
+  itemHp: [rect(452, 410, 72, 65)],
+  itemSp: [rect(580, 408, 78, 67)],
+  itemRemote: [rect(711, 401, 112, 76)],
+  itemKick: [rect(846, 401, 128, 74)],
+  itemShield: [rect(1020, 407, 68, 70)],
+  itemCoin: [rect(1150, 408, 65, 67)],
+  itemKey: [rect(1282, 404, 48, 72)],
+  itemHeart: [rect(1397, 405, 79, 72)],
+  wallSolid: [rect(45, 572, 64, 63, true)],
+  wallCrate: [rect(166, 572, 68, 63, true)],
+  wallCrateBreak: [rect(270, 566, 99, 71)],
+  floorGrass: [rect(422, 574, 63, 58, true)],
+  floorSand: [rect(523, 575, 59, 56, true)],
+  water: [rect(620, 575, 58, 56, true)],
+  ice: [rect(714, 575, 60, 56, true)],
+  lava: [rect(814, 575, 60, 56, true)],
+  grassBush: [rect(908, 567, 74, 70)],
+  switchOff: [rect(1037, 573, 70, 62, true)],
+  switchOn: [rect(1171, 573, 72, 62, true)],
+  exit: [rect(1298, 571, 83, 66, true)],
+  warpGate: [rect(1419, 565, 87, 75)],
+  bomb: [rect(42, 717, 52, 55), rect(151, 712, 75, 61)],
+  remoteBomb: [rect(295, 712, 68, 61)],
+  explosion: [rect(426, 704, 49, 68), ...frames([487, 582, 674, 756], 704, 76, 68), rect(834, 708, 49, 59)],
+  flameCenter: [rect(1390, 699, 93, 78)],
+  flameUp: [rect(914, 699, 86, 78)],
+  flameDown: [rect(1068, 699, 33, 78)],
+  flameLeft: [rect(1159, 713, 81, 53)],
+  flameRight: [rect(1277, 720, 86, 38)],
+  smoke: [rect(28, 852, 43, 38), ...frames([77, 127, 176], 842, 49, 48)],
+  spark: frames([264, 307, 349], 842, 40, 48),
+  star: [rect(425, 842, 80, 46)],
+  freeze: frames([542, 589, 637], 838, 42, 52),
+  thunder: frames([717, 764, 814], 836, 49, 54),
+  blackHole: frames([907, 971, 1037], 836, 62, 54),
+  shakeLine: [rect(1134, 842, 146, 46)],
+  dashEffect: [rect(1308, 861, 78, 23)],
+  damageNumber: frames([1398, 1442, 1482], 866, 33, 24),
+  uiHeart: frames([19, 74, 129, 184], 953, 47, 46),
+  uiBombCount: frames([278, 334, 391, 448, 505], 953, 47, 50),
+  uiSpGauge: frames([601, 637, 673, 709, 745, 781, 817], 959, 32, 42),
+  uiDigits: frames([896, 940, 979, 1020, 1064, 1107, 1151, 1195, 1239, 1282], 958, 32, 40),
+  uiBang: [rect(1383, 951, 30, 49)]
 };
+// No dedicated upward walking frames are present in the supplied PNG.
+SPRITE_MAP.playerUp = SPRITE_MAP.playerDown;
+SPRITE_MAP.playerRight = SPRITE_MAP.playerLeft.map(frame => ({ ...frame, flipX: true }));
+SPRITE_MAP.playerDashRight = SPRITE_MAP.playerDashLeft.map(frame => ({ ...frame, flipX: true }));
 const sprites = SPRITE_MAP;
 
 // Game state
@@ -174,7 +150,7 @@ const state = {
 const spriteImage = new Image();
 let spriteSource = spriteImage;
 spriteImage.onload = () => {
-  spriteSource = spriteImage;
+  spriteSource = makeTransparentSpriteSource(spriteImage);
   state.spritesReady = true;
   draw();
 };
@@ -184,44 +160,46 @@ spriteImage.onerror = () => {
 spriteImage.src = SPRITE_SHEET_SRC;
 
 function makeTransparentSpriteSource(image) {
-  const offscreen = document.createElement("canvas");
-  offscreen.width = image.naturalWidth;
-  offscreen.height = image.naturalHeight;
-  const offCtx = offscreen.getContext("2d");
-  offCtx.drawImage(image, 0, 0);
-  const imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
-  const { data, width, height } = imageData;
-  const dark = new Uint8Array(width * height);
-  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
-    dark[p] = data[i] < 28 && data[i + 1] < 28 && data[i + 2] < 28 ? 1 : 0;
-  }
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const p = y * width + x;
-      if (!dark[p]) continue;
-      let nearArt = false;
-      for (let oy = -2; oy <= 2 && !nearArt; oy++) {
-        for (let ox = -2; ox <= 2; ox++) {
-          const nx = x + ox;
-          const ny = y + oy;
-          if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
-          const np = ny * width + nx;
-          if (!dark[np]) {
-            const ni = np * 4;
-            if (data[ni] > 55 || data[ni + 1] > 55 || data[ni + 2] > 55) {
-              nearArt = true;
-              break;
-            }
-          }
-        }
+  const atlas = document.createElement("canvas");
+  atlas.width = image.naturalWidth;
+  atlas.height = image.naturalHeight;
+  const atlasCtx = atlas.getContext("2d");
+  const seen = new Set();
+  for (const list of Object.values(sprites)) {
+    for (const frame of list) {
+      if (seen.has(frame)) continue;
+      seen.add(frame);
+      const { x, y, w, h, opaque } = frame;
+      atlasCtx.drawImage(image, x, y, w, h, x, y, w, h);
+      if (opaque) continue;
+      const pixels = atlasCtx.getImageData(x, y, w, h);
+      const data = pixels.data;
+      const visited = new Uint8Array(w * h);
+      const queue = [];
+      // Flood only edge-connected dark background, preserving enclosed detail.
+      function enqueue(px, py) {
+        const i = py * w + px;
+        if (visited[i]) return;
+        visited[i] = 1;
+        const offset = i * 4;
+        if (Math.max(data[offset], data[offset + 1], data[offset + 2]) > 38) return;
+        queue.push(i);
       }
-      if (!nearArt) data[p * 4 + 3] = 0;
+      for (let px = 0; px < w; px++) { enqueue(px, 0); enqueue(px, h - 1); }
+      for (let py = 0; py < h; py++) { enqueue(0, py); enqueue(w - 1, py); }
+      for (let head = 0; head < queue.length; head++) {
+        const i = queue[head], px = i % w, py = Math.floor(i / w);
+        data[i * 4 + 3] = 0;
+        if (px > 0) enqueue(px - 1, py);
+        if (px + 1 < w) enqueue(px + 1, py);
+        if (py > 0) enqueue(px, py - 1);
+        if (py + 1 < h) enqueue(px, py + 1);
+      }
+      atlasCtx.putImageData(pixels, x, y);
     }
   }
-  offCtx.putImageData(imageData, 0, 0);
-  return offscreen;
+  return atlas;
 }
-
 const input = {
   up: false,
   down: false,
@@ -870,7 +848,23 @@ function drawSprite(name, frameIndex, dx, dy, dw = TILE, dh = TILE, options = {}
   if (!frame) return false;
   const oldAlpha = ctx.globalAlpha;
   if (options.alpha !== undefined) ctx.globalAlpha = options.alpha;
-  ctx.drawImage(spriteSource, frame.x, frame.y, frame.w, frame.h, dx, dy, dw, dh);
+  if (!frame.opaque) {
+    const scale = Math.min(dw / frame.w, dh / frame.h);
+    const width = frame.w * scale, height = frame.h * scale;
+    dx += (dw - width) / 2;
+    dy += (dh - height) / 2;
+    dw = width;
+    dh = height;
+  }
+  ctx.save();
+  if (frame.flipX) {
+    ctx.translate(dx + dw, dy);
+    ctx.scale(-1, 1);
+    ctx.drawImage(spriteSource, frame.x, frame.y, frame.w, frame.h, 0, 0, dw, dh);
+  } else {
+    ctx.drawImage(spriteSource, frame.x, frame.y, frame.w, frame.h, dx, dy, dw, dh);
+  }
+  ctx.restore();
   if (DEBUG_SPRITE_DEST) {
     ctx.save();
     ctx.strokeStyle = "red";
