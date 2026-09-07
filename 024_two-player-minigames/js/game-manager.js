@@ -151,7 +151,6 @@
       this.currentGame.testMode = this.testMode;
       if (this.currentGameKey === "bomb") {
         this.currentGame.testExplosionTime = this.testMode ? this.bombExplosionTime : 0;
-        if (this.testMode && this.currentGame.setTestExplosionTime) this.currentGame.setTestExplosionTime(this.bombExplosionTime);
       }
       this.elements.debugPanel.hidden = !(this.debug || this.testMode);
       this.elements.testSpeedButton.hidden = !this.testMode || (this.currentGameKey !== "boxing" && this.currentGameKey !== "bomb");

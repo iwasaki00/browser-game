@@ -26,6 +26,25 @@ assert.match(appSource, /launchBombHotPotato/);
 assert.match(managerSource, /window\.BombHotPotatoGame/);
 assert.doesNotMatch(source, /bombVelocity|TAP_POWER|CHARGE_POWER|pushForce|applyPush/);
 
+global.location = { search: "" };
+vm.runInThisContext(managerSource, { filename: "game-manager.js" });
+const button = () => ({ textContent: "", hidden: false, setAttribute() {} });
+const manager = new window.GameManager({
+  testModeButton: button(), menuTestModeButton: button(), testSpeedButton: button(),
+  debugPanel: { hidden: true }
+});
+manager.currentGameKey = "bomb";
+let timerChanges = 0;
+manager.currentGame = {
+  testMode: false, testExplosionTime: 0,
+  setTestExplosionTime() { timerChanges += 1; },
+  updateHud() {}, render() {}
+};
+manager.toggleTestMode();
+assert.strictEqual(timerChanges, 0, "showing TEST data must not alter the running explosion timer");
+manager.cycleTestSpeed();
+assert.strictEqual(timerChanges, 1, "only the explosion-time selector should alter the timer");
+
 const classList = { add() {}, remove() {}, toggle() {} };
 const control = () => ({ classList, offsetWidth: 10 });
 function makeGame() {
