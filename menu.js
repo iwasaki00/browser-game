@@ -3,6 +3,15 @@
 
   const games = [
     {
+      number: "026",
+      title: "鉄棒ゲーム",
+      genre: "Physics / Action",
+      description: "縮む・離すの2ボタンで振りを育て、大車輪から空中回転！マットへのピタッと着地を狙う、1人用の玩具アクションゲームです。",
+      href: "./026_tetsubou-game/index.html",
+      icon: "./026_tetsubou-game/assets/body.png",
+      alt: "赤い胴体と青い腰の玩具体操選手"
+    },
+    {
       number: "025",
       title: "三重振り子 DUEL",
       genre: "Physics / Action",

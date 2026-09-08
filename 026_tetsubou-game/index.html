@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#eff5fc">
+  <title>鉄棒ゲーム | 大車輪チャレンジ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game">
+    <header>
+      <a class="back" href="../index.html" aria-label="ゲーム一覧へ">‹</a>
+      <h1>鉄棒ゲーム<span>大車輪チャレンジ</span></h1>
+      <div class="stats"><div><span>SCORE</span><strong id="score">0</strong></div><div><span>空中回転</span><strong id="flips">0<span>回</span></strong></div><div><span>最高高度</span><strong id="height">0.0<span>m</span></strong></div></div>
+      <button id="debug" class="debug" aria-pressed="false">DEBUG</button>
+    </header>
+    <section class="arena" aria-label="鉄棒と着地マット">
+      <canvas id="canvas" aria-label="横向きの鉄棒アクションゲーム"></canvas>
+      <div class="cue" id="cue" aria-live="polite">下を通る直前に縮む → 上がったらボタンを離す</div>
+      <div class="badge" id="badge"></div>
+      <pre id="telemetry" hidden></pre>
+      <div id="result" class="result" hidden role="status">
+        <p class="eyebrow">LANDING RESULT</p><h2 id="grade"></h2>
+        <p id="reason"></p><strong id="finalScore"></strong><span class="points">POINTS</span>
+        <p id="summary"></p><button id="retry">もう一度 <span>↻</span></button>
+      </div>
+      <div class="rotate">↻ 横向きにすると、大きな画面で遊べます</div>
+    </section>
+    <footer>
+      <button id="tuck" class="control tuck" aria-pressed="false"><span class="symbol">↓</span><span>縮む<small>押して縮む・離して伸びる</small></span><kbd>SPACE / Z</kbd></button>
+      <div class="instructions"><b>振る → 回る → 着地！</b><span>空中でも縮めます<br>着地の前に伸びよう</span></div>
+      <button id="release" class="control release"><span class="symbol">↗</span><span>離す！<small>タイミングを狙ってジャンプ</small></span><kbd>X / ENTER</kbd></button>
+    </footer>
+  </main>
+  <script src="physics.js"></script><script src="game.js"></script>
+</body>
+</html>
