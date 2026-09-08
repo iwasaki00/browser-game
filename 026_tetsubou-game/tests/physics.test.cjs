@@ -1,56 +1,73 @@
 'use strict';
-const assert = require('node:assert/strict');
-const P = require('../physics.js'), C = P.CONFIG, dt = C.fixedStep;
-function advance(s, seconds) { for(let i=0;i<Math.round(seconds/dt);i++) P.step(s,dt); }
-function controller() {
-  let peak = 0, presses = 0;
-  return { run(s) {
-    const a=P.wrap(s.angle), toward=a*s.omega<0;
-    if(!s.held&&toward&&Math.abs(a)<Math.max(.06,Math.min(.5,s.amplitude*.3))){s.held=true;presses++;peak=0;}
-    peak=Math.max(peak,Math.abs(s.omega));
-    if(s.held&&!toward&&Math.abs(s.omega)<peak*.25)s.held=false;
-  }, get presses(){return presses;} };
+const assert=require('node:assert/strict'),P=require('../physics.js'),C=P.CONFIG,dt=C.fixedStep;
+const near=(a,b,e=1e-7)=>assert(Math.abs(a-b)<e,a+' != '+b);
+function advance(s,t){for(let i=0;i<t/dt;i++)P.step(s,dt);}
+function controller(){
+ let presses=0,peak=0,last=-1;
+ return{run(s){
+  const g=P.geometry(s.pump),a=P.wrap(s.angle-Math.atan2(g.com.x,g.com.y)),toward=a*s.omega<0;
+  if(!s.held&&toward&&Math.abs(a)<Math.max(.1,s.amplitude*.4)&&s.elapsed-last>.25){s.held=true;presses++;peak=0;last=s.elapsed;}
+  peak=Math.max(peak,Math.abs(s.omega));
+  if(s.held&&!toward&&Math.abs(s.omega)<peak*.3&&s.elapsed-last>.25){s.held=false;last=s.elapsed;}
+ },get presses(){return presses;}};
 }
-// No input, a constant hold, and mistimed pumping must not produce automatic giants.
-for(const mode of ['idle','hold','wrong']){
-  const s=P.create();
-  for(let i=0;i<30/dt;i++){s.held=mode==='hold'||(mode==='wrong'&&P.wrap(s.angle)*s.omega<0);P.step(s,dt);}
-  assert.equal(s.giants,0,mode);
+// Link lengths must stay invariant in every pose, orientation, and game phase.
+for(const phase of ['swing','flight','result'])for(let q=0;q<=1;q+=.05)for(let angle=-Math.PI;angle<=Math.PI;angle+=.2){
+ const s=P.create();s.phase=phase;s.pump=q;s.angle=angle;const p=P.pose(s);
+ near(Math.hypot(p.hand.x-p.shoulder.x,p.hand.y-p.shoulder.y),C.armLength);
+ near(Math.hypot(p.foot.x-p.hip.x,p.foot.y-p.hip.y),C.legLength);
+ if(phase==='swing'){near(p.hand.x,C.barX);near(p.hand.y,C.barHeight);}
 }
-const swing=P.create(), control=controller();
-while(swing.giants===0&&swing.elapsed<15){control.run(swing);P.step(swing,dt);}
-assert(swing.giants>0,'Timed retraction must yield a giant');
-assert(control.presses>=2&&control.presses<=5,`Expected 2–5 presses, got ${control.presses}`);
-console.log(`Timed pumping: giant after ${control.presses} presses, ${swing.elapsed.toFixed(2)}s`);
-// Instantaneous release preserves angular and linear velocities, including radial motion.
-const launch=P.create();launch.held=true;advance(launch,.07);
-const before={vx:launch.vx,vy:launch.vy,omega:launch.omega,angle:launch.angle};
-assert(P.release(launch));for(const key of Object.keys(before))assert.equal(launch[key],before[key]);assert(!P.release(launch));
-// Free flight conserves spin momentum (apart from the configured drag).
-const airborne=P.create();P.release(airborne);airborne.y=-1000;airborne.omega=2;airborne.angularMomentum=2*P.airInertia(0);airborne.held=true;
-advance(airborne,.14);assert(airborne.omega>7);airborne.held=false;advance(airborne,.14);assert(airborne.omega<2.01);
-// Every landing grade can be distinguished by actual contacts.
-for(const [grade,angle,x,vx] of [['PERFECT',0,675,0],['GOOD',.35,620,0],['STEP',.8,560,180],['CRASH',Math.PI,675,0]]){
-  const s=P.create();P.release(s);s.x=x;s.y=240;s.angle=angle;s.vx=vx;s.vy=100;s.omega=0;s.angularMomentum=0;
-  advance(s,2);assert.equal(s.result?.grade,grade);assert(Number.isFinite(s.score));
+const regular=P.geometry(0),forward=P.geometry(1);
+near(regular.legAngle,C.legReturnAngle);near(forward.legAngle,C.legForwardAngle);
+assert(forward.foot.x-forward.hip.x>30,'Leg visibly extends forward');
+assert(forward.com.x>regular.com.x);assert(P.metrics(1).inertia<P.metrics(0).inertia);
+assert(C.legForwardAngle>=-70*Math.PI/180&&C.legForwardAngle<=-30*Math.PI/180);
+for(const held of [false,true]){
+ const s=P.create();s.held=held;advance(s,30);assert.equal(s.giants,0,'No giants from idle/constant hold');
+ assert(s.amplitude<.6,'A held pose must settle rather than accelerate itself');
 }
-// Real play trajectories: sweep release times and a single air-tuck duration.
-const base=P.create(), pump=controller(), grades=new Set(), flips=new Set();let example=null;
-for(let i=0;i<1800;i++){
-  pump.run(base);P.step(base,dt);
-  if(i%6!==0||i<140)continue;
-  for(let tuckTime=0;tuckTime<=1.8;tuckTime+=.06){
-    const s=structuredClone(base);P.release(s);
-    while(s.phase==='flight'){s.held=s.flightTime<tuckTime;P.step(s,dt);}
-    grades.add(s.result.grade);flips.add(s.result.flips);
-    if(s.result.grade==='PERFECT'&&!example)example={releaseAt:base.elapsed,tuckTime,flips:s.result.flips};
-  }
+for(const mode of ['wrong','rapid']){
+ const s=P.create();for(let i=0;i<15/dt;i++){s.held=mode==='wrong'?s.omega>0:Math.floor(s.elapsed/.07)%2===0;P.step(s,dt);}
+ assert.equal(s.giants,0,'Mistimed pumping must not automatically yield giants');
 }
-assert(grades.has('PERFECT')&&grades.has('GOOD')&&grades.has('STEP')&&grades.has('CRASH'),`Reachable grades: ${[...grades]}`);
-for(const n of [0,1,2,3])assert(flips.has(n),`Must be able to perform ${n} air rotations`);
-console.log('Reachable play grades:',[...grades].join(', '),'Air rotations:',[...flips].sort((a,b)=>a-b).join(', '));
-console.log('Perfect example:',example);
-// Determinism and restart isolation.
-const fresh=P.create();assert.equal(fresh.held,false);assert.equal(fresh.giants,0);assert.equal(fresh.result,null);
-const a=P.create(), b=P.create();advance(a,3);advance(b,3);assert.deepEqual(a,b);
-console.log('All physics tests passed.');
+const s=P.create(),control=controller(),history=[];
+while(!s.giants&&s.elapsed<15){
+ const n=control.presses;control.run(s);P.step(s,dt);if(control.presses!==n)history.push(s.amplitude);
+}
+assert(s.giants>0);assert(control.presses>=2&&control.presses<=6);
+console.log('Timed leg pumping: '+control.presses+' strokes, '+s.elapsed.toFixed(2)+'s to giant.');
+// Pose response is smooth, and release retains COM velocity, angle and angular velocity exactly.
+const launch=P.create();launch.held=true;advance(launch,.08);assert(launch.pump>0&&launch.pump<1);
+const before={vx:launch.vx,vy:launch.vy,omega:launch.omega,angle:launch.angle},beforePose=P.pose(launch);
+assert(P.release(launch));for(const key of Object.keys(before))near(launch[key],before[key]);
+const afterPose=P.pose(launch);for(const key of ['hand','shoulder','hip','foot']){near(beforePose[key].x,afterPose[key].x);near(beforePose[key].y,afterPose[key].y);}
+assert(!P.release(launch));
+// Airborne posture changes conserve total angular momentum, apart from drag.
+launch.y=-2000;const momentum=launch.angularMomentum;advance(launch,.4);
+near(launch.angularMomentum,momentum*Math.exp(-C.airDrag*Math.round(.4/dt)*dt),1e-5);
+launch.held=false;advance(launch,.8);assert(launch.pump<.001);
+// With a settled pose, integration must equal gravity torque + damping, not a button-dependent speed bonus.
+for(const held of [false,true]){
+ const v=P.create();v.pump=held?1:0;v.held=held;v.angle=.4;v.omega=.5;
+ const g=P.metrics(v.pump),x=g.com.x*Math.cos(v.angle)-g.com.y*Math.sin(v.angle);
+ const expected=(g.inertia*v.omega+C.gravity*g.mass*x*dt)*Math.exp(-C.swingDamping*dt)/g.inertia;
+ P.step(v,dt);near(v.omega,expected);
+}
+// Real release/stroke combinations must still support all landing grades and aerial rotations.
+const base=P.create(),pump=controller(),grades=new Set(),flips=new Set();let perfect;
+for(let i=0;i<1900;i++){
+ pump.run(base);P.step(base,dt);if(i<100||i%8)continue;
+ for(const returnTime of [0,.12,.24,.4])for(let duration=0;duration<=1.8;duration+=.08){
+  const v=structuredClone(base);if(returnTime){v.held=false;advance(v,returnTime);}P.release(v);
+  while(v.phase==='flight'){v.held=v.flightTime<duration;P.step(v,dt);}
+  grades.add(v.result.grade);flips.add(v.result.flips);
+  if(v.result.grade==='PERFECT'&&!perfect)perfect={release:base.elapsed,hold:duration,flips:v.result.flips};
+ }
+}
+for(const grade of ['PERFECT','GOOD','STEP','CRASH'])assert(grades.has(grade),'Reachable '+grade);
+for(const count of [0,1,2,3])assert(flips.has(count),'Reachable '+count+' flips');
+console.log('Playable landings: '+[...grades]+'. Air rotations: '+[...flips].sort((a,b)=>a-b));
+console.log('Perfect example:',perfect);
+const a=P.create(),b=P.create();advance(a,3);advance(b,3);assert.deepEqual(a,b);
+console.log('Fixed arms, leg geometry, momentum, pumping, landing, and restart tests passed.');

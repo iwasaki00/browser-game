@@ -8,7 +8,7 @@ function target(name){
     setAttribute(key,value){this.attributes[key]=value;},blur(){},getBoundingClientRect(){return{width:844,height:230};}};
   listeners.set(name,obj);return obj;
 }
-for(const id of ['canvas','tuck','release','retry','debug','telemetry','result','badge','score','flips','height','cue','grade','finalScore','summary','reason'])elements.set(id,target(id));
+for(const id of ['canvas','pump','release','retry','debug','telemetry','result','badge','score','flips','height','cue','grade','finalScore','summary','reason'])elements.set(id,target(id));
 const ctx=new Proxy({},{get(o,k){return o[k]??(()=>{});},set(o,k,v){o[k]=v;return true;}});
 elements.get('canvas').getContext=()=>ctx;
 const win=target('window'),doc=target('document');doc.getElementById=id=>elements.get(id);doc.hidden=false;doc.activeElement={tagName:'BODY'};
@@ -16,13 +16,13 @@ let callback,now=0;
 const env={window:win,document:doc,performance:{now:()=>now},Image:class{complete=true;naturalWidth=340;},requestAnimationFrame:fn=>callback=fn,console};
 vm.createContext(env);vm.runInContext(fs.readFileSync(path.join(base,'physics.js'),'utf8'),env);vm.runInContext(fs.readFileSync(path.join(base,'game.js'),'utf8'),env);
 function frame(){now+=16.666;callback(now);}
-const tuck=elements.get('tuck'),release=elements.get('release');
-function pressed(value){assert.equal(tuck.attributes['aria-pressed'],String(value));}
-for(const event of ['pointerup','pointercancel','pointerleave','lostpointercapture']){tuck.emit('pointerdown',{pointerId:1,pointerType:'touch'});pressed(true);tuck.emit(event,{pointerId:1});pressed(false);}
-for(const event of ['touchend','touchcancel']){tuck.emit('pointerdown',{pointerId:1,pointerType:'touch'});win.emit(event,{touches:[]});pressed(false);}
-for(const event of ['blur','pagehide','resize']){tuck.emit('pointerdown',{pointerId:1,pointerType:'touch'});win.emit(event);pressed(false);}
+const pump=elements.get('pump'),release=elements.get('release');
+function pressed(value){assert.equal(pump.attributes['aria-pressed'],String(value));}
+for(const event of ['pointerup','pointercancel','pointerleave','lostpointercapture']){pump.emit('pointerdown',{pointerId:1,pointerType:'touch'});pressed(true);pump.emit(event,{pointerId:1});pressed(false);}
+for(const event of ['touchend','touchcancel']){pump.emit('pointerdown',{pointerId:1,pointerType:'touch'});win.emit(event,{touches:[]});pressed(false);}
+for(const event of ['blur','pagehide','resize']){pump.emit('pointerdown',{pointerId:1,pointerType:'touch'});win.emit(event);pressed(false);}
 win.emit('keydown',{code:'Space'});win.emit('keydown',{code:'KeyZ'});pressed(true);win.emit('keyup',{code:'Space'});pressed(true);win.emit('keyup',{code:'KeyZ'});pressed(false);
-tuck.emit('pointerdown',{pointerId:1,pointerType:'touch'});release.emit('pointerdown',{pointerId:2,pointerType:'touch'});assert(release.disabled);pressed(true);
+pump.emit('pointerdown',{pointerId:1,pointerType:'touch'});release.emit('pointerdown',{pointerId:2,pointerType:'touch'});assert(release.disabled);pressed(true);
 win.emit('pointerup',{pointerId:2});pressed(true);win.emit('pointerup',{pointerId:1});pressed(false);
 for(let i=0;i<300;i++)frame();assert.equal(elements.get('result').hidden,false);assert(elements.get('grade').textContent.startsWith('CRASH'));
 elements.get('retry').emit('click');assert.equal(release.disabled,false);assert.equal(elements.get('result').hidden,true);pressed(false);

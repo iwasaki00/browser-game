@@ -17,7 +17,7 @@
     </header>
     <section class="arena" aria-label="鉄棒と着地マット">
       <canvas id="canvas" aria-label="横向きの鉄棒アクションゲーム"></canvas>
-      <div class="cue" id="cue" aria-live="polite">下を通る直前に縮む → 上がったらボタンを離す</div>
+      <div class="cue" id="cue" aria-live="polite">下へ向かうときに「こぐ」→ 振り上がったら戻す</div>
       <div class="badge" id="badge"></div>
       <pre id="telemetry" hidden></pre>
       <div id="result" class="result" hidden role="status">
@@ -28,8 +28,8 @@
       <div class="rotate">↻ 横向きにすると、大きな画面で遊べます</div>
     </section>
     <footer>
-      <button id="tuck" class="control tuck" aria-pressed="false"><span class="symbol">↓</span><span>縮む<small>押して縮む・離して伸びる</small></span><kbd>SPACE / Z</kbd></button>
-      <div class="instructions"><b>振る → 回る → 着地！</b><span>空中でも縮めます<br>着地の前に伸びよう</span></div>
+      <button id="pump" class="control pump" aria-pressed="false"><span class="symbol">↓</span><span>こぐ<small>押して足を前へ・離して戻す</small></span><kbd>SPACE / Z</kbd></button>
+      <div class="instructions"><b>振る → 回る → 着地！</b><span>足を振って勢いをつけよう<br>着地の前に足を戻そう</span></div>
       <button id="release" class="control release"><span class="symbol">↗</span><span>離す！<small>タイミングを狙ってジャンプ</small></span><kbd>X / ENTER</kbd></button>
     </footer>
   </main>
