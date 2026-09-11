@@ -15,30 +15,53 @@ const CONFIG=Object.freeze({
  fixedStep:1/240,maxFrame:0.05,maxFlightTime:15,
  viewWidth:420,viewHeight:270,viewInitialHeight:178,viewBottomMargin:22,viewCenterOffset:40,viewMinHeight:166,viewMargin:12,cameraResponse:5
 });
+
+const DIFFICULTY=Object.freeze({
+ easy:Object.freeze({pumpPower:1.12,timingWindow:0.65,gravityScale:0.94,damping:0.032,airDrag:0.008,matWidth:250,landingTolerance:1.3,airControl:1.16,scoreMultiplier:0.7,guide:true,feedback:true,minStrokeInterval:0.22}),
+ normal:Object.freeze({pumpPower:1,timingWindow:0.4,gravityScale:1,damping:0.055,airDrag:0.015,matWidth:190,landingTolerance:1,airControl:1,scoreMultiplier:1,guide:false,feedback:false,minStrokeInterval:0.22})
+});
+const SETTINGS=Object.fromEntries(Object.entries(DIFFICULTY).map(([mode,d])=>[mode,Object.freeze({
+ ...CONFIG,mode,...d,gravity:CONFIG.gravity*d.gravityScale,pumpStrength:CONFIG.pumpStrength*d.pumpPower,
+ swingDamping:d.damping,matX:CONFIG.matX-(d.matWidth-CONFIG.matWidth)/2,
+ perfectAngle:CONFIG.perfectAngle*d.landingTolerance,goodAngle:CONFIG.goodAngle*d.landingTolerance,
+ stepAngle:CONFIG.stepAngle*d.landingTolerance,perfectCenter:CONFIG.perfectCenter*d.landingTolerance,
+ perfectSpin:CONFIG.perfectSpin*d.landingTolerance,goodSpin:CONFIG.goodSpin*d.landingTolerance,
+ perfectSpeed:CONFIG.perfectSpeed*d.landingTolerance,goodSpeed:CONFIG.goodSpeed*d.landingTolerance
+})]));
+const settings=mode=>SETTINGS[mode]||SETTINGS.normal;
+function timing(s,held){
+ const d=settings(s.mode),g=geometry(s.pump,d),a=wrap(s.angle-Math.atan2(g.com.x,g.com.y));
+ const toward=a*s.omega<0;
+ if(s.phase!=='swing'||Math.abs(s.omega)<0.12)return null;
+ if(held&&toward&&Math.abs(a)<Math.max(.15,s.amplitude*d.timingWindow))return Math.abs(a)<Math.max(.08,s.amplitude*.25)?'PERFECT!':'GOOD!';
+ if(!held&&!toward&&Math.abs(s.omega)<Math.max(.7,s.strokePeak*.45))return 'GREAT!';
+ return null;
+}
+
 const TAU=2*Math.PI,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
 const rotate=(p,a)=>({x:p.x*Math.cos(a)-p.y*Math.sin(a),y:p.x*Math.sin(a)+p.y*Math.cos(a)});
 const add=(a,b)=>({x:a.x+b.x,y:a.y+b.y});
 const along=(a,l)=>({x:-Math.sin(a)*l,y:Math.cos(a)*l});
-function geometry(pump){
- const shoulderAngle=CONFIG.shoulderForwardAngle*pump,bodyAngle=CONFIG.hipForwardAngle*pump;
- const legAngle=CONFIG.legReturnAngle+(CONFIG.legForwardAngle-CONFIG.legReturnAngle)*pump;
- const hand={x:0,y:0},shoulder=along(shoulderAngle,CONFIG.armLength);
- const hip=add(shoulder,along(bodyAngle,CONFIG.bodyLength)),foot=add(hip,along(bodyAngle+legAngle,CONFIG.legLength));
- const torso=add(shoulder,along(bodyAngle,CONFIG.bodyLength*.47));
+function geometry(pump,config=CONFIG){
+ const shoulderAngle=config.shoulderForwardAngle*pump,bodyAngle=config.hipForwardAngle*pump;
+ const legAngle=config.legReturnAngle+(config.legForwardAngle-config.legReturnAngle)*pump;
+ const hand={x:0,y:0},shoulder=along(shoulderAngle,config.armLength);
+ const hip=add(shoulder,along(bodyAngle,config.bodyLength)),foot=add(hip,along(bodyAngle+legAngle,config.legLength));
+ const torso=add(shoulder,along(bodyAngle,config.bodyLength*.47));
  const head=add(shoulder,rotate({x:2,y:-20},bodyAngle));
  const masses=[
-  {m:CONFIG.armMass,p:along(shoulderAngle,CONFIG.armLength*.5)},
-  {m:CONFIG.bodyMass,p:torso},
-  {m:CONFIG.legMass*CONFIG.pumpStrength,p:add(hip,along(bodyAngle+legAngle,CONFIG.legLength*.55))}
+  {m:config.armMass,p:along(shoulderAngle,config.armLength*.5)},
+  {m:config.bodyMass,p:torso},
+  {m:config.legMass*config.pumpStrength,p:add(hip,along(bodyAngle+legAngle,config.legLength*.55))}
  ];
  const mass=masses.reduce((n,b)=>n+b.m,0);
  const com={x:masses.reduce((n,b)=>n+b.m*b.p.x,0)/mass,y:masses.reduce((n,b)=>n+b.m*b.p.y,0)/mass};
- const inertia=masses.reduce((n,b)=>n+b.m*(b.p.x*b.p.x+b.p.y*b.p.y),CONFIG.segmentInertia);
+ const inertia=masses.reduce((n,b)=>n+b.m*(b.p.x*b.p.x+b.p.y*b.p.y),config.segmentInertia);
  const airInertia=inertia-mass*(com.x*com.x+com.y*com.y);
  return{hand,shoulder,hip,foot,torso,head,shoulderAngle,bodyAngle,legAngle,masses,mass,com,inertia,airInertia};
 }
-function metrics(pump){
- const g=geometry(pump),epsilon=1e-4,a=geometry(pump-epsilon),b=geometry(pump+epsilon);
+function metrics(pump,config=CONFIG){
+ const g=geometry(pump,config),epsilon=1e-4,a=geometry(pump-epsilon,config),b=geometry(pump+epsilon,config);
  let coupling=0,airCoupling=0;
  g.masses.forEach((body,i)=>{
   const v={x:(b.masses[i].p.x-a.masses[i].p.x)/(2*epsilon),y:(b.masses[i].p.y-a.masses[i].p.y)/(2*epsilon)};
@@ -49,25 +72,26 @@ function metrics(pump){
  });
   // Exaggerate the leg-pose inertia change for a lightweight toy; geometry and arm length stay unchanged.
  // The same factor applies to the moving-shape coupling, preserving momentum rather than adding speed.
- const poseFactor=1/(1+CONFIG.pumpStrength*(1-Math.cos(g.legAngle-CONFIG.legReturnAngle)));
+ const poseFactor=1/(1+config.pumpStrength*(1-Math.cos(g.legAngle-config.legReturnAngle)));
  return{...g,inertia:g.inertia*poseFactor,airInertia:g.airInertia*poseFactor,coupling:coupling*poseFactor,airCoupling:airCoupling*poseFactor};
 }
 function point(s,x,y){return add({x:s.x,y:s.y},rotate({x,y},s.angle));}
 function pose(s){
- const g=geometry(s.pump),origin=s.phase==='swing'?{x:CONFIG.barX,y:CONFIG.barHeight}:add({x:s.x,y:s.y},rotate({x:-g.com.x,y:-g.com.y},s.angle));
+ const g=geometry(s.pump,settings(s.mode)),origin=s.phase==='swing'?{x:CONFIG.barX,y:CONFIG.barHeight}:add({x:s.x,y:s.y},rotate({x:-g.com.x,y:-g.com.y},s.angle));
  const p={};
  for(const key of ['hand','shoulder','hip','foot','torso','head'])p[key]=add(origin,rotate(g[key],s.angle));
  return{...p,legAngle:g.legAngle,bodyAngle:g.bodyAngle,shoulderAngle:g.shoulderAngle,com:{x:s.x,y:s.y}};
 }
-function attachedPosition(s,g=metrics(s.pump)){
+function attachedPosition(s,g=metrics(s.pump,settings(s.mode))){
  const c=rotate(g.com,s.angle);
  s.x=CONFIG.barX+c.x;s.y=CONFIG.barHeight+c.y;
- const e=1e-4,a=geometry(s.pump-e).com,b=geometry(s.pump+e).com;
+ const e=1e-4,a=geometry(s.pump-e,settings(s.mode)).com,b=geometry(s.pump+e,settings(s.mode)).com;
  const internal=rotate({x:(b.x-a.x)/(2*e)*s.pumpVelocity,y:(b.y-a.y)/(2*e)*s.pumpVelocity},s.angle);
  s.vx=-c.y*s.omega+internal.x;s.vy=c.x*s.omega+internal.y;
 }
-function create(){
- const s={phase:'swing',angle:CONFIG.initialAngle,omega:CONFIG.initialOmega,pump:0,pumpVelocity:0,previousPumpVelocity:0,held:false,
+function create(mode='normal'){
+ const CONFIG=settings(mode);
+ const s={mode:CONFIG.mode,config:CONFIG,strokePeak:0,inputHeld:false,phase:'swing',angle:CONFIG.initialAngle,omega:CONFIG.initialOmega,pump:0,pumpVelocity:0,previousPumpVelocity:0,held:false,
  x:0,y:0,vx:0,vy:0,angularMomentum:0,maxHeight:0,airRotation:0,giants:0,swingTravel:0,turnDirection:0,
  amplitude:Math.abs(CONFIG.initialAngle),peakAmplitude:Math.abs(CONFIG.initialAngle),flightTime:0,score:0,result:null,startX:0,elapsed:0,impact:null};
  attachedPosition(s);return s;
@@ -75,10 +99,11 @@ function create(){
 function release(s){
  if(s.phase!=='swing')return false;
  attachedPosition(s);
- const g=metrics(s.pump);s.angularMomentum=g.airInertia*s.omega+g.airCoupling*s.pumpVelocity;
+ const g=metrics(s.pump,settings(s.mode));s.angularMomentum=g.airInertia*s.omega+g.airCoupling*s.pumpVelocity;
  s.phase='flight';s.startX=s.x;s.flightTime=0;return true;
 }
 function evaluateLanding(s,collision){
+ const CONFIG=settings(s.mode);
  const p=pose(s),tilt=Math.abs(wrap(s.angle+p.bodyAngle)),onMat=collision.onMat,feetFirst=collision.part==='foot';
  const centerDistance=Math.abs(p.foot.x-(CONFIG.matX+CONFIG.matWidth/2)),speed=Math.hypot(s.vx,s.vy),spin=Math.abs(s.omega);
  let grade='CRASH';
@@ -90,19 +115,22 @@ function evaluateLanding(s,collision){
  const flips=Math.floor((s.airRotation+1e-8)/TAU),distance=Math.abs(s.x-s.startX)/CONFIG.pixelsPerMeter;
  const raw=CONFIG.baseScore+CONFIG.flipScore*flips*(flips+1)+s.maxHeight*CONFIG.heightScore+distance*CONFIG.distanceScore
  +(onMat?Math.max(0,1-centerDistance/(CONFIG.matWidth/2))*CONFIG.centerScore:0)+Math.max(0,1-tilt/Math.PI)*CONFIG.postureScore;
- return{grade,flips,distance,centerDistance,tilt,speed,spin,score:Math.round(raw*CONFIG.multipliers[grade]),
+ return{grade,flips,distance,centerDistance,tilt,speed,spin,baseScore:Math.round(raw*CONFIG.multipliers[grade]),scoreMultiplier:CONFIG.scoreMultiplier,score:Math.round(Math.round(raw*CONFIG.multipliers[grade])*CONFIG.scoreMultiplier),
  reason:!onMat?'マットの外！離すタイミングを変えてみよう':!feetFirst?'着地の前に足を戻して、足先を下へ':grade==='PERFECT'?'中央にピタッ！見事な着地':grade==='GOOD'?'ナイス着地！次はマットの真ん中へ':'あと一歩！早めに足を戻して着地しよう'};
 }
 function step(s,dt){
+ const CONFIG=settings(s.mode);
  if(s.phase==='result')return;
  s.elapsed+=dt;
- const previous=pose(s),old=metrics(s.pump),oldAngle=s.angle,oldPump=s.pump;
+ if(s.held!==s.inputHeld){if(s.held)s.strokePeak=Math.abs(s.omega);s.inputHeld=s.held;}
+ s.strokePeak=Math.max(s.strokePeak,Math.abs(s.omega));
+ const previous=pose(s),old=metrics(s.pump,settings(s.mode)),oldAngle=s.angle,oldPump=s.pump;
  // A damped pose motor, never a velocity boost. Its moving leg mass exchanges angular momentum with the body.
- const target=s.held?1:0,response=CONFIG.pumpResponseSpeed*4;
+ const target=s.held?1:0,response=CONFIG.pumpResponseSpeed*4*(s.phase==='flight'?CONFIG.airControl:1);
  const acceleration=response*response*(target-s.pump)-2*response*s.pumpVelocity;
  s.pumpVelocity+=acceleration*dt;s.pump=clamp(s.pump+s.pumpVelocity*dt,0,1);
  if(s.pump===0||s.pump===1)s.pumpVelocity=(s.pump-oldPump)/dt;
- const g=metrics(s.pump);
+ const g=metrics(s.pump,settings(s.mode));
  if(s.phase==='swing'){
   let momentum=old.inertia*s.omega+old.coupling*s.previousPumpVelocity;
   if(!Number.isFinite(momentum))momentum=old.inertia*s.omega;
@@ -136,11 +164,11 @@ function step(s,dt){
    }
   }
   if(hit){s.y-=current[hit.part].y-hit.y;s.result=evaluateLanding(s,hit);s.score=s.result.score;s.phase='result';s.held=false;s.impact=hit;}
-  else if(s.flightTime>CONFIG.maxFlightTime||!Number.isFinite(s.x+s.y)){s.result={grade:'CRASH',score:0,flips:0,distance:0,reason:'場外！もう一度チャレンジ'};s.phase='result';s.held=false;}
+  else if(s.flightTime>CONFIG.maxFlightTime||!Number.isFinite(s.x+s.y)){s.result={grade:'CRASH',score:0,baseScore:0,scoreMultiplier:CONFIG.scoreMultiplier,flips:0,distance:0,reason:'場外！もう一度チャレンジ'};s.phase='result';s.held=false;}
  }
  s.previousPumpVelocity=s.pumpVelocity;
  s.maxHeight=Math.max(s.maxHeight,(CONFIG.groundY-s.y)/CONFIG.pixelsPerMeter);
 }
-const API={CONFIG,create,step,release,pose,point,wrap,evaluateLanding,geometry,metrics};
+const API={CONFIG,DIFFICULTY,settings,timing,create,step,release,pose,point,wrap,evaluateLanding,geometry,metrics};
 if(typeof module!=='undefined'&&module.exports)module.exports=API;else root.BarPhysics=API;
 })(typeof window!=='undefined'?window:globalThis);

@@ -12,17 +12,17 @@
     <header>
       <a class="back" href="../index.html" aria-label="ゲーム一覧へ">‹</a>
       <h1>鉄棒ゲーム<span>大車輪チャレンジ</span></h1>
-      <div class="stats"><div><span>SCORE</span><strong id="score">0</strong></div><div><span>空中回転</span><strong id="flips">0<span>回</span></strong></div><div><span>最高高度</span><strong id="height">0.0<span>m</span></strong></div></div>
+      <nav class="game-menu" aria-label="ゲーム設定"><label><span class="sr-only">難易度（変更すると最初から）</span><select id="difficulty" title="変更すると最初から"><option value="easy">EASY ×0.7</option><option value="normal">NORMAL ×1.0</option></select></label><button id="rankingOpen" type="button">ランキング</button></nav><div class="stats"><div><span>SCORE</span><strong id="score">0</strong></div><div><span>空中回転</span><strong id="flips">0<span>回</span></strong></div><div><span>最高高度</span><strong id="height">0.0<span>m</span></strong></div></div>
       <button id="debug" class="debug" aria-pressed="false">DEBUG</button>
     </header>
     <section class="arena" aria-label="鉄棒と着地マット">
       <canvas id="canvas" aria-label="横向きの鉄棒アクションゲーム"></canvas>
       <div class="cue" id="cue" aria-live="polite">下へ向かうときに「こぐ」→ 振り上がったら戻す</div>
-      <div class="badge" id="badge"></div>
+      <div class="badge" id="badge"></div><div id="timingFeedback" aria-live="polite"></div><div id="guideLegend"><span class="green">● こぐ</span><span>○ 戻す</span><span class="orange">● 離す！</span></div>
       <pre id="telemetry" hidden></pre>
       <div id="result" class="result" hidden role="status">
         <p class="eyebrow">LANDING RESULT</p><h2 id="grade"></h2>
-        <p id="reason"></p><strong id="finalScore"></strong><span class="points">POINTS</span>
+        <p id="reason"></p><p id="scoreBreakdown"></p><p id="recordNotice"></p><strong id="finalScore"></strong><span class="points">FINAL SCORE</span>
         <p id="summary"></p><button id="retry">もう一度 <span>↻</span></button>
       </div>
       <div class="rotate">↻ 横向きにすると、大きな画面で遊べます</div>
@@ -33,6 +33,7 @@
       <button id="release" class="control release"><span class="symbol">↗</span><span>離す！<small>タイミングを狙ってジャンプ</small></span><kbd>X / ENTER</kbd></button>
     </footer>
   </main>
-  <script src="physics.js"></script><script src="game.js"></script>
+  <dialog id="rankingDialog" aria-labelledby="rankingTitle"><div class="ranking-heading"><h2 id="rankingTitle">過去得点ランキング</h2><button id="rankingClose" autofocus aria-label="ランキングを閉じる">閉じる</button></div><p class="ranking-help">このブラウザに保存 · 難易度別 TOP 10</p><div class="rank-tabs"><button id="rankEasy" aria-pressed="true">EASY</button><button id="rankNormal" aria-pressed="false">NORMAL</button></div><p id="personalBest"></p><ol id="rankingList"></ol><p id="storageStatus"></p><p class="ranking-help">EASYでタイミングを覚えたら、NORMALに挑戦！</p></dialog>
+  <script src="ranking.js"></script><script src="physics.js"></script><script src="game.js"></script>
 </body>
 </html>

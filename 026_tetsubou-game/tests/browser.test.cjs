@@ -36,7 +36,7 @@ const server=http.createServer((req,res)=>{
    });
    const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
    await page.goto(url);await page.waitForTimeout(350);
-   for(const id of ['pump','release','debug']){
+   for(const id of ['pump','release','debug','difficulty','rankingOpen']){
     const box=await page.locator('#'+id).boundingBox();assert(box&&box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+1&&box.y+box.height<=viewport.height+1,`${name}: ${id} out of viewport`);assert(box.height>=44);
    }
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
@@ -48,7 +48,32 @@ const server=http.createServer((req,res)=>{
    if(mobile)await page.locator('#release').tap();else await page.keyboard.press('x');
    await page.locator('#result').waitFor({state:'visible'});
    await page.screenshot({path:path.join(out,name+'-result.png')});
+
+   assert((await page.locator('#scoreBreakdown').textContent()).includes('EASY ×0.7'));
+   assert((await page.locator('#recordNotice').textContent()).includes('NEW RECORD!'));
+   await page.locator('#rankingOpen').click();
+   assert.equal(await page.locator('#rankingList li').count(),1);
+   assert((await page.locator('#personalBest').textContent()).includes('自己ベスト'));
+   await page.screenshot({path:path.join(out,name+'-ranking.png')});
+   await page.locator('#rankNormal').click();assert.equal(await page.locator('#rankingList li').count(),0);
+   await page.locator('#rankEasy').click();assert.equal(await page.locator('#rankingList li').count(),1);
+   await page.locator('#rankingClose').click();
+   await page.locator('#difficulty').selectOption('normal');
+   assert.equal(await page.locator('#guideLegend').isVisible(),false);
+   await page.locator('#release').click();
+   if(await page.locator('#release').isEnabled())await page.locator('#release').dispatchEvent('pointerdown',{pointerId:20,pointerType:'touch',button:0});
+   await page.locator('#result').waitFor({state:'visible'});
+   assert((await page.locator('#scoreBreakdown').textContent()).includes('NORMAL ×1.0'));
+   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem(window.BarRanking.KEY)).entries);
+   assert.equal(saved.length,2);for(const r of saved)for(const field of ['score','mode','airRotationCount','landingRank','playedAt'])assert(field in r);
    await page.locator('#retry').click();assert.equal(await page.locator('#result').isVisible(),false);assert.equal(await page.locator('#release').isEnabled(),true);
+
+   await page.locator('#rankingOpen').click();
+   const elapsed=await page.evaluate(()=>window.__testState.elapsed);
+   await page.locator('#pump').dispatchEvent('pointerdown',{pointerId:30,pointerType:'touch'});
+   await page.waitForTimeout(120);assert.equal(await page.evaluate(()=>window.__testState.elapsed),elapsed);
+   assert.equal(await page.locator('#pump').getAttribute('aria-pressed'),'false');
+   await page.locator('#rankingClose').click();
    await page.locator('#debug').click();assert.equal(await page.locator('#telemetry').isVisible(),true);
    await page.waitForFunction(()=>document.getElementById('telemetry').textContent.includes('腕長'));
    for(const label of ['足角度','足目標','振り子角度','角速度','現在の振れ幅','こぐ','重心','腕長'])assert((await page.locator('#telemetry').textContent()).includes(label));
@@ -76,6 +101,12 @@ const server=http.createServer((req,res)=>{
     assert.equal(fit.clipped,0,'Giant rotation stays inside viewport');
     assert(fit.samples>60);console.log('Full giant rotation: no offscreen character frames');
    }
+
+   await page.reload();await page.locator('#rankingOpen').click();
+   assert.equal(await page.locator('#rankingList li').count(),1);
+   await page.locator('#rankNormal').click();assert.equal(await page.locator('#rankingList li').count(),1);
+   await page.locator('#rankingClose').click();
+   assert.equal(await page.locator('#rankingOpen').textContent(),'ランキング');
    assert.deepEqual(errors,[]);console.log(`${name}: layout, assets, touch cancellation, release, result, retry, debug OK`);
   }finally{await browser.close();}
  }

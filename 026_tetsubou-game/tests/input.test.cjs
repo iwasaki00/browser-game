@@ -8,13 +8,13 @@ function target(name){
     setAttribute(key,value){this.attributes[key]=value;},blur(){},getBoundingClientRect(){return{width:844,height:230};}};
   listeners.set(name,obj);return obj;
 }
-for(const id of ['canvas','pump','release','retry','debug','telemetry','result','badge','score','flips','height','cue','grade','finalScore','summary','reason'])elements.set(id,target(id));
+for(const id of ['canvas','pump','release','retry','debug','telemetry','result','badge','score','flips','height','cue','grade','finalScore','summary','reason','difficulty','rankingOpen','rankingClose','rankingDialog','rankEasy','rankNormal','rankingList','personalBest','storageStatus','guideLegend','timingFeedback','scoreBreakdown','recordNotice'])elements.set(id,target(id));
 const ctx=new Proxy({},{get(o,k){return o[k]??(()=>{});},set(o,k,v){o[k]=v;return true;}});
 elements.get('canvas').getContext=()=>ctx;
 const win=target('window'),doc=target('document');doc.getElementById=id=>elements.get(id);doc.hidden=false;doc.activeElement={tagName:'BODY'};
 let callback,now=0;
 const env={window:win,document:doc,performance:{now:()=>now},Image:class{complete=true;naturalWidth=340;},requestAnimationFrame:fn=>callback=fn,console};
-vm.createContext(env);vm.runInContext(fs.readFileSync(path.join(base,'physics.js'),'utf8'),env);vm.runInContext(fs.readFileSync(path.join(base,'game.js'),'utf8'),env);
+vm.createContext(env);vm.runInContext(fs.readFileSync(path.join(base,'ranking.js'),'utf8'),env);vm.runInContext(fs.readFileSync(path.join(base,'physics.js'),'utf8'),env);vm.runInContext(fs.readFileSync(path.join(base,'game.js'),'utf8'),env);
 function frame(){now+=16.666;callback(now);}
 const pump=elements.get('pump'),release=elements.get('release');
 function pressed(value){assert.equal(pump.attributes['aria-pressed'],String(value));}
