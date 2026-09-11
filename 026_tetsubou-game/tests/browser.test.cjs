@@ -40,6 +40,13 @@ const server=http.createServer((req,res)=>{
     const box=await page.locator('#'+id).boundingBox();assert(box&&box.x>=0&&box.y>=0&&box.x+box.width<=viewport.width+1&&box.y+box.height<=viewport.height+1,`${name}: ${id} out of viewport`);assert(box.height>=44);
    }
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+   if(mobile){
+    const visualScale=await page.evaluate(()=>visualViewport.scale);
+    await page.locator('#pump').tap();await page.locator('#pump').tap();
+    assert.equal(await page.evaluate(()=>visualViewport.scale),visualScale);
+    assert.equal(await page.evaluate(()=>getSelection().toString()),'');
+    assert.equal(await page.locator('#pump').evaluate(el=>getComputedStyle(el).touchAction),'none');
+   }
    await page.screenshot({path:path.join(out,name+'.png')});
    await page.locator('#pump').dispatchEvent('pointerdown',{pointerId:1,pointerType:'touch',button:0});
    await page.waitForTimeout(180);assert.equal(await page.locator('#pump').getAttribute('aria-pressed'),'true');
@@ -47,6 +54,9 @@ const server=http.createServer((req,res)=>{
    await page.locator('#pump').dispatchEvent('pointercancel',{pointerId:1,pointerType:'touch'});assert.equal(await page.locator('#pump').getAttribute('aria-pressed'),'false');
    if(mobile)await page.locator('#release').tap();else await page.keyboard.press('x');
    await page.locator('#result').waitFor({state:'visible'});
+   const retryBox=await page.locator('#retry').boundingBox(),resultBox=await page.locator('#result').boundingBox();
+   assert(retryBox.y+retryBox.height<=resultBox.y+resultBox.height+1,'Retry must be visible without scrolling');
+   assert.equal(await page.locator('.points').isVisible(),true);
    await page.screenshot({path:path.join(out,name+'-result.png')});
 
    assert((await page.locator('#scoreBreakdown').textContent()).includes('EASY ×0.7'));

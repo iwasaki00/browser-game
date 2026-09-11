@@ -72,7 +72,10 @@
     e.preventDefault(); if (e.button !== 0 && e.pointerType === 'mouse') return;
     if(paused||state.phase==='result')return; pointers.add(e.pointerId); updateHeld(); tone(220, 0.035);
   });
-  for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture']) pump.addEventListener(event, e => { pointers.delete(e.pointerId); updateHeld(); });
+  for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture']) pump.addEventListener(event, e => {
+    pointers.delete(e.pointerId);
+    updateHeld(event === 'pointerup');
+  });
   for (const event of ['pointerup', 'pointercancel']) window.addEventListener(event, e => { pointers.delete(e.pointerId); updateHeld(); });
   for (const event of ['touchend', 'touchcancel']) window.addEventListener(event, e => {
     if (event === 'touchcancel' || e.touches.length === 0) { pointers.clear(); updateHeld(); }
@@ -211,7 +214,13 @@
     while(particles.length&&particles[0].life<=0)particles.shift();if(debug)diagnostics();
     if(state.giants>shownGiants){shownGiants=state.giants;$('badge').textContent=`大車輪！ ×${shownGiants}`;badgeUntil=now+1400;tone(880,0.12);}if(now>badgeUntil)$('badge').textContent='';
     $('flips').innerHTML=`${Math.floor(state.airRotation/(2*Math.PI))}<span>回</span>`;$('height').innerHTML=`${state.maxHeight.toFixed(1)}<span>m</span>`;
-    const cue=state.phase==='swing'?(state.amplitude>2.9?'大車輪！右上へ向かう瞬間に「離す！」':state.held?'振り上がったら離して、足を戻そう':'下へ向かうときに「こぐ」→ 振り上がったら戻す'):state.phase==='flight'?'足を前へ振って回転 → 着地前に足を下へ戻す':'Rキーでも、すぐにリトライ';
+    let cue=state.phase==='swing'?(state.amplitude>2.9?'大車輪！右上へ向かう瞬間に「離す！」':state.held?'振り上がったら離して、足を戻そう':'下へ向かうときに「こぐ」→ 振り上がったら戻す'):state.phase==='flight'?'足を前へ振って回転 → 着地前に足を下へ戻す':'Rキーでも、すぐにリトライ';
+    if(C.guide&&state.phase==='swing'){
+      cue=state.vx>80&&state.vy<-60&&Math.abs(state.omega)>1.4?'右上へ飛ぶチャンス！「離す！」を狙おう'
+        :!state.held&&P.timing(state,true)?'今は「こぐ」！足を前へ出そう'
+        :state.held&&P.timing(state,false)?'今は戻す！ボタンを離して足を下へ'
+        :state.held?'振り上がったら、ボタンを離して戻そう':'緑でこぐ → 白で戻す → オレンジで離す';
+    }
     $('guideLegend').hidden=!C.guide||state.phase!=='swing';
     if(now>feedbackUntil)$('timingFeedback').textContent='';
     if($('cue').textContent!==cue)$('cue').textContent=cue;if(state.phase==='result'&&now-resultTime>400)$('result').hidden=false;
