@@ -12,8 +12,17 @@
     COUNT_IN_BEATS: 2
   });
 
+  const STAGES = Object.freeze([
+    { name: "1だけ", hint: "1の目だけ。まずは1拍に1回のタップを覚えよう。", pattern: [1] },
+    { name: "1と2", hint: "1・1・2・2を繰り返して、2連打に慣れよう。", pattern: [1, 1, 2, 2] },
+    { name: "2を練習", hint: "2を中心に、1を合図としてはさむ練習。", pattern: [2, 2, 1, 2] },
+    { name: "4を練習", hint: "1・2から4連打へ、段階的に速くしよう。", pattern: [1, 2, 4, 4] },
+    { name: "ミックス", hint: "決まった混合パターンを覚えて安定させよう。", pattern: [1, 2, 1, 4, 2, 4, 1, 2, 4, 2, 1, 4, 2, 1, 4, 4] },
+    { name: "シャッフル", hint: "1・2・4が毎セット変化する実戦ステージ。", random: true }
+  ]);
   class ChartGenerator {
-    generate(size = CONFIG.GRID_SIZE) {
+    generate(stage, size = CONFIG.GRID_SIZE) {
+      if (!stage.random) return Array.from({ length: size }, (_, index) => stage.pattern[index % stage.pattern.length]);
       return Array.from({ length: size }, () => {
         const roll = Math.random();
         let total = 0;
@@ -69,7 +78,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "lives", "bpmDisplay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
       this.buttons = [...document.querySelectorAll(".dice-button")];
     }
     renderChart(chart, activeIndex = 0) {
@@ -88,7 +97,7 @@
         die.classList.toggle("active", cellIndex === index);
         die.classList.toggle("done", cellIndex < index);
       });
-      this.beatNumber.textContent = String(index + 1).padStart(2, "0");
+      this.beatNumber.textContent = `BEAT ${String(index + 1).padStart(2, "0")} / ${CONFIG.GRID_SIZE}`;
     }
     stats(score, combo, lives, testMode) {
       this.score.textContent = String(score).padStart(6, "0");
@@ -119,6 +128,7 @@
       this.audio = new AudioManager();
       this.ui = new UIManager();
       this.bpm = CONFIG.DEFAULT_BPM;
+      this.stageIndex = 0;
       this.chart = [];
       this.index = 0;
       this.score = 0;
@@ -144,7 +154,23 @@
         this.bpm = Number(button.dataset.bpm);
         document.querySelectorAll("[data-bpm]").forEach((item) => item.classList.toggle("selected", item === button));
         this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
+      this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       });
+      document.getElementById("stageOptions").addEventListener("pointerdown", (event) => {
+        const button = event.target.closest("button[data-stage]");
+        if (!button) return;
+        event.preventDefault();
+        this.stageIndex = Number(button.dataset.stage);
+        document.querySelectorAll("[data-stage]").forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle("selected", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+        document.getElementById("stageHint").textContent = STAGES[this.stageIndex].hint;
+        this.previewChart();
+      });
+      document.getElementById("stageMenu").addEventListener("pointerdown", (event) => { event.preventDefault(); this.openStageMenu(); });
+      document.getElementById("stageSelectButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.openStageMenu(); });
       document.getElementById("startButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.start(); });
       document.getElementById("retryButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.ui.gameOver.hidden = true; this.start(); });
       document.getElementById("resumeButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.resume(); });
@@ -153,9 +179,21 @@
       document.addEventListener("visibilitychange", () => { if (document.hidden && this.running) this.pause(); });
       window.addEventListener("pagehide", () => { if (this.running) this.pause(); });
     }
+    openStageMenu() {
+      this.running = false;
+      clearTimeout(this.beatTimer);
+      cancelAnimationFrame(this.frame);
+      this.ui.enableControls(false);
+      this.ui.gameOver.hidden = true;
+      this.ui.pauseScreen.hidden = true;
+      this.ui.startScreen.hidden = false;
+      this.ui.judgement.textContent = "";
+      this.previewChart();
+    }
     previewChart() {
-      this.chart = this.chartGenerator.generate();
+      this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]);
       this.ui.renderChart(this.chart);
+      this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.enableControls(false);
     }
     async start() {
@@ -164,10 +202,11 @@
       cancelAnimationFrame(this.frame);
       this.testMode = document.getElementById("testMode").checked;
       this.index = 0; this.score = 0; this.combo = 0; this.bestCombo = 0; this.lives = CONFIG.STARTING_LIVES; this.running = false;
-      this.chart = this.chartGenerator.generate();
+      this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]);
       this.ui.renderChart(this.chart);
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
+      this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.testPanel.hidden = !this.testMode;
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
@@ -221,7 +260,7 @@
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       if (this.lives <= 0 && !this.testMode) { this.end(); return; }
       this.index += 1;
-      if (this.index >= CONFIG.GRID_SIZE) { this.chart = this.chartGenerator.generate(); this.index = 0; this.ui.renderChart(this.chart); }
+      if (this.index >= CONFIG.GRID_SIZE) { this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]); this.index = 0; this.ui.renderChart(this.chart); }
       this.beginBeat();
     }
     updateFrame() {
