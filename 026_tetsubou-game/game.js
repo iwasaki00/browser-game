@@ -52,6 +52,7 @@
   }
   function updateSimulationUI(status){
     $('debugControls').hidden=!debug;
+    $('telemetry').hidden=!debug||simulation.active;
     $('debugSimulation').setAttribute('aria-pressed',String(simulation.active));
     $('debugSimulation').textContent=simulation.active?'シミュレーション停止':'ベストタイミング再生';
     $('debugSimulationStatus').textContent=status||(simulation.active?'自動こぎ中 · '+simulation.presses+'回':'待機中');
@@ -242,7 +243,7 @@
     ctx.save();ctx.globalAlpha=.12;ctx.fillStyle='#335978';ctx.beginPath();ctx.ellipse(state.x,C.groundY-2,22,4,0,0,Math.PI*2);ctx.fill();ctx.restore();gymnast();
     for(const p of particles){p.life-=dt;p.vy+=300*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;ctx.globalAlpha=Math.max(0,p.life);roundRect(p.x,p.y,5,5,1,p.color);}ctx.globalAlpha=1;
     while(particles.length&&particles[0].life<=0)particles.shift();if(debug)diagnostics();
-    if(state.giants>shownGiants){shownGiants=state.giants;$('badge').textContent=`大車輪！ ×${shownGiants}`;badgeUntil=now+1400;tone(880,0.12);if(simulation.active)stopSimulation('大車輪達成 · '+simulation.presses+'回');}if(now>badgeUntil)$('badge').textContent='';
+    if(state.giants>shownGiants){shownGiants=state.giants;$('badge').textContent=`大車輪！ ×${shownGiants}`;badgeUntil=now+1400;tone(880,0.12);}if(now>badgeUntil)$('badge').textContent='';
     $('flips').innerHTML=`${Math.floor(state.airRotation/(2*Math.PI))}<span>回</span>`;$('height').innerHTML=`${state.maxHeight.toFixed(1)}<span>m</span>`;
     let cue=state.phase==='swing'?(state.amplitude>2.9?'大車輪！右上へ向かう瞬間に「離す！」':state.held?'振り上がったら離して、足を戻そう':'下へ向かうときに「こぐ」→ 振り上がったら戻す'):state.phase==='flight'?'足を前へ振って回転 → 着地前に足を下へ戻す':'Rキーでも、すぐにリトライ';
     if(C.guide&&state.phase==='swing'){

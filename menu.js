@@ -3,6 +3,15 @@
 
   const games = [
     {
+      number: "027",
+      title: "Dice Rhythm Challenge",
+      genre: "Rhythm",
+      description: "光るサイコロと同じ色のボタンを、目の数だけ1拍の中でリズムよくタップ。固定された4×4グリッドを順番に攻略する反射神経ゲームです。",
+      href: "./027_dice-rhythm-challenge/index.html",
+      icon: "./assets/game-icons/027-dice-rhythm-challenge.svg",
+      alt: "赤・青・紫のサイコロとリズムの波形を描いたゲームアイコン"
+    },
+    {
       number: "026",
       title: "鉄棒ゲーム",
       genre: "Physics / Action",

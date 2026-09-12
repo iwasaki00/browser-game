@@ -27,9 +27,10 @@ win.emit('pointerup',{pointerId:2});pressed(true);win.emit('pointerup',{pointerI
 for(let i=0;i<300;i++)frame();assert.equal(elements.get('result').hidden,false);assert(elements.get('grade').textContent.startsWith('CRASH'));
 elements.get('retry').emit('click');assert.equal(release.disabled,false);assert.equal(elements.get('result').hidden,true);pressed(false);
 elements.get('debug').emit('click');frame();assert.equal(elements.get('telemetry').hidden,false);assert(elements.get('telemetry').textContent.includes('rad/s'));
-elements.get('debugSimulation').emit('click');assert.equal(elements.get('debugSimulation').attributes['aria-pressed'],'true');
-let sawAutoPress=false,sawAutoRelease=false,sawAutoRunning=false;for(let i=0;i<420;i++){frame();const down=pump.attributes['aria-pressed']==='true';if(down)sawAutoPress=true;if(sawAutoPress&&!down)sawAutoRelease=true;if(elements.get('telemetry').textContent.includes('自動こぎ: 実行中'))sawAutoRunning=true;if(elements.get('debugSimulation').attributes['aria-pressed']==='false')break;}
-assert(sawAutoPress,'Simulation visibly presses the pump button');assert(sawAutoRelease,'Simulation visibly releases the pump button');assert(sawAutoRunning);assert.match(elements.get('debugSimulationStatus').textContent,/^大車輪達成 · [2-6]回$/);pressed(false);
+elements.get('debugSimulation').emit('click');assert.equal(elements.get('debugSimulation').attributes['aria-pressed'],'true');assert.equal(elements.get('telemetry').hidden,true);
+let sawAutoPress=false,sawAutoRelease=false;for(let i=0;i<720;i++){frame();const down=pump.attributes['aria-pressed']==='true';if(down)sawAutoPress=true;if(sawAutoPress&&!down)sawAutoRelease=true;}
+assert(sawAutoPress,'Simulation visibly presses the pump button');assert(sawAutoRelease,'Simulation visibly releases the pump button');assert.equal(elements.get('debugSimulation').attributes['aria-pressed'],'true');
+elements.get('debugSimulation').emit('click');assert.equal(elements.get('debugSimulation').attributes['aria-pressed'],'false');assert.equal(elements.get('telemetry').hidden,false);pressed(false);
 win.emit('keydown',{code:'Space'});doc.hidden=true;doc.emit('visibilitychange');pressed(false);frame();doc.hidden=false;doc.emit('visibilitychange');frame();
 // Every local dependency is included; no network or build step is needed.
 const html=fs.readFileSync(path.join(base,'index.html'),'utf8');for(const match of html.matchAll(/(?:src|href)="([^"#]+)"/g))assert(fs.existsSync(path.resolve(base,match[1])),match[1]);

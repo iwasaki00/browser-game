@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 384" role="img" aria-label="Dice Rhythm Challenge">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#171b29"/><stop offset="1" stop-color="#07090e"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="384" height="384" rx="38" fill="url(#bg)"/>
+  <path d="M30 246h42l15-48 27 104 30-126 29 87 21-39 24 22h136" fill="none" stroke="#c8ff54" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".88" filter="url(#glow)"/>
+  <g transform="translate(64 57) rotate(-8 76 76)"><rect width="152" height="152" rx="32" fill="#9b4dff" stroke="#fff" stroke-width="7" filter="url(#glow)"/><g fill="#fff"><circle cx="43" cy="43" r="13"/><circle cx="109" cy="43" r="13"/><circle cx="43" cy="109" r="13"/><circle cx="109" cy="109" r="13"/></g></g>
+  <g transform="translate(214 78) rotate(9 55 55)"><rect width="110" height="110" rx="25" fill="#278eff" stroke="#fff" stroke-width="6"/><g fill="#fff"><circle cx="80" cy="30" r="11"/><circle cx="30" cy="80" r="11"/></g></g>
+  <g transform="translate(229 219) rotate(-5 45 45)"><rect width="90" height="90" rx="21" fill="#ff365a" stroke="#fff" stroke-width="6"/><circle cx="45" cy="45" r="12" fill="#fff"/></g>
+  <text x="36" y="345" fill="#fff" font-family="Arial,sans-serif" font-size="28" font-weight="900" letter-spacing="2">DICE RHYTHM</text>
+</svg>
