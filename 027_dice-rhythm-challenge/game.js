@@ -9,7 +9,7 @@
     GOOD_WINDOW_MS: 165,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
     SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 }),
-    COUNT_IN_BEATS: 2
+    COUNT_IN_BEATS: 3
   });
 
   const STAGES = Object.freeze([
@@ -92,7 +92,15 @@
         return die;
       }));
     }
-    setActive(index) {
+    renderCountdown(activeIndex = -1) {
+      this.grid.replaceChildren(...Array.from({ length: CONFIG.GRID_SIZE }, (_, index) => {
+        const frame = document.createElement("div");
+        frame.className = `die countdown${index === activeIndex ? " active" : ""}`;
+        frame.setAttribute("aria-hidden", "true");
+        return frame;
+      }));
+      this.beatNumber.textContent = activeIndex < 0 ? "GET READY" : `COUNT ${CONFIG.COUNT_IN_BEATS - activeIndex}`;
+    }    setActive(index) {
       [...this.grid.children].forEach((die, cellIndex) => {
         die.classList.toggle("active", cellIndex === index);
         die.classList.toggle("done", cellIndex < index);
@@ -138,6 +146,7 @@
       this.taps = [];
       this.wrongInput = false;
       this.running = false;
+      this.preparing = false;
       this.testMode = false;
       this.beatStart = 0;
       this.frame = 0;
@@ -176,11 +185,12 @@
       document.getElementById("resumeButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.resume(); });
       this.ui.buttons.forEach((button) => button.addEventListener("pointerdown", (event) => this.onTap(event, Number(button.dataset.value)), { passive: false }));
       document.addEventListener("contextmenu", (event) => event.preventDefault());
-      document.addEventListener("visibilitychange", () => { if (document.hidden && this.running) this.pause(); });
-      window.addEventListener("pagehide", () => { if (this.running) this.pause(); });
+      document.addEventListener("visibilitychange", () => { if (document.hidden && (this.running || this.preparing)) this.pause(); });
+      window.addEventListener("pagehide", () => { if (this.running || this.preparing) this.pause(); });
     }
     openStageMenu() {
       this.running = false;
+      this.preparing = false;
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
       this.ui.enableControls(false);
@@ -203,7 +213,7 @@
       this.testMode = document.getElementById("testMode").checked;
       this.index = 0; this.score = 0; this.combo = 0; this.bestCombo = 0; this.lives = CONFIG.STARTING_LIVES; this.running = false;
       this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]);
-      this.ui.renderChart(this.chart);
+      this.ui.renderCountdown();
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
@@ -211,11 +221,30 @@
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
-      this.countIn(CONFIG.COUNT_IN_BEATS);
+      this.showReady();
+    }
+    showReady() {
+      this.preparing = true;
+      this.ui.renderCountdown();
+      this.ui.progress(0);
+      this.ui.judgement.className = "judgement ready";
+      this.ui.judgement.textContent = "READY";
+      this.beatTimer = window.setTimeout(() => this.countIn(CONFIG.COUNT_IN_BEATS), 1000);
     }
     countIn(remaining) {
-      if (remaining <= 0) { this.running = true; this.ui.enableControls(true); this.beginBeat(); return; }
-      this.ui.judgement.className = "judgement show";
+      if (remaining <= 0) {
+        this.preparing = false;
+        this.ui.renderChart(this.chart, this.index);
+        this.ui.judgement.className = "judgement";
+        this.ui.judgement.textContent = "";
+        this.running = true;
+        this.ui.enableControls(true);
+        this.beginBeat();
+        return;
+      }
+      const activeFrame = CONFIG.COUNT_IN_BEATS - remaining;
+      this.ui.renderCountdown(activeFrame);
+      this.ui.judgement.className = "judgement countdown-number";
       this.ui.judgement.textContent = remaining;
       this.audio.metronome(true);
       this.beatTimer = window.setTimeout(() => this.countIn(remaining - 1), this.beatDuration);
@@ -277,13 +306,14 @@
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
       this.running = false;
+      this.preparing = false;
       this.ui.enableControls(false);
       this.ui.pauseScreen.hidden = false;
     }
     async resume() {
       await this.audio.unlock();
       this.ui.pauseScreen.hidden = true;
-      this.countIn(2);
+      this.showReady();
     }
     end() {
       this.running = false;
