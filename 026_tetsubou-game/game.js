@@ -10,6 +10,7 @@
   for (const name of ['body', 'arm', 'leg']) { const image = new Image(); image.src = `assets/${name}.png`; sprites[name] = image; }
 
   let paused=false,rankMode='easy',feedbackUntil=0,lastFeedbackAt=-1000;
+  const simulation={active:false,held:false,peak:0,lastChange:-1,presses:0};
   let storage=null;try{storage=window.localStorage;}catch(_){}
   const rankings=window.BarRanking.create(storage);
   function renderRanking(){
@@ -41,7 +42,7 @@
     width = rect.width; height = rect.height; scale = Math.min(width / C.viewWidth, height / viewHeight); cameraX=(C.barX+C.matX+C.matWidth)/2-C.viewCenterOffset-width/scale/2; cameraY=C.groundY+C.viewBottomMargin-viewHeight;
   }
   function updateHeld(interactive=true) {
-    const held=!paused&&state.phase!=='result'&&(keys.size>0||pointers.size>0);
+    const held=!paused&&state.phase!=='result'&&(simulation.held||keys.size>0||pointers.size>0);
     if(interactive&&held!==state.held&&C.feedback&&performance.now()-lastFeedbackAt>C.minStrokeInterval*1000){
       const grade=P.timing(state,held);
       if(grade){$('timingFeedback').textContent=grade;feedbackUntil=performance.now()+750;lastFeedbackAt=performance.now();}
@@ -49,7 +50,34 @@
     state.held=held;
     $('pump').setAttribute('aria-pressed', String(state.held));
   }
-  function clearInput() { keys.clear(); pointers.clear(); updateHeld(false); }
+  function updateSimulationUI(status){
+    $('debugControls').hidden=!debug;
+    $('debugSimulation').setAttribute('aria-pressed',String(simulation.active));
+    $('debugSimulation').textContent=simulation.active?'シミュレーション停止':'ベストタイミング再生';
+    $('debugSimulationStatus').textContent=status||(simulation.active?'自動こぎ中 · '+simulation.presses+'回':'待機中');
+  }
+  function stopSimulation(status='待機中'){
+    simulation.active=false;simulation.held=false;simulation.peak=0;simulation.lastChange=-1;
+    updateHeld(false);updateSimulationUI(status);
+  }
+  function clearInput() { keys.clear(); pointers.clear(); stopSimulation(); }
+  function startSimulation(){
+    reset(state.mode);simulation.active=true;simulation.held=false;simulation.peak=0;simulation.lastChange=-1;simulation.presses=0;
+    updateHeld(false);updateSimulationUI();
+  }
+  function simulateBestTiming(){
+    if(!simulation.active||state.phase!=='swing')return;
+    const g=P.geometry(state.pump,C),a=P.wrap(state.angle-Math.atan2(g.com.x,g.com.y)),toward=a*state.omega<0;
+    if(!simulation.held&&toward&&Math.abs(a)<Math.max(.08,state.amplitude*.25)&&state.elapsed-simulation.lastChange>.25){
+      simulation.held=true;simulation.presses++;simulation.peak=0;simulation.lastChange=state.elapsed;
+      $('timingFeedback').textContent='AUTO PERFECT!';feedbackUntil=performance.now()+750;updateHeld(false);updateSimulationUI();
+    }
+    simulation.peak=Math.max(simulation.peak,Math.abs(state.omega));
+    if(simulation.held&&!toward&&Math.abs(state.omega)<simulation.peak*.3&&state.elapsed-simulation.lastChange>.25){
+      simulation.held=false;simulation.lastChange=state.elapsed;
+      $('timingFeedback').textContent='AUTO GREAT!';feedbackUntil=performance.now()+750;updateHeld(false);updateSimulationUI();
+    }
+  }
   function tone(frequency, duration = 0.09, type = 'sine') {
     try {
       if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
@@ -60,7 +88,7 @@
       osc.connect(gain); gain.connect(audio.destination); osc.start(); osc.stop(audio.currentTime + duration);
     } catch (_) { /* Sound is optional. */ }
   }
-  function release() { if (!paused && P.release(state)) { tone(620, 0.15); $('release').disabled = true; trail.length = 0; } }
+  function release() { if(simulation.active)stopSimulation('離手しました');if (!paused && P.release(state)) { tone(620, 0.15); $('release').disabled = true; trail.length = 0; } }
   function reset(mode=state.mode) {
     clearInput(); state = P.create(mode); C=state.config; $('difficulty').value=state.mode; $('guideLegend').hidden=!C.guide; $('timingFeedback').textContent='';feedbackUntil=0; shownGiants = 0; badgeUntil = 0; resultTime = 0;
     accumulator=0;viewHeight=C.viewInitialHeight;resize(); trail.length = particles.length = 0;
@@ -70,7 +98,7 @@
   const pump = $('pump');
   pump.addEventListener('pointerdown', e => {
     e.preventDefault(); if (e.button !== 0 && e.pointerType === 'mouse') return;
-    if(paused||state.phase==='result')return; pointers.add(e.pointerId); updateHeld(); tone(220, 0.035);
+    if(paused||state.phase==='result')return;if(simulation.active)stopSimulation('手動操作'); pointers.add(e.pointerId); updateHeld(); tone(220, 0.035);
   });
   for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture']) pump.addEventListener(event, e => {
     pointers.delete(e.pointerId);
@@ -84,13 +112,14 @@
   $('release').addEventListener('pointerdown', e => { e.preventDefault(); release(); });
   $('release').addEventListener('click', e => { if (e.detail === 0) release(); });
   $('retry').addEventListener('click',()=>reset());
-  $('debug').addEventListener('click', () => { debug = !debug; $('debug').setAttribute('aria-pressed', String(debug)); $('telemetry').hidden = !debug; });
+  $('debug').addEventListener('click', () => { debug = !debug;if(!debug)stopSimulation(); $('debug').setAttribute('aria-pressed', String(debug)); $('telemetry').hidden = !debug;updateSimulationUI(); });
+  $('debugSimulation').addEventListener('click',()=>simulation.active?stopSimulation('停止しました'):startSimulation());
   window.addEventListener('keydown', e => {
     if (e.altKey || e.ctrlKey || e.metaKey || paused || document.activeElement.tagName==='SELECT') return;
     const isPump = e.code === 'Space' || e.code === 'KeyZ';
     if (e.code === 'Enter' && document.activeElement.tagName === 'BUTTON') return;
     if (isPump || ['KeyX', 'Enter', 'KeyR'].includes(e.code)) e.preventDefault();
-    if (isPump) { keys.add(e.code); updateHeld(); }
+    if (isPump) { if(simulation.active)stopSimulation('手動操作');keys.add(e.code); updateHeld(); }
     if (!e.repeat && (e.code === 'KeyX' || e.code === 'Enter')) release();
     if (!e.repeat && e.code === 'KeyR') reset();
   });
@@ -175,7 +204,8 @@
     line(C.matX,C.groundY-C.matThickness,C.matX+C.matWidth,C.groundY-C.matThickness,'#ec338a',2);ctx.restore();
     const deg=v=>(v*180/Math.PI).toFixed(1);
     $('telemetry').textContent=['状態: '+state.phase,'速度: '+Math.hypot(state.vx,state.vy).toFixed(1)+' px/s',
-      'こぐ: '+(state.held?'ON':'OFF'),'足角度: '+deg(p.legAngle)+'°',
+      'こぐ: '+(state.held?'ON':'OFF'),'自動こぎ: '+(simulation.active?'実行中':'OFF'),'自動入力: '+(simulation.held?'ON':'OFF'),
+      '足角度: '+deg(p.legAngle)+'°',
       '足目標: '+deg(state.held?C.legForwardAngle:C.legReturnAngle)+'°',
       '振り子角度: '+deg(P.wrap(state.angle))+'°','角速度: '+state.omega.toFixed(2)+' rad/s',
       '現在の振れ幅: '+deg(state.amplitude)+'°','重心: ('+state.x.toFixed(1)+', '+state.y.toFixed(1)+')',
@@ -212,7 +242,7 @@
     ctx.save();ctx.globalAlpha=.12;ctx.fillStyle='#335978';ctx.beginPath();ctx.ellipse(state.x,C.groundY-2,22,4,0,0,Math.PI*2);ctx.fill();ctx.restore();gymnast();
     for(const p of particles){p.life-=dt;p.vy+=300*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;ctx.globalAlpha=Math.max(0,p.life);roundRect(p.x,p.y,5,5,1,p.color);}ctx.globalAlpha=1;
     while(particles.length&&particles[0].life<=0)particles.shift();if(debug)diagnostics();
-    if(state.giants>shownGiants){shownGiants=state.giants;$('badge').textContent=`大車輪！ ×${shownGiants}`;badgeUntil=now+1400;tone(880,0.12);}if(now>badgeUntil)$('badge').textContent='';
+    if(state.giants>shownGiants){shownGiants=state.giants;$('badge').textContent=`大車輪！ ×${shownGiants}`;badgeUntil=now+1400;tone(880,0.12);if(simulation.active)stopSimulation('大車輪達成 · '+simulation.presses+'回');}if(now>badgeUntil)$('badge').textContent='';
     $('flips').innerHTML=`${Math.floor(state.airRotation/(2*Math.PI))}<span>回</span>`;$('height').innerHTML=`${state.maxHeight.toFixed(1)}<span>m</span>`;
     let cue=state.phase==='swing'?(state.amplitude>2.9?'大車輪！右上へ向かう瞬間に「離す！」':state.held?'振り上がったら離して、足を戻そう':'下へ向かうときに「こぐ」→ 振り上がったら戻す'):state.phase==='flight'?'足を前へ振って回転 → 着地前に足を下へ戻す':'Rキーでも、すぐにリトライ';
     if(C.guide&&state.phase==='swing'){
@@ -227,8 +257,8 @@
   }
   function frame(now) {
     const dt=lastTime?Math.min(C.maxFrame,(now-lastTime)/1000):0;lastTime=now;
-    if(!document.hidden&&!paused){accumulator+=dt;while(accumulator>=C.fixedStep){const phase=state.phase;P.step(state,C.fixedStep);accumulator-=C.fixedStep;if(phase!=='result'&&state.phase==='result')showResult();}draw(dt,now);}
+    if(!document.hidden&&!paused){accumulator+=dt;while(accumulator>=C.fixedStep){simulateBestTiming();const phase=state.phase;P.step(state,C.fixedStep);accumulator-=C.fixedStep;if(phase!=='result'&&state.phase==='result')showResult();}draw(dt,now);}
     requestAnimationFrame(frame);
   }
-  $('guideLegend').hidden=!C.guide;resize();requestAnimationFrame(frame);
+  $('guideLegend').hidden=!C.guide;updateSimulationUI();resize();requestAnimationFrame(frame);
 })();

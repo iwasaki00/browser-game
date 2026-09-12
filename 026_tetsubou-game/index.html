@@ -19,6 +19,7 @@
       <canvas id="canvas" aria-label="横向きの鉄棒アクションゲーム"></canvas>
       <div class="cue" id="cue" aria-live="polite">下へ向かうときに「こぐ」→ 振り上がったら戻す</div>
       <div class="badge" id="badge"></div><div id="timingFeedback" aria-live="polite"></div><div id="guideLegend"><span class="green">● こぐ</span><span>○ 戻す</span><span class="orange">● 離す！</span></div>
+      <div id="debugControls" hidden><button id="debugSimulation" type="button" aria-pressed="false">ベストタイミング再生</button><span id="debugSimulationStatus" aria-live="polite">待機中</span></div>
       <pre id="telemetry" hidden></pre>
       <div id="result" class="result" hidden role="status">
         <p class="eyebrow">LANDING RESULT</p><h2 id="grade"></h2>
