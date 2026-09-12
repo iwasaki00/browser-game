@@ -315,12 +315,23 @@
       ctx.restore();
     }
     drawRoundMessage(ctx) {
-      const table = this.tableBounds(); ctx.save(); ctx.translate((table.left + table.right) / 2, table.centerY);
+      const table = this.tableBounds();
+      const centerX = (table.left + table.right) / 2;
       const boxWidth = Math.min(360, this.width * .84);
-      ctx.fillStyle = "rgba(3,13,21,.84)"; ctx.fillRect(-boxWidth / 2, -38, boxWidth, 76);
-      ctx.fillStyle = this.roundMessage === "READY" ? "#fff8df" : "#ffc857";
-      ctx.font = "1000 " + Math.max(25, Math.min(42, this.width * .1)) + "px ui-monospace, Consolas, monospace";
-      ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(this.roundMessage, 0, 0); ctx.restore();
+      const offset = Math.min(36, this.height * .085);
+      [-1, 1].forEach((side) => {
+        ctx.save();
+        ctx.translate(centerX, table.centerY + side * offset);
+        if (side < 0) ctx.rotate(Math.PI);
+        ctx.fillStyle = "rgba(3,13,21,.84)";
+        ctx.fillRect(-boxWidth / 2, -26, boxWidth, 52);
+        ctx.fillStyle = this.roundMessage === "READY" ? "#fff8df" : "#ffc857";
+        ctx.font = "1000 " + Math.max(20, Math.min(32, this.width * .078)) + "px ui-monospace, Consolas, monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(this.roundMessage, 0, 0);
+        ctx.restore();
+      });
     }
     drawTestOverlay(ctx, table) {
       ctx.save(); ctx.lineWidth = 1.5; ctx.setLineDash([5, 5]); ctx.strokeStyle = "rgba(120,255,155,.72)";

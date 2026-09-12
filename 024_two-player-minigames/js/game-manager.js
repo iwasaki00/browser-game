@@ -115,13 +115,14 @@
       ["3", "2", "1", "START!"].forEach((step, index) => {
         const timer = window.setTimeout(() => {
           this.elements.countdown.textContent = step; this.elements.countdown.classList.remove("pop"); void this.elements.countdown.offsetWidth;
+          this.elements.countdown.dataset.label = step;
           this.elements.countdown.classList.add("pop"); this.playCount(step === "START!");
-          if (step === "START!") { this.currentGame.start(); this.countdownTimers.push(window.setTimeout(() => { this.elements.countdown.textContent = ""; }, 570)); }
+          if (step === "START!") { this.currentGame.start(); this.countdownTimers.push(window.setTimeout(() => { this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }, 570)); }
         }, index * 680);
         this.countdownTimers.push(timer);
       });
     }
-    clearCountdown() { this.countdownTimers.forEach(window.clearTimeout); this.countdownTimers = []; this.elements.countdown.textContent = ""; }
+    clearCountdown() { this.countdownTimers.forEach(window.clearTimeout); this.countdownTimers = []; this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }
     showResult(winner, reason) {
       if (winner === 0) {
         this.elements.resultTitle.textContent = "DRAW!"; this.elements.resultTitle.style.color = "var(--gold)"; this.playCount(true);
@@ -129,7 +130,12 @@
         this.scores[winner - 1] += 1; this.updateScore(); this.elements.resultTitle.textContent = `PLAYER ${winner} WIN!`;
         this.elements.resultTitle.style.color = winner === 1 ? "var(--cyan)" : "var(--coral)"; this.playWin(winner);
       }
+      if (this.elements.resultTitleTop) {
+        this.elements.resultTitleTop.textContent = this.elements.resultTitle.textContent;
+        this.elements.resultTitleTop.style.color = this.elements.resultTitle.style.color;
+      }
       this.elements.resultReason.textContent = reason;
+      if (this.elements.resultReasonTop) this.elements.resultReasonTop.textContent = reason;
       window.setTimeout(() => { this.elements.resultPanel.hidden = false; this.elements.replayButton.focus({ preventScroll: true }); }, 420);
     }
     replay() { this.resumeAudio(); this.elements.resultPanel.hidden = true; this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); }); }

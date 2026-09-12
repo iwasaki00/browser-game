@@ -765,7 +765,13 @@
       ctx.fillStyle = "rgba(255,248,223,.78)";
       ctx.font = `900 ${Math.max(12, Math.min(16, this.height * .032))}px ui-monospace,Consolas,monospace`;
       ctx.textAlign = "center";
-      ctx.fillText(remaining, this.width * .5, this.height * .095);
+      ctx.textBaseline = "middle";
+      ctx.save();
+      ctx.translate(this.width * .5, this.height * .075);
+      ctx.rotate(Math.PI);
+      ctx.fillText(remaining, 0, 0);
+      ctx.restore();
+      ctx.fillText(remaining, this.width * .5, this.height * .925);
       ctx.restore();
     }
 
@@ -858,15 +864,17 @@
       ctx.fillRect(-scale * .19, -scale * .12, scale * .38, scale * .07);
       ctx.restore();
       this.drawArm(ctx, pose.arms.arm1, color, scale, 1);
-      this.drawArmLabel(ctx, pose.arms.arm1.elbow, "①", color, scale);
-      this.drawArmLabel(ctx, pose.arms.arm2.elbow, "②", color, scale);
+      this.drawArmLabel(ctx, pose.arms.arm1.elbow, "①", color, scale, player.index);
+      this.drawArmLabel(ctx, pose.arms.arm2.elbow, "②", color, scale, player.index);
     }
 
-    drawArmLabel(ctx, point, label, color, scale) {
+    drawArmLabel(ctx, point, label, color, scale, playerIndex) {
       ctx.save();
+      ctx.translate(point.x, point.y - scale * .15);
+      if (playerIndex === 0) ctx.rotate(Math.PI);
       ctx.fillStyle = "rgba(4,15,24,.88)";
       ctx.beginPath();
-      ctx.arc(point.x, point.y - scale * .15, scale * .105, 0, Math.PI * 2);
+      ctx.arc(0, 0, scale * .105, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
@@ -875,7 +883,7 @@
       ctx.font = `900 ${Math.max(12, scale * .13)}px system-ui,sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(label, point.x, point.y - scale * .15);
+      ctx.fillText(label, 0, 0);
       ctx.restore();
     }
 
@@ -1017,7 +1025,11 @@
       this.players.forEach((player) => {
         if (!player.feedback) return;
         ctx.fillStyle = player.feedback === "BLOCK!" ? "#9beaf1" : "#ffc857";
-        ctx.fillText(player.feedback, player.pose.head.x, player.pose.head.y - this.characterScale() * .34);
+        ctx.save();
+        ctx.translate(player.pose.head.x, player.pose.head.y - this.characterScale() * .34);
+        if (player.index === 0) ctx.rotate(Math.PI);
+        ctx.fillText(player.feedback, 0, 0);
+        ctx.restore();
       });
       ctx.restore();
     }

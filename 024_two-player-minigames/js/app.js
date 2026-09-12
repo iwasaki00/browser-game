@@ -6,7 +6,8 @@
     p1Control: byId("p1Control"), p2Control: byId("p2Control"), p1Energy: byId("p1Energy"), p2Energy: byId("p2Energy"),
     p1Score: byId("p1Score"), p2Score: byId("p2Score"), dangerLeft: byId("dangerLeft"), dangerRight: byId("dangerRight"),
     countdown: byId("countdown"), debugPanel: byId("debugPanel"), resultPanel: byId("resultPanel"), resultTitle: byId("resultTitle"),
-    resultReason: byId("resultReason"), replayButton: byId("replayButton"), menuButton: byId("menuButton"), backButton: byId("backButton"),
+    resultReason: byId("resultReason"), resultTitleTop: byId("resultTitleTop"), resultReasonTop: byId("resultReasonTop"),
+    replayButton: byId("replayButton"), replayButtonTop: byId("replayButtonTop"), menuButton: byId("menuButton"), menuButtonTop: byId("menuButtonTop"), backButton: byId("backButton"),
     muteButton: byId("muteButton"), menuMuteButton: byId("menuMuteButton"), testModeButton: byId("testModeButton"), menuTestModeButton: byId("menuTestModeButton"), testSpeedButton: byId("testSpeedButton"),
     controlActions: [byId("p1Action"), byId("p2Action")], energyNames: [byId("p1EnergyName"), byId("p2EnergyName")], centerBadge: byId("centerBadge"),
     jointButtons: [[...document.querySelectorAll('[data-player="0"][data-joint]')], [...document.querySelectorAll('[data-player="1"][data-joint]')]]
@@ -18,7 +19,9 @@
   elements.boxingCard.addEventListener("click", () => manager.launchWobbleBoxing());
   elements.hockeyCard.addEventListener("click", () => manager.launchTableHockey());
   elements.replayButton.addEventListener("click", () => manager.replay());
+  elements.replayButtonTop.addEventListener("click", () => manager.replay());
   elements.menuButton.addEventListener("click", () => manager.showMenu());
+  elements.menuButtonTop.addEventListener("click", () => manager.showMenu());
   elements.backButton.addEventListener("click", () => manager.showMenu());
   elements.muteButton.addEventListener("click", () => manager.toggleMute());
   elements.menuMuteButton.addEventListener("click", () => manager.toggleMute());
