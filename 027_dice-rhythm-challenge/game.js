@@ -114,6 +114,23 @@
     }
     progress(ratio) { this.beatProgress.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`; }
     enableControls(enabled) { this.buttons.forEach((button) => { button.disabled = !enabled; }); }
+    targetGuide(value, enabled) {
+      this.buttons.forEach((button) => {
+        const active = enabled && Number(button.dataset.value) === value;
+        const label = button.querySelector(".target-guide");
+        button.classList.toggle("test-target", active);
+        button.classList.remove("guide-hit");
+        label.hidden = !active;
+        label.textContent = active ? `TARGET ${value} / ${value} taps` : "";
+      });
+    }
+    hitGuide(button) {
+      if (!button.classList.contains("test-target")) return;
+      button.classList.remove("guide-hit");
+      void button.offsetWidth;
+      button.classList.add("guide-hit");
+      window.setTimeout(() => button.classList.remove("guide-hit"), 110);
+    }
     test(data) {
       this.testBpm.textContent = `${data.bpm} BPM`;
       this.testCell.textContent = `CELL ${String(data.cell + 1).padStart(2, "0")}`;
@@ -187,6 +204,7 @@
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
       this.ui.gameOver.hidden = true;
       this.ui.pauseScreen.hidden = true;
       this.ui.readyOverlay.hidden = true;
@@ -199,6 +217,7 @@
       this.ui.renderChart(this.chart);
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
     }
     async start() {
       await this.audio.unlock();
@@ -215,12 +234,14 @@
       this.ui.testPanel.hidden = !this.testMode;
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
       this.showReady();
     }
     showReady() {
       this.preparing = true;
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
       this.ui.progress(0);
       this.ui.beatNumber.textContent = "READY";
       this.ui.judgement.className = "judgement";
@@ -241,6 +262,7 @@
       this.ui.setActive(this.index);
       this.ui.progress(0);
       this.ui.enableControls(this.chart[this.index] !== 0);
+      this.ui.targetGuide(this.chart[this.index], this.testMode && this.chart[this.index] !== 0);
       this.audio.metronome(this.index % 4 === 0);
       this.updateFrame();
       this.beatTimer = window.setTimeout(() => this.finishBeat(), this.beatDuration);
@@ -252,6 +274,7 @@
       button.classList.remove("pressed");
       void button.offsetWidth;
       button.classList.add("pressed");
+      this.ui.hitGuide(button);
       window.setTimeout(() => button.classList.remove("pressed"), 72);
       this.audio.tap(value);
       const elapsed = performance.now() - this.beatStart;
@@ -300,6 +323,7 @@
       this.preparing = false;
       this.ui.readyOverlay.hidden = true;
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
       this.ui.pauseScreen.hidden = false;
     }
     async resume() {
@@ -312,6 +336,7 @@
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
       this.ui.enableControls(false);
+      this.ui.targetGuide(0, false);
       this.ui.finalScore.textContent = this.score;
       this.ui.maxCombo.textContent = this.bestCombo;
       this.ui.gameOver.hidden = false;
