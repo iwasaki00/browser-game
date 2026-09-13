@@ -7,6 +7,7 @@
     GRID_SIZE: 16,
     PERFECT_WINDOW_MS: 68,
     GOOD_WINDOW_MS: 165,
+    GUIDE_PULSE_MS: 82,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
     SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 }),
     INTRO_BEATS: 4
@@ -38,7 +39,7 @@
   class RhythmJudge {
     judge(value, taps, wrongInput, beatDuration) {
       if (wrongInput || taps.length !== value) return { grade: "MISS", error: Infinity };
-      const errors = taps.map((tap, index) => Math.abs(tap - beatDuration * ((index + 0.5) / value)));
+      const errors = taps.map((tap, index) => Math.abs(tap - beatDuration * (index / value)));
       const averageError = errors.reduce((sum, error) => sum + error, 0) / errors.length;
       if (averageError <= CONFIG.PERFECT_WINDOW_MS) return { grade: "PERFECT", error: averageError };
       if (averageError <= CONFIG.GOOD_WINDOW_MS) return { grade: "GOOD", error: averageError };
@@ -119,10 +120,13 @@
         const active = enabled && Number(button.dataset.value) === value;
         const label = button.querySelector(".target-guide");
         button.classList.toggle("test-target", active);
-        button.classList.remove("guide-hit");
+        button.classList.remove("guide-hit", "guide-cue");
         label.hidden = !active;
         label.textContent = active ? `TARGET ${value} / ${value} taps` : "";
       });
+    }
+    guideCue(active) {
+      this.buttons.forEach((button) => button.classList.toggle("guide-cue", active && button.classList.contains("test-target")));
     }
     hitGuide(button) {
       if (!button.classList.contains("test-target")) return;
@@ -263,6 +267,7 @@
       this.ui.progress(0);
       this.ui.enableControls(this.chart[this.index] !== 0);
       this.ui.targetGuide(this.chart[this.index], this.testMode && this.chart[this.index] !== 0);
+      this.updateGuide(0);
       this.audio.metronome(this.index % 4 === 0);
       this.updateFrame();
       this.beatTimer = window.setTimeout(() => this.finishBeat(), this.beatDuration);
@@ -310,8 +315,19 @@
       if (!this.running) return;
       const elapsed = performance.now() - this.beatStart;
       this.ui.progress(elapsed / this.beatDuration);
+      this.updateGuide(elapsed);
       this.updateTest(elapsed);
       this.frame = requestAnimationFrame(() => this.updateFrame());
+    }
+    updateGuide(elapsed) {
+      const value = this.chart[this.index];
+      if (!this.testMode || !value || elapsed >= this.beatDuration) {
+        this.ui.guideCue(false);
+        return;
+      }
+      const subdivision = this.beatDuration / value;
+      const pulseWindow = Math.min(CONFIG.GUIDE_PULSE_MS, subdivision * 0.55);
+      this.ui.guideCue(elapsed % subdivision < pulseWindow);
     }
     updateTest(elapsed) {
       if (this.testMode) this.ui.test({ bpm: this.bpm, cell: this.index, taps: this.taps.length, required: this.chart[this.index], elapsed: Math.min(elapsed, this.beatDuration), duration: this.beatDuration });
