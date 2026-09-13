@@ -9,7 +9,7 @@
     GOOD_WINDOW_MS: 165,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
     SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 }),
-    COUNT_IN_BEATS: 3
+    INTRO_BEATS: 4
   });
 
   const STAGES = Object.freeze([
@@ -78,29 +78,22 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
       this.buttons = [...document.querySelectorAll(".dice-button")];
     }
     renderChart(chart, activeIndex = 0) {
       this.grid.replaceChildren(...chart.map((value, index) => {
         const die = document.createElement("div");
-        die.className = `die value-${value}${index === activeIndex ? " active" : ""}`;
+        die.className = value === 0 ? `die countdown${index === activeIndex ? " active" : ""}` : `die value-${value}${index === activeIndex ? " active" : ""}`;
         die.setAttribute("role", "listitem");
-        die.setAttribute("aria-label", `${index + 1}番目、${value}の目`);
-        const positions = value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : ["tl", "tr", "bl", "br"];
+        die.setAttribute("aria-label", value === 0 ? `${index + 1}番目、カウントイン` : `${index + 1}番目、${value}の目`);
+        const positions = value === 0 ? [] : value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : ["tl", "tr", "bl", "br"];
         positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
         return die;
       }));
     }
-    renderCountdown(activeIndex = -1) {
-      this.grid.replaceChildren(...Array.from({ length: CONFIG.GRID_SIZE }, (_, index) => {
-        const frame = document.createElement("div");
-        frame.className = `die countdown${index === activeIndex ? " active" : ""}`;
-        frame.setAttribute("aria-hidden", "true");
-        return frame;
-      }));
-      this.beatNumber.textContent = activeIndex < 0 ? "GET READY" : `COUNT ${CONFIG.COUNT_IN_BEATS - activeIndex}`;
-    }    setActive(index) {
+    setActive(index) {
+
       [...this.grid.children].forEach((die, cellIndex) => {
         die.classList.toggle("active", cellIndex === index);
         die.classList.toggle("done", cellIndex < index);
@@ -196,6 +189,7 @@
       this.ui.enableControls(false);
       this.ui.gameOver.hidden = true;
       this.ui.pauseScreen.hidden = true;
+      this.ui.readyOverlay.hidden = true;
       this.ui.startScreen.hidden = false;
       this.ui.judgement.textContent = "";
       this.previewChart();
@@ -212,8 +206,9 @@
       cancelAnimationFrame(this.frame);
       this.testMode = document.getElementById("testMode").checked;
       this.index = 0; this.score = 0; this.combo = 0; this.bestCombo = 0; this.lives = CONFIG.STARTING_LIVES; this.running = false;
-      this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]);
-      this.ui.renderCountdown();
+      const openingNotes = this.chartGenerator.generate(STAGES[this.stageIndex]);
+      this.chart = [...Array(CONFIG.INTRO_BEATS).fill(0), ...openingNotes.slice(0, CONFIG.GRID_SIZE - CONFIG.INTRO_BEATS)];
+      this.ui.renderChart(this.chart, -1);
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
@@ -225,29 +220,18 @@
     }
     showReady() {
       this.preparing = true;
-      this.ui.renderCountdown();
+      this.ui.enableControls(false);
       this.ui.progress(0);
-      this.ui.judgement.className = "judgement ready";
-      this.ui.judgement.textContent = "READY";
-      this.beatTimer = window.setTimeout(() => this.countIn(CONFIG.COUNT_IN_BEATS), 1000);
-    }
-    countIn(remaining) {
-      if (remaining <= 0) {
+      this.ui.beatNumber.textContent = "READY";
+      this.ui.judgement.className = "judgement";
+      this.ui.judgement.textContent = "";
+      this.ui.readyOverlay.hidden = false;
+      this.beatTimer = window.setTimeout(() => {
+        this.ui.readyOverlay.hidden = true;
         this.preparing = false;
-        this.ui.renderChart(this.chart, this.index);
-        this.ui.judgement.className = "judgement";
-        this.ui.judgement.textContent = "";
         this.running = true;
-        this.ui.enableControls(true);
         this.beginBeat();
-        return;
-      }
-      const activeFrame = CONFIG.COUNT_IN_BEATS - remaining;
-      this.ui.renderCountdown(activeFrame);
-      this.ui.judgement.className = "judgement countdown-number";
-      this.ui.judgement.textContent = remaining;
-      this.audio.metronome(true);
-      this.beatTimer = window.setTimeout(() => this.countIn(remaining - 1), this.beatDuration);
+      }, 1000);
     }
     beginBeat() {
       if (!this.running) return;
@@ -256,13 +240,14 @@
       this.beatStart = performance.now();
       this.ui.setActive(this.index);
       this.ui.progress(0);
+      this.ui.enableControls(this.chart[this.index] !== 0);
       this.audio.metronome(this.index % 4 === 0);
       this.updateFrame();
       this.beatTimer = window.setTimeout(() => this.finishBeat(), this.beatDuration);
     }
     onTap(event, value) {
       event.preventDefault();
-      if (!this.running) return;
+      if (!this.running || this.chart[this.index] === 0) return;
       const button = event.currentTarget;
       button.classList.remove("pressed");
       void button.offsetWidth;
@@ -281,6 +266,12 @@
       cancelAnimationFrame(this.frame);
       this.ui.progress(1);
       const value = this.chart[this.index];
+      if (value === 0) {
+        this.index += 1;
+        this.ui.judgement.textContent = "";
+        this.beginBeat();
+        return;
+      }
       const result = this.judge.judge(value, this.taps, this.wrongInput, this.beatDuration);
       this.audio.result(result.grade);
       this.ui.verdict(result.grade);
@@ -307,6 +298,7 @@
       cancelAnimationFrame(this.frame);
       this.running = false;
       this.preparing = false;
+      this.ui.readyOverlay.hidden = true;
       this.ui.enableControls(false);
       this.ui.pauseScreen.hidden = false;
     }
