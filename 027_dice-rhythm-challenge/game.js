@@ -5,8 +5,8 @@
     DEFAULT_BPM: 120,
     STARTING_LIVES: 3,
     GRID_SIZE: 16,
-    PERFECT_WINDOW_MS: 68,
-    GOOD_WINDOW_MS: 165,
+    PERFECT_WINDOW_MS: 90,
+    GOOD_WINDOW_MS: 210,
     GUIDE_PULSE_MS: 82,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
     SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 }),
@@ -15,7 +15,9 @@
 
   const STAGES = Object.freeze([
     { name: "1だけ", hint: "1の目だけ。まずは1拍に1回のタップを覚えよう。", pattern: [1] },
-    { name: "1と2", hint: "1・1・2・2を繰り返して、2連打に慣れよう。", pattern: [1, 1, 2, 2] },
+    { name: "2だけ", hint: "2の目だけ。1拍を半分に分けて2回叩こう。", pattern: [2] },
+    { name: "4だけ", hint: "4の目だけ。1拍を4分割して一定に叩こう。", pattern: [4] },
+    { name: "1と2", hint: "1・1・2・2を繰り返して切り替えに慣れよう。", pattern: [1, 1, 2, 2] },
     { name: "2を練習", hint: "2を中心に、1を合図としてはさむ練習。", pattern: [2, 2, 1, 2] },
     { name: "4を練習", hint: "1・2から4連打へ、段階的に速くしよう。", pattern: [1, 2, 4, 4] },
     { name: "ミックス", hint: "決まった混合パターンを覚えて安定させよう。", pattern: [1, 2, 1, 4, 2, 4, 1, 2, 4, 2, 1, 4, 2, 1, 4, 4] },
