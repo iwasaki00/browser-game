@@ -4,13 +4,15 @@
   const CONFIG = Object.freeze({
     DEFAULT_BPM: 120,
     STARTING_LIVES: 3,
-    GRID_SIZE: 16,
+    ROW_SIZE: 4,
+    VISIBLE_ROWS: 5,
+    ACTIVE_ROW: 1,
+    PREVIEW_SIZE: 20,
     PERFECT_WINDOW_MS: 90,
     GOOD_WINDOW_MS: 210,
     GUIDE_PULSE_MS: 82,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
-    SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 }),
-    INTRO_BEATS: 4
+    SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 })
   });
 
   const STAGES = Object.freeze([
@@ -24,17 +26,27 @@
     { name: "シャッフル", hint: "1・2・4が毎セット変化する実戦ステージ。", random: true }
   ]);
   class ChartGenerator {
-    generate(stage, size = CONFIG.GRID_SIZE) {
+    constructor() { this.cursor = 0; }
+    reset() { this.cursor = 0; }
+    randomValue() {
+      const roll = Math.random();
+      let total = 0;
+      for (const item of CONFIG.CHART_WEIGHTS) {
+        total += item.weight;
+        if (roll < total) return item.value;
+      }
+      return 4;
+    }
+    nextValue(stage) {
+      if (stage.random) return this.randomValue();
+      const value = stage.pattern[this.cursor % stage.pattern.length];
+      this.cursor += 1;
+      return value;
+    }
+    nextRow(stage) { return Array.from({ length: CONFIG.ROW_SIZE }, () => this.nextValue(stage)); }
+    generate(stage, size = CONFIG.PREVIEW_SIZE) {
       if (!stage.random) return Array.from({ length: size }, (_, index) => stage.pattern[index % stage.pattern.length]);
-      return Array.from({ length: size }, () => {
-        const roll = Math.random();
-        let total = 0;
-        for (const item of CONFIG.CHART_WEIGHTS) {
-          total += item.weight;
-          if (roll < total) return item.value;
-        }
-        return 4;
-      });
+      return Array.from({ length: size }, () => this.randomValue());
     }
   }
 
@@ -84,24 +96,41 @@
       ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
       this.buttons = [...document.querySelectorAll(".dice-button")];
     }
-    renderChart(chart, activeIndex = 0) {
-      this.grid.replaceChildren(...chart.map((value, index) => {
-        const die = document.createElement("div");
-        die.className = value === 0 ? `die countdown${index === activeIndex ? " active" : ""}` : `die value-${value}${index === activeIndex ? " active" : ""}`;
-        die.setAttribute("role", "listitem");
-        die.setAttribute("aria-label", value === 0 ? `${index + 1}番目、カウントイン` : `${index + 1}番目、${value}の目`);
-        const positions = value === 0 ? [] : value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : ["tl", "tr", "bl", "br"];
-        positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
-        return die;
-      }));
+    createDie(value, rowIndex, column, activeColumn) {
+      const die = document.createElement("div");
+      const isActive = rowIndex === CONFIG.ACTIVE_ROW && column === activeColumn;
+      die.className = value === 0 ? `die countdown${isActive ? " active" : ""}` : `die value-${value}${isActive ? " active" : ""}`;
+      die.setAttribute("role", "listitem");
+      die.setAttribute("aria-label", value === 0 ? `${column + 1}拍目、カウントイン` : `${column + 1}拍目、${value}の目`);
+      const positions = value === 0 ? [] : value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : ["tl", "tr", "bl", "br"];
+      positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
+      return die;
     }
-    setActive(index) {
-
-      [...this.grid.children].forEach((die, cellIndex) => {
-        die.classList.toggle("active", cellIndex === index);
-        die.classList.toggle("done", cellIndex < index);
+    renderChart(rows, activeColumn = 0, animate = false) {
+      const rowElements = rows.map((row, rowIndex) => {
+        const rowElement = document.createElement("div");
+        rowElement.className = `dice-row${rowIndex === CONFIG.ACTIVE_ROW ? " play-line" : ""}${rowIndex === 0 ? " past-row" : ""}`;
+        rowElement.setAttribute("role", "group");
+        rowElement.setAttribute("aria-label", rowIndex === CONFIG.ACTIVE_ROW ? "現在の演奏ライン" : `${rowIndex + 1}段目`);
+        rowElement.replaceChildren(...row.map((value, column) => this.createDie(value, rowIndex, column, activeColumn)));
+        return rowElement;
       });
-      this.beatNumber.textContent = `BEAT ${String(index + 1).padStart(2, "0")} / ${CONFIG.GRID_SIZE}`;
+      this.grid.replaceChildren(...rowElements);
+      this.grid.classList.remove("row-shift");
+      if (animate) {
+        void this.grid.offsetWidth;
+        this.grid.classList.add("row-shift");
+        this.grid.addEventListener("animationend", () => this.grid.classList.remove("row-shift"), { once: true });
+      }
+    }
+    setActive(column, countIn = false) {
+      [...this.grid.querySelectorAll(".dice-row")].forEach((row, rowIndex) => {
+        [...row.children].forEach((die, cellColumn) => {
+          die.classList.toggle("active", rowIndex === CONFIG.ACTIVE_ROW && cellColumn === column);
+          die.classList.toggle("done", rowIndex === 0 || (rowIndex === CONFIG.ACTIVE_ROW && cellColumn < column));
+        });
+      });
+      this.beatNumber.textContent = countIn ? `COUNT IN ${column + 1} / ${CONFIG.ROW_SIZE}` : `BEAT ${String(column + 1).padStart(2, "0")} / ${String(CONFIG.ROW_SIZE).padStart(2, "0")}`;
     }
     stats(score, combo, lives, testMode) {
       this.score.textContent = String(score).padStart(6, "0");
@@ -139,7 +168,7 @@
     }
     test(data) {
       this.testBpm.textContent = `${data.bpm} BPM`;
-      this.testCell.textContent = `CELL ${String(data.cell + 1).padStart(2, "0")}`;
+      this.testCell.textContent = `BEAT ${data.cell + 1} / ${CONFIG.ROW_SIZE}`;
       this.testTaps.textContent = `TAPS ${data.taps} / ${data.required}`;
       this.testElapsed.textContent = `TIME ${Math.round(data.elapsed)} / ${Math.round(data.duration)}ms`;
     }
@@ -153,8 +182,8 @@
       this.ui = new UIManager();
       this.bpm = CONFIG.DEFAULT_BPM;
       this.stageIndex = 0;
-      this.chart = [];
-      this.index = 0;
+      this.rows = [];
+      this.column = 0;
       this.score = 0;
       this.combo = 0;
       this.bestCombo = 0;
@@ -171,6 +200,7 @@
       this.previewChart();
     }
     get beatDuration() { return 60000 / this.bpm; }
+    get currentValue() { return this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? 0; }
     bind() {
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
@@ -179,7 +209,7 @@
         this.bpm = Number(button.dataset.bpm);
         document.querySelectorAll("[data-bpm]").forEach((item) => item.classList.toggle("selected", item === button));
         this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
-      this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
+        this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       });
       document.getElementById("stageOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-stage]");
@@ -204,6 +234,15 @@
       document.addEventListener("visibilitychange", () => { if (document.hidden && (this.running || this.preparing)) this.pause(); });
       window.addEventListener("pagehide", () => { if (this.running || this.preparing) this.pause(); });
     }
+    makePreviewRows() {
+      const values = this.chartGenerator.generate(STAGES[this.stageIndex], CONFIG.PREVIEW_SIZE);
+      return Array.from({ length: CONFIG.VISIBLE_ROWS }, (_, row) => values.slice(row * CONFIG.ROW_SIZE, (row + 1) * CONFIG.ROW_SIZE));
+    }
+    makeOpeningRows() {
+      this.chartGenerator.reset();
+      const blankRow = () => Array(CONFIG.ROW_SIZE).fill(0);
+      return [blankRow(), blankRow(), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
+    }
     openStageMenu() {
       this.running = false;
       this.preparing = false;
@@ -219,8 +258,9 @@
       this.previewChart();
     }
     previewChart() {
-      this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]);
-      this.ui.renderChart(this.chart);
+      this.rows = this.makePreviewRows();
+      this.column = 0;
+      this.ui.renderChart(this.rows, this.column);
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
@@ -230,10 +270,14 @@
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
       this.testMode = document.getElementById("testMode").checked;
-      this.index = 0; this.score = 0; this.combo = 0; this.bestCombo = 0; this.lives = CONFIG.STARTING_LIVES; this.running = false;
-      const openingNotes = this.chartGenerator.generate(STAGES[this.stageIndex]);
-      this.chart = [...Array(CONFIG.INTRO_BEATS).fill(0), ...openingNotes.slice(0, CONFIG.GRID_SIZE - CONFIG.INTRO_BEATS)];
-      this.ui.renderChart(this.chart, -1);
+      this.column = 0;
+      this.score = 0;
+      this.combo = 0;
+      this.bestCombo = 0;
+      this.lives = CONFIG.STARTING_LIVES;
+      this.running = false;
+      this.rows = this.makeOpeningRows();
+      this.ui.renderChart(this.rows, -1);
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
@@ -242,6 +286,7 @@
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
+      document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(100, Math.min(180, this.beatDuration * 0.3))}ms`);
       this.showReady();
     }
     showReady() {
@@ -257,26 +302,28 @@
         this.ui.readyOverlay.hidden = true;
         this.preparing = false;
         this.running = true;
-        this.beginBeat();
+        this.beginBeat(performance.now());
       }, 1000);
     }
-    beginBeat() {
+    beginBeat(startTime = performance.now()) {
       if (!this.running) return;
       this.taps = [];
       this.wrongInput = false;
-      this.beatStart = performance.now();
-      this.ui.setActive(this.index);
+      this.beatStart = startTime;
+      const value = this.currentValue;
+      this.ui.setActive(this.column, value === 0);
       this.ui.progress(0);
-      this.ui.enableControls(this.chart[this.index] !== 0);
-      this.ui.targetGuide(this.chart[this.index], this.testMode && this.chart[this.index] !== 0);
-      this.updateGuide(0);
-      this.audio.metronome(this.index % 4 === 0);
+      this.ui.enableControls(value !== 0);
+      this.ui.targetGuide(value, this.testMode && value !== 0);
+      this.updateGuide(Math.max(0, performance.now() - this.beatStart));
+      this.audio.metronome(this.column === 0);
       this.updateFrame();
-      this.beatTimer = window.setTimeout(() => this.finishBeat(), this.beatDuration);
+      const delay = Math.max(0, this.beatStart + this.beatDuration - performance.now());
+      this.beatTimer = window.setTimeout(() => this.finishBeat(), delay);
     }
     onTap(event, value) {
       event.preventDefault();
-      if (!this.running || this.chart[this.index] === 0) return;
+      if (!this.running || this.currentValue === 0) return;
       const button = event.currentTarget;
       button.classList.remove("pressed");
       void button.offsetWidth;
@@ -286,32 +333,46 @@
       this.audio.tap(value);
       const elapsed = performance.now() - this.beatStart;
       if (elapsed > this.beatDuration) return;
-      if (value !== this.chart[this.index]) this.wrongInput = true;
+      if (value !== this.currentValue) this.wrongInput = true;
       else this.taps.push(elapsed);
-      if (this.taps.length > this.chart[this.index]) this.wrongInput = true;
+      if (this.taps.length > this.currentValue) this.wrongInput = true;
       this.updateTest(elapsed);
     }
     finishBeat() {
       if (!this.running) return;
       cancelAnimationFrame(this.frame);
       this.ui.progress(1);
-      const value = this.chart[this.index];
+      const value = this.currentValue;
+      const nextBeatStart = this.beatStart + this.beatDuration;
       if (value === 0) {
-        this.index += 1;
         this.ui.judgement.textContent = "";
-        this.beginBeat();
+        this.advanceChart(nextBeatStart);
         return;
       }
       const result = this.judge.judge(value, this.taps, this.wrongInput, this.beatDuration);
       this.audio.result(result.grade);
       this.ui.verdict(result.grade);
-      if (result.grade === "MISS") { this.combo = 0; if (!this.testMode) this.lives -= 1; }
-      else { this.combo += 1; this.bestCombo = Math.max(this.bestCombo, this.combo); this.score += CONFIG.SCORE_MULTIPLIER[result.grade] * value; }
+      if (result.grade === "MISS") {
+        this.combo = 0;
+        if (!this.testMode) this.lives -= 1;
+      } else {
+        this.combo += 1;
+        this.bestCombo = Math.max(this.bestCombo, this.combo);
+        this.score += CONFIG.SCORE_MULTIPLIER[result.grade] * value;
+      }
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       if (this.lives <= 0 && !this.testMode) { this.end(); return; }
-      this.index += 1;
-      if (this.index >= CONFIG.GRID_SIZE) { this.chart = this.chartGenerator.generate(STAGES[this.stageIndex]); this.index = 0; this.ui.renderChart(this.chart); }
-      this.beginBeat();
+      this.advanceChart(nextBeatStart);
+    }
+    advanceChart(nextBeatStart) {
+      if (this.column < CONFIG.ROW_SIZE - 1) {
+        this.column += 1;
+      } else {
+        this.rows = [...this.rows.slice(1), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
+        this.column = 0;
+        this.ui.renderChart(this.rows, this.column, true);
+      }
+      this.beginBeat(nextBeatStart);
     }
     updateFrame() {
       if (!this.running) return;
@@ -322,8 +383,8 @@
       this.frame = requestAnimationFrame(() => this.updateFrame());
     }
     updateGuide(elapsed) {
-      const value = this.chart[this.index];
-      if (!this.testMode || !value || elapsed >= this.beatDuration) {
+      const value = this.currentValue;
+      if (!this.testMode || !value || elapsed < 0 || elapsed >= this.beatDuration) {
         this.ui.guideCue(false);
         return;
       }
@@ -332,7 +393,7 @@
       this.ui.guideCue(elapsed % subdivision < pulseWindow);
     }
     updateTest(elapsed) {
-      if (this.testMode) this.ui.test({ bpm: this.bpm, cell: this.index, taps: this.taps.length, required: this.chart[this.index], elapsed: Math.min(elapsed, this.beatDuration), duration: this.beatDuration });
+      if (this.testMode) this.ui.test({ bpm: this.bpm, cell: this.column, taps: this.taps.length, required: this.currentValue, elapsed: Math.min(Math.max(0, elapsed), this.beatDuration), duration: this.beatDuration });
     }
     pause() {
       clearTimeout(this.beatTimer);
@@ -360,6 +421,5 @@
       this.ui.gameOver.hidden = false;
     }
   }
-
   new Game();
 })();
