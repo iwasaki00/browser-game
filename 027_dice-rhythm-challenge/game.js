@@ -8,8 +8,6 @@
     VISIBLE_ROWS: 5,
     ACTIVE_ROW: 1,
     PREVIEW_SIZE: 20,
-    PERFECT_WINDOW_MS: 90,
-    GOOD_WINDOW_MS: 210,
     GUIDE_PULSE_MS: 82,
     CHART_WEIGHTS: Object.freeze([{ value: 1, weight: 0.30 }, { value: 2, weight: 0.40 }, { value: 4, weight: 0.30 }]),
     SCORE_MULTIPLIER: Object.freeze({ PERFECT: 100, GOOD: 50, MISS: 0 })
@@ -51,13 +49,9 @@
   }
 
   class RhythmJudge {
-    judge(value, taps, wrongInput, beatDuration) {
-      if (wrongInput || taps.length !== value) return { grade: "MISS", error: Infinity };
-      const errors = taps.map((tap, index) => Math.abs(tap - beatDuration * (index / value)));
-      const averageError = errors.reduce((sum, error) => sum + error, 0) / errors.length;
-      if (averageError <= CONFIG.PERFECT_WINDOW_MS) return { grade: "PERFECT", error: averageError };
-      if (averageError <= CONFIG.GOOD_WINDOW_MS) return { grade: "GOOD", error: averageError };
-      return { grade: "GOOD", error: averageError };
+    judge(value, taps, wrongInput) {
+      if (wrongInput || taps.length < value) return { grade: "MISS", error: Infinity };
+      return { grade: "PERFECT", error: 0 };
     }
   }
 
@@ -95,6 +89,8 @@
     constructor() {
       ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
       this.buttons = [...document.querySelectorAll(".dice-button")];
+      this.gridWindow = this.grid.parentElement;
+      this.renderId = 0;
     }
     createDie(value, rowIndex, column, activeColumn) {
       const die = document.createElement("div");
@@ -106,28 +102,70 @@
       positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
       return die;
     }
-    renderChart(rows, activeColumn = 0, animate = false) {
-      const rowElements = rows.map((row, rowIndex) => {
-        const rowElement = document.createElement("div");
-        rowElement.className = `dice-row${rowIndex === CONFIG.ACTIVE_ROW ? " play-line" : ""}${rowIndex === 0 ? " past-row" : ""}`;
-        rowElement.setAttribute("role", "group");
-        rowElement.setAttribute("aria-label", rowIndex === CONFIG.ACTIVE_ROW ? "現在の演奏ライン" : `${rowIndex + 1}段目`);
-        rowElement.replaceChildren(...row.map((value, column) => this.createDie(value, rowIndex, column, activeColumn)));
-        return rowElement;
-      });
-      this.grid.replaceChildren(...rowElements);
+    createRow(values, rowIndex, activeColumn) {
+      const row = document.createElement("div");
+      row.className = "dice-row";
+      row.setAttribute("role", "group");
+      row.replaceChildren(...values.map((value, column) => this.createDie(value, rowIndex, column, activeColumn)));
+      return row;
+    }
+    positionPlayLine() {
+      const row = this.grid.children[CONFIG.ACTIVE_ROW];
+      if (!row) return;
+      this.gridWindow.style.setProperty("--play-line-top", `${this.grid.offsetTop + row.offsetTop}px`);
+      this.gridWindow.style.setProperty("--play-line-height", `${row.offsetHeight}px`);
+      this.gridWindow.style.setProperty("--play-line-center", `${this.grid.offsetTop + row.offsetTop + row.offsetHeight / 2}px`);
+    }
+    renderChart(rows, activeColumn = 0) {
+      this.renderId += 1;
       this.grid.classList.remove("row-shift");
-      if (animate) {
-        void this.grid.offsetWidth;
-        this.grid.classList.add("row-shift");
-        this.grid.addEventListener("animationend", () => this.grid.classList.remove("row-shift"), { once: true });
+      this.grid.style.removeProperty("--row-shift-distance");
+      this.gridWindow.style.removeProperty("height");
+      this.grid.replaceChildren(...rows.map((row, rowIndex) => this.createRow(row, rowIndex, activeColumn)));
+      this.setActive(activeColumn, rows[CONFIG.ACTIVE_ROW]?.[activeColumn] === 0);
+      this.positionPlayLine();
+    }
+    scrollChart(rows, activeColumn = 0, countIn = false) {
+      const oldRows = [...this.grid.children];
+      if (oldRows.length !== CONFIG.VISIBLE_ROWS) {
+        this.renderChart(rows, activeColumn);
+        return;
       }
+      const renderId = ++this.renderId;
+      const windowHeight = this.gridWindow.getBoundingClientRect().height;
+      const distance = oldRows[1].offsetTop - oldRows[0].offsetTop;
+      this.gridWindow.style.height = `${windowHeight}px`;
+      this.grid.append(this.createRow(rows[CONFIG.VISIBLE_ROWS - 1], CONFIG.VISIBLE_ROWS, activeColumn));
+      this.grid.style.setProperty("--row-shift-distance", `${distance}px`);
+      this.setActive(activeColumn, countIn);
+      this.grid.classList.remove("row-shift");
+      void this.grid.offsetWidth;
+      this.grid.classList.add("row-shift");
+      let finished = false;
+      const finish = () => {
+        if (finished || renderId !== this.renderId) return;
+        finished = true;
+        this.grid.classList.remove("row-shift");
+        this.grid.firstElementChild?.remove();
+        this.grid.style.removeProperty("--row-shift-distance");
+        this.gridWindow.style.removeProperty("height");
+        this.setActive(activeColumn, countIn);
+        this.positionPlayLine();
+      };
+      this.grid.addEventListener("animationend", finish, { once: true });
+      window.setTimeout(finish, 360);
     }
     setActive(column, countIn = false) {
+      const shifting = this.grid.children.length > CONFIG.VISIBLE_ROWS;
+      const activeDomRow = CONFIG.ACTIVE_ROW + (shifting ? 1 : 0);
       [...this.grid.querySelectorAll(".dice-row")].forEach((row, rowIndex) => {
+        const logicalRow = rowIndex - (shifting ? 1 : 0);
+        row.classList.toggle("play-line", rowIndex === activeDomRow);
+        row.classList.toggle("past-row", logicalRow <= 0);
+        row.setAttribute("aria-label", rowIndex === activeDomRow ? "現在の演奏ライン" : `${Math.max(1, logicalRow + 1)}段目`);
         [...row.children].forEach((die, cellColumn) => {
-          die.classList.toggle("active", rowIndex === CONFIG.ACTIVE_ROW && cellColumn === column);
-          die.classList.toggle("done", rowIndex === 0 || (rowIndex === CONFIG.ACTIVE_ROW && cellColumn < column));
+          die.classList.toggle("active", rowIndex === activeDomRow && cellColumn === column);
+          die.classList.toggle("done", logicalRow < CONFIG.ACTIVE_ROW || (rowIndex === activeDomRow && cellColumn < column));
         });
       });
       this.beatNumber.textContent = countIn ? `COUNT IN ${column + 1} / ${CONFIG.ROW_SIZE}` : `BEAT ${String(column + 1).padStart(2, "0")} / ${String(CONFIG.ROW_SIZE).padStart(2, "0")}`;
@@ -286,7 +324,7 @@
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
-      document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(100, Math.min(180, this.beatDuration * 0.3))}ms`);
+      document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(180, Math.min(260, this.beatDuration * 0.45))}ms`);
       this.showReady();
     }
     showReady() {
@@ -333,9 +371,12 @@
       this.audio.tap(value);
       const elapsed = performance.now() - this.beatStart;
       if (elapsed > this.beatDuration) return;
+      if (this.taps.length >= this.currentValue) {
+        this.updateTest(elapsed);
+        return;
+      }
       if (value !== this.currentValue) this.wrongInput = true;
       else this.taps.push(elapsed);
-      if (this.taps.length > this.currentValue) this.wrongInput = true;
       this.updateTest(elapsed);
     }
     finishBeat() {
@@ -349,7 +390,7 @@
         this.advanceChart(nextBeatStart);
         return;
       }
-      const result = this.judge.judge(value, this.taps, this.wrongInput, this.beatDuration);
+      const result = this.judge.judge(value, this.taps, this.wrongInput);
       this.audio.result(result.grade);
       this.ui.verdict(result.grade);
       if (result.grade === "MISS") {
@@ -370,7 +411,7 @@
       } else {
         this.rows = [...this.rows.slice(1), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
         this.column = 0;
-        this.ui.renderChart(this.rows, this.column, true);
+        this.ui.scrollChart(this.rows, this.column, this.currentValue === 0);
       }
       this.beginBeat(nextBeatStart);
     }
