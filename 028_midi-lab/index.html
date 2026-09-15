@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#10151c">
+  <meta name="description" content="MIDIファイルの読み込み・解析・再生・作成・保存を試せる検証用Webアプリ">
+  <title>MIDI実験室</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div><h1>MIDI実験室</h1><p>SMF INSPECTOR / AUDIO CLOCK</p></div>
+    <div class="header-status"><span class="status-dot" id="statusDot"></span><span id="headerStatus">データ未読込</span></div>
+  </header>
+
+  <nav class="tabs" aria-label="機能タブ">
+    <button class="tab is-active" data-tab="load">読み込み</button>
+    <button class="tab" data-tab="play">再生</button>
+    <button class="tab" data-tab="analysis">解析</button>
+    <button class="tab" data-tab="create">MIDI作成</button>
+    <button class="tab" data-tab="debug">デバッグ</button>
+  </nav>
+
+  <main>
+    <section class="panel tab-panel is-active" id="tab-load">
+      <div class="section-heading"><div><span class="eyebrow">INPUT</span><h2>MIDIを読み込む</h2></div><span class="step-number">01</span></div>
+      <div class="load-grid">
+        <label class="drop-zone" id="dropZone">
+          <input id="fileInput" type="file" accept=".mid,.midi,audio/midi,audio/x-midi">
+          <span class="upload-icon" aria-hidden="true">↥</span>
+          <strong>MIDIファイルを選択</strong>
+          <small>.mid / .midi · ドロップにも対応</small>
+        </label>
+        <div class="sample-card">
+          <span class="eyebrow">NO FILE? TRY THIS</span>
+          <h3>Cメジャースケール</h3>
+          <p>C4からC5までを120 BPMで再生する8音のサンプルです。</p>
+          <button class="button secondary" id="sampleButton">サンプル曲生成</button>
+        </div>
+      </div>
+      <div class="message" id="message" role="status" aria-live="polite">MIDIファイルを選ぶか、サンプル曲を生成してください。</div>
+      <div class="summary-grid" id="summaryGrid" aria-label="曲の概要">
+        <div><span>FILE</span><strong id="sumFile">—</strong></div><div><span>FORMAT</span><strong id="sumFormat">—</strong></div>
+        <div><span>TRACKS</span><strong id="sumTracks">—</strong></div><div><span>BPM</span><strong id="sumBpm">—</strong></div>
+        <div><span>TIME SIG.</span><strong id="sumTimeSig">—</strong></div><div><span>LENGTH</span><strong id="sumLength">—</strong></div>
+        <div><span>NOTES</span><strong id="sumNotes">—</strong></div>
+      </div>
+    </section>
+
+    <section class="panel tab-panel" id="tab-play">
+      <div class="section-heading"><div><span class="eyebrow">TRANSPORT</span><h2>再生と同期モニター</h2></div><span class="step-number">02</span></div>
+      <div class="transport">
+        <div class="transport-buttons">
+          <button class="button primary" id="playButton">▶ 再生</button>
+          <button class="button" id="pauseButton">Ⅱ 一時停止</button>
+          <button class="button" id="stopButton">■ 停止</button>
+          <button class="button" id="rewindButton">↤ 先頭へ</button>
+        </div>
+        <div class="time-readout"><span id="currentTime">00:00.000</span><small>/</small><span id="totalTime">00:00.000</span></div>
+        <input id="seekBar" class="seek" type="range" min="0" max="1" value="0" step="0.001" aria-label="再生位置">
+        <label class="volume-control"><span>音量</span><input id="volume" type="range" min="0" max="1" value="0.65" step="0.01"><output id="volumeValue">65%</output></label>
+      </div>
+      <div class="monitor" aria-label="ゲーム同期確認用モニター">
+        <div class="monitor-main"><span>現在時間</span><strong><output id="monTime">0.000</output><small> sec</small></strong></div>
+        <div><span>BPM</span><strong id="monBpm">—</strong></div>
+        <div><span>小節</span><strong id="monBar">—</strong></div>
+        <div><span>拍</span><strong id="monBeat">—</strong></div>
+        <div class="monitor-next"><span>次ノート</span><strong id="monNext">—</strong></div>
+      </div>
+      <div class="subsection-heading"><h3>再生トラック</h3><span>チェックを外すとミュート</span></div>
+      <div class="track-toggles empty-state" id="trackToggles">MIDIを読み込むとトラックが表示されます。</div>
+    </section>
+
+    <section class="panel tab-panel" id="tab-analysis">
+      <div class="section-heading"><div><span class="eyebrow">INSPECTOR</span><h2>MIDI解析</h2></div><span class="step-number">03</span></div>
+      <div class="subsection-heading"><h3>トラック情報</h3></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>名前</th><th>Channel</th><th>Program</th><th>推定楽器</th><th>Notes</th></tr></thead><tbody id="trackTable"><tr><td colspan="6" class="empty-cell">データ未読込</td></tr></tbody></table></div>
+      <div class="subsection-heading"><h3>ノート情報</h3><span id="noteLimitLabel">先頭200件を表示</span></div>
+      <div class="table-wrap note-table-wrap"><table><thead><tr><th>Track</th><th>Ch.</th><th>Note</th><th>音名</th><th>開始</th><th>終了</th><th>Duration</th><th>Velocity</th></tr></thead><tbody id="noteTable"><tr><td colspan="8" class="empty-cell">データ未読込</td></tr></tbody></table></div>
+    </section>
+
+    <section class="panel tab-panel" id="tab-create">
+      <div class="section-heading"><div><span class="eyebrow">STEP SEQUENCER</span><h2>MIDIを作る</h2></div><span class="step-number">04</span></div>
+      <div class="creator-settings">
+        <label>BPM<input id="createBpm" type="number" min="30" max="300" value="120"></label>
+        <label>拍子<select id="createSignature"><option value="4/4">4 / 4</option><option value="3/4">3 / 4</option></select></label>
+        <label>ノート長<select id="noteUnit"><option value="8">8分音符</option><option value="4">4分音符</option></select></label>
+        <label>Velocity<input id="createVelocity" type="number" min="1" max="127" value="100"></label>
+        <label>ステップ数<select id="stepCount"><option value="8">8</option><option value="16" selected>16</option></select></label>
+      </div>
+      <p class="hint">セルをタップして発音をON/OFF。横方向が時間、縦方向が音程です。</p>
+      <div class="sequencer-scroll"><div class="sequencer" id="sequencer" role="grid" aria-label="ステップシーケンサー"></div></div>
+      <div class="creator-actions">
+        <button class="button primary" id="previewButton">▶ 試聴</button>
+        <button class="button" id="loadCreationButton">再生・解析へ送る</button>
+        <button class="button accent" id="saveButton">↓ MIDI保存</button>
+      </div>
+    </section>
+
+    <section class="panel tab-panel" id="tab-debug">
+      <div class="section-heading"><div><span class="eyebrow">DIAGNOSTICS</span><h2>デバッグ</h2></div><span class="step-number">05</span></div>
+      <label class="debug-switch"><input id="debugToggle" type="checkbox"><span>デバッグ表示</span></label>
+      <div class="debug-console is-hidden" id="debugConsole">
+        <div><span>AudioContext.state</span><code id="dbgState">not-created</code></div>
+        <div><span>AudioContext.currentTime</span><code id="dbgAudioTime">0.000000</code></div>
+        <div><span>MIDI Tick</span><code id="dbgTick">0</code></div>
+        <div><span>PPQ / TPQN</span><code id="dbgPpq">—</code></div>
+        <div><span>BPM</span><code id="dbgBpm">—</code></div>
+        <div><span>現在Beat</span><code id="dbgBeat">—</code></div>
+        <div><span>現在Bar</span><code id="dbgBar">—</code></div>
+        <div><span>発音中Note</span><code id="dbgNotes">—</code></div>
+        <div><span>次回発音予定時刻</span><code id="dbgNext">—</code></div>
+        <div><span>scheduler遅延値</span><code id="dbgDelay">0.000 ms</code></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>MIDI LAB / EXPERIMENTAL BUILD</span><span>Web Audio clock based scheduler</span></footer>
+  <script src="midi-core.js"></script>
+  <script src="synth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
