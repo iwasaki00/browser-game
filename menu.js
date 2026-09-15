@@ -3,6 +3,15 @@
 
   const games = [
     {
+      number: "028",
+      title: "MIDI実験室",
+      genre: "Music / Tool",
+      description: "MIDIファイルの読み込み・解析・再生から、ステップ入力による作成と保存までを試せる検証用音楽ツールです。",
+      href: "./028_midi-lab/index.html",
+      icon: "./assets/game-icons/028-midi-lab.jpg",
+      alt: "光るステップシーケンサーと鍵盤と波形を組み合わせたMIDI実験室のアイコン"
+    },
+    {
       number: "027",
       title: "Dice Rhythm Challenge",
       genre: "Rhythm",
