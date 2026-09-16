@@ -9,6 +9,11 @@
   let currentSong = null;
   let isSeeking = false;
   let debugVisible = false;
+  let isCreationPreview = false;
+  let activePlayheadStep = -1;
+  let confirmAction = null;
+  let confirmCancelAction = null;
+  let lastSavedSnapshot = null;
 
   function createEmptyGrid(steps) { return pitches.map(() => Array(steps).fill(false)); }
   function formatTime(seconds) {
@@ -18,11 +23,13 @@
   }
   function fixed(value, digits = 3) { return Number(value).toFixed(digits); }
   function setMessage(text, isError = false) { $("message").textContent = text; $("message").classList.toggle("error", isError); }
+  function noteCount() { return grid.reduce((total, row) => total + row.filter(Boolean).length, 0); }
 
   document.querySelectorAll(".tab").forEach((button) => button.addEventListener("click", () => selectTab(button.dataset.tab)));
   function selectTab(name) {
     document.querySelectorAll(".tab").forEach((el) => el.classList.toggle("is-active", el.dataset.tab === name));
     document.querySelectorAll(".tab-panel").forEach((el) => el.classList.toggle("is-active", el.id === `tab-${name}`));
+    if (name === "create") updateCreationInfo();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -40,10 +47,12 @@
       setMessage("MIDIを解析しています…");
       const song = MidiCore.parse(await file.arrayBuffer(), file.name);
       loadSong(song, `${file.name} を読み込みました。`);
+      compareLoadedSong(song);
     } catch (error) { console.error(error); setMessage(`読み込みエラー: ${error.message}`, true); }
   }
 
   function loadSong(song, message) {
+    isCreationPreview = false; clearPlayhead();
     currentSong = song; player.setSong(song); renderSong();
     $("statusDot").classList.add("ready"); $("headerStatus").textContent = `${song.totalNotes} notes ready`;
     setMessage(message || "MIDIデータを準備しました。");
@@ -116,7 +125,8 @@
   }
 
   $("playButton").addEventListener("click", async () => {
-    try { await player.play(); } catch (error) { setMessage(error.message, true); selectTab(currentSong ? "play" : "load"); }
+    try { isCreationPreview = false; player.setLoop(false); await player.play(); }
+    catch (error) { setMessage(error.message, true); selectTab(currentSong ? "play" : "load"); }
   });
   $("pauseButton").addEventListener("click", () => player.pause());
   $("stopButton").addEventListener("click", () => player.stop());
@@ -130,15 +140,23 @@
   $("trackTableWrap").addEventListener("wheel", (event) => {
     const container = event.currentTarget;
     if (event.shiftKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY) || container.scrollWidth <= container.clientWidth) return;
-    event.preventDefault();
-    container.scrollLeft += event.deltaY;
+    event.preventDefault(); container.scrollLeft += event.deltaY;
   }, { passive: false });
   $("volume").addEventListener("input", (event) => { synth.setVolume(event.target.value); $("volumeValue").textContent = `${Math.round(event.target.value * 100)}%`; });
   $("seekBar").addEventListener("pointerdown", () => { isSeeking = true; });
   $("seekBar").addEventListener("input", (event) => { isSeeking = true; $("currentTime").textContent = formatTime(event.target.value); updateMonitor(Number(event.target.value)); });
   $("seekBar").addEventListener("change", (event) => { player.seek(event.target.value); isSeeking = false; });
 
-  function updateTransportState() { $("playButton").textContent = player.playing ? "▶ 再生中" : "▶ 再生"; }
+  function updateTransportState() {
+    $("playButton").textContent = player.playing && !isCreationPreview ? "▶ 再生中" : "▶ 再生";
+    $("previewButton").textContent = player.playing && isCreationPreview ? "▶ 試聴中" : "▶ 試聴";
+    $("previewStopButton").disabled = !(player.playing && isCreationPreview);
+    if (!player.playing) {
+      const wasPreview = isCreationPreview;
+      isCreationPreview = false; clearPlayhead();
+      if (wasPreview) $("creatorFeedback").textContent = "試聴を停止しました。";
+    }
+  }
 
   function positionInfo(song, seconds) {
     if (!song) return { tick: 0, bpm: 0, bar: 0, beat: 0, beatInBar: 0, denominator: 4 };
@@ -188,53 +206,182 @@
   function animationFrame() {
     const seconds = player.currentTime();
     if (!isSeeking) { $("currentTime").textContent = formatTime(seconds); $("seekBar").value = seconds; }
-    updateMonitor(seconds); requestAnimationFrame(animationFrame);
+    updateMonitor(seconds); updateCreationPlayhead(seconds); requestAnimationFrame(animationFrame);
   }
 
   $("debugToggle").addEventListener("change", (event) => { debugVisible = event.target.checked; $("debugConsole").classList.toggle("is-hidden", !debugVisible); });
 
+  function creationSettings() {
+    const [numerator, denominator] = $("createSignature").value.split("/").map(Number);
+    return { bpm: Number($("createBpm").value) || 120, numerator, denominator, noteUnit: Number($("noteUnit").value), velocity: Number($("createVelocity").value) || 100, steps: grid[0].length };
+  }
+
+  function creationTiming() {
+    const settings = creationSettings();
+    const beatsPerStep = MidiCore.stepUnitToBeats(settings.noteUnit);
+    const beatsPerBar = settings.numerator * 4 / settings.denominator;
+    const stepsPerBeat = settings.noteUnit / settings.denominator;
+    const stepsPerBar = settings.numerator * stepsPerBeat;
+    const bars = settings.steps * beatsPerStep / beatsPerBar;
+    const stepSeconds = beatsPerStep * 60 / settings.bpm;
+    return { ...settings, beatsPerStep, beatsPerBar, stepsPerBeat, stepsPerBar, bars, stepSeconds, duration: settings.steps * stepSeconds };
+  }
+
+  function boundaryClass(step, timing) {
+    if (step <= 0) return "";
+    if (Number.isInteger(timing.stepsPerBar) && step % timing.stepsPerBar === 0) return " is-bar-start";
+    if (Number.isInteger(timing.stepsPerBeat) && step % timing.stepsPerBeat === 0) return " is-beat-start";
+    return "";
+  }
+
   function renderSequencer() {
-    const steps = Number($("stepCount").value);
-    if (grid[0].length !== steps) grid = pitches.map((_, row) => Array.from({ length: steps }, (_, i) => grid[row]?.[i] || false));
-    const seq = $("sequencer"); seq.style.gridTemplateColumns = `42px repeat(${steps}, var(--step-width, 50px))`; seq.style.gridTemplateRows = `26px repeat(${pitches.length}, 44px)`; seq.replaceChildren();
+    const steps = grid[0].length, timing = creationTiming();
+    $("stepCount").value = String(steps);
+    const seq = $("sequencer"); seq.style.gridTemplateColumns = `54px repeat(${steps}, var(--step-width, 50px))`; seq.style.gridTemplateRows = `34px repeat(${pitches.length}, 44px)`; seq.replaceChildren();
     const corner = document.createElement("span"); corner.className = "pitch-corner"; seq.append(corner);
-    for (let step = 0; step < steps; step++) { const label = document.createElement("span"); label.className = "step-index"; label.textContent = step + 1; seq.append(label); }
+    for (let step = 0; step < steps; step++) {
+      const header = document.createElement("div"); header.className = `step-header${boundaryClass(step, timing)}`; header.dataset.step = step;
+      const number = document.createElement("span"); number.textContent = step + 1;
+      const clear = document.createElement("button"); clear.type = "button"; clear.className = "step-clear"; clear.textContent = "×"; clear.setAttribute("aria-label", `ステップ${step + 1}を消去`);
+      clear.addEventListener("click", () => clearStep(step)); header.append(number, clear); seq.append(header);
+    }
     pitches.forEach((pitch, row) => {
-      const label = document.createElement("span"); label.className = "pitch-label"; label.textContent = MidiCore.noteName(pitch); seq.append(label);
+      const label = document.createElement("div"); label.className = "pitch-label"; label.dataset.row = row;
+      const audition = document.createElement("button"); audition.type = "button"; audition.className = "pitch-audition"; audition.textContent = MidiCore.noteName(pitch); audition.setAttribute("aria-label", `${MidiCore.noteName(pitch)}を試聴`);
+      audition.addEventListener("click", () => auditionPitch(pitch));
+      const clearRow = document.createElement("button"); clearRow.type = "button"; clearRow.className = "row-clear"; clearRow.textContent = "×"; clearRow.setAttribute("aria-label", `${MidiCore.noteName(pitch)}の行を消去`);
+      clearRow.addEventListener("click", () => clearPitchRow(row)); label.append(audition, clearRow); seq.append(label);
       for (let step = 0; step < steps; step++) {
-        const cell = document.createElement("button"); cell.type = "button"; cell.className = `step-cell${grid[row][step] ? " is-on" : ""}`;
+        const cell = document.createElement("button"); cell.type = "button"; cell.className = `step-cell${boundaryClass(step, timing)}${grid[row][step] ? " is-on" : ""}`; cell.dataset.step = step; cell.dataset.row = row;
         cell.setAttribute("role", "gridcell"); cell.setAttribute("aria-label", `${MidiCore.noteName(pitch)} ステップ${step + 1}`); cell.setAttribute("aria-pressed", grid[row][step]);
-        cell.addEventListener("click", () => { grid[row][step] = !grid[row][step]; cell.classList.toggle("is-on", grid[row][step]); cell.setAttribute("aria-pressed", grid[row][step]); });
+        cell.addEventListener("click", () => { grid[row][step] = !grid[row][step]; cell.classList.toggle("is-on", grid[row][step]); cell.setAttribute("aria-pressed", grid[row][step]); updateCreationInfo(); });
         seq.append(cell);
       }
     });
+    updateCreationInfo();
+  }
+
+  function resizeGrid(steps) {
+    grid = pitches.map((_, row) => Array.from({ length: steps }, (_, index) => Boolean(grid[row]?.[index])));
+    renderSequencer();
+  }
+
+  function clearStep(step) {
+    grid.forEach((row) => { row[step] = false; }); renderSequencer();
+    $("creatorFeedback").textContent = `ステップ${step + 1}を消去しました。`;
+  }
+
+  function clearPitchRow(row) {
+    grid[row].fill(false); renderSequencer();
+    $("creatorFeedback").textContent = `${MidiCore.noteName(pitches[row])}の行を消去しました。`;
+  }
+
+  async function auditionPitch(noteNumber) {
+    try {
+      const ctx = await synth.ensureContext();
+      synth.schedule({ noteNumber, velocity: creationSettings().velocity }, ctx.currentTime + 0.005, 0.38);
+      $("creatorFeedback").textContent = `${MidiCore.noteName(noteNumber)}を試聴中`;
+    } catch (error) { $("creatorFeedback").textContent = error.message; }
+  }
+
+  function updateCreationInfo() {
+    const timing = creationTiming();
+    const barsText = Number.isInteger(timing.bars) ? String(timing.bars) : timing.bars.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+    $("infoBpm").textContent = formatBpm(timing.bpm); $("infoSignature").textContent = `${timing.numerator} / ${timing.denominator}`;
+    $("infoSteps").textContent = timing.steps; $("infoResolution").textContent = `1 / ${timing.noteUnit}`; $("infoBars").textContent = barsText; $("infoNotes").textContent = noteCount();
+    $("clearAllButton").disabled = noteCount() === 0;
+    if (!isCreationPreview) $("creatorFeedback").textContent = `${timing.steps}ステップ・1/${timing.noteUnit}・${barsText}小節・${fixed(timing.duration)}秒`;
+  }
+
+  function updateCreationPlayhead(seconds) {
+    if (!isCreationPreview || !player.playing) { clearPlayhead(); return; }
+    const timing = creationTiming();
+    const step = Math.min(timing.steps - 1, Math.floor(seconds / timing.stepSeconds));
+    if (step === activePlayheadStep) return;
+    clearPlayhead(); activePlayheadStep = step;
+    document.querySelectorAll(`[data-step="${step}"]`).forEach((element) => element.classList.add("is-playhead"));
+    $("creatorFeedback").textContent = `再生中：ステップ ${step + 1} / ${timing.steps}${player.loop ? "（ループ）" : ""}`;
+  }
+
+  function clearPlayhead() {
+    if (activePlayheadStep < 0) return;
+    document.querySelectorAll(".is-playhead").forEach((element) => element.classList.remove("is-playhead")); activePlayheadStep = -1;
   }
 
   function creationSong(title = "midi-lab-test-001") {
-    const [numerator, denominator] = $("createSignature").value.split("/").map(Number);
-    return MidiCore.createStepSong({ title, bpm: $("createBpm").value, numerator, denominator, noteUnit: Number($("noteUnit").value), velocity: $("createVelocity").value, steps: Number($("stepCount").value), pitches, grid });
+    const settings = creationSettings();
+    return MidiCore.createStepSong({ title, ...settings, pitches, grid });
   }
 
-  $("stepCount").addEventListener("change", renderSequencer);
+  function stopCreationPreview(message) {
+    if (isCreationPreview || player.playing) player.stop();
+    isCreationPreview = false; clearPlayhead();
+    if (message) $("creatorFeedback").textContent = message;
+  }
+
+  function openConfirm(message, action, cancelAction) {
+    confirmAction = action; confirmCancelAction = cancelAction || null; $("confirmMessage").textContent = message;
+    if (typeof $("confirmDialog").showModal === "function") $("confirmDialog").showModal();
+    else if (window.confirm(message)) { const callback = confirmAction; confirmAction = null; callback?.(); }
+  }
+
+  function closeConfirm(confirmed) {
+    const action = confirmed ? confirmAction : confirmCancelAction; confirmAction = null; confirmCancelAction = null;
+    if ($("confirmDialog").open) $("confirmDialog").close(); action?.();
+  }
+
+  $("confirmCancelButton").addEventListener("click", () => closeConfirm(false));
+  $("confirmDeleteButton").addEventListener("click", () => closeConfirm(true));
+  $("confirmDialog").addEventListener("cancel", (event) => { event.preventDefault(); closeConfirm(false); });
+
+  $("stepCount").addEventListener("change", (event) => {
+    const previous = grid[0].length, next = Number(event.target.value);
+    stopCreationPreview();
+    const hasTrimmedNotes = next < previous && grid.some((row) => row.slice(next).some(Boolean));
+    if (hasTrimmedNotes) {
+      openConfirm(`${next + 1}～${previous}ステップにノートがあります。\n${next}ステップへ変更すると削除されます。`, () => resizeGrid(next), () => { $("stepCount").value = previous; });
+    } else resizeGrid(next);
+  });
+  $("createBpm").addEventListener("input", () => { stopCreationPreview(); updateCreationInfo(); });
+  $("createVelocity").addEventListener("input", updateCreationInfo);
+  $("createSignature").addEventListener("change", () => { stopCreationPreview(); renderSequencer(); });
+  $("noteUnit").addEventListener("change", () => { stopCreationPreview(); renderSequencer(); });
+  $("loopToggle").addEventListener("change", () => { if (isCreationPreview && player.playing) stopCreationPreview("ループ設定を変更しました。もう一度試聴してください。"); });
+
+  $("clearAllButton").addEventListener("click", () => {
+    if (!noteCount()) return;
+    openConfirm("作成中のノートをすべて削除しますか？", () => { grid.forEach((row) => row.fill(false)); renderSequencer(); $("creatorFeedback").textContent = "すべてのノートを削除しました。"; });
+  });
+
   $("sampleButton").addEventListener("click", () => {
-    $("createBpm").value = 120; $("createSignature").value = "4/4"; $("noteUnit").value = "8"; $("createVelocity").value = 100; $("stepCount").value = "8";
-    grid = createEmptyGrid(8);
-    const ascendingRows = [7, 6, 5, 4, 3, 2, 1, 0]; ascendingRows.forEach((row, step) => { grid[row][step] = true; });
+    stopCreationPreview(); $("createBpm").value = 120; $("createSignature").value = "4/4"; $("noteUnit").value = "8"; $("createVelocity").value = 100; $("stepCount").value = "8";
+    grid = createEmptyGrid(8); [7, 6, 5, 4, 3, 2, 1, 0].forEach((row, step) => { grid[row][step] = true; });
     renderSequencer(); const song = creationSong("C-major-scale"); song.fileName = "C-major-scale.mid（内部生成）";
     loadSong(song, "120 BPMのCメジャースケールを生成しました。再生・解析・保存を試せます。");
   });
   $("previewButton").addEventListener("click", async () => {
-    try { const song = creationSong(); currentSong = song; player.setSong(song); renderSong(); await player.play(); }
-    catch (error) { setMessage(error.message, true); }
+    try {
+      player.stop(); const song = creationSong(); currentSong = song; player.setSong(song); player.setLoop($("loopToggle").checked); isCreationPreview = true; renderSong(); await player.play();
+    } catch (error) { isCreationPreview = false; clearPlayhead(); $("creatorFeedback").textContent = error.message; }
   });
-  $("loadCreationButton").addEventListener("click", () => { loadSong(creationSong(), "ステップ入力を再生・解析に送りました。"); selectTab("play"); });
+  $("previewStopButton").addEventListener("click", () => stopCreationPreview("試聴を停止しました。"));
+  $("loadCreationButton").addEventListener("click", () => { stopCreationPreview(); loadSong(creationSong(), "ステップ入力を再生・解析に送りました。"); selectTab("play"); });
   $("saveButton").addEventListener("click", () => {
     const song = creationSong();
-    if (!song.totalNotes) { setMessage("保存するノートがありません。ステップを1つ以上ONにしてください。", true); selectTab("load"); return; }
+    if (!song.totalNotes) { $("creatorFeedback").textContent = "保存するノートがありません。"; return; }
     const blob = new Blob([MidiCore.write(song)], { type: "audio/midi" });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "midi-lab-test-001.mid"; document.body.append(link); link.click(); link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "midi-lab-test-001.mid"; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    lastSavedSnapshot = { notes: song.totalNotes, bpm: song.bpm, duration: song.duration };
+    $("dbgOriginalNotes").textContent = song.totalNotes; $("dbgLoadedNotes").textContent = "—"; $("dbgCompareBpm").textContent = `${formatBpm(song.bpm)} → —`; $("dbgCompareDuration").textContent = `${fixed(song.duration)} → — sec`;
+    $("creatorFeedback").textContent = `保存しました：${song.totalNotes}ノート / ${fixed(song.duration)}秒`;
   });
 
-  renderSequencer(); animationFrame();
+  function compareLoadedSong(song) {
+    if (!lastSavedSnapshot) return;
+    $("dbgOriginalNotes").textContent = lastSavedSnapshot.notes; $("dbgLoadedNotes").textContent = song.totalNotes;
+    $("dbgCompareBpm").textContent = `${formatBpm(lastSavedSnapshot.bpm)} → ${formatBpm(song.bpm)}`;
+    $("dbgCompareDuration").textContent = `${fixed(lastSavedSnapshot.duration)} → ${fixed(song.duration)} sec`;
+  }
+
+  renderSequencer(); updateTransportState(); animationFrame();
 })();

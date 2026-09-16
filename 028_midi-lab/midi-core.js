@@ -184,20 +184,31 @@
       events.sort((a, b) => a.tick - b.tick || a.order - b.order);
       let lastTick = 0, bytes = [];
       events.forEach((event) => { bytes.push(...vlq(event.tick - lastTick), ...event.bytes); lastTick = event.tick; });
-      bytes.push(0, 0xff, 0x2f, 0);
+      const trackEndTick = Math.max(lastTick, secondsToTicks(song.duration || 0));
+      bytes.push(...vlq(trackEndTick - lastTick), 0xff, 0x2f, 0);
       trackChunks.push(chunk("MTrk", bytes));
     });
     const header = chunk("MThd", [...u16(1), ...u16(trackChunks.length), ...u16(ppq)]);
     return new Uint8Array([...header, ...trackChunks.flat()]).buffer;
   }
 
+  function stepUnitToBeats(noteUnit) {
+    const unit = Number(noteUnit) || 8;
+    return 4 / unit;
+  }
+
+  function stepIndexToTime(stepIndex, bpm, noteUnit) {
+    const musicalTime = Number(stepIndex) * stepUnitToBeats(noteUnit);
+    return { musicalTime, seconds: musicalTime * 60 / (Number(bpm) || 120) };
+  }
+
   function createStepSong(options) {
     const bpm = Number(options.bpm) || 120, steps = Number(options.steps) || 16;
-    const stepBeats = options.noteUnit === 4 ? 1 : 0.5;
+    const stepBeats = stepUnitToBeats(options.noteUnit);
     const notes = [];
     options.grid.forEach((row, rowIndex) => row.forEach((on, step) => {
       if (!on) return;
-      const startTime = step * stepBeats * 60 / bpm;
+      const { seconds: startTime } = stepIndexToTime(step, bpm, options.noteUnit);
       notes.push({ noteNumber: options.pitches[rowIndex], noteName: noteName(options.pitches[rowIndex]), channel: 0, startTime, duration: stepBeats * 60 / bpm * 0.9, velocity: Number(options.velocity) || 100 });
     }));
     return {
@@ -211,5 +222,5 @@
     };
   }
 
-  global.MidiCore = { parse, write, createStepSong, noteName, GM_INSTRUMENTS };
+  global.MidiCore = { parse, write, createStepSong, stepUnitToBeats, stepIndexToTime, noteName, GM_INSTRUMENTS };
 })(window);

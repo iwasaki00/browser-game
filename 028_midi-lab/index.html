@@ -98,19 +98,30 @@
       <div class="creator-settings">
         <label>BPM<input id="createBpm" type="number" min="30" max="300" value="120"></label>
         <label>拍子<select id="createSignature"><option value="4/4">4 / 4</option><option value="3/4">3 / 4</option></select></label>
-        <label>ノート長<select id="noteUnit"><option value="8">8分音符</option><option value="4">4分音符</option></select></label>
+        <label>ステップ単位<select id="noteUnit"><option value="4">1/4（4分）</option><option value="8" selected>1/8（8分）</option><option value="16">1/16（16分）</option></select></label>
         <label>Velocity<input id="createVelocity" type="number" min="1" max="127" value="100"></label>
-        <label>ステップ数<select id="stepCount"><option value="8">8</option><option value="16" selected>16</option></select></label>
+        <label>ステップ数<select id="stepCount"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option></select></label>
       </div>
-      <p class="hint">セルをタップして発音をON/OFF。横方向が時間、縦方向が音程です。</p>
+      <div class="creator-stats" aria-label="作成データ情報">
+        <div><span>BPM</span><strong id="infoBpm">120</strong></div>
+        <div><span>拍子</span><strong id="infoSignature">4 / 4</strong></div>
+        <div><span>ステップ</span><strong id="infoSteps">16</strong></div>
+        <div><span>解像度</span><strong id="infoResolution">1 / 8</strong></div>
+        <div><span>小節</span><strong id="infoBars">2</strong></div>
+        <div><span>ノート数</span><strong id="infoNotes">0</strong></div>
+      </div>
+      <p class="hint">セルでノート入力、音階名で試聴、各「×」で行または列を消去できます。</p>
       <div class="sequencer-scroll"><div class="sequencer" id="sequencer" role="grid" aria-label="ステップシーケンサー"></div></div>
+      <p class="creator-feedback" id="creatorFeedback" role="status" aria-live="polite">16ステップ・1/8・2小節</p>
       <div class="creator-actions">
-        <button class="button primary" id="previewButton">▶ 試聴</button>
-        <button class="button" id="loadCreationButton">再生・解析へ送る</button>
-        <button class="button accent" id="saveButton">↓ MIDI保存</button>
+        <button class="button primary" id="previewButton" type="button">▶ 試聴</button>
+        <button class="button" id="previewStopButton" type="button">■ 停止</button>
+        <label class="loop-control"><input id="loopToggle" type="checkbox"><span>ループ</span></label>
+        <button class="button danger" id="clearAllButton" type="button" disabled>全消去</button>
+        <button class="button" id="loadCreationButton" type="button">再生・解析へ送る</button>
+        <button class="button accent" id="saveButton" type="button">↓ MIDI保存</button>
       </div>
     </section>
-
     <section class="panel tab-panel" id="tab-debug">
       <div class="section-heading"><div><span class="eyebrow">DIAGNOSTICS</span><h2>デバッグ</h2></div><span class="step-number">05</span></div>
       <label class="debug-switch"><input id="debugToggle" type="checkbox"><span>デバッグ表示</span></label>
@@ -125,9 +136,25 @@
         <div><span>発音中Note</span><code id="dbgNotes">—</code></div>
         <div><span>次回発音予定時刻</span><code id="dbgNext">—</code></div>
         <div><span>scheduler遅延値</span><code id="dbgDelay">0.000 ms</code></div>
+        <div><span>Original notes</span><code id="dbgOriginalNotes">—</code></div>
+        <div><span>Loaded notes</span><code id="dbgLoadedNotes">—</code></div>
+        <div><span>BPM比較</span><code id="dbgCompareBpm">—</code></div>
+        <div><span>Duration比較</span><code id="dbgCompareDuration">—</code></div>
       </div>
     </section>
   </main>
+
+  <dialog class="confirm-dialog" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+    <div class="confirm-card">
+      <span class="eyebrow">CONFIRM</span>
+      <h2 id="confirmTitle">作成データの確認</h2>
+      <p id="confirmMessage">この操作を実行しますか？</p>
+      <div class="confirm-actions">
+        <button class="button" id="confirmCancelButton" type="button">キャンセル</button>
+        <button class="button danger" id="confirmDeleteButton" type="button">削除</button>
+      </div>
+    </div>
+  </dialog>
 
   <footer><span>MIDI LAB / EXPERIMENTAL BUILD</span><span>Web Audio clock based scheduler</span></footer>
   <script src="midi-core.js"></script>

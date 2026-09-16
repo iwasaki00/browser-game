@@ -75,46 +75,74 @@
 
   class AudioClockPlayer {
     constructor(synth, onStateChange) {
-      this.synth = synth; this.song = null; this.position = 0; this.playing = false;
-      this.startedAt = 0; this.events = []; this.cursor = 0; this.timer = null;
+      this.synth = synth; this.song = null; this.position = 0; this.playing = false; this.loop = false;
+      this.startedAt = 0; this.events = []; this.cursor = 0; this.eventCycle = 0; this.timer = null;
       this.lookAhead = 0.12; this.intervalMs = 25; this.lastSchedulerDelay = 0;
       this.lastSchedulerAt = 0; this.onStateChange = onStateChange || (() => {});
     }
-    setSong(song) { this.stop(); this.song = song; this.position = 0; this.rebuildEvents(); this.onStateChange(); }
+    setSong(song) { this.stop(); this.song = song; this.position = 0; this.loop = false; this.rebuildEvents(); this.onStateChange(); }
+    setLoop(enabled) { this.loop = Boolean(enabled); }
     rebuildEvents() {
       this.events = this.song ? this.song.tracks.flatMap((track) => track.notes.map((note) => ({ track, note }))).sort((a, b) => a.note.startTime - b.note.startTime) : [];
     }
-    currentTime() {
+    rawCurrentTime() {
       if (!this.playing || !this.synth.context) return this.position;
-      return Math.min(this.song?.duration || Infinity, this.position + this.synth.context.currentTime - this.startedAt);
+      return this.position + this.synth.context.currentTime - this.startedAt;
+    }
+    currentTime() {
+      const raw = this.rawCurrentTime();
+      if (this.loop && this.song?.duration > 0) return raw % this.song.duration;
+      return Math.min(this.song?.duration || Infinity, raw);
     }
     async play() {
+      if (this.playing) return;
       if (!this.song || !this.song.totalNotes) throw new Error("再生するノートがありません。");
       const ctx = await this.synth.ensureContext();
       if (this.position >= this.song.duration - 0.001) this.position = 0;
-      this.playing = true; this.startedAt = ctx.currentTime;
-      this.cursor = this.events.findIndex((e) => e.note.startTime >= this.position - 0.001);
-      if (this.cursor < 0) this.cursor = this.events.length;
+      this.playing = true; this.startedAt = ctx.currentTime; this.eventCycle = 0;
+      this.cursor = this.events.findIndex((event) => event.note.startTime >= this.position - 0.001);
+      if (this.cursor < 0) {
+        if (this.loop) { this.cursor = 0; this.eventCycle = 1; }
+        else this.cursor = this.events.length;
+      }
       this.lastSchedulerAt = performance.now();
       this.schedule();
       this.timer = window.setInterval(() => this.schedule(), this.intervalMs);
       this.onStateChange();
+    }
+    scheduleEvent(event, eventTime, transportNow) {
+      if (!event.track.enabled || eventTime + event.note.duration < transportNow) return;
+      const when = this.synth.context.currentTime + Math.max(0, eventTime - transportNow);
+      const remaining = event.note.duration - Math.max(0, transportNow - eventTime);
+      this.synth.schedule(event.note, when, remaining);
     }
     schedule() {
       if (!this.playing || !this.synth.context) return;
       const perfNow = performance.now();
       this.lastSchedulerDelay = Math.max(0, perfNow - this.lastSchedulerAt - this.intervalMs);
       this.lastSchedulerAt = perfNow;
-      const songNow = this.currentTime(), horizon = songNow + this.lookAhead;
-      while (this.cursor < this.events.length && this.events[this.cursor].note.startTime <= horizon) {
-        const event = this.events[this.cursor++];
-        if (event.track.enabled && event.note.startTime + event.note.duration >= songNow) {
-          const when = this.synth.context.currentTime + Math.max(0, event.note.startTime - songNow);
-          const remaining = event.note.duration - Math.max(0, songNow - event.note.startTime);
-          this.synth.schedule(event.note, when, remaining);
+      const rawNow = this.rawCurrentTime();
+      const horizon = rawNow + this.lookAhead;
+
+      if (this.loop && this.song.duration > 0) {
+        let guard = 0;
+        while (this.events.length && guard++ < 10000) {
+          const event = this.events[this.cursor];
+          const eventTime = this.eventCycle * this.song.duration + event.note.startTime;
+          if (eventTime > horizon) break;
+          this.scheduleEvent(event, eventTime, rawNow);
+          this.cursor++;
+          if (this.cursor >= this.events.length) { this.cursor = 0; this.eventCycle++; }
         }
+        return;
       }
-      if (songNow >= this.song.duration) this.stop(true);
+
+      const songNow = Math.min(this.song.duration, rawNow);
+      while (this.cursor < this.events.length && this.events[this.cursor].note.startTime <= songNow + this.lookAhead) {
+        const event = this.events[this.cursor++];
+        this.scheduleEvent(event, event.note.startTime, songNow);
+      }
+      if (rawNow >= this.song.duration) this.stop(true);
     }
     pause() {
       if (!this.playing) return;
@@ -124,7 +152,7 @@
     stop(ended = false) {
       if (this.playing) this.position = this.currentTime();
       this.playing = false; clearInterval(this.timer); this.timer = null; this.synth.stopAll();
-      this.position = 0; this.cursor = 0; this.onStateChange(ended);
+      this.position = 0; this.cursor = 0; this.eventCycle = 0; this.onStateChange(ended);
     }
     rewind() {
       const wasPlaying = this.playing; this.stop();
@@ -137,6 +165,5 @@
       if (wasPlaying) this.play().catch(() => {}); else this.onStateChange();
     }
   }
-
   global.MidiAudio = { MidiSynth, AudioClockPlayer };
 })(window);
