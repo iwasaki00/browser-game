@@ -72,12 +72,26 @@
     currentSong.tracks.forEach((track, index) => {
       const label = document.createElement("label"); label.className = "track-toggle";
       const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = track.enabled;
-      checkbox.addEventListener("change", () => { track.enabled = checkbox.checked; });
+      checkbox.addEventListener("change", () => { track.enabled = checkbox.checked; updateTrackBulkButtons(); });
       const text = document.createElement("span");
       const strong = document.createElement("strong"); strong.textContent = `Track ${index + 1} · ${track.name}`;
       const small = document.createElement("small"); small.textContent = `${track.instrumentName} / ${track.notes.length} notes`;
       text.append(strong, small); label.append(checkbox, text); $("trackToggles").append(label);
     });
+    updateTrackBulkButtons();
+  }
+
+  function setAllTracks(enabled) {
+    if (!currentSong) return;
+    currentSong.tracks.forEach((track) => { track.enabled = enabled; });
+    $("trackToggles").querySelectorAll('input[type="checkbox"]').forEach((checkbox) => { checkbox.checked = enabled; });
+    updateTrackBulkButtons();
+  }
+
+  function updateTrackBulkButtons() {
+    const hasTracks = Boolean(currentSong?.tracks.length);
+    $("tracksOnButton").disabled = !hasTracks || currentSong.tracks.every((track) => track.enabled);
+    $("tracksOffButton").disabled = !hasTracks || currentSong.tracks.every((track) => !track.enabled);
   }
 
   function renderTrackTable() {
@@ -107,6 +121,18 @@
   $("pauseButton").addEventListener("click", () => player.pause());
   $("stopButton").addEventListener("click", () => player.stop());
   $("rewindButton").addEventListener("click", () => player.rewind());
+  $("tracksOnButton").addEventListener("click", () => setAllTracks(true));
+  $("tracksOffButton").addEventListener("click", () => setAllTracks(false));
+  document.querySelectorAll(".scroll-button").forEach((button) => button.addEventListener("click", () => {
+    const container = $(button.dataset.scrollTarget);
+    container.scrollBy({ left: Number(button.dataset.scrollDirection) * Math.max(180, container.clientWidth * 0.55), behavior: "smooth" });
+  }));
+  $("trackTableWrap").addEventListener("wheel", (event) => {
+    const container = event.currentTarget;
+    if (event.shiftKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY) || container.scrollWidth <= container.clientWidth) return;
+    event.preventDefault();
+    container.scrollLeft += event.deltaY;
+  }, { passive: false });
   $("volume").addEventListener("input", (event) => { synth.setVolume(event.target.value); $("volumeValue").textContent = `${Math.round(event.target.value * 100)}%`; });
   $("seekBar").addEventListener("pointerdown", () => { isSeeking = true; });
   $("seekBar").addEventListener("input", (event) => { isSeeking = true; $("currentTime").textContent = formatTime(event.target.value); updateMonitor(Number(event.target.value)); });
@@ -170,8 +196,8 @@
   function renderSequencer() {
     const steps = Number($("stepCount").value);
     if (grid[0].length !== steps) grid = pitches.map((_, row) => Array.from({ length: steps }, (_, i) => grid[row]?.[i] || false));
-    const seq = $("sequencer"); seq.style.gridTemplateColumns = `55px repeat(${steps}, minmax(38px, 1fr))`; seq.replaceChildren();
-    const corner = document.createElement("span"); seq.append(corner);
+    const seq = $("sequencer"); seq.style.gridTemplateColumns = `42px repeat(${steps}, var(--step-width, 50px))`; seq.style.gridTemplateRows = `26px repeat(${pitches.length}, 44px)`; seq.replaceChildren();
+    const corner = document.createElement("span"); corner.className = "pitch-corner"; seq.append(corner);
     for (let step = 0; step < steps; step++) { const label = document.createElement("span"); label.className = "step-index"; label.textContent = step + 1; seq.append(label); }
     pitches.forEach((pitch, row) => {
       const label = document.createElement("span"); label.className = "pitch-label"; label.textContent = MidiCore.noteName(pitch); seq.append(label);

@@ -69,16 +69,28 @@
         <div><span>拍</span><strong id="monBeat">—</strong></div>
         <div class="monitor-next"><span>次ノート</span><strong id="monNext">—</strong></div>
       </div>
-      <div class="subsection-heading"><h3>再生トラック</h3><span>チェックを外すとミュート</span></div>
+      <div class="subsection-heading track-heading">
+        <div><h3>再生トラック</h3><span>再生中も次の発音から反映</span></div>
+        <div class="compact-actions" aria-label="トラック一括操作">
+          <button class="compact-button" id="tracksOnButton" type="button" disabled>全てON</button>
+          <button class="compact-button" id="tracksOffButton" type="button" disabled>全てOFF</button>
+        </div>
+      </div>
       <div class="track-toggles empty-state" id="trackToggles">MIDIを読み込むとトラックが表示されます。</div>
     </section>
 
     <section class="panel tab-panel" id="tab-analysis">
       <div class="section-heading"><div><span class="eyebrow">INSPECTOR</span><h2>MIDI解析</h2></div><span class="step-number">03</span></div>
-      <div class="subsection-heading"><h3>トラック情報</h3></div>
-      <div class="table-wrap"><table><thead><tr><th>#</th><th>名前</th><th>Channel</th><th>Program</th><th>推定楽器</th><th>Notes</th></tr></thead><tbody id="trackTable"><tr><td colspan="6" class="empty-cell">データ未読込</td></tr></tbody></table></div>
-      <div class="subsection-heading"><h3>ノート情報</h3><span id="noteLimitLabel">先頭200件を表示</span></div>
-      <div class="table-wrap note-table-wrap"><table><thead><tr><th>Track</th><th>Ch.</th><th>Note</th><th>音名</th><th>開始</th><th>終了</th><th>Duration</th><th>Velocity</th></tr></thead><tbody id="noteTable"><tr><td colspan="8" class="empty-cell">データ未読込</td></tr></tbody></table></div>
+      <div class="subsection-heading table-heading">
+        <h3>トラック情報</h3>
+        <div class="table-tools"><span>横スクロール</span><button class="scroll-button" type="button" data-scroll-target="trackTableWrap" data-scroll-direction="-1" aria-label="トラック表を左へスクロール">←</button><button class="scroll-button" type="button" data-scroll-target="trackTableWrap" data-scroll-direction="1" aria-label="トラック表を右へスクロール">→</button></div>
+      </div>
+      <div class="table-wrap" id="trackTableWrap" tabindex="0"><table><thead><tr><th>#</th><th>名前</th><th>Channel</th><th>Program</th><th>推定楽器</th><th>Notes</th></tr></thead><tbody id="trackTable"><tr><td colspan="6" class="empty-cell">データ未読込</td></tr></tbody></table></div>
+      <div class="subsection-heading table-heading">
+        <div><h3>ノート情報</h3><span id="noteLimitLabel">先頭200件を表示</span></div>
+        <div class="table-tools"><span>横スクロール</span><button class="scroll-button" type="button" data-scroll-target="noteTableWrap" data-scroll-direction="-1" aria-label="ノート表を左へスクロール">←</button><button class="scroll-button" type="button" data-scroll-target="noteTableWrap" data-scroll-direction="1" aria-label="ノート表を右へスクロール">→</button></div>
+      </div>
+      <div class="table-wrap note-table-wrap" id="noteTableWrap" tabindex="0"><table><thead><tr><th>Track</th><th>Ch.</th><th>Note</th><th>音名</th><th>開始</th><th>終了</th><th>Duration</th><th>Velocity</th></tr></thead><tbody id="noteTable"><tr><td colspan="8" class="empty-cell">データ未読込</td></tr></tbody></table></div>
     </section>
 
     <section class="panel tab-panel" id="tab-create">
