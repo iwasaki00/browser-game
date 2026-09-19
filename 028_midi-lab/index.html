@@ -64,7 +64,9 @@
       </div>
       <div class="monitor" aria-label="ゲーム同期確認用モニター">
         <div class="monitor-main"><span>現在時間</span><strong><output id="monTime">0.000</output><small> sec</small></strong></div>
-        <div><span>BPM</span><strong id="monBpm">—</strong></div>
+        <div><span>現在BPM</span><strong id="monBpm">—</strong></div>
+        <div><span>現在拍子</span><strong id="monSignature">—</strong></div>
+        <div><span>テンポ変更</span><strong id="monTempoChanges">—</strong></div>
         <div><span>小節</span><strong id="monBar">—</strong></div>
         <div><span>拍</span><strong id="monBeat">—</strong></div>
         <div class="monitor-next"><span>次ノート</span><strong id="monNext">—</strong></div>
@@ -91,6 +93,10 @@
         <div class="table-tools"><span>横スクロール</span><button class="scroll-button" type="button" data-scroll-target="noteTableWrap" data-scroll-direction="-1" aria-label="ノート表を左へスクロール">←</button><button class="scroll-button" type="button" data-scroll-target="noteTableWrap" data-scroll-direction="1" aria-label="ノート表を右へスクロール">→</button></div>
       </div>
       <div class="table-wrap note-table-wrap" id="noteTableWrap" tabindex="0"><table><thead><tr><th>Track</th><th>Ch.</th><th>Note</th><th>音名</th><th>開始</th><th>終了</th><th>Duration</th><th>Velocity</th></tr></thead><tbody id="noteTable"><tr><td colspan="8" class="empty-cell">データ未読込</td></tr></tbody></table></div>
+      <div class="map-grid">
+        <div><div class="subsection-heading"><h3>Tempo Map</h3></div><div class="table-wrap"><table><thead><tr><th>Tick</th><th>Bar</th><th>BPM</th></tr></thead><tbody id="tempoMapTable"><tr><td colspan="3" class="empty-cell">データ未読込</td></tr></tbody></table></div></div>
+        <div><div class="subsection-heading"><h3>Time Signature Map</h3></div><div class="table-wrap"><table><thead><tr><th>Tick</th><th>Bar</th><th>拍子</th></tr></thead><tbody id="signatureMapTable"><tr><td colspan="3" class="empty-cell">データ未読込</td></tr></tbody></table></div></div>
+      </div>
     </section>
 
     <section class="panel tab-panel" id="tab-create">
@@ -125,7 +131,7 @@
       </div>
       <div class="creator-settings">
         <label>BPM<input id="createBpm" type="number" min="30" max="300" value="120"></label>
-        <label>拍子<select id="createSignature"><option value="4/4">4 / 4</option><option value="3/4">3 / 4</option></select></label>
+        <label>拍子<select id="createSignature"><option value="4/4">4 / 4</option><option value="3/4">3 / 4</option><option value="5/4">5 / 4</option></select></label>
         <label>ステップ単位<select id="noteUnit"><option value="4">1/4（4分）</option><option value="8" selected>1/8（8分）</option><option value="16">1/16（16分）</option></select></label>
         <label>Velocity<input id="createVelocity" type="number" min="1" max="127" value="100"></label>
         <label>ステップ数<select id="stepCount"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option></select></label>
@@ -160,6 +166,7 @@
         <div><span>MIDI Tick</span><code id="dbgTick">0</code></div>
         <div><span>PPQ / TPQN</span><code id="dbgPpq">—</code></div>
         <div><span>BPM</span><code id="dbgBpm">—</code></div>
+        <div><span>現在拍子</span><code id="dbgSignature">—</code></div>
         <div><span>現在Beat</span><code id="dbgBeat">—</code></div>
         <div><span>現在Bar</span><code id="dbgBar">—</code></div>
         <div><span>発音中Note</span><code id="dbgNotes">—</code></div>
@@ -189,6 +196,7 @@
   </dialog>
 
   <footer><span>MIDI LAB / EXPERIMENTAL BUILD</span><span>Web Audio clock based scheduler</span></footer>
+  <script src="midi-timing.js"></script>
   <script src="midi-core.js"></script>
   <script src="midi-edit.js"></script>
   <script src="synth.js"></script>

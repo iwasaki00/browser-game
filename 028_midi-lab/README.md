@@ -39,7 +39,7 @@ py -3 -m http.server 8080
 
 ## 使用ライブラリ
 
-外部ライブラリは使用していません。`midi-core.js` に最小限のSMFパーサー／ライター、`midi-edit.js` にMIDIと編集グリッド間の変換、`synth.js` にWeb Audio API音源とスケジューラーを実装しています。画面処理は `app.js` に分離しているため、将来MIDI処理だけ置き換えられます。
+外部ライブラリは使用していません。`midi-timing.js` にTempo Map／Time Signature Mapと双方向時間変換、`midi-core.js` に最小限のSMFパーサー／ライター、`midi-edit.js` にMIDIと編集グリッド間の変換、`synth.js` にWeb Audio API音源とスケジューラーを実装しています。画面処理は `app.js` に分離しているため、時間変換やMIDI処理を将来の共通基盤へ移しやすい構成です。
 
 ## 実装の概要
 
@@ -47,10 +47,11 @@ py -3 -m http.server 8080
 - 再生: AudioContextの `currentTime` を基準に、25msごとに120ms先までのノートを予約します。`setInterval()` は予約処理を起こすためだけに使い、再生位置の基準にはしません。
 - 音源: 三角波の基音と小さな正弦波倍音に短いアタック／減衰を付けた軽量な内蔵音源です。
 - MIDI出力: 480 PPQ、Type 1としてテンポ、拍子、トラック名、Program Change、Note On/Off、End of Trackを書き出します。
-- ステップ時刻: stepIndex → 四分音符基準のmusicalTime → seconds に変換します。小節境界は拍子とステップ単位から算出します。
+- 時間変換: `midi-timing.js` が全テンポ区間を積算してtick↔秒を変換し、拍子区間を継続する小節番号でtick↔小節／拍へ変換します。
 - ループ試聴: AudioContextの絶対時刻上で周回番号を加算し、境界をまたぐノートも先読み予約します。
 - リアルタイム打ち込み: ループ中は25msごとに最新グリッドを読み直し、120ms先までだけ予約します。未来のステップへの追加・未予約ノートの削除は停止せず反映されます。
-- MIDIグリッド編集: MIDI tickを選択した1/4・1/8・1/16単位へ丸め、2小節の表示窓へ変換します。編集状態は曲全体のtickベースデータに保持し、区間移動後も維持します。
+- MIDIグリッド編集: MIDI tickを選択した1/4・1/8・1/16単位へ丸め、Time Signature Mapから求めた2小節のstartTick/endTickへ展開します。各セルはabsoluteTickを持ち、4/4→3/4→5/4では1/8グリッドが16→12→20ステップへ変化します。
+- 可変テンポ区間試聴: ノートtickと区間境界をTempo Mapで秒へ変換します。再生ハイライトはAudioContext経過秒→tick→ローカルステップの逆変換で追従します。
 
 ## テスト
 
@@ -58,15 +59,17 @@ py -3 -m http.server 8080
 node self-test.js
 node scheduler-test.js
 node midi-edit-test.js
+node generate-timing-fixtures.js
+node timing-test.js
 ```
 
-`self-test.js` はMIDI保存・再読込を、`scheduler-test.js` は未来／過去ステップの追加、削除、コード、重複防止、ループ境界を検証します。 `midi-edit-test.js` は8小節・3トラックのfixtureを使い、コード展開、量子化、区間間の編集保持、未編集トラック保持、テンポ変更を含む再保存を検証します。
+`generate-timing-fixtures.js` は `test-data` にTempo Test、Time Signature Test、Mixed Testの3ファイルを再生成します。`self-test.js` はMIDI保存・再読込を、`scheduler-test.js` は未来／過去ステップの追加、削除、コード、重複防止、ループ境界を検証します。`midi-edit-test.js` は8小節・3トラックのfixtureを使い、コード展開、量子化、区間間の編集保持、未編集トラック保持、テンポ変更を含む再保存を検証します。`timing-test.js` は生成済みMIDIも再読込し、120→150→90 BPM、4/4→3/4→5/4、tick／秒／小節／拍の往復、区間境界、ループ長、ハイライト位置、保存後のマップ一致を検証します。
 
 ## 現在の制限
 
 - SMPTE time divisionは未対応です。
 - MIDI Type 2、SysExの内容、歌詞、マーカー、キュー、ピッチベンド、Aftertouch、Control Change、ペダルによる実音長の再現には未対応です（解析時に不要なイベントは読み飛ばします）。
-- テンポ／拍子変更イベントは再保存時も保持します。ただしMIDI作成グリッドと区間試聴は先頭の拍子／BPMを基準にし、途中変更には追従しません。
+- テンポ／拍子変更イベントは再生・位置表示・2小節編集・区間試聴・再保存へ反映します。拍子変更が小節途中に置かれた場合は、その変更tickを新しい小節の先頭として扱います。
 - トラック途中のProgram Changeは編集後の保存時に先頭Programへ統合されます。
 - 同一ノートが重なるケースはFIFOでNote Offと対応付けます。
 - ドラムチャンネルも同じ簡易シンセ音で鳴ります。
@@ -75,4 +78,4 @@ node midi-edit-test.js
 
 ## 今後の拡張候補
 
-SoundFont音源、ドラム専用音源、Control Change／サステイン対応、複数テンポを維持する再出力、ピアノロール、ループ範囲、メトロノーム、MIDI Web API入力、Web Workerでの大規模ファイル解析、自動テスト用MIDI fixture、共通基盤としてのAPI設計が候補です。
+SoundFont音源、ドラム専用音源、Control Change／サステイン対応、テンポ／拍子イベントのGUI編集、ピアノロール、任意ループ範囲、メトロノーム、MIDI Web API入力、Web Workerでの大規模ファイル解析、`midi-timing.js` の共通パッケージ化が候補です。

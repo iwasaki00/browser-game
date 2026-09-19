@@ -1,5 +1,6 @@
 global.window = global;
 const fs = require("fs");
+eval(fs.readFileSync(__dirname + "/midi-timing.js", "utf8"));
 eval(fs.readFileSync(__dirname + "/midi-core.js", "utf8"));
 
 function roundTrip({ steps, noteUnit, velocity, placements }) {

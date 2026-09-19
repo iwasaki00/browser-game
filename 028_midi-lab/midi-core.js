@@ -111,23 +111,10 @@
       rawTracks.push({ id: ti, name: name || `Track ${ti + 1}`, channels: [...channels], programs: [...programs], notes, endTick: tick, noteCount });
     }
 
-    const uniqByTick = (items) => {
-      const map = new Map(); items.sort((a, b) => a.tick - b.tick).forEach((v) => map.set(v.tick, v)); return [...map.values()].sort((a, b) => a.tick - b.tick);
-    };
-    const tempoMap = uniqByTick(tempos);
-    let elapsed = 0;
-    tempoMap.forEach((tempo, i) => {
-      if (i) elapsed += (tempo.tick - tempoMap[i - 1].tick) * tempoMap[i - 1].microseconds / 1000000 / ppq;
-      tempo.time = elapsed;
-      tempo.bpm = 60000000 / tempo.microseconds;
-    });
-    const timeSignatureMap = uniqByTick(signatures);
-
-    function tickToSeconds(tick) {
-      let t = tempoMap[0];
-      for (let i = 1; i < tempoMap.length && tempoMap[i].tick <= tick; i++) t = tempoMap[i];
-      return t.time + (tick - t.tick) * t.microseconds / 1000000 / ppq;
-    }
+    const tempoMap = global.MidiTiming.buildTempoMap(tempos, ppq);
+    const timeSignatureMap = global.MidiTiming.buildTimeSignatureMap(signatures, ppq);
+    const timingSong = { ppq, tempoMap, timeSignatureMap };
+    const tickToSeconds = (tick) => global.MidiTiming.tickToSeconds(timingSong, tick);
 
     const tracks = rawTracks.map((track) => {
       const channel = track.channels.length === 1 ? track.channels[0] : (track.channels.length ? track.channels.join(", ") : "—");
@@ -168,10 +155,9 @@
     const bpm = Number(song.bpm) || 120;
     const micro = Math.round(60000000 / bpm);
     const sig = song.timeSignature || { numerator: 4, denominator: 4 };
-    const denomPow = Math.round(Math.log2(sig.denominator || 4));
     const metaEvents = [];
     (song.tempoMap?.length ? song.tempoMap : [{ tick: 0, microseconds: micro }]).forEach((tempo) => {
-      const value = Math.round(tempo.microseconds || 60000000 / (tempo.bpm || bpm));
+      const value = Math.round(tempo.microsecondsPerQuarter || tempo.microseconds || 60000000 / (tempo.bpm || bpm));
       metaEvents.push({ tick: Math.max(0, Math.round(tempo.tick || 0)), order: 0, bytes: [0xff, 0x51, 3, (value >> 16) & 255, (value >> 8) & 255, value & 255] });
     });
     (song.timeSignatureMap?.length ? song.timeSignatureMap : [{ tick: 0, ...sig }]).forEach((signature) => {
@@ -184,7 +170,7 @@
     const metaEndTick = Math.max(metaTick, declaredEndTick);
     meta.push(...vlq(metaEndTick - metaTick), 0xff, 0x2f, 0);
     const trackChunks = [chunk("MTrk", meta)];
-    const secondsToTicks = (seconds) => Math.max(0, Math.round(seconds * bpm * ppq / 60));
+    const secondsToTicks = (seconds) => Math.max(0, Math.round(global.MidiTiming.secondsToTick(song, seconds)));
     const writableTracks = song.tracks.filter((track) => track.notes.length || track.channels?.length || track.programs?.length);
     writableTracks.forEach((track) => {
       const events = [];
@@ -239,5 +225,5 @@
     };
   }
 
-  global.MidiCore = { parse, write, createStepSong, stepUnitToBeats, stepIndexToTime, noteName, GM_INSTRUMENTS };
+  global.MidiCore = { parse, write, createStepSong, stepUnitToBeats, stepIndexToTime, noteName, GM_INSTRUMENTS, tickToSeconds: global.MidiTiming.tickToSeconds, secondsToTick: global.MidiTiming.secondsToTick, tickToBarBeat: global.MidiTiming.tickToBarBeat, barBeatToTick: global.MidiTiming.barBeatToTick };
 })(window);

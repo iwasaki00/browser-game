@@ -45,7 +45,7 @@
     $("sumBpm").textContent = formatBpm(currentSong.bpm); $("sumTimeSig").textContent = `${currentSong.timeSignature.numerator} / ${currentSong.timeSignature.denominator}`;
     $("sumLength").textContent = formatTime(currentSong.duration); $("sumNotes").textContent = currentSong.totalNotes.toLocaleString("ja-JP");
     $("totalTime").textContent = formatTime(currentSong.duration); $("seekBar").max = Math.max(0.001, currentSong.duration);
-    renderTrackToggles(); renderTrackTable(); renderNoteTable(); updateMonitor(0);
+    renderTrackToggles(); renderTrackTable(); renderNoteTable(); renderTimingMaps(); updateMonitor(0);
   }
   function channelText(track) { return track.channels.length ? track.channels.map((c) => c + 1).join(", ") : "—"; }
   function programText(track) { return track.programs.length ? track.programs.join(", ") : "—"; }
@@ -71,6 +71,11 @@
     if (!shown.length) { const tr = document.createElement("tr"), td = document.createElement("td"); td.colSpan = 8; td.className = "empty-cell"; td.textContent = "ノートイベントがありません。"; tr.append(td); $("noteTable").append(tr); }
     $("noteLimitLabel").textContent = notes.length > 200 ? `先頭200件を表示（全${notes.length.toLocaleString("ja-JP")}件）` : `${notes.length}件を表示`;
   }
+  function renderTimingMaps() {
+    const renderRows = (id, rows) => { const body = $(id); body.replaceChildren(); rows.forEach((values) => { const tr = document.createElement("tr"); values.forEach((value) => { const td = document.createElement("td"); td.textContent = value; tr.append(td); }); body.append(tr); }); };
+    renderRows("tempoMapTable", currentSong.tempoMap.map((tempo) => [tempo.tick, MidiTiming.tickToBarBeat(currentSong, tempo.tick).bar, formatBpm(tempo.bpm)]));
+    renderRows("signatureMapTable", currentSong.timeSignatureMap.map((signature) => [signature.tick, MidiTiming.tickToBarBeat(currentSong, signature.tick).bar, `${signature.numerator} / ${signature.denominator}`]));
+  }
 
   $("playButton").addEventListener("click", async () => { try { isCreationPreview = false; player.setLoop(false); await player.play(); } catch (error) { setMessage(error.message, true); selectTab(currentSong ? "play" : "load"); } });
   $("pauseButton").addEventListener("click", () => player.pause()); $("stopButton").addEventListener("click", () => player.stop()); $("rewindButton").addEventListener("click", () => player.rewind());
@@ -84,16 +89,14 @@
     if (!player.playing) { const wasPreview = isCreationPreview; isCreationPreview = false; clearPlayhead(); if (wasPreview) $("creatorFeedback").textContent = "試聴を停止しました。"; }
   }
   function positionInfo(song, seconds) {
-    if (!song) return { tick: 0, bpm: 0, bar: 0, beat: 0, beatInBar: 0, denominator: 4 };
-    let tempo = song.tempoMap[0]; for (let i = 1; i < song.tempoMap.length && song.tempoMap[i].time <= seconds; i++) tempo = song.tempoMap[i];
-    const tick = tempo.tick + (seconds - tempo.time) * tempo.bpm * song.ppq / 60; let sig = song.timeSignatureMap[0]; for (let i = 1; i < song.timeSignatureMap.length && song.timeSignatureMap[i].tick <= tick; i++) sig = song.timeSignatureMap[i];
-    const ticksPerBeat = song.ppq * 4 / sig.denominator, localBeats = Math.max(0, (tick - sig.tick) / ticksPerBeat); let barsBefore = 0;
-    for (let i = 0; i < song.timeSignatureMap.length; i++) { const here = song.timeSignatureMap[i], next = song.timeSignatureMap[i + 1]; if (here.tick >= sig.tick) break; const end = Math.min(sig.tick, next ? next.tick : sig.tick); barsBefore += Math.floor((end - here.tick) / (song.ppq * 4 / here.denominator) / here.numerator); }
-    return { tick, bpm: tempo.bpm, bar: barsBefore + Math.floor(localBeats / sig.numerator) + 1, beat: Math.floor(tick / ticksPerBeat) + 1, beatInBar: Math.floor(localBeats % sig.numerator) + 1, denominator: sig.numerator };
+    if (!song) return { tick: 0, bpm: 0, bar: 0, beat: 0, beatInBar: 0, numerator: 4, denominator: 4 };
+    const tick = MidiTiming.secondsToTick(song, seconds), tempo = MidiTiming.tempoAtTick(song, tick), position = MidiTiming.tickToBarBeat(song, tick);
+    const barOffset = Number(song.sectionStartBar) ? song.sectionStartBar - 1 : 0;
+    return { tick, bpm: tempo.bpm, bar: position.bar + barOffset, beat: position.beat, beatInBar: position.beat, beatFraction: position.beatFraction, numerator: position.numerator, denominator: position.denominator };
   }
   function nextNoteDelay(song, seconds) { if (!song) return null; let next = Infinity; song.tracks.forEach((track) => { if (track.enabled) track.notes.forEach((note) => { if (note.startTime > seconds + 0.0005) next = Math.min(next, note.startTime); }); }); return Number.isFinite(next) ? next - seconds : null; }
-  function updateMonitor(seconds) { const info = positionInfo(currentSong, seconds), next = nextNoteDelay(currentSong, seconds); $("monTime").textContent = fixed(seconds); $("monBpm").textContent = currentSong ? formatBpm(info.bpm) : "—"; $("monBar").textContent = currentSong ? info.bar : "—"; $("monBeat").textContent = currentSong ? `${info.beatInBar} / ${info.denominator}` : "—"; $("monNext").textContent = next === null ? "—" : `${fixed(next)} sec後`; if (debugVisible) updateDebug(info, next); }
-  function updateDebug(info, next) { const ctx = synth.context; $("dbgState").textContent = ctx ? ctx.state : "not-created"; $("dbgAudioTime").textContent = ctx ? fixed(ctx.currentTime, 6) : "0.000000"; $("dbgTick").textContent = Math.round(info.tick); $("dbgPpq").textContent = currentSong?.ppq ?? "—"; $("dbgBpm").textContent = currentSong ? formatBpm(info.bpm) : "—"; $("dbgBeat").textContent = currentSong ? info.beat : "—"; $("dbgBar").textContent = currentSong ? info.bar : "—"; $("dbgNotes").textContent = synth.activeNoteNames().join(", ") || "—"; $("dbgNext").textContent = next === null || !ctx ? "—" : `${fixed(ctx.currentTime + next, 6)} sec`; $("dbgDelay").textContent = `${fixed(player.lastSchedulerDelay)} ms`; }
+  function updateMonitor(seconds) { const info = positionInfo(currentSong, seconds), next = nextNoteDelay(currentSong, seconds); $("monTime").textContent = fixed(seconds); $("monBpm").textContent = currentSong ? formatBpm(info.bpm) : "—"; $("monSignature").textContent = currentSong ? `${info.numerator} / ${info.denominator}` : "—"; $("monTempoChanges").textContent = currentSong ? `${currentSong.tempoMap.length}箇所` : "—"; $("monBar").textContent = currentSong ? info.bar : "—"; $("monBeat").textContent = currentSong ? `${info.beatInBar} / ${info.numerator}` : "—"; $("monNext").textContent = next === null ? "—" : `${fixed(next)} sec後`; if (debugVisible) updateDebug(info, next); }
+  function updateDebug(info, next) { const ctx = synth.context; $("dbgState").textContent = ctx ? ctx.state : "not-created"; $("dbgAudioTime").textContent = ctx ? fixed(ctx.currentTime, 6) : "0.000000"; $("dbgTick").textContent = Math.round(info.tick); $("dbgPpq").textContent = currentSong?.ppq ?? "—"; $("dbgBpm").textContent = currentSong ? formatBpm(info.bpm) : "—"; $("dbgSignature").textContent = currentSong ? `${info.numerator}/${info.denominator}` : "—"; $("dbgBeat").textContent = currentSong ? `${info.beat}${info.beatFraction ? ` + ${fixed(info.beatFraction)}` : ""}` : "—"; $("dbgBar").textContent = currentSong ? info.bar : "—"; $("dbgNotes").textContent = synth.activeNoteNames().join(", ") || "—"; $("dbgNext").textContent = next === null || !ctx ? "—" : `${fixed(ctx.currentTime + next, 6)} sec`; $("dbgDelay").textContent = `${fixed(player.lastSchedulerDelay)} ms`; }
   function animationFrame() { const seconds = player.currentTime(); if (!isSeeking) { $("currentTime").textContent = formatTime(seconds); $("seekBar").value = seconds; } updateMonitor(seconds); updateCreationPlayhead(seconds); requestAnimationFrame(animationFrame); }
   $("debugToggle").addEventListener("change", (event) => { debugVisible = event.target.checked; $("debugConsole").classList.toggle("is-hidden", !debugVisible); });
   function populateEditTracks() {
@@ -109,7 +112,7 @@
     const unit = Number($("editQuantize").value), ticks = MidiEdit.stepTicks(loadedMidiSong.ppq, unit);
     const maxStep = selected.track.notes.reduce((max, note) => Math.max(max, Math.round((note.startTick || 0) / ticks) + 1), 0), range = MidiEdit.choosePitchRange(selected.track.notes);
     $("importNoteCount").textContent = selected.track.notes.length; $("importPitchRange").textContent = `${MidiCore.noteName(range.min)} ～ ${MidiCore.noteName(range.max)}`;
-    $("importDuration").textContent = formatTime(loadedMidiSong.duration); $("importBpm").textContent = formatBpm(loadedMidiSong.bpm); $("importSteps").textContent = maxStep;
+    $("importDuration").textContent = formatTime(loadedMidiSong.duration); $("importBpm").textContent = `${formatBpm(loadedMidiSong.bpm)}（${loadedMidiSong.tempoMap.length}箇所）`; $("importSteps").textContent = maxStep;
     const warnings = MidiEdit.warnings(loadedMidiSong); $("importWarning").textContent = warnings.join(" "); $("importWarning").classList.toggle("is-hidden", !warnings.length);
   }
   function setCreationControlsForMode() {
@@ -144,9 +147,12 @@
     $("importWarning").textContent = warnings.join(" "); $("importWarning").classList.toggle("is-hidden", !warnings.length); $("creatorFeedback").textContent = `${selected.track.name}を1/${editSession.noteUnit}へクオンタイズして展開しました。`;
   }
   function showEditorSection() {
-    if (!editSession) return; grid = MidiEdit.gridForSection(editSession); setStepCountValue(editSession.sectionSteps);
-    const start = editSession.sectionStartBar + 1, end = Math.min(editSession.totalBars, editSession.sectionStartBar + editSession.sectionBars);
-    $("sectionRange").textContent = `小節 ${start}～${end} / ${editSession.totalBars}`; $("previousSectionButton").disabled = editSession.sectionStartBar === 0; $("nextSectionButton").disabled = editSession.sectionStartBar + editSession.sectionBars >= editSession.totalBars;
+    if (!editSession) return;
+    const bounds = MidiEdit.updateSectionMetrics(editSession), tempo = MidiTiming.tempoAtTick(editSession.song, bounds.startTick), signature = MidiTiming.signatureAtTick(editSession.song, bounds.startTick);
+    grid = MidiEdit.gridForSection(editSession); setStepCountValue(editSession.sectionSteps); $("createBpm").value = Math.round(tempo.bpm * 100) / 100;
+    const signatureValue = `${signature.numerator}/${signature.denominator}`; if (![...$("createSignature").options].some((option) => option.value === signatureValue)) { const option = document.createElement("option"); option.value = signatureValue; option.textContent = `${signature.numerator} / ${signature.denominator}`; option.dataset.import = "true"; $("createSignature").append(option); } $("createSignature").value = signatureValue;
+    const start = bounds.startBar, end = Math.min(editSession.totalBars, bounds.endBar - 1);
+    $("sectionRange").textContent = `小節 ${start}～${end} / ${editSession.totalBars}（Tick ${bounds.startTick}–${bounds.endTick}）`; $("previousSectionButton").disabled = editSession.sectionStartBar === 0; $("nextSectionButton").disabled = editSession.sectionStartBar + editSession.sectionBars >= editSession.totalBars;
     renderSequencer(); updateModeDisplay(); updateEditComparison();
   }
   function moveEditorSection(direction) { if (!editSession) return; stopCreationPreview(); const maxStart = Math.max(0, Math.floor((editSession.totalBars - 1) / editSession.sectionBars) * editSession.sectionBars); editSession.sectionStartBar = Math.max(0, Math.min(maxStart, editSession.sectionStartBar + direction * editSession.sectionBars)); showEditorSection(); }
@@ -157,34 +163,40 @@
   function markEdited(message) { if (!editSession) return; grid = MidiEdit.gridForSection(editSession); updateModeDisplay(); updateEditComparison(); updateCreationInfo(); if (message) $("creatorFeedback").textContent = message; }
 
   function creationSettings() { const [numerator, denominator] = $("createSignature").value.split("/").map(Number); return { bpm: Number($("createBpm").value) || 120, numerator, denominator, noteUnit: Number($("noteUnit").value), velocity: Number($("createVelocity").value) || 100, steps: grid[0].length }; }
-  function creationTiming() { const settings = creationSettings(), beatsPerStep = MidiCore.stepUnitToBeats(settings.noteUnit), beatsPerBar = settings.numerator * 4 / settings.denominator, stepsPerBeat = settings.noteUnit / settings.denominator, stepsPerBar = settings.numerator * stepsPerBeat, bars = settings.steps * beatsPerStep / beatsPerBar, stepSeconds = beatsPerStep * 60 / settings.bpm; return { ...settings, beatsPerStep, beatsPerBar, stepsPerBeat, stepsPerBar, bars, stepSeconds, duration: settings.steps * stepSeconds }; }
-  function boundaryClass(step, timing) { if (step <= 0) return ""; if (Number.isInteger(timing.stepsPerBar) && step % timing.stepsPerBar === 0) return " is-bar-start"; if (Number.isInteger(timing.stepsPerBeat) && step % timing.stepsPerBeat === 0) return " is-beat-start"; return ""; }
+  function creationTiming() {
+    const settings = creationSettings(), beatsPerStep = MidiCore.stepUnitToBeats(settings.noteUnit);
+    if (editSession) { const bounds = MidiEdit.sectionBounds(editSession), tempo = MidiTiming.tempoAtTick(editSession.song, bounds.startTick), signature = MidiTiming.signatureAtTick(editSession.song, bounds.startTick); return { ...settings, bpm: tempo.bpm, numerator: signature.numerator, denominator: signature.denominator, steps: bounds.stepTicks.length, beatsPerStep, bars: editSession.sectionBars, duration: bounds.endSeconds - bounds.startSeconds, bounds }; }
+    const beatsPerBar = settings.numerator * 4 / settings.denominator, stepsPerBeat = settings.noteUnit / settings.denominator, stepsPerBar = settings.numerator * stepsPerBeat, bars = settings.steps * beatsPerStep / beatsPerBar, stepSeconds = beatsPerStep * 60 / settings.bpm;
+    return { ...settings, beatsPerStep, beatsPerBar, stepsPerBeat, stepsPerBar, bars, stepSeconds, duration: settings.steps * stepSeconds };
+  }
+  function boundaryClass(step, timing) { if (step <= 0) return ""; if (editSession) { const tick = timing.bounds.stepTicks[step], position = MidiTiming.tickToBarBeat(editSession.song, tick); if (position.beat === 1 && Math.abs(position.beatFraction) < 0.000001) return " is-bar-start"; if (Math.abs(position.beatFraction) < 0.000001) return " is-beat-start"; return ""; } if (Number.isInteger(timing.stepsPerBar) && step % timing.stepsPerBar === 0) return " is-bar-start"; if (Number.isInteger(timing.stepsPerBeat) && step % timing.stepsPerBeat === 0) return " is-beat-start"; return ""; }
   function renderSequencer() {
     const steps = grid[0].length, timing = creationTiming(); setStepCountValue(steps);
     const seq = $("sequencer"); seq.style.gridTemplateColumns = `54px repeat(${steps}, var(--step-width, 50px))`; seq.style.gridTemplateRows = `34px repeat(${pitches.length}, 44px)`; seq.replaceChildren();
-    const corner = document.createElement("span"); corner.className = "pitch-corner"; seq.append(corner); const startStep = editSession ? editSession.sectionStartBar * editSession.stepsPerBar : 0;
+    const corner = document.createElement("span"); corner.className = "pitch-corner"; seq.append(corner);
     for (let step = 0; step < steps; step++) {
-      const header = document.createElement("div"); header.className = `step-header${boundaryClass(step, timing)}`; header.dataset.step = step;
-      const number = document.createElement("span"); number.textContent = startStep + step + 1; const clear = document.createElement("button"); clear.type = "button"; clear.className = "step-clear"; clear.textContent = "×"; clear.setAttribute("aria-label", `ステップ${startStep + step + 1}を消去`); clear.addEventListener("click", () => clearStep(step)); header.append(number, clear); seq.append(header);
+      const absoluteTick = editSession ? timing.bounds.stepTicks[step] : step * MidiEdit.stepTicks(480, timing.noteUnit), displayStep = Math.round(absoluteTick / (editSession ? editSession.ticksPerStep : MidiEdit.stepTicks(480, timing.noteUnit))) + 1;
+      const header = document.createElement("div"); header.className = `step-header${boundaryClass(step, timing)}`; header.dataset.step = step; header.dataset.tick = absoluteTick;
+      const number = document.createElement("span"); number.textContent = displayStep; const clear = document.createElement("button"); clear.type = "button"; clear.className = "step-clear"; clear.textContent = "×"; clear.setAttribute("aria-label", `ステップ${displayStep}を消去`); clear.addEventListener("click", () => clearStep(step)); header.append(number, clear); seq.append(header);
     }
     pitches.forEach((pitch, row) => {
       const label = document.createElement("div"); label.className = "pitch-label"; label.dataset.row = row;
       const audition = document.createElement("button"); audition.type = "button"; audition.className = "pitch-audition"; audition.textContent = MidiCore.noteName(pitch); audition.setAttribute("aria-label", `${MidiCore.noteName(pitch)}を試聴`); audition.addEventListener("click", () => auditionPitch(pitch));
       const clearRow = document.createElement("button"); clearRow.type = "button"; clearRow.className = "row-clear"; clearRow.textContent = "×"; clearRow.setAttribute("aria-label", `${MidiCore.noteName(pitch)}の行を消去`); clearRow.addEventListener("click", () => clearPitchRow(row)); label.append(audition, clearRow); seq.append(label);
-      for (let step = 0; step < steps; step++) { const on = Boolean(grid[row][step]), cell = document.createElement("button"); cell.type = "button"; cell.className = `step-cell${boundaryClass(step, timing)}${on ? " is-on" : ""}`; cell.dataset.step = step; cell.dataset.row = row; cell.setAttribute("role", "gridcell"); cell.setAttribute("aria-label", `${MidiCore.noteName(pitch)} ステップ${startStep + step + 1}`); cell.setAttribute("aria-pressed", on); cell.addEventListener("click", () => toggleGridCell(row, step, cell)); seq.append(cell); }
+      for (let step = 0; step < steps; step++) { const on = Boolean(grid[row][step]), cell = document.createElement("button"), absoluteTick = editSession ? timing.bounds.stepTicks[step] : step * MidiEdit.stepTicks(480, timing.noteUnit); cell.type = "button"; cell.className = `step-cell${boundaryClass(step, timing)}${on ? " is-on" : ""}`; cell.dataset.step = step; cell.dataset.tick = absoluteTick; cell.dataset.row = row; cell.setAttribute("role", "gridcell"); cell.setAttribute("aria-label", `${MidiCore.noteName(pitch)} Tick ${absoluteTick}`); cell.setAttribute("aria-pressed", on); cell.addEventListener("click", () => toggleGridCell(row, step, cell)); seq.append(cell); }
     });
     updateCreationInfo(); if (isCreationPreview && player.playing && activePlayheadStep >= 0) document.querySelectorAll(`[data-step="${activePlayheadStep}"]`).forEach((element) => element.classList.add("is-playhead"));
   }
   function toggleGridCell(row, step, cell) {
     let on;
-    if (editSession) { on = MidiEdit.toggleCell(editSession, pitches[row], step, creationSettings().velocity); grid = MidiEdit.gridForSection(editSession); markEdited(`${MidiCore.noteName(pitches[row])} / Step ${editSession.sectionStartBar * editSession.stepsPerBar + step + 1}を${on ? "追加" : "削除"}しました。`); }
+    if (editSession) { const tick = MidiEdit.cellTick(editSession, step); on = MidiEdit.toggleCell(editSession, pitches[row], step, creationSettings().velocity); grid = MidiEdit.gridForSection(editSession); markEdited(`${MidiCore.noteName(pitches[row])} / Tick ${tick}を${on ? "追加" : "削除"}しました。`); }
     else { grid[row][step] = !grid[row][step]; on = grid[row][step]; updateCreationInfo(); }
     cell.classList.toggle("is-on", Boolean(on)); cell.setAttribute("aria-pressed", Boolean(on));
   }
   function resizeGrid(steps) { grid = pitches.map((_, row) => Array.from({ length: steps }, (_, index) => Boolean(grid[row]?.[index]))); renderSequencer(); updateModeDisplay(); }
   function clearStep(step) {
     let message;
-    if (editSession) { const removed = MidiEdit.clearStep(editSession, step); grid = MidiEdit.gridForSection(editSession); message = `ステップ${editSession.sectionStartBar * editSession.stepsPerBar + step + 1}から${removed}ノート削除しました。`; }
+    if (editSession) { const tick = MidiEdit.cellTick(editSession, step), removed = MidiEdit.clearStep(editSession, step); grid = MidiEdit.gridForSection(editSession); message = `Tick ${tick}から${removed}ノート削除しました。`; }
     else { grid.forEach((row) => { row[step] = false; }); message = `ステップ${step + 1}を消去しました。`; }
     renderSequencer(); if (editSession) markEdited(message); else $("creatorFeedback").textContent = message;
   }
@@ -197,12 +209,18 @@
   async function auditionPitch(noteNumber) { try { const ctx = await synth.ensureContext(); synth.schedule({ noteNumber, velocity: creationSettings().velocity }, ctx.currentTime + 0.005, 0.38); $("creatorFeedback").textContent = `${MidiCore.noteName(noteNumber)}を試聴中`; } catch (error) { $("creatorFeedback").textContent = error.message; } }
   function updateCreationInfo() {
     const timing = creationTiming(), barsText = Number.isInteger(timing.bars) ? String(timing.bars) : timing.bars.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
-    $("infoBpm").textContent = formatBpm(timing.bpm); $("infoSignature").textContent = `${timing.numerator} / ${timing.denominator}`; $("infoSteps").textContent = timing.steps; $("infoResolution").textContent = `1 / ${timing.noteUnit}`; $("infoBars").textContent = barsText;
+    $("infoBpm").textContent = editSession ? `${formatBpm(timing.bpm)}（区間開始）` : formatBpm(timing.bpm); $("infoSignature").textContent = `${timing.numerator} / ${timing.denominator}`; $("infoSteps").textContent = timing.steps; $("infoResolution").textContent = `1 / ${timing.noteUnit}`; $("infoBars").textContent = barsText;
     $("infoNotes").textContent = editSession ? editSession.song.tracks[editSession.trackIndex].notes.length : noteCount(); $("clearAllButton").disabled = noteCount() === 0;
-    if (!isCreationPreview) $("creatorFeedback").textContent = editSession ? `小節 ${editSession.sectionStartBar + 1}～${Math.min(editSession.totalBars, editSession.sectionStartBar + editSession.sectionBars)}・${noteCount()}表示ノート` : `${timing.steps}ステップ・1/${timing.noteUnit}・${barsText}小節・${fixed(timing.duration)}秒`;
+    if (!isCreationPreview) $("creatorFeedback").textContent = editSession ? `小節 ${editSession.sectionStartBar + 1}～${Math.min(editSession.totalBars, editSession.sectionStartBar + editSession.sectionBars)}・${timing.steps}ステップ・${fixed(timing.duration)}秒` : `${timing.steps}ステップ・1/${timing.noteUnit}・${barsText}小節・${fixed(timing.duration)}秒`;
     updateModeDisplay();
   }
-  function updateCreationPlayhead(seconds) { if (!isCreationPreview || !player.playing) { clearPlayhead(); return; } const timing = creationTiming(), step = Math.min(timing.steps - 1, Math.floor(seconds / timing.stepSeconds)); if (step === activePlayheadStep) return; clearPlayhead(); activePlayheadStep = step; document.querySelectorAll(`[data-step="${step}"]`).forEach((element) => element.classList.add("is-playhead")); $("creatorFeedback").textContent = `再生中：ステップ ${step + 1} / ${timing.steps}${player.loop ? "（ループ）" : ""}`; }
+  function updateCreationPlayhead(seconds) {
+    if (!isCreationPreview || !player.playing) { clearPlayhead(); return; }
+    const timing = creationTiming(); let step;
+    if (editSession) { const localTick = MidiTiming.secondsToTick(player.song, seconds); step = Math.max(0, Math.min(timing.steps - 1, Math.floor(localTick / editSession.ticksPerStep + 0.000001))); }
+    else step = Math.min(timing.steps - 1, Math.floor(seconds / timing.stepSeconds));
+    if (step === activePlayheadStep) return; clearPlayhead(); activePlayheadStep = step; document.querySelectorAll(`[data-step="${step}"]`).forEach((element) => element.classList.add("is-playhead")); $("creatorFeedback").textContent = `再生中：ステップ ${step + 1} / ${timing.steps}${player.loop ? "（ループ）" : ""}`;
+  }
   function clearPlayhead() { if (activePlayheadStep < 0) return; document.querySelectorAll(".is-playhead").forEach((element) => element.classList.remove("is-playhead")); activePlayheadStep = -1; }
   function creationSong(title = "midi-lab-test-001") { if (editSession) return MidiEdit.sectionSong(editSession); return MidiCore.createStepSong({ title, ...creationSettings(), pitches, grid }); }
   function liveCreationSnapshot() { const song = creationSong(); return { duration: song.duration, events: song.tracks.flatMap((track) => track.notes.map((note) => ({ track, note }))) }; }
