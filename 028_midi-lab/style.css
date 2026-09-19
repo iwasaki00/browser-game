@@ -480,3 +480,47 @@ footer {
     flex: 1;
   }
 }
+
+/* Imported MIDI editing */
+.editor-mode-bar {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr auto;
+  gap: 1px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.editor-mode-bar > div { min-width: 0; padding: 10px 12px; background: #0d151c; }
+.editor-mode-bar span, .import-preview span { display: block; color: var(--muted); font: 700 .64rem ui-monospace, monospace; letter-spacing: .08em; }
+.editor-mode-bar strong { display: block; overflow: hidden; color: var(--cyan); font: 750 .85rem ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.edit-state { align-self: stretch; display: grid; place-items: center; min-width: 92px; padding: 8px 12px; color: var(--muted); background: #101922; font-size: .78rem; font-weight: 800; }
+.edit-state.is-dirty { color: #221205; background: var(--orange); }
+.edit-state.is-saved { color: #061817; background: var(--cyan); }
+.midi-import-panel { margin-bottom: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: rgba(7,13,18,.35); }
+.midi-import-panel .subsection-heading { margin: 0 0 10px; }
+.import-controls { display: grid; grid-template-columns: minmax(210px, 2fr) minmax(120px, .7fr) auto auto; gap: 8px; align-items: end; }
+.import-controls label { color: var(--muted); font-size: .78rem; font-weight: 700; }
+.import-controls select { width: 100%; min-height: 44px; margin-top: 5px; padding: 8px 10px; color: var(--text); border: 1px solid #3a4b58; border-radius: 5px; background: #0e151c; }
+.import-preview { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; margin-top: 10px; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--line); }
+.import-preview > div { min-width: 0; padding: 8px 10px; background: #111922; }
+.import-preview strong { display: block; margin-top: 2px; overflow: hidden; color: #d8e5e9; font: 750 .82rem ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.import-warning { margin: 10px 0 0; padding: 9px 11px; color: #ffd4a8; background: rgba(255,158,87,.08); border-left: 3px solid var(--orange); font-size: .78rem; }
+.section-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 12px 0; padding: 9px; border: 1px solid var(--line); border-radius: 7px; background: #0d151c; }
+.section-nav strong { min-width: 150px; text-align: center; color: var(--cyan); font: 750 .84rem ui-monospace, monospace; }
+.creator-settings :disabled, .import-controls :disabled { cursor: not-allowed; opacity: .55; }
+@media (max-width: 820px) {
+  .editor-mode-bar { grid-template-columns: 1fr 1fr; }
+  .edit-state { min-height: 44px; }
+  .import-controls { grid-template-columns: 1fr 1fr; }
+  .import-preview { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .editor-mode-bar { grid-template-columns: 1fr; }
+  .import-controls { grid-template-columns: 1fr; }
+  .import-preview { grid-template-columns: repeat(2, 1fr); }
+  .section-nav { flex-wrap: wrap; }
+  .section-nav strong { order: -1; width: 100%; }
+  .section-nav .compact-button { flex: 1; }
+}

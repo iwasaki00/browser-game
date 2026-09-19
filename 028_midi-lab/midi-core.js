@@ -56,6 +56,7 @@
     const tempos = [{ tick: 0, microseconds: 500000 }];
     const signatures = [{ tick: 0, numerator: 4, denominator: 4 }];
     let maxTick = 0;
+    const unsupportedEvents = { controlChange: 0, pitchBend: 0, aftertouch: 0, sysex: 0, lyrics: 0, otherMeta: 0 };
 
     for (let ti = 0; ti < trackCount; ti++) {
       if (r.str(4) !== "MTrk") throw new Error(`Track ${ti + 1} のMTrkヘッダーがありません。`);
@@ -77,15 +78,20 @@
           if (type === 0x03) name = decodeText(data);
           else if (type === 0x51 && len === 3) tempos.push({ tick, microseconds: (data[0] << 16) | (data[1] << 8) | data[2] });
           else if (type === 0x58 && len >= 2) signatures.push({ tick, numerator: data[0], denominator: Math.pow(2, data[1]) });
+          else if (type === 0x05) unsupportedEvents.lyrics++;
+          else if (type !== 0x2f) unsupportedEvents.otherMeta++;
           continue;
         }
-        if (status === 0xf0 || status === 0xf7) { r.skip(r.vlq()); runningStatus = null; continue; }
+        if (status === 0xf0 || status === 0xf7) { unsupportedEvents.sysex++; r.skip(r.vlq()); runningStatus = null; continue; }
         if (status >= 0xf0) throw new Error(`未対応のSystem Event: 0x${status.toString(16)}`);
 
         const kind = status >> 4, channel = status & 0x0f;
         channels.add(channel);
         const d1 = firstData === null ? r.u8() : firstData;
         const d2 = (kind === 0x0c || kind === 0x0d) ? null : r.u8();
+        if (kind === 0x0b) unsupportedEvents.controlChange++;
+        else if (kind === 0x0e) unsupportedEvents.pitchBend++;
+        else if (kind === 0x0a || kind === 0x0d) unsupportedEvents.aftertouch++;
         if (kind === 0x0c) programs.add(d1);
         if (kind === 0x09 && d2 > 0) {
           const key = `${channel}:${d1}`;
@@ -132,15 +138,16 @@
         programs: track.programs, instrumentName: drum ? "Drum Kit" : (GM_INSTRUMENTS[program] || "Unknown"), enabled: true,
         notes: track.notes.map((n) => ({
           noteNumber: n.noteNumber, noteName: noteName(n.noteNumber), channel: n.channel,
-          startTick: n.tick, endTick: n.endTick, startTime: tickToSeconds(n.tick),
+          startTick: n.tick, endTick: n.endTick, durationTicks: n.durationTicks, startTime: tickToSeconds(n.tick),
           duration: tickToSeconds(n.endTick) - tickToSeconds(n.tick), velocity: n.velocity
         })).sort((a, b) => a.startTime - b.startTime)
       };
     });
     const duration = Math.max(tickToSeconds(maxTick), ...tracks.flatMap((t) => t.notes.map((n) => n.startTime + n.duration)), 0);
     return {
-      title: (fileName || "Untitled").replace(/\.(mid|midi)$/i, ""), fileName: fileName || "—", format, ppq, duration,
-      bpm: tempoMap[0].bpm, timeSignature: timeSignatureMap[0], tempoMap, timeSignatureMap, tracks,
+      title: (fileName || "Untitled").replace(/\.(mid|midi)$/i, ""), fileName: fileName || "—", format, ppq, duration, endTick: maxTick,
+      bpm: tempoMap[0].bpm, timeSignature: timeSignatureMap[0], tempoMap, timeSignatureMap, tracks, unsupportedEvents,
+      hasUnsupportedEvents: Object.values(unsupportedEvents).some((count) => count > 0),
       totalNotes: tracks.reduce((sum, t) => sum + t.notes.length, 0)
     };
   }
@@ -162,14 +169,24 @@
     const micro = Math.round(60000000 / bpm);
     const sig = song.timeSignature || { numerator: 4, denominator: 4 };
     const denomPow = Math.round(Math.log2(sig.denominator || 4));
-    const meta = [
-      0, 0xff, 0x51, 3, (micro >> 16) & 255, (micro >> 8) & 255, micro & 255,
-      0, 0xff, 0x58, 4, sig.numerator || 4, denomPow, 24, 8,
-      0, 0xff, 0x2f, 0
-    ];
+    const metaEvents = [];
+    (song.tempoMap?.length ? song.tempoMap : [{ tick: 0, microseconds: micro }]).forEach((tempo) => {
+      const value = Math.round(tempo.microseconds || 60000000 / (tempo.bpm || bpm));
+      metaEvents.push({ tick: Math.max(0, Math.round(tempo.tick || 0)), order: 0, bytes: [0xff, 0x51, 3, (value >> 16) & 255, (value >> 8) & 255, value & 255] });
+    });
+    (song.timeSignatureMap?.length ? song.timeSignatureMap : [{ tick: 0, ...sig }]).forEach((signature) => {
+      metaEvents.push({ tick: Math.max(0, Math.round(signature.tick || 0)), order: 1, bytes: [0xff, 0x58, 4, signature.numerator || 4, Math.round(Math.log2(signature.denominator || 4)), 24, 8] });
+    });
+    metaEvents.sort((a, b) => a.tick - b.tick || a.order - b.order);
+    let metaTick = 0, meta = [];
+    metaEvents.forEach((event) => { meta.push(...vlq(event.tick - metaTick), ...event.bytes); metaTick = event.tick; });
+    const declaredEndTick = song.keepTicks && Number.isFinite(song.endTick) ? song.endTick : 0;
+    const metaEndTick = Math.max(metaTick, declaredEndTick);
+    meta.push(...vlq(metaEndTick - metaTick), 0xff, 0x2f, 0);
     const trackChunks = [chunk("MTrk", meta)];
     const secondsToTicks = (seconds) => Math.max(0, Math.round(seconds * bpm * ppq / 60));
-    song.tracks.forEach((track) => {
+    const writableTracks = song.tracks.filter((track) => track.notes.length || track.channels?.length || track.programs?.length);
+    writableTracks.forEach((track) => {
       const events = [];
       const channel = Number.isInteger(track.channel) ? track.channel : (track.channels && track.channels[0]) || 0;
       const nameBytes = new TextEncoder().encode(track.name || "Track");
@@ -184,7 +201,7 @@
       events.sort((a, b) => a.tick - b.tick || a.order - b.order);
       let lastTick = 0, bytes = [];
       events.forEach((event) => { bytes.push(...vlq(event.tick - lastTick), ...event.bytes); lastTick = event.tick; });
-      const trackEndTick = Math.max(lastTick, secondsToTicks(song.duration || 0));
+      const trackEndTick = Math.max(lastTick, declaredEndTick || secondsToTicks(song.duration || 0));
       bytes.push(...vlq(trackEndTick - lastTick), 0xff, 0x2f, 0);
       trackChunks.push(chunk("MTrk", bytes));
     });

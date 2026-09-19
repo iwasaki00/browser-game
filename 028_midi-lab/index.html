@@ -94,7 +94,35 @@
     </section>
 
     <section class="panel tab-panel" id="tab-create">
-      <div class="section-heading"><div><span class="eyebrow">STEP SEQUENCER</span><h2>MIDIを作る</h2></div><span class="step-number">04</span></div>
+      <div class="section-heading"><div><span class="eyebrow">STEP SEQUENCER</span><h2>MIDIを作る・編集する</h2></div><span class="step-number">04</span></div>
+      <div class="editor-mode-bar">
+        <div><span>MODE</span><strong id="creatorMode">NEW MIDI</strong></div>
+        <div><span>TARGET</span><strong id="creatorTarget">新規作成</strong></div>
+        <div><span>RANGE</span><strong id="creatorRange">全16ステップ</strong></div>
+        <output class="edit-state" id="editState">新規</output>
+      </div>
+      <section class="midi-import-panel" aria-labelledby="midiImportTitle">
+        <div class="subsection-heading"><div><h3 id="midiImportTitle">読み込んだMIDIを編集</h3><span>1トラックずつ、2小節単位で編集します</span></div></div>
+        <div class="import-controls">
+          <label>編集対象トラック<select id="editTrackSelect" disabled><option value="">MIDIを読み込んでください</option></select></label>
+          <label>クオンタイズ<select id="editQuantize"><option value="4">1/4</option><option value="8" selected>1/8</option><option value="16">1/16</option></select></label>
+          <button class="button accent" id="expandMidiButton" type="button" disabled>グリッドへ展開</button>
+          <button class="button" id="newModeButton" type="button">新規作成</button>
+        </div>
+        <div class="import-preview" id="importPreview">
+          <div><span>ノート数</span><strong id="importNoteCount">—</strong></div>
+          <div><span>音域</span><strong id="importPitchRange">—</strong></div>
+          <div><span>曲長</span><strong id="importDuration">—</strong></div>
+          <div><span>BPM</span><strong id="importBpm">—</strong></div>
+          <div><span>必要ステップ</span><strong id="importSteps">—</strong></div>
+        </div>
+        <p class="import-warning is-hidden" id="importWarning"></p>
+      </section>
+      <div class="section-nav is-hidden" id="sectionNav">
+        <button class="compact-button" id="previousSectionButton" type="button">← 前の2小節</button>
+        <strong id="sectionRange">小節 1～2</strong>
+        <button class="compact-button" id="nextSectionButton" type="button">次の2小節 →</button>
+      </div>
       <div class="creator-settings">
         <label>BPM<input id="createBpm" type="number" min="30" max="300" value="120"></label>
         <label>拍子<select id="createSignature"><option value="4/4">4 / 4</option><option value="3/4">3 / 4</option></select></label>
@@ -120,6 +148,7 @@
         <button class="button danger" id="clearAllButton" type="button" disabled>全消去</button>
         <button class="button" id="loadCreationButton" type="button">再生・解析へ送る</button>
         <button class="button accent" id="saveButton" type="button">↓ MIDI保存</button>
+        <button class="button accent is-hidden" id="saveEditedButton" type="button">↓ 編集したMIDIを保存</button>
       </div>
     </section>
     <section class="panel tab-panel" id="tab-debug">
@@ -140,6 +169,9 @@
         <div><span>Loaded notes</span><code id="dbgLoadedNotes">—</code></div>
         <div><span>BPM比較</span><code id="dbgCompareBpm">—</code></div>
         <div><span>Duration比較</span><code id="dbgCompareDuration">—</code></div>
+        <div><span>編集元ノート</span><code id="dbgEditOriginal">—</code></div>
+        <div><span>編集後ノート</span><code id="dbgEditCurrent">—</code></div>
+        <div><span>追加 / 削除</span><code id="dbgEditDelta">—</code></div>
       </div>
     </section>
   </main>
@@ -158,6 +190,7 @@
 
   <footer><span>MIDI LAB / EXPERIMENTAL BUILD</span><span>Web Audio clock based scheduler</span></footer>
   <script src="midi-core.js"></script>
+  <script src="midi-edit.js"></script>
   <script src="synth.js"></script>
   <script src="app.js"></script>
 </body>
