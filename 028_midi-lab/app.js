@@ -259,6 +259,9 @@
       }
     });
     updateCreationInfo();
+    if (isCreationPreview && player.playing && activePlayheadStep >= 0) {
+      document.querySelectorAll(`[data-step="${activePlayheadStep}"]`).forEach((element) => element.classList.add("is-playhead"));
+    }
   }
 
   function resizeGrid(steps) {
@@ -313,6 +316,28 @@
     return MidiCore.createStepSong({ title, ...settings, pitches, grid });
   }
 
+  function liveCreationSnapshot() {
+    const timing = creationTiming();
+    const track = { id: "live-step-sequence", enabled: true };
+    const duration = timing.stepSeconds * 0.9;
+    const events = [];
+    grid.forEach((row, rowIndex) => row.forEach((on, stepIndex) => {
+      if (!on) return;
+      events.push({
+        track,
+        note: {
+          stepIndex,
+          noteNumber: pitches[rowIndex],
+          channel: 0,
+          startTime: stepIndex * timing.stepSeconds,
+          duration,
+          velocity: timing.velocity
+        }
+      });
+    }));
+    return { duration: timing.duration, events };
+  }
+
   function stopCreationPreview(message) {
     if (isCreationPreview || player.playing) player.stop();
     isCreationPreview = false; clearPlayhead();
@@ -361,7 +386,9 @@
   });
   $("previewButton").addEventListener("click", async () => {
     try {
-      player.stop(); const song = creationSong(); currentSong = song; player.setSong(song); player.setLoop($("loopToggle").checked); isCreationPreview = true; renderSong(); await player.play();
+      player.stop(); const song = creationSong(); const looping = $("loopToggle").checked; currentSong = song; player.setSong(song); player.setLoop(looping);
+      if (looping) player.setLiveEventProvider(liveCreationSnapshot);
+      isCreationPreview = true; renderSong(); await player.play();
     } catch (error) { isCreationPreview = false; clearPlayhead(); $("creatorFeedback").textContent = error.message; }
   });
   $("previewStopButton").addEventListener("click", () => stopCreationPreview("試聴を停止しました。"));

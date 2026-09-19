@@ -77,11 +77,13 @@
     constructor(synth, onStateChange) {
       this.synth = synth; this.song = null; this.position = 0; this.playing = false; this.loop = false;
       this.startedAt = 0; this.events = []; this.cursor = 0; this.eventCycle = 0; this.timer = null;
+      this.liveEventProvider = null; this.scheduledLiveEvents = new Map();
       this.lookAhead = 0.12; this.intervalMs = 25; this.lastSchedulerDelay = 0;
       this.lastSchedulerAt = 0; this.onStateChange = onStateChange || (() => {});
     }
-    setSong(song) { this.stop(); this.song = song; this.position = 0; this.loop = false; this.rebuildEvents(); this.onStateChange(); }
+    setSong(song) { this.stop(); this.song = song; this.position = 0; this.loop = false; this.liveEventProvider = null; this.rebuildEvents(); this.onStateChange(); }
     setLoop(enabled) { this.loop = Boolean(enabled); }
+    setLiveEventProvider(provider) { this.liveEventProvider = typeof provider === "function" ? provider : null; this.scheduledLiveEvents.clear(); }
     rebuildEvents() {
       this.events = this.song ? this.song.tracks.flatMap((track) => track.notes.map((note) => ({ track, note }))).sort((a, b) => a.note.startTime - b.note.startTime) : [];
     }
@@ -96,10 +98,11 @@
     }
     async play() {
       if (this.playing) return;
-      if (!this.song || !this.song.totalNotes) throw new Error("再生するノートがありません。");
+      if (!this.song || (!this.song.totalNotes && !this.liveEventProvider)) throw new Error("再生するノートがありません。");
       const ctx = await this.synth.ensureContext();
       if (this.position >= this.song.duration - 0.001) this.position = 0;
       this.playing = true; this.startedAt = ctx.currentTime; this.eventCycle = 0;
+      this.scheduledLiveEvents.clear();
       this.cursor = this.events.findIndex((event) => event.note.startTime >= this.position - 0.001);
       if (this.cursor < 0) {
         if (this.loop) { this.cursor = 0; this.eventCycle = 1; }
@@ -116,6 +119,29 @@
       const remaining = event.note.duration - Math.max(0, transportNow - eventTime);
       this.synth.schedule(event.note, when, remaining);
     }
+    scheduleLiveLoop(rawNow, horizon) {
+      const snapshot = this.liveEventProvider();
+      const duration = Number(snapshot?.duration) || this.song.duration;
+      const events = Array.isArray(snapshot?.events) ? snapshot.events : [];
+      if (!(duration > 0)) return;
+
+      for (const [key, eventTime] of this.scheduledLiveEvents) {
+        if (eventTime < rawNow - 0.001) this.scheduledLiveEvents.delete(key);
+      }
+      const firstCycle = Math.max(0, Math.floor(rawNow / duration));
+      const lastCycle = Math.max(firstCycle, Math.floor(horizon / duration));
+      for (let cycle = firstCycle; cycle <= lastCycle; cycle++) {
+        for (const event of events) {
+          const eventTime = cycle * duration + event.note.startTime;
+          if (eventTime < rawNow - 0.001 || eventTime > horizon) continue;
+          const step = event.note.stepIndex ?? Math.round(event.note.startTime * 1000000);
+          const key = `${cycle}:${step}:${event.note.channel ?? 0}:${event.note.noteNumber}`;
+          if (this.scheduledLiveEvents.has(key)) continue;
+          this.scheduledLiveEvents.set(key, eventTime);
+          this.scheduleEvent(event, eventTime, rawNow);
+        }
+      }
+    }
     schedule() {
       if (!this.playing || !this.synth.context) return;
       const perfNow = performance.now();
@@ -123,6 +149,11 @@
       this.lastSchedulerAt = perfNow;
       const rawNow = this.rawCurrentTime();
       const horizon = rawNow + this.lookAhead;
+
+      if (this.loop && this.liveEventProvider) {
+        this.scheduleLiveLoop(rawNow, horizon);
+        return;
+      }
 
       if (this.loop && this.song.duration > 0) {
         let guard = 0;
@@ -152,7 +183,7 @@
     stop(ended = false) {
       if (this.playing) this.position = this.currentTime();
       this.playing = false; clearInterval(this.timer); this.timer = null; this.synth.stopAll();
-      this.position = 0; this.cursor = 0; this.eventCycle = 0; this.onStateChange(ended);
+      this.position = 0; this.cursor = 0; this.eventCycle = 0; this.scheduledLiveEvents.clear(); this.onStateChange(ended);
     }
     rewind() {
       const wasPlaying = this.playing; this.stop();

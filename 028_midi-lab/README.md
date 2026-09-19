@@ -45,6 +45,16 @@ py -3 -m http.server 8080
 - MIDI出力: 480 PPQ、Type 1としてテンポ、拍子、トラック名、Program Change、Note On/Off、End of Trackを書き出します。
 - ステップ時刻: stepIndex → 四分音符基準のmusicalTime → seconds に変換します。小節境界は拍子とステップ単位から算出します。
 - ループ試聴: AudioContextの絶対時刻上で周回番号を加算し、境界をまたぐノートも先読み予約します。
+- リアルタイム打ち込み: ループ中は25msごとに最新グリッドを読み直し、120ms先までだけ予約します。未来のステップへの追加・未予約ノートの削除は停止せず反映されます。
+
+## テスト
+
+```powershell
+node self-test.js
+node scheduler-test.js
+```
+
+`self-test.js` はMIDI保存・再読込を、`scheduler-test.js` は未来／過去ステップの追加、削除、コード、重複防止、ループ境界を検証します。
 
 ## 現在の制限
 
