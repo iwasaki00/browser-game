@@ -31,7 +31,7 @@
   async function readFile(file) {
     if (!/\.(mid|midi)$/i.test(file.name)) { setMessage(".mid または .midi ファイルを選択してください。", true); return; }
     try {
-      setMessage("MIDIを解析しています…"); const song = MidiCore.parse(await file.arrayBuffer(), file.name);
+      setMessage("MIDIを解析しています…"); const song = MidiCommon.parse(await file.arrayBuffer(), { fileName: file.name }); song.tracks.forEach((track) => { track.enabled = true; });
       loadedMidiSong = song; editWorkspace = null; editSession = null; populateEditTracks(); loadSong(song, `${file.name} を読み込みました。MIDI作成タブから編集できます。`); compareLoadedSong(song);
     } catch (error) { console.error(error); setMessage(`読み込みエラー: ${error.message}`, true); }
   }

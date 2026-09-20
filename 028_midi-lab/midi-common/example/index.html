@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MidiCommon 最小サンプル</title>
+  <style>body{font-family:system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 16px;line-height:1.6}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{border:1px solid #bbb;padding:6px;text-align:left}.error{color:#b00020}</style>
+</head>
+<body>
+  <h1>MidiCommon 最小サンプル</h1>
+  <p>音声再生は行わず、MIDIファイルの概要だけを表示します。</p>
+  <input id="midiFile" type="file" accept=".mid,.midi,audio/midi,audio/x-midi">
+  <p id="summary">MIDIファイルを選択してください。</p>
+  <table><thead><tr><th>Track</th><th>名前</th><th>Notes</th></tr></thead><tbody id="tracks"></tbody></table>
+  <script src="../midi-timing.js"></script>
+  <script src="../midi-common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -70,6 +70,7 @@ node multi-track-edit-test.js
 node event-preservation-test.js
 node facade-compat-test.js
 node baseline-test.js
+node midi-common/tests/midi-common-test.js
 ```
 
 `generate-timing-fixtures.js` はTempo／拍子テストを、`generate-event-fixture.js` は非ノートイベントfixtureを `test-data` へ再生成します。`multi-track-edit-test.js` は3トラックの編集・切替・保存を、`event-preservation-test.js` はノート編集後もCC、Sustain、Pitch Bend、Aftertouch、複数Program Change、Meta、SysExのtickと値が一致することを検証します。既存の保存、scheduler、8小節編集、時間変換テストも引き続き実行します。
@@ -87,6 +88,12 @@ const seconds = MidiApi.timing.tickToSeconds(song, 1920);
 const workspace = MidiApi.editor.createWorkspace(song);
 const transport = MidiApi.transport.create(synth, onStateChange);
 ```
+
+## 読み込み専用共通基盤 v0.1.0
+
+`midi-common/` は他のWebゲームへコピーできる、DOM・AudioContext非依存の読み込み専用共通基盤です。実行に必要なのは `midi-common/midi-timing.js` と `midi-common/midi-common.js` の2ファイルです。公開API、対応イベント、コピー方法、最小サンプルは `midi-common/README.md` を参照してください。
+
+MIDI実験室のファイル読込だけは `MidiCommon.parse()` を使用します。読込後に実験室固有の再生状態として `track.enabled` を追加します。Writer、Editor、Scheduler、SynthとPhase 1互換Facade `MidiApi` は変更していません。
 
 ## 現在の制限
 
