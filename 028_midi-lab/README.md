@@ -68,9 +68,25 @@ node timing-test.js
 node generate-event-fixture.js
 node multi-track-edit-test.js
 node event-preservation-test.js
+node facade-compat-test.js
+node baseline-test.js
 ```
 
 `generate-timing-fixtures.js` はTempo／拍子テストを、`generate-event-fixture.js` は非ノートイベントfixtureを `test-data` へ再生成します。`multi-track-edit-test.js` は3トラックの編集・切替・保存を、`event-preservation-test.js` はノート編集後もCC、Sustain、Pitch Bend、Aftertouch、複数Program Change、Meta、SysExのtickと値が一致することを検証します。既存の保存、scheduler、8小節編集、時間変換テストも引き続き実行します。
+
+## 共通基盤化 Phase 0・1
+
+`baseline/` は共通化前のTempo／拍子変換、イベント、編集状態、SongData、fixtureのparse→write→再parse結果を固定した基準です。意図的に基準を更新するときだけ `node generate-baseline.js` を実行してください。
+
+`midi-api.js` は既存ロジックを移動せずに追加した互換Facadeです。従来の `MidiTiming`、`MidiCore`、`MidiEdit`、`MidiAudio` はそのまま利用できます。
+
+```javascript
+const song = MidiApi.parse(arrayBuffer, { fileName: "song.mid" });
+const bytes = MidiApi.write(song);
+const seconds = MidiApi.timing.tickToSeconds(song, 1920);
+const workspace = MidiApi.editor.createWorkspace(song);
+const transport = MidiApi.transport.create(synth, onStateChange);
+```
 
 ## 現在の制限
 

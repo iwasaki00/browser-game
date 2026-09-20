@@ -1,0 +1,38 @@
+{
+  "phase": "Phase 0 / Phase 1",
+  "allPassed": true,
+  "tests": [
+    {
+      "command": "node self-test.js",
+      "result": { "bytes": 145, "format": 1, "bpm": 120, "notes": 8, "duration": 2, "timing": 0.25, "chordNotes": 4 }
+    },
+    {
+      "command": "node scheduler-test.js",
+      "result": { "scheduled": 8, "futureAdded": true, "futureDeleted": true, "chord": [60, 64, 67], "boundaryCount": 1, "pastNextLoop": true }
+    },
+    {
+      "command": "node midi-edit-test.js",
+      "result": { "tracks": 3, "bars": 8, "sectionSteps": 16, "chordAtStart": true, "quantizedTick": 240, "added": 1, "deleted": 1, "bassPreserved": true, "drumsPreserved": true, "tempoChanges": 2 }
+    },
+    {
+      "command": "node timing-test.js",
+      "result": { "assertions": 38, "fixtureFiles": 3, "tempoMap": 3, "signatureMap": 3, "bars34Steps": 12, "bars56Steps": 20, "playheadStep": 12, "maxTickRoundtripError": 0.00001 }
+    },
+    {
+      "command": "node multi-track-edit-test.js",
+      "result": { "tracksEdited": 3, "pianoQuantize": 16, "bassQuantize": 8, "drumsQuantize": 16, "pianoBar": 5, "bassBar": 1, "drumsBar": 9, "editsAfterReload": 3 }
+    },
+    {
+      "command": "node event-preservation-test.js",
+      "result": { "cc": [6, 6], "sustain": [2, 2], "pitchBend": [3, 3], "aftertouch": [2, 2], "programChange": [3, 3], "lyrics": [2, 2], "sysex": [1, 1], "other": [5, 5], "notes": [5, 6] }
+    },
+    {
+      "command": "node facade-compat-test.js",
+      "result": { "parseDeepEqual": true, "writeByteIdentical": true, "writtenBytes": 343, "timingEqual": true, "editorEqual": true, "trackCount": 2, "noteCount": 24, "transportWrapped": true, "domIndependent": true }
+    },
+    {
+      "command": "node baseline-test.js",
+      "result": { "baselineFiles": 5, "fixtures": 4, "temporaryFields": ["_durationTicks", "_editStep", "_gridTick", "_sourceId"] }
+    }
+  ]
+}

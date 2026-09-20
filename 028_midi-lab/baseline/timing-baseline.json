@@ -1,0 +1,470 @@
+{
+  "tempo-test.mid": {
+    "tempoMap": [
+      {
+        "tick": 0,
+        "bpm": 120,
+        "microsecondsPerQuarter": 500000,
+        "time": 0
+      },
+      {
+        "tick": 3840,
+        "bpm": 150,
+        "microsecondsPerQuarter": 400000,
+        "time": 4
+      },
+      {
+        "tick": 7680,
+        "bpm": 89.999955,
+        "microsecondsPerQuarter": 666667,
+        "time": 7.2
+      }
+    ],
+    "timeSignatureMap": [
+      {
+        "tick": 0,
+        "numerator": 4,
+        "denominator": 4,
+        "bar": 1
+      }
+    ],
+    "conversions": [
+      {
+        "tick": 0,
+        "seconds": 0,
+        "roundTripTick": 0,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 120,
+        "seconds": 0.125,
+        "roundTripTick": 120,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0.25,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 480,
+        "seconds": 0.5,
+        "roundTripTick": 480,
+        "bar": 1,
+        "beat": 2,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 960,
+        "seconds": 1,
+        "roundTripTick": 960,
+        "bar": 1,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 1920,
+        "seconds": 2,
+        "roundTripTick": 1920,
+        "bar": 2,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3839,
+        "seconds": 3.998958333,
+        "roundTripTick": 3839,
+        "bar": 2,
+        "beat": 4,
+        "beatFraction": 0.997916667,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3840,
+        "seconds": 4,
+        "roundTripTick": 3840,
+        "bar": 3,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 5200,
+        "seconds": 5.133333333,
+        "roundTripTick": 5200,
+        "bar": 3,
+        "beat": 3,
+        "beatFraction": 0.833333333,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 6720,
+        "seconds": 6.4,
+        "roundTripTick": 6720,
+        "bar": 4,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 7679,
+        "seconds": 7.199166667,
+        "roundTripTick": 7679,
+        "bar": 4,
+        "beat": 4,
+        "beatFraction": 0.997916667,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 7680,
+        "seconds": 7.2,
+        "roundTripTick": 7680,
+        "bar": 5,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 11520,
+        "seconds": 12.533336,
+        "roundTripTick": 11520,
+        "bar": 7,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      }
+    ]
+  },
+  "time-signature-test.mid": {
+    "tempoMap": [
+      {
+        "tick": 0,
+        "bpm": 120,
+        "microsecondsPerQuarter": 500000,
+        "time": 0
+      }
+    ],
+    "timeSignatureMap": [
+      {
+        "tick": 0,
+        "numerator": 4,
+        "denominator": 4,
+        "bar": 1
+      },
+      {
+        "tick": 3840,
+        "numerator": 3,
+        "denominator": 4,
+        "bar": 3
+      },
+      {
+        "tick": 6720,
+        "numerator": 5,
+        "denominator": 4,
+        "bar": 5
+      }
+    ],
+    "conversions": [
+      {
+        "tick": 0,
+        "seconds": 0,
+        "roundTripTick": 0,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 120,
+        "seconds": 0.125,
+        "roundTripTick": 120,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0.25,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 480,
+        "seconds": 0.5,
+        "roundTripTick": 480,
+        "bar": 1,
+        "beat": 2,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 960,
+        "seconds": 1,
+        "roundTripTick": 960,
+        "bar": 1,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 1920,
+        "seconds": 2,
+        "roundTripTick": 1920,
+        "bar": 2,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3839,
+        "seconds": 3.998958333,
+        "roundTripTick": 3839,
+        "bar": 2,
+        "beat": 4,
+        "beatFraction": 0.997916667,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3840,
+        "seconds": 4,
+        "roundTripTick": 3840,
+        "bar": 3,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 3,
+        "denominator": 4
+      },
+      {
+        "tick": 5200,
+        "seconds": 5.416666667,
+        "roundTripTick": 5200,
+        "bar": 3,
+        "beat": 3,
+        "beatFraction": 0.833333333,
+        "numerator": 3,
+        "denominator": 4
+      },
+      {
+        "tick": 6720,
+        "seconds": 7,
+        "roundTripTick": 6720,
+        "bar": 5,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 7679,
+        "seconds": 7.998958333,
+        "roundTripTick": 7679,
+        "bar": 5,
+        "beat": 2,
+        "beatFraction": 0.997916667,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 7680,
+        "seconds": 8,
+        "roundTripTick": 7680,
+        "bar": 5,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 11520,
+        "seconds": 12,
+        "roundTripTick": 11520,
+        "bar": 7,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      }
+    ]
+  },
+  "mixed-test.mid": {
+    "tempoMap": [
+      {
+        "tick": 0,
+        "bpm": 120,
+        "microsecondsPerQuarter": 500000,
+        "time": 0
+      },
+      {
+        "tick": 3840,
+        "bpm": 150,
+        "microsecondsPerQuarter": 400000,
+        "time": 4
+      },
+      {
+        "tick": 6720,
+        "bpm": 89.999955,
+        "microsecondsPerQuarter": 666667,
+        "time": 6.4
+      }
+    ],
+    "timeSignatureMap": [
+      {
+        "tick": 0,
+        "numerator": 4,
+        "denominator": 4,
+        "bar": 1
+      },
+      {
+        "tick": 3840,
+        "numerator": 3,
+        "denominator": 4,
+        "bar": 3
+      },
+      {
+        "tick": 6720,
+        "numerator": 5,
+        "denominator": 4,
+        "bar": 5
+      }
+    ],
+    "conversions": [
+      {
+        "tick": 0,
+        "seconds": 0,
+        "roundTripTick": 0,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 120,
+        "seconds": 0.125,
+        "roundTripTick": 120,
+        "bar": 1,
+        "beat": 1,
+        "beatFraction": 0.25,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 480,
+        "seconds": 0.5,
+        "roundTripTick": 480,
+        "bar": 1,
+        "beat": 2,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 960,
+        "seconds": 1,
+        "roundTripTick": 960,
+        "bar": 1,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 1920,
+        "seconds": 2,
+        "roundTripTick": 1920,
+        "bar": 2,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3839,
+        "seconds": 3.998958333,
+        "roundTripTick": 3839,
+        "bar": 2,
+        "beat": 4,
+        "beatFraction": 0.997916667,
+        "numerator": 4,
+        "denominator": 4
+      },
+      {
+        "tick": 3840,
+        "seconds": 4,
+        "roundTripTick": 3840,
+        "bar": 3,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 3,
+        "denominator": 4
+      },
+      {
+        "tick": 5200,
+        "seconds": 5.133333333,
+        "roundTripTick": 5200,
+        "bar": 3,
+        "beat": 3,
+        "beatFraction": 0.833333333,
+        "numerator": 3,
+        "denominator": 4
+      },
+      {
+        "tick": 6720,
+        "seconds": 6.4,
+        "roundTripTick": 6720,
+        "bar": 5,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 7679,
+        "seconds": 7.73194511,
+        "roundTripTick": 7679,
+        "bar": 5,
+        "beat": 2,
+        "beatFraction": 0.997916667,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 7680,
+        "seconds": 7.733334,
+        "roundTripTick": 7680,
+        "bar": 5,
+        "beat": 3,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      },
+      {
+        "tick": 11520,
+        "seconds": 13.06667,
+        "roundTripTick": 11520,
+        "bar": 7,
+        "beat": 1,
+        "beatFraction": 0,
+        "numerator": 5,
+        "denominator": 4
+      }
+    ]
+  }
+}

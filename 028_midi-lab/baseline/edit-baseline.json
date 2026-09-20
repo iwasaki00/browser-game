@@ -1,0 +1,49 @@
+{
+  "trackCount": 2,
+  "totalNotes": 25,
+  "originalTotalNotes": 24,
+  "activeTrackIndex": 1,
+  "noteUnit": 8,
+  "ticksPerStep": 240,
+  "sectionBars": 2,
+  "sectionStartBar": 2,
+  "totalBars": 6,
+  "dirty": true,
+  "saved": false,
+  "added": {
+    "pitch": 67,
+    "step": 0
+  },
+  "comparison": {
+    "original": 24,
+    "edited": 25,
+    "added": 1,
+    "deleted": 0
+  },
+  "workspaceStates": [
+    {
+      "trackIndex": 0,
+      "name": "Track 1",
+      "modified": false,
+      "saved": false,
+      "noteUnit": null,
+      "sectionStartBar": 0,
+      "notes": 0
+    },
+    {
+      "trackIndex": 1,
+      "name": "Timing Test",
+      "modified": true,
+      "saved": false,
+      "noteUnit": 8,
+      "sectionStartBar": 2,
+      "notes": 25
+    }
+  ],
+  "temporaryNoteFields": [
+    "_durationTicks",
+    "_editStep",
+    "_gridTick",
+    "_sourceId"
+  ]
+}

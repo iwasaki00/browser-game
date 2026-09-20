@@ -1,0 +1,494 @@
+{
+  "trackName": "Event Track",
+  "beforeCounts": {
+    "notes": 5,
+    "controlChange": 6,
+    "pitchBend": 3,
+    "aftertouch": 2,
+    "programChange": 3,
+    "lyrics": 2,
+    "sysex": 1,
+    "other": 5
+  },
+  "afterCounts": {
+    "notes": 5,
+    "controlChange": 6,
+    "pitchBend": 3,
+    "aftertouch": 2,
+    "programChange": 3,
+    "lyrics": 2,
+    "sysex": 1,
+    "other": 5
+  },
+  "beforeEvents": [
+    {
+      "type": "trackName",
+      "tick": 0,
+      "order": 0,
+      "metaType": 3,
+      "text": "Event Track",
+      "data": [
+        69,
+        118,
+        101,
+        110,
+        116,
+        32,
+        84,
+        114,
+        97,
+        99,
+        107
+      ]
+    },
+    {
+      "type": "copyright",
+      "tick": 0,
+      "order": 1,
+      "metaType": 2,
+      "text": "MIDI Lab",
+      "data": [
+        77,
+        73,
+        68,
+        73,
+        32,
+        76,
+        97,
+        98
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 0,
+      "order": 2,
+      "channel": 0,
+      "program": 0
+    },
+    {
+      "type": "text",
+      "tick": 100,
+      "order": 4,
+      "metaType": 1,
+      "text": "Intro",
+      "data": [
+        73,
+        110,
+        116,
+        114,
+        111
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 120,
+      "order": 5,
+      "channel": 0,
+      "controller": 7,
+      "value": 100
+    },
+    {
+      "type": "controlChange",
+      "tick": 240,
+      "order": 6,
+      "channel": 0,
+      "controller": 10,
+      "value": 32
+    },
+    {
+      "type": "controlChange",
+      "tick": 360,
+      "order": 7,
+      "channel": 0,
+      "controller": 11,
+      "value": 96
+    },
+    {
+      "type": "controlChange",
+      "tick": 480,
+      "order": 9,
+      "channel": 0,
+      "controller": 1,
+      "value": 45
+    },
+    {
+      "type": "pitchBend",
+      "tick": 720,
+      "order": 10,
+      "channel": 0,
+      "value": 8192
+    },
+    {
+      "type": "lyrics",
+      "tick": 960,
+      "order": 11,
+      "metaType": 5,
+      "text": "Hello",
+      "data": [
+        72,
+        101,
+        108,
+        108,
+        111
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 1000,
+      "order": 13,
+      "channel": 0,
+      "controller": 64,
+      "value": 127
+    },
+    {
+      "type": "pitchBend",
+      "tick": 1440,
+      "order": 15,
+      "channel": 0,
+      "value": 12288
+    },
+    {
+      "type": "polyAftertouch",
+      "tick": 1500,
+      "order": 16,
+      "channel": 0,
+      "value": 70,
+      "noteNumber": 64
+    },
+    {
+      "type": "channelAftertouch",
+      "tick": 1560,
+      "order": 17,
+      "channel": 0,
+      "value": 65
+    },
+    {
+      "type": "lyrics",
+      "tick": 1920,
+      "order": 18,
+      "metaType": 5,
+      "text": "World",
+      "data": [
+        87,
+        111,
+        114,
+        108,
+        100
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 1920,
+      "order": 19,
+      "channel": 0,
+      "program": 48
+    },
+    {
+      "type": "pitchBend",
+      "tick": 2160,
+      "order": 21,
+      "channel": 0,
+      "value": 4096
+    },
+    {
+      "type": "marker",
+      "tick": 2880,
+      "order": 23,
+      "metaType": 6,
+      "text": "Verse",
+      "data": [
+        86,
+        101,
+        114,
+        115,
+        101
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 3000,
+      "order": 25,
+      "channel": 0,
+      "controller": 64,
+      "value": 0
+    },
+    {
+      "type": "cuePoint",
+      "tick": 3840,
+      "order": 27,
+      "metaType": 7,
+      "text": "Cue",
+      "data": [
+        67,
+        117,
+        101
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 3840,
+      "order": 28,
+      "channel": 0,
+      "program": 61
+    },
+    {
+      "type": "meta",
+      "tick": 4000,
+      "order": 30,
+      "metaType": 127,
+      "data": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "type": "sysEx",
+      "tick": 4200,
+      "order": 31,
+      "status": 240,
+      "data": [
+        125,
+        1,
+        2,
+        247
+      ]
+    }
+  ],
+  "afterEvents": [
+    {
+      "type": "trackName",
+      "tick": 0,
+      "order": 0,
+      "metaType": 3,
+      "text": "Event Track",
+      "data": [
+        69,
+        118,
+        101,
+        110,
+        116,
+        32,
+        84,
+        114,
+        97,
+        99,
+        107
+      ]
+    },
+    {
+      "type": "copyright",
+      "tick": 0,
+      "order": 1,
+      "metaType": 2,
+      "text": "MIDI Lab",
+      "data": [
+        77,
+        73,
+        68,
+        73,
+        32,
+        76,
+        97,
+        98
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 0,
+      "order": 2,
+      "channel": 0,
+      "program": 0
+    },
+    {
+      "type": "text",
+      "tick": 100,
+      "order": 4,
+      "metaType": 1,
+      "text": "Intro",
+      "data": [
+        73,
+        110,
+        116,
+        114,
+        111
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 120,
+      "order": 5,
+      "channel": 0,
+      "controller": 7,
+      "value": 100
+    },
+    {
+      "type": "controlChange",
+      "tick": 240,
+      "order": 6,
+      "channel": 0,
+      "controller": 10,
+      "value": 32
+    },
+    {
+      "type": "controlChange",
+      "tick": 360,
+      "order": 7,
+      "channel": 0,
+      "controller": 11,
+      "value": 96
+    },
+    {
+      "type": "controlChange",
+      "tick": 480,
+      "order": 9,
+      "channel": 0,
+      "controller": 1,
+      "value": 45
+    },
+    {
+      "type": "pitchBend",
+      "tick": 720,
+      "order": 10,
+      "channel": 0,
+      "value": 8192
+    },
+    {
+      "type": "lyrics",
+      "tick": 960,
+      "order": 11,
+      "metaType": 5,
+      "text": "Hello",
+      "data": [
+        72,
+        101,
+        108,
+        108,
+        111
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 1000,
+      "order": 13,
+      "channel": 0,
+      "controller": 64,
+      "value": 127
+    },
+    {
+      "type": "pitchBend",
+      "tick": 1440,
+      "order": 15,
+      "channel": 0,
+      "value": 12288
+    },
+    {
+      "type": "polyAftertouch",
+      "tick": 1500,
+      "order": 16,
+      "channel": 0,
+      "value": 70,
+      "noteNumber": 64
+    },
+    {
+      "type": "channelAftertouch",
+      "tick": 1560,
+      "order": 17,
+      "channel": 0,
+      "value": 65
+    },
+    {
+      "type": "lyrics",
+      "tick": 1920,
+      "order": 18,
+      "metaType": 5,
+      "text": "World",
+      "data": [
+        87,
+        111,
+        114,
+        108,
+        100
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 1920,
+      "order": 19,
+      "channel": 0,
+      "program": 48
+    },
+    {
+      "type": "pitchBend",
+      "tick": 2160,
+      "order": 21,
+      "channel": 0,
+      "value": 4096
+    },
+    {
+      "type": "marker",
+      "tick": 2880,
+      "order": 23,
+      "metaType": 6,
+      "text": "Verse",
+      "data": [
+        86,
+        101,
+        114,
+        115,
+        101
+      ]
+    },
+    {
+      "type": "controlChange",
+      "tick": 3000,
+      "order": 25,
+      "channel": 0,
+      "controller": 64,
+      "value": 0
+    },
+    {
+      "type": "cuePoint",
+      "tick": 3840,
+      "order": 27,
+      "metaType": 7,
+      "text": "Cue",
+      "data": [
+        67,
+        117,
+        101
+      ]
+    },
+    {
+      "type": "programChange",
+      "tick": 3840,
+      "order": 28,
+      "channel": 0,
+      "program": 61
+    },
+    {
+      "type": "meta",
+      "tick": 4000,
+      "order": 30,
+      "metaType": 127,
+      "data": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "type": "sysEx",
+      "tick": 4200,
+      "order": 31,
+      "status": 240,
+      "data": [
+        125,
+        1,
+        2,
+        247
+      ]
+    }
+  ],
+  "byteIdenticalAfterWrite": false
+}

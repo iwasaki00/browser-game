@@ -1,0 +1,2968 @@
+{
+  "tempo-test.mid": {
+    "input": {
+      "byteLength": 328,
+      "sha256": "c6e3cb9df4b35333700c0a55f23cdfd17d8ff4b7f36b191628b7c46cee8aef04"
+    },
+    "parsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 12.533336,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        },
+        {
+          "tick": 3840,
+          "bpm": 150,
+          "microsecondsPerQuarter": 400000,
+          "time": 4
+        },
+        {
+          "tick": 7680,
+          "bpm": 89.999955,
+          "microsecondsPerQuarter": 666667,
+          "time": 7.2
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 4.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.2,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 5.6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 6.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 6.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 7.2,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 7.866667,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 8.533334,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.200001,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 9.866668,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 10.533335,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11.200002,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 11.866669,
+              "duration": 0.250000125,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    },
+    "written": {
+      "byteLength": 327,
+      "sha256": "73e9996fe02af368ab06a697fd35becffab7797a987f9e445f4e4c25f573f0dc"
+    },
+    "reparsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 12.533336,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        },
+        {
+          "tick": 3840,
+          "bpm": 150,
+          "microsecondsPerQuarter": 400000,
+          "time": 4
+        },
+        {
+          "tick": 7680,
+          "bpm": 89.999955,
+          "microsecondsPerQuarter": 666667,
+          "time": 7.2
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 7680,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 4.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.2,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 5.6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 6.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 6.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 7.2,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 7.866667,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 8.533334,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.200001,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 9.866668,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 10.533335,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11.200002,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 11.866669,
+              "duration": 0.250000125,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "time-signature-test.mid": {
+    "input": {
+      "byteLength": 330,
+      "sha256": "e7a2ea239a75d8dfe603962361331c47949ac54cb253752709adee89002d62cb"
+    },
+    "parsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 12,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        },
+        {
+          "tick": 3840,
+          "numerator": 3,
+          "denominator": 4,
+          "bar": 3
+        },
+        {
+          "tick": 6720,
+          "numerator": 5,
+          "denominator": 4,
+          "bar": 5
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 7,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 7.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 8,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 8.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 9,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 10,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 10.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 11.5,
+              "duration": 0.1875,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    },
+    "written": {
+      "byteLength": 329,
+      "sha256": "0d3754338e6d94a19940b91891ae466093ed5913cc1129b903bf26cb3228af61"
+    },
+    "reparsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 12,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        },
+        {
+          "tick": 3840,
+          "numerator": 3,
+          "denominator": 4,
+          "bar": 3
+        },
+        {
+          "tick": 6720,
+          "numerator": 5,
+          "denominator": 4,
+          "bar": 5
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 6720,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 7,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 7.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 8,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 8.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 9,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 10,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 10.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 11.5,
+              "duration": 0.1875,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mixed-test.mid": {
+    "input": {
+      "byteLength": 344,
+      "sha256": "460ea5b86d4f7d1daa71017fc451981febcb58e8d583b81ab7d9775efc7b7803"
+    },
+    "parsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 13.06667,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        },
+        {
+          "tick": 3840,
+          "bpm": 150,
+          "microsecondsPerQuarter": 400000,
+          "time": 4
+        },
+        {
+          "tick": 6720,
+          "bpm": 89.999955,
+          "microsecondsPerQuarter": 666667,
+          "time": 6.4
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        },
+        {
+          "tick": 3840,
+          "numerator": 3,
+          "denominator": 4,
+          "bar": 3
+        },
+        {
+          "tick": 6720,
+          "numerator": 5,
+          "denominator": 4,
+          "bar": 5
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 4.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.2,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 5.6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 6.4,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 7.066667,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 7.733334,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 8.400001,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 9.066668,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.733335,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 10.400002,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 11.066669,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11.733336,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 12.400003,
+              "duration": 0.250000125,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    },
+    "written": {
+      "byteLength": 343,
+      "sha256": "bb45150941c6817a20b616fed5e5cc13e8de493e1b6d4b91daa49de7f3a2f061"
+    },
+    "reparsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 13.06667,
+      "endTick": 11520,
+      "totalNotes": 24,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        },
+        {
+          "tick": 3840,
+          "bpm": 150,
+          "microsecondsPerQuarter": 400000,
+          "time": 4
+        },
+        {
+          "tick": 6720,
+          "bpm": 89.999955,
+          "microsecondsPerQuarter": 666667,
+          "time": 6.4
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        },
+        {
+          "tick": 3840,
+          "numerator": 3,
+          "denominator": 4,
+          "bar": 3
+        },
+        {
+          "tick": 6720,
+          "numerator": 5,
+          "denominator": 4,
+          "bar": 5
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 6720,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Timing Test",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 11520,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 180,
+              "durationTicks": 180,
+              "startTime": 0,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 480,
+              "endTick": 660,
+              "durationTicks": 180,
+              "startTime": 0.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1140,
+              "durationTicks": 180,
+              "startTime": 1,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 1440,
+              "endTick": 1620,
+              "durationTicks": 180,
+              "startTime": 1.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2100,
+              "durationTicks": 180,
+              "startTime": 2,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 2400,
+              "endTick": 2580,
+              "durationTicks": 180,
+              "startTime": 2.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3060,
+              "durationTicks": 180,
+              "startTime": 3,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 3360,
+              "endTick": 3540,
+              "durationTicks": 180,
+              "startTime": 3.5,
+              "duration": 0.1875,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4020,
+              "durationTicks": 180,
+              "startTime": 4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 4320,
+              "endTick": 4500,
+              "durationTicks": 180,
+              "startTime": 4.4,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 4800,
+              "endTick": 4980,
+              "durationTicks": 180,
+              "startTime": 4.8,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 5280,
+              "endTick": 5460,
+              "durationTicks": 180,
+              "startTime": 5.2,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 5760,
+              "endTick": 5940,
+              "durationTicks": 180,
+              "startTime": 5.6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 6240,
+              "endTick": 6420,
+              "durationTicks": 180,
+              "startTime": 6,
+              "duration": 0.15,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 6720,
+              "endTick": 6900,
+              "durationTicks": 180,
+              "startTime": 6.4,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 7200,
+              "endTick": 7380,
+              "durationTicks": 180,
+              "startTime": 7.066667,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 7680,
+              "endTick": 7860,
+              "durationTicks": 180,
+              "startTime": 7.733334,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 8160,
+              "endTick": 8340,
+              "durationTicks": 180,
+              "startTime": 8.400001,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 8640,
+              "endTick": 8820,
+              "durationTicks": 180,
+              "startTime": 9.066668,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 9120,
+              "endTick": 9300,
+              "durationTicks": 180,
+              "startTime": 9.733335,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 9600,
+              "endTick": 9780,
+              "durationTicks": 180,
+              "startTime": 10.400002,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 65,
+              "noteName": "F4",
+              "channel": 0,
+              "startTick": 10080,
+              "endTick": 10260,
+              "durationTicks": 180,
+              "startTime": 11.066669,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 66,
+              "noteName": "F#4",
+              "channel": 0,
+              "startTick": 10560,
+              "endTick": 10740,
+              "durationTicks": 180,
+              "startTime": 11.733336,
+              "duration": 0.250000125,
+              "velocity": 88
+            },
+            {
+              "noteNumber": 67,
+              "noteName": "G4",
+              "channel": 0,
+              "startTick": 11040,
+              "endTick": 11220,
+              "durationTicks": 180,
+              "startTime": 12.400003,
+              "duration": 0.250000125,
+              "velocity": 88
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Timing Test",
+              "data": [
+                84,
+                105,
+                109,
+                105,
+                110,
+                103,
+                32,
+                84,
+                101,
+                115,
+                116
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 1,
+              "channel": 0,
+              "program": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "event-preservation-test.mid": {
+    "input": {
+      "byteLength": 241,
+      "sha256": "c83a2d7b820370d233010b540d66f450c4f6f5cf51871c945f122fb6ada1fccf"
+    },
+    "parsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 6,
+      "endTick": 5760,
+      "totalNotes": 5,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 5760,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Event Track",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0,
+            48,
+            61
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 5760,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 360,
+              "durationTicks": 360,
+              "startTime": 0,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1320,
+              "durationTicks": 360,
+              "startTime": 1,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2280,
+              "durationTicks": 360,
+              "startTime": 2,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3240,
+              "durationTicks": 360,
+              "startTime": 3,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4200,
+              "durationTicks": 360,
+              "startTime": 4,
+              "duration": 0.375,
+              "velocity": 90
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Event Track",
+              "data": [
+                69,
+                118,
+                101,
+                110,
+                116,
+                32,
+                84,
+                114,
+                97,
+                99,
+                107
+              ]
+            },
+            {
+              "type": "copyright",
+              "tick": 0,
+              "order": 1,
+              "metaType": 2,
+              "text": "MIDI Lab",
+              "data": [
+                77,
+                73,
+                68,
+                73,
+                32,
+                76,
+                97,
+                98
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 2,
+              "channel": 0,
+              "program": 0
+            },
+            {
+              "type": "text",
+              "tick": 100,
+              "order": 4,
+              "metaType": 1,
+              "text": "Intro",
+              "data": [
+                73,
+                110,
+                116,
+                114,
+                111
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 120,
+              "order": 5,
+              "channel": 0,
+              "controller": 7,
+              "value": 100
+            },
+            {
+              "type": "controlChange",
+              "tick": 240,
+              "order": 6,
+              "channel": 0,
+              "controller": 10,
+              "value": 32
+            },
+            {
+              "type": "controlChange",
+              "tick": 360,
+              "order": 7,
+              "channel": 0,
+              "controller": 11,
+              "value": 96
+            },
+            {
+              "type": "controlChange",
+              "tick": 480,
+              "order": 9,
+              "channel": 0,
+              "controller": 1,
+              "value": 45
+            },
+            {
+              "type": "pitchBend",
+              "tick": 720,
+              "order": 10,
+              "channel": 0,
+              "value": 8192
+            },
+            {
+              "type": "lyrics",
+              "tick": 960,
+              "order": 11,
+              "metaType": 5,
+              "text": "Hello",
+              "data": [
+                72,
+                101,
+                108,
+                108,
+                111
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 1000,
+              "order": 13,
+              "channel": 0,
+              "controller": 64,
+              "value": 127
+            },
+            {
+              "type": "pitchBend",
+              "tick": 1440,
+              "order": 15,
+              "channel": 0,
+              "value": 12288
+            },
+            {
+              "type": "polyAftertouch",
+              "tick": 1500,
+              "order": 16,
+              "channel": 0,
+              "value": 70,
+              "noteNumber": 64
+            },
+            {
+              "type": "channelAftertouch",
+              "tick": 1560,
+              "order": 17,
+              "channel": 0,
+              "value": 65
+            },
+            {
+              "type": "lyrics",
+              "tick": 1920,
+              "order": 18,
+              "metaType": 5,
+              "text": "World",
+              "data": [
+                87,
+                111,
+                114,
+                108,
+                100
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 1920,
+              "order": 19,
+              "channel": 0,
+              "program": 48
+            },
+            {
+              "type": "pitchBend",
+              "tick": 2160,
+              "order": 21,
+              "channel": 0,
+              "value": 4096
+            },
+            {
+              "type": "marker",
+              "tick": 2880,
+              "order": 23,
+              "metaType": 6,
+              "text": "Verse",
+              "data": [
+                86,
+                101,
+                114,
+                115,
+                101
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 3000,
+              "order": 25,
+              "channel": 0,
+              "controller": 64,
+              "value": 0
+            },
+            {
+              "type": "cuePoint",
+              "tick": 3840,
+              "order": 27,
+              "metaType": 7,
+              "text": "Cue",
+              "data": [
+                67,
+                117,
+                101
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 3840,
+              "order": 28,
+              "channel": 0,
+              "program": 61
+            },
+            {
+              "type": "meta",
+              "tick": 4000,
+              "order": 30,
+              "metaType": 127,
+              "data": [
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "type": "sysEx",
+              "tick": 4200,
+              "order": 31,
+              "status": 240,
+              "data": [
+                125,
+                1,
+                2,
+                247
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "written": {
+      "byteLength": 240,
+      "sha256": "d752bfa362027fb3076a5c6534c59853dcf1f31be04bac22706a7d8aa49a0aa0"
+    },
+    "reparsed": {
+      "format": 1,
+      "ppq": 480,
+      "bpm": 120,
+      "timeSignature": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "duration": 6,
+      "endTick": 5760,
+      "totalNotes": 5,
+      "trackCount": 2,
+      "tempoMap": [
+        {
+          "tick": 0,
+          "bpm": 120,
+          "microsecondsPerQuarter": 500000,
+          "time": 0
+        }
+      ],
+      "timeSignatureMap": [
+        {
+          "tick": 0,
+          "numerator": 4,
+          "denominator": 4,
+          "bar": 1
+        }
+      ],
+      "tracks": [
+        {
+          "id": 0,
+          "name": "Track 1",
+          "channel": "—",
+          "channels": [],
+          "program": 0,
+          "programs": [],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 0,
+          "notes": [],
+          "rawEvents": []
+        },
+        {
+          "id": 1,
+          "name": "Event Track",
+          "channel": 0,
+          "channels": [
+            0
+          ],
+          "program": 0,
+          "programs": [
+            0,
+            48,
+            61
+          ],
+          "instrumentName": "Acoustic Grand Piano",
+          "enabled": true,
+          "endTick": 5760,
+          "notes": [
+            {
+              "noteNumber": 60,
+              "noteName": "C4",
+              "channel": 0,
+              "startTick": 0,
+              "endTick": 360,
+              "durationTicks": 360,
+              "startTime": 0,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 61,
+              "noteName": "C#4",
+              "channel": 0,
+              "startTick": 960,
+              "endTick": 1320,
+              "durationTicks": 360,
+              "startTime": 1,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 62,
+              "noteName": "D4",
+              "channel": 0,
+              "startTick": 1920,
+              "endTick": 2280,
+              "durationTicks": 360,
+              "startTime": 2,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 63,
+              "noteName": "D#4",
+              "channel": 0,
+              "startTick": 2880,
+              "endTick": 3240,
+              "durationTicks": 360,
+              "startTime": 3,
+              "duration": 0.375,
+              "velocity": 90
+            },
+            {
+              "noteNumber": 64,
+              "noteName": "E4",
+              "channel": 0,
+              "startTick": 3840,
+              "endTick": 4200,
+              "durationTicks": 360,
+              "startTime": 4,
+              "duration": 0.375,
+              "velocity": 90
+            }
+          ],
+          "rawEvents": [
+            {
+              "type": "trackName",
+              "tick": 0,
+              "order": 0,
+              "metaType": 3,
+              "text": "Event Track",
+              "data": [
+                69,
+                118,
+                101,
+                110,
+                116,
+                32,
+                84,
+                114,
+                97,
+                99,
+                107
+              ]
+            },
+            {
+              "type": "copyright",
+              "tick": 0,
+              "order": 1,
+              "metaType": 2,
+              "text": "MIDI Lab",
+              "data": [
+                77,
+                73,
+                68,
+                73,
+                32,
+                76,
+                97,
+                98
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 0,
+              "order": 2,
+              "channel": 0,
+              "program": 0
+            },
+            {
+              "type": "text",
+              "tick": 100,
+              "order": 4,
+              "metaType": 1,
+              "text": "Intro",
+              "data": [
+                73,
+                110,
+                116,
+                114,
+                111
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 120,
+              "order": 5,
+              "channel": 0,
+              "controller": 7,
+              "value": 100
+            },
+            {
+              "type": "controlChange",
+              "tick": 240,
+              "order": 6,
+              "channel": 0,
+              "controller": 10,
+              "value": 32
+            },
+            {
+              "type": "controlChange",
+              "tick": 360,
+              "order": 7,
+              "channel": 0,
+              "controller": 11,
+              "value": 96
+            },
+            {
+              "type": "controlChange",
+              "tick": 480,
+              "order": 9,
+              "channel": 0,
+              "controller": 1,
+              "value": 45
+            },
+            {
+              "type": "pitchBend",
+              "tick": 720,
+              "order": 10,
+              "channel": 0,
+              "value": 8192
+            },
+            {
+              "type": "lyrics",
+              "tick": 960,
+              "order": 11,
+              "metaType": 5,
+              "text": "Hello",
+              "data": [
+                72,
+                101,
+                108,
+                108,
+                111
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 1000,
+              "order": 13,
+              "channel": 0,
+              "controller": 64,
+              "value": 127
+            },
+            {
+              "type": "pitchBend",
+              "tick": 1440,
+              "order": 15,
+              "channel": 0,
+              "value": 12288
+            },
+            {
+              "type": "polyAftertouch",
+              "tick": 1500,
+              "order": 16,
+              "channel": 0,
+              "value": 70,
+              "noteNumber": 64
+            },
+            {
+              "type": "channelAftertouch",
+              "tick": 1560,
+              "order": 17,
+              "channel": 0,
+              "value": 65
+            },
+            {
+              "type": "lyrics",
+              "tick": 1920,
+              "order": 18,
+              "metaType": 5,
+              "text": "World",
+              "data": [
+                87,
+                111,
+                114,
+                108,
+                100
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 1920,
+              "order": 19,
+              "channel": 0,
+              "program": 48
+            },
+            {
+              "type": "pitchBend",
+              "tick": 2160,
+              "order": 21,
+              "channel": 0,
+              "value": 4096
+            },
+            {
+              "type": "marker",
+              "tick": 2880,
+              "order": 23,
+              "metaType": 6,
+              "text": "Verse",
+              "data": [
+                86,
+                101,
+                114,
+                115,
+                101
+              ]
+            },
+            {
+              "type": "controlChange",
+              "tick": 3000,
+              "order": 25,
+              "channel": 0,
+              "controller": 64,
+              "value": 0
+            },
+            {
+              "type": "cuePoint",
+              "tick": 3840,
+              "order": 27,
+              "metaType": 7,
+              "text": "Cue",
+              "data": [
+                67,
+                117,
+                101
+              ]
+            },
+            {
+              "type": "programChange",
+              "tick": 3840,
+              "order": 28,
+              "channel": 0,
+              "program": 61
+            },
+            {
+              "type": "meta",
+              "tick": 4000,
+              "order": 30,
+              "metaType": 127,
+              "data": [
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "type": "sysEx",
+              "tick": 4200,
+              "order": 31,
+              "status": 240,
+              "data": [
+                125,
+                1,
+                2,
+                247
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
