@@ -127,7 +127,7 @@ NoteData:
 
 ## テスト
 
-プロジェクトの`028_midi-lab`ディレクトリで実行します。
+プロジェクトの`028_cmn_midi`ディレクトリで実行します。
 
 ```powershell
 node midi-common/tests/midi-common-test.js
