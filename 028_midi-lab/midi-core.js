@@ -62,10 +62,11 @@
       if (r.str(4) !== "MTrk") throw new Error(`Track ${ti + 1} のMTrkヘッダーがありません。`);
       const trackLength = r.u32();
       const end = r.pos + trackLength;
-      let tick = 0, runningStatus = null, name = "", noteCount = 0;
-      const active = new Map(), notes = [], channels = new Set(), programs = new Set();
+      let tick = 0, runningStatus = null, name = "", noteCount = 0, eventOrder = 0;
+      const active = new Map(), notes = [], rawEvents = [], channels = new Set(), programs = new Set();
       while (r.pos < end) {
         tick += r.vlq();
+        const order = eventOrder++;
         let status = r.u8(), firstData = null;
         if (status < 0x80) {
           if (runningStatus === null) throw new Error("Invalid running status");
@@ -78,21 +79,21 @@
           if (type === 0x03) name = decodeText(data);
           else if (type === 0x51 && len === 3) tempos.push({ tick, microseconds: (data[0] << 16) | (data[1] << 8) | data[2] });
           else if (type === 0x58 && len >= 2) signatures.push({ tick, numerator: data[0], denominator: Math.pow(2, data[1]) });
-          else if (type === 0x05) unsupportedEvents.lyrics++;
-          else if (type !== 0x2f) unsupportedEvents.otherMeta++;
+          if (![0x2f, 0x51, 0x58].includes(type)) rawEvents.push({ type: type === 0x01 ? "text" : type === 0x02 ? "copyright" : type === 0x03 ? "trackName" : type === 0x05 ? "lyrics" : type === 0x06 ? "marker" : type === 0x07 ? "cuePoint" : "meta", tick, order, metaType: type, text: [0x01, 0x02, 0x03, 0x05, 0x06, 0x07].includes(type) ? decodeText(data) : undefined, data });
           continue;
         }
-        if (status === 0xf0 || status === 0xf7) { unsupportedEvents.sysex++; r.skip(r.vlq()); runningStatus = null; continue; }
+        if (status === 0xf0 || status === 0xf7) { const len = r.vlq(), data = []; for (let i = 0; i < len; i++) data.push(r.u8()); rawEvents.push({ type: "sysEx", tick, order, status, data }); unsupportedEvents.sysex++; runningStatus = null; continue; }
         if (status >= 0xf0) throw new Error(`未対応のSystem Event: 0x${status.toString(16)}`);
 
         const kind = status >> 4, channel = status & 0x0f;
         channels.add(channel);
         const d1 = firstData === null ? r.u8() : firstData;
         const d2 = (kind === 0x0c || kind === 0x0d) ? null : r.u8();
-        if (kind === 0x0b) unsupportedEvents.controlChange++;
-        else if (kind === 0x0e) unsupportedEvents.pitchBend++;
-        else if (kind === 0x0a || kind === 0x0d) unsupportedEvents.aftertouch++;
-        if (kind === 0x0c) programs.add(d1);
+        if (kind === 0x0b) rawEvents.push({ type: "controlChange", tick, order, channel, controller: d1, value: d2 });
+        else if (kind === 0x0e) rawEvents.push({ type: "pitchBend", tick, order, channel, value: d1 | (d2 << 7) });
+        else if (kind === 0x0a) rawEvents.push({ type: "polyAftertouch", tick, order, channel, noteNumber: d1, value: d2 });
+        else if (kind === 0x0d) rawEvents.push({ type: "channelAftertouch", tick, order, channel, value: d1 });
+        if (kind === 0x0c) { programs.add(d1); rawEvents.push({ type: "programChange", tick, order, channel, program: d1 }); }
         if (kind === 0x09 && d2 > 0) {
           const key = `${channel}:${d1}`;
           if (!active.has(key)) active.set(key, []);
@@ -108,7 +109,7 @@
       }
       r.pos = end;
       maxTick = Math.max(maxTick, tick);
-      rawTracks.push({ id: ti, name: name || `Track ${ti + 1}`, channels: [...channels], programs: [...programs], notes, endTick: tick, noteCount });
+      rawTracks.push({ id: ti, name: name || `Track ${ti + 1}`, channels: [...channels], programs: [...programs], notes, rawEvents, endTick: tick, noteCount });
     }
 
     const tempoMap = global.MidiTiming.buildTempoMap(tempos, ppq);
@@ -122,7 +123,7 @@
       const drum = track.channels.includes(9);
       return {
         id: track.id, name: track.name, channel, channels: track.channels, program,
-        programs: track.programs, instrumentName: drum ? "Drum Kit" : (GM_INSTRUMENTS[program] || "Unknown"), enabled: true,
+        programs: track.programs, instrumentName: drum ? "Drum Kit" : (GM_INSTRUMENTS[program] || "Unknown"), enabled: true, rawEvents: track.rawEvents, endTick: track.endTick,
         notes: track.notes.map((n) => ({
           noteNumber: n.noteNumber, noteName: noteName(n.noteNumber), channel: n.channel,
           startTick: n.tick, endTick: n.endTick, durationTicks: n.durationTicks, startTime: tickToSeconds(n.tick),
@@ -150,6 +151,41 @@
   function ascii(s) { return [...s].map((c) => c.charCodeAt(0)); }
   function chunk(type, bytes) { return [...ascii(type), ...u32(bytes.length), ...bytes]; }
 
+  function rawEventBytes(event) {
+    const channel = Math.max(0, Math.min(15, Number(event.channel) || 0));
+    if (event.type === "programChange") return [0xc0 | channel, Number(event.program) & 0x7f];
+    if (event.type === "controlChange") return [0xb0 | channel, Number(event.controller) & 0x7f, Number(event.value) & 0x7f];
+    if (event.type === "pitchBend") { const value = Math.max(0, Math.min(16383, Number(event.value) || 0)); return [0xe0 | channel, value & 0x7f, (value >> 7) & 0x7f]; }
+    if (event.type === "polyAftertouch") return [0xa0 | channel, Number(event.noteNumber) & 0x7f, Number(event.value) & 0x7f];
+    if (event.type === "channelAftertouch") return [0xd0 | channel, Number(event.value) & 0x7f];
+    if (event.type === "sysEx") { const data = Array.from(event.data || []); return [event.status === 0xf7 ? 0xf7 : 0xf0, ...vlq(data.length), ...data]; }
+    if (["text", "copyright", "trackName", "lyrics", "marker", "cuePoint", "meta"].includes(event.type)) { const data = Array.from(event.data || new TextEncoder().encode(event.text || "")); return [0xff, Number(event.metaType) & 0x7f, ...vlq(data.length), ...data]; }
+    return null;
+  }
+
+  function rawEventPriority(event) {
+    if (["text", "copyright", "trackName", "lyrics", "marker", "cuePoint", "meta"].includes(event.type)) return 0;
+    if (event.type === "programChange") return 10;
+    if (event.type === "controlChange") return 20;
+    if (["pitchBend", "polyAftertouch", "channelAftertouch"].includes(event.type)) return 25;
+    if (event.type === "sysEx") return 30;
+    return 35;
+  }
+
+  function eventCounts(track) {
+    const counts = { notes: track.notes?.length || 0, controlChange: 0, pitchBend: 0, aftertouch: 0, programChange: 0, lyrics: 0, sysex: 0, other: 0 };
+    (track.rawEvents || []).forEach((event) => {
+      if (event.type === "controlChange") counts.controlChange++;
+      else if (event.type === "pitchBend") counts.pitchBend++;
+      else if (event.type === "polyAftertouch" || event.type === "channelAftertouch") counts.aftertouch++;
+      else if (event.type === "programChange") counts.programChange++;
+      else if (event.type === "lyrics") counts.lyrics++;
+      else if (event.type === "sysEx") counts.sysex++;
+      else if (event.type !== "trackName") counts.other++;
+    });
+    return counts;
+  }
+
   function write(song) {
     const ppq = song.ppq || 480;
     const bpm = Number(song.bpm) || 120;
@@ -171,23 +207,23 @@
     meta.push(...vlq(metaEndTick - metaTick), 0xff, 0x2f, 0);
     const trackChunks = [chunk("MTrk", meta)];
     const secondsToTicks = (seconds) => Math.max(0, Math.round(global.MidiTiming.secondsToTick(song, seconds)));
-    const writableTracks = song.tracks.filter((track) => track.notes.length || track.channels?.length || track.programs?.length);
+    const writableTracks = song.tracks.filter((track) => track.notes.length || track.rawEvents?.length || track.channels?.length || track.programs?.length);
     writableTracks.forEach((track) => {
-      const events = [];
+      const events = [], rawEvents = track.rawEvents || [];
       const channel = Number.isInteger(track.channel) ? track.channel : (track.channels && track.channels[0]) || 0;
-      const nameBytes = new TextEncoder().encode(track.name || "Track");
-      events.push({ tick: 0, order: 0, bytes: [0xff, 0x03, ...vlq(nameBytes.length), ...nameBytes] });
-      if (channel !== 9) events.push({ tick: 0, order: 1, bytes: [0xc0 | channel, track.program || 0] });
-      track.notes.forEach((note) => {
+      rawEvents.forEach((rawEvent) => { const bytes = rawEventBytes(rawEvent); if (bytes) events.push({ tick: Math.max(0, Math.round(rawEvent.tick || 0)), priority: rawEventPriority(rawEvent), sourceOrder: Number(rawEvent.order) || 0, bytes }); });
+      if (!rawEvents.some((event) => event.type === "trackName")) { const nameBytes = new TextEncoder().encode(track.name || "Track"); events.push({ tick: 0, priority: 0, sourceOrder: -2, bytes: [0xff, 0x03, ...vlq(nameBytes.length), ...nameBytes] }); }
+      if (channel !== 9 && !rawEvents.some((event) => event.type === "programChange")) events.push({ tick: 0, priority: 10, sourceOrder: -1, bytes: [0xc0 | channel, track.program || 0] });
+      track.notes.forEach((note, noteOrder) => {
         const start = Number.isFinite(note.startTick) && song.keepTicks ? note.startTick : secondsToTicks(note.startTime);
         const end = Number.isFinite(note.endTick) && song.keepTicks ? note.endTick : secondsToTicks(note.startTime + note.duration);
-        events.push({ tick: start, order: 2, bytes: [0x90 | (note.channel ?? channel), note.noteNumber, note.velocity] });
-        events.push({ tick: Math.max(start + 1, end), order: 1, bytes: [0x80 | (note.channel ?? channel), note.noteNumber, 0] });
+        events.push({ tick: start, priority: 50, sourceOrder: noteOrder, bytes: [0x90 | (note.channel ?? channel), note.noteNumber, note.velocity] });
+        events.push({ tick: Math.max(start + 1, end), priority: 40, sourceOrder: noteOrder, bytes: [0x80 | (note.channel ?? channel), note.noteNumber, 0] });
       });
-      events.sort((a, b) => a.tick - b.tick || a.order - b.order);
+      events.sort((a, b) => a.tick - b.tick || a.priority - b.priority || a.sourceOrder - b.sourceOrder);
       let lastTick = 0, bytes = [];
       events.forEach((event) => { bytes.push(...vlq(event.tick - lastTick), ...event.bytes); lastTick = event.tick; });
-      const trackEndTick = Math.max(lastTick, declaredEndTick || secondsToTicks(song.duration || 0));
+      const trackEndTick = Math.max(lastTick, Number(track.endTick) || 0, declaredEndTick || secondsToTicks(song.duration || 0));
       bytes.push(...vlq(trackEndTick - lastTick), 0xff, 0x2f, 0);
       trackChunks.push(chunk("MTrk", bytes));
     });
@@ -225,5 +261,5 @@
     };
   }
 
-  global.MidiCore = { parse, write, createStepSong, stepUnitToBeats, stepIndexToTime, noteName, GM_INSTRUMENTS, tickToSeconds: global.MidiTiming.tickToSeconds, secondsToTick: global.MidiTiming.secondsToTick, tickToBarBeat: global.MidiTiming.tickToBarBeat, barBeatToTick: global.MidiTiming.barBeatToTick };
+  global.MidiCore = { parse, write, createStepSong, stepUnitToBeats, stepIndexToTime, noteName, GM_INSTRUMENTS, eventCounts, tickToSeconds: global.MidiTiming.tickToSeconds, secondsToTick: global.MidiTiming.secondsToTick, tickToBarBeat: global.MidiTiming.tickToBarBeat, barBeatToTick: global.MidiTiming.barBeatToTick };
 })(window);

@@ -23,6 +23,8 @@ py -3 -m http.server 8080
 
 読み込んだMIDIは、編集するトラックと量子化単位を選んで「グリッドへ展開」できます。音域はノート密度を基準に最大25半音へ自動調整し、表示外のノートは削除せず保持します。編集は2小節単位で前後へ移動でき、各区間の変更は曲全体へ蓄積されます。既存ノートの長さとVelocityは維持され、新規ノートには画面のVelocityとステップ長を使用します。
 
+複数トラックを順番に開いた場合も、トラックごとのノート編集、量子化単位、最後に表示していた2小節をWorkspace内に保持します。トラック一覧には「●編集あり」または「保存済み」を表示します。
+
 ## MIDI保存方法
 
 「MIDI作成」タブの「MIDI保存」を押すと `midi-lab-test-001.mid` をダウンロードします。保存形式はStandard MIDI File Type 1で、テンポ／拍子用トラックとノート用トラックを出力します。保存したファイルを「読み込み」から再度選び、値が復元されることを確認できます。
@@ -52,6 +54,8 @@ py -3 -m http.server 8080
 - リアルタイム打ち込み: ループ中は25msごとに最新グリッドを読み直し、120ms先までだけ予約します。未来のステップへの追加・未予約ノートの削除は停止せず反映されます。
 - MIDIグリッド編集: MIDI tickを選択した1/4・1/8・1/16単位へ丸め、Time Signature Mapから求めた2小節のstartTick/endTickへ展開します。各セルはabsoluteTickを持ち、4/4→3/4→5/4では1/8グリッドが16→12→20ステップへ変化します。
 - 可変テンポ区間試聴: ノートtickと区間境界をTempo Mapで秒へ変換します。再生ハイライトはAudioContext経過秒→tick→ローカルステップの逆変換で追従します。
+- 複数トラック編集: 1曲の共有Workspace内にトラック別Sessionを持ち、ノート配列、量子化、表示小節、dirty／saved状態を保持します。
+- イベント保持: グリッドはノートだけを編集し、Control Change、Pitch Bend、Aftertouch、Program Change、Text／Lyrics／Marker／Cue／Copyright、SysExは `rawEvents` として元tickと値を保持して再出力します。
 
 ## テスト
 
@@ -61,16 +65,19 @@ node scheduler-test.js
 node midi-edit-test.js
 node generate-timing-fixtures.js
 node timing-test.js
+node generate-event-fixture.js
+node multi-track-edit-test.js
+node event-preservation-test.js
 ```
 
-`generate-timing-fixtures.js` は `test-data` にTempo Test、Time Signature Test、Mixed Testの3ファイルを再生成します。`self-test.js` はMIDI保存・再読込を、`scheduler-test.js` は未来／過去ステップの追加、削除、コード、重複防止、ループ境界を検証します。`midi-edit-test.js` は8小節・3トラックのfixtureを使い、コード展開、量子化、区間間の編集保持、未編集トラック保持、テンポ変更を含む再保存を検証します。`timing-test.js` は生成済みMIDIも再読込し、120→150→90 BPM、4/4→3/4→5/4、tick／秒／小節／拍の往復、区間境界、ループ長、ハイライト位置、保存後のマップ一致を検証します。
+`generate-timing-fixtures.js` はTempo／拍子テストを、`generate-event-fixture.js` は非ノートイベントfixtureを `test-data` へ再生成します。`multi-track-edit-test.js` は3トラックの編集・切替・保存を、`event-preservation-test.js` はノート編集後もCC、Sustain、Pitch Bend、Aftertouch、複数Program Change、Meta、SysExのtickと値が一致することを検証します。既存の保存、scheduler、8小節編集、時間変換テストも引き続き実行します。
 
 ## 現在の制限
 
 - SMPTE time divisionは未対応です。
-- MIDI Type 2、SysExの内容、歌詞、マーカー、キュー、ピッチベンド、Aftertouch、Control Change、ペダルによる実音長の再現には未対応です（解析時に不要なイベントは読み飛ばします）。
+- MIDI Type 2は未対応です。CC、Pitch Bend、Aftertouch、Program Change、Meta Event、SysExは保存しますが、内蔵シンセの音色・音量・サステイン等の再生表現には反映しません。
 - テンポ／拍子変更イベントは再生・位置表示・2小節編集・区間試聴・再保存へ反映します。拍子変更が小節途中に置かれた場合は、その変更tickを新しい小節の先頭として扱います。
-- トラック途中のProgram Changeは編集後の保存時に先頭Programへ統合されます。
+- SysExは元バイト列を再出力しますが、接続機器固有データの完全互換性は保証しません。保存前に警告を表示します。
 - 同一ノートが重なるケースはFIFOでNote Offと対応付けます。
 - ドラムチャンネルも同じ簡易シンセ音で鳴ります。
 - SoundFont、外部MIDI機器、複雑な編集、全件ノート表示は未対応です。

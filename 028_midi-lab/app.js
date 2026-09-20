@@ -4,7 +4,7 @@
   const synth = new MidiAudio.MidiSynth();
   const player = new MidiAudio.AudioClockPlayer(synth, updateTransportState);
   const DEFAULT_PITCHES = [72, 71, 69, 67, 65, 64, 62, 60];
-  let pitches = [...DEFAULT_PITCHES], grid = createEmptyGrid(16), currentSong = null, loadedMidiSong = null, editSession = null;
+  let pitches = [...DEFAULT_PITCHES], grid = createEmptyGrid(16), currentSong = null, loadedMidiSong = null, editWorkspace = null, editSession = null;
   let isSeeking = false, debugVisible = false, isCreationPreview = false, activePlayheadStep = -1;
   let confirmAction = null, confirmCancelAction = null, lastSavedSnapshot = null;
 
@@ -32,7 +32,7 @@
     if (!/\.(mid|midi)$/i.test(file.name)) { setMessage(".mid または .midi ファイルを選択してください。", true); return; }
     try {
       setMessage("MIDIを解析しています…"); const song = MidiCore.parse(await file.arrayBuffer(), file.name);
-      loadedMidiSong = song; populateEditTracks(); loadSong(song, `${file.name} を読み込みました。MIDI作成タブから編集できます。`); compareLoadedSong(song);
+      loadedMidiSong = song; editWorkspace = null; editSession = null; populateEditTracks(); loadSong(song, `${file.name} を読み込みました。MIDI作成タブから編集できます。`); compareLoadedSong(song);
     } catch (error) { console.error(error); setMessage(`読み込みエラー: ${error.message}`, true); }
   }
   function loadSong(song, message) {
@@ -45,7 +45,7 @@
     $("sumBpm").textContent = formatBpm(currentSong.bpm); $("sumTimeSig").textContent = `${currentSong.timeSignature.numerator} / ${currentSong.timeSignature.denominator}`;
     $("sumLength").textContent = formatTime(currentSong.duration); $("sumNotes").textContent = currentSong.totalNotes.toLocaleString("ja-JP");
     $("totalTime").textContent = formatTime(currentSong.duration); $("seekBar").max = Math.max(0.001, currentSong.duration);
-    renderTrackToggles(); renderTrackTable(); renderNoteTable(); renderTimingMaps(); updateMonitor(0);
+    renderTrackToggles(); renderTrackTable(); renderNoteTable(); renderTimingMaps(); renderEventStats(currentSong); updateMonitor(0);
   }
   function channelText(track) { return track.channels.length ? track.channels.map((c) => c + 1).join(", ") : "—"; }
   function programText(track) { return track.programs.length ? track.programs.join(", ") : "—"; }
@@ -76,6 +76,21 @@
     renderRows("tempoMapTable", currentSong.tempoMap.map((tempo) => [tempo.tick, MidiTiming.tickToBarBeat(currentSong, tempo.tick).bar, formatBpm(tempo.bpm)]));
     renderRows("signatureMapTable", currentSong.timeSignatureMap.map((signature) => [signature.tick, MidiTiming.tickToBarBeat(currentSong, signature.tick).bar, `${signature.numerator} / ${signature.denominator}`]));
   }
+  function renderEventStats(song = editWorkspace?.song || currentSong) {
+    const body = $("eventStatsTable"); if (!body) return; body.replaceChildren();
+    (song?.tracks || []).forEach((track, index) => { const counts = MidiCore.eventCounts(track), tr = document.createElement("tr"); [index + 1, track.name, counts.notes, counts.controlChange, counts.pitchBend, counts.aftertouch, counts.programChange, counts.lyrics, counts.sysex, counts.other].forEach((value) => { const td = document.createElement("td"); td.textContent = value; tr.append(td); }); body.append(tr); });
+    if (!song?.tracks?.length) { const tr = document.createElement("tr"), td = document.createElement("td"); td.colSpan = 10; td.className = "empty-cell"; td.textContent = "データ未読込"; tr.append(td); body.append(tr); }
+  }
+  function renderTrackEditStates() {
+    const container = $("trackEditStateList"); if (!container) return; container.replaceChildren();
+    if (!editWorkspace) { container.textContent = "トラックを展開すると編集状態が表示されます。"; return; }
+    MidiEdit.workspaceStates(editWorkspace).filter((state) => state.notes || editWorkspace.sessions.has(state.trackIndex)).forEach((state) => { const item = document.createElement("span"); item.className = `track-edit-state${state.modified ? " is-modified" : state.saved ? " is-saved" : ""}`; item.textContent = `Track ${state.trackIndex + 1} ${state.name} · ${state.modified ? "Modified" : state.saved ? "Saved" : "Original"}${state.noteUnit ? ` · 1/${state.noteUnit} · Bars ${state.sectionStartBar + 1}-${state.sectionStartBar + 2}` : ""}`; container.append(item); });
+  }
+  function refreshEditTrackOptions() {
+    if (!loadedMidiSong) return; const selected = $("editTrackSelect").value;
+    [...$("editTrackSelect").options].forEach((option) => { const index = Number(option.value), track = loadedMidiSong.tracks[index], editedTrack = editWorkspace?.song.tracks[index], session = editWorkspace?.sessions.get(index); if (track) option.textContent = `Track ${index + 1} · ${track.name} (${editedTrack?.notes.length ?? track.notes.length})${session?.dirty ? " ●編集あり" : session?.saved ? " 保存済み" : ""}`; });
+    $("editTrackSelect").value = selected; renderTrackEditStates(); renderEventStats(editWorkspace?.song || currentSong);
+  }
 
   $("playButton").addEventListener("click", async () => { try { isCreationPreview = false; player.setLoop(false); await player.play(); } catch (error) { setMessage(error.message, true); selectTab(currentSong ? "play" : "load"); } });
   $("pauseButton").addEventListener("click", () => player.pause()); $("stopButton").addEventListener("click", () => player.stop()); $("rewindButton").addEventListener("click", () => player.rewind());
@@ -103,7 +118,7 @@
     const select = $("editTrackSelect"); select.replaceChildren();
     if (!loadedMidiSong) { const option = document.createElement("option"); option.value = ""; option.textContent = "MIDIを読み込んでください"; select.append(option); select.disabled = true; $("expandMidiButton").disabled = true; updateImportPreview(); return; }
     loadedMidiSong.tracks.forEach((track, index) => { if (!track.notes.length) return; const option = document.createElement("option"); option.value = index; option.textContent = `Track ${index + 1} · ${track.name} (${track.notes.length})`; select.append(option); });
-    select.disabled = !select.options.length; $("expandMidiButton").disabled = !select.options.length; updateImportPreview();
+    select.disabled = !select.options.length; $("expandMidiButton").disabled = !select.options.length; updateImportPreview(); refreshEditTrackOptions();
   }
   function selectedEditTrack() { if (!loadedMidiSong || $("editTrackSelect").value === "") return null; const index = Number($("editTrackSelect").value); return { index, track: loadedMidiSong.tracks[index] }; }
   function updateImportPreview() {
@@ -117,7 +132,7 @@
   }
   function setCreationControlsForMode() {
     const editing = Boolean(editSession); ["createBpm", "createSignature", "noteUnit", "stepCount"].forEach((id) => { $(id).disabled = editing; });
-    $("editTrackSelect").disabled = editing || !loadedMidiSong; $("editQuantize").disabled = editing; $("expandMidiButton").disabled = editing || !selectedEditTrack();
+    $("editTrackSelect").disabled = !loadedMidiSong; $("editQuantize").disabled = false; $("expandMidiButton").disabled = !selectedEditTrack(); $("expandMidiButton").textContent = editing ? "トラックを開く" : "グリッドへ展開";
     $("sectionNav").classList.toggle("is-hidden", !editing); $("saveButton").classList.toggle("is-hidden", editing); $("saveEditedButton").classList.toggle("is-hidden", !editing);
     $("clearAllButton").textContent = editing ? "表示範囲を全消去" : "全消去";
   }
@@ -133,18 +148,19 @@
     select.value = String(steps);
   }
   function enterNewMode(reset = true) {
-    stopCreationPreview(); editSession = null; pitches = [...DEFAULT_PITCHES];
+    stopCreationPreview(); editWorkspace = null; editSession = null; pitches = [...DEFAULT_PITCHES];
     if (reset) { grid = createEmptyGrid(16); $("createBpm").value = 120; $("createSignature").value = "4/4"; $("noteUnit").value = "8"; setStepCountValue(16); }
     setCreationControlsForMode(); renderSequencer(); updateModeDisplay(); updateEditComparison();
   }
   function expandSelectedTrack() {
     const selected = selectedEditTrack(); if (!selected) return; stopCreationPreview();
-    editSession = MidiEdit.createSession(loadedMidiSong, selected.index, Number($("editQuantize").value), 2); pitches = [...editSession.pitches];
-    $("createBpm").value = editSession.song.bpm; $("createSignature").value = `${editSession.song.timeSignature.numerator}/${editSession.song.timeSignature.denominator}`;
+    if (!editWorkspace) editWorkspace = MidiEdit.createWorkspace(loadedMidiSong);
+    const existing = editWorkspace.sessions.get(selected.index); editSession = MidiEdit.createSession(editWorkspace, selected.index, Number($("editQuantize").value), 2); pitches = [...editSession.pitches];
+    $("editQuantize").value = String(editSession.noteUnit); $("createBpm").value = editSession.song.bpm; $("createSignature").value = `${editSession.song.timeSignature.numerator}/${editSession.song.timeSignature.denominator}`;
     if (!$("createSignature").value) $("createSignature").value = "4/4"; $("noteUnit").value = String(editSession.noteUnit); setStepCountValue(editSession.sectionSteps);
-    setCreationControlsForMode(); showEditorSection();
+    setCreationControlsForMode(); showEditorSection(); refreshEditTrackOptions();
     const warnings = MidiEdit.warnings(editSession.song); if (editSession.pitchRange.omitted) warnings.push(`表示音域外の${editSession.pitchRange.omitted}ノートは内部データに保持されています。`);
-    $("importWarning").textContent = warnings.join(" "); $("importWarning").classList.toggle("is-hidden", !warnings.length); $("creatorFeedback").textContent = `${selected.track.name}を1/${editSession.noteUnit}へクオンタイズして展開しました。`;
+    $("importWarning").textContent = warnings.join(" "); $("importWarning").classList.toggle("is-hidden", !warnings.length); $("creatorFeedback").textContent = existing ? `${selected.track.name}の編集状態を復元しました。` : `${selected.track.name}を1/${editSession.noteUnit}へクオンタイズして展開しました。`;
   }
   function showEditorSection() {
     if (!editSession) return;
@@ -153,14 +169,14 @@
     const signatureValue = `${signature.numerator}/${signature.denominator}`; if (![...$("createSignature").options].some((option) => option.value === signatureValue)) { const option = document.createElement("option"); option.value = signatureValue; option.textContent = `${signature.numerator} / ${signature.denominator}`; option.dataset.import = "true"; $("createSignature").append(option); } $("createSignature").value = signatureValue;
     const start = bounds.startBar, end = Math.min(editSession.totalBars, bounds.endBar - 1);
     $("sectionRange").textContent = `小節 ${start}～${end} / ${editSession.totalBars}（Tick ${bounds.startTick}–${bounds.endTick}）`; $("previousSectionButton").disabled = editSession.sectionStartBar === 0; $("nextSectionButton").disabled = editSession.sectionStartBar + editSession.sectionBars >= editSession.totalBars;
-    renderSequencer(); updateModeDisplay(); updateEditComparison();
+    renderSequencer(); updateModeDisplay(); updateEditComparison(); renderTrackEditStates();
   }
   function moveEditorSection(direction) { if (!editSession) return; stopCreationPreview(); const maxStart = Math.max(0, Math.floor((editSession.totalBars - 1) / editSession.sectionBars) * editSession.sectionBars); editSession.sectionStartBar = Math.max(0, Math.min(maxStart, editSession.sectionStartBar + direction * editSession.sectionBars)); showEditorSection(); }
   function updateEditComparison() {
     if (!editSession) { $("dbgEditOriginal").textContent = "—"; $("dbgEditCurrent").textContent = "—"; $("dbgEditDelta").textContent = "—"; return; }
     const value = MidiEdit.comparison(editSession); $("dbgEditOriginal").textContent = value.original; $("dbgEditCurrent").textContent = value.edited; $("dbgEditDelta").textContent = `+${value.added} / -${value.deleted}`;
   }
-  function markEdited(message) { if (!editSession) return; grid = MidiEdit.gridForSection(editSession); updateModeDisplay(); updateEditComparison(); updateCreationInfo(); if (message) $("creatorFeedback").textContent = message; }
+  function markEdited(message) { if (!editSession) return; grid = MidiEdit.gridForSection(editSession); updateModeDisplay(); updateEditComparison(); updateCreationInfo(); refreshEditTrackOptions(); if (message) $("creatorFeedback").textContent = message; }
 
   function creationSettings() { const [numerator, denominator] = $("createSignature").value.split("/").map(Number); return { bpm: Number($("createBpm").value) || 120, numerator, denominator, noteUnit: Number($("noteUnit").value), velocity: Number($("createVelocity").value) || 100, steps: grid[0].length }; }
   function creationTiming() {
@@ -225,13 +241,13 @@
   function creationSong(title = "midi-lab-test-001") { if (editSession) return MidiEdit.sectionSong(editSession); return MidiCore.createStepSong({ title, ...creationSettings(), pitches, grid }); }
   function liveCreationSnapshot() { const song = creationSong(); return { duration: song.duration, events: song.tracks.flatMap((track) => track.notes.map((note) => ({ track, note }))) }; }
   function stopCreationPreview(message) { if (isCreationPreview || player.playing) player.stop(); isCreationPreview = false; clearPlayhead(); if (message) $("creatorFeedback").textContent = message; }
-  function openConfirm(message, action, cancelAction) { confirmAction = action; confirmCancelAction = cancelAction || null; $("confirmMessage").textContent = message; if (typeof $("confirmDialog").showModal === "function") $("confirmDialog").showModal(); else if (window.confirm(message)) { const callback = confirmAction; confirmAction = null; callback?.(); } }
-  function closeConfirm(confirmed) { const action = confirmed ? confirmAction : confirmCancelAction; confirmAction = null; confirmCancelAction = null; if ($("confirmDialog").open) $("confirmDialog").close(); action?.(); }
+  function openConfirm(message, action, cancelAction, confirmLabel = "削除") { confirmAction = action; confirmCancelAction = cancelAction || null; $("confirmMessage").textContent = message; $("confirmDeleteButton").textContent = confirmLabel; if (typeof $("confirmDialog").showModal === "function") $("confirmDialog").showModal(); else if (window.confirm(message)) { const callback = confirmAction; confirmAction = null; callback?.(); } }
+  function closeConfirm(confirmed) { const action = confirmed ? confirmAction : confirmCancelAction; confirmAction = null; confirmCancelAction = null; if ($("confirmDialog").open) $("confirmDialog").close(); $("confirmDeleteButton").textContent = "削除"; action?.(); }
 
   $("confirmCancelButton").addEventListener("click", () => closeConfirm(false)); $("confirmDeleteButton").addEventListener("click", () => closeConfirm(true)); $("confirmDialog").addEventListener("cancel", (event) => { event.preventDefault(); closeConfirm(false); });
   $("editTrackSelect").addEventListener("change", updateImportPreview); $("editQuantize").addEventListener("change", updateImportPreview);
-  $("expandMidiButton").addEventListener("click", () => { if (editSession?.dirty) openConfirm("現在の編集内容を破棄して、選択トラックを展開し直しますか？", expandSelectedTrack); else expandSelectedTrack(); });
-  $("newModeButton").addEventListener("click", () => { if (editSession?.dirty) openConfirm("読み込みMIDIの未保存編集を破棄して新規作成へ戻りますか？", () => enterNewMode(true)); else enterNewMode(true); });
+  $("expandMidiButton").addEventListener("click", expandSelectedTrack);
+  $("newModeButton").addEventListener("click", () => { const dirty = editWorkspace && MidiEdit.workspaceStates(editWorkspace).some((state) => state.modified); if (dirty) openConfirm("複数トラックを含む未保存編集を破棄して新規作成へ戻りますか？", () => enterNewMode(true)); else enterNewMode(true); });
   $("previousSectionButton").addEventListener("click", () => moveEditorSection(-1)); $("nextSectionButton").addEventListener("click", () => moveEditorSection(1));
   $("stepCount").addEventListener("change", (event) => {
     if (editSession) return; const previous = grid[0].length, next = Number(event.target.value); stopCreationPreview(); const hasTrimmedNotes = next < previous && grid.some((row) => row.slice(next).some(Boolean));
@@ -254,18 +270,23 @@
     catch (error) { isCreationPreview = false; clearPlayhead(); $("creatorFeedback").textContent = error.message; }
   });
   $("previewStopButton").addEventListener("click", () => stopCreationPreview("試聴を停止しました。"));
-  $("loadCreationButton").addEventListener("click", () => { stopCreationPreview(); const song = editSession ? MidiEdit.clone(editSession.song) : creationSong(); loadSong(song, editSession ? "編集した全曲データを再生・解析へ送りました。" : "ステップ入力を再生・解析に送りました。"); selectTab("play"); });
+  $("loadCreationButton").addEventListener("click", () => { stopCreationPreview(); const song = editWorkspace ? MidiEdit.clone(editWorkspace.song) : creationSong(); loadSong(song, editWorkspace ? "複数トラックの編集を含む全曲データを再生・解析へ送りました。" : "ステップ入力を再生・解析に送りました。"); selectTab("play"); });
   function downloadSong(song, filename) { const blob = new Blob([MidiCore.write(song)], { type: "audio/midi" }), link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = filename; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(link.href), 1000); }
   $("saveButton").addEventListener("click", () => {
     const song = creationSong(); if (!song.totalNotes) { $("creatorFeedback").textContent = "保存するノートがありません。"; return; } downloadSong(song, "midi-lab-test-001.mid"); lastSavedSnapshot = { notes: song.totalNotes, bpm: song.bpm, duration: song.duration };
     $("dbgOriginalNotes").textContent = song.totalNotes; $("dbgLoadedNotes").textContent = "—"; $("dbgCompareBpm").textContent = `${formatBpm(song.bpm)} → —`; $("dbgCompareDuration").textContent = `${fixed(song.duration)} → — sec`; $("creatorFeedback").textContent = `保存しました：${song.totalNotes}ノート / ${fixed(song.duration)}秒`;
   });
+  function saveEditedMidi() {
+    if (!editWorkspace || !editSession) return; editWorkspace.sessions.forEach((session) => MidiEdit.refreshSong(session)); const song = editWorkspace.song;
+    downloadSong(song, `${song.title || "midi-lab"}-edited.mid`); MidiEdit.markWorkspaceSaved(editWorkspace); updateModeDisplay(); updateEditComparison(); refreshEditTrackOptions();
+    lastSavedSnapshot = { notes: song.totalNotes, bpm: song.bpm, duration: song.duration }; $("dbgOriginalNotes").textContent = editWorkspace.originalTotalNotes; $("dbgLoadedNotes").textContent = song.totalNotes; $("dbgCompareBpm").textContent = `${formatBpm(editWorkspace.originalSong.bpm)} → ${formatBpm(song.bpm)}`; $("dbgCompareDuration").textContent = `${fixed(editWorkspace.originalSong.duration)} → ${fixed(song.duration)} sec`;
+    $("creatorFeedback").textContent = `全曲を保存しました：${song.totalNotes}ノート / ${editWorkspace.sessions.size}トラック編集`;
+  }
   $("saveEditedButton").addEventListener("click", () => {
-    if (!editSession) return; MidiEdit.refreshSong(editSession); const song = editSession.song; downloadSong(song, `${song.title || "midi-lab"}-edited.mid`); editSession.dirty = false; editSession.saved = true; updateModeDisplay(); updateEditComparison();
-    lastSavedSnapshot = { notes: song.totalNotes, bpm: song.bpm, duration: song.duration }; $("dbgOriginalNotes").textContent = editSession.originalTotalNotes; $("dbgLoadedNotes").textContent = song.totalNotes; $("dbgCompareBpm").textContent = `${formatBpm(editSession.originalSong.bpm)} → ${formatBpm(song.bpm)}`; $("dbgCompareDuration").textContent = `${fixed(editSession.originalSong.duration)} → ${fixed(song.duration)} sec`;
-    $("creatorFeedback").textContent = `全曲を保存しました：${song.totalNotes}ノート${MidiEdit.warnings(song).length ? "（未対応イベントの警告あり）" : ""}`;
+    if (!editWorkspace) return; const warnings = MidiEdit.warnings(editWorkspace.song);
+    if (warnings.length) openConfirm(`このMIDIには確認が必要なイベントがあります。\n\n${warnings.join("\n")}\n\n保存を続行しますか？`, saveEditedMidi, null, "保存"); else saveEditedMidi();
   });
   function compareLoadedSong(song) { if (!lastSavedSnapshot) return; $("dbgOriginalNotes").textContent = lastSavedSnapshot.notes; $("dbgLoadedNotes").textContent = song.totalNotes; $("dbgCompareBpm").textContent = `${formatBpm(lastSavedSnapshot.bpm)} → ${formatBpm(song.bpm)}`; $("dbgCompareDuration").textContent = `${fixed(lastSavedSnapshot.duration)} → ${fixed(song.duration)} sec`; }
 
-  populateEditTracks(); setCreationControlsForMode(); renderSequencer(); updateModeDisplay(); updateEditComparison(); updateTransportState(); animationFrame();
+  populateEditTracks(); setCreationControlsForMode(); renderSequencer(); updateModeDisplay(); updateEditComparison(); renderTrackEditStates(); renderEventStats(); updateTransportState(); animationFrame();
 })();

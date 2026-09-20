@@ -50,38 +50,49 @@
     return bounds;
   }
 
-  function createSession(sourceSong, trackIndex, noteUnit = 8, sectionBars = 2) {
-    const originalSong = clone(sourceSong), song = clone(sourceSong), track = song.tracks[trackIndex];
-    if (!track) throw new Error("編集対象トラックが見つかりません。");
+  function createWorkspace(sourceSong) {
+    const originalSong = clone(sourceSong), song = clone(sourceSong);
     song.tempoMap = global.MidiTiming.buildTempoMap(song.tempoMap, song.ppq, song.bpm || 120);
     song.timeSignatureMap = global.MidiTiming.buildTimeSignatureMap(song.timeSignatureMap, song.ppq, song.timeSignature || { numerator: 4, denominator: 4 });
-    song.bpm = song.tempoMap[0].bpm; song.timeSignature = song.timeSignatureMap[0];
+    song.bpm = song.tempoMap[0].bpm; song.timeSignature = song.timeSignatureMap[0]; song.keepTicks = true;
+    return { _midiEditWorkspace: true, originalSong, song, sessions: new Map(), originalTotalNotes: sourceSong.totalNotes, saved: false };
+  }
+
+  function createSession(sourceOrWorkspace, trackIndex, noteUnit = 8, sectionBars = 2) {
+    const workspace = sourceOrWorkspace?._midiEditWorkspace ? sourceOrWorkspace : createWorkspace(sourceOrWorkspace);
+    if (workspace.sessions.has(trackIndex)) return workspace.sessions.get(trackIndex);
+    const { originalSong, song } = workspace, track = song.tracks[trackIndex];
+    if (!track) throw new Error("編集対象トラックが見つかりません。");
     const ticksPerStep = stepTicks(song.ppq, noteUnit);
     track.notes.forEach((note, index) => {
       const sourceTick = Number.isFinite(note.startTick) ? note.startTick : global.MidiTiming.secondsToTick(song, note.startTime);
       const sourceEndTick = Number.isFinite(note.endTick) ? note.endTick : global.MidiTiming.secondsToTick(song, note.startTime + note.duration);
       const durationTicks = Number.isFinite(note.durationTicks) ? note.durationTicks : Math.max(1, Math.round(sourceEndTick - sourceTick));
-      note._sourceId = `source-${index}`;
+      note._sourceId = `track-${trackIndex}-source-${index}`;
       note._gridTick = Math.max(0, Math.round(sourceTick / ticksPerStep) * ticksPerStep);
-      note._editStep = Math.round(note._gridTick / ticksPerStep);
-      note._durationTicks = Math.max(1, durationTicks);
+      note._editStep = Math.round(note._gridTick / ticksPerStep); note._durationTicks = Math.max(1, durationTicks);
       note.startTick = note._gridTick; note.endTick = note.startTick + note._durationTicks;
-      note.startTime = tickToSeconds(song, note.startTick);
-      note.duration = Math.max(0.001, tickToSeconds(song, note.endTick) - note.startTime);
-      note.noteName = global.MidiCore.noteName(note.noteNumber);
+      note.startTime = tickToSeconds(song, note.startTick); note.duration = Math.max(0.001, tickToSeconds(song, note.endTick) - note.startTime); note.noteName = global.MidiCore.noteName(note.noteNumber);
     });
     track.notes.sort((a, b) => a.startTick - b.startTick || a.noteNumber - b.noteNumber);
-    const pitchRange = choosePitchRange(track.notes);
-    const lastTick = Math.max(Number(song.endTick) || 0, ...song.tracks.flatMap((item) => item.notes.map((note) => note.endTick || 0)), 1);
+    const pitchRange = choosePitchRange(track.notes), lastTick = Math.max(Number(song.endTick) || 0, ...song.tracks.flatMap((item) => item.notes.map((note) => note.endTick || 0)), 1);
     const session = {
-      mode: "midi", originalSong, song, trackIndex, noteUnit: Number(noteUnit), sectionBars,
+      mode: "midi", workspace, originalSong, song, trackIndex, noteUnit: Number(noteUnit), sectionBars,
       ticksPerStep, totalBars: global.MidiTiming.totalBars(song, lastTick), sectionStartBar: 0,
-      pitches: pitchRange.pitches, pitchRange, originalTrackNotes: track.notes.length,
-      originalTotalNotes: sourceSong.totalNotes, dirty: false, saved: false
+      pitches: pitchRange.pitches, pitchRange, originalTrackNotes: originalSong.tracks[trackIndex]?.notes.length || 0,
+      originalTotalNotes: workspace.originalTotalNotes, dirty: false, saved: false
     };
-    song.keepTicks = true; song.endTick = Math.max(Number(song.endTick) || 0, lastTick);
-    updateSectionMetrics(session);
-    return session;
+    song.endTick = Math.max(Number(song.endTick) || 0, lastTick); workspace.sessions.set(trackIndex, session); updateSectionMetrics(session); return session;
+  }
+
+  function workspaceStates(workspace) {
+    if (!workspace?._midiEditWorkspace) return [];
+    return workspace.song.tracks.map((track, trackIndex) => { const session = workspace.sessions.get(trackIndex); return { trackIndex, name: track.name, modified: Boolean(session?.dirty), saved: Boolean(session?.saved), noteUnit: session?.noteUnit || null, sectionStartBar: session?.sectionStartBar || 0, notes: track.notes.length }; });
+  }
+
+  function markWorkspaceSaved(workspace) {
+    if (!workspace?._midiEditWorkspace) return;
+    workspace.saved = true; workspace.sessions.forEach((session) => { session.dirty = false; session.saved = true; });
   }
 
   function gridForSection(session) {
@@ -161,11 +172,14 @@
 
   function comparison(session) { const notes = session.song.tracks[session.trackIndex].notes, surviving = new Set(notes.map((note) => note._sourceId).filter(Boolean)); return { original: session.originalTrackNotes, edited: notes.length, added: notes.filter((note) => !note._sourceId).length, deleted: session.originalTrackNotes - surviving.size }; }
   function warnings(song) {
-    const warnings = [], unsupportedCount = Object.values(song.unsupportedEvents || {}).reduce((sum, count) => sum + count, 0);
-    if (unsupportedCount) warnings.push(`未対応イベント ${unsupportedCount}件は保存時に失われる可能性があります。`);
-    if (song.tracks?.some((track) => (track.programs?.length || 0) > 1)) warnings.push("トラック途中のProgram Changeは、保存時に先頭のProgramへ統合されます。");
+    const warnings = [], allEvents = song.tracks?.flatMap((track) => track.rawEvents || []) || [];
+    const sysex = allEvents.filter((event) => event.type === "sysEx").length;
+    const supported = new Set(["programChange", "controlChange", "pitchBend", "polyAftertouch", "channelAftertouch", "sysEx", "text", "copyright", "trackName", "lyrics", "marker", "cuePoint", "meta"]);
+    const unknown = allEvents.filter((event) => !supported.has(event.type)).length;
+    if (sysex) warnings.push(`SysEx ${sysex}件は元バイト列を保持して再出力します。機器固有データの完全互換性を確認してください。`);
+    if (unknown) warnings.push(`未知イベント ${unknown}件は保存時に失われる可能性があります。`);
     return warnings;
   }
 
-  global.MidiEdit = { clone, stepTicks, barTicks, tickToSeconds, choosePitchRange, createSession, updateSectionMetrics, gridForSection, notesAtCell, toggleCell, clearStep, clearPitch, clearSection, refreshSong, sectionSong, sectionBounds, cellTick, comparison, warnings };
+  global.MidiEdit = { clone, stepTicks, barTicks, tickToSeconds, choosePitchRange, createWorkspace, createSession, workspaceStates, markWorkspaceSaved, updateSectionMetrics, gridForSection, notesAtCell, toggleCell, clearStep, clearPitch, clearSection, refreshSong, sectionSong, sectionBounds, cellTick, comparison, warnings };
 })(window);

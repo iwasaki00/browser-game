@@ -123,6 +123,7 @@
           <div><span>必要ステップ</span><strong id="importSteps">—</strong></div>
         </div>
         <p class="import-warning is-hidden" id="importWarning"></p>
+        <div class="track-edit-state-list" id="trackEditStateList">トラックを展開すると編集状態が表示されます。</div>
       </section>
       <div class="section-nav is-hidden" id="sectionNav">
         <button class="compact-button" id="previousSectionButton" type="button">← 前の2小節</button>
@@ -180,6 +181,8 @@
         <div><span>編集後ノート</span><code id="dbgEditCurrent">—</code></div>
         <div><span>追加 / 削除</span><code id="dbgEditDelta">—</code></div>
       </div>
+      <div class="subsection-heading table-heading"><div><h3>トラック別イベント</h3><span>保存対象のノート／非ノートイベント</span></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Track</th><th>名前</th><th>Notes</th><th>CC</th><th>Pitch Bend</th><th>Aftertouch</th><th>Program</th><th>Lyrics</th><th>SysEx</th><th>Other</th></tr></thead><tbody id="eventStatsTable"><tr><td colspan="10" class="empty-cell">データ未読込</td></tr></tbody></table></div>
     </section>
   </main>
 

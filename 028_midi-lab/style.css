@@ -534,3 +534,14 @@ footer {
 @media (max-width: 700px) {
   .map-grid { grid-template-columns: 1fr; }
 }
+.track-edit-state-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.track-edit-state { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, 0.03); }
+.track-edit-state.is-modified { color: var(--orange); border-color: var(--orange); }
+.track-edit-state.is-saved { color: var(--cyan); border-color: var(--cyan); }
