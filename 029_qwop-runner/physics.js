@@ -5,6 +5,12 @@
   const DEG = Math.PI / 180;
   const FIXED_STEP = 1000 / 60;
   const SELF_COLLISION_GROUP = -17;
+  const DEMO_FORWARD_SEQUENCE = Object.freeze([
+    Object.freeze({ name: "Q + O", keys: Object.freeze(["q", "o"]), duration: 220 }),
+    Object.freeze({ name: "Q", keys: Object.freeze(["q"]), duration: 160 }),
+    Object.freeze({ name: "W + P", keys: Object.freeze(["w", "p"]), duration: 220 }),
+    Object.freeze({ name: "W", keys: Object.freeze(["w"]), duration: 160 })
+  ]);
 
   const DEFAULTS = Object.freeze({
     gravity: 0.72,
@@ -22,6 +28,9 @@
     ankleKp: 4.00,
     ankleKd: 0.30,
     ankleMaxTorque: 4.00,
+    neckKp: 0.45,
+    neckKd: 0.12,
+    neckMaxTorque: 0.30,
     jointLimitStrength: 20.00,
     balanceKp: 0.0020,
     balanceKd: 0.020,
@@ -31,7 +40,8 @@
   const LIMITS = Object.freeze({
     hip: [-60 * DEG, 60 * DEG],
     knee: [-6 * DEG, 92 * DEG],
-    ankle: [-30 * DEG, 30 * DEG]
+    ankle: [-30 * DEG, 30 * DEG],
+    neck: [-25 * DEG, 25 * DEG]
   });
 
   const NEUTRAL = Object.freeze({
@@ -88,6 +98,7 @@
     emptyControlState() {
       return {
         torso: { current: 0, target: 0, torque: 0 },
+        neck: { current: 0, target: 0, torque: 0 },
         rightHip: { current: 0, target: NEUTRAL.rightHip, torque: 0 },
         leftHip: { current: 0, target: NEUTRAL.leftHip, torque: 0 },
         rightKnee: { current: 0, target: NEUTRAL.rightKnee, torque: 0 },
@@ -117,7 +128,7 @@
     createRunner() {
       const x = this.startX;
       const torso = limb(x, 278, 44, 100, { label: "torso", density: 0.0036 });
-      const head = Bodies.circle(x, 203, 25, {
+      const head = Bodies.circle(x, 207, 25, {
         label: "head",
         density: 0.0017,
         friction: 0.7,
@@ -132,8 +143,11 @@
       const rightFoot = limb(x + 33, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
 
       this.bodies = { torso, head, leftThigh, rightThigh, leftShin, rightShin, leftFoot, rightFoot };
+      this.neckConstraint = pin(torso, { x: 0, y: -49 }, head, { x: 0, y: 21 }, 1);
+      this.neckConstraint.stiffness = 1;
+      this.neckConstraint.damping = 0.5;
       this.constraints = [
-        pin(torso, { x: 0, y: -49 }, head, { x: 0, y: 25 }, 1),
+        this.neckConstraint,
         pin(torso, { x: -15, y: 48 }, leftThigh, { x: 0, y: -37 }, 1),
         pin(torso, { x: 15, y: 48 }, rightThigh, { x: 0, y: -37 }, 1),
         pin(leftThigh, { x: 0, y: 37 }, leftShin, { x: 0, y: -37 }, 1),
@@ -229,6 +243,7 @@
       Body.applyForce(b.rightFoot, b.rightFoot.position, { x: -balanceForce / 2, y: 0 });
 
       this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp, p.torsoKd, p.torsoMaxTorque);
+      this.control.neck = this.jointPD(b.torso, b.head, 0, p.neckKp, p.neckKd, p.neckMaxTorque);
       this.control.rightHip = this.jointPD(b.torso, b.rightThigh, target.rightHip, p.hipKp, p.hipKd, p.hipMaxTorque);
       this.control.leftHip = this.jointPD(b.torso, b.leftThigh, target.leftHip, p.hipKp, p.hipKd, p.hipMaxTorque);
       this.control.rightKnee = this.jointPD(b.rightThigh, b.rightShin, target.rightKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
@@ -243,6 +258,7 @@
       this.softLimit(b.leftThigh, b.leftShin, LIMITS.knee, p.kneeMaxTorque);
       this.softLimit(b.rightShin, b.rightFoot, LIMITS.ankle, p.ankleMaxTorque);
       this.softLimit(b.leftShin, b.leftFoot, LIMITS.ankle, p.ankleMaxTorque);
+      this.softLimit(b.torso, b.head, LIMITS.neck, p.neckMaxTorque);
     }
 
     step(deltaMs) {
@@ -257,11 +273,25 @@
 
     diagnostics() {
       const torso = this.bodies.torso;
+      const worldPoint = (body, point) => ({
+        x: body.position.x + point.x * Math.cos(body.angle) - point.y * Math.sin(body.angle),
+        y: body.position.y + point.x * Math.sin(body.angle) + point.y * Math.cos(body.angle)
+      });
+      const neckTorsoAnchor = worldPoint(this.neckConstraint.bodyA, this.neckConstraint.pointA);
+      const neckHeadAnchor = worldPoint(this.neckConstraint.bodyB, this.neckConstraint.pointB);
+      const neckDistance = Math.hypot(neckHeadAnchor.x - neckTorsoAnchor.x, neckHeadAnchor.y - neckTorsoAnchor.y);
       return {
         inputState: { ...this.inputState },
         torsoAngularVelocity: torso.angularVelocity,
         position: { ...torso.position },
         velocity: { ...torso.velocity },
+        headPosition: { ...this.bodies.head.position },
+        neck: {
+          connected: neckDistance < 20,
+          distance: neckDistance,
+          torsoAnchor: neckTorsoAnchor,
+          headAnchor: neckHeadAnchor
+        },
         control: JSON.parse(JSON.stringify(this.control))
       };
     }
@@ -272,5 +302,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
 })();

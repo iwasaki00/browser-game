@@ -1,1 +1,39 @@
-<!doctype html><html lang=ja><head><meta charset=utf-8><meta name=viewport content=width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no><title>RAGDOLL RUN</title><link rel=stylesheet href=style.css></head><body><main><header><a href=../index.html>← ARCADE</a><div>DISTANCE <b id=distance>0.00 m</b></div><button id=debugButton>DEBUG</button><button id=retryButton>RETRY</button></header><section class=stage><canvas id=gameCanvas></canvas><div class=rotate>↻ 横向きにして遊んでください</div><aside id=debugPanel hidden><b>PHYSICS LAB</b> <span id=fps>60 FPS</span><div id=parameters></div><button id=resetParameters>RESET PARAMETERS</button></aside></section><section class=controls><button data-key=q><b>Q</b><span>右もも</span></button><button data-key=w><b>W</b><span>左もも</span></button><i>MOVE EACH LEG</i><button data-key=o><b>O</b><span>右ひざ</span></button><button data-key=p><b>P</b><span>左ひざ</span></button></section></main><script src=../022_pythagora-lab/vendor/matter.min.js></script><script src=physics.js></script><script src=game.js></script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#07111f">
+  <title>RAGDOLL RUN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <a href="../index.html" aria-label="アーケードへ戻る">← ARCADE</a>
+      <div class="distance">DISTANCE <b id="distance">0.00 m</b></div>
+      <button id="debugButton" type="button" aria-pressed="false">DEBUG</button>
+      <button id="retryButton" type="button">RETRY</button>
+    </header>
+    <section class="stage" aria-label="物理ランニングゲーム">
+      <canvas id="gameCanvas"></canvas>
+      <aside id="debugPanel" hidden>
+        <b>PHYSICS LAB</b>
+        <span id="fps">60 FPS</span>
+        <div id="parameters"></div>
+        <button id="resetParameters" type="button">RESET PARAMETERS</button>
+      </aside>
+    </section>
+    <section class="controls" aria-label="脚の操作">
+      <button data-key="q" type="button" aria-pressed="false"><b>Q</b><span>右もも</span></button>
+      <button data-key="w" type="button" aria-pressed="false"><b>W</b><span>左もも</span></button>
+      <i>MOVE EACH LEG</i>
+      <button data-key="o" type="button" aria-pressed="false"><b>O</b><span>右ひざ</span></button>
+      <button data-key="p" type="button" aria-pressed="false"><b>P</b><span>左ひざ</span></button>
+    </section>
+  </main>
+  <script src="../022_pythagora-lab/vendor/matter.min.js"></script>
+  <script src="physics.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
