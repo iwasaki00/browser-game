@@ -7,7 +7,7 @@ MIDIの読み込み・解析・再生・作成・保存を、iPhone SafariとPC�
 外部依存やビルド工程はありません。`index.html` を直接開いても動作しますが、ブラウザの制限を避けるためローカルHTTPサーバーの利用を推奨します。
 
 ```powershell
-cd 028_cmn_midi
+cd _cmn_midi
 py -3 -m http.server 8080
 ```
 

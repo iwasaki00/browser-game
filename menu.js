@@ -2,12 +2,13 @@
   "use strict";
 
   const games = [
+    { number: "029", title: "RAGDOLL RUN", genre: "Physics / Action", description: "Q・W・O・Pの4キーで左右の股関節とひざを操る、横視点の物理ランニング実験。転んでも、その姿勢から走り続けられます。", href: "./029_qwop-runner/index.html", icon: "./assets/game-icons/029-ragdoll-run.svg", alt: "四つの操作キーの上を走るカラフルな物理人形のアイコン" },
     {
       number: "028",
       title: "MIDI実験室",
       genre: "Music / Tool",
       description: "MIDIファイルの読み込み・解析・再生から、ステップ入力による作成と保存までを試せる検証用音楽ツールです。",
-      href: "./028_cmn_midi/index.html",
+      href: "./_cmn_midi/index.html",
       icon: "./assets/game-icons/028-midi-lab.jpg",
       alt: "光るステップシーケンサーと鍵盤と波形を組み合わせたMIDI実験室のアイコン"
     },
