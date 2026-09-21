@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const { Engine, Bodies, Body, Composite, Constraint, Events } = Matter;
+  const { Engine, Bodies, Body, Composite, Constraint, Events, Query } = Matter;
   const DEG = Math.PI / 180;
   const FIXED_STEP = 1000 / 60;
   const SELF_COLLISION_GROUP = -17;
@@ -90,6 +90,10 @@
       });
       this.engine.gravity.scale = 0.001;
       this.accumulator = 0;
+      this.balanceScale = 1;
+      this.ankleScale = 1;
+      this.dynamicFootFriction = false;
+      this.footContact = { left: false, right: false };
       this.control = this.emptyControlState();
       this.reset();
       Events.on(this.engine, "beforeUpdate", () => this.applyControls());
@@ -182,6 +186,21 @@
     resetParameters() {
       Object.assign(this.params, DEFAULTS);
       Object.keys(this.params).forEach(name => this.setParameter(name, this.params[name]));
+      this.setBalanceScale(1);
+      this.setAnkleScale(1);
+      this.setDynamicFootFriction(false);
+    }
+
+    setBalanceScale(scale) {
+      this.balanceScale = clamp(Number(scale), 0.25, 1);
+    }
+
+    setAnkleScale(scale) {
+      this.ankleScale = clamp(Number(scale), 0, 1);
+    }
+
+    setDynamicFootFriction(active) {
+      this.dynamicFootFriction = Boolean(active);
     }
 
     jointPD(parent, child, target, kp, kd, maxTorque) {
@@ -229,28 +248,37 @@
       const b = this.bodies;
       const p = this.params;
       const target = this.targets();
+      this.footContact.left = Query.collides(b.leftFoot, [this.ground]).length > 0;
+      this.footContact.right = Query.collides(b.rightFoot, [this.ground]).length > 0;
+      if (this.dynamicFootFriction) {
+        b.leftFoot.friction = p.footFriction * (this.footContact.left ? 1.18 : 0.72);
+        b.rightFoot.friction = p.footFriction * (this.footContact.right ? 1.18 : 0.72);
+      } else {
+        b.leftFoot.friction = p.footFriction;
+        b.rightFoot.friction = p.footFriction;
+      }
 
       const ankleX = foot => foot.position.x - Math.cos(foot.angle) * 18;
       const supportX = (ankleX(b.leftFoot) + ankleX(b.rightFoot)) / 2;
       const supportVelocity = (b.leftFoot.velocity.x + b.rightFoot.velocity.x) / 2;
       const balanceForce = clamp(
         -p.balanceKp * (b.torso.position.x - supportX) - p.balanceKd * (b.torso.velocity.x - supportVelocity),
-        -p.balanceMaxForce,
-        p.balanceMaxForce
-      );
+        -p.balanceMaxForce * this.balanceScale,
+        p.balanceMaxForce * this.balanceScale
+      ) * this.balanceScale;
       Body.applyForce(b.torso, b.torso.position, { x: balanceForce, y: 0 });
       Body.applyForce(b.leftFoot, b.leftFoot.position, { x: -balanceForce / 2, y: 0 });
       Body.applyForce(b.rightFoot, b.rightFoot.position, { x: -balanceForce / 2, y: 0 });
 
-      this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp, p.torsoKd, p.torsoMaxTorque);
+      this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp * this.balanceScale, p.torsoKd * this.balanceScale, p.torsoMaxTorque * this.balanceScale);
       this.control.neck = this.jointPD(b.torso, b.head, 0, p.neckKp, p.neckKd, p.neckMaxTorque);
       this.control.rightHip = this.jointPD(b.torso, b.rightThigh, target.rightHip, p.hipKp, p.hipKd, p.hipMaxTorque);
       this.control.leftHip = this.jointPD(b.torso, b.leftThigh, target.leftHip, p.hipKp, p.hipKd, p.hipMaxTorque);
       this.control.rightKnee = this.jointPD(b.rightThigh, b.rightShin, target.rightKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
       this.control.leftKnee = this.jointPD(b.leftThigh, b.leftShin, target.leftKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
 
-      this.absolutePD(b.rightFoot, 0, p.ankleKp, p.ankleKd, p.ankleMaxTorque);
-      this.absolutePD(b.leftFoot, 0, p.ankleKp, p.ankleKd, p.ankleMaxTorque);
+      this.absolutePD(b.rightFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
+      this.absolutePD(b.leftFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
 
       this.softLimit(b.torso, b.rightThigh, LIMITS.hip, p.hipMaxTorque);
       this.softLimit(b.torso, b.leftThigh, LIMITS.hip, p.hipMaxTorque);
@@ -292,6 +320,11 @@
           torsoAnchor: neckTorsoAnchor,
           headAnchor: neckHeadAnchor
         },
+        feet: {
+          left: { contact: this.footContact.left, friction: this.bodies.leftFoot.friction },
+          right: { contact: this.footContact.right, friction: this.bodies.rightFoot.friction }
+        },
+        experiments: { balanceScale: this.balanceScale, ankleScale: this.ankleScale, dynamicFootFriction: this.dynamicFootFriction },
         control: JSON.parse(JSON.stringify(this.control))
       };
     }

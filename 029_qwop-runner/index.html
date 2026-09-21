@@ -17,6 +17,17 @@
     </header>
     <section class="stage" aria-label="物理ランニングゲーム">
       <canvas id="gameCanvas"></canvas>
+      <button id="trainingButton" class="training-toggle" type="button" aria-pressed="false">TRAINING</button>
+      <section id="trainingPanel" class="training-panel" hidden aria-live="polite">
+        <div class="training-title"><b>FORWARD TRAINING</b><span id="trainingFeedback">YOUR TURN</span></div>
+        <div class="training-cue"><span>NOW <b id="trainingNow">Q + O</b></span><span>NEXT <b id="trainingNext">Q</b></span></div>
+        <div class="timing-track"><i id="timingProgress"></i></div>
+        <div id="trainingHistory" class="training-history"></div>
+        <div class="training-actions">
+          <button id="watchDemo" type="button">WATCH DEMO</button>
+          <button id="demoSpeed" type="button" aria-pressed="false">NORMAL</button>
+        </div>
+      </section>
       <aside id="debugPanel" hidden>
         <b>PHYSICS LAB</b>
         <span id="fps">60 FPS</span>
@@ -34,6 +45,7 @@
   </main>
   <script src="../022_pythagora-lab/vendor/matter.min.js"></script>
   <script src="physics.js"></script>
+  <script src="training.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

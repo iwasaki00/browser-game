@@ -9,24 +9,39 @@
   const panel = document.querySelector("#debugPanel");
   const parameterRoot = document.querySelector("#parameters");
   const fpsEl = document.querySelector("#fps");
+  const trainingButton = document.querySelector("#trainingButton");
+  const trainingPanel = document.querySelector("#trainingPanel");
+  const trainingNow = document.querySelector("#trainingNow");
+  const trainingNext = document.querySelector("#trainingNext");
+  const trainingFeedback = document.querySelector("#trainingFeedback");
+  const trainingHistory = document.querySelector("#trainingHistory");
+  const timingProgress = document.querySelector("#timingProgress");
+  const watchDemoButton = document.querySelector("#watchDemo");
+  const demoSpeedButton = document.querySelector("#demoSpeed");
   const physics = new QWOPPhysics.RunnerPhysics();
+  const phases = QWOPTraining.PHASES;
   const activePointers = new Map();
 
   let debug = false;
   let cameraX = 0;
-  let cameraInitialized = false;
   let viewScale = 1;
   let lastTime = performance.now();
   let fps = 60;
-  const demoSequence = QWOPPhysics.DEMO_FORWARD_SEQUENCE;
-  const demo = { active: false, phaseIndex: 0, phaseElapsed: 0, totalElapsed: 0, startX: 0 };
-  const velocitySamples = [];
   let averageVelocityX = 0;
+  const velocitySamples = [];
+  const demo = {
+    active: false, source: "debug", speed: "normal", phaseIndex: 0,
+    phaseElapsed: 0, totalElapsed: 0, cyclesRemaining: Infinity, startX: 0
+  };
+  const training = {
+    active: false, slow: false, phaseIndex: 0, phaseElapsed: 0,
+    phaseStarted: false, phaseStartX: physics.bodies.torso.position.x, history: [], feedback: "YOUR TURN"
+  };
 
   const parameterSpec = {
-    gravity: ["重力", 0.35, 1.2, 0.01, 2],
-    groundFriction: ["地面摩擦", 0.4, 1.8, 0.01, 2],
-    footFriction: ["足の摩擦", 0.5, 2.2, 0.01, 2],
+    gravity: ["Gravity", 0.35, 1.2, 0.01, 2],
+    groundFriction: ["Ground friction", 0.4, 1.8, 0.01, 2],
+    footFriction: ["Foot friction", 0.5, 2.2, 0.01, 2],
     torsoKp: ["Torso Kp", 0.02, 0.5, 0.01, 2],
     torsoKd: ["Torso Kd", 0.01, 0.3, 0.01, 2],
     torsoMaxTorque: ["Torso Max Torque", 0.02, 0.6, 0.01, 2],
@@ -50,7 +65,6 @@
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     viewScale = Math.min(1, Math.max(0.66, (rect.height - 8) / 307));
     cameraX = physics.bodies.torso.position.x - (rect.width / viewScale) * 0.38;
-    cameraInitialized = true;
   }
 
   function setInput(key, active) {
@@ -90,24 +104,19 @@
     const key = event.key.toLowerCase();
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (demo.active) return;
-    setInput(key, true);
+    if (!demo.active) setInput(key, true);
   });
-
   document.addEventListener("keyup", event => {
     const key = event.key.toLowerCase();
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (demo.active) return;
-    setInput(key, false);
+    if (!demo.active) setInput(key, false);
   });
-
   window.addEventListener("blur", () => {
     if (demo.active) stopDemo();
     clearInputs();
     activePointers.clear();
   });
-
   document.querySelectorAll(".controls [data-key]").forEach(bindPointerControl);
 
   const diagnosticsEl = document.createElement("pre");
@@ -116,62 +125,189 @@
   controlTest.className = "control-test";
   controlTest.innerHTML = `<h3>CONTROL TEST</h3><div>${["q", "w", "o", "p"].map(key => `<button type="button" data-key="${key}" aria-pressed="false">${key.toUpperCase()} TEST</button>`).join("")}</div>`;
   controlTest.querySelectorAll("[data-key]").forEach(bindPointerControl);
-  panel.insertBefore(controlTest, document.querySelector("#resetParameters"));
-  panel.insertBefore(diagnosticsEl, controlTest);
+
+  const experimentPanel = document.createElement("section");
+  experimentPanel.className = "experiment-controls";
+  experimentPanel.innerHTML = `
+    <h3>STABILITY EXPERIMENTS</h3>
+    <label>Dynamic Foot Friction <input class="dynamic-friction" type="checkbox"></label>
+    <label>Balance <select class="balance-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option></select></label>
+    <label>Ankle Control <select class="ankle-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">OFF</option></select></label>`;
+  experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
+  experimentPanel.querySelector(".balance-preset").addEventListener("change", event => physics.setBalanceScale(event.target.value));
+  experimentPanel.querySelector(".ankle-preset").addEventListener("change", event => physics.setAnkleScale(event.target.value));
 
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
   demoPanel.innerHTML = `<h3>FORWARD REFERENCE</h3><p class="demo-status">DEMO: OFF</p><div><button type="button" class="start-demo">DEMO FORWARD</button><button type="button" class="stop-demo" disabled>STOP DEMO</button></div>`;
-  panel.insertBefore(demoPanel, diagnosticsEl);
   const demoStatus = demoPanel.querySelector(".demo-status");
   const startDemoButton = demoPanel.querySelector(".start-demo");
   const stopDemoButton = demoPanel.querySelector(".stop-demo");
+  panel.insertBefore(demoPanel, document.querySelector("#resetParameters"));
+  panel.insertBefore(experimentPanel, demoPanel);
+  panel.insertBefore(diagnosticsEl, experimentPanel);
+  panel.insertBefore(controlTest, document.querySelector("#resetParameters"));
+
+  function demoDuration(phase) {
+    return phase[demo.speed];
+  }
 
   function applyDemoPhase() {
     clearInputs();
-    const phase = demoSequence[demo.phaseIndex];
+    const phase = phases[demo.phaseIndex];
     phase.keys.forEach(key => setInput(key, true));
-    demoStatus.textContent = `DEMO: FORWARD  /  PHASE: ${phase.name}`;
+    demoStatus.textContent = `DEMO: ${demo.speed.toUpperCase()} / PHASE: ${phase.name}`;
+    if (demo.source === "training") {
+      training.phaseIndex = demo.phaseIndex;
+      training.phaseElapsed = demo.phaseElapsed;
+      training.feedback = "WATCH";
+      updateTrainingPanel();
+    }
   }
 
-  function startDemo() {
+  function startDemo(options = {}) {
     clearInputs();
     activePointers.clear();
     demo.active = true;
+    demo.source = options.source || "debug";
+    demo.speed = options.speed || "normal";
     demo.phaseIndex = 0;
     demo.phaseElapsed = 0;
     demo.totalElapsed = 0;
+    demo.cyclesRemaining = options.cycles === undefined ? Infinity : options.cycles;
     demo.startX = physics.bodies.torso.position.x;
     startDemoButton.disabled = true;
     stopDemoButton.disabled = false;
+    watchDemoButton.disabled = true;
     applyDemoPhase();
   }
 
-  function stopDemo(clear = true) {
+  function stopDemo(clear = true, completed = false) {
+    const source = demo.source;
     demo.active = false;
     demo.phaseIndex = 0;
     demo.phaseElapsed = 0;
     startDemoButton.disabled = false;
     stopDemoButton.disabled = true;
+    watchDemoButton.disabled = false;
     demoStatus.textContent = "DEMO: OFF";
     if (clear) clearInputs();
+    if (source === "training") {
+      training.phaseIndex = 0;
+      training.phaseElapsed = 0;
+      training.phaseStarted = false;
+      training.phaseStartX = physics.bodies.torso.position.x;
+      training.history = [];
+      training.feedback = completed ? "YOUR TURN" : "DEMO STOPPED";
+      updateTrainingPanel();
+    }
   }
 
   function updateDemo(delta) {
     if (!demo.active) return;
     demo.phaseElapsed += delta;
     demo.totalElapsed += delta;
-    let phase = demoSequence[demo.phaseIndex];
-    while (demo.phaseElapsed >= phase.duration) {
-      demo.phaseElapsed -= phase.duration;
-      demo.phaseIndex = (demo.phaseIndex + 1) % demoSequence.length;
-      phase = demoSequence[demo.phaseIndex];
+    let phase = phases[demo.phaseIndex];
+    while (demo.phaseElapsed >= demoDuration(phase)) {
+      demo.phaseElapsed -= demoDuration(phase);
+      if (demo.phaseIndex === phases.length - 1 && Number.isFinite(demo.cyclesRemaining)) {
+        demo.cyclesRemaining -= 1;
+        if (demo.cyclesRemaining <= 0) {
+          stopDemo(true, true);
+          return;
+        }
+      }
+      demo.phaseIndex = (demo.phaseIndex + 1) % phases.length;
+      phase = phases[demo.phaseIndex];
       applyDemoPhase();
+    }
+    if (demo.source === "training") {
+      training.phaseElapsed = demo.phaseElapsed;
+      updateTrainingPanel();
     }
   }
 
-  startDemoButton.addEventListener("click", startDemo);
+  startDemoButton.addEventListener("click", () => startDemo());
   stopDemoButton.addEventListener("click", () => stopDemo());
+  watchDemoButton.addEventListener("click", () => startDemo({ source: "training", speed: training.slow ? "slow" : "normal", cycles: 3 }));
+  demoSpeedButton.addEventListener("click", () => {
+    training.slow = !training.slow;
+    demoSpeedButton.textContent = training.slow ? "SLOW" : "NORMAL";
+    demoSpeedButton.setAttribute("aria-pressed", String(training.slow));
+  });
+
+  function feedbackFor(verdict, deltaX) {
+    if (averageVelocityX < -0.22) return "REVERSE — TRY THE NEXT CUE";
+    if (deltaX > 2 || averageVelocityX > 0.18) return verdict === "MISS" ? "FORWARD" : "GOOD PUSH";
+    return verdict;
+  }
+
+  function advanceTraining(verdict) {
+    const phase = phases[training.phaseIndex];
+    const deltaX = physics.bodies.torso.position.x - training.phaseStartX;
+    training.feedback = feedbackFor(verdict, deltaX);
+    training.history.push({ name: phase.name, verdict });
+    training.history = training.history.slice(-8);
+    training.phaseIndex = (training.phaseIndex + 1) % phases.length;
+    training.phaseElapsed = 0;
+    training.phaseStarted = QWOPTraining.pressedKeys(physics.inputState).length > 0;
+    training.phaseStartX = physics.bodies.torso.position.x;
+  }
+
+  function updateTraining(delta) {
+    if (!training.active || demo.active) return;
+    const phase = phases[training.phaseIndex];
+    const pressed = QWOPTraining.pressedKeys(physics.inputState);
+    if (!training.phaseStarted) {
+      if (!pressed.length) {
+        updateTrainingPanel();
+        return;
+      }
+      training.phaseStarted = true;
+    }
+    training.phaseElapsed += delta;
+    const verdict = QWOPTraining.classifyInput(phase.keys, pressed);
+    if (verdict === "GOOD" && training.phaseElapsed >= phase.min) {
+      advanceTraining("GOOD");
+    } else if (training.phaseElapsed >= phase.max) {
+      advanceTraining(verdict);
+    }
+    updateTrainingPanel();
+  }
+
+  function updateGuideHighlights() {
+    const keys = training.active ? new Set(phases[training.phaseIndex].keys) : new Set();
+    document.querySelectorAll(".controls [data-key]").forEach(button => button.classList.toggle("guide", keys.has(button.dataset.key)));
+  }
+
+  function updateTrainingPanel() {
+    const phase = phases[training.phaseIndex];
+    const next = phases[(training.phaseIndex + 1) % phases.length];
+    trainingNow.textContent = phase.name;
+    trainingNext.textContent = next.name;
+    trainingFeedback.textContent = training.feedback;
+    trainingFeedback.className = training.feedback.startsWith("REVERSE") ? "reverse" : "";
+    timingProgress.style.width = `${Math.min(100, training.phaseElapsed / phase.max * 100)}%`;
+    timingProgress.classList.toggle("ready", training.phaseElapsed >= phase.min);
+    trainingHistory.innerHTML = training.history.map(item => `<span class="${item.verdict.toLowerCase()}">${item.name}<b>${item.verdict}</b></span>`).join("");
+    updateGuideHighlights();
+  }
+
+  trainingButton.addEventListener("click", () => {
+    training.active = !training.active;
+    if (!training.active && demo.source === "training" && demo.active) stopDemo();
+    trainingPanel.hidden = !training.active;
+    trainingButton.classList.toggle("active", training.active);
+    trainingButton.setAttribute("aria-pressed", String(training.active));
+    trainingButton.textContent = training.active ? "TRAINING ON" : "TRAINING";
+    training.phaseIndex = 0;
+    training.phaseElapsed = 0;
+    training.phaseStarted = false;
+    training.phaseStartX = physics.bodies.torso.position.x;
+    training.history = [];
+    training.feedback = "YOUR TURN";
+    updateTrainingPanel();
+  });
 
   Object.entries(parameterSpec).forEach(([name, spec]) => {
     const row = document.createElement("div");
@@ -197,15 +333,21 @@
     cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
     lastTime = performance.now();
     distanceEl.textContent = "0.00 m";
+    training.phaseIndex = 0;
+    training.phaseElapsed = 0;
+    training.phaseStarted = false;
+    training.phaseStartX = physics.bodies.torso.position.x;
+    training.history = [];
+    training.feedback = "YOUR TURN";
+    updateTrainingPanel();
   }
-
   retryButton.addEventListener("click", retry);
   debugButton.addEventListener("click", () => {
     debug = !debug;
     panel.hidden = !debug;
     debugButton.textContent = debug ? "DEBUG ON" : "DEBUG";
     debugButton.setAttribute("aria-pressed", String(debug));
-    if (!debug && demo.active) stopDemo();
+    if (!debug && demo.active && demo.source === "debug") stopDemo();
   });
 
   document.querySelector("#resetParameters").addEventListener("click", () => {
@@ -214,6 +356,9 @@
       input.value = physics.params[input.dataset.parameter];
       input.dispatchEvent(new Event("input"));
     });
+    experimentPanel.querySelector(".dynamic-friction").checked = false;
+    experimentPanel.querySelector(".balance-preset").value = "1";
+    experimentPanel.querySelector(".ankle-preset").value = "1";
   });
 
   function bodyPath(body) {
@@ -221,7 +366,6 @@
     body.vertices.forEach((vertex, index) => index ? ctx.lineTo(vertex.x, vertex.y) : ctx.moveTo(vertex.x, vertex.y));
     ctx.closePath();
   }
-
   function drawBody(body, fill) {
     bodyPath(body);
     ctx.fillStyle = fill;
@@ -230,27 +374,26 @@
     ctx.strokeStyle = "#07111f";
     ctx.stroke();
   }
-
   function drawPartLabel(body, key) {
     const active = physics.inputState[key];
+    const guided = training.active && phases[training.phaseIndex].keys.includes(key);
     ctx.save();
     ctx.translate(body.position.x, body.position.y);
     ctx.rotate(body.angle);
     ctx.beginPath();
-    ctx.arc(0, 0, active ? 13 : 11, 0, Math.PI * 2);
-    ctx.fillStyle = active ? "#fff36b" : "rgba(7,17,31,.86)";
+    ctx.arc(0, 0, active ? 13 : guided ? 13 : 11, 0, Math.PI * 2);
+    ctx.fillStyle = active ? "#fff36b" : guided ? "#63e6e2" : "rgba(7,17,31,.86)";
     ctx.fill();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = guided ? 4 : 2;
     ctx.strokeStyle = active ? "#07111f" : "#fff";
     ctx.stroke();
-    ctx.fillStyle = active ? "#07111f" : "#fff";
-    ctx.font = `900 ${active ? 16 : 14}px monospace`;
+    ctx.fillStyle = active || guided ? "#07111f" : "#fff";
+    ctx.font = `900 ${active || guided ? 16 : 14}px monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(key.toUpperCase(), 0, 1);
     ctx.restore();
   }
-
   function degrees(value) {
     return `${(value / QWOPPhysics.DEG).toFixed(1)}°`;
   }
@@ -261,18 +404,17 @@
     const jointLine = (label, joint) => `${label.padEnd(7)} cur ${degrees(joint.current).padStart(7)}  target ${degrees(joint.target).padStart(7)}  torque ${joint.torque.toFixed(4).padStart(7)}`;
     diagnosticsEl.textContent = [
       `Q: ${data.inputState.q ? "ON " : "OFF"}   W: ${data.inputState.w ? "ON " : "OFF"}   O: ${data.inputState.o ? "ON " : "OFF"}   P: ${data.inputState.p ? "ON " : "OFF"}`,
-      `TORSO  angle ${degrees(c.torso.current)}  angular velocity ${data.torsoAngularVelocity.toFixed(4)}`,
-      jointLine("R HIP", c.rightHip),
-      jointLine("L HIP", c.leftHip),
-      jointLine("R KNEE", c.rightKnee),
-      jointLine("L KNEE", c.leftKnee),
-      `POSITION  x ${data.position.x.toFixed(2)}  y ${data.position.y.toFixed(2)}`,
-      `VELOCITY  x ${data.velocity.x.toFixed(3)}  y ${data.velocity.y.toFixed(3)}`
-      ,`VELOCITY X AVG (1s) ${averageVelocityX.toFixed(3)}`
-      ,`HEAD  x ${data.headPosition.x.toFixed(2)}  y ${data.headPosition.y.toFixed(2)}`
-      ,`NECK  ${data.neck.connected ? "CONNECTED" : "LOOSE"}  anchor gap ${data.neck.distance.toFixed(2)}`
-      ,`DEMO  ${demo.active ? "ON" : "OFF"}  phase ${demo.active ? demoSequence[demo.phaseIndex].name : "-"}  elapsed ${(demo.totalElapsed / 1000).toFixed(2)}s`
-      ,`ORIENTATION  ${matchMedia("(orientation: portrait)").matches ? "PORTRAIT" : "LANDSCAPE"}`
+      `TORSO angle ${degrees(c.torso.current)}  angular velocity ${data.torsoAngularVelocity.toFixed(4)}`,
+      jointLine("R HIP", c.rightHip), jointLine("L HIP", c.leftHip),
+      jointLine("R KNEE", c.rightKnee), jointLine("L KNEE", c.leftKnee),
+      `POSITION x ${data.position.x.toFixed(2)} y ${data.position.y.toFixed(2)}`,
+      `VELOCITY x ${data.velocity.x.toFixed(3)} y ${data.velocity.y.toFixed(3)} / AVG ${averageVelocityX.toFixed(3)}`,
+      `LEFT FOOT  ${data.feet.left.contact ? "GROUND" : "AIR"} friction ${data.feet.left.friction.toFixed(2)}`,
+      `RIGHT FOOT ${data.feet.right.contact ? "GROUND" : "AIR"} friction ${data.feet.right.friction.toFixed(2)}`,
+      `STABILITY balance ${Math.round(data.experiments.balanceScale * 100)}% ankle ${Math.round(data.experiments.ankleScale * 100)}% dynamic friction ${data.experiments.dynamicFootFriction ? "ON" : "OFF"}`,
+      `NECK ${data.neck.connected ? "CONNECTED" : "LOOSE"} gap ${data.neck.distance.toFixed(2)}`,
+      `DEMO ${demo.active ? "ON" : "OFF"} phase ${demo.active ? phases[demo.phaseIndex].name : "-"} elapsed ${(demo.totalElapsed / 1000).toFixed(2)}s`,
+      `ORIENTATION ${matchMedia("(orientation: portrait)").matches ? "PORTRAIT" : "LANDSCAPE"}`
     ].join("\n");
   }
 
@@ -281,35 +423,17 @@
     ctx.strokeStyle = "#ff2a63";
     ctx.lineWidth = 1;
     Object.values(bodies).forEach(body => { bodyPath(body); ctx.stroke(); });
-    ctx.fillStyle = "#ff2a63";
-    physics.constraints.forEach(constraint => {
-      const x = (constraint.bodyA.position.x + constraint.bodyB.position.x) / 2;
-      const y = (constraint.bodyA.position.y + constraint.bodyB.position.y) / 2;
-      ctx.beginPath();
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
-      ctx.fill();
+    const data = physics.diagnostics();
+    [["left", bodies.leftFoot], ["right", bodies.rightFoot]].forEach(([side, foot]) => {
+      ctx.fillStyle = data.feet[side].contact ? "#63e6e2" : "#ff7068";
+      ctx.font = "800 10px monospace";
+      ctx.fillText(data.feet[side].contact ? "GROUND" : "AIR", foot.position.x - 20, foot.position.y + 28);
     });
-    const torso = bodies.torso;
-    ctx.fillStyle = "#ffe066";
+    ctx.strokeStyle = data.neck.connected ? "#63e6e2" : "#ff2a63";
     ctx.beginPath();
-    ctx.arc(torso.position.x, torso.position.y, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#ffe066";
-    ctx.beginPath();
-    ctx.moveTo(torso.position.x, torso.position.y);
-    ctx.lineTo(torso.position.x + torso.velocity.x * 18, torso.position.y + torso.velocity.y * 18);
+    ctx.moveTo(data.neck.torsoAnchor.x, data.neck.torsoAnchor.y);
+    ctx.lineTo(data.neck.headAnchor.x, data.neck.headAnchor.y);
     ctx.stroke();
-    const neck = physics.diagnostics().neck;
-    ctx.strokeStyle = neck.connected ? "#63e6e2" : "#ff2a63";
-    ctx.beginPath();
-    ctx.moveTo(neck.torsoAnchor.x, neck.torsoAnchor.y);
-    ctx.lineTo(neck.headAnchor.x, neck.headAnchor.y);
-    ctx.stroke();
-    [neck.torsoAnchor, neck.headAnchor].forEach(anchor => {
-      ctx.beginPath();
-      ctx.arc(anchor.x, anchor.y, 4, 0, Math.PI * 2);
-      ctx.fill();
-    });
   }
 
   function draw(width, height) {
@@ -319,7 +443,6 @@
     sky.addColorStop(1, "#87ccd7");
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, width, height);
-
     ctx.save();
     ctx.translate(0, height - 489 * viewScale);
     ctx.scale(viewScale, viewScale);
@@ -332,59 +455,40 @@
     ctx.fillRect(left, 489, right - left, 8);
     ctx.strokeStyle = "rgba(38,56,73,.22)";
     for (let x = Math.floor(left / 72) * 72; x < right; x += 72) {
-      ctx.beginPath();
-      ctx.moveTo(x, 497);
-      ctx.lineTo(x - 34, 538);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, 497); ctx.lineTo(x - 34, 538); ctx.stroke();
     }
-
     ctx.fillStyle = "#163044";
     ctx.font = "800 11px monospace";
     ctx.fillText("START", physics.startX - 24, 478);
     ctx.fillRect(physics.startX, 459, 3, 30);
+    ctx.strokeStyle = "#163044";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(physics.startX + 38, 447);
+    ctx.lineTo(physics.startX + 128, 447);
+    ctx.lineTo(physics.startX + 116, 439);
+    ctx.moveTo(physics.startX + 128, 447);
+    ctx.lineTo(physics.startX + 116, 455);
+    ctx.stroke();
+    ctx.fillText("FORWARD", physics.startX + 51, 435);
     for (let meter = -5; meter < 150; meter += 5) {
       const x = physics.startX + meter * QWOPPhysics.SCALE;
       ctx.fillRect(x, 481, 2, 8);
       if (meter % 10 === 0) ctx.fillText(`${meter}m`, x - 10, 470);
     }
-
     const b = physics.bodies;
-    drawBody(b.leftThigh, "#ef5f63");
-    drawBody(b.leftShin, "#f18b62");
-    drawBody(b.leftFoot, "#f5f0df");
-    drawBody(b.rightThigh, "#31b9c5");
-    drawBody(b.rightShin, "#55d5d0");
-    drawBody(b.rightFoot, "#f5f0df");
+    drawBody(b.leftThigh, "#ef5f63"); drawBody(b.leftShin, "#f18b62"); drawBody(b.leftFoot, "#f5f0df");
+    drawBody(b.rightThigh, "#31b9c5"); drawBody(b.rightShin, "#55d5d0"); drawBody(b.rightFoot, "#f5f0df");
     const neck = physics.diagnostics().neck;
-    ctx.strokeStyle = "#f3b58d";
-    ctx.lineWidth = 14;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(neck.torsoAnchor.x, neck.torsoAnchor.y);
-    ctx.lineTo(neck.headAnchor.x, neck.headAnchor.y);
-    ctx.stroke();
+    ctx.strokeStyle = "#f3b58d"; ctx.lineWidth = 14; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(neck.torsoAnchor.x, neck.torsoAnchor.y); ctx.lineTo(neck.headAnchor.x, neck.headAnchor.y); ctx.stroke();
     drawBody(b.torso, "#f7cf59");
-    ctx.beginPath();
-    ctx.arc(b.head.position.x, b.head.position.y, b.head.circleRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "#f3b58d";
-    ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#07111f";
-    ctx.stroke();
-    ctx.save();
-    ctx.translate(b.head.position.x, b.head.position.y);
-    ctx.rotate(b.head.angle);
-    ctx.fillStyle = "#07111f";
-    ctx.beginPath();
-    ctx.arc(8, -5, 2.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    drawPartLabel(b.rightThigh, "q");
-    drawPartLabel(b.leftThigh, "w");
-    drawPartLabel(b.rightShin, "o");
-    drawPartLabel(b.leftShin, "p");
-
+    ctx.beginPath(); ctx.arc(b.head.position.x, b.head.position.y, b.head.circleRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#f3b58d"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
+    ctx.save(); ctx.translate(b.head.position.x, b.head.position.y); ctx.rotate(b.head.angle);
+    ctx.fillStyle = "#07111f"; ctx.beginPath(); ctx.arc(8, -5, 2.3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    drawPartLabel(b.rightThigh, "q"); drawPartLabel(b.leftThigh, "w");
+    drawPartLabel(b.rightShin, "o"); drawPartLabel(b.leftShin, "p");
     if (debug) drawDebug();
     ctx.restore();
   }
@@ -393,6 +497,7 @@
     const delta = Math.min(now - lastTime, 100);
     lastTime = now;
     updateDemo(delta);
+    updateTraining(delta);
     physics.step(delta);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
@@ -413,5 +518,6 @@
   window.addEventListener("resize", resize, { passive: true });
   document.addEventListener("visibilitychange", () => { lastTime = performance.now(); });
   resize();
+  updateTrainingPanel();
   requestAnimationFrame(frame);
 })();
