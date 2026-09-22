@@ -66,6 +66,7 @@ aside > span { float:right; color:var(--cyan); }
 .experiment-controls h3 { grid-column:1/-1; margin:0; color:var(--cyan); font-size:9px; letter-spacing:.15em; }
 .experiment-controls label { display:flex; align-items:center; justify-content:space-between; gap:6px; color:#c8d6e0; font-size:9px; }
 .experiment-controls select { max-width:74px; padding:4px; border:1px solid #355065; border-radius:5px; background:#102436; color:#fff; font-size:9px; }
+.experiment-controls .recovery-test { grid-column:1/-1; min-height:34px; border:1px solid #b86c55; border-radius:7px; background:#472337; color:#ffd7c8; font-size:9px; font-weight:900; letter-spacing:.1em; }
 #resetParameters { width:100%; }
 .rotate { display:none; }
 @media (max-width:760px) {

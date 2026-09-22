@@ -131,15 +131,25 @@
   experimentPanel.innerHTML = `
     <h3>STABILITY EXPERIMENTS</h3>
     <label>Dynamic Foot Friction <input class="dynamic-friction" type="checkbox"></label>
-    <label>Balance <select class="balance-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option></select></label>
+    <label>Balance <select class="balance-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".4">40%</option><option value=".25">25%</option></select></label>
     <label>Ankle Control <select class="ankle-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">OFF</option></select></label>
-    <label>Arm Swing <select class="arm-swing-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">0%</option></select></label>
-    <label>Arm Mass <select class="arm-mass-preset"><option value="light">Light</option><option value="normal" selected>Normal</option><option value="heavy">Heavy</option></select></label>`;
+    <label>Arm Swing <select class="arm-swing-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".7">70%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">0%</option></select></label>
+    <label>Arm Mass <select class="arm-mass-preset"><option value="light">Light</option><option value="normal" selected>Normal</option><option value="heavy">Heavy</option></select></label>
+    <label>Arm Amplitude <select class="arm-amplitude"><option value="20">20°</option><option value="25">25°</option><option value="30">30°</option><option value="35" selected>35°</option><option value="40">40°</option><option value="42">42°</option></select></label>
+    <label>Hand Friction <select class="hand-friction"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
+    <button type="button" class="recovery-test">RECOVERY TEST</button>`;
   experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
   experimentPanel.querySelector(".balance-preset").addEventListener("change", event => physics.setBalanceScale(event.target.value));
   experimentPanel.querySelector(".ankle-preset").addEventListener("change", event => physics.setAnkleScale(event.target.value));
   experimentPanel.querySelector(".arm-swing-preset").addEventListener("change", event => physics.setArmSwingScale(event.target.value));
   experimentPanel.querySelector(".arm-mass-preset").addEventListener("change", event => physics.setArmMass(event.target.value));
+  experimentPanel.querySelector(".arm-amplitude").addEventListener("change", event => physics.setArmAmplitude(event.target.value));
+  experimentPanel.querySelector(".hand-friction").addEventListener("change", event => physics.setHandFriction(event.target.value));
+  let recoveryDirection = 1;
+  experimentPanel.querySelector(".recovery-test").addEventListener("click", () => {
+    physics.applyRecoveryImpulse(recoveryDirection);
+    recoveryDirection *= -1;
+  });
 
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
@@ -365,6 +375,8 @@
     experimentPanel.querySelector(".ankle-preset").value = "1";
     experimentPanel.querySelector(".arm-swing-preset").value = "1";
     experimentPanel.querySelector(".arm-mass-preset").value = "normal";
+    experimentPanel.querySelector(".arm-amplitude").value = "35";
+    experimentPanel.querySelector(".hand-friction").value = "normal";
   });
 
   function bodyPath(body) {
@@ -419,8 +431,12 @@
       `VELOCITY x ${data.velocity.x.toFixed(3)} y ${data.velocity.y.toFixed(3)} / AVG ${averageVelocityX.toFixed(3)}`,
       `LEFT FOOT  ${data.feet.left.contact ? "GROUND" : "AIR"} friction ${data.feet.left.friction.toFixed(2)}`,
       `RIGHT FOOT ${data.feet.right.contact ? "GROUND" : "AIR"} friction ${data.feet.right.friction.toFixed(2)}`,
+      `LEFT HAND  ${data.hands.left.contact ? "GROUND" : "AIR"} friction ${data.hands.left.friction.toFixed(2)}`,
+      `RIGHT HAND ${data.hands.right.contact ? "GROUND" : "AIR"} friction ${data.hands.right.friction.toFixed(2)}`,
+      `POSTURE ${data.posture}  balance active ${Math.round(data.experiments.balancePostureFactor * 100)}%`,
       `STABILITY balance ${Math.round(data.experiments.balanceScale * 100)}% ankle ${Math.round(data.experiments.ankleScale * 100)}% dynamic friction ${data.experiments.dynamicFootFriction ? "ON" : "OFF"}`,
-      `ARMS swing ${Math.round(data.experiments.armSwingScale * 100)}% mass ${data.experiments.armMass.toUpperCase()} active ${Math.round(data.experiments.armControlFactor * 100)}%`,
+      `ARMS swing ${Math.round(data.experiments.armSwingScale * 100)}% amplitude ${data.experiments.armAmplitude}° mass ${data.experiments.armMass.toUpperCase()} active ${Math.round(data.experiments.armControlFactor * 100)}%`,
+      `HANDS friction ${data.experiments.handFriction.toUpperCase()}  stride ${data.experiments.smoothedStride.toFixed(3)}`,
       `NECK ${data.neck.connected ? "CONNECTED" : "LOOSE"} gap ${data.neck.distance.toFixed(2)}`,
       `DEMO ${demo.active ? "ON" : "OFF"} phase ${demo.active ? phases[demo.phaseIndex].name : "-"} elapsed ${(demo.totalElapsed / 1000).toFixed(2)}s`,
       `ORIENTATION ${matchMedia("(orientation: portrait)").matches ? "PORTRAIT" : "LANDSCAPE"}`
@@ -486,14 +502,24 @@
       if (meter % 10 === 0) ctx.fillText(`${meter}m`, x - 10, 470);
     }
     const b = physics.bodies;
-    drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62");
+    const armData = physics.diagnostics();
+    const drawArm = side => {
+      if (side === "left") {
+        drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62"); drawBody(b.leftHand, "#f3b58d");
+      } else {
+        drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf"); drawBody(b.rightHand, "#f3b58d");
+      }
+    };
+    const frontArm = armData.experiments.smoothedStride >= 0 ? "right" : "left";
+    const backArm = frontArm === "right" ? "left" : "right";
+    drawArm(backArm);
     drawBody(b.leftThigh, "#ef5f63"); drawBody(b.leftShin, "#f18b62"); drawBody(b.leftFoot, "#f5f0df");
     drawBody(b.rightThigh, "#31b9c5"); drawBody(b.rightShin, "#55d5d0"); drawBody(b.rightFoot, "#f5f0df");
     const neck = physics.diagnostics().neck;
     ctx.strokeStyle = "#f3b58d"; ctx.lineWidth = 14; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(neck.torsoAnchor.x, neck.torsoAnchor.y); ctx.lineTo(neck.headAnchor.x, neck.headAnchor.y); ctx.stroke();
     drawBody(b.torso, "#f7cf59");
-    drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf");
+    drawArm(frontArm);
     ctx.beginPath(); ctx.arc(b.head.position.x, b.head.position.y, b.head.circleRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#f3b58d"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
     ctx.save(); ctx.translate(b.head.position.x, b.head.position.y); ctx.rotate(b.head.angle);

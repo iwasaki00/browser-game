@@ -167,11 +167,17 @@ async function viewport(name, width, height) {
   await wait(120);
   const debugText = await evaluate("document.querySelector('.control-diagnostics').textContent");
   assert(debugText.includes("R SHOULDER") && debugText.includes("L ELBOW"), "arm joint diagnostics missing");
-  assert(debugText.includes("ARMS swing 0% mass NORMAL"), "arm experiment diagnostics missing");
+  assert(debugText.includes("ARMS swing 0% amplitude 35° mass NORMAL"), "arm experiment diagnostics missing");
+  assert(debugText.includes("LEFT HAND") && debugText.includes("RIGHT HAND") && debugText.includes("POSTURE"), "hand or posture diagnostics missing");
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
+  assert.deepEqual(await evaluate("[...document.querySelector('.arm-amplitude').options].map(option => option.value)"), ["20", "25", "30", "35", "40", "42"]);
+  assert.deepEqual(await evaluate("[...document.querySelector('.hand-friction').options].map(option => option.textContent)"), ["Low", "Normal", "High"]);
+  assert(await evaluate("Boolean(document.querySelector('.recovery-test'))"));
+  await evaluate("document.querySelector('.recovery-test').click()");
+  await wait(180);
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log("Phase 1D browser smoke tests passed");
+  console.log("Phase 1E browser smoke tests passed");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

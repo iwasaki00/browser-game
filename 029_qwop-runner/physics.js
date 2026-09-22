@@ -5,6 +5,7 @@
   const DEG = Math.PI / 180;
   const FIXED_STEP = 1000 / 60;
   const SELF_COLLISION_GROUP = -17;
+  const COLLISION = Object.freeze({ ground: 0x0001, core: 0x0002, limb: 0x0004, hand: 0x0008 });
   const DEMO_FORWARD_SEQUENCE = Object.freeze([
     Object.freeze({ name: "Q + O", keys: Object.freeze(["q", "o"]), duration: 220 }),
     Object.freeze({ name: "Q", keys: Object.freeze(["q"]), duration: 160 }),
@@ -49,8 +50,8 @@
     ankle: [-30 * DEG, 30 * DEG],
     neck: [-25 * DEG, 25 * DEG],
     shoulder: [-85 * DEG, 85 * DEG],
-    leftElbow: [-125 * DEG, -30 * DEG],
-    rightElbow: [30 * DEG, 125 * DEG]
+    leftElbow: [25 * DEG, 125 * DEG],
+    rightElbow: [-125 * DEG, -25 * DEG]
   });
 
   const NEUTRAL = Object.freeze({
@@ -60,6 +61,7 @@
     rightKnee: 8 * DEG
   });
   const ARM_MASS = Object.freeze({ light: 0.65, normal: 1, heavy: 1.45 });
+  const HAND_FRICTION = Object.freeze({ low: 0.35, normal: 0.70, high: 1.05 });
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = angle => Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -71,7 +73,7 @@
       frictionStatic: 1.4,
       restitution: 0,
       chamfer: { radius: Math.min(width, height) * 0.2 },
-      collisionFilter: { group: SELF_COLLISION_GROUP },
+      collisionFilter: { group: SELF_COLLISION_GROUP, category: COLLISION.limb, mask: COLLISION.ground },
       ...options
     });
   }
@@ -113,7 +115,15 @@
       this.dynamicFootFriction = false;
       this.armSwingScale = 1;
       this.armMassMode = "normal";
+      this.armAmplitude = 35;
+      this.handFrictionMode = "normal";
+      this.smoothedStride = 0;
       this.armControlFactor = 1;
+      this.balancePostureFactor = 1;
+      this.posture = "STABLE";
+      this.handContact = { left: false, right: false };
+      this.recoveryForceFrames = 0;
+      this.recoveryDirection = 1;
       this.footContact = { left: false, right: false };
       this.control = this.emptyControlState();
       this.reset();
@@ -128,10 +138,10 @@
         leftHip: { current: 0, target: NEUTRAL.leftHip, torque: 0 },
         rightKnee: { current: 0, target: NEUTRAL.rightKnee, torque: 0 },
         leftKnee: { current: 0, target: NEUTRAL.leftKnee, torque: 0 },
-        rightShoulder: { current: -18 * DEG, target: -18 * DEG, torque: 0 },
-        leftShoulder: { current: 18 * DEG, target: 18 * DEG, torque: 0 },
-        rightElbow: { current: 82 * DEG, target: 82 * DEG, torque: 0 },
-        leftElbow: { current: -82 * DEG, target: -82 * DEG, torque: 0 }
+        rightShoulder: { current: -10 * DEG, target: -10 * DEG, torque: 0 },
+        leftShoulder: { current: 10 * DEG, target: 10 * DEG, torque: 0 },
+        rightElbow: { current: -85 * DEG, target: -85 * DEG, torque: 0 },
+        leftElbow: { current: 85 * DEG, target: 85 * DEG, torque: 0 }
       };
     }
 
@@ -139,15 +149,18 @@
       Composite.clear(this.engine.world, false, true);
       Engine.clear(this.engine);
       this.accumulator = 0;
+      this.smoothedStride = 0;
+      this.recoveryForceFrames = 0;
       Object.keys(this.inputState).forEach(key => { this.inputState[key] = false; });
       this.engine.gravity.y = this.params.gravity;
       this.startX = 300;
-      this.ground = Bodies.rectangle(10000, 516, 20500, 54, {
+      this.ground = Bodies.rectangle(10000, 516, 60000, 54, {
         isStatic: true,
         label: "ground",
         friction: this.params.groundFriction,
         frictionStatic: 2,
-        restitution: 0
+        restitution: 0,
+        collisionFilter: { category: COLLISION.ground, mask: 0xffffffff }
       });
       Composite.add(this.engine.world, this.ground);
       this.createRunner();
@@ -156,13 +169,17 @@
 
     createRunner() {
       const x = this.startX;
-      const torso = limb(x, 278, 44, 100, { label: "torso", density: 0.0036 });
+      const torso = limb(x, 278, 44, 100, {
+        label: "torso",
+        density: 0.0036,
+        collisionFilter: { group: 0, category: COLLISION.core, mask: COLLISION.ground | COLLISION.hand }
+      });
       const head = Bodies.circle(x, 207, 25, {
         label: "head",
         density: 0.0017,
         friction: 0.7,
         restitution: 0,
-        collisionFilter: { group: SELF_COLLISION_GROUP }
+        collisionFilter: { group: SELF_COLLISION_GROUP, category: COLLISION.limb, mask: COLLISION.ground }
       });
       const leftThigh = limb(x - 15, 366, 24, 76, { label: "left thigh" });
       const rightThigh = limb(x + 15, 366, 24, 76, { label: "right thigh" });
@@ -170,33 +187,54 @@
       const rightShin = limb(x + 15, 442, 20, 76, { label: "right shin" });
       const leftFoot = limb(x + 3, 479, 52, 18, { label: "left foot", friction: this.params.footFriction, frictionStatic: 2 });
       const rightFoot = limb(x + 33, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
-      const leftUpperArm = limbFromJoint(x - 20, 248, 15, 58, 18 * DEG, { label: "left upper arm", density: 0.00125, friction: 0.65 });
-      const leftElbowX = x - 20 - Math.sin(18 * DEG) * 58;
-      const leftElbowY = 248 + Math.cos(18 * DEG) * 58;
-      const leftForearm = limbFromJoint(leftElbowX, leftElbowY, 13, 54, -64 * DEG, { label: "left forearm", density: 0.0010, friction: 0.7 });
-      const rightUpperArm = limbFromJoint(x + 20, 248, 15, 58, -18 * DEG, { label: "right upper arm", density: 0.00125, friction: 0.65 });
-      const rightElbowX = x + 20 - Math.sin(-18 * DEG) * 58;
-      const rightElbowY = 248 + Math.cos(-18 * DEG) * 58;
-      const rightForearm = limbFromJoint(rightElbowX, rightElbowY, 13, 54, 64 * DEG, { label: "right forearm", density: 0.0010, friction: 0.7 });
+      const leftUpperAngle = 10 * DEG;
+      const leftForearmAngle = 95 * DEG;
+      const leftUpperArm = limbFromJoint(x - 20, 248, 14, 54, leftUpperAngle, { label: "left upper arm", density: 0.00125, friction: 0.65 });
+      const leftElbowX = x - 20 - Math.sin(leftUpperAngle) * 54;
+      const leftElbowY = 248 + Math.cos(leftUpperAngle) * 54;
+      const leftForearm = limbFromJoint(leftElbowX, leftElbowY, 12, 44, leftForearmAngle, { label: "left forearm", density: 0.0010, friction: 0.7 });
+      const leftHandX = leftElbowX - Math.sin(leftForearmAngle) * 44;
+      const leftHandY = leftElbowY + Math.cos(leftForearmAngle) * 44;
+      const leftHand = Bodies.circle(leftHandX, leftHandY, 8, {
+        label: "left hand", density: 0.00055, friction: HAND_FRICTION[this.handFrictionMode],
+        frictionStatic: 1, restitution: 0,
+        collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
+      });
+      const rightUpperAngle = -10 * DEG;
+      const rightForearmAngle = -95 * DEG;
+      const rightUpperArm = limbFromJoint(x + 20, 248, 14, 54, rightUpperAngle, { label: "right upper arm", density: 0.00125, friction: 0.65 });
+      const rightElbowX = x + 20 - Math.sin(rightUpperAngle) * 54;
+      const rightElbowY = 248 + Math.cos(rightUpperAngle) * 54;
+      const rightForearm = limbFromJoint(rightElbowX, rightElbowY, 12, 44, rightForearmAngle, { label: "right forearm", density: 0.0010, friction: 0.7 });
+      const rightHandX = rightElbowX - Math.sin(rightForearmAngle) * 44;
+      const rightHandY = rightElbowY + Math.cos(rightForearmAngle) * 44;
+      const rightHand = Bodies.circle(rightHandX, rightHandY, 8, {
+        label: "right hand", density: 0.00055, friction: HAND_FRICTION[this.handFrictionMode],
+        frictionStatic: 1, restitution: 0,
+        collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
+      });
 
       this.bodies = {
         torso, head,
-        leftUpperArm, leftForearm, rightUpperArm, rightForearm,
+        leftUpperArm, leftForearm, leftHand, rightUpperArm, rightForearm, rightHand,
         leftThigh, rightThigh, leftShin, rightShin, leftFoot, rightFoot
       };
       this.armBaseDensities = new Map([
         [leftUpperArm, 0.00125], [leftForearm, 0.0010],
-        [rightUpperArm, 0.00125], [rightForearm, 0.0010]
+        [rightUpperArm, 0.00125], [rightForearm, 0.0010],
+        [leftHand, 0.00055], [rightHand, 0.00055]
       ]);
       this.neckConstraint = pin(torso, { x: 0, y: -49 }, head, { x: 0, y: 21 }, 1);
       this.neckConstraint.stiffness = 1;
       this.neckConstraint.damping = 0.5;
       this.constraints = [
         this.neckConstraint,
-        pin(torso, { x: -20, y: -30 }, leftUpperArm, { x: 0, y: -29 }, 1, "left shoulder"),
-        pin(leftUpperArm, { x: 0, y: 29 }, leftForearm, { x: 0, y: -27 }, 1, "left elbow"),
-        pin(torso, { x: 20, y: -30 }, rightUpperArm, { x: 0, y: -29 }, 1, "right shoulder"),
-        pin(rightUpperArm, { x: 0, y: 29 }, rightForearm, { x: 0, y: -27 }, 1, "right elbow"),
+        pin(torso, { x: -20, y: -30 }, leftUpperArm, { x: 0, y: -27 }, 1, "left shoulder"),
+        pin(leftUpperArm, { x: 0, y: 27 }, leftForearm, { x: 0, y: -22 }, 1, "left elbow"),
+        pin(leftForearm, { x: 0, y: 22 }, leftHand, { x: 0, y: 0 }, 1, "left wrist"),
+        pin(torso, { x: 20, y: -30 }, rightUpperArm, { x: 0, y: -27 }, 1, "right shoulder"),
+        pin(rightUpperArm, { x: 0, y: 27 }, rightForearm, { x: 0, y: -22 }, 1, "right elbow"),
+        pin(rightForearm, { x: 0, y: 22 }, rightHand, { x: 0, y: 0 }, 1, "right wrist"),
         pin(torso, { x: -15, y: 48 }, leftThigh, { x: 0, y: -37 }, 1),
         pin(torso, { x: 15, y: 48 }, rightThigh, { x: 0, y: -37 }, 1),
         pin(leftThigh, { x: 0, y: 37 }, leftShin, { x: 0, y: -37 }, 1),
@@ -214,6 +252,7 @@
         body.torque = 0;
       });
       this.setArmMass(this.armMassMode);
+      this.setHandFriction(this.handFrictionMode);
     }
 
     setInput(key, active) {
@@ -237,6 +276,8 @@
       this.setDynamicFootFriction(false);
       this.setArmSwingScale(1);
       this.setArmMass("normal");
+      this.setArmAmplitude(35);
+      this.setHandFriction("normal");
     }
 
     setBalanceScale(scale) {
@@ -261,6 +302,25 @@
       const multiplier = ARM_MASS[mode];
       if (!this.armBaseDensities) return;
       this.armBaseDensities.forEach((density, body) => Body.setDensity(body, density * multiplier));
+    }
+
+    setArmAmplitude(degrees) {
+      this.armAmplitude = clamp(Number(degrees), 20, 42);
+    }
+
+    setHandFriction(mode) {
+      if (!(mode in HAND_FRICTION)) return;
+      this.handFrictionMode = mode;
+      if (!this.bodies?.leftHand) return;
+      [this.bodies.leftHand, this.bodies.rightHand].forEach(hand => {
+        hand.friction = HAND_FRICTION[mode];
+        hand.frictionStatic = HAND_FRICTION[mode] * 1.4;
+      });
+    }
+
+    applyRecoveryImpulse(direction = 1) {
+      this.recoveryDirection = direction < 0 ? -1 : 1;
+      this.recoveryForceFrames = 8;
     }
 
     jointPD(parent, child, target, kp, kd, maxTorque) {
@@ -308,8 +368,14 @@
       const b = this.bodies;
       const p = this.params;
       const target = this.targets();
+      if (this.recoveryForceFrames > 0) {
+        Body.applyForce(b.torso, { x: b.torso.position.x, y: b.torso.position.y - 34 }, { x: 0.080 * this.recoveryDirection, y: -0.004 });
+        this.recoveryForceFrames -= 1;
+      }
       this.footContact.left = Query.collides(b.leftFoot, [this.ground]).length > 0;
       this.footContact.right = Query.collides(b.rightFoot, [this.ground]).length > 0;
+      this.handContact.left = Query.collides(b.leftHand, [this.ground]).length > 0;
+      this.handContact.right = Query.collides(b.rightHand, [this.ground]).length > 0;
       if (this.dynamicFootFriction) {
         b.leftFoot.friction = p.footFriction * (this.footContact.left ? 1.18 : 0.72);
         b.rightFoot.friction = p.footFriction * (this.footContact.right ? 1.18 : 0.72);
@@ -321,16 +387,26 @@
       const ankleX = foot => foot.position.x - Math.cos(foot.angle) * 18;
       const supportX = (ankleX(b.leftFoot) + ankleX(b.rightFoot)) / 2;
       const supportVelocity = (b.leftFoot.velocity.x + b.rightFoot.velocity.x) / 2;
+      const torsoTilt = Math.abs(normalizeAngle(b.torso.angle));
+      const down = b.torso.position.y > 400 || b.head.position.y > 430;
+      const angularSpeed = Math.abs(b.torso.angularVelocity);
+      this.posture = down ? "DOWN"
+        : torsoTilt > 50 * DEG || (torsoTilt > 30 * DEG && angularSpeed > 0.08) ? "FALLING"
+          : torsoTilt > 10 * DEG ? "LEANING" : "STABLE";
+      const tiltBalanceFactor = clamp(1 - Math.max(0, torsoTilt - 8 * DEG) / (35 * DEG), 0.12, 1);
+      const heightBalanceFactor = clamp(1 - Math.max(0, b.torso.position.y - 320) / 50, 0.12, 1);
+      this.balancePostureFactor = down ? 0.08 : Math.min(tiltBalanceFactor, heightBalanceFactor);
+      const effectiveBalance = this.balanceScale * this.balancePostureFactor;
       const balanceForce = clamp(
         -p.balanceKp * (b.torso.position.x - supportX) - p.balanceKd * (b.torso.velocity.x - supportVelocity),
-        -p.balanceMaxForce * this.balanceScale,
-        p.balanceMaxForce * this.balanceScale
-      ) * this.balanceScale;
+        -p.balanceMaxForce,
+        p.balanceMaxForce
+      ) * effectiveBalance;
       Body.applyForce(b.torso, b.torso.position, { x: balanceForce, y: 0 });
       Body.applyForce(b.leftFoot, b.leftFoot.position, { x: -balanceForce / 2, y: 0 });
       Body.applyForce(b.rightFoot, b.rightFoot.position, { x: -balanceForce / 2, y: 0 });
 
-      this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp * this.balanceScale, p.torsoKd * this.balanceScale, p.torsoMaxTorque * this.balanceScale);
+      this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp * effectiveBalance, p.torsoKd * effectiveBalance, p.torsoMaxTorque * effectiveBalance);
       this.control.neck = this.jointPD(b.torso, b.head, 0, p.neckKp, p.neckKd, p.neckMaxTorque);
       this.control.rightHip = this.jointPD(b.torso, b.rightThigh, target.rightHip, p.hipKp, p.hipKd, p.hipMaxTorque);
       this.control.leftHip = this.jointPD(b.torso, b.leftThigh, target.leftHip, p.hipKp, p.hipKd, p.hipMaxTorque);
@@ -338,14 +414,21 @@
       this.control.leftKnee = this.jointPD(b.leftThigh, b.leftShin, target.leftKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
 
       const neutralHipDifference = NEUTRAL.rightHip - NEUTRAL.leftHip;
-      const stride = clamp((this.control.rightHip.current - this.control.leftHip.current - neutralHipDifference) / (70 * DEG), -1, 1);
+      const rawStride = clamp((this.control.rightHip.current - this.control.leftHip.current - neutralHipDifference) / (70 * DEG), -1, 1);
+      this.smoothedStride += (rawStride - this.smoothedStride) * 0.16;
+      const stride = this.smoothedStride;
+      const phaseMagnitude = Math.abs(stride);
+      const frontAmplitude = this.armAmplitude * DEG;
+      const rearAmplitude = this.armAmplitude * 0.72 * DEG;
+      const idleShoulder = 10 * DEG * (1 - phaseMagnitude);
+      const leftElbowMagnitude = (85 + 15 * stride) * DEG;
+      const rightElbowMagnitude = (85 - 15 * stride) * DEG;
       const armTarget = {
-        leftShoulder: clamp(18 * DEG + stride * 42 * DEG, ...LIMITS.shoulder),
-        rightShoulder: clamp(-18 * DEG - stride * 42 * DEG, ...LIMITS.shoulder),
-        leftElbow: clamp((-82 - stride * 7) * DEG, ...LIMITS.leftElbow),
-        rightElbow: clamp((82 + stride * 7) * DEG, ...LIMITS.rightElbow)
+        leftShoulder: clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder, ...LIMITS.shoulder),
+        rightShoulder: clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder, ...LIMITS.shoulder),
+        leftElbow: clamp(leftElbowMagnitude, ...LIMITS.leftElbow),
+        rightElbow: clamp(-rightElbowMagnitude, ...LIMITS.rightElbow)
       };
-      const torsoTilt = Math.abs(normalizeAngle(b.torso.angle));
       const tiltFactor = clamp(1 - (torsoTilt - 35 * DEG) / (45 * DEG), 0.12, 1);
       const headFactor = b.head.position.y > 390 ? 0.25 : 1;
       this.armControlFactor = this.armSwingScale * Math.min(tiltFactor, headFactor);
@@ -407,13 +490,23 @@
           left: { contact: this.footContact.left, friction: this.bodies.leftFoot.friction },
           right: { contact: this.footContact.right, friction: this.bodies.rightFoot.friction }
         },
+        hands: {
+          left: { contact: this.handContact.left, friction: this.bodies.leftHand.friction },
+          right: { contact: this.handContact.right, friction: this.bodies.rightHand.friction }
+        },
+        posture: this.posture,
         experiments: {
           balanceScale: this.balanceScale,
           ankleScale: this.ankleScale,
           dynamicFootFriction: this.dynamicFootFriction,
           armSwingScale: this.armSwingScale,
           armMass: this.armMassMode,
-          armControlFactor: this.armControlFactor
+          armAmplitude: this.armAmplitude,
+          armControlFactor: this.armControlFactor,
+          handFriction: this.handFrictionMode,
+          balancePostureFactor: this.balancePostureFactor,
+          smoothedStride: this.smoothedStride,
+          recoveryActive: this.recoveryForceFrames > 0
         },
         control: JSON.parse(JSON.stringify(this.control))
       };
@@ -425,5 +518,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
 })();
