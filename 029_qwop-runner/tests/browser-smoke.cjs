@@ -158,9 +158,20 @@ async function viewport(name, width, height) {
   await viewport("landscape-844x390", 844, 390);
   await evaluate("document.querySelector('#debugButton').click()");
   assert.equal(await evaluate("document.querySelector('#debugPanel').hidden"), false);
+  assert.equal(await evaluate(`(() => {
+    const select = document.querySelector(".arm-swing-preset");
+    select.value = "0";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    return select.value;
+  })()`), "0");
+  await wait(120);
+  const debugText = await evaluate("document.querySelector('.control-diagnostics').textContent");
+  assert(debugText.includes("R SHOULDER") && debugText.includes("L ELBOW"), "arm joint diagnostics missing");
+  assert(debugText.includes("ARMS swing 0% mass NORMAL"), "arm experiment diagnostics missing");
+  assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log("Phase 1C browser smoke tests passed");
+  console.log("Phase 1D browser smoke tests passed");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

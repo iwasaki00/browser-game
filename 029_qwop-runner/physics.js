@@ -31,6 +31,12 @@
     neckKp: 0.45,
     neckKd: 0.12,
     neckMaxTorque: 0.30,
+    shoulderKp: 1.50,
+    shoulderKd: 0.18,
+    shoulderMaxTorque: 1.20,
+    elbowKp: 0.70,
+    elbowKd: 0.12,
+    elbowMaxTorque: 0.65,
     jointLimitStrength: 20.00,
     balanceKp: 0.0020,
     balanceKd: 0.020,
@@ -41,7 +47,10 @@
     hip: [-60 * DEG, 60 * DEG],
     knee: [-6 * DEG, 92 * DEG],
     ankle: [-30 * DEG, 30 * DEG],
-    neck: [-25 * DEG, 25 * DEG]
+    neck: [-25 * DEG, 25 * DEG],
+    shoulder: [-85 * DEG, 85 * DEG],
+    leftElbow: [-125 * DEG, -30 * DEG],
+    rightElbow: [30 * DEG, 125 * DEG]
   });
 
   const NEUTRAL = Object.freeze({
@@ -50,6 +59,7 @@
     leftKnee: 8 * DEG,
     rightKnee: 8 * DEG
   });
+  const ARM_MASS = Object.freeze({ light: 0.65, normal: 1, heavy: 1.45 });
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = angle => Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -66,8 +76,16 @@
     });
   }
 
-  function pin(bodyA, pointA, bodyB, pointB, length = 0) {
+  function limbFromJoint(x, y, width, height, angle, options = {}) {
+    const half = height / 2;
+    const body = limb(x - Math.sin(angle) * half, y + Math.cos(angle) * half, width, height, options);
+    Body.setAngle(body, angle);
+    return body;
+  }
+
+  function pin(bodyA, pointA, bodyB, pointB, length = 0, label = "joint") {
     return Constraint.create({
+      label,
       bodyA,
       pointA,
       bodyB,
@@ -93,6 +111,9 @@
       this.balanceScale = 1;
       this.ankleScale = 1;
       this.dynamicFootFriction = false;
+      this.armSwingScale = 1;
+      this.armMassMode = "normal";
+      this.armControlFactor = 1;
       this.footContact = { left: false, right: false };
       this.control = this.emptyControlState();
       this.reset();
@@ -106,7 +127,11 @@
         rightHip: { current: 0, target: NEUTRAL.rightHip, torque: 0 },
         leftHip: { current: 0, target: NEUTRAL.leftHip, torque: 0 },
         rightKnee: { current: 0, target: NEUTRAL.rightKnee, torque: 0 },
-        leftKnee: { current: 0, target: NEUTRAL.leftKnee, torque: 0 }
+        leftKnee: { current: 0, target: NEUTRAL.leftKnee, torque: 0 },
+        rightShoulder: { current: -18 * DEG, target: -18 * DEG, torque: 0 },
+        leftShoulder: { current: 18 * DEG, target: 18 * DEG, torque: 0 },
+        rightElbow: { current: 82 * DEG, target: 82 * DEG, torque: 0 },
+        leftElbow: { current: -82 * DEG, target: -82 * DEG, torque: 0 }
       };
     }
 
@@ -145,13 +170,33 @@
       const rightShin = limb(x + 15, 442, 20, 76, { label: "right shin" });
       const leftFoot = limb(x + 3, 479, 52, 18, { label: "left foot", friction: this.params.footFriction, frictionStatic: 2 });
       const rightFoot = limb(x + 33, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
+      const leftUpperArm = limbFromJoint(x - 20, 248, 15, 58, 18 * DEG, { label: "left upper arm", density: 0.00125, friction: 0.65 });
+      const leftElbowX = x - 20 - Math.sin(18 * DEG) * 58;
+      const leftElbowY = 248 + Math.cos(18 * DEG) * 58;
+      const leftForearm = limbFromJoint(leftElbowX, leftElbowY, 13, 54, -64 * DEG, { label: "left forearm", density: 0.0010, friction: 0.7 });
+      const rightUpperArm = limbFromJoint(x + 20, 248, 15, 58, -18 * DEG, { label: "right upper arm", density: 0.00125, friction: 0.65 });
+      const rightElbowX = x + 20 - Math.sin(-18 * DEG) * 58;
+      const rightElbowY = 248 + Math.cos(-18 * DEG) * 58;
+      const rightForearm = limbFromJoint(rightElbowX, rightElbowY, 13, 54, 64 * DEG, { label: "right forearm", density: 0.0010, friction: 0.7 });
 
-      this.bodies = { torso, head, leftThigh, rightThigh, leftShin, rightShin, leftFoot, rightFoot };
+      this.bodies = {
+        torso, head,
+        leftUpperArm, leftForearm, rightUpperArm, rightForearm,
+        leftThigh, rightThigh, leftShin, rightShin, leftFoot, rightFoot
+      };
+      this.armBaseDensities = new Map([
+        [leftUpperArm, 0.00125], [leftForearm, 0.0010],
+        [rightUpperArm, 0.00125], [rightForearm, 0.0010]
+      ]);
       this.neckConstraint = pin(torso, { x: 0, y: -49 }, head, { x: 0, y: 21 }, 1);
       this.neckConstraint.stiffness = 1;
       this.neckConstraint.damping = 0.5;
       this.constraints = [
         this.neckConstraint,
+        pin(torso, { x: -20, y: -30 }, leftUpperArm, { x: 0, y: -29 }, 1, "left shoulder"),
+        pin(leftUpperArm, { x: 0, y: 29 }, leftForearm, { x: 0, y: -27 }, 1, "left elbow"),
+        pin(torso, { x: 20, y: -30 }, rightUpperArm, { x: 0, y: -29 }, 1, "right shoulder"),
+        pin(rightUpperArm, { x: 0, y: 29 }, rightForearm, { x: 0, y: -27 }, 1, "right elbow"),
         pin(torso, { x: -15, y: 48 }, leftThigh, { x: 0, y: -37 }, 1),
         pin(torso, { x: 15, y: 48 }, rightThigh, { x: 0, y: -37 }, 1),
         pin(leftThigh, { x: 0, y: 37 }, leftShin, { x: 0, y: -37 }, 1),
@@ -168,6 +213,7 @@
         body.force.y = 0;
         body.torque = 0;
       });
+      this.setArmMass(this.armMassMode);
     }
 
     setInput(key, active) {
@@ -189,6 +235,8 @@
       this.setBalanceScale(1);
       this.setAnkleScale(1);
       this.setDynamicFootFriction(false);
+      this.setArmSwingScale(1);
+      this.setArmMass("normal");
     }
 
     setBalanceScale(scale) {
@@ -201,6 +249,18 @@
 
     setDynamicFootFriction(active) {
       this.dynamicFootFriction = Boolean(active);
+    }
+
+    setArmSwingScale(scale) {
+      this.armSwingScale = clamp(Number(scale), 0, 1);
+    }
+
+    setArmMass(mode) {
+      if (!(mode in ARM_MASS)) return;
+      this.armMassMode = mode;
+      const multiplier = ARM_MASS[mode];
+      if (!this.armBaseDensities) return;
+      this.armBaseDensities.forEach((density, body) => Body.setDensity(body, density * multiplier));
     }
 
     jointPD(parent, child, target, kp, kd, maxTorque) {
@@ -277,6 +337,24 @@
       this.control.rightKnee = this.jointPD(b.rightThigh, b.rightShin, target.rightKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
       this.control.leftKnee = this.jointPD(b.leftThigh, b.leftShin, target.leftKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
 
+      const neutralHipDifference = NEUTRAL.rightHip - NEUTRAL.leftHip;
+      const stride = clamp((this.control.rightHip.current - this.control.leftHip.current - neutralHipDifference) / (70 * DEG), -1, 1);
+      const armTarget = {
+        leftShoulder: clamp(18 * DEG + stride * 42 * DEG, ...LIMITS.shoulder),
+        rightShoulder: clamp(-18 * DEG - stride * 42 * DEG, ...LIMITS.shoulder),
+        leftElbow: clamp((-82 - stride * 7) * DEG, ...LIMITS.leftElbow),
+        rightElbow: clamp((82 + stride * 7) * DEG, ...LIMITS.rightElbow)
+      };
+      const torsoTilt = Math.abs(normalizeAngle(b.torso.angle));
+      const tiltFactor = clamp(1 - (torsoTilt - 35 * DEG) / (45 * DEG), 0.12, 1);
+      const headFactor = b.head.position.y > 390 ? 0.25 : 1;
+      this.armControlFactor = this.armSwingScale * Math.min(tiltFactor, headFactor);
+      const armFactor = this.armControlFactor;
+      this.control.leftShoulder = this.jointPD(b.torso, b.leftUpperArm, armTarget.leftShoulder, p.shoulderKp * armFactor, p.shoulderKd * armFactor, p.shoulderMaxTorque * armFactor);
+      this.control.rightShoulder = this.jointPD(b.torso, b.rightUpperArm, armTarget.rightShoulder, p.shoulderKp * armFactor, p.shoulderKd * armFactor, p.shoulderMaxTorque * armFactor);
+      this.control.leftElbow = this.jointPD(b.leftUpperArm, b.leftForearm, armTarget.leftElbow, p.elbowKp * armFactor, p.elbowKd * armFactor, p.elbowMaxTorque * armFactor);
+      this.control.rightElbow = this.jointPD(b.rightUpperArm, b.rightForearm, armTarget.rightElbow, p.elbowKp * armFactor, p.elbowKd * armFactor, p.elbowMaxTorque * armFactor);
+
       this.absolutePD(b.rightFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
       this.absolutePD(b.leftFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
 
@@ -287,6 +365,11 @@
       this.softLimit(b.rightShin, b.rightFoot, LIMITS.ankle, p.ankleMaxTorque);
       this.softLimit(b.leftShin, b.leftFoot, LIMITS.ankle, p.ankleMaxTorque);
       this.softLimit(b.torso, b.head, LIMITS.neck, p.neckMaxTorque);
+      const armLimitTorque = 0.08 + 0.42 * armFactor;
+      this.softLimit(b.torso, b.leftUpperArm, LIMITS.shoulder, armLimitTorque);
+      this.softLimit(b.torso, b.rightUpperArm, LIMITS.shoulder, armLimitTorque);
+      this.softLimit(b.leftUpperArm, b.leftForearm, LIMITS.leftElbow, armLimitTorque);
+      this.softLimit(b.rightUpperArm, b.rightForearm, LIMITS.rightElbow, armLimitTorque);
     }
 
     step(deltaMs) {
@@ -324,7 +407,14 @@
           left: { contact: this.footContact.left, friction: this.bodies.leftFoot.friction },
           right: { contact: this.footContact.right, friction: this.bodies.rightFoot.friction }
         },
-        experiments: { balanceScale: this.balanceScale, ankleScale: this.ankleScale, dynamicFootFriction: this.dynamicFootFriction },
+        experiments: {
+          balanceScale: this.balanceScale,
+          ankleScale: this.ankleScale,
+          dynamicFootFriction: this.dynamicFootFriction,
+          armSwingScale: this.armSwingScale,
+          armMass: this.armMassMode,
+          armControlFactor: this.armControlFactor
+        },
         control: JSON.parse(JSON.stringify(this.control))
       };
     }
@@ -335,5 +425,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
 })();
