@@ -160,14 +160,14 @@ async function viewport(name, width, height) {
   assert.equal(await evaluate("document.querySelector('#debugPanel').hidden"), false);
   assert.equal(await evaluate(`(() => {
     const select = document.querySelector(".arm-swing-preset");
-    select.value = "0";
+    select.value = "1";
     select.dispatchEvent(new Event("change", { bubbles: true }));
     return select.value;
-  })()`), "0");
+  })()`), "1");
   await wait(120);
   const debugText = await evaluate("document.querySelector('.control-diagnostics').textContent");
   assert(debugText.includes("R SHOULDER") && debugText.includes("L ELBOW"), "arm joint diagnostics missing");
-  assert(debugText.includes("ARMS swing 0% amplitude 35° mass NORMAL"), "arm experiment diagnostics missing");
+  assert(debugText.includes("ARMS swing 100% amplitude 35° mass NORMAL"), "arm experiment diagnostics missing");
   assert(debugText.includes("LEFT HAND") && debugText.includes("RIGHT HAND") && debugText.includes("POSTURE"), "hand or posture diagnostics missing");
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-amplitude').options].map(option => option.value)"), ["20", "25", "30", "35", "40", "42"]);
@@ -175,9 +175,58 @@ async function viewport(name, width, height) {
   assert(await evaluate("Boolean(document.querySelector('.recovery-test'))"));
   await evaluate("document.querySelector('.recovery-test').click()");
   await wait(180);
+
+  await evaluate("document.querySelector('.drift-test').click()");
+  assert.equal(await evaluate("document.querySelector('.start-demo').disabled && document.querySelector('.recovery-test').disabled"), true);
+  await evaluate("document.dispatchEvent(new KeyboardEvent('keydown', { key: 'q', bubbles: true }))");
+  assert.equal(await evaluate("document.querySelector('.controls [data-key=q]').classList.contains('active')"), false, "DRIFT TEST must reject input");
+  await wait(5300);
+  const driftResult = await evaluate("document.querySelector('.physics-test-result').textContent");
+  assert(driftResult.includes("DRIFT TEST: COMPLETE") && driftResult.includes("Foot ground"), "DRIFT TEST result missing");
+  const driftMeters = Number.parseFloat(driftResult.match(/Drift Distance ([+-]?[0-9.]+) m/)[1]);
+  assert(Math.abs(driftMeters) <= 0.05, `browser drift exceeded target: ${driftMeters}m`);
+
+  await evaluate("document.querySelector('.fall-test').click()");
+  await wait(1250);
+  const fallDuring = await evaluate("document.querySelector('.physics-test-result').textContent");
+  assert(fallDuring.includes("DOWN") && fallDuring.includes("First body contact"), "FALL TEST contact report missing");
+  await evaluate("document.dispatchEvent(new KeyboardEvent('keydown', { key: 'q', bubbles: true }))");
+  assert.equal(await evaluate("document.querySelector('.controls [data-key=q]').classList.contains('active')"), true, "Q input must remain enabled while DOWN");
+  await evaluate("document.dispatchEvent(new KeyboardEvent('keyup', { key: 'q', bubbles: true }))");
+  await wait(900);
+  assert((await evaluate("document.querySelector('.physics-test-result').textContent")).includes("FALL TEST: COMPLETE"));
+
+  const browserPresets = await evaluate(`(async () => {
+    const presets = [{ name: "A", balance: "1", arms: "1" }, { name: "B", balance: ".75", arms: ".7" }, { name: "C", balance: ".6", arms: ".7" }, { name: "D", balance: ".5", arms: ".7" }];
+    const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+    const key = (type, value) => document.dispatchEvent(new KeyboardEvent(type, { key: value, bubbles: true }));
+    const results = [];
+    for (const preset of presets) {
+      document.querySelector("#retryButton").click();
+      const balance = document.querySelector(".balance-preset");
+      const arms = document.querySelector(".arm-swing-preset");
+      balance.value = preset.balance; balance.dispatchEvent(new Event("change", { bubbles: true }));
+      arms.value = preset.arms; arms.dispatchEvent(new Event("change", { bubbles: true }));
+      for (let cycle = 0; cycle < 4; cycle += 1) {
+        key("keydown", "q"); key("keydown", "o"); await sleep(220);
+        key("keyup", "o"); await sleep(160); key("keyup", "q");
+        key("keydown", "w"); key("keydown", "p"); await sleep(220);
+        key("keyup", "p"); await sleep(160); key("keyup", "w");
+      }
+      await sleep(100);
+      const diagnostic = document.querySelector(".control-diagnostics").textContent;
+      results.push({ name: preset.name, distance: Number.parseFloat(document.querySelector("#distance").textContent), posture: diagnostic.match(/POSTURE (STABLE|LEANING|FALLING|DOWN)/)?.[1] });
+    }
+    return results;
+  })()`);
+  browserPresets.forEach(result => {
+    assert(result.distance > 0.2, `browser preset ${result.name} did not advance: ${result.distance}m`);
+    assert.notEqual(result.posture, "DOWN", `browser preset ${result.name} fell during controlled input`);
+  });
+  console.log("Browser preset control comparison", JSON.stringify(browserPresets));
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log("Phase 1E browser smoke tests passed");
+  console.log(`Phase 1F browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

@@ -37,6 +37,14 @@
     active: false, slow: false, phaseIndex: 0, phaseElapsed: 0,
     phaseStarted: false, phaseStartX: physics.bodies.torso.position.x, history: [], feedback: "YOUR TURN"
   };
+  const physicsTest = {
+    mode: null, elapsed: 0, startX: 0, velocityIntegral: 0, maxVelocity: 0,
+    leftFootTime: 0, rightFootTime: 0, leftLoadIntegral: 0, rightLoadIntegral: 0,
+    leftHandTime: 0, rightHandTime: 0, firstContact: "none",
+    fallingAt: null, downAt: null, nextFallDirection: 1
+  };
+
+  const inputLocked = () => demo.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
   const parameterSpec = {
     gravity: ["Gravity", 0.35, 1.2, 0.01, 2],
@@ -83,7 +91,7 @@
     const key = button.dataset.key;
     button.addEventListener("pointerdown", event => {
       event.preventDefault();
-      if (demo.active) return;
+      if (inputLocked()) return;
       button.setPointerCapture(event.pointerId);
       activePointers.set(event.pointerId, key);
       setInput(key, true);
@@ -104,13 +112,13 @@
     const key = event.key.toLowerCase();
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (!demo.active) setInput(key, true);
+    if (!inputLocked()) setInput(key, true);
   });
   document.addEventListener("keyup", event => {
     const key = event.key.toLowerCase();
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (!demo.active) setInput(key, false);
+    if (!inputLocked()) setInput(key, false);
   });
   window.addEventListener("blur", () => {
     if (demo.active) stopDemo();
@@ -137,7 +145,9 @@
     <label>Arm Mass <select class="arm-mass-preset"><option value="light">Light</option><option value="normal" selected>Normal</option><option value="heavy">Heavy</option></select></label>
     <label>Arm Amplitude <select class="arm-amplitude"><option value="20">20°</option><option value="25">25°</option><option value="30">30°</option><option value="35" selected>35°</option><option value="40">40°</option><option value="42">42°</option></select></label>
     <label>Hand Friction <select class="hand-friction"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
-    <button type="button" class="recovery-test">RECOVERY TEST</button>`;
+    <button type="button" class="recovery-test">RECOVERY TEST</button>
+    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button></div>
+    <pre class="physics-test-result">PHASE 1F TESTS: READY</pre>`;
   experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
   experimentPanel.querySelector(".balance-preset").addEventListener("change", event => physics.setBalanceScale(event.target.value));
   experimentPanel.querySelector(".ankle-preset").addEventListener("change", event => physics.setAnkleScale(event.target.value));
@@ -150,6 +160,57 @@
     physics.applyRecoveryImpulse(recoveryDirection);
     recoveryDirection *= -1;
   });
+  const driftTestButton = experimentPanel.querySelector(".drift-test");
+  const fallTestButton = experimentPanel.querySelector(".fall-test");
+  const physicsTestResult = experimentPanel.querySelector(".physics-test-result");
+
+  function setTestButtons(running) {
+    driftTestButton.disabled = running;
+    fallTestButton.disabled = running;
+    experimentPanel.querySelector(".recovery-test").disabled = running;
+    startDemoButton.disabled = running;
+    watchDemoButton.disabled = running;
+  }
+
+  function resetTestState(mode) {
+    stopDemo();
+    clearInputs();
+    activePointers.clear();
+    physics.reset();
+    physicsTest.mode = mode;
+    physicsTest.elapsed = 0;
+    physicsTest.startX = physics.bodies.torso.position.x;
+    physicsTest.velocityIntegral = 0;
+    physicsTest.maxVelocity = 0;
+    physicsTest.leftFootTime = 0;
+    physicsTest.rightFootTime = 0;
+    physicsTest.leftLoadIntegral = 0;
+    physicsTest.rightLoadIntegral = 0;
+    physicsTest.leftHandTime = 0;
+    physicsTest.rightHandTime = 0;
+    physicsTest.firstContact = "none";
+    physicsTest.fallingAt = null;
+    physicsTest.downAt = null;
+    cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
+    lastTime = performance.now();
+    setTestButtons(true);
+  }
+
+  function startDriftTest() {
+    resetTestState("drift");
+    physicsTestResult.textContent = "DRIFT TEST: RUNNING 0.0 / 5.0s\nInputs and demo are disabled.";
+  }
+
+  function startFallTest() {
+    resetTestState("fall");
+    const direction = physicsTest.nextFallDirection;
+    physicsTest.nextFallDirection *= -1;
+    physics.applyFallTest(direction);
+    physicsTestResult.textContent = `FALL TEST: RUNNING / PUSH ${direction > 0 ? "RIGHT" : "LEFT"}`;
+  }
+
+  driftTestButton.addEventListener("click", startDriftTest);
+  fallTestButton.addEventListener("click", startFallTest);
 
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
@@ -180,6 +241,7 @@
   }
 
   function startDemo(options = {}) {
+    if (physicsTest.mode) return;
     clearInputs();
     activePointers.clear();
     demo.active = true;
@@ -340,6 +402,8 @@
   });
 
   function retry() {
+    physicsTest.mode = null;
+    setTestButtons(false);
     stopDemo();
     clearInputs();
     activePointers.clear();
@@ -443,6 +507,66 @@
     ].join("\n");
   }
 
+  function updatePhysicsTest(delta) {
+    if (!physicsTest.mode) return;
+    const dt = delta / 1000;
+    const data = physics.diagnostics();
+    physicsTest.elapsed += delta;
+    if (physicsTest.mode === "drift") {
+      physicsTest.velocityIntegral += data.velocity.x * dt;
+      physicsTest.maxVelocity = Math.max(physicsTest.maxVelocity, Math.abs(data.velocity.x));
+      if (data.feet.left.contact) physicsTest.leftFootTime += dt;
+      if (data.feet.right.contact) physicsTest.rightFootTime += dt;
+      if (data.feet.left.contact) physicsTest.leftLoadIntegral += physics.bodies.leftFoot.mass * physics.params.gravity * dt;
+      if (data.feet.right.contact) physicsTest.rightLoadIntegral += physics.bodies.rightFoot.mass * physics.params.gravity * dt;
+      physicsTestResult.textContent = `DRIFT TEST: RUNNING ${(physicsTest.elapsed / 1000).toFixed(1)} / 5.0s\nInputs and demo are disabled.`;
+      if (physicsTest.elapsed >= 5000) {
+        const endX = data.position.x;
+        const duration = physicsTest.elapsed / 1000;
+        physicsTestResult.textContent = [
+          "DRIFT TEST: COMPLETE",
+          `Start X ${(physicsTest.startX / QWOPPhysics.SCALE).toFixed(4)} m`,
+          `End X   ${(endX / QWOPPhysics.SCALE).toFixed(4)} m`,
+          `Drift Distance ${((endX - physicsTest.startX) / QWOPPhysics.SCALE).toFixed(4)} m`,
+          `Avg X velocity ${(physicsTest.velocityIntegral / duration / QWOPPhysics.SCALE).toFixed(4)} m/s`,
+          `Max X velocity ${(physicsTest.maxVelocity / QWOPPhysics.SCALE).toFixed(4)} m/s`,
+          `Foot ground L ${physicsTest.leftFootTime.toFixed(2)}s / R ${physicsTest.rightFootTime.toFixed(2)}s`,
+          `Est. foot load L ${(physicsTest.leftLoadIntegral / duration).toFixed(3)} / R ${(physicsTest.rightLoadIntegral / duration).toFixed(3)}`
+        ].join("\n");
+        physicsTest.mode = null;
+        setTestButtons(false);
+      }
+      return;
+    }
+
+    if (data.hands.left.contact) physicsTest.leftHandTime += dt;
+    if (data.hands.right.contact) physicsTest.rightHandTime += dt;
+    if (physicsTest.firstContact === "none") {
+      const first = Object.entries(data.groundContacts).find(([, contact]) => contact);
+      if (first) physicsTest.firstContact = first[0];
+    }
+    if (data.posture === "FALLING" && physicsTest.fallingAt === null) physicsTest.fallingAt = physicsTest.elapsed;
+    if (data.posture === "DOWN" && physicsTest.downAt === null) {
+      physicsTest.downAt = physicsTest.elapsed;
+      clearInputs();
+    }
+    const done = physicsTest.elapsed >= 6000 || (physicsTest.downAt !== null && physicsTest.elapsed >= physicsTest.downAt + 1000);
+    physicsTestResult.textContent = [
+      `FALL TEST: ${done ? "COMPLETE" : "RUNNING"}`,
+      `Posture ${data.posture}`,
+      `FALLING ${physicsTest.fallingAt === null ? "not reached" : (physicsTest.fallingAt / 1000).toFixed(2) + "s"}`,
+      `DOWN ${physicsTest.downAt === null ? "not reached" : (physicsTest.downAt / 1000).toFixed(2) + "s"}`,
+      `Hand now L ${data.hands.left.contact ? "GROUND" : "AIR"} / R ${data.hands.right.contact ? "GROUND" : "AIR"}`,
+      `Hand contact L ${physicsTest.leftHandTime.toFixed(2)}s / R ${physicsTest.rightHandTime.toFixed(2)}s`,
+      `First body contact ${physicsTest.firstContact}`,
+      physicsTest.downAt === null ? "Q/W/O/P locked until DOWN" : "Q/W/O/P enabled while DOWN"
+    ].join("\n");
+    if (done) {
+      physicsTest.mode = null;
+      setTestButtons(false);
+    }
+  }
+
   function drawDebug() {
     const bodies = physics.bodies;
     ctx.strokeStyle = "#ff2a63";
@@ -536,6 +660,7 @@
     updateDemo(delta);
     updateTraining(delta);
     physics.step(delta);
+    updatePhysicsTest(delta);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const desiredCamera = physics.bodies.torso.position.x - (width / viewScale) * 0.38;

@@ -6,6 +6,8 @@
   const FIXED_STEP = 1000 / 60;
   const SELF_COLLISION_GROUP = -17;
   const COLLISION = Object.freeze({ ground: 0x0001, core: 0x0002, limb: 0x0004, hand: 0x0008 });
+  const FOOT_ANKLE_X = 2;
+  const FOOT_SUPPORT_X = -18.27;
   const DEMO_FORWARD_SEQUENCE = Object.freeze([
     Object.freeze({ name: "Q + O", keys: Object.freeze(["q", "o"]), duration: 220 }),
     Object.freeze({ name: "Q", keys: Object.freeze(["q"]), duration: 160 }),
@@ -124,6 +126,8 @@
       this.handContact = { left: false, right: false };
       this.recoveryForceFrames = 0;
       this.recoveryDirection = 1;
+      this.fallForceFrames = 0;
+      this.fallDirection = 1;
       this.footContact = { left: false, right: false };
       this.control = this.emptyControlState();
       this.reset();
@@ -151,6 +155,7 @@
       this.accumulator = 0;
       this.smoothedStride = 0;
       this.recoveryForceFrames = 0;
+      this.fallForceFrames = 0;
       Object.keys(this.inputState).forEach(key => { this.inputState[key] = false; });
       this.engine.gravity.y = this.params.gravity;
       this.startX = 300;
@@ -185,8 +190,10 @@
       const rightThigh = limb(x + 15, 366, 24, 76, { label: "right thigh" });
       const leftShin = limb(x - 15, 442, 20, 76, { label: "left shin" });
       const rightShin = limb(x + 15, 442, 20, 76, { label: "right shin" });
-      const leftFoot = limb(x + 3, 479, 52, 18, { label: "left foot", friction: this.params.footFriction, frictionStatic: 2 });
-      const rightFoot = limb(x + 33, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
+      // Keep the ankle close to each foot's physical center. The old -18 px
+      // forward-biased anchor generated a continuous contact moment at idle.
+      const leftFoot = limb(x - 17, 479, 52, 18, { label: "left foot", friction: this.params.footFriction, frictionStatic: 2 });
+      const rightFoot = limb(x + 13, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
       const leftUpperAngle = 10 * DEG;
       const leftForearmAngle = 95 * DEG;
       const leftUpperArm = limbFromJoint(x - 20, 248, 14, 54, leftUpperAngle, { label: "left upper arm", density: 0.00125, friction: 0.65 });
@@ -239,8 +246,8 @@
         pin(torso, { x: 15, y: 48 }, rightThigh, { x: 0, y: -37 }, 1),
         pin(leftThigh, { x: 0, y: 37 }, leftShin, { x: 0, y: -37 }, 1),
         pin(rightThigh, { x: 0, y: 37 }, rightShin, { x: 0, y: -37 }, 1),
-        pin(leftShin, { x: 0, y: 37 }, leftFoot, { x: -18, y: 0 }, 1),
-        pin(rightShin, { x: 0, y: 37 }, rightFoot, { x: -18, y: 0 }, 1)
+        pin(leftShin, { x: 0, y: 37 }, leftFoot, { x: FOOT_ANKLE_X, y: 0 }, 1),
+        pin(rightShin, { x: 0, y: 37 }, rightFoot, { x: FOOT_ANKLE_X, y: 0 }, 1)
       ];
 
       Composite.add(this.engine.world, [...Object.values(this.bodies), ...this.constraints]);
@@ -323,6 +330,11 @@
       this.recoveryForceFrames = 8;
     }
 
+    applyFallTest(direction = 1) {
+      this.fallDirection = direction < 0 ? -1 : 1;
+      this.fallForceFrames = 36;
+    }
+
     jointPD(parent, child, target, kp, kd, maxTorque) {
       const current = normalizeAngle(child.angle - parent.angle);
       const velocity = child.angularVelocity - parent.angularVelocity;
@@ -372,6 +384,12 @@
         Body.applyForce(b.torso, { x: b.torso.position.x, y: b.torso.position.y - 34 }, { x: 0.080 * this.recoveryDirection, y: -0.004 });
         this.recoveryForceFrames -= 1;
       }
+      if (this.fallForceFrames > 0) {
+        // Deliberately physical: a sustained shoulder-height shove creates
+        // translation and rotation without setting position, angle or velocity.
+        Body.applyForce(b.torso, { x: b.torso.position.x, y: b.torso.position.y - 42 }, { x: 0.135 * this.fallDirection, y: 0 });
+        this.fallForceFrames -= 1;
+      }
       this.footContact.left = Query.collides(b.leftFoot, [this.ground]).length > 0;
       this.footContact.right = Query.collides(b.rightFoot, [this.ground]).length > 0;
       this.handContact.left = Query.collides(b.leftHand, [this.ground]).length > 0;
@@ -384,8 +402,10 @@
         b.rightFoot.friction = p.footFriction;
       }
 
-      const ankleX = foot => foot.position.x - Math.cos(foot.angle) * 18;
-      const supportX = (ankleX(b.leftFoot) + ankleX(b.rightFoot)) / 2;
+      // Balance reacts around the heel-side center of pressure, which is
+      // intentionally distinct from the mechanical ankle joint.
+      const supportPointX = foot => foot.position.x + Math.cos(foot.angle) * FOOT_SUPPORT_X;
+      const supportX = (supportPointX(b.leftFoot) + supportPointX(b.rightFoot)) / 2;
       const supportVelocity = (b.leftFoot.velocity.x + b.rightFoot.velocity.x) / 2;
       const torsoTilt = Math.abs(normalizeAngle(b.torso.angle));
       const down = b.torso.position.y > 400 || b.head.position.y > 430;
@@ -420,7 +440,9 @@
       const phaseMagnitude = Math.abs(stride);
       const frontAmplitude = this.armAmplitude * DEG;
       const rearAmplitude = this.armAmplitude * 0.72 * DEG;
-      const idleShoulder = 10 * DEG * (1 - phaseMagnitude);
+      // Fade the idle pose quickly once a leg command establishes a phase so
+      // the opposite arm visibly crosses before the next Q/W transition.
+      const idleShoulder = 10 * DEG * Math.max(0, 1 - phaseMagnitude * 2.5);
       const leftElbowMagnitude = (85 + 15 * stride) * DEG;
       const rightElbowMagnitude = (85 - 15 * stride) * DEG;
       const armTarget = {
@@ -429,9 +451,10 @@
         leftElbow: clamp(leftElbowMagnitude, ...LIMITS.leftElbow),
         rightElbow: clamp(-rightElbowMagnitude, ...LIMITS.rightElbow)
       };
-      const tiltFactor = clamp(1 - (torsoTilt - 35 * DEG) / (45 * DEG), 0.12, 1);
-      const headFactor = b.head.position.y > 390 ? 0.25 : 1;
-      this.armControlFactor = this.armSwingScale * Math.min(tiltFactor, headFactor);
+      const postureArmFactor = this.posture === "STABLE" ? 1
+        : this.posture === "LEANING" ? 0.85
+          : this.posture === "FALLING" ? 0.30 : 0.08;
+      this.armControlFactor = this.armSwingScale * postureArmFactor;
       const armFactor = this.armControlFactor;
       this.control.leftShoulder = this.jointPD(b.torso, b.leftUpperArm, armTarget.leftShoulder, p.shoulderKp * armFactor, p.shoulderKd * armFactor, p.shoulderMaxTorque * armFactor);
       this.control.rightShoulder = this.jointPD(b.torso, b.rightUpperArm, armTarget.rightShoulder, p.shoulderKp * armFactor, p.shoulderKd * armFactor, p.shoulderMaxTorque * armFactor);
@@ -448,7 +471,7 @@
       this.softLimit(b.rightShin, b.rightFoot, LIMITS.ankle, p.ankleMaxTorque);
       this.softLimit(b.leftShin, b.leftFoot, LIMITS.ankle, p.ankleMaxTorque);
       this.softLimit(b.torso, b.head, LIMITS.neck, p.neckMaxTorque);
-      const armLimitTorque = 0.08 + 0.42 * armFactor;
+      const armLimitTorque = 0.04 + 0.35 * armFactor;
       this.softLimit(b.torso, b.leftUpperArm, LIMITS.shoulder, armLimitTorque);
       this.softLimit(b.torso, b.rightUpperArm, LIMITS.shoulder, armLimitTorque);
       this.softLimit(b.leftUpperArm, b.leftForearm, LIMITS.leftElbow, armLimitTorque);
@@ -474,6 +497,7 @@
       const neckTorsoAnchor = worldPoint(this.neckConstraint.bodyA, this.neckConstraint.pointA);
       const neckHeadAnchor = worldPoint(this.neckConstraint.bodyB, this.neckConstraint.pointB);
       const neckDistance = Math.hypot(neckHeadAnchor.x - neckTorsoAnchor.x, neckHeadAnchor.y - neckTorsoAnchor.y);
+      const touchesGround = body => Query.collides(body, [this.ground]).length > 0;
       return {
         inputState: { ...this.inputState },
         torsoAngularVelocity: torso.angularVelocity,
@@ -494,6 +518,14 @@
           left: { contact: this.handContact.left, friction: this.bodies.leftHand.friction },
           right: { contact: this.handContact.right, friction: this.bodies.rightHand.friction }
         },
+        groundContacts: {
+          leftHand: this.handContact.left,
+          rightHand: this.handContact.right,
+          leftKnee: touchesGround(this.bodies.leftShin),
+          rightKnee: touchesGround(this.bodies.rightShin),
+          head: touchesGround(this.bodies.head),
+          torso: touchesGround(this.bodies.torso)
+        },
         posture: this.posture,
         experiments: {
           balanceScale: this.balanceScale,
@@ -506,7 +538,8 @@
           handFriction: this.handFrictionMode,
           balancePostureFactor: this.balancePostureFactor,
           smoothedStride: this.smoothedStride,
-          recoveryActive: this.recoveryForceFrames > 0
+          recoveryActive: this.recoveryForceFrames > 0,
+          fallTestActive: this.fallForceFrames > 0
         },
         control: JSON.parse(JSON.stringify(this.control))
       };
@@ -518,5 +551,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, DEMO_FORWARD_SEQUENCE, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
 })();
