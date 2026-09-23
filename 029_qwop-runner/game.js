@@ -43,7 +43,7 @@
     leftHandTime: 0, rightHandTime: 0, firstContact: "none",
     fallingAt: null, downAt: null, nextFallDirection: 1
   };
-  const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME"] };
+  const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["LEFT_FRONT", "RIGHT_FRONT", "LEFT_FRONT", "RIGHT_FRONT"] };
   const armConnectionTest = {
     active: false, phaseIndex: 0, elapsed: 0,
     poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME", "FALLING"],
@@ -250,7 +250,7 @@
     physics.setArmFormPose(armFormTest.poses[0]);
     armFormTestButton.disabled = true;
     armFormTestButton.textContent = "ARM FORM RUNNING";
-    armFormStatus.textContent = "ARM FORM: NEUTRAL 1 / 5";
+    armFormStatus.textContent = "ARM FORM: LEFT FRONT / RIGHT REAR 1 / 4";
   }
 
   function updateArmFormTest(delta) {
@@ -265,11 +265,11 @@
     }
     const pose = armFormTest.poses[armFormTest.phaseIndex];
     physics.setArmFormPose(pose);
-    const labels = {
-      LEFT_FRONT: "LEFT ARM FRONT", RIGHT_FRONT: "RIGHT ARM FRONT",
-      LEFT_EXTREME: "LEFT ARM EXTREME", RIGHT_EXTREME: "RIGHT ARM EXTREME"
-    };
-    armFormStatus.textContent = `ARM FORM: ${labels[pose] || pose} ${armFormTest.phaseIndex + 1} / 5`;
+    const labels = [
+      "LEFT FRONT / RIGHT REAR", "RIGHT FRONT / LEFT REAR",
+      "LEFT FRONT HOLD", "RIGHT FRONT HOLD"
+    ];
+    armFormStatus.textContent = `ARM FORM: ${labels[armFormTest.phaseIndex]} ${armFormTest.phaseIndex + 1} / 4`;
   }
 
   armFormTestButton.addEventListener("click", startArmFormTest);
@@ -618,8 +618,8 @@
       `ARM ROLE FRONT ${data.armForm.frontArm.toUpperCase()} / REAR ${data.armForm.rearArm.toUpperCase()} / POSE ${data.armForm.pose}`,
       `L SHOULDER HUMAN ${data.armForm.leftShoulderHuman.toFixed(1)}°  R SHOULDER HUMAN ${data.armForm.rightShoulderHuman.toFixed(1)}°`,
       `L ELBOW HUMAN ${data.armForm.leftElbowHuman.toFixed(1)}°  R ELBOW HUMAN ${data.armForm.rightElbowHuman.toFixed(1)}°`,
-      `L ELBOW SIGNED ${data.armForm.leftElbowSigned.toFixed(1)}°  ${data.armForm.leftBendDefinition}  DIRECTION ${data.armForm.leftElbowDirection}`,
-      `R ELBOW SIGNED ${data.armForm.rightElbowSigned.toFixed(1)}°  ${data.armForm.rightBendDefinition}  DIRECTION ${data.armForm.rightElbowDirection}`,
+      `LEFT ARM ROLE ${data.armForm.leftRole} / ELBOW SIGNED ${data.armForm.leftElbowSigned.toFixed(1)}° / ANATOMICAL ${data.armForm.leftAnatomicalSigned.toFixed(1)}° / EXPECTED SIGN ${data.armForm.leftExpectedSign > 0 ? "+" : "-"} / ACTUAL SIGN ${data.armForm.leftActualSign > 0 ? "+" : "-"} / DIRECTION ${data.armForm.leftElbowDirection}`,
+      `RIGHT ARM ROLE ${data.armForm.rightRole} / ELBOW SIGNED ${data.armForm.rightElbowSigned.toFixed(1)}° / ANATOMICAL ${data.armForm.rightAnatomicalSigned.toFixed(1)}° / EXPECTED SIGN ${data.armForm.rightExpectedSign > 0 ? "+" : "-"} / ACTUAL SIGN ${data.armForm.rightActualSign > 0 ? "+" : "-"} / DIRECTION ${data.armForm.rightElbowDirection}`,
       `L UA SCREEN ${data.armForm.leftUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°`,
       `R UA SCREEN ${data.armForm.rightUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `L FOREARM SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°  R FOREARM SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,

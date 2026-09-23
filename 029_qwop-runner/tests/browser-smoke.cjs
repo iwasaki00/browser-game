@@ -233,26 +233,26 @@ async function viewport(name, width, height) {
   await wait(120);
   await screenshot("phase1h-running.png");
 
-  await evaluate("if (document.querySelector('#trainingButton').classList.contains('active')) document.querySelector('#trainingButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.arm-form-test').click()");
-  await wait(700);
-  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("NEUTRAL"));
+  await evaluate("if (document.querySelector('#trainingButton').classList.contains('active')) document.querySelector('#trainingButton').click(); document.querySelector('#retryButton').click()");
+  await wait(300);
   await screenshot("phase1h-neutral.png");
   await evaluate("(() => { const toggle = document.querySelector('.joint-dots'); toggle.checked = false; toggle.dispatchEvent(new Event('change', { bubbles: true })); })()");
   await wait(120);
   await screenshot("phase1i-joint-dots-off.png");
   await evaluate("(() => { const toggle = document.querySelector('.joint-dots'); toggle.checked = true; toggle.dispatchEvent(new Event('change', { bubbles: true })); })()");
+  await evaluate("document.querySelector('.arm-form-test').click()");
+  await wait(700);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT FRONT / RIGHT REAR"));
+  await screenshot("phase1j-left-front-right-rear.png");
   await wait(1800);
-  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM FRONT"));
-  await screenshot("phase1h-left-front.png");
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT FRONT / LEFT REAR"));
+  await screenshot("phase1j-right-front-left-rear.png");
   await wait(1800);
-  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT ARM FRONT"));
-  await screenshot("phase1h-right-front.png");
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT FRONT HOLD"));
+  await screenshot("phase1j-left-front-hold.png");
   await wait(1800);
-  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM EXTREME"));
-  await screenshot("phase1h-left-extreme.png");
-  await wait(1800);
-  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT ARM EXTREME"));
-  await screenshot("phase1h-right-extreme.png");
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT FRONT HOLD"));
+  await screenshot("phase1j-right-front-hold.png");
   await wait(1800);
   assert.equal(await evaluate("document.querySelector('.arm-form-status').textContent"), "ARM FORM: COMPLETE");
 
@@ -271,7 +271,7 @@ async function viewport(name, width, height) {
   await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1I browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log(`Phase 1J browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

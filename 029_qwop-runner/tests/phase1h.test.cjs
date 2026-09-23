@@ -74,7 +74,7 @@ const gameSource = fs.readFileSync(path.join(__dirname, "..", "game.js"), "utf8"
 for (const marker of [
   "LEFT_EXTREME", "RIGHT_EXTREME", "ELBOW SIGNED", "DIRECTION",
   "UpperArmScreen", "drawJoint", "points.shoulder", "points.elbow", "points.hand",
-  "LEFT ARM EXTREME", "RIGHT ARM EXTREME"
+  "LEFT_EXTREME", "RIGHT_EXTREME"
 ]) assert(gameSource.includes(marker), `game contains ${marker}`);
 assert(!/Body\.setAngle/.test(gameSource), "form test never forces body angles");
 

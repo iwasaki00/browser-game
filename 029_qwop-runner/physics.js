@@ -69,31 +69,44 @@
     leftElbowHuman: 95, rightElbowHuman: 95,
     leftBend: 1, rightBend: -1
   });
+  const ARM_SIDE_BEND_SIGN = Object.freeze({ left: 1, right: -1 });
+  const ARM_ROLE_AXIS_SIGN = Object.freeze({
+    FRONT: Object.freeze({ left: -1, right: 1 }),
+    REAR: Object.freeze({ left: 1, right: -1 })
+  });
+  const naturalElbowBendSign = (side, role) => role === "NEUTRAL"
+    ? ARM_SIDE_BEND_SIGN[side]
+    : ARM_SIDE_BEND_SIGN[side] * ARM_ROLE_AXIS_SIGN[role][side];
   const ARM_FORM_POSES = Object.freeze({
     NEUTRAL: Object.freeze({
       leftShoulder: 6, rightShoulder: -6,
       leftElbowHuman: 125, rightElbowHuman: 150,
-      leftBend: 1, rightBend: -1
+      leftBend: naturalElbowBendSign("left", "NEUTRAL"),
+      rightBend: naturalElbowBendSign("right", "NEUTRAL")
     }),
     LEFT_FRONT: Object.freeze({
       leftShoulder: -30, rightShoulder: 24,
       leftElbowHuman: 72, rightElbowHuman: 150,
-      leftBend: -1, rightBend: 1
+      leftBend: naturalElbowBendSign("left", "FRONT"),
+      rightBend: naturalElbowBendSign("right", "REAR")
     }),
     RIGHT_FRONT: Object.freeze({
       leftShoulder: 24, rightShoulder: -30,
       leftElbowHuman: 150, rightElbowHuman: 72,
-      leftBend: 1, rightBend: -1
+      leftBend: naturalElbowBendSign("left", "REAR"),
+      rightBend: naturalElbowBendSign("right", "FRONT")
     }),
     LEFT_EXTREME: Object.freeze({
       leftShoulder: -40, rightShoulder: 30,
       leftElbowHuman: 48, rightElbowHuman: 155,
-      leftBend: -1, rightBend: 1
+      leftBend: naturalElbowBendSign("left", "FRONT"),
+      rightBend: naturalElbowBendSign("right", "REAR")
     }),
     RIGHT_EXTREME: Object.freeze({
       leftShoulder: 30, rightShoulder: -40,
       leftElbowHuman: 155, rightElbowHuman: 48,
-      leftBend: 1, rightBend: -1
+      leftBend: naturalElbowBendSign("left", "REAR"),
+      rightBend: naturalElbowBendSign("right", "FRONT")
     })
   });
 
@@ -108,7 +121,7 @@
   const humanElbowAngle = relativeAngle => 180 - Math.abs(normalizeAngle(relativeAngle) / DEG);
   const signedElbowAngle = relativeAngle => normalizeAngle(relativeAngle) / DEG;
   const elbowBendDirection = (side, signedDegrees, role = "NEUTRAL") => {
-    const expectedSign = role === "FRONT" ? -1 : role === "REAR" ? 1 : side === "left" ? 1 : -1;
+    const expectedSign = naturalElbowBendSign(side, role);
     return Math.sign(signedDegrees || expectedSign) === expectedSign ? "CORRECT" : "WRONG";
   };
   const humanAngleToPhysicsTarget = (humanDegrees, bendDirection) => clamp(180 - humanDegrees, 25, 125) * DEG * (bendDirection < 0 ? -1 : 1);
@@ -652,8 +665,10 @@
       const rightConnection = armConnection("right");
       const leftSignedElbow = signedElbowAngle(leftElbowRelative);
       const rightSignedElbow = signedElbowAngle(rightElbowRelative);
-      const roleFor = side => this.armFormPose === "NEUTRAL" || !this.armFormPose
+      const roleFor = side => this.armFormPose === "NEUTRAL"
         ? "NEUTRAL" : side === frontArm ? "FRONT" : "REAR";
+      const expectedSignFor = side => naturalElbowBendSign(side, roleFor(side));
+      const actualSignFor = signed => Math.sign(signed) || 0;
       return {
         inputState: { ...this.inputState },
         torsoAngularVelocity: torso.angularVelocity,
@@ -688,6 +703,14 @@
           rightElbowHuman: humanElbowAngle(rightElbowRelative),
           leftElbowDirection: elbowBendDirection("left", leftSignedElbow, roleFor("left")),
           rightElbowDirection: elbowBendDirection("right", rightSignedElbow, roleFor("right")),
+          leftRole: roleFor("left"),
+          rightRole: roleFor("right"),
+          leftExpectedSign: expectedSignFor("left"),
+          rightExpectedSign: expectedSignFor("right"),
+          leftActualSign: actualSignFor(leftSignedElbow),
+          rightActualSign: actualSignFor(rightSignedElbow),
+          leftAnatomicalSigned: leftSignedElbow * ARM_SIDE_BEND_SIGN.left,
+          rightAnatomicalSigned: rightSignedElbow * ARM_SIDE_BEND_SIGN.right,
           leftBendDefinition: roleFor("left") === "FRONT" ? "FRONT / NEGATIVE" : roleFor("left") === "REAR" ? "REAR / POSITIVE" : "NEUTRAL / POSITIVE",
           rightBendDefinition: roleFor("right") === "FRONT" ? "FRONT / NEGATIVE" : roleFor("right") === "REAR" ? "REAR / POSITIVE" : "NEUTRAL / NEGATIVE",
           leftForearmScreen: normalizeAngle(this.bodies.leftForearm.angle + 90 * DEG) / DEG,
@@ -728,5 +751,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_FORM_POSES, bodyWorldPoint, getBodyEndpoint, pointGap, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_SIDE_BEND_SIGN, ARM_ROLE_AXIS_SIGN, ARM_FORM_POSES, naturalElbowBendSign, bodyWorldPoint, getBodyEndpoint, pointGap, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
 })();
