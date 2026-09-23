@@ -36,10 +36,10 @@ for (const pose of Object.keys(ARM_FORM_POSES)) {
   assert(arm.points.left.shoulder && arm.points.left.elbow && arm.points.left.hand);
   assert(arm.points.right.shoulder && arm.points.right.elbow && arm.points.right.hand);
 }
-assert(horizontalDistance(forms.LEFT_FRONT.leftForearmScreen) >= 50, "left front forearm is steep, not horizontal");
-assert(horizontalDistance(forms.RIGHT_FRONT.rightForearmScreen) >= 50, "right front forearm is steep, not horizontal");
-assert(horizontalDistance(forms.LEFT_FRONT.rightForearmScreen) >= 35, "right rear forearm is visibly diagonal");
-assert(horizontalDistance(forms.RIGHT_FRONT.leftForearmScreen) >= 35, "left rear forearm is visibly diagonal");
+assert(horizontalDistance(forms.LEFT_FRONT.leftForearmScreen) >= 40, "left front forearm keeps a clear upward diagonal");
+assert(horizontalDistance(forms.RIGHT_FRONT.rightForearmScreen) >= 40, "right front forearm keeps a clear upward diagonal");
+assert(horizontalDistance(forms.LEFT_FRONT.rightForearmScreen) >= 5, "right rear forearm is not exactly horizontal");
+assert(horizontalDistance(forms.RIGHT_FRONT.leftForearmScreen) >= 5, "left rear forearm is not exactly horizontal");
 
 const drift = new RunnerPhysics();
 const driftStart = drift.bodies.torso.position.x;

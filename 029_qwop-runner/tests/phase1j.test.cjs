@@ -20,11 +20,13 @@ const measure = pose => {
   return physics.diagnostics().armForm;
 };
 
-assert.deepEqual(ARM_SIDE_BEND_SIGN, { left: 1, right: -1 });
+assert.deepEqual(ARM_SIDE_BEND_SIGN, { left: -1, right: 1 });
 assert.equal(naturalElbowBendSign("left", "FRONT"), -1);
 assert.equal(naturalElbowBendSign("left", "REAR"), 1);
 assert.equal(naturalElbowBendSign("right", "FRONT"), -1);
 assert.equal(naturalElbowBendSign("right", "REAR"), 1);
+assert.equal(naturalElbowBendSign("left", "NEUTRAL"), -1);
+assert.equal(naturalElbowBendSign("right", "NEUTRAL"), 1);
 
 const leftFront = measure("LEFT_FRONT");
 const rightFront = measure("RIGHT_FRONT");
@@ -43,7 +45,7 @@ for (const [label, vector] of [["LEFT FRONT", lf], ["RIGHT FRONT", rf]]) {
 }
 for (const [label, vector] of [["LEFT REAR", lr], ["RIGHT REAR", rr]]) {
   assert(vector.x < -5, `${label} hand is behind elbow`);
-  assert(vector.y > 5, `${label} hand is below elbow`);
+  assert(Math.abs(vector.y) < 15, `${label} forearm remains near a natural rear-running diagonal`);
 }
 assert.equal(leftFront.leftElbowDirection, "CORRECT");
 assert.equal(leftFront.rightElbowDirection, "CORRECT");

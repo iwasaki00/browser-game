@@ -173,7 +173,8 @@ async function viewport(name, width, height) {
   assert(debugText.includes("LEFT HAND") && debugText.includes("RIGHT HAND") && debugText.includes("POSTURE"), "hand or posture diagnostics missing");
   assert(debugText.includes("SHOULDER HUMAN") && debugText.includes("ELBOW HUMAN") && debugText.includes("FOREARM SCREEN") && debugText.includes("ARM ROLE FRONT"), "Phase 1G arm diagnostics missing");
   assert(debugText.includes("ARM SKELETON") && debugText.includes("GAP shoulder") && debugText.includes("upper-A") && debugText.includes("A-B"), "Phase 1I connection diagnostics missing");
-  assert(await evaluate("Boolean(document.querySelector('.joint-dots')) && Boolean(document.querySelector('.arm-skeleton-debug')) && Boolean(document.querySelector('.arm-connection-test'))"));
+  assert(debugText.includes("LEFT ELBOW STATE") && debugText.includes("HUMAN TARGET") && debugText.includes("TARGET TRACE 2s"), "Phase 1K elbow state diagnostics missing");
+  assert(await evaluate("Boolean(document.querySelector('.joint-dots')) && Boolean(document.querySelector('.arm-skeleton-debug')) && Boolean(document.querySelector('.arm-connection-test')) && Boolean(document.querySelector('.elbow-matrix-test'))"));
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-amplitude').options].map(option => option.value)"), ["20", "25", "30", "35", "40", "42"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.hand-friction').options].map(option => option.textContent)"), ["Low", "Normal", "High"]);
@@ -256,6 +257,52 @@ async function viewport(name, width, height) {
   await wait(1800);
   assert.equal(await evaluate("document.querySelector('.arm-form-status').textContent"), "ARM FORM: COMPLETE");
 
+  await evaluate("document.querySelector('#retryButton').click(); if (document.querySelector('#debugPanel').hidden) document.querySelector('#debugButton').click()");
+  await wait(3000);
+  const neutralElbows = await evaluate(`(() => {
+    const text = document.querySelector(".control-diagnostics").textContent;
+    return {
+      left: Number.parseFloat(text.match(/LEFT ELBOW STATE .*?HUMAN CURRENT ([0-9.]+)°/)?.[1]),
+      right: Number.parseFloat(text.match(/RIGHT ELBOW STATE .*?HUMAN CURRENT ([0-9.]+)°/)?.[1]),
+      leftCorrect: /LEFT ARM ROLE .*DIRECTION CORRECT/.test(text),
+      rightCorrect: /RIGHT ARM ROLE .*DIRECTION CORRECT/.test(text)
+    };
+  })()`);
+  assert(neutralElbows.left >= 80 && neutralElbows.left <= 110 && neutralElbows.right >= 80 && neutralElbows.right <= 110, `neutral elbow angles invalid: ${JSON.stringify(neutralElbows)}`);
+  assert(neutralElbows.leftCorrect && neutralElbows.rightCorrect, "neutral elbow direction is not correct");
+  await screenshot("phase1k-none-3s.png");
+
+  const inputMatrix = [
+    ["Q", ["q"]], ["W", ["w"]], ["O", ["o"]], ["P", ["p"]],
+    ["Q+O", ["q", "o"]], ["Q+P", ["q", "p"]], ["W+O", ["w", "o"]], ["W+P", ["w", "p"]]
+  ];
+  const browserMatrix = [];
+  for (const [name, keys] of inputMatrix) {
+    await evaluate(`(() => {
+      document.querySelector("#retryButton").click();
+      for (const key of ${JSON.stringify(keys)}) document.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+    })()`);
+    await wait(1200);
+    const result = await evaluate(`(() => {
+      const text = document.querySelector(".control-diagnostics").textContent;
+      return {
+        left: /LEFT ARM ROLE .*DIRECTION CORRECT/.test(text),
+        right: /RIGHT ARM ROLE .*DIRECTION CORRECT/.test(text)
+      };
+    })()`);
+    assert(result.left && result.right, `${name}: browser elbow direction incorrect`);
+    browserMatrix.push({ name, ...result });
+    await screenshot(`phase1k-${name.toLowerCase().replaceAll("+", "-")}.png`);
+    await evaluate(`for (const key of ${JSON.stringify(keys)}) document.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles: true }))`);
+  }
+  console.log("Phase 1K browser input matrix", JSON.stringify(browserMatrix));
+
+  await evaluate("document.querySelector('#retryButton').click(); document.querySelector('.elbow-matrix-test').click()");
+  await wait(11500);
+  const matrixResult = await evaluate("document.querySelector('.physics-test-result').textContent");
+  assert(matrixResult.includes("ELBOW MATRIX TEST: COMPLETE"), "ELBOW MATRIX TEST did not complete");
+  assert((matrixResult.match(/CORRECT/g) || []).length === 18, `ELBOW MATRIX TEST did not report 18 correct directions: ${matrixResult}`);
+
   await evaluate("document.querySelector('.arm-connection-test').click()");
   await wait(9300);
   const connectionResult = await evaluate("document.querySelector('.physics-test-result').textContent");
@@ -271,7 +318,7 @@ async function viewport(name, width, height) {
   await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1J browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log(`Phase 1K browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

@@ -49,10 +49,18 @@
     poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME", "FALLING"],
     max: { left: { shoulder: 0, elbow: 0, wrist: 0 }, right: { shoulder: 0, elbow: 0, wrist: 0 } }
   };
+  const elbowMatrixTest = {
+    active: false, phaseIndex: 0, elapsed: 0, results: [],
+    states: [
+      { name: "NONE", keys: [] }, { name: "Q", keys: ["q"] }, { name: "W", keys: ["w"] },
+      { name: "O", keys: ["o"] }, { name: "P", keys: ["p"] }, { name: "Q+O", keys: ["q", "o"] },
+      { name: "Q+P", keys: ["q", "p"] }, { name: "W+O", keys: ["w", "o"] }, { name: "W+P", keys: ["w", "p"] }
+    ]
+  };
   let jointDots = true;
   let armSkeletonDebug = false;
 
-  const inputLocked = () => demo.active || armConnectionTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
+  const inputLocked = () => demo.active || armConnectionTest.active || elbowMatrixTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
   const parameterSpec = {
     gravity: ["Gravity", 0.35, 1.2, 0.01, 2],
@@ -156,7 +164,7 @@
     <button type="button" class="recovery-test">RECOVERY TEST</button>
     <label>Joint Dots <input class="joint-dots" type="checkbox" checked></label>
     <label>Arm Skeleton <input class="arm-skeleton-debug" type="checkbox"></label>
-    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button><button type="button" class="arm-form-test">ARM FORM TEST</button><button type="button" class="arm-connection-test">ARM CONNECTION TEST</button></div>
+    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button><button type="button" class="arm-form-test">ARM FORM TEST</button><button type="button" class="arm-connection-test">ARM CONNECTION TEST</button><button type="button" class="elbow-matrix-test">ELBOW MATRIX TEST</button></div>
     <pre class="physics-test-result">PHASE 1F TESTS: READY</pre>
     <p class="arm-form-status">ARM FORM: READY</p>`;
   experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
@@ -177,6 +185,7 @@
   const fallTestButton = experimentPanel.querySelector(".fall-test");
   const armFormTestButton = experimentPanel.querySelector(".arm-form-test");
   const armConnectionTestButton = experimentPanel.querySelector(".arm-connection-test");
+  const elbowMatrixTestButton = experimentPanel.querySelector(".elbow-matrix-test");
   const armFormStatus = experimentPanel.querySelector(".arm-form-status");
   const physicsTestResult = experimentPanel.querySelector(".physics-test-result");
 
@@ -185,6 +194,7 @@
     fallTestButton.disabled = running;
     armFormTestButton.disabled = running;
     armConnectionTestButton.disabled = running;
+    elbowMatrixTestButton.disabled = running;
     experimentPanel.querySelector(".recovery-test").disabled = running;
     startDemoButton.disabled = running;
     watchDemoButton.disabled = running;
@@ -320,6 +330,52 @@
   }
 
   armConnectionTestButton.addEventListener("click", startArmConnectionTest);
+
+  function applyElbowMatrixState() {
+    clearInputs();
+    physics.reset();
+    const test = elbowMatrixTest.states[elbowMatrixTest.phaseIndex];
+    test.keys.forEach(key => setInput(key, true));
+    physicsTestResult.textContent = `ELBOW MATRIX TEST: ${test.name} ${elbowMatrixTest.phaseIndex + 1} / ${elbowMatrixTest.states.length}`;
+  }
+
+  function startElbowMatrixTest() {
+    if (physicsTest.mode || armFormTest.active || armConnectionTest.active) return;
+    stopDemo();
+    elbowMatrixTest.active = true;
+    elbowMatrixTest.phaseIndex = 0;
+    elbowMatrixTest.elapsed = 0;
+    elbowMatrixTest.results = [];
+    setTestButtons(true);
+    elbowMatrixTestButton.disabled = true;
+    applyElbowMatrixState();
+  }
+
+  function updateElbowMatrixTest(delta) {
+    if (!elbowMatrixTest.active) return;
+    elbowMatrixTest.elapsed += delta;
+    if (elbowMatrixTest.elapsed < 1200) return;
+    const data = physics.diagnostics().armForm;
+    const test = elbowMatrixTest.states[elbowMatrixTest.phaseIndex];
+    elbowMatrixTest.results.push({
+      name: test.name,
+      left: { role: data.leftRole, human: data.leftElbowHuman, bend: data.leftExpectedSign, correct: data.leftElbowDirection },
+      right: { role: data.rightRole, human: data.rightElbowHuman, bend: data.rightExpectedSign, correct: data.rightElbowDirection }
+    });
+    elbowMatrixTest.phaseIndex += 1;
+    elbowMatrixTest.elapsed = 0;
+    if (elbowMatrixTest.phaseIndex < elbowMatrixTest.states.length) {
+      applyElbowMatrixState();
+      return;
+    }
+    clearInputs();
+    elbowMatrixTest.active = false;
+    setTestButtons(false);
+    const line = result => `${result.name.padEnd(4)} L ${result.left.role} ${result.left.human.toFixed(1)}deg bend ${result.left.bend > 0 ? "+" : "-"} ${result.left.correct} / R ${result.right.role} ${result.right.human.toFixed(1)}deg bend ${result.right.bend > 0 ? "+" : "-"} ${result.right.correct}`;
+    physicsTestResult.textContent = ["ELBOW MATRIX TEST: COMPLETE", ...elbowMatrixTest.results.map(line)].join("\n");
+  }
+
+  elbowMatrixTestButton.addEventListener("click", startElbowMatrixTest);
 
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
@@ -620,6 +676,10 @@
       `L ELBOW HUMAN ${data.armForm.leftElbowHuman.toFixed(1)}°  R ELBOW HUMAN ${data.armForm.rightElbowHuman.toFixed(1)}°`,
       `LEFT ARM ROLE ${data.armForm.leftRole} / ELBOW SIGNED ${data.armForm.leftElbowSigned.toFixed(1)}° / ANATOMICAL ${data.armForm.leftAnatomicalSigned.toFixed(1)}° / EXPECTED SIGN ${data.armForm.leftExpectedSign > 0 ? "+" : "-"} / ACTUAL SIGN ${data.armForm.leftActualSign > 0 ? "+" : "-"} / DIRECTION ${data.armForm.leftElbowDirection}`,
       `RIGHT ARM ROLE ${data.armForm.rightRole} / ELBOW SIGNED ${data.armForm.rightElbowSigned.toFixed(1)}° / ANATOMICAL ${data.armForm.rightAnatomicalSigned.toFixed(1)}° / EXPECTED SIGN ${data.armForm.rightExpectedSign > 0 ? "+" : "-"} / ACTUAL SIGN ${data.armForm.rightActualSign > 0 ? "+" : "-"} / DIRECTION ${data.armForm.rightElbowDirection}`,
+      `LEFT ELBOW STATE ${data.armForm.leftElbowState} / HUMAN CURRENT ${data.armForm.leftElbowHuman.toFixed(1)}° / HUMAN TARGET ${data.armForm.leftElbowHumanTarget.toFixed(1)}° / PHYSICS CURRENT ${data.armForm.leftElbowSigned.toFixed(1)}° / PHYSICS TARGET ${data.armForm.leftElbowPhysicsTarget.toFixed(1)}° / BEND ${data.armForm.leftExpectedSign > 0 ? "+" : "-"} / ROLE ${data.armForm.leftRole} / PHASE ${data.armForm.phase.toFixed(3)}`,
+      `RIGHT ELBOW STATE ${data.armForm.rightElbowState} / HUMAN CURRENT ${data.armForm.rightElbowHuman.toFixed(1)}° / HUMAN TARGET ${data.armForm.rightElbowHumanTarget.toFixed(1)}° / PHYSICS CURRENT ${data.armForm.rightElbowSigned.toFixed(1)}° / PHYSICS TARGET ${data.armForm.rightElbowPhysicsTarget.toFixed(1)}° / BEND ${data.armForm.rightExpectedSign > 0 ? "+" : "-"} / ROLE ${data.armForm.rightRole} / PHASE ${data.armForm.phase.toFixed(3)}`,
+      `TARGET TRACE 2s L [${data.armForm.targetTrace.map(sample => sample.left.toFixed(0)).join(" ")}]`,
+      `TARGET TRACE 2s R [${data.armForm.targetTrace.map(sample => sample.right.toFixed(0)).join(" ")}]`,
       `L UA SCREEN ${data.armForm.leftUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°`,
       `R UA SCREEN ${data.armForm.rightUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `L FOREARM SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°  R FOREARM SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
@@ -841,6 +901,7 @@
     updateTraining(delta);
     updateArmFormTest(delta);
     physics.step(delta);
+    updateElbowMatrixTest(delta);
     updateArmConnectionTest(delta);
     updatePhysicsTest(delta);
     const width = canvas.clientWidth;

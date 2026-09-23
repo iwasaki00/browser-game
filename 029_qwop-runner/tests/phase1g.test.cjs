@@ -24,8 +24,8 @@ assert(Math.abs(humanAngleToPhysicsTarget(80, 1) / DEG - 100) < 1e-9);
 assert(Math.abs(humanAngleToPhysicsTarget(95, -1) / DEG + 85) < 1e-9);
 assert.deepEqual(ARM_FORM_POSES.NEUTRAL, {
   leftShoulder: 6, rightShoulder: -6,
-  leftElbowHuman: 125, rightElbowHuman: 150,
-  leftBend: 1, rightBend: -1
+  leftElbowHuman: 91, rightElbowHuman: 91,
+  leftBend: -1, rightBend: 1
 });
 
 const poseResults = {};

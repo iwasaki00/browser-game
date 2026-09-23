@@ -35,11 +35,11 @@
     neckKd: 0.12,
     neckMaxTorque: 0.30,
     shoulderKp: 2.50,
-    shoulderKd: 0.18,
+    shoulderKd: 0.15,
     shoulderMaxTorque: 1.20,
-    elbowKp: 0.70,
+    elbowKp: 1.50,
     elbowKd: 0.12,
-    elbowMaxTorque: 0.65,
+    elbowMaxTorque: 1.00,
     jointLimitStrength: 20.00,
     balanceKp: 0.0020,
     balanceKd: 0.020,
@@ -64,47 +64,54 @@
   });
   const ARM_MASS = Object.freeze({ light: 0.65, normal: 1, heavy: 1.45 });
   const HAND_FRICTION = Object.freeze({ low: 0.35, normal: 0.70, high: 1.05 });
+  const ELBOW_HUMAN_ANGLE = Object.freeze({ FRONT: 80, REAR: 95, NEUTRAL: 91 });
+  const ELBOW_TRANSITION_HUMAN = 110;
+  const ELBOW_ROLE_THRESHOLD = 0.12;
+  // Screen-space anatomy: the red/left forearm folds clockwise and the
+  // blue/right forearm folds counter-clockwise. Keep the full side/role table
+  // explicit so role changes can never accidentally add a second sign flip.
+  const ARM_BEND_DIRECTION = Object.freeze({
+    NEUTRAL: Object.freeze({ left: -1, right: 1 }),
+    FRONT: Object.freeze({ left: -1, right: -1 }),
+    REAR: Object.freeze({ left: 1, right: 1 })
+  });
   const ARM_IDLE = Object.freeze({
     leftShoulder: 10, rightShoulder: -10,
-    leftElbowHuman: 95, rightElbowHuman: 95,
-    leftBend: 1, rightBend: -1
+    leftElbowHuman: ELBOW_HUMAN_ANGLE.NEUTRAL, rightElbowHuman: ELBOW_HUMAN_ANGLE.NEUTRAL,
+    leftBend: ARM_BEND_DIRECTION.NEUTRAL.left, rightBend: ARM_BEND_DIRECTION.NEUTRAL.right
   });
-  const ARM_SIDE_BEND_SIGN = Object.freeze({ left: 1, right: -1 });
-  const ARM_ROLE_AXIS_SIGN = Object.freeze({
-    FRONT: Object.freeze({ left: -1, right: 1 }),
-    REAR: Object.freeze({ left: 1, right: -1 })
-  });
-  const naturalElbowBendSign = (side, role) => role === "NEUTRAL"
-    ? ARM_SIDE_BEND_SIGN[side]
-    : ARM_SIDE_BEND_SIGN[side] * ARM_ROLE_AXIS_SIGN[role][side];
+  const ARM_SIDE_BEND_SIGN = Object.freeze({ left: -1, right: 1 });
+  const ARM_ROLE_AXIS_SIGN = ARM_BEND_DIRECTION;
+  const getBendDirection = (side, role = "NEUTRAL") => (ARM_BEND_DIRECTION[role] || ARM_BEND_DIRECTION.NEUTRAL)[side];
+  const naturalElbowBendSign = getBendDirection;
   const ARM_FORM_POSES = Object.freeze({
     NEUTRAL: Object.freeze({
       leftShoulder: 6, rightShoulder: -6,
-      leftElbowHuman: 125, rightElbowHuman: 150,
+      leftElbowHuman: ELBOW_HUMAN_ANGLE.NEUTRAL, rightElbowHuman: ELBOW_HUMAN_ANGLE.NEUTRAL,
       leftBend: naturalElbowBendSign("left", "NEUTRAL"),
       rightBend: naturalElbowBendSign("right", "NEUTRAL")
     }),
     LEFT_FRONT: Object.freeze({
       leftShoulder: -30, rightShoulder: 24,
-      leftElbowHuman: 72, rightElbowHuman: 150,
+      leftElbowHuman: ELBOW_HUMAN_ANGLE.FRONT, rightElbowHuman: ELBOW_HUMAN_ANGLE.REAR,
       leftBend: naturalElbowBendSign("left", "FRONT"),
       rightBend: naturalElbowBendSign("right", "REAR")
     }),
     RIGHT_FRONT: Object.freeze({
       leftShoulder: 24, rightShoulder: -30,
-      leftElbowHuman: 150, rightElbowHuman: 72,
+      leftElbowHuman: ELBOW_HUMAN_ANGLE.REAR, rightElbowHuman: ELBOW_HUMAN_ANGLE.FRONT,
       leftBend: naturalElbowBendSign("left", "REAR"),
       rightBend: naturalElbowBendSign("right", "FRONT")
     }),
     LEFT_EXTREME: Object.freeze({
       leftShoulder: -40, rightShoulder: 30,
-      leftElbowHuman: 48, rightElbowHuman: 155,
+      leftElbowHuman: ELBOW_HUMAN_ANGLE.FRONT, rightElbowHuman: ELBOW_HUMAN_ANGLE.REAR,
       leftBend: naturalElbowBendSign("left", "FRONT"),
       rightBend: naturalElbowBendSign("right", "REAR")
     }),
     RIGHT_EXTREME: Object.freeze({
       leftShoulder: 30, rightShoulder: -40,
-      leftElbowHuman: 155, rightElbowHuman: 48,
+      leftElbowHuman: ELBOW_HUMAN_ANGLE.REAR, rightElbowHuman: ELBOW_HUMAN_ANGLE.FRONT,
       leftBend: naturalElbowBendSign("left", "REAR"),
       rightBend: naturalElbowBendSign("right", "FRONT")
     })
@@ -126,6 +133,12 @@
   };
   const humanAngleToPhysicsTarget = (humanDegrees, bendDirection) => clamp(180 - humanDegrees, 25, 125) * DEG * (bendDirection < 0 ? -1 : 1);
   const mix = (from, to, amount) => from + (to - from) * amount;
+  const getElbowTarget = (side, armRole = "NEUTRAL", phase = 1) => {
+    const role = ELBOW_HUMAN_ANGLE[armRole] === undefined ? "NEUTRAL" : armRole;
+    const humanAngle = mix(ELBOW_HUMAN_ANGLE.NEUTRAL, ELBOW_HUMAN_ANGLE[role], clamp(phase, 0, 1));
+    const bendDirection = getBendDirection(side, role);
+    return { side, role, humanAngle, bendDirection, physicsTargetAngle: humanAngleToPhysicsTarget(humanAngle, bendDirection) };
+  };
 
   function limb(x, y, width, height, options = {}) {
     return Bodies.rectangle(x, y, width, height, {
@@ -189,6 +202,16 @@
       this.handFrictionMode = "normal";
       this.armFormPose = null;
       this.smoothedStride = 0;
+      this.armRoles = { left: "NEUTRAL", right: "NEUTRAL" };
+      this.elbowState = {
+        left: { role: "NEUTRAL", humanAngle: ELBOW_HUMAN_ANGLE.NEUTRAL, bendDirection: getBendDirection("left", "NEUTRAL"), stage: "HOLD", state: "NEUTRAL" },
+        right: { role: "NEUTRAL", humanAngle: ELBOW_HUMAN_ANGLE.NEUTRAL, bendDirection: getBendDirection("right", "NEUTRAL"), stage: "HOLD", state: "NEUTRAL" }
+      };
+      this.elbowTargets = {
+        left: getElbowTarget("left", "NEUTRAL"), right: getElbowTarget("right", "NEUTRAL")
+      };
+      this.elbowTargetTrace = [];
+      this.elbowTraceFrame = 0;
       this.armControlFactor = 1;
       this.balancePostureFactor = 1;
       this.posture = "STABLE";
@@ -213,8 +236,8 @@
         leftKnee: { current: 0, target: NEUTRAL.leftKnee, torque: 0 },
         rightShoulder: { current: -10 * DEG, target: -10 * DEG, torque: 0 },
         leftShoulder: { current: 10 * DEG, target: 10 * DEG, torque: 0 },
-        rightElbow: { current: -85 * DEG, target: -85 * DEG, torque: 0 },
-        leftElbow: { current: 85 * DEG, target: 85 * DEG, torque: 0 }
+        rightElbow: { current: 90 * DEG, target: 90 * DEG, torque: 0 },
+        leftElbow: { current: -90 * DEG, target: -90 * DEG, torque: 0 }
       };
     }
 
@@ -223,6 +246,16 @@
       Engine.clear(this.engine);
       this.accumulator = 0;
       this.smoothedStride = 0;
+      this.armRoles = { left: "NEUTRAL", right: "NEUTRAL" };
+      this.elbowState = {
+        left: { role: "NEUTRAL", humanAngle: ELBOW_HUMAN_ANGLE.NEUTRAL, bendDirection: getBendDirection("left", "NEUTRAL"), stage: "HOLD", state: "NEUTRAL" },
+        right: { role: "NEUTRAL", humanAngle: ELBOW_HUMAN_ANGLE.NEUTRAL, bendDirection: getBendDirection("right", "NEUTRAL"), stage: "HOLD", state: "NEUTRAL" }
+      };
+      this.elbowTargets = {
+        left: getElbowTarget("left", "NEUTRAL"), right: getElbowTarget("right", "NEUTRAL")
+      };
+      this.elbowTargetTrace = [];
+      this.elbowTraceFrame = 0;
       this.recoveryForceFrames = 0;
       this.fallForceFrames = 0;
       Object.keys(this.inputState).forEach(key => { this.inputState[key] = false; });
@@ -264,7 +297,7 @@
       const leftFoot = limb(x - 17, 479, 52, 18, { label: "left foot", friction: this.params.footFriction, frictionStatic: 2 });
       const rightFoot = limb(x + 13, 479, 52, 18, { label: "right foot", friction: this.params.footFriction, frictionStatic: 2 });
       const leftUpperAngle = 10 * DEG;
-      const leftForearmAngle = 95 * DEG;
+      const leftForearmAngle = -80 * DEG;
       const leftUpperArm = limbFromJoint(x - 20, 248, 14, 54, leftUpperAngle, { label: "left upper arm", density: 0.00125, friction: 0.65 });
       const leftElbowX = x - 20 - Math.sin(leftUpperAngle) * 54;
       const leftElbowY = 248 + Math.cos(leftUpperAngle) * 54;
@@ -274,10 +307,10 @@
       const leftHand = Bodies.circle(leftHandX, leftHandY, 8, {
         label: "left hand", density: 0.00055, friction: HAND_FRICTION[this.handFrictionMode],
         frictionStatic: 1, restitution: 0,
-        collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
+         collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
       });
       const rightUpperAngle = -10 * DEG;
-      const rightForearmAngle = -95 * DEG;
+      const rightForearmAngle = 80 * DEG;
       const rightUpperArm = limbFromJoint(x + 20, 248, 14, 54, rightUpperAngle, { label: "right upper arm", density: 0.00125, friction: 0.65 });
       const rightElbowX = x + 20 - Math.sin(rightUpperAngle) * 54;
       const rightElbowY = 248 + Math.cos(rightUpperAngle) * 54;
@@ -287,7 +320,7 @@
       const rightHand = Bodies.circle(rightHandX, rightHandY, 8, {
         label: "right hand", density: 0.00055, friction: HAND_FRICTION[this.handFrictionMode],
         frictionStatic: 1, restitution: 0,
-        collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
+         collisionFilter: { group: 0, category: COLLISION.hand, mask: COLLISION.ground | COLLISION.core }
       });
 
       this.bodies = {
@@ -410,6 +443,50 @@
       this.armFormPose = pose && ARM_FORM_POSES[pose] ? pose : null;
     }
 
+    requestedArmRoles(stride) {
+      if (this.armFormPose === "NEUTRAL") return { left: "NEUTRAL", right: "NEUTRAL" };
+      if (this.armFormPose === "LEFT_FRONT" || this.armFormPose === "LEFT_EXTREME") return { left: "FRONT", right: "REAR" };
+      if (this.armFormPose === "RIGHT_FRONT" || this.armFormPose === "RIGHT_EXTREME") return { left: "REAR", right: "FRONT" };
+      const hasInput = Object.values(this.inputState).some(Boolean);
+      if (!hasInput && Math.abs(stride) <= ELBOW_ROLE_THRESHOLD) return { left: "NEUTRAL", right: "NEUTRAL" };
+      if (stride < -ELBOW_ROLE_THRESHOLD) return { left: "FRONT", right: "REAR" };
+      if (stride > ELBOW_ROLE_THRESHOLD) return { left: "REAR", right: "FRONT" };
+      return { ...this.armRoles };
+    }
+
+    updateElbowTarget(side, requestedRole) {
+      const state = this.elbowState[side];
+      if (state.role !== requestedRole) {
+        state.role = requestedRole;
+        state.state = "TRANSITION";
+        state.stage = state.bendDirection === getBendDirection(side, requestedRole) ? "BLEND" : "TO_NEUTRAL";
+      }
+      const desired = getElbowTarget(side, requestedRole);
+      // 110° keeps the subsequent signed target jump below PI, so normalized
+      // PD error chooses the route through the valid elbow range, not ±PI.
+      const transitionHuman = state.stage === "TO_NEUTRAL" ? ELBOW_TRANSITION_HUMAN : desired.humanAngle;
+      state.humanAngle += (transitionHuman - state.humanAngle) * 0.16;
+      if (state.stage === "TO_NEUTRAL" && Math.abs(ELBOW_TRANSITION_HUMAN - state.humanAngle) < 0.35) {
+        state.humanAngle = ELBOW_TRANSITION_HUMAN;
+        state.bendDirection = desired.bendDirection;
+        state.stage = "BLEND";
+      }
+      const currentSign = Math.sign(this.control?.[`${side}Elbow`]?.current || state.bendDirection);
+      if (state.stage === "BLEND" && Math.abs(desired.humanAngle - state.humanAngle) < 0.35 && currentSign === desired.bendDirection) {
+        state.humanAngle = desired.humanAngle;
+        state.stage = "HOLD";
+        state.state = requestedRole;
+      }
+      const bendDirection = state.bendDirection;
+      const target = {
+        side, role: requestedRole, state: state.state,
+        humanAngle: state.humanAngle, bendDirection,
+        physicsTargetAngle: humanAngleToPhysicsTarget(state.humanAngle, bendDirection)
+      };
+      this.elbowTargets[side] = target;
+      return target;
+    }
+
     armPoseTargets(stride) {
       // Normal idle retains the Phase 1F mass distribution. The explicit
       // NEUTRAL form-test pose is visual-first and keeps both forearms diagonal.
@@ -419,22 +496,21 @@
       // Preserve the exact Phase 1F neutral mass distribution inside the
       // small idle sway, then blend to the running form outside that band.
       const amount = this.armFormPose ? 1 : clamp((Math.abs(stride) - 0.08) / 0.92, 0, 1);
-      const elbowTarget = (side, source) => mix(
-        humanAngleToPhysicsTarget(neutral[`${side}ElbowHuman`], neutral[`${side}Bend`]),
-        humanAngleToPhysicsTarget(source[`${side}ElbowHuman`], source[`${side}Bend`]),
-        amount
-      );
+      const roles = this.requestedArmRoles(stride);
+      this.armRoles = roles;
+      const leftElbow = this.updateElbowTarget("left", roles.left);
+      const rightElbow = this.updateElbowTarget("right", roles.right);
       return {
         leftShoulder: mix(neutral.leftShoulder, pose.leftShoulder, amount) * DEG,
         rightShoulder: mix(neutral.rightShoulder, pose.rightShoulder, amount) * DEG,
-        leftElbow: elbowTarget("left", pose),
-        rightElbow: elbowTarget("right", pose)
+        leftElbow: leftElbow.physicsTargetAngle,
+        rightElbow: rightElbow.physicsTargetAngle
       };
     }
 
     applyRecoveryImpulse(direction = 1) {
       this.recoveryDirection = direction < 0 ? -1 : 1;
-      this.recoveryForceFrames = 8;
+      this.recoveryForceFrames = 9;
     }
 
     applyFallTest(direction = 1) {
@@ -558,9 +634,12 @@
         // Correct arm endpoints move the real arm mass inward. This arm-only
         // posture bias restores the Phase 1F drift envelope without changing
         // feet, balance forces, or lower-body parameters.
-        const highBalanceBias = -4 * clamp((1 - this.balanceScale) / 0.25, 0, 1);
-        const lowBalanceBias = -8 * clamp((0.75 - this.balanceScale) / 0.15, 0, 1);
-        const idleArmBias = (highBalanceBias + lowBalanceBias) * DEG * idleAmount;
+        const neutralBias = this.balanceScale >= 0.75
+          ? mix(-13.5, -12.5, (this.balanceScale - 0.75) / 0.25)
+          : this.balanceScale >= 0.60
+            ? mix(-10, -13.5, (this.balanceScale - 0.60) / 0.15)
+            : mix(-7, -10, (this.balanceScale - 0.50) / 0.10);
+        const idleArmBias = neutralBias * DEG * idleAmount;
         armTarget.leftShoulder = clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder + idleArmBias, ...LIMITS.shoulder);
         armTarget.rightShoulder = clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder + idleArmBias, ...LIMITS.shoulder);
       }
@@ -573,6 +652,14 @@
       this.control.rightShoulder = this.jointPD(b.torso, b.rightUpperArm, armTarget.rightShoulder, p.shoulderKp * armFactor, p.shoulderKd * armFactor, p.shoulderMaxTorque * armFactor);
       this.control.leftElbow = this.jointPD(b.leftUpperArm, b.leftForearm, armTarget.leftElbow, p.elbowKp * armFactor, p.elbowKd * armFactor, p.elbowMaxTorque * armFactor);
       this.control.rightElbow = this.jointPD(b.rightUpperArm, b.rightForearm, armTarget.rightElbow, p.elbowKp * armFactor, p.elbowKd * armFactor, p.elbowMaxTorque * armFactor);
+      this.elbowTraceFrame += 1;
+      if (this.elbowTraceFrame % 6 === 0) {
+        this.elbowTargetTrace.push({
+          left: this.elbowTargets.left.physicsTargetAngle / DEG,
+          right: this.elbowTargets.right.physicsTargetAngle / DEG
+        });
+        if (this.elbowTargetTrace.length > 20) this.elbowTargetTrace.shift();
+      }
 
       this.absolutePD(b.rightFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
       this.absolutePD(b.leftFoot, 0, p.ankleKp * this.ankleScale, p.ankleKd * this.ankleScale, p.ankleMaxTorque * this.ankleScale);
@@ -665,10 +752,10 @@
       const rightConnection = armConnection("right");
       const leftSignedElbow = signedElbowAngle(leftElbowRelative);
       const rightSignedElbow = signedElbowAngle(rightElbowRelative);
-      const roleFor = side => this.armFormPose === "NEUTRAL"
-        ? "NEUTRAL" : side === frontArm ? "FRONT" : "REAR";
-      const expectedSignFor = side => naturalElbowBendSign(side, roleFor(side));
+      const roleFor = side => this.elbowTargets[side].role;
+      const expectedSignFor = side => this.elbowTargets[side].bendDirection;
       const actualSignFor = signed => Math.sign(signed) || 0;
+      const directionFor = (side, signed) => Math.sign(signed || expectedSignFor(side)) === expectedSignFor(side) ? "CORRECT" : "WRONG";
       return {
         inputState: { ...this.inputState },
         torsoAngularVelocity: torso.angularVelocity,
@@ -701,8 +788,16 @@
           rightElbowSigned: rightSignedElbow,
           leftElbowHuman: humanElbowAngle(leftElbowRelative),
           rightElbowHuman: humanElbowAngle(rightElbowRelative),
-          leftElbowDirection: elbowBendDirection("left", leftSignedElbow, roleFor("left")),
-          rightElbowDirection: elbowBendDirection("right", rightSignedElbow, roleFor("right")),
+          leftElbowHumanTarget: this.elbowTargets.left.humanAngle,
+          rightElbowHumanTarget: this.elbowTargets.right.humanAngle,
+          leftElbowPhysicsTarget: this.elbowTargets.left.physicsTargetAngle / DEG,
+          rightElbowPhysicsTarget: this.elbowTargets.right.physicsTargetAngle / DEG,
+          leftElbowState: this.elbowTargets.left.state,
+          rightElbowState: this.elbowTargets.right.state,
+          phase: this.smoothedStride,
+          targetTrace: this.elbowTargetTrace.map(sample => ({ ...sample })),
+          leftElbowDirection: directionFor("left", leftSignedElbow),
+          rightElbowDirection: directionFor("right", rightSignedElbow),
           leftRole: roleFor("left"),
           rightRole: roleFor("right"),
           leftExpectedSign: expectedSignFor("left"),
@@ -711,8 +806,8 @@
           rightActualSign: actualSignFor(rightSignedElbow),
           leftAnatomicalSigned: leftSignedElbow * ARM_SIDE_BEND_SIGN.left,
           rightAnatomicalSigned: rightSignedElbow * ARM_SIDE_BEND_SIGN.right,
-          leftBendDefinition: roleFor("left") === "FRONT" ? "FRONT / NEGATIVE" : roleFor("left") === "REAR" ? "REAR / POSITIVE" : "NEUTRAL / POSITIVE",
-          rightBendDefinition: roleFor("right") === "FRONT" ? "FRONT / NEGATIVE" : roleFor("right") === "REAR" ? "REAR / POSITIVE" : "NEUTRAL / NEGATIVE",
+          leftBendDefinition: `${roleFor("left")} / ${expectedSignFor("left") > 0 ? "POSITIVE" : "NEGATIVE"}`,
+          rightBendDefinition: `${roleFor("right")} / ${expectedSignFor("right") > 0 ? "POSITIVE" : "NEGATIVE"}`,
           leftForearmScreen: normalizeAngle(this.bodies.leftForearm.angle + 90 * DEG) / DEG,
           rightForearmScreen: normalizeAngle(this.bodies.rightForearm.angle + 90 * DEG) / DEG,
           points: { left: leftConnection.points, right: rightConnection.points },
@@ -751,5 +846,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_SIDE_BEND_SIGN, ARM_ROLE_AXIS_SIGN, ARM_FORM_POSES, naturalElbowBendSign, bodyWorldPoint, getBodyEndpoint, pointGap, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_SIDE_BEND_SIGN, ARM_ROLE_AXIS_SIGN, ARM_BEND_DIRECTION, ARM_FORM_POSES, ELBOW_HUMAN_ANGLE, ELBOW_TRANSITION_HUMAN, ELBOW_ROLE_THRESHOLD, getBendDirection, getElbowTarget, naturalElbowBendSign, normalizeAngle, bodyWorldPoint, getBodyEndpoint, pointGap, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
 })();

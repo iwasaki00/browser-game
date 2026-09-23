@@ -34,7 +34,7 @@ node 029_qwop-runner/tests/browser-smoke.cjs
 DEBUG内には次の独立した試験があります。
 
 - `DRIFT TEST 5s`: RETRY相当の初期状態へ戻し、手入力とデモを無効にして5秒計測します。Start X、End X、Drift Distance、平均/最大X速度、左右足の接地時間、推定荷重を表示します。
-- `RECOVERY TEST`: 従来どおり8フレームの軽い横力でLEANINGと復帰性を確認します。
+- `RECOVERY TEST`: 9フレームの軽い横力でLEANINGと復帰性を確認します。
 - `FALL TEST`: 左右を交互に、胴体上部へ36フレーム、水平0.135の力を加えます。位置・角度・速度の直接変更は行いません。FALLING/DOWN到達時間、現在の手接地、左右手接地時間、最初に地面へ触れた部位を表示します。DOWN到達後はQ/W/O/Pがすぐ有効になります。
 
 静止ドリフトの主因は、足先側へ偏っていた足首Constraintと、Balanceが使う支持点が同一扱いだったことです。機械的な足首アンカーを足中心付近の`+2px`へ移し、足裏の有効支持点を独立した`-18.27px`として定義しました。速度や位置を固定する処理は使っていません。
@@ -92,8 +92,8 @@ Arm Massは上腕・前腕・手の密度へLight 65%、Normal 100%、Heavy 145%
 | Knee | 6.00 | 0.40 | 6.00 |
 | Ankle | 4.00 | 0.30 | 4.00 |
 | Neck | 0.45 | 0.12 | 0.30 |
-| Shoulder | 1.50 | 0.18 | 1.20 |
-| Elbow | 0.70 | 0.12 | 0.65 |
+| Shoulder | 2.50 | 0.15 | 1.20 |
+| Elbow | 1.50 | 0.12 | 1.00 |
 
 可動域はHip `-60°〜60°`、Knee `-6°〜92°`、Ankle `-30°〜30°`、Neck `-25°〜25°`、Shoulder `-85°〜85°`、Elbowは左右鏡像の`25°〜125°`です。中立値は左Hip `+2°`、右Hip `-2°`、左右Knee `+8°`です。
 
@@ -109,7 +109,7 @@ Arm Massは上腕・前腕・手の密度へLight 65%、Normal 100%、Heavy 145%
 
 | 姿勢 | 前側肩 | 前側人体肘角 | 後側肩 | 後側人体肘角 |
 |---|---:|---:|---:|---:|
-| Neutral | ±10° | 95° | ±10° | 95° |
+| Neutral | ±10° | 91° | ±10° | 91° |
 | Running | 前30° | 80° | 後24° | 95° |
 
 DEBUGの`ARM FORM TEST`はNEUTRAL、LEFT ARM FRONT、RIGHT ARM FRONTを各1.8秒表示します。脚入力は固定しません。DEBUGには左右の肩人体角、肘人体角、前腕画面角、FRONT/REAR ARMを表示します。
@@ -121,3 +121,13 @@ DEBUGの`ARM FORM TEST`はNEUTRAL、LEFT ARM FRONT、RIGHT ARM FRONTを各1.8秒
 ## Phase 1Gの範囲
 
 ゴール、タイマー、ランキング、ハイスコア、敵、障害物、キャラクターステージ、腕の手動操作、完成版ゲームループは未実装です。Phase 1Gは腕フォームを確定する段階です。
+
+## Phase 1K 肘Target状態遷移
+
+肘Targetは`getElbowTarget(side, role, phase)`を入口とし、人体肘角と曲げ方向を分離しました。基本人体角はFRONT 80°、REAR 95°、NEUTRAL 91°です。無入力は独立したNEUTRALとして扱い、走行位相±0.12の間は現在Roleを維持してチャタリングを防ぎます。
+
+曲げ方向はside/role表から一度だけ決定します。符号が変わるRole遷移では、符号付き角度を直接補間せず110°の中継姿勢へ寄せてから切り替えます。これにより正規化後のPD誤差が±PI側の遠回りを選ばず、Targetが伸び切りの0°を通りません。相対角と誤差は共通`normalizeAngle()`で`-PI〜+PI`へ正規化します。
+
+DEBUGには左右それぞれのState、Human Current/Target、Physics Current/Target、Bend Direction、Role、Phase、および直近約2秒のTarget Traceを表示します。`ELBOW MATRIX TEST`はNONE、Q、W、O、P、Q+O、Q+P、W+O、W+Pを各1.2秒実行し、左右のRole、人体角、曲げ方向、Direction Correctを記録します。
+
+自動テスト実測では9入力すべて左右CORRECT、無入力3秒は左90.5°／右90.0°、遷移中Targetは人体角110°以内かつ物理角絶対値70°以上、最大Connection Gap 0.366pxでした。推奨Cの12サイクルは4.876m、5秒静止ドリフトは-0.0482mです。実Chromeの5秒DRIFT TESTは-0.0421mでした。
