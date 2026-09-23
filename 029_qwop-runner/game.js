@@ -44,8 +44,15 @@
     fallingAt: null, downAt: null, nextFallDirection: 1
   };
   const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME"] };
+  const armConnectionTest = {
+    active: false, phaseIndex: 0, elapsed: 0,
+    poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME", "FALLING"],
+    max: { left: { shoulder: 0, elbow: 0, wrist: 0 }, right: { shoulder: 0, elbow: 0, wrist: 0 } }
+  };
+  let jointDots = true;
+  let armSkeletonDebug = false;
 
-  const inputLocked = () => demo.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
+  const inputLocked = () => demo.active || armConnectionTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
   const parameterSpec = {
     gravity: ["Gravity", 0.35, 1.2, 0.01, 2],
@@ -147,7 +154,9 @@
     <label>Arm Amplitude <select class="arm-amplitude"><option value="20">20°</option><option value="25">25°</option><option value="30">30°</option><option value="35" selected>35°</option><option value="40">40°</option><option value="42">42°</option></select></label>
     <label>Hand Friction <select class="hand-friction"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
     <button type="button" class="recovery-test">RECOVERY TEST</button>
-    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button><button type="button" class="arm-form-test">ARM FORM TEST</button></div>
+    <label>Joint Dots <input class="joint-dots" type="checkbox" checked></label>
+    <label>Arm Skeleton <input class="arm-skeleton-debug" type="checkbox"></label>
+    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button><button type="button" class="arm-form-test">ARM FORM TEST</button><button type="button" class="arm-connection-test">ARM CONNECTION TEST</button></div>
     <pre class="physics-test-result">PHASE 1F TESTS: READY</pre>
     <p class="arm-form-status">ARM FORM: READY</p>`;
   experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
@@ -157,6 +166,8 @@
   experimentPanel.querySelector(".arm-mass-preset").addEventListener("change", event => physics.setArmMass(event.target.value));
   experimentPanel.querySelector(".arm-amplitude").addEventListener("change", event => physics.setArmAmplitude(event.target.value));
   experimentPanel.querySelector(".hand-friction").addEventListener("change", event => physics.setHandFriction(event.target.value));
+  experimentPanel.querySelector(".joint-dots").addEventListener("change", event => { jointDots = event.target.checked; });
+  experimentPanel.querySelector(".arm-skeleton-debug").addEventListener("change", event => { armSkeletonDebug = event.target.checked; });
   let recoveryDirection = 1;
   experimentPanel.querySelector(".recovery-test").addEventListener("click", () => {
     physics.applyRecoveryImpulse(recoveryDirection);
@@ -165,6 +176,7 @@
   const driftTestButton = experimentPanel.querySelector(".drift-test");
   const fallTestButton = experimentPanel.querySelector(".fall-test");
   const armFormTestButton = experimentPanel.querySelector(".arm-form-test");
+  const armConnectionTestButton = experimentPanel.querySelector(".arm-connection-test");
   const armFormStatus = experimentPanel.querySelector(".arm-form-status");
   const physicsTestResult = experimentPanel.querySelector(".physics-test-result");
 
@@ -172,6 +184,7 @@
     driftTestButton.disabled = running;
     fallTestButton.disabled = running;
     armFormTestButton.disabled = running;
+    armConnectionTestButton.disabled = running;
     experimentPanel.querySelector(".recovery-test").disabled = running;
     startDemoButton.disabled = running;
     watchDemoButton.disabled = running;
@@ -229,7 +242,7 @@
   }
 
   function startArmFormTest() {
-    if (physicsTest.mode) return;
+    if (physicsTest.mode || armConnectionTest.active) return;
     stopDemo();
     armFormTest.active = true;
     armFormTest.phaseIndex = 0;
@@ -260,6 +273,53 @@
   }
 
   armFormTestButton.addEventListener("click", startArmFormTest);
+
+  function startArmConnectionTest() {
+    if (physicsTest.mode || armFormTest.active) return;
+    stopDemo();
+    clearInputs();
+    physics.reset();
+    armConnectionTest.active = true;
+    armConnectionTest.phaseIndex = 0;
+    armConnectionTest.elapsed = 0;
+    armConnectionTest.max = { left: { shoulder: 0, elbow: 0, wrist: 0 }, right: { shoulder: 0, elbow: 0, wrist: 0 } };
+    physics.setArmFormPose("NEUTRAL");
+    setTestButtons(true);
+    armConnectionTestButton.disabled = true;
+    physicsTestResult.textContent = "ARM CONNECTION TEST: NEUTRAL 1 / 6";
+  }
+
+  function updateArmConnectionTest(delta) {
+    if (!armConnectionTest.active) return;
+    const connections = physics.diagnostics().armForm.connections;
+    ["left", "right"].forEach(side => {
+      ["shoulder", "elbow", "wrist"].forEach(joint => {
+        armConnectionTest.max[side][joint] = Math.max(armConnectionTest.max[side][joint], connections[side].gaps[joint]);
+      });
+    });
+    armConnectionTest.elapsed += delta;
+    if (armConnectionTest.elapsed < 1500) return;
+    armConnectionTest.elapsed -= 1500;
+    armConnectionTest.phaseIndex += 1;
+    if (armConnectionTest.phaseIndex >= armConnectionTest.poses.length) {
+      armConnectionTest.active = false;
+      physics.setArmFormPose(null);
+      setTestButtons(false);
+      const line = side => `${side.toUpperCase()} ARM MAX GAP  shoulder ${armConnectionTest.max[side].shoulder.toFixed(3)}px / elbow ${armConnectionTest.max[side].elbow.toFixed(3)}px / wrist ${armConnectionTest.max[side].wrist.toFixed(3)}px`;
+      physicsTestResult.textContent = ["ARM CONNECTION TEST: COMPLETE", line("left"), line("right")].join("\n");
+      return;
+    }
+    const pose = armConnectionTest.poses[armConnectionTest.phaseIndex];
+    if (pose === "FALLING") {
+      physics.setArmFormPose(null);
+      physics.applyFallTest(1);
+    } else {
+      physics.setArmFormPose(pose);
+    }
+    physicsTestResult.textContent = `ARM CONNECTION TEST: ${pose.replaceAll("_", " ")} ${armConnectionTest.phaseIndex + 1} / 6`;
+  }
+
+  armConnectionTestButton.addEventListener("click", startArmConnectionTest);
 
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
@@ -534,6 +594,19 @@
   function updateDiagnostics() {
     const data = physics.diagnostics();
     const c = data.control;
+    const point = value => `(${value.x.toFixed(1)}, ${value.y.toFixed(1)})`;
+    const connectionLines = side => {
+      const name = side.toUpperCase();
+      const connection = data.armForm.connections[side];
+      const world = connection.world;
+      const gaps = connection.gaps;
+      return [
+        `${name} ARM SKELETON shoulder ${point(world.shoulderTorsoAnchor)} / upper shoulder ${point(world.upperShoulderEndpoint)}`,
+        `${name} ELBOW upper ${point(world.upperElbowEndpoint)} / A ${point(world.elbowConstraintA)} / B ${point(world.elbowConstraintB)} / forearm ${point(world.forearmElbowEndpoint)}`,
+        `${name} WRIST forearm ${point(world.forearmWristEndpoint)} / hand ${point(world.handCenter)}`,
+        `${name} GAP shoulder ${gaps.shoulder.toFixed(3)}px / upper-A ${gaps.upperToA.toFixed(3)}px / A-B ${gaps.aToB.toFixed(3)}px / B-forearm ${gaps.bToForearm.toFixed(3)}px / elbow ${gaps.elbow.toFixed(3)}px / wrist ${gaps.wrist.toFixed(3)}px`
+      ];
+    };
     const jointLine = (label, joint) => `${label.padEnd(7)} cur ${degrees(joint.current).padStart(7)}  target ${degrees(joint.target).padStart(7)}  torque ${joint.torque.toFixed(4).padStart(7)}`;
     diagnosticsEl.textContent = [
       `Q: ${data.inputState.q ? "ON " : "OFF"}   W: ${data.inputState.w ? "ON " : "OFF"}   O: ${data.inputState.o ? "ON " : "OFF"}   P: ${data.inputState.p ? "ON " : "OFF"}`,
@@ -550,6 +623,8 @@
       `L UA SCREEN ${data.armForm.leftUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°`,
       `R UA SCREEN ${data.armForm.rightUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `L FOREARM SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°  R FOREARM SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
+      `JOINT DOTS ${jointDots ? "ON" : "OFF"}  ARM SKELETON ${armSkeletonDebug ? "ON" : "OFF"}`,
+      ...connectionLines("left"), ...connectionLines("right"),
       `POSITION x ${data.position.x.toFixed(2)} y ${data.position.y.toFixed(2)}`,
       `VELOCITY x ${data.velocity.x.toFixed(3)} y ${data.velocity.y.toFixed(3)} / AVG ${averageVelocityX.toFixed(3)}`,
       `LEFT FOOT  ${data.feet.left.contact ? "GROUND" : "AIR"} friction ${data.feet.left.friction.toFixed(2)}`,
@@ -642,7 +717,7 @@
     ctx.moveTo(data.neck.torsoAnchor.x, data.neck.torsoAnchor.y);
     ctx.lineTo(data.neck.headAnchor.x, data.neck.headAnchor.y);
     ctx.stroke();
-    ["left", "right"].forEach(side => {
+    if (armSkeletonDebug) ["left", "right"].forEach(side => {
       const points = data.armForm.points[side];
       ctx.save();
       ctx.setLineDash([4, 3]);
@@ -716,13 +791,17 @@
     const drawArm = side => {
       if (side === "left") {
         drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62");
-        drawJoint(armData.armForm.points.left.shoulder, 5, "#c94958");
-        drawJoint(armData.armForm.points.left.elbow, 6, "#df6a62");
+        if (jointDots) {
+          drawJoint(armData.armForm.points.left.shoulder, 5, "#c94958");
+          drawJoint(armData.armForm.points.left.elbow, 6, "#df6a62");
+        }
         drawVisualHand("left", b.leftHand);
       } else {
         drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf");
-        drawJoint(armData.armForm.points.right.shoulder, 5, "#188d9f");
-        drawJoint(armData.armForm.points.right.elbow, 6, "#27b8bf");
+        if (jointDots) {
+          drawJoint(armData.armForm.points.right.shoulder, 5, "#188d9f");
+          drawJoint(armData.armForm.points.right.elbow, 6, "#27b8bf");
+        }
         drawVisualHand("right", b.rightHand);
       }
     };
@@ -762,6 +841,7 @@
     updateTraining(delta);
     updateArmFormTest(delta);
     physics.step(delta);
+    updateArmConnectionTest(delta);
     updatePhysicsTest(delta);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;

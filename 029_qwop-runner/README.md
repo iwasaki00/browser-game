@@ -15,6 +15,7 @@ node 029_qwop-runner/tests/phase1e.test.cjs
 node 029_qwop-runner/tests/phase1f.test.cjs
 node 029_qwop-runner/tests/phase1g.test.cjs
 node 029_qwop-runner/tests/phase1h.test.cjs
+node 029_qwop-runner/tests/phase1i.test.cjs
 node 029_qwop-runner/tests/browser-smoke.cjs
 ```
 

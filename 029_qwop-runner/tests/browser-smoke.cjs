@@ -172,6 +172,8 @@ async function viewport(name, width, height) {
   assert(debugText.includes("ARMS swing 100% amplitude 35° mass NORMAL"), "arm experiment diagnostics missing");
   assert(debugText.includes("LEFT HAND") && debugText.includes("RIGHT HAND") && debugText.includes("POSTURE"), "hand or posture diagnostics missing");
   assert(debugText.includes("SHOULDER HUMAN") && debugText.includes("ELBOW HUMAN") && debugText.includes("FOREARM SCREEN") && debugText.includes("ARM ROLE FRONT"), "Phase 1G arm diagnostics missing");
+  assert(debugText.includes("ARM SKELETON") && debugText.includes("GAP shoulder") && debugText.includes("upper-A") && debugText.includes("A-B"), "Phase 1I connection diagnostics missing");
+  assert(await evaluate("Boolean(document.querySelector('.joint-dots')) && Boolean(document.querySelector('.arm-skeleton-debug')) && Boolean(document.querySelector('.arm-connection-test'))"));
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-amplitude').options].map(option => option.value)"), ["20", "25", "30", "35", "40", "42"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.hand-friction').options].map(option => option.textContent)"), ["Low", "Normal", "High"]);
@@ -235,6 +237,10 @@ async function viewport(name, width, height) {
   await wait(700);
   assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("NEUTRAL"));
   await screenshot("phase1h-neutral.png");
+  await evaluate("(() => { const toggle = document.querySelector('.joint-dots'); toggle.checked = false; toggle.dispatchEvent(new Event('change', { bubbles: true })); })()");
+  await wait(120);
+  await screenshot("phase1i-joint-dots-off.png");
+  await evaluate("(() => { const toggle = document.querySelector('.joint-dots'); toggle.checked = true; toggle.dispatchEvent(new Event('change', { bubbles: true })); })()");
   await wait(1800);
   assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM FRONT"));
   await screenshot("phase1h-left-front.png");
@@ -250,6 +256,13 @@ async function viewport(name, width, height) {
   await wait(1800);
   assert.equal(await evaluate("document.querySelector('.arm-form-status').textContent"), "ARM FORM: COMPLETE");
 
+  await evaluate("document.querySelector('.arm-connection-test').click()");
+  await wait(9300);
+  const connectionResult = await evaluate("document.querySelector('.physics-test-result').textContent");
+  assert(connectionResult.includes("ARM CONNECTION TEST: COMPLETE"), "ARM CONNECTION TEST did not complete");
+  const connectionGaps = [...connectionResult.matchAll(/(?:shoulder|elbow|wrist) ([0-9.]+)px/g)].map(match => Number.parseFloat(match[1]));
+  assert(connectionGaps.length === 6 && connectionGaps.every(gap => gap <= 2), `connection gap exceeded 2px: ${connectionResult}`);
+
   await evaluate("document.querySelector('#debugButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.fall-test').click(); document.querySelector('#debugButton').click()");
   await wait(500);
   const fallingCapture = await evaluate("document.querySelector('.physics-test-result').textContent");
@@ -258,7 +271,7 @@ async function viewport(name, width, height) {
   await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1H browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log(`Phase 1I browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

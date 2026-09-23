@@ -34,7 +34,7 @@
     neckKp: 0.45,
     neckKd: 0.12,
     neckMaxTorque: 0.30,
-    shoulderKp: 1.50,
+    shoulderKp: 2.50,
     shoulderKd: 0.18,
     shoulderMaxTorque: 1.20,
     elbowKp: 0.70,
@@ -99,6 +99,12 @@
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = angle => Math.atan2(Math.sin(angle), Math.cos(angle));
+  const bodyWorldPoint = (body, localOffset) => ({
+    x: body.position.x + localOffset.x * Math.cos(body.angle) - localOffset.y * Math.sin(body.angle),
+    y: body.position.y + localOffset.x * Math.sin(body.angle) + localOffset.y * Math.cos(body.angle)
+  });
+  const getBodyEndpoint = (body, localOffset) => bodyWorldPoint(body, localOffset);
+  const pointGap = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
   const humanElbowAngle = relativeAngle => 180 - Math.abs(normalizeAngle(relativeAngle) / DEG);
   const signedElbowAngle = relativeAngle => normalizeAngle(relativeAngle) / DEG;
   const elbowBendDirection = (side, signedDegrees, role = "NEUTRAL") => {
@@ -128,12 +134,21 @@
   }
 
   function pin(bodyA, pointA, bodyB, pointB, length = 0, label = "joint") {
+    const rotateForBody = (body, point) => {
+      if (!body) return point;
+      const cosine = Math.cos(body.angle);
+      const sine = Math.sin(body.angle);
+      return {
+        x: point.x * cosine - point.y * sine,
+        y: point.x * sine + point.y * cosine
+      };
+    };
     return Constraint.create({
       label,
       bodyA,
-      pointA,
+      pointA: rotateForBody(bodyA, pointA),
       bodyB,
-      pointB,
+      pointB: rotateForBody(bodyB, pointB),
       length,
       stiffness: 0.985,
       damping: 0.32
@@ -275,14 +290,26 @@
       this.neckConstraint = pin(torso, { x: 0, y: -49 }, head, { x: 0, y: 21 }, 1);
       this.neckConstraint.stiffness = 1;
       this.neckConstraint.damping = 0.5;
+      this.armConstraints = {
+        left: {
+          shoulder: pin(torso, { x: -20, y: -30 }, leftUpperArm, { x: 0, y: -27 }, 0, "left shoulder"),
+          elbow: pin(leftUpperArm, { x: 0, y: 27 }, leftForearm, { x: 0, y: -22 }, 0, "left elbow"),
+          wrist: pin(leftForearm, { x: 0, y: 22 }, leftHand, { x: 0, y: 0 }, 0, "left wrist")
+        },
+        right: {
+          shoulder: pin(torso, { x: 20, y: -30 }, rightUpperArm, { x: 0, y: -27 }, 0, "right shoulder"),
+          elbow: pin(rightUpperArm, { x: 0, y: 27 }, rightForearm, { x: 0, y: -22 }, 0, "right elbow"),
+          wrist: pin(rightForearm, { x: 0, y: 22 }, rightHand, { x: 0, y: 0 }, 0, "right wrist")
+        }
+      };
       this.constraints = [
         this.neckConstraint,
-        pin(torso, { x: -20, y: -30 }, leftUpperArm, { x: 0, y: -27 }, 1, "left shoulder"),
-        pin(leftUpperArm, { x: 0, y: 27 }, leftForearm, { x: 0, y: -22 }, 1, "left elbow"),
-        pin(leftForearm, { x: 0, y: 22 }, leftHand, { x: 0, y: 0 }, 1, "left wrist"),
-        pin(torso, { x: 20, y: -30 }, rightUpperArm, { x: 0, y: -27 }, 1, "right shoulder"),
-        pin(rightUpperArm, { x: 0, y: 27 }, rightForearm, { x: 0, y: -22 }, 1, "right elbow"),
-        pin(rightForearm, { x: 0, y: 22 }, rightHand, { x: 0, y: 0 }, 1, "right wrist"),
+        this.armConstraints.left.shoulder,
+        this.armConstraints.left.elbow,
+        this.armConstraints.left.wrist,
+        this.armConstraints.right.shoulder,
+        this.armConstraints.right.elbow,
+        this.armConstraints.right.wrist,
         pin(torso, { x: -15, y: 48 }, leftThigh, { x: 0, y: -37 }, 1),
         pin(torso, { x: 15, y: 48 }, rightThigh, { x: 0, y: -37 }, 1),
         pin(leftThigh, { x: 0, y: 37 }, leftShin, { x: 0, y: -37 }, 1),
@@ -513,9 +540,16 @@
         const phaseMagnitude = Math.abs(stride);
         const frontAmplitude = this.armAmplitude * DEG;
         const rearAmplitude = this.armAmplitude * 0.72 * DEG;
-        const idleShoulder = 10 * DEG * Math.max(0, 1 - phaseMagnitude * 2.5);
-        armTarget.leftShoulder = clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder, ...LIMITS.shoulder);
-        armTarget.rightShoulder = clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder, ...LIMITS.shoulder);
+        const idleAmount = Math.max(0, 1 - phaseMagnitude * 2.5);
+        const idleShoulder = 10 * DEG * idleAmount;
+        // Correct arm endpoints move the real arm mass inward. This arm-only
+        // posture bias restores the Phase 1F drift envelope without changing
+        // feet, balance forces, or lower-body parameters.
+        const highBalanceBias = -4 * clamp((1 - this.balanceScale) / 0.25, 0, 1);
+        const lowBalanceBias = -8 * clamp((0.75 - this.balanceScale) / 0.15, 0, 1);
+        const idleArmBias = (highBalanceBias + lowBalanceBias) * DEG * idleAmount;
+        armTarget.leftShoulder = clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder + idleArmBias, ...LIMITS.shoulder);
+        armTarget.rightShoulder = clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder + idleArmBias, ...LIMITS.shoulder);
       }
       const postureArmFactor = this.posture === "STABLE" ? 1
         : this.posture === "LEANING" ? 0.85
@@ -556,12 +590,8 @@
 
     diagnostics() {
       const torso = this.bodies.torso;
-      const worldPoint = (body, point) => ({
-        x: body.position.x + point.x * Math.cos(body.angle) - point.y * Math.sin(body.angle),
-        y: body.position.y + point.x * Math.sin(body.angle) + point.y * Math.cos(body.angle)
-      });
-      const neckTorsoAnchor = worldPoint(this.neckConstraint.bodyA, this.neckConstraint.pointA);
-      const neckHeadAnchor = worldPoint(this.neckConstraint.bodyB, this.neckConstraint.pointB);
+      const neckTorsoAnchor = bodyWorldPoint(this.neckConstraint.bodyA, this.neckConstraint.pointA);
+      const neckHeadAnchor = bodyWorldPoint(this.neckConstraint.bodyB, this.neckConstraint.pointB);
       const neckDistance = Math.hypot(neckHeadAnchor.x - neckTorsoAnchor.x, neckHeadAnchor.y - neckTorsoAnchor.y);
       const touchesGround = body => Query.collides(body, [this.ground]).length > 0;
       const leftShoulderRelative = normalizeAngle(this.bodies.leftUpperArm.angle - torso.angle);
@@ -571,15 +601,55 @@
       const frontArm = this.armFormPose === "LEFT_FRONT" || this.armFormPose === "LEFT_EXTREME" ? "left"
         : this.armFormPose === "RIGHT_FRONT" || this.armFormPose === "RIGHT_EXTREME" ? "right"
           : this.smoothedStride < 0 ? "left" : "right";
-      const armPoints = side => {
+      const armConnection = side => {
         const upper = this.bodies[`${side}UpperArm`];
         const forearm = this.bodies[`${side}Forearm`];
+        const hand = this.bodies[`${side}Hand`];
+        const shoulderConstraint = this.armConstraints[side].shoulder;
+        const elbowConstraint = this.armConstraints[side].elbow;
+        const wristConstraint = this.armConstraints[side].wrist;
+        const shoulderTorsoAnchor = Constraint.pointAWorld(shoulderConstraint);
+        const upperShoulderEndpoint = getBodyEndpoint(upper, { x: 0, y: -27 });
+        const upperElbowEndpoint = getBodyEndpoint(upper, { x: 0, y: 27 });
+        const elbowConstraintA = Constraint.pointAWorld(elbowConstraint);
+        const elbowConstraintB = Constraint.pointBWorld(elbowConstraint);
+        const forearmElbowEndpoint = getBodyEndpoint(forearm, { x: 0, y: -22 });
+        const forearmWristEndpoint = getBodyEndpoint(forearm, { x: 0, y: 22 });
+        const wristConstraintA = Constraint.pointAWorld(wristConstraint);
+        const wristConstraintB = Constraint.pointBWorld(wristConstraint);
+        const handCenter = { ...hand.position };
         return {
-          shoulder: worldPoint(upper, { x: 0, y: -27 }),
-          elbow: worldPoint(upper, { x: 0, y: 27 }),
-          hand: worldPoint(forearm, { x: 0, y: 22 })
+          points: {
+            shoulder: upperShoulderEndpoint,
+            elbow: {
+              x: (upperElbowEndpoint.x + forearmElbowEndpoint.x) / 2,
+              y: (upperElbowEndpoint.y + forearmElbowEndpoint.y) / 2
+            },
+            wrist: forearmWristEndpoint,
+            hand: handCenter
+          },
+          world: {
+            shoulderTorsoAnchor, upperShoulderEndpoint, upperElbowEndpoint,
+            elbowConstraintA, elbowConstraintB, forearmElbowEndpoint,
+            forearmWristEndpoint, wristConstraintA, wristConstraintB, handCenter
+          },
+          gaps: {
+            shoulder: pointGap(shoulderTorsoAnchor, upperShoulderEndpoint),
+            upperToA: pointGap(upperElbowEndpoint, elbowConstraintA),
+            aToB: pointGap(elbowConstraintA, elbowConstraintB),
+            bToForearm: pointGap(elbowConstraintB, forearmElbowEndpoint),
+            elbow: pointGap(upperElbowEndpoint, forearmElbowEndpoint),
+            wrist: pointGap(forearmWristEndpoint, handCenter)
+          },
+          lengths: {
+            shoulder: shoulderConstraint.length,
+            elbow: elbowConstraint.length,
+            wrist: wristConstraint.length
+          }
         };
       };
+      const leftConnection = armConnection("left");
+      const rightConnection = armConnection("right");
       const leftSignedElbow = signedElbowAngle(leftElbowRelative);
       const rightSignedElbow = signedElbowAngle(rightElbowRelative);
       const roleFor = side => this.armFormPose === "NEUTRAL" || !this.armFormPose
@@ -622,7 +692,8 @@
           rightBendDefinition: roleFor("right") === "FRONT" ? "FRONT / NEGATIVE" : roleFor("right") === "REAR" ? "REAR / POSITIVE" : "NEUTRAL / NEGATIVE",
           leftForearmScreen: normalizeAngle(this.bodies.leftForearm.angle + 90 * DEG) / DEG,
           rightForearmScreen: normalizeAngle(this.bodies.rightForearm.angle + 90 * DEG) / DEG,
-          points: { left: armPoints("left"), right: armPoints("right") }
+          points: { left: leftConnection.points, right: rightConnection.points },
+          connections: { left: leftConnection, right: rightConnection }
         },
         groundContacts: {
           leftHand: this.handContact.left,
@@ -657,5 +728,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_FORM_POSES, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_IDLE, ARM_FORM_POSES, bodyWorldPoint, getBodyEndpoint, pointGap, humanElbowAngle, signedElbowAngle, elbowBendDirection, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
 })();
