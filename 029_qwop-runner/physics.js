@@ -52,8 +52,8 @@
     ankle: [-30 * DEG, 30 * DEG],
     neck: [-25 * DEG, 25 * DEG],
     shoulder: [-85 * DEG, 85 * DEG],
-    leftElbow: [25 * DEG, 125 * DEG],
-    rightElbow: [-125 * DEG, -25 * DEG]
+    leftElbow: [-125 * DEG, 125 * DEG],
+    rightElbow: [-125 * DEG, 125 * DEG]
   });
 
   const NEUTRAL = Object.freeze({
@@ -64,9 +64,29 @@
   });
   const ARM_MASS = Object.freeze({ light: 0.65, normal: 1, heavy: 1.45 });
   const HAND_FRICTION = Object.freeze({ low: 0.35, normal: 0.70, high: 1.05 });
+  const ARM_FORM_POSES = Object.freeze({
+    NEUTRAL: Object.freeze({
+      leftShoulder: 10, rightShoulder: -10,
+      leftElbowHuman: 95, rightElbowHuman: 95,
+      leftBend: 1, rightBend: -1
+    }),
+    LEFT_FRONT: Object.freeze({
+      leftShoulder: -30, rightShoulder: 24,
+      leftElbowHuman: 80, rightElbowHuman: 95,
+      leftBend: 1, rightBend: -1
+    }),
+    RIGHT_FRONT: Object.freeze({
+      leftShoulder: 24, rightShoulder: -30,
+      leftElbowHuman: 95, rightElbowHuman: 80,
+      leftBend: 1, rightBend: -1
+    })
+  });
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = angle => Math.atan2(Math.sin(angle), Math.cos(angle));
+  const humanElbowAngle = relativeAngle => 180 - Math.abs(normalizeAngle(relativeAngle) / DEG);
+  const humanAngleToPhysicsTarget = (humanDegrees, bendDirection) => clamp(180 - humanDegrees, 25, 125) * DEG * (bendDirection < 0 ? -1 : 1);
+  const mix = (from, to, amount) => from + (to - from) * amount;
 
   function limb(x, y, width, height, options = {}) {
     return Bodies.rectangle(x, y, width, height, {
@@ -119,6 +139,7 @@
       this.armMassMode = "normal";
       this.armAmplitude = 35;
       this.handFrictionMode = "normal";
+      this.armFormPose = null;
       this.smoothedStride = 0;
       this.armControlFactor = 1;
       this.balancePostureFactor = 1;
@@ -325,6 +346,29 @@
       });
     }
 
+    setArmFormPose(pose) {
+      this.armFormPose = pose && ARM_FORM_POSES[pose] ? pose : null;
+    }
+
+    armPoseTargets(stride) {
+      const neutral = ARM_FORM_POSES.NEUTRAL;
+      const poseName = this.armFormPose || (stride < 0 ? "LEFT_FRONT" : "RIGHT_FRONT");
+      const pose = ARM_FORM_POSES[poseName];
+      // Preserve the exact Phase 1F neutral mass distribution inside the
+      // small idle sway, then blend to the running form outside that band.
+      const amount = this.armFormPose ? 1 : clamp((Math.abs(stride) - 0.08) / 0.92, 0, 1);
+      const elbowTarget = (side, source) => humanAngleToPhysicsTarget(
+        mix(neutral[`${side}ElbowHuman`], source[`${side}ElbowHuman`], amount),
+        source[`${side}Bend`]
+      );
+      return {
+        leftShoulder: mix(neutral.leftShoulder, pose.leftShoulder, amount) * DEG,
+        rightShoulder: mix(neutral.rightShoulder, pose.rightShoulder, amount) * DEG,
+        leftElbow: elbowTarget("left", pose),
+        rightElbow: elbowTarget("right", pose)
+      };
+    }
+
     applyRecoveryImpulse(direction = 1) {
       this.recoveryDirection = direction < 0 ? -1 : 1;
       this.recoveryForceFrames = 8;
@@ -437,20 +481,19 @@
       const rawStride = clamp((this.control.rightHip.current - this.control.leftHip.current - neutralHipDifference) / (70 * DEG), -1, 1);
       this.smoothedStride += (rawStride - this.smoothedStride) * 0.16;
       const stride = this.smoothedStride;
-      const phaseMagnitude = Math.abs(stride);
-      const frontAmplitude = this.armAmplitude * DEG;
-      const rearAmplitude = this.armAmplitude * 0.72 * DEG;
-      // Fade the idle pose quickly once a leg command establishes a phase so
-      // the opposite arm visibly crosses before the next Q/W transition.
-      const idleShoulder = 10 * DEG * Math.max(0, 1 - phaseMagnitude * 2.5);
-      const leftElbowMagnitude = (85 + 15 * stride) * DEG;
-      const rightElbowMagnitude = (85 - 15 * stride) * DEG;
-      const armTarget = {
-        leftShoulder: clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder, ...LIMITS.shoulder),
-        rightShoulder: clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder, ...LIMITS.shoulder),
-        leftElbow: clamp(leftElbowMagnitude, ...LIMITS.leftElbow),
-        rightElbow: clamp(-rightElbowMagnitude, ...LIMITS.rightElbow)
-      };
+      const armTarget = this.armPoseTargets(stride);
+      const amplitudeScale = this.armAmplitude / 35;
+      if (this.armFormPose) {
+        armTarget.leftShoulder = clamp(armTarget.leftShoulder * amplitudeScale, ...LIMITS.shoulder);
+        armTarget.rightShoulder = clamp(armTarget.rightShoulder * amplitudeScale, ...LIMITS.shoulder);
+      } else {
+        const phaseMagnitude = Math.abs(stride);
+        const frontAmplitude = this.armAmplitude * DEG;
+        const rearAmplitude = this.armAmplitude * 0.72 * DEG;
+        const idleShoulder = 10 * DEG * Math.max(0, 1 - phaseMagnitude * 2.5);
+        armTarget.leftShoulder = clamp(-frontAmplitude * Math.max(0, -stride) + rearAmplitude * Math.max(0, stride) + idleShoulder, ...LIMITS.shoulder);
+        armTarget.rightShoulder = clamp(-frontAmplitude * Math.max(0, stride) + rearAmplitude * Math.max(0, -stride) - idleShoulder, ...LIMITS.shoulder);
+      }
       const postureArmFactor = this.posture === "STABLE" ? 1
         : this.posture === "LEANING" ? 0.85
           : this.posture === "FALLING" ? 0.30 : 0.08;
@@ -498,6 +541,13 @@
       const neckHeadAnchor = worldPoint(this.neckConstraint.bodyB, this.neckConstraint.pointB);
       const neckDistance = Math.hypot(neckHeadAnchor.x - neckTorsoAnchor.x, neckHeadAnchor.y - neckTorsoAnchor.y);
       const touchesGround = body => Query.collides(body, [this.ground]).length > 0;
+      const leftShoulderRelative = normalizeAngle(this.bodies.leftUpperArm.angle - torso.angle);
+      const rightShoulderRelative = normalizeAngle(this.bodies.rightUpperArm.angle - torso.angle);
+      const leftElbowRelative = normalizeAngle(this.bodies.leftForearm.angle - this.bodies.leftUpperArm.angle);
+      const rightElbowRelative = normalizeAngle(this.bodies.rightForearm.angle - this.bodies.rightUpperArm.angle);
+      const frontArm = this.armFormPose === "LEFT_FRONT" ? "left"
+        : this.armFormPose === "RIGHT_FRONT" ? "right"
+          : this.smoothedStride < 0 ? "left" : "right";
       return {
         inputState: { ...this.inputState },
         torsoAngularVelocity: torso.angularVelocity,
@@ -517,6 +567,17 @@
         hands: {
           left: { contact: this.handContact.left, friction: this.bodies.leftHand.friction },
           right: { contact: this.handContact.right, friction: this.bodies.rightHand.friction }
+        },
+        armForm: {
+          pose: this.armFormPose || "RUNNING",
+          frontArm,
+          rearArm: frontArm === "left" ? "right" : "left",
+          leftShoulderHuman: -leftShoulderRelative / DEG,
+          rightShoulderHuman: -rightShoulderRelative / DEG,
+          leftElbowHuman: humanElbowAngle(leftElbowRelative),
+          rightElbowHuman: humanElbowAngle(rightElbowRelative),
+          leftForearmScreen: normalizeAngle(this.bodies.leftForearm.angle + 90 * DEG) / DEG,
+          rightForearmScreen: normalizeAngle(this.bodies.rightForearm.angle + 90 * DEG) / DEG
         },
         groundContacts: {
           leftHand: this.handContact.left,
@@ -551,5 +612,5 @@
     }
   }
 
-  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
+  window.QWOPPhysics = { RunnerPhysics, DEFAULTS, LIMITS, NEUTRAL, ARM_MASS, HAND_FRICTION, ARM_FORM_POSES, humanElbowAngle, humanAngleToPhysicsTarget, DEMO_FORWARD_SEQUENCE, FOOT_ANKLE_X, FOOT_SUPPORT_X, SCALE: 72, DEG };
 })();

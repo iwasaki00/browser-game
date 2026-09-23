@@ -1,6 +1,6 @@
-# RAGDOLL RUN — Phase 1F
+# RAGDOLL RUN — Phase 1G
 
-Q/W/O/Pで左右の股関節とひざを個別に動かす、横視点の物理ランニング実験です。Phase 1Fでは静止ドリフトの原因修正、再現可能な転倒試験、手の接地計測、デフォルト候補A〜Dの比較を追加しました。
+Q/W/O/Pで左右の股関節とひざを個別に動かす、横視点の物理ランニング実験です。Phase 1Gでは人体としての肘角定義、前後非対称の腕フォーム、ARM FORM TEST、腕・脚の前後描画順を追加しました。
 
 ## 起動とテスト
 
@@ -13,6 +13,7 @@ node 029_qwop-runner/tests/phase1c.test.cjs
 node 029_qwop-runner/tests/phase1d.test.cjs
 node 029_qwop-runner/tests/phase1e.test.cjs
 node 029_qwop-runner/tests/phase1f.test.cjs
+node 029_qwop-runner/tests/phase1g.test.cjs
 node 029_qwop-runner/tests/browser-smoke.cjs
 ```
 
@@ -99,6 +100,21 @@ Arm Massは上腕・前腕・手の密度へLight 65%、Normal 100%、Heavy 145%
 
 基準デモは`Q+O 220ms → Q 160ms → W+P 220ms → W 160ms`を繰り返します。手入力中の部位ラベルとボタンが点灯し、TrainingではNOW/NEXT、入力タイミング、GOOD/OK/MISS、前進/後退フィードバックを表示します。縦画面では操作ボタンを2×2に配置します。
 
-## Phase 1Fの範囲
+## Phase 1G 腕フォーム
 
-ゴール、タイマー、ランキング、ハイスコア、敵、障害物、キャラクターステージ、完成版ゲームループは未実装です。Phase 1Fは物理基盤と診断を確定する段階です。
+物理相対角0°は腕が直線なので、人体肘角を`180° - |前腕角 - 上腕角|`として表示します。走行位相が小さい間はPhase 1Fの中立質量配置を維持し、位相0.08を越えた範囲だけ新フォームへ滑らかに補間します。
+
+| 姿勢 | 前側肩 | 前側人体肘角 | 後側肩 | 後側人体肘角 |
+|---|---:|---:|---:|---:|
+| Neutral | ±10° | 95° | ±10° | 95° |
+| Running | 前30° | 80° | 後24° | 95° |
+
+DEBUGの`ARM FORM TEST`はNEUTRAL、LEFT ARM FRONT、RIGHT ARM FRONTを各1.8秒表示します。脚入力は固定しません。DEBUGには左右の肩人体角、肘人体角、前腕画面角、FRONT/REAR ARMを表示します。
+
+描画は奥腕、奥脚、胴体、手前脚、手前腕の順です。通常表示の手は前腕末端に描画し、物理Hand Bodyと接地判定は変更していません。DEBUG輪郭では実際のHand Bodyも確認できます。
+
+推奨候補（Balance 60%、Arm Swing 70%、Amplitude 35°、Hand Friction Normal）の12サイクル実測は5.357mで、Phase 1G基準4.8m以上を維持しています。
+
+## Phase 1Gの範囲
+
+ゴール、タイマー、ランキング、ハイスコア、敵、障害物、キャラクターステージ、腕の手動操作、完成版ゲームループは未実装です。Phase 1Gは腕フォームを確定する段階です。

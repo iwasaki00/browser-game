@@ -169,6 +169,7 @@ async function viewport(name, width, height) {
   assert(debugText.includes("R SHOULDER") && debugText.includes("L ELBOW"), "arm joint diagnostics missing");
   assert(debugText.includes("ARMS swing 100% amplitude 35° mass NORMAL"), "arm experiment diagnostics missing");
   assert(debugText.includes("LEFT HAND") && debugText.includes("RIGHT HAND") && debugText.includes("POSTURE"), "hand or posture diagnostics missing");
+  assert(debugText.includes("SHOULDER HUMAN") && debugText.includes("ELBOW HUMAN") && debugText.includes("FOREARM SCREEN") && debugText.includes("ARM ROLE FRONT"), "Phase 1G arm diagnostics missing");
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-mass-preset').options].map(option => option.textContent)"), ["Light", "Normal", "Heavy"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.arm-amplitude').options].map(option => option.value)"), ["20", "25", "30", "35", "40", "42"]);
   assert.deepEqual(await evaluate("[...document.querySelector('.hand-friction').options].map(option => option.textContent)"), ["Low", "Normal", "High"]);
@@ -224,9 +225,29 @@ async function viewport(name, width, height) {
     assert.notEqual(result.posture, "DOWN", `browser preset ${result.name} fell during controlled input`);
   });
   console.log("Browser preset control comparison", JSON.stringify(browserPresets));
+
+  await evaluate("if (document.querySelector('#trainingButton').classList.contains('active')) document.querySelector('#trainingButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.arm-form-test').click(); document.querySelector('#debugButton').click()");
+  await wait(700);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("NEUTRAL"));
+  await screenshot("phase1g-neutral.png");
+  await wait(1800);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM FRONT"));
+  await screenshot("phase1g-left-front.png");
+  await wait(1800);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT ARM FRONT"));
+  await screenshot("phase1g-right-front.png");
+  await wait(1800);
+  assert.equal(await evaluate("document.querySelector('.arm-form-status').textContent"), "ARM FORM: COMPLETE");
+
+  await evaluate("document.querySelector('#debugButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.fall-test').click(); document.querySelector('#debugButton').click()");
+  await wait(500);
+  const fallingCapture = await evaluate("document.querySelector('.physics-test-result').textContent");
+  assert(fallingCapture.includes("FALLING") || fallingCapture.includes("DOWN"), "falling capture did not reach FALLING");
+  await screenshot("phase1g-falling.png");
+  await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1F browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log(`Phase 1G browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

@@ -43,6 +43,7 @@
     leftHandTime: 0, rightHandTime: 0, firstContact: "none",
     fallingAt: null, downAt: null, nextFallDirection: 1
   };
+  const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT"] };
 
   const inputLocked = () => demo.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
@@ -146,8 +147,9 @@
     <label>Arm Amplitude <select class="arm-amplitude"><option value="20">20°</option><option value="25">25°</option><option value="30">30°</option><option value="35" selected>35°</option><option value="40">40°</option><option value="42">42°</option></select></label>
     <label>Hand Friction <select class="hand-friction"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
     <button type="button" class="recovery-test">RECOVERY TEST</button>
-    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button></div>
-    <pre class="physics-test-result">PHASE 1F TESTS: READY</pre>`;
+    <div class="phase1f-tests"><button type="button" class="drift-test">DRIFT TEST 5s</button><button type="button" class="fall-test">FALL TEST</button><button type="button" class="arm-form-test">ARM FORM TEST</button></div>
+    <pre class="physics-test-result">PHASE 1F TESTS: READY</pre>
+    <p class="arm-form-status">ARM FORM: READY</p>`;
   experimentPanel.querySelector(".dynamic-friction").addEventListener("change", event => physics.setDynamicFootFriction(event.target.checked));
   experimentPanel.querySelector(".balance-preset").addEventListener("change", event => physics.setBalanceScale(event.target.value));
   experimentPanel.querySelector(".ankle-preset").addEventListener("change", event => physics.setAnkleScale(event.target.value));
@@ -162,17 +164,21 @@
   });
   const driftTestButton = experimentPanel.querySelector(".drift-test");
   const fallTestButton = experimentPanel.querySelector(".fall-test");
+  const armFormTestButton = experimentPanel.querySelector(".arm-form-test");
+  const armFormStatus = experimentPanel.querySelector(".arm-form-status");
   const physicsTestResult = experimentPanel.querySelector(".physics-test-result");
 
   function setTestButtons(running) {
     driftTestButton.disabled = running;
     fallTestButton.disabled = running;
+    armFormTestButton.disabled = running;
     experimentPanel.querySelector(".recovery-test").disabled = running;
     startDemoButton.disabled = running;
     watchDemoButton.disabled = running;
   }
 
   function resetTestState(mode) {
+    stopArmFormTest();
     stopDemo();
     clearInputs();
     activePointers.clear();
@@ -212,6 +218,46 @@
   driftTestButton.addEventListener("click", startDriftTest);
   fallTestButton.addEventListener("click", startFallTest);
 
+  function stopArmFormTest(completed = false) {
+    armFormTest.active = false;
+    armFormTest.phaseIndex = 0;
+    armFormTest.elapsed = 0;
+    physics.setArmFormPose(null);
+    armFormTestButton.disabled = false;
+    armFormTestButton.textContent = "ARM FORM TEST";
+    armFormStatus.textContent = completed ? "ARM FORM: COMPLETE" : "ARM FORM: READY";
+  }
+
+  function startArmFormTest() {
+    if (physicsTest.mode) return;
+    stopDemo();
+    armFormTest.active = true;
+    armFormTest.phaseIndex = 0;
+    armFormTest.elapsed = 0;
+    physics.setArmFormPose(armFormTest.poses[0]);
+    armFormTestButton.disabled = true;
+    armFormTestButton.textContent = "ARM FORM RUNNING";
+    armFormStatus.textContent = "ARM FORM: NEUTRAL 1 / 3";
+  }
+
+  function updateArmFormTest(delta) {
+    if (!armFormTest.active) return;
+    armFormTest.elapsed += delta;
+    if (armFormTest.elapsed < 1800) return;
+    armFormTest.elapsed -= 1800;
+    armFormTest.phaseIndex += 1;
+    if (armFormTest.phaseIndex >= armFormTest.poses.length) {
+      stopArmFormTest(true);
+      return;
+    }
+    const pose = armFormTest.poses[armFormTest.phaseIndex];
+    physics.setArmFormPose(pose);
+    const label = pose === "LEFT_FRONT" ? "LEFT ARM FRONT" : pose === "RIGHT_FRONT" ? "RIGHT ARM FRONT" : pose;
+    armFormStatus.textContent = `ARM FORM: ${label} ${armFormTest.phaseIndex + 1} / 3`;
+  }
+
+  armFormTestButton.addEventListener("click", startArmFormTest);
+
   const demoPanel = document.createElement("section");
   demoPanel.className = "demo-controls";
   demoPanel.innerHTML = `<h3>FORWARD REFERENCE</h3><p class="demo-status">DEMO: OFF</p><div><button type="button" class="start-demo">DEMO FORWARD</button><button type="button" class="stop-demo" disabled>STOP DEMO</button></div>`;
@@ -242,6 +288,7 @@
 
   function startDemo(options = {}) {
     if (physicsTest.mode) return;
+    stopArmFormTest();
     clearInputs();
     activePointers.clear();
     demo.active = true;
@@ -402,6 +449,7 @@
   });
 
   function retry() {
+    stopArmFormTest();
     physicsTest.mode = null;
     setTestButtons(false);
     stopDemo();
@@ -491,6 +539,10 @@
       jointLine("R KNEE", c.rightKnee), jointLine("L KNEE", c.leftKnee),
       jointLine("R SHOULDER", c.rightShoulder), jointLine("L SHOULDER", c.leftShoulder),
       jointLine("R ELBOW", c.rightElbow), jointLine("L ELBOW", c.leftElbow),
+      `ARM ROLE FRONT ${data.armForm.frontArm.toUpperCase()} / REAR ${data.armForm.rearArm.toUpperCase()} / POSE ${data.armForm.pose}`,
+      `L SHOULDER HUMAN ${data.armForm.leftShoulderHuman.toFixed(1)}°  R SHOULDER HUMAN ${data.armForm.rightShoulderHuman.toFixed(1)}°`,
+      `L ELBOW HUMAN ${data.armForm.leftElbowHuman.toFixed(1)}°  R ELBOW HUMAN ${data.armForm.rightElbowHuman.toFixed(1)}°`,
+      `L FOREARM SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°  R FOREARM SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `POSITION x ${data.position.x.toFixed(2)} y ${data.position.y.toFixed(2)}`,
       `VELOCITY x ${data.velocity.x.toFixed(3)} y ${data.velocity.y.toFixed(3)} / AVG ${averageVelocityX.toFixed(3)}`,
       `LEFT FOOT  ${data.feet.left.contact ? "GROUND" : "AIR"} friction ${data.feet.left.friction.toFixed(2)}`,
@@ -627,22 +679,37 @@
     }
     const b = physics.bodies;
     const armData = physics.diagnostics();
+    const drawVisualHand = (forearm, hand) => {
+      const x = forearm.position.x - Math.sin(forearm.angle) * 22;
+      const y = forearm.position.y + Math.cos(forearm.angle) * 22;
+      ctx.beginPath(); ctx.arc(x, y, hand.circleRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "#f3b58d"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
+    };
     const drawArm = side => {
       if (side === "left") {
-        drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62"); drawBody(b.leftHand, "#f3b58d");
+        drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62"); drawVisualHand(b.leftForearm, b.leftHand);
       } else {
-        drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf"); drawBody(b.rightHand, "#f3b58d");
+        drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf"); drawVisualHand(b.rightForearm, b.rightHand);
       }
     };
-    const frontArm = armData.experiments.smoothedStride >= 0 ? "right" : "left";
+    const frontArm = armData.armForm.frontArm;
     const backArm = frontArm === "right" ? "left" : "right";
+    const frontLeg = frontArm === "right" ? "left" : "right";
+    const backLeg = frontLeg === "left" ? "right" : "left";
+    const drawLeg = side => {
+      if (side === "left") {
+        drawBody(b.leftThigh, "#ef5f63"); drawBody(b.leftShin, "#f18b62"); drawBody(b.leftFoot, "#f5f0df");
+      } else {
+        drawBody(b.rightThigh, "#31b9c5"); drawBody(b.rightShin, "#55d5d0"); drawBody(b.rightFoot, "#f5f0df");
+      }
+    };
     drawArm(backArm);
-    drawBody(b.leftThigh, "#ef5f63"); drawBody(b.leftShin, "#f18b62"); drawBody(b.leftFoot, "#f5f0df");
-    drawBody(b.rightThigh, "#31b9c5"); drawBody(b.rightShin, "#55d5d0"); drawBody(b.rightFoot, "#f5f0df");
+    drawLeg(backLeg);
     const neck = physics.diagnostics().neck;
     ctx.strokeStyle = "#f3b58d"; ctx.lineWidth = 14; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(neck.torsoAnchor.x, neck.torsoAnchor.y); ctx.lineTo(neck.headAnchor.x, neck.headAnchor.y); ctx.stroke();
     drawBody(b.torso, "#f7cf59");
+    drawLeg(frontLeg);
     drawArm(frontArm);
     ctx.beginPath(); ctx.arc(b.head.position.x, b.head.position.y, b.head.circleRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#f3b58d"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
@@ -659,6 +726,7 @@
     lastTime = now;
     updateDemo(delta);
     updateTraining(delta);
+    updateArmFormTest(delta);
     physics.step(delta);
     updatePhysicsTest(delta);
     const width = canvas.clientWidth;
