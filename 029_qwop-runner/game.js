@@ -43,7 +43,7 @@
     leftHandTime: 0, rightHandTime: 0, firstContact: "none",
     fallingAt: null, downAt: null, nextFallDirection: 1
   };
-  const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT"] };
+  const armFormTest = { active: false, phaseIndex: 0, elapsed: 0, poses: ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT", "LEFT_EXTREME", "RIGHT_EXTREME"] };
 
   const inputLocked = () => demo.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
@@ -237,7 +237,7 @@
     physics.setArmFormPose(armFormTest.poses[0]);
     armFormTestButton.disabled = true;
     armFormTestButton.textContent = "ARM FORM RUNNING";
-    armFormStatus.textContent = "ARM FORM: NEUTRAL 1 / 3";
+    armFormStatus.textContent = "ARM FORM: NEUTRAL 1 / 5";
   }
 
   function updateArmFormTest(delta) {
@@ -252,8 +252,11 @@
     }
     const pose = armFormTest.poses[armFormTest.phaseIndex];
     physics.setArmFormPose(pose);
-    const label = pose === "LEFT_FRONT" ? "LEFT ARM FRONT" : pose === "RIGHT_FRONT" ? "RIGHT ARM FRONT" : pose;
-    armFormStatus.textContent = `ARM FORM: ${label} ${armFormTest.phaseIndex + 1} / 3`;
+    const labels = {
+      LEFT_FRONT: "LEFT ARM FRONT", RIGHT_FRONT: "RIGHT ARM FRONT",
+      LEFT_EXTREME: "LEFT ARM EXTREME", RIGHT_EXTREME: "RIGHT ARM EXTREME"
+    };
+    armFormStatus.textContent = `ARM FORM: ${labels[pose] || pose} ${armFormTest.phaseIndex + 1} / 5`;
   }
 
   armFormTestButton.addEventListener("click", startArmFormTest);
@@ -542,6 +545,10 @@
       `ARM ROLE FRONT ${data.armForm.frontArm.toUpperCase()} / REAR ${data.armForm.rearArm.toUpperCase()} / POSE ${data.armForm.pose}`,
       `L SHOULDER HUMAN ${data.armForm.leftShoulderHuman.toFixed(1)}°  R SHOULDER HUMAN ${data.armForm.rightShoulderHuman.toFixed(1)}°`,
       `L ELBOW HUMAN ${data.armForm.leftElbowHuman.toFixed(1)}°  R ELBOW HUMAN ${data.armForm.rightElbowHuman.toFixed(1)}°`,
+      `L ELBOW SIGNED ${data.armForm.leftElbowSigned.toFixed(1)}°  ${data.armForm.leftBendDefinition}  DIRECTION ${data.armForm.leftElbowDirection}`,
+      `R ELBOW SIGNED ${data.armForm.rightElbowSigned.toFixed(1)}°  ${data.armForm.rightBendDefinition}  DIRECTION ${data.armForm.rightElbowDirection}`,
+      `L UA SCREEN ${data.armForm.leftUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°`,
+      `R UA SCREEN ${data.armForm.rightUpperArmScreen.toFixed(1)}°  FA SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `L FOREARM SCREEN ${data.armForm.leftForearmScreen.toFixed(1)}°  R FOREARM SCREEN ${data.armForm.rightForearmScreen.toFixed(1)}°`,
       `POSITION x ${data.position.x.toFixed(2)} y ${data.position.y.toFixed(2)}`,
       `VELOCITY x ${data.velocity.x.toFixed(3)} y ${data.velocity.y.toFixed(3)} / AVG ${averageVelocityX.toFixed(3)}`,
@@ -635,6 +642,24 @@
     ctx.moveTo(data.neck.torsoAnchor.x, data.neck.torsoAnchor.y);
     ctx.lineTo(data.neck.headAnchor.x, data.neck.headAnchor.y);
     ctx.stroke();
+    ["left", "right"].forEach(side => {
+      const points = data.armForm.points[side];
+      ctx.save();
+      ctx.setLineDash([4, 3]);
+      ctx.strokeStyle = side === "left" ? "#ff335f" : "#00c6d7";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(points.shoulder.x, points.shoulder.y);
+      ctx.lineTo(points.elbow.x, points.elbow.y);
+      ctx.lineTo(points.hand.x, points.hand.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = "#07111f";
+      ctx.font = "800 9px monospace";
+      ctx.fillText(`${side === "left" ? "L" : "R"} UA ${data.armForm[`${side}UpperArmScreen`].toFixed(0)}°`, points.elbow.x + 8, points.elbow.y - 8);
+      ctx.fillText(`FA ${data.armForm[`${side}ForearmScreen`].toFixed(0)}°`, points.hand.x + 8, points.hand.y);
+      ctx.restore();
+    });
   }
 
   function draw(width, height) {
@@ -679,17 +704,26 @@
     }
     const b = physics.bodies;
     const armData = physics.diagnostics();
-    const drawVisualHand = (forearm, hand) => {
-      const x = forearm.position.x - Math.sin(forearm.angle) * 22;
-      const y = forearm.position.y + Math.cos(forearm.angle) * 22;
-      ctx.beginPath(); ctx.arc(x, y, hand.circleRadius, 0, Math.PI * 2);
+    const drawJoint = (point, radius, fill) => {
+      ctx.beginPath(); ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = fill; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
+    };
+    const drawVisualHand = (side, hand) => {
+      const point = armData.armForm.points[side].hand;
+      ctx.beginPath(); ctx.arc(point.x, point.y, hand.circleRadius, 0, Math.PI * 2);
       ctx.fillStyle = "#f3b58d"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#07111f"; ctx.stroke();
     };
     const drawArm = side => {
       if (side === "left") {
-        drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62"); drawVisualHand(b.leftForearm, b.leftHand);
+        drawBody(b.leftUpperArm, "#c94958"); drawBody(b.leftForearm, "#df6a62");
+        drawJoint(armData.armForm.points.left.shoulder, 5, "#c94958");
+        drawJoint(armData.armForm.points.left.elbow, 6, "#df6a62");
+        drawVisualHand("left", b.leftHand);
       } else {
-        drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf"); drawVisualHand(b.rightForearm, b.rightHand);
+        drawBody(b.rightUpperArm, "#188d9f"); drawBody(b.rightForearm, "#27b8bf");
+        drawJoint(armData.armForm.points.right.shoulder, 5, "#188d9f");
+        drawJoint(armData.armForm.points.right.elbow, 6, "#27b8bf");
+        drawVisualHand("right", b.rightHand);
       }
     };
     const frontArm = armData.armForm.frontArm;

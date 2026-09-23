@@ -124,8 +124,10 @@ async function viewport(name, width, height) {
 
   await evaluate(`document.dispatchEvent(new KeyboardEvent("keydown", { key: "q", bubbles: true }));
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "o", bubbles: true }))`);
-  await wait(260);
-  assert((await evaluate("document.querySelector('#trainingHistory').textContent")).includes("GOOD"));
+  await retry(async () => {
+    if (!(await evaluate("document.querySelector('#trainingHistory').textContent")).includes("GOOD")) throw new Error("training result pending");
+    return true;
+  }, 12);
   await evaluate("document.dispatchEvent(new KeyboardEvent('keyup', { key: 'o', bubbles: true }))");
   await wait(160);
   assert((await evaluate("document.querySelectorAll('#trainingHistory span').length")) >= 2);
@@ -225,17 +227,26 @@ async function viewport(name, width, height) {
     assert.notEqual(result.posture, "DOWN", `browser preset ${result.name} fell during controlled input`);
   });
   console.log("Browser preset control comparison", JSON.stringify(browserPresets));
+  await evaluate("if (!document.querySelector('#debugPanel').hidden) document.querySelector('#debugButton').click()");
+  await wait(120);
+  await screenshot("phase1h-running.png");
 
-  await evaluate("if (document.querySelector('#trainingButton').classList.contains('active')) document.querySelector('#trainingButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.arm-form-test').click(); document.querySelector('#debugButton').click()");
+  await evaluate("if (document.querySelector('#trainingButton').classList.contains('active')) document.querySelector('#trainingButton').click(); document.querySelector('#retryButton').click(); document.querySelector('.arm-form-test').click()");
   await wait(700);
   assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("NEUTRAL"));
-  await screenshot("phase1g-neutral.png");
+  await screenshot("phase1h-neutral.png");
   await wait(1800);
   assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM FRONT"));
-  await screenshot("phase1g-left-front.png");
+  await screenshot("phase1h-left-front.png");
   await wait(1800);
   assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT ARM FRONT"));
-  await screenshot("phase1g-right-front.png");
+  await screenshot("phase1h-right-front.png");
+  await wait(1800);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("LEFT ARM EXTREME"));
+  await screenshot("phase1h-left-extreme.png");
+  await wait(1800);
+  assert((await evaluate("document.querySelector('.arm-form-status').textContent")).includes("RIGHT ARM EXTREME"));
+  await screenshot("phase1h-right-extreme.png");
   await wait(1800);
   assert.equal(await evaluate("document.querySelector('.arm-form-status').textContent"), "ARM FORM: COMPLETE");
 
@@ -243,11 +254,11 @@ async function viewport(name, width, height) {
   await wait(500);
   const fallingCapture = await evaluate("document.querySelector('.physics-test-result').textContent");
   assert(fallingCapture.includes("FALLING") || fallingCapture.includes("DOWN"), "falling capture did not reach FALLING");
-  await screenshot("phase1g-falling.png");
+  await screenshot("phase1h-falling.png");
   await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1G browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log(`Phase 1H browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

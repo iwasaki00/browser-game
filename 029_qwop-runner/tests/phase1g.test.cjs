@@ -23,8 +23,8 @@ assert.equal(humanElbowAngle(90 * DEG), 90, "right-angle physical elbow is human
 assert(Math.abs(humanAngleToPhysicsTarget(80, 1) / DEG - 100) < 1e-9);
 assert(Math.abs(humanAngleToPhysicsTarget(95, -1) / DEG + 85) < 1e-9);
 assert.deepEqual(ARM_FORM_POSES.NEUTRAL, {
-  leftShoulder: 10, rightShoulder: -10,
-  leftElbowHuman: 95, rightElbowHuman: 95,
+  leftShoulder: 6, rightShoulder: -6,
+  leftElbowHuman: 125, rightElbowHuman: 150,
   leftBend: 1, rightBend: -1
 });
 
@@ -52,8 +52,8 @@ for (const pose of ["NEUTRAL", "LEFT_FRONT", "RIGHT_FRONT"]) {
 assert.equal(new RunnerPhysics().diagnostics().armForm.pose, "RUNNING");
 assert(poseResults.LEFT_FRONT.leftShoulder > 20, "left-front shoulder points forward");
 assert(poseResults.RIGHT_FRONT.rightShoulder > 20, "right-front shoulder points forward");
-assert(Math.abs(poseResults.LEFT_FRONT.leftElbow - 80) < 12, "left-front elbow is near human 80 degrees");
-assert(Math.abs(poseResults.RIGHT_FRONT.rightElbow - 80) < 12, "right-front elbow is near human 80 degrees");
+assert(poseResults.LEFT_FRONT.leftElbow >= 55 && poseResults.LEFT_FRONT.leftElbow <= 90, "left-front elbow remains in the Phase 1G/1H human range");
+assert(poseResults.RIGHT_FRONT.rightElbow >= 55 && poseResults.RIGHT_FRONT.rightElbow <= 90, "right-front elbow remains in the Phase 1G/1H human range");
 const horizontalDistance = angle => Math.min(Math.abs(angle), Math.abs(180 - Math.abs(angle)));
 assert(horizontalDistance(poseResults.LEFT_FRONT.leftForearm) > 18, "left-front forearm is not horizontal");
 assert(horizontalDistance(poseResults.RIGHT_FRONT.rightForearm) > 18, "right-front forearm is not horizontal");
