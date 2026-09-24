@@ -11,12 +11,22 @@
   <main>
     <header>
       <a href="../index.html" aria-label="アーケードへ戻る">← ARCADE</a>
-      <div class="distance">DISTANCE <b id="distance">0.00 m</b></div>
+      <div class="race-hud">
+        <span class="hud-stat distance">DISTANCE <b id="distance">0.00 m</b></span>
+        <span class="hud-stat">TIME <b id="raceTime">0.000</b></span>
+        <span class="hud-stat">BEST <b id="bestTime">--.---</b></span>
+      </div>
       <button id="debugButton" type="button" aria-pressed="false">DEBUG</button>
       <button id="retryButton" type="button">RETRY</button>
     </header>
     <section class="stage" aria-label="物理ランニングゲーム">
       <canvas id="gameCanvas"></canvas>
+      <div id="raceOverlay" class="race-overlay" aria-live="assertive">
+        <b id="raceMessage">READY</b>
+        <span id="raceResult"></span>
+        <button id="runAgainButton" type="button" hidden>RUN AGAIN</button>
+      </div>
+      <div class="race-records"><b id="recordStatus">VALID RUN</b><span>BEST DISTANCE <strong id="bestDistance">0.00 m</strong></span></div>
       <button id="trainingButton" class="training-toggle" type="button" aria-pressed="false">TRAINING</button>
       <section id="trainingPanel" class="training-panel" hidden aria-live="polite">
         <div class="training-title"><b>FORWARD TRAINING</b><span id="trainingFeedback">YOUR TURN</span></div>
@@ -46,6 +56,7 @@
   <script src="../022_pythagora-lab/vendor/matter.min.js"></script>
   <script src="physics.js"></script>
   <script src="training.js"></script>
+  <script src="race.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

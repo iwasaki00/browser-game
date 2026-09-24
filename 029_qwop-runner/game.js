@@ -4,6 +4,14 @@
   const canvas = document.querySelector("#gameCanvas");
   const ctx = canvas.getContext("2d");
   const distanceEl = document.querySelector("#distance");
+  const raceTimeEl = document.querySelector("#raceTime");
+  const bestTimeEl = document.querySelector("#bestTime");
+  const bestDistanceEl = document.querySelector("#bestDistance");
+  const raceOverlay = document.querySelector("#raceOverlay");
+  const raceMessage = document.querySelector("#raceMessage");
+  const raceResult = document.querySelector("#raceResult");
+  const runAgainButton = document.querySelector("#runAgainButton");
+  const recordStatus = document.querySelector("#recordStatus");
   const debugButton = document.querySelector("#debugButton");
   const retryButton = document.querySelector("#retryButton");
   const panel = document.querySelector("#debugPanel");
@@ -19,6 +27,12 @@
   const watchDemoButton = document.querySelector("#watchDemo");
   const demoSpeedButton = document.querySelector("#demoSpeed");
   const physics = new QWOPPhysics.RunnerPhysics();
+  const raceTestMode = new URLSearchParams(location.search).has("raceTest")
+    && (location.hostname === "127.0.0.1" || location.hostname === "localhost");
+  const race = new QWOPRace.RaceController({
+    storage: window.localStorage,
+    countdown: raceTestMode ? { ready: 10, three: 10, two: 10, one: 10, go: 20 } : undefined
+  });
   const phases = QWOPTraining.PHASES;
   const activePointers = new Map();
 
@@ -59,8 +73,69 @@
   };
   let jointDots = true;
   let armSkeletonDebug = false;
+  let raceWorldOriginX = physics.bodies.torso.position.x;
 
-  const inputLocked = () => demo.active || armConnectionTest.active || elbowMatrixTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
+  const inputLocked = () => !race.inputEnabled || demo.active || armConnectionTest.active || elbowMatrixTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
+
+  function invalidateRace(reason) {
+    race.invalidate(reason);
+  }
+
+  function formatRaceTime(milliseconds) {
+    return milliseconds === null ? "--.---" : (milliseconds / 1000).toFixed(3);
+  }
+
+  function raceDistance() {
+    if (race.state !== QWOPRace.RACE_STATE.RUNNING && race.state !== QWOPRace.RACE_STATE.FINISHED) return 0;
+    return (physics.bodies.torso.position.x - raceWorldOriginX) / QWOPPhysics.SCALE;
+  }
+
+  function finishRace() {
+    clearInputs();
+    activePointers.clear();
+    if (demo.active) stopDemo();
+    setTestButtons(true);
+    training.active = false;
+    trainingButton.disabled = true;
+    trainingPanel.hidden = true;
+    trainingButton.classList.remove("active");
+    trainingButton.setAttribute("aria-pressed", "false");
+    trainingButton.textContent = "TRAINING";
+    updateTrainingPanel();
+  }
+
+  function updateRaceUI(now) {
+    const label = race.countdownLabel(now);
+    const finished = race.state === QWOPRace.RACE_STATE.FINISHED;
+    raceTimeEl.textContent = formatRaceTime(finished ? race.finalTimeMs : race.elapsedMs);
+    bestTimeEl.textContent = formatRaceTime(race.bestTimeMs);
+    bestDistanceEl.textContent = `${race.bestDistance.toFixed(2)} m`;
+    recordStatus.textContent = race.recordValid ? "VALID RUN" : `DEBUG RUN - ${race.invalidReasons.join(" / ")}`;
+    recordStatus.classList.toggle("invalid", !race.recordValid);
+    raceMessage.textContent = finished ? "GOAL!" : label;
+    if (finished) {
+      raceResult.textContent = race.recordValid
+        ? `TIME ${formatRaceTime(race.finalTimeMs)} s${race.newBest ? " - NEW BEST!" : ""}`
+        : `DEBUG RUN - TIME ${formatRaceTime(race.finalTimeMs)} s - RECORD NOT SAVED`;
+    } else {
+      raceResult.textContent = "";
+    }
+    raceOverlay.hidden = !finished && !label;
+    runAgainButton.hidden = !finished;
+  }
+
+  function updateRace(now, forcedDistance) {
+    const event = race.update(now, forcedDistance === undefined ? raceDistance() : forcedDistance);
+    if (event.started) {
+      raceWorldOriginX = physics.bodies.torso.position.x;
+      race.currentDistance = 0;
+      race.maxDistance = 0;
+      clearInputs();
+    }
+    if (event.finished) finishRace();
+    updateRaceUI(now);
+    return event;
+  }
 
   const parameterSpec = {
     gravity: ["Gravity", 0.35, 1.2, 0.01, 2],
@@ -178,6 +253,7 @@
   experimentPanel.querySelector(".arm-skeleton-debug").addEventListener("change", event => { armSkeletonDebug = event.target.checked; });
   let recoveryDirection = 1;
   experimentPanel.querySelector(".recovery-test").addEventListener("click", () => {
+    invalidateRace("RECOVERY TEST");
     physics.applyRecoveryImpulse(recoveryDirection);
     recoveryDirection *= -1;
   });
@@ -201,6 +277,7 @@
   }
 
   function resetTestState(mode) {
+    invalidateRace(`${mode.toUpperCase()} TEST`);
     stopArmFormTest();
     stopDemo();
     clearInputs();
@@ -253,6 +330,7 @@
 
   function startArmFormTest() {
     if (physicsTest.mode || armConnectionTest.active) return;
+    invalidateRace("ARM FORM TEST");
     stopDemo();
     armFormTest.active = true;
     armFormTest.phaseIndex = 0;
@@ -286,6 +364,7 @@
 
   function startArmConnectionTest() {
     if (physicsTest.mode || armFormTest.active) return;
+    invalidateRace("ARM CONNECTION TEST");
     stopDemo();
     clearInputs();
     physics.reset();
@@ -341,6 +420,7 @@
 
   function startElbowMatrixTest() {
     if (physicsTest.mode || armFormTest.active || armConnectionTest.active) return;
+    invalidateRace("ELBOW MATRIX TEST");
     stopDemo();
     elbowMatrixTest.active = true;
     elbowMatrixTest.phaseIndex = 0;
@@ -407,6 +487,7 @@
 
   function startDemo(options = {}) {
     if (physicsTest.mode) return;
+    invalidateRace(options.source === "training" ? "TRAINING DEMO" : "DEMO FORWARD");
     stopArmFormTest();
     clearInputs();
     activePointers.clear();
@@ -569,14 +650,23 @@
 
   function retry() {
     stopArmFormTest();
+    armConnectionTest.active = false;
+    elbowMatrixTest.active = false;
+    physics.setArmFormPose(null);
     physicsTest.mode = null;
     setTestButtons(false);
+    trainingButton.disabled = false;
     stopDemo();
     clearInputs();
     activePointers.clear();
     physics.reset();
+    const now = performance.now();
+    race.reset(now);
+    race.startCountdown(now);
+    raceWorldOriginX = physics.bodies.torso.position.x;
+    if (raceTestMode) updateRace(now + race.countdownRunAt());
     cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
-    lastTime = performance.now();
+    lastTime = now;
     distanceEl.textContent = "0.00 m";
     training.phaseIndex = 0;
     training.phaseElapsed = 0;
@@ -585,8 +675,10 @@
     training.history = [];
     training.feedback = "YOUR TURN";
     updateTrainingPanel();
+    updateRaceUI(now);
   }
   retryButton.addEventListener("click", retry);
+  runAgainButton.addEventListener("click", retry);
   debugButton.addEventListener("click", () => {
     debug = !debug;
     panel.hidden = !debug;
@@ -820,23 +912,41 @@
     }
     ctx.fillStyle = "#163044";
     ctx.font = "800 11px monospace";
-    ctx.fillText("START", physics.startX - 24, 478);
-    ctx.fillRect(physics.startX, 459, 3, 30);
+    const courseStartX = raceWorldOriginX;
+    const goalX = courseStartX + race.goalDistance * QWOPPhysics.SCALE;
+    ctx.fillText("START", courseStartX - 24, 478);
+    ctx.fillRect(courseStartX, 459, 3, 30);
     ctx.strokeStyle = "#163044";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(physics.startX + 38, 447);
-    ctx.lineTo(physics.startX + 128, 447);
-    ctx.lineTo(physics.startX + 116, 439);
-    ctx.moveTo(physics.startX + 128, 447);
-    ctx.lineTo(physics.startX + 116, 455);
+    ctx.moveTo(courseStartX + 38, 447);
+    ctx.lineTo(courseStartX + 128, 447);
+    ctx.lineTo(courseStartX + 116, 439);
+    ctx.moveTo(courseStartX + 128, 447);
+    ctx.lineTo(courseStartX + 116, 455);
     ctx.stroke();
-    ctx.fillText("FORWARD", physics.startX + 51, 435);
-    for (let meter = -5; meter < 150; meter += 5) {
-      const x = physics.startX + meter * QWOPPhysics.SCALE;
+    ctx.fillText("FORWARD", courseStartX + 51, 435);
+    for (let meter = -50; meter <= 100; meter += 5) {
+      const x = courseStartX + meter * QWOPPhysics.SCALE;
       ctx.fillRect(x, 481, 2, 8);
       if (meter % 10 === 0) ctx.fillText(`${meter}m`, x - 10, 470);
     }
+    ctx.save();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "#ff2a63";
+    ctx.setLineDash([12, 8]);
+    ctx.beginPath();
+    ctx.moveTo(goalX, 345);
+    ctx.lineTo(goalX, 489);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#07111f";
+    ctx.fillRect(goalX - 38, 335, 76, 26);
+    ctx.fillStyle = "#fff36b";
+    ctx.font = "900 14px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("GOAL 100m", goalX, 353);
+    ctx.restore();
     const b = physics.bodies;
     const armData = physics.diagnostics();
     const drawJoint = (point, radius, fill) => {
@@ -904,13 +1014,14 @@
     updateElbowMatrixTest(delta);
     updateArmConnectionTest(delta);
     updatePhysicsTest(delta);
+    updateRace(now);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const desiredCamera = physics.bodies.torso.position.x - (width / viewScale) * 0.38;
     const cameraError = desiredCamera - cameraX;
     if (Math.abs(cameraError) > 80) cameraX += Math.sign(cameraError) * (Math.abs(cameraError) - 80) * 0.025;
     draw(width, height);
-    distanceEl.textContent = `${physics.distance.toFixed(2)} m`;
+    distanceEl.textContent = `${race.currentDistance.toFixed(2)} m`;
     fps += ((1000 / Math.max(delta, 1)) - fps) * 0.08;
     fpsEl.textContent = `${Math.round(fps)} FPS`;
     velocitySamples.push({ time: now, value: physics.bodies.torso.velocity.x });
@@ -923,6 +1034,14 @@
   window.addEventListener("resize", resize, { passive: true });
   document.addEventListener("visibilitychange", () => { lastTime = performance.now(); });
   resize();
-  updateTrainingPanel();
+  retry();
+  if (raceTestMode) {
+    window.__QWOP_RACE_TEST__ = {
+      snapshot: () => race.snapshot(),
+      forceDistance: distance => updateRace(performance.now(), distance),
+      invalidate: reason => invalidateRace(reason || "TEST DEBUG"),
+      retry
+    };
+  }
   requestAnimationFrame(frame);
 })();

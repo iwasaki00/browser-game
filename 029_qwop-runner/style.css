@@ -8,9 +8,20 @@ header { z-index:4; display:flex; align-items:center; justify-content:center; ga
 header a { margin-right:auto; color:var(--muted); font-weight:800; text-decoration:none; }
 header div { color:var(--muted); font-weight:800; }
 header b { margin-left:9px; color:#fff; font:700 24px monospace; letter-spacing:0; }
+.race-hud { display:flex; align-items:center; justify-content:center; gap:18px; }
+.hud-stat { display:flex; align-items:center; white-space:nowrap; }
 header button, #resetParameters { padding:9px 12px; border:1px solid #355065; border-radius:8px; background:#102436; font-size:10px; font-weight:800; letter-spacing:.08em; cursor:pointer; }
 .stage { position:relative; min-height:0; overflow:hidden; background:#b9e7ee; }
 canvas { display:block; width:100%; height:100%; }
+.race-overlay { position:absolute; z-index:7; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; pointer-events:none; text-align:center; text-shadow:0 3px 12px #000b; }
+.race-overlay:empty, .race-overlay.hidden { display:none; }
+.race-overlay > b { color:#fff; font:1000 clamp(44px,10vw,92px)/1 monospace; letter-spacing:.04em; }
+.race-overlay > span { color:#fff; font:900 clamp(15px,3vw,25px)/1.45 monospace; white-space:pre-line; }
+.race-overlay button { min-width:170px; min-height:48px; padding:12px 20px; pointer-events:auto; border:2px solid var(--cyan); border-radius:11px; background:#0b3141ee; color:#fff; font-size:14px; font-weight:1000; letter-spacing:.1em; box-shadow:0 8px 26px #0008; }
+.race-records { position:absolute; z-index:5; right:12px; bottom:10px; display:flex; align-items:center; gap:10px; padding:7px 9px; border:1px solid #173d50; border-radius:8px; background:#07111fd9; color:var(--muted); font:800 9px/1.2 monospace; }
+.race-records b { color:var(--cyan); }
+.race-records b.invalid { color:#ff9e55; }
+.race-records strong { color:#fff; }
 .training-toggle { position:absolute; z-index:5; top:12px; left:12px; padding:10px 13px; border:1px solid #173d50; border-radius:9px; background:#07111fe6; color:#fff; font-size:10px; font-weight:900; letter-spacing:.1em; box-shadow:0 6px 20px #0004; }
 .training-toggle.active { border-color:var(--cyan); color:var(--cyan); }
 .training-panel { position:absolute; z-index:4; top:58px; left:12px; width:min(360px,calc(100% - 24px)); padding:12px; border:1px solid #173d50; border-radius:12px; background:#07111fe8; box-shadow:0 10px 30px #0005; backdrop-filter:blur(10px); }
@@ -81,6 +92,9 @@ aside > span { float:right; color:var(--cyan); }
   header a { width:22px; overflow:hidden; font-size:0; }
   header a::first-letter { font-size:18px; }
   header b { font-size:18px; }
+  .race-hud { gap:7px; }
+  .hud-stat { flex-direction:column; gap:1px; font-size:7px; }
+  .hud-stat b { margin:0; font-size:14px; }
   header button { padding:8px; font-size:8px; }
   .controls { grid-template-columns:repeat(4,1fr); gap:6px; padding:7px; }
   .controls button { height:68px; }
@@ -88,12 +102,14 @@ aside > span { float:right; color:var(--cyan); }
   aside { width:min(390px,calc(100% - 16px)); top:8px; right:8px; max-height:calc(100% - 16px); }
   .training-toggle { top:8px; left:8px; }
   .training-panel { top:50px; left:8px; width:min(350px,calc(100% - 16px)); }
+  .race-records { right:8px; bottom:7px; max-width:calc(100% - 16px); font-size:7px; }
 }
 @media (orientation:portrait) and (max-width:760px) {
   main { grid-template-rows:58px minmax(280px,1fr) minmax(218px,30vh); }
-  header { display:grid; grid-template-columns:24px minmax(94px,1fr) auto auto; gap:6px; padding:6px 8px; }
+  header { display:grid; grid-template-columns:24px minmax(0,1fr) auto auto; gap:6px; padding:6px 8px; }
+  .race-hud { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3px; width:100%; }
   header .distance { line-height:1.05; text-align:center; }
-  header .distance b { display:block; margin:3px 0 0; font-size:17px; }
+  header .hud-stat b { display:block; margin:3px 0 0; font-size:12px; }
   header button { min-height:38px; }
   .controls { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:10px; padding:10px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }
   .controls button { width:100%; height:auto; min-height:88px; }

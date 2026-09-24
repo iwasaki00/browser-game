@@ -67,11 +67,12 @@ async function viewport(name, width, height) {
     return {
       width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth,
       training: box("#trainingButton"), controls: box(".controls"), canvas: box("#gameCanvas"),
-      q: box('.controls [data-key="q"]'), p: box('.controls [data-key="p"]')
+      q: box('.controls [data-key="q"]'), p: box('.controls [data-key="p"]'),
+      hud: box(".race-hud"), records: box(".race-records")
     };
   })()`);
   assert.equal(layout.scrollWidth > layout.width, false, `${name}: horizontal overflow`);
-  for (const key of ["training", "q", "p"]) {
+  for (const key of ["training", "q", "p", "hud", "records"]) {
     const box = layout[key];
     assert(box.x >= 0 && box.y >= 0 && box.right <= width + 1 && box.bottom <= height + 1, `${name}: ${key} outside viewport`);
   }
@@ -82,7 +83,7 @@ async function viewport(name, width, height) {
 (async () => {
   assert(fs.existsSync(chrome), "Chrome is required");
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
-  const gameUrl = `http://127.0.0.1:${server.address().port}/029_qwop-runner/`;
+  const gameUrl = `http://127.0.0.1:${server.address().port}/029_qwop-runner/?raceTest=1`;
   browser = spawn(chrome, [
     "--headless=new", "--disable-gpu", "--no-first-run", "--disable-default-apps",
     `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
@@ -317,8 +318,36 @@ async function viewport(name, width, height) {
   await screenshot("phase1h-falling.png");
   await evaluate("document.querySelector('#debugButton').click()");
   await screenshot("landscape-debug.png");
+
+  await evaluate("if (!document.querySelector('#debugPanel').hidden) document.querySelector('#debugButton').click(); document.querySelector('#retryButton').click()");
+  const runningRace = await evaluate("window.__QWOP_RACE_TEST__.snapshot()");
+  assert.equal(runningRace.state, "RUNNING", "race test mode did not start the race");
+  assert.equal(runningRace.currentDistance, 0);
+  assert.equal(await evaluate("document.querySelector('#recordStatus').textContent"), "VALID RUN");
+  await evaluate("window.__QWOP_RACE_TEST__.forceDistance(99.999)");
+  assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING", "race finished before 100m");
+  await evaluate("window.__QWOP_RACE_TEST__.forceDistance(100)");
+  const validGoal = await evaluate('(() => ({ race: window.__QWOP_RACE_TEST__.snapshot(), message: document.querySelector("#raceMessage").textContent, result: document.querySelector("#raceResult").textContent, retryVisible: !document.querySelector("#runAgainButton").hidden }))()');
+  assert.equal(validGoal.race.state, "FINISHED");
+  assert.equal(validGoal.message, "GOAL!");
+  assert(validGoal.result.includes("TIME"));
+  assert.equal(validGoal.retryVisible, true);
+  const frozenTime = validGoal.race.finalTimeMs;
+  await wait(120);
+  assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot().finalTimeMs")), frozenTime, "goal time did not freeze");
+  await screenshot("phase2a-goal.png");
+
+  const priorBest = validGoal.race.bestTimeMs;
+  await evaluate("document.querySelector('#runAgainButton').click(); window.__QWOP_RACE_TEST__.invalidate('DEMO FORWARD'); window.__QWOP_RACE_TEST__.forceDistance(100)");
+  const debugGoal = await evaluate('(() => ({ race: window.__QWOP_RACE_TEST__.snapshot(), status: document.querySelector("#recordStatus").textContent, result: document.querySelector("#raceResult").textContent }))()');
+  assert.equal(debugGoal.race.state, "FINISHED");
+  assert.equal(debugGoal.race.recordValid, false);
+  assert.equal(debugGoal.race.bestTimeMs, priorBest, "debug run changed best time");
+  assert(debugGoal.status.includes("DEBUG RUN"));
+  assert(debugGoal.result.includes("RECORD NOT SAVED"));
+  await screenshot("phase2a-debug-goal.png");
   assert.deepEqual(errors, []);
-  console.log(`Phase 1K browser smoke tests passed; drift ${driftMeters.toFixed(4)}m`);
+  console.log("Phase 2A browser smoke tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;
