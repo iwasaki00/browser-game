@@ -13,6 +13,7 @@
       <a href="../index.html" aria-label="アーケードへ戻る">← ARCADE</a>
       <div class="race-hud">
         <span class="hud-stat distance">DISTANCE <b id="distance">0.00 m</b></span>
+        <span class="hud-stat">TO GO <b id="toGo">100.0 m</b></span>
         <span class="hud-stat">TIME <b id="raceTime">0.000</b></span>
         <span class="hud-stat">BEST <b id="bestTime">--.---</b></span>
       </div>
@@ -21,9 +22,21 @@
     </header>
     <section class="stage" aria-label="物理ランニングゲーム">
       <canvas id="gameCanvas"></canvas>
+      <div class="race-progress" role="progressbar" aria-label="100m race progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span>0m</span><i><b id="raceProgressFill"></b></i><span>100m</span>
+      </div>
+      <div id="raceNotice" class="race-notice" aria-live="polite" hidden></div>
       <div id="raceOverlay" class="race-overlay" aria-live="assertive">
         <b id="raceMessage">READY</b>
-        <span id="raceResult"></span>
+        <div id="raceResult" class="race-result" hidden>
+          <div class="result-grid">
+            <span>TIME <b id="resultTime">--.---</b></span>
+            <span>BEST <b id="resultBest">--.---</b></span>
+            <span>BEST DISTANCE <b id="resultBestDistance">0.00 m</b></span>
+          </div>
+          <strong id="resultComparison"></strong>
+          <small id="resultFlags"></small>
+        </div>
         <button id="runAgainButton" type="button" hidden>RUN AGAIN</button>
       </div>
       <div class="race-records"><b id="recordStatus">VALID RUN</b><span>BEST DISTANCE <strong id="bestDistance">0.00 m</strong></span></div>

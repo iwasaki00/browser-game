@@ -68,11 +68,11 @@ async function viewport(name, width, height) {
       width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth,
       training: box("#trainingButton"), controls: box(".controls"), canvas: box("#gameCanvas"),
       q: box('.controls [data-key="q"]'), p: box('.controls [data-key="p"]'),
-      hud: box(".race-hud"), records: box(".race-records")
+      hud: box(".race-hud"), records: box(".race-records"), progress: box(".race-progress")
     };
   })()`);
   assert.equal(layout.scrollWidth > layout.width, false, `${name}: horizontal overflow`);
-  for (const key of ["training", "q", "p", "hud", "records"]) {
+  for (const key of ["training", "q", "p", "hud", "records", "progress"]) {
     const box = layout[key];
     assert(box.x >= 0 && box.y >= 0 && box.right <= width + 1 && box.bottom <= height + 1, `${name}: ${key} outside viewport`);
   }
@@ -320,17 +320,29 @@ async function viewport(name, width, height) {
   await screenshot("landscape-debug.png");
 
   await evaluate("if (!document.querySelector('#debugPanel').hidden) document.querySelector('#debugButton').click(); document.querySelector('#retryButton').click()");
+  await evaluate("window.__phase2bEvents = []; document.addEventListener('qwop-race-event', event => window.__phase2bEvents.push(event.detail.type))");
   const runningRace = await evaluate("window.__QWOP_RACE_TEST__.snapshot()");
   assert.equal(runningRace.state, "RUNNING", "race test mode did not start the race");
   assert.equal(runningRace.currentDistance, 0);
   assert.equal(await evaluate("document.querySelector('#recordStatus').textContent"), "VALID RUN");
-  await evaluate("window.__QWOP_RACE_TEST__.forceDistance(99.999)");
+  await evaluate("window.__QWOP_RACE_TEST__.forceDistance(50)");
+  const halfwayUI = await evaluate('({ notice: document.querySelector("#raceNotice").textContent, toGo: document.querySelector("#toGo").textContent, progress: document.querySelector("#raceProgressFill").style.width })');
+  assert(halfwayUI.notice.includes("HALFWAY"));
+  assert.equal(halfwayUI.toGo, "50.0 m");
+  assert.equal(halfwayUI.progress, "50%");
+  await evaluate("window.__QWOP_RACE_TEST__.forceDistance(60); window.__QWOP_RACE_TEST__.forceDistance(90); window.__QWOP_RACE_TEST__.forceDistance(95)");
+  assert((await evaluate("document.querySelector('#raceNotice').textContent")).includes("FINAL 10m"));
+  assert.deepEqual(await evaluate("window.__phase2bEvents.filter(type => type === 'halfway' || type === 'finalTen')"), ["halfway", "finalTen"]);
+  await evaluate("window.__QWOP_RACE_TEST__.placeRunnerAt(99.999)");
+  const finishCamera = await evaluate("window.__QWOP_RACE_TEST__.cameraSnapshot()");
+  assert(finishCamera.goalScreenX >= 0 && finishCamera.goalScreenX <= finishCamera.width, `100m goal is outside camera: ${JSON.stringify(finishCamera)}`);
   assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING", "race finished before 100m");
   await evaluate("window.__QWOP_RACE_TEST__.forceDistance(100)");
   const validGoal = await evaluate('(() => ({ race: window.__QWOP_RACE_TEST__.snapshot(), message: document.querySelector("#raceMessage").textContent, result: document.querySelector("#raceResult").textContent, retryVisible: !document.querySelector("#runAgainButton").hidden }))()');
   assert.equal(validGoal.race.state, "FINISHED");
   assert.equal(validGoal.message, "GOAL!");
   assert(validGoal.result.includes("TIME"));
+  assert(validGoal.result.includes("FIRST FINISH") || validGoal.result.includes("NEW BEST"));
   assert.equal(validGoal.retryVisible, true);
   const frozenTime = validGoal.race.finalTimeMs;
   await wait(120);
@@ -346,8 +358,12 @@ async function viewport(name, width, height) {
   assert(debugGoal.status.includes("DEBUG RUN"));
   assert(debugGoal.result.includes("RECORD NOT SAVED"));
   await screenshot("phase2a-debug-goal.png");
+  await evaluate("document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))");
+  assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING", "Enter did not RUN AGAIN");
+  assert.equal(await evaluate("document.querySelector('#toGo').textContent"), "100.0 m");
+  assert.equal(await evaluate("document.querySelector('#raceProgressFill').style.width"), "0%");
   assert.deepEqual(errors, []);
-  console.log("Phase 2A browser smoke tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
+  console.log("Phase 2B browser smoke tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

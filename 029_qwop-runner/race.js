@@ -57,6 +57,11 @@
       this.recordValid = true;
       this.invalidReasons = [];
       this.newBest = false;
+      this.previousBestTimeMs = null;
+      this.improvementMs = null;
+      this.firstFinish = false;
+      this.halfwayReached = false;
+      this.finalTenReached = false;
       this.goVisibleUntil = 0;
       this.resetTime = now;
       return this.snapshot();
@@ -100,7 +105,7 @@
       this.raceStartTime = now;
       this.elapsedMs = 0;
       this.goVisibleUntil = now + this.countdown.go;
-      return { started: true, finished: false };
+      return { started: true, finished: false, halfway: false, finalTen: false, newBest: false };
     }
 
     updateBestDistance(distance) {
@@ -116,16 +121,19 @@
       this.finalTimeMs = this.elapsedMs;
       this.state = RACE_STATE.FINISHED;
       this.updateBestDistance(Math.max(this.maxDistance, this.goalDistance));
+      this.previousBestTimeMs = this.bestTimeMs;
+      this.firstFinish = this.recordValid && this.previousBestTimeMs === null;
       if (this.recordValid && (this.bestTimeMs === null || this.finalTimeMs < this.bestTimeMs)) {
         this.bestTimeMs = this.finalTimeMs;
         this.newBest = true;
+        this.improvementMs = this.previousBestTimeMs === null ? null : this.finalTimeMs - this.previousBestTimeMs;
         this.writeNumber(STORAGE_KEYS.bestTime, this.bestTimeMs);
       }
-      return { started: false, finished: true };
+      return { started: false, finished: true, newBest: this.newBest };
     }
 
     update(now, distance) {
-      const event = { started: false, finished: false };
+      const event = { started: false, finished: false, halfway: false, finalTen: false, newBest: false };
       if (this.state === RACE_STATE.COUNTDOWN && now - this.countdownStartTime >= this.countdownRunAt()) {
         Object.assign(event, this.startRace(now));
         return event;
@@ -135,6 +143,14 @@
       this.maxDistance = Math.max(this.maxDistance, this.currentDistance);
       this.elapsedMs = Math.max(0, now - this.raceStartTime);
       this.updateBestDistance(this.maxDistance);
+      if (!this.halfwayReached && this.currentDistance >= 50) {
+        this.halfwayReached = true;
+        event.halfway = true;
+      }
+      if (!this.finalTenReached && this.currentDistance >= 90) {
+        this.finalTenReached = true;
+        event.finalTen = true;
+      }
       if (this.currentDistance >= this.goalDistance) Object.assign(event, this.finish(now));
       return event;
     }
@@ -154,7 +170,12 @@
         bestDistance: this.bestDistance,
         recordValid: this.recordValid,
         invalidReasons: [...this.invalidReasons],
-        newBest: this.newBest
+        newBest: this.newBest,
+        previousBestTimeMs: this.previousBestTimeMs,
+        improvementMs: this.improvementMs,
+        firstFinish: this.firstFinish,
+        halfwayReached: this.halfwayReached,
+        finalTenReached: this.finalTenReached
       };
     }
   }

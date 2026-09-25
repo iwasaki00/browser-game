@@ -4,14 +4,24 @@
   const canvas = document.querySelector("#gameCanvas");
   const ctx = canvas.getContext("2d");
   const distanceEl = document.querySelector("#distance");
+  const toGoEl = document.querySelector("#toGo");
   const raceTimeEl = document.querySelector("#raceTime");
   const bestTimeEl = document.querySelector("#bestTime");
   const bestDistanceEl = document.querySelector("#bestDistance");
   const raceOverlay = document.querySelector("#raceOverlay");
   const raceMessage = document.querySelector("#raceMessage");
   const raceResult = document.querySelector("#raceResult");
+  const resultTime = document.querySelector("#resultTime");
+  const resultBest = document.querySelector("#resultBest");
+  const resultBestDistance = document.querySelector("#resultBestDistance");
+  const resultComparison = document.querySelector("#resultComparison");
+  const resultFlags = document.querySelector("#resultFlags");
   const runAgainButton = document.querySelector("#runAgainButton");
   const recordStatus = document.querySelector("#recordStatus");
+  const raceProgress = document.querySelector(".race-progress");
+  const raceProgressFill = document.querySelector("#raceProgressFill");
+  const raceNotice = document.querySelector("#raceNotice");
+  const stage = document.querySelector(".stage");
   const debugButton = document.querySelector("#debugButton");
   const retryButton = document.querySelector("#retryButton");
   const panel = document.querySelector("#debugPanel");
@@ -74,6 +84,9 @@
   let jointDots = true;
   let armSkeletonDebug = false;
   let raceWorldOriginX = physics.bodies.torso.position.x;
+  let raceNoticeUntil = 0;
+  let lastCountdownLabel = "";
+  let trainingUsed = false;
 
   const inputLocked = () => !race.inputEnabled || demo.active || armConnectionTest.active || elbowMatrixTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
@@ -83,6 +96,17 @@
 
   function formatRaceTime(milliseconds) {
     return milliseconds === null ? "--.---" : (milliseconds / 1000).toFixed(3);
+  }
+
+  function emitRaceEvent(type, detail = {}) {
+    document.dispatchEvent(new CustomEvent("qwop-race-event", { detail: { type, ...detail } }));
+  }
+
+  function showRaceNotice(message, duration = 900, type = "notice") {
+    raceNotice.textContent = message;
+    raceNotice.dataset.type = type;
+    raceNotice.hidden = false;
+    raceNoticeUntil = performance.now() + duration;
   }
 
   function raceDistance() {
@@ -107,21 +131,51 @@
   function updateRaceUI(now) {
     const label = race.countdownLabel(now);
     const finished = race.state === QWOPRace.RACE_STATE.FINISHED;
+    const displayDistance = race.currentDistance;
+    const remaining = Math.max(0, race.goalDistance - displayDistance);
+    const progress = Math.min(100, Math.max(0, displayDistance / race.goalDistance * 100));
     raceTimeEl.textContent = formatRaceTime(finished ? race.finalTimeMs : race.elapsedMs);
+    toGoEl.textContent = `${remaining.toFixed(1)} m`;
     bestTimeEl.textContent = formatRaceTime(race.bestTimeMs);
     bestDistanceEl.textContent = `${race.bestDistance.toFixed(2)} m`;
+    raceProgressFill.style.width = `${finished ? 100 : progress}%`;
+    raceProgress.setAttribute("aria-valuenow", String(Math.round(finished ? 100 : progress)));
     recordStatus.textContent = race.recordValid ? "VALID RUN" : `DEBUG RUN - ${race.invalidReasons.join(" / ")}`;
     recordStatus.classList.toggle("invalid", !race.recordValid);
     raceMessage.textContent = finished ? "GOAL!" : label;
+    raceOverlay.classList.toggle("go", label === "GO!");
+    raceOverlay.classList.toggle("finished", finished);
+    stage.classList.toggle("race-go", label === "GO!");
+    stage.classList.toggle("race-finished", finished);
+    if (race.state === QWOPRace.RACE_STATE.COUNTDOWN && label && label !== lastCountdownLabel) {
+      emitRaceEvent("countdownTick", { label });
+    }
+    lastCountdownLabel = label;
     if (finished) {
-      raceResult.textContent = race.recordValid
-        ? `TIME ${formatRaceTime(race.finalTimeMs)} s${race.newBest ? " - NEW BEST!" : ""}`
-        : `DEBUG RUN - TIME ${formatRaceTime(race.finalTimeMs)} s - RECORD NOT SAVED`;
+      resultTime.textContent = formatRaceTime(race.finalTimeMs);
+      resultBest.textContent = formatRaceTime(race.bestTimeMs);
+      resultBestDistance.textContent = `${race.bestDistance.toFixed(2)} m`;
+      if (!race.recordValid) {
+        resultComparison.textContent = "";
+        resultFlags.textContent = "DEBUG RUN\nRECORD NOT SAVED";
+      } else if (race.newBest && race.firstFinish) {
+        resultComparison.textContent = "FIRST FINISH!\nNEW BEST!";
+        resultFlags.textContent = trainingUsed ? "TRAINING USED" : "";
+      } else if (race.newBest) {
+        resultComparison.textContent = `NEW BEST!\nPREVIOUS ${formatRaceTime(race.previousBestTimeMs)} s · NEW ${formatRaceTime(race.finalTimeMs)} s · DIFF ${(race.improvementMs / 1000).toFixed(3)} s`;
+        resultFlags.textContent = trainingUsed ? "TRAINING USED" : "";
+      } else {
+        resultComparison.textContent = "FINISH!";
+        resultFlags.textContent = trainingUsed ? "TRAINING USED" : "";
+      }
     } else {
-      raceResult.textContent = "";
+      resultComparison.textContent = "";
+      resultFlags.textContent = "";
     }
     raceOverlay.hidden = !finished && !label;
+    raceResult.hidden = !finished;
     runAgainButton.hidden = !finished;
+    if (!raceNotice.hidden && now >= raceNoticeUntil) raceNotice.hidden = true;
   }
 
   function updateRace(now, forcedDistance) {
@@ -131,8 +185,19 @@
       race.currentDistance = 0;
       race.maxDistance = 0;
       clearInputs();
+      emitRaceEvent("start");
+    }
+    if (event.halfway) {
+      showRaceNotice("HALFWAY! 50m", 1100, "halfway");
+      emitRaceEvent("halfway");
+    }
+    if (event.finalTen) {
+      showRaceNotice("FINAL 10m", 1100, "finalTen");
+      emitRaceEvent("finalTen");
     }
     if (event.finished) finishRace();
+    if (event.finished) emitRaceEvent("finish", { timeMs: race.finalTimeMs, valid: race.recordValid });
+    if (event.newBest) emitRaceEvent("newBest", { timeMs: race.finalTimeMs, previousMs: race.previousBestTimeMs });
     updateRaceUI(now);
     return event;
   }
@@ -182,7 +247,10 @@
     const key = button.dataset.key;
     button.addEventListener("pointerdown", event => {
       event.preventDefault();
-      if (inputLocked()) return;
+      if (inputLocked()) {
+        if (race.state === QWOPRace.RACE_STATE.COUNTDOWN) showRaceNotice("WAIT", 550, "falseStart");
+        return;
+      }
       button.setPointerCapture(event.pointerId);
       activePointers.set(event.pointerId, key);
       setInput(key, true);
@@ -201,9 +269,18 @@
 
   document.addEventListener("keydown", event => {
     const key = event.key.toLowerCase();
+    if ((key === "enter" || key === " ") && race.state === QWOPRace.RACE_STATE.FINISHED) {
+      event.preventDefault();
+      retry();
+      return;
+    }
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (!inputLocked()) setInput(key, true);
+    if (inputLocked()) {
+      if (race.state === QWOPRace.RACE_STATE.COUNTDOWN) showRaceNotice("WAIT", 550, "falseStart");
+      return;
+    }
+    setInput(key, true);
   });
   document.addEventListener("keyup", event => {
     const key = event.key.toLowerCase();
@@ -618,6 +695,7 @@
 
   trainingButton.addEventListener("click", () => {
     training.active = !training.active;
+    if (training.active) trainingUsed = true;
     if (!training.active && demo.source === "training" && demo.active) stopDemo();
     trainingPanel.hidden = !training.active;
     trainingButton.classList.toggle("active", training.active);
@@ -663,6 +741,10 @@
     const now = performance.now();
     race.reset(now);
     race.startCountdown(now);
+    trainingUsed = training.active;
+    lastCountdownLabel = "";
+    raceNoticeUntil = 0;
+    raceNotice.hidden = true;
     raceWorldOriginX = physics.bodies.torso.position.x;
     if (raceTestMode) updateRace(now + race.countdownRunAt());
     cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
@@ -914,8 +996,11 @@
     ctx.font = "800 11px monospace";
     const courseStartX = raceWorldOriginX;
     const goalX = courseStartX + race.goalDistance * QWOPPhysics.SCALE;
+    const startFlashing = race.state === QWOPRace.RACE_STATE.RUNNING && performance.now() < race.goVisibleUntil;
+    ctx.fillStyle = startFlashing && Math.floor(performance.now() / 100) % 2 ? "#ff2a63" : "#163044";
+    ctx.font = "1000 14px monospace";
     ctx.fillText("START", courseStartX - 24, 478);
-    ctx.fillRect(courseStartX, 459, 3, 30);
+    ctx.fillRect(courseStartX, 425, 5, 64);
     ctx.strokeStyle = "#163044";
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -928,8 +1013,13 @@
     ctx.fillText("FORWARD", courseStartX + 51, 435);
     for (let meter = -50; meter <= 100; meter += 5) {
       const x = courseStartX + meter * QWOPPhysics.SCALE;
-      ctx.fillRect(x, 481, 2, 8);
-      if (meter % 10 === 0) ctx.fillText(`${meter}m`, x - 10, 470);
+      const featured = meter === 0 || meter === 50 || meter === 100;
+      ctx.fillStyle = featured ? "#ff2a63" : "#163044";
+      ctx.fillRect(x, featured ? 473 : 481, featured ? 4 : 2, featured ? 16 : 8);
+      if (meter % 10 === 0) {
+        ctx.font = featured ? "1000 14px monospace" : "800 11px monospace";
+        ctx.fillText(meter === 50 ? "50m HALFWAY" : `${meter}m`, x - (meter === 50 ? 42 : 10), featured ? 464 : 470);
+      }
     }
     ctx.save();
     ctx.lineWidth = 5;
@@ -942,6 +1032,10 @@
     ctx.setLineDash([]);
     ctx.fillStyle = "#07111f";
     ctx.fillRect(goalX - 38, 335, 76, 26);
+    for (let y = 365; y < 489; y += 12) {
+      ctx.fillStyle = (y / 12) % 2 < 1 ? "#fff" : "#ff2a63";
+      ctx.fillRect(goalX - 5, y, 10, 12);
+    }
     ctx.fillStyle = "#fff36b";
     ctx.font = "900 14px monospace";
     ctx.textAlign = "center";
@@ -1039,6 +1133,18 @@
     window.__QWOP_RACE_TEST__ = {
       snapshot: () => race.snapshot(),
       forceDistance: distance => updateRace(performance.now(), distance),
+      placeRunnerAt: distance => {
+        const targetX = raceWorldOriginX + distance * QWOPPhysics.SCALE;
+        const offsetX = targetX - physics.bodies.torso.position.x;
+        Object.values(physics.bodies).forEach(body => Matter.Body.translate(body, { x: offsetX, y: 0 }));
+        cameraX = targetX - (canvas.clientWidth / viewScale) * 0.38;
+        return updateRace(performance.now(), distance);
+      },
+      cameraSnapshot: () => ({
+        cameraX,
+        goalScreenX: (raceWorldOriginX + race.goalDistance * QWOPPhysics.SCALE - cameraX) * viewScale,
+        width: canvas.clientWidth
+      }),
       invalidate: reason => invalidateRace(reason || "TEST DEBUG"),
       retry
     };
