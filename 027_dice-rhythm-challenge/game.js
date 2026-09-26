@@ -57,10 +57,11 @@
 
   class AudioManager {
     constructor() { this.context = null; }
-    async unlock() {
+    async unlock(sharedContext = null) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
-      if (!this.context) this.context = new AudioContext();
+      if (sharedContext) this.context = sharedContext;
+      else if (!this.context) this.context = new AudioContext();
       if (this.context.state === "suspended") await this.context.resume();
     }
     tone(frequency, duration, type = "sine", volume = 0.07, delay = 0) {
@@ -87,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus"].forEach((id) => { this[id] = document.getElementById(id); });
       this.buttons = [...document.querySelectorAll(".dice-button")];
       this.gridWindow = this.grid.parentElement;
       this.renderId = 0;
@@ -205,10 +206,39 @@
       window.setTimeout(() => button.classList.remove("guide-hit"), 110);
     }
     test(data) {
-      this.testBpm.textContent = `${data.bpm} BPM`;
+      this.testBpm.textContent = `${Math.round(data.bpm)} BPM`;
       this.testCell.textContent = `BEAT ${data.cell + 1} / ${CONFIG.ROW_SIZE}`;
       this.testTaps.textContent = `TAPS ${data.taps} / ${data.required}`;
       this.testElapsed.textContent = `TIME ${Math.round(data.elapsed)} / ${Math.round(data.duration)}ms`;
+    }
+    mode(isMidi) {
+      this.startScreen.classList.toggle("midi-selected", isMidi);
+      this.midiPanel.hidden = !isMidi;
+    }
+    midiMessage(message, type = "") {
+      this.midiStatus.className = `midi-status${type ? ` ${type}` : ""}`;
+      this.midiStatus.textContent = message;
+    }
+    midiInfo(info) {
+      const minutes = Math.floor(info.duration / 60);
+      const seconds = Math.floor(info.duration % 60);
+      this.midiName.textContent = info.fileName;
+      this.midiTempo.textContent = `${Math.round(info.bpm)} BPM`;
+      this.midiSignature.textContent = info.timeSignature;
+      this.midiDuration.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      this.midiTracks.textContent = String(info.tracks);
+      this.midiTempoChanges.textContent = String(info.tempoChanges);
+      this.midiMessage(info.recommended ? `${info.notes} notes / MIDI準備完了` : `${info.notes} notes / 現在このゲームでは4/4を推奨`, info.recommended ? "" : "warning");
+    }
+    results(score, maxCombo, totals, songClear) {
+      this.finalScore.textContent = score;
+      this.maxCombo.textContent = maxCombo;
+      this.perfectTotal.textContent = totals.PERFECT;
+      this.goodTotal.textContent = totals.GOOD;
+      this.missTotal.textContent = totals.MISS;
+      this.resultKicker.textContent = songClear ? "MIDI COMPLETE" : "RUN COMPLETE";
+      this.resultTitle.textContent = songClear ? "SONG CLEAR" : "GAME OVER";
+      this.resultTitle.classList.toggle("song-clear", songClear);
     }
   }
 
@@ -218,7 +248,12 @@
       this.judge = new RhythmJudge();
       this.audio = new AudioManager();
       this.ui = new UIManager();
+      this.midi = null;
+      try { this.midi = new window.MidiIntegration({ onEnded: () => this.onMidiEnded() }); }
+      catch (error) { console.error("MIDI common layer failed to initialize", error); }
+      this.mode = "normal";
       this.bpm = CONFIG.DEFAULT_BPM;
+      this.currentTempo = this.bpm;
       this.stageIndex = 0;
       this.rows = [];
       this.column = 0;
@@ -226,25 +261,35 @@
       this.combo = 0;
       this.bestCombo = 0;
       this.lives = CONFIG.STARTING_LIVES;
+      this.totals = { PERFECT: 0, GOOD: 0, MISS: 0 };
       this.taps = [];
       this.wrongInput = false;
       this.running = false;
       this.preparing = false;
       this.testMode = false;
       this.beatStart = 0;
+      this.currentBeatDuration = 60000 / this.bpm;
+      this.midiBeatIndex = -CONFIG.ROW_SIZE;
       this.frame = 0;
       this.beatTimer = 0;
       this.bind();
       this.previewChart();
+      this.setPlayMode("normal");
+      this.loadDefaultMidi();
     }
-    get beatDuration() { return 60000 / this.bpm; }
+    get beatDuration() { return this.currentBeatDuration; }
     get currentValue() { return this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? 0; }
+    clockNow() { return this.mode === "midi" && this.midi?.context ? this.midi.context.currentTime * 1000 : performance.now(); }
     bind() {
+      document.querySelectorAll('input[name="playMode"]').forEach((input) => input.addEventListener("change", () => this.setPlayMode(input.value)));
+      document.getElementById("midiFile").addEventListener("change", (event) => this.loadMidiFile(event.target.files?.[0]));
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
         if (!button) return;
         event.preventDefault();
         this.bpm = Number(button.dataset.bpm);
+        this.currentTempo = this.bpm;
+        this.currentBeatDuration = 60000 / this.bpm;
         document.querySelectorAll("[data-bpm]").forEach((item) => item.classList.toggle("selected", item === button));
         this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
         this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
@@ -272,6 +317,35 @@
       document.addEventListener("visibilitychange", () => { if (document.hidden && (this.running || this.preparing)) this.pause(); });
       window.addEventListener("pagehide", () => { if (this.running || this.preparing) this.pause(); });
     }
+    setPlayMode(mode) {
+      this.mode = mode === "midi" ? "midi" : "normal";
+      this.ui.mode(this.mode === "midi");
+      if (this.mode === "midi" && this.midi?.ready) this.ui.midiInfo(this.midi.getInfo());
+      this.ui.bpmDisplay.textContent = this.mode === "midi" && this.midi?.ready ? `MIDI ♪ ${Math.round(this.midi.getInfo().bpm)} BPM` : `♪ = ${this.bpm} BPM`;
+    }
+    async loadDefaultMidi() {
+      if (!this.midi) {
+        this.ui.midiMessage("MIDI共通基盤を読み込めませんでした。", "error");
+        return;
+      }
+      try { this.ui.midiInfo(await this.midi.loadUrl("assets/midi/sample.mid", "sample.mid")); }
+      catch (error) {
+        console.error("Default MIDI load failed", error);
+        this.ui.midiMessage(error.code === "SAMPLE_MISSING" ? "サンプルMIDIがありません。ファイルを選択してください。" : "サンプルMIDIを読み込めません。ファイルを選択してください。", error.code === "SAMPLE_MISSING" ? "warning" : "error");
+      }
+    }
+    async loadMidiFile(file) {
+      if (!file || !this.midi) return;
+      this.ui.midiMessage("MIDIを解析中…");
+      try {
+        const info = await this.midi.loadFile(file);
+        this.ui.midiInfo(info);
+        if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
+      } catch (error) {
+        console.error("MIDI file load failed", error);
+        this.ui.midiMessage(error.message || "MIDIファイルを読み込めませんでした。", "error");
+      }
+    }
     makePreviewRows() {
       const values = this.chartGenerator.generate(STAGES[this.stageIndex], CONFIG.PREVIEW_SIZE);
       return Array.from({ length: CONFIG.VISIBLE_ROWS }, (_, row) => values.slice(row * CONFIG.ROW_SIZE, (row + 1) * CONFIG.ROW_SIZE));
@@ -281,11 +355,15 @@
       const blankRow = () => Array(CONFIG.ROW_SIZE).fill(0);
       return [blankRow(), blankRow(), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
     }
-    openStageMenu() {
-      this.running = false;
-      this.preparing = false;
+    stopTiming() {
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
+      if (this.mode === "midi") this.midi?.stop();
+    }
+    openStageMenu() {
+      this.stopTiming();
+      this.running = false;
+      this.preparing = false;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
       this.ui.gameOver.hidden = true;
@@ -304,30 +382,48 @@
       this.ui.targetGuide(0, false);
     }
     async start() {
-      await this.audio.unlock();
-      clearTimeout(this.beatTimer);
-      cancelAnimationFrame(this.frame);
+      this.mode = document.querySelector('input[name="playMode"]:checked')?.value === "midi" ? "midi" : "normal";
+      if (this.mode === "midi" && !this.midi?.ready) {
+        this.ui.midiMessage("MIDIファイルを読み込んでからSTARTしてください。", "error");
+        return;
+      }
+      this.stopTiming();
+      try {
+        const sharedContext = this.mode === "midi" ? await this.midi.ensureAudio() : null;
+        await this.audio.unlock(sharedContext);
+      } catch (error) {
+        console.error("AudioContext start failed", error);
+        this.ui.midiMessage("音声を開始できませんでした。もう一度STARTしてください。", "error");
+        return;
+      }
       this.testMode = document.getElementById("testMode").checked;
       this.column = 0;
       this.score = 0;
       this.combo = 0;
       this.bestCombo = 0;
       this.lives = CONFIG.STARTING_LIVES;
+      this.totals = { PERFECT: 0, GOOD: 0, MISS: 0 };
       this.running = false;
+      this.midiBeatIndex = -CONFIG.ROW_SIZE;
+      this.currentTempo = this.mode === "midi" ? this.midi.getInfo().bpm : this.bpm;
+      this.currentBeatDuration = 60000 / this.currentTempo;
       this.rows = this.makeOpeningRows();
       this.ui.renderChart(this.rows, -1);
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
-      this.ui.bpmDisplay.textContent = `♪ = ${this.bpm} BPM`;
+      this.ui.bpmDisplay.textContent = this.mode === "midi" ? `MIDI ♪ ${Math.round(this.currentTempo)} BPM` : `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.testPanel.hidden = !this.testMode;
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
+      this.applyBeatCss();
+      this.showReady(false);
+    }
+    applyBeatCss() {
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
       document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(180, Math.min(260, this.beatDuration * 0.45))}ms`);
-      this.showReady();
     }
-    showReady() {
+    showReady(resuming) {
       this.preparing = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
@@ -336,27 +432,48 @@
       this.ui.judgement.className = "judgement";
       this.ui.judgement.textContent = "";
       this.ui.readyOverlay.hidden = false;
-      this.beatTimer = window.setTimeout(() => {
-        this.ui.readyOverlay.hidden = true;
-        this.preparing = false;
-        this.running = true;
-        this.beginBeat(performance.now());
+      this.beatTimer = window.setTimeout(async () => {
+        try {
+          this.ui.readyOverlay.hidden = true;
+          this.preparing = false;
+          this.running = true;
+          if (this.mode === "midi") {
+            const timing = resuming ? await this.midi.resume() : await this.midi.startWithCountIn(CONFIG.ROW_SIZE);
+            this.midiBeatIndex = timing.beatIndex;
+            this.beginMidiBeat(timing);
+          } else {
+            this.currentTempo = this.bpm;
+            this.beginBeat(performance.now(), 60000 / this.bpm);
+          }
+        } catch (error) {
+          console.error("Game start failed", error);
+          this.running = false;
+          this.ui.startScreen.hidden = false;
+          this.ui.midiMessage(error.message || "ゲームを開始できませんでした。", "error");
+        }
       }, 1000);
     }
-    beginBeat(startTime = performance.now()) {
+    beginMidiBeat(timing = this.midi.getBeatTiming(this.midiBeatIndex)) {
+      this.currentTempo = timing.bpm;
+      this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(timing.bpm)} BPM`;
+      this.beginBeat(timing.startAudioTime * 1000, timing.duration * 1000);
+    }
+    beginBeat(startTime, duration) {
       if (!this.running) return;
       this.taps = [];
       this.wrongInput = false;
       this.beatStart = startTime;
+      this.currentBeatDuration = duration;
+      this.applyBeatCss();
       const value = this.currentValue;
       this.ui.setActive(this.column, value === 0);
       this.ui.progress(0);
       this.ui.enableControls(value !== 0);
       this.ui.targetGuide(value, this.testMode && value !== 0);
-      this.updateGuide(Math.max(0, performance.now() - this.beatStart));
+      this.updateGuide(Math.max(0, this.clockNow() - this.beatStart));
       this.audio.metronome(this.column === 0);
       this.updateFrame();
-      const delay = Math.max(0, this.beatStart + this.beatDuration - performance.now());
+      const delay = Math.max(0, this.beatStart + this.beatDuration - this.clockNow());
       this.beatTimer = window.setTimeout(() => this.finishBeat(), delay);
     }
     onTap(event, value) {
@@ -369,8 +486,8 @@
       this.ui.hitGuide(button);
       window.setTimeout(() => button.classList.remove("pressed"), 72);
       this.audio.tap(value);
-      const elapsed = performance.now() - this.beatStart;
-      if (elapsed > this.beatDuration) return;
+      const elapsed = this.clockNow() - this.beatStart;
+      if (elapsed < 0 || elapsed > this.beatDuration) return;
       if (this.taps.length >= this.currentValue) {
         this.updateTest(elapsed);
         return;
@@ -384,40 +501,39 @@
       cancelAnimationFrame(this.frame);
       this.ui.progress(1);
       const value = this.currentValue;
-      const nextBeatStart = this.beatStart + this.beatDuration;
-      if (value === 0) {
-        this.ui.judgement.textContent = "";
-        this.advanceChart(nextBeatStart);
-        return;
-      }
-      const result = this.judge.judge(value, this.taps, this.wrongInput);
-      this.audio.result(result.grade);
-      this.ui.verdict(result.grade);
-      if (result.grade === "MISS") {
-        this.combo = 0;
-        if (!this.testMode) this.lives -= 1;
-      } else {
-        this.combo += 1;
-        this.bestCombo = Math.max(this.bestCombo, this.combo);
-        this.score += CONFIG.SCORE_MULTIPLIER[result.grade] * value;
-      }
-      this.ui.stats(this.score, this.combo, this.lives, this.testMode);
-      if (this.lives <= 0 && !this.testMode) { this.end(); return; }
-      this.advanceChart(nextBeatStart);
+      if (value !== 0) {
+        const result = this.judge.judge(value, this.taps, this.wrongInput);
+        this.totals[result.grade] += 1;
+        this.audio.result(result.grade);
+        this.ui.verdict(result.grade);
+        if (result.grade === "MISS") {
+          this.combo = 0;
+          if (!this.testMode) this.lives -= 1;
+        } else {
+          this.combo += 1;
+          this.bestCombo = Math.max(this.bestCombo, this.combo);
+          this.score += CONFIG.SCORE_MULTIPLIER[result.grade] * value;
+        }
+        this.ui.stats(this.score, this.combo, this.lives, this.testMode);
+        if (this.lives <= 0 && !this.testMode) { this.end(false); return; }
+      } else this.ui.judgement.textContent = "";
+      this.advanceChart();
+      if (this.mode === "midi") {
+        this.midiBeatIndex += 1;
+        this.beginMidiBeat();
+      } else this.beginBeat(this.beatStart + this.beatDuration, 60000 / this.bpm);
     }
-    advanceChart(nextBeatStart) {
-      if (this.column < CONFIG.ROW_SIZE - 1) {
-        this.column += 1;
-      } else {
+    advanceChart() {
+      if (this.column < CONFIG.ROW_SIZE - 1) this.column += 1;
+      else {
         this.rows = [...this.rows.slice(1), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
         this.column = 0;
         this.ui.scrollChart(this.rows, this.column, this.currentValue === 0);
       }
-      this.beginBeat(nextBeatStart);
     }
     updateFrame() {
       if (!this.running) return;
-      const elapsed = performance.now() - this.beatStart;
+      const elapsed = this.clockNow() - this.beatStart;
       this.ui.progress(elapsed / this.beatDuration);
       this.updateGuide(elapsed);
       this.updateTest(elapsed);
@@ -434,11 +550,12 @@
       this.ui.guideCue(elapsed % subdivision < pulseWindow);
     }
     updateTest(elapsed) {
-      if (this.testMode) this.ui.test({ bpm: this.bpm, cell: this.column, taps: this.taps.length, required: this.currentValue, elapsed: Math.min(Math.max(0, elapsed), this.beatDuration), duration: this.beatDuration });
+      if (this.testMode) this.ui.test({ bpm: this.currentTempo, cell: this.column, taps: this.taps.length, required: this.currentValue, elapsed: Math.min(Math.max(0, elapsed), this.beatDuration), duration: this.beatDuration });
     }
     pause() {
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
+      if (this.mode === "midi") this.midi?.pause();
       this.running = false;
       this.preparing = false;
       this.ui.readyOverlay.hidden = true;
@@ -447,18 +564,27 @@
       this.ui.pauseScreen.hidden = false;
     }
     async resume() {
-      await this.audio.unlock();
+      try {
+        const sharedContext = this.mode === "midi" ? await this.midi.ensureAudio() : null;
+        await this.audio.unlock(sharedContext);
+      } catch (error) {
+        console.error("Audio resume failed", error);
+        return;
+      }
       this.ui.pauseScreen.hidden = true;
-      this.showReady();
+      this.showReady(true);
     }
-    end() {
+    onMidiEnded() {
+      if (this.mode === "midi" && this.running) this.end(true);
+    }
+    end(songClear = false) {
       this.running = false;
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
+      if (this.mode === "midi") this.midi?.stop();
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
-      this.ui.finalScore.textContent = this.score;
-      this.ui.maxCombo.textContent = this.bestCombo;
+      this.ui.results(this.score, this.bestCombo, this.totals, songClear);
       this.ui.gameOver.hidden = false;
     }
   }

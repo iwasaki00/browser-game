@@ -10,6 +10,10 @@
   <meta name="description" content="サイコロの目と同じボタンを、数字の回数だけ1拍の中でタップするリズムゲーム。">
   <title>Dice Rhythm Challenge</title>
   <link rel="stylesheet" href="style.css">
+  <script src="../_cmn_midi/midi-common/midi-timing.js" defer></script>
+  <script src="../_cmn_midi/midi-common/midi-common.js" defer></script>
+  <script src="../_cmn_midi/synth.js" defer></script>
+  <script src="midi-integration.js" defer></script>
   <script src="game.js" defer></script>
 </head>
 <body>
@@ -43,13 +47,16 @@
       <div class="start-card">
         <div class="logo-die face-4" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <p class="kicker">TAP THE BEAT</p><h1>Dice Rhythm<br><em>Challenge</em></h1>
+        <p class="version">VERSION 1.1.0 MIDI</p>
         <p class="howto">同じパターンを繰り返して、<strong>少しずつステップアップ！</strong></p>
+        <fieldset class="mode-picker"><legend>PLAY MODE</legend><div><label><input type="radio" name="playMode" value="normal" checked><span>NORMAL</span></label><label><input type="radio" name="playMode" value="midi"><span>MIDI</span></label></div></fieldset>
         <fieldset class="stage-picker"><legend>STAGE SELECT</legend><div id="stageOptions"><button class="selected" type="button" data-stage="0"><b>LEVEL 1</b><span>1だけ</span><small>1 1 1 1</small></button><button type="button" data-stage="1"><b>LEVEL 2</b><span>2だけ</span><small>2 2 2 2</small></button><button type="button" data-stage="2"><b>LEVEL 3</b><span>4だけ</span><small>4 4 4 4</small></button><button type="button" data-stage="3"><b>LEVEL 4</b><span>1と2</span><small>1 1 2 2</small></button><button type="button" data-stage="4"><b>LEVEL 5</b><span>2を練習</span><small>2 2 1 2</small></button><button type="button" data-stage="5"><b>LEVEL 6</b><span>4を練習</span><small>1 2 4 4</small></button><button type="button" data-stage="6"><b>LEVEL 7</b><span>ミックス</span><small>2 4 1 2</small></button><button type="button" data-stage="7"><b>LEVEL 8</b><span>シャッフル</span><small>? ? ? ?</small></button></div><p id="stageHint">1の目だけ。まずは1拍に1回のタップを覚えよう。</p></fieldset><fieldset class="bpm-picker"><legend>BPM SELECT</legend><div id="bpmOptions"><button type="button" data-bpm="60">60</button><button type="button" data-bpm="80">80</button><button type="button" data-bpm="100">100</button><button class="selected" type="button" data-bpm="120">120</button><button type="button" data-bpm="140">140</button><button type="button" data-bpm="160">160</button><button type="button" data-bpm="180">180</button><button type="button" data-bpm="200">200</button></div></fieldset>
+        <section class="midi-panel" id="midiPanel" hidden aria-label="MIDIファイル情報"><label class="midi-file-button">MIDIファイル選択<input id="midiFile" type="file" accept=".mid,.midi,audio/midi,audio/x-midi"></label><div class="midi-summary"><span>曲<b id="midiName">sample.mid</b></span><span>Tempo<b id="midiTempo">—</b></span><span>Time Signature<b id="midiSignature">—</b></span><span>Duration<b id="midiDuration">—</b></span><span>Tracks<b id="midiTracks">—</b></span><span>Tempo Changes<b id="midiTempoChanges">—</b></span></div><p class="midi-status" id="midiStatus" aria-live="polite">サンプルMIDIを確認中…</p></section>
         <label class="test-toggle"><input id="testMode" type="checkbox"><span aria-hidden="true"></span>TEST MODE</label>
         <button class="start-button" id="startButton" type="button">START <span>▶</span></button>
       </div>
     </section>
-    <section class="overlay game-over" id="gameOver" hidden><div class="result-card"><p>RUN COMPLETE</p><h2>GAME OVER</h2><div class="result-stats"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>MAX COMBO</span><strong id="maxCombo">0</strong></div></div><button id="retryButton" type="button">RETRY <span>↻</span></button><button class="secondary-button" id="stageSelectButton" type="button">STAGE SELECT</button></div></section>
+    <section class="overlay game-over" id="gameOver" hidden><div class="result-card"><p id="resultKicker">RUN COMPLETE</p><h2 id="resultTitle">GAME OVER</h2><div class="result-stats"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>MAX COMBO</span><strong id="maxCombo">0</strong></div><div><span>PERFECT</span><strong id="perfectTotal">0</strong></div><div><span>GOOD</span><strong id="goodTotal">0</strong></div><div><span>MISS</span><strong id="missTotal">0</strong></div></div><button id="retryButton" type="button">RETRY <span>↻</span></button><button class="secondary-button" id="stageSelectButton" type="button">TITLE</button></div></section>
     <section class="overlay pause-screen" id="pauseScreen" hidden><div class="result-card"><p>GAME PAUSED</p><h2>READY?</h2><button id="resumeButton" type="button">RESUME <span>▶</span></button></div></section>
     <section class="ready-overlay" id="readyOverlay" hidden aria-live="assertive">READY</section>
   </main>
