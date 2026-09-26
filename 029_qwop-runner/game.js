@@ -12,6 +12,7 @@
   const raceMessage = document.querySelector("#raceMessage");
   const raceResult = document.querySelector("#raceResult");
   const resultTime = document.querySelector("#resultTime");
+  const resultDistance = document.querySelector("#resultDistance");
   const resultDifficulty = document.querySelector("#resultDifficulty");
   const resultBest = document.querySelector("#resultBest");
   const resultBestDistance = document.querySelector("#resultBestDistance");
@@ -95,6 +96,7 @@
   let raceNoticeUntil = 0;
   let lastCountdownLabel = "";
   let trainingUsed = false;
+  const gameOverGuard = new QWOPRace.FallGuard();
 
   const inputLocked = () => !race.inputEnabled || demo.active || armConnectionTest.active || elbowMatrixTest.active || physicsTest.mode === "drift" || (physicsTest.mode === "fall" && physicsTest.downAt === null);
 
@@ -161,9 +163,12 @@
   }
 
   function raceDistance() {
-    if (race.state !== QWOPRace.RACE_STATE.RUNNING && race.state !== QWOPRace.RACE_STATE.FINISHED) return 0;
-    return (physics.bodies.torso.position.x - raceWorldOriginX) / QWOPPhysics.SCALE;
+    if (![QWOPRace.RACE_STATE.RUNNING, QWOPRace.RACE_STATE.FINISHED, QWOPRace.RACE_STATE.GAME_OVER].includes(race.state)) return 0;
+    const physicalDeltaX = physics.bodies.torso.position.x - raceWorldOriginX;
+    return physicalDeltaX / QWOPPhysics.SCALE * QWOPRace.DISTANCE_SCALE;
   }
+
+  const raceMetersToPhysicalDelta = meters => meters / QWOPRace.DISTANCE_SCALE * QWOPPhysics.SCALE;
 
   function finishRace() {
     clearInputs();
@@ -182,10 +187,12 @@
   function updateRaceUI(now) {
     const label = race.countdownLabel(now);
     const finished = race.state === QWOPRace.RACE_STATE.FINISHED;
+    const gameOver = race.state === QWOPRace.RACE_STATE.GAME_OVER;
+    const ended = finished || gameOver;
     const displayDistance = race.currentDistance;
     const remaining = Math.max(0, race.goalDistance - displayDistance);
     const progress = Math.min(100, Math.max(0, displayDistance / race.goalDistance * 100));
-    raceTimeEl.textContent = formatRaceTime(finished ? race.finalTimeMs : race.elapsedMs);
+    raceTimeEl.textContent = formatRaceTime(ended ? race.finalTimeMs : race.elapsedMs);
     toGoEl.textContent = `${remaining.toFixed(1)} m`;
     bestTimeEl.textContent = formatRaceTime(race.bestTimeMs);
     bestDistanceEl.textContent = `${race.bestDistance.toFixed(2)} m`;
@@ -193,21 +200,33 @@
     raceProgress.setAttribute("aria-valuenow", String(Math.round(finished ? 100 : progress)));
     recordStatus.textContent = race.recordValid ? "VALID RUN" : `DEBUG RUN - ${race.invalidReasons.join(" / ")}`;
     recordStatus.classList.toggle("invalid", !race.recordValid);
-    raceMessage.textContent = finished ? "GOAL!" : label;
+    raceMessage.textContent = finished ? "GOAL!" : gameOver ? "GAME OVER" : label;
     raceOverlay.classList.toggle("go", label === "GO!");
     raceOverlay.classList.toggle("finished", finished);
+    raceOverlay.classList.toggle("game-over", gameOver);
     stage.classList.toggle("race-go", label === "GO!");
     stage.classList.toggle("race-finished", finished);
+    stage.classList.toggle("race-game-over", gameOver);
     if (race.state === QWOPRace.RACE_STATE.COUNTDOWN && label && label !== lastCountdownLabel) {
       emitRaceEvent("countdownTick", { label });
     }
     lastCountdownLabel = label;
-    if (finished) {
+    if (ended) {
       resultDifficulty.textContent = `${selectedDifficulty} / ${QWOPDifficulty.DIFFICULTY_PRESETS[selectedDifficulty].label}`;
+      resultDistance.textContent = `${race.currentDistance.toFixed(2)} m`;
       resultTime.textContent = formatRaceTime(race.finalTimeMs);
       resultBest.textContent = formatRaceTime(race.bestTimeMs);
       resultBestDistance.textContent = `${race.bestDistance.toFixed(2)} m`;
-      if (!race.recordValid) {
+      if (gameOver && !race.recordValid) {
+        resultComparison.textContent = "GAME OVER";
+        resultFlags.textContent = "DEBUG RUN\nRECORD NOT SAVED";
+      } else if (gameOver && race.newDistanceBest) {
+        resultComparison.textContent = "NEW DISTANCE BEST!";
+        resultFlags.textContent = trainingUsed ? "TRAINING USED" : "";
+      } else if (gameOver) {
+        resultComparison.textContent = "RUN ENDED";
+        resultFlags.textContent = trainingUsed ? "TRAINING USED" : "";
+      } else if (!race.recordValid) {
         resultComparison.textContent = "";
         resultFlags.textContent = "DEBUG RUN\nRECORD NOT SAVED";
       } else if (race.newBest && race.firstFinish) {
@@ -224,9 +243,10 @@
       resultComparison.textContent = "";
       resultFlags.textContent = "";
     }
-    raceOverlay.hidden = !finished && !label;
-    raceResult.hidden = !finished;
-    runAgainButton.hidden = !finished;
+    raceOverlay.hidden = !ended && !label;
+    raceResult.hidden = !ended;
+    runAgainButton.hidden = !ended;
+    runAgainButton.textContent = gameOver ? "RETRY" : "RUN AGAIN";
     difficultyPanel.hidden = race.state !== QWOPRace.RACE_STATE.READY;
     if (!raceNotice.hidden && now >= raceNoticeUntil) raceNotice.hidden = true;
   }
@@ -253,6 +273,31 @@
     if (event.newBest) emitRaceEvent("newBest", { timeMs: race.finalTimeMs, previousMs: race.previousBestTimeMs });
     updateRaceUI(now);
     return event;
+  }
+
+  function updateGameOver(now, delta) {
+    if (race.state !== QWOPRace.RACE_STATE.RUNNING) {
+      gameOverGuard.reset();
+      return false;
+    }
+    if (physicsTest.mode || armFormTest.active || armConnectionTest.active || elbowMatrixTest.active) {
+      gameOverGuard.reset();
+      return false;
+    }
+    const data = physics.diagnostics();
+    const candidate = data.posture === "DOWN" || data.groundContacts.head || data.groundContacts.torso;
+    if (!gameOverGuard.update(candidate, delta)) return false;
+    const event = race.gameOver(now, raceDistance());
+    if (!event.gameOver) return false;
+    finishRace();
+    emitRaceEvent("gameOver", {
+      distance: race.currentDistance,
+      timeMs: race.finalTimeMs,
+      valid: race.recordValid,
+      newDistanceBest: race.newDistanceBest
+    });
+    updateRaceUI(now);
+    return true;
   }
 
   const parameterSpec = {
@@ -327,7 +372,7 @@
       beginCountdown();
       return;
     }
-    if ((key === "enter" || key === " ") && race.state === QWOPRace.RACE_STATE.FINISHED) {
+    if ((key === "enter" || key === " ") && [QWOPRace.RACE_STATE.FINISHED, QWOPRace.RACE_STATE.GAME_OVER].includes(race.state)) {
       event.preventDefault();
       retry();
       return;
@@ -803,6 +848,7 @@
     lastCountdownLabel = "";
     raceNoticeUntil = 0;
     raceNotice.hidden = true;
+    gameOverGuard.reset();
     raceWorldOriginX = physics.bodies.torso.position.x;
     if (raceTestMode && options.autoStart !== false) {
       race.startCountdown(now);
@@ -1062,7 +1108,7 @@
     ctx.fillStyle = "#163044";
     ctx.font = "800 11px monospace";
     const courseStartX = raceWorldOriginX;
-    const goalX = courseStartX + race.goalDistance * QWOPPhysics.SCALE;
+    const goalX = courseStartX + raceMetersToPhysicalDelta(race.goalDistance);
     const startFlashing = race.state === QWOPRace.RACE_STATE.RUNNING && performance.now() < race.goVisibleUntil;
     ctx.fillStyle = startFlashing && Math.floor(performance.now() / 100) % 2 ? "#ff2a63" : "#163044";
     ctx.font = "1000 14px monospace";
@@ -1079,7 +1125,7 @@
     ctx.stroke();
     ctx.fillText("FORWARD", courseStartX + 51, 435);
     for (let meter = -50; meter <= 100; meter += 5) {
-      const x = courseStartX + meter * QWOPPhysics.SCALE;
+      const x = courseStartX + raceMetersToPhysicalDelta(meter);
       const featured = meter === 0 || meter === 50 || meter === 100;
       ctx.fillStyle = featured ? "#ff2a63" : "#163044";
       ctx.fillRect(x, featured ? 473 : 481, featured ? 4 : 2, featured ? 16 : 8);
@@ -1176,6 +1222,7 @@
     updateArmConnectionTest(delta);
     updatePhysicsTest(delta);
     updateRace(now);
+    updateGameOver(now, delta);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const desiredCamera = physics.bodies.torso.position.x - (width / viewScale) * 0.38;
@@ -1201,7 +1248,7 @@
       snapshot: () => race.snapshot(),
       forceDistance: distance => updateRace(performance.now(), distance),
       placeRunnerAt: distance => {
-        const targetX = raceWorldOriginX + distance * QWOPPhysics.SCALE;
+        const targetX = raceWorldOriginX + raceMetersToPhysicalDelta(distance);
         const offsetX = targetX - physics.bodies.torso.position.x;
         Object.values(physics.bodies).forEach(body => Matter.Body.translate(body, { x: offsetX, y: 0 }));
         cameraX = targetX - (canvas.clientWidth / viewScale) * 0.38;
@@ -1209,7 +1256,7 @@
       },
       cameraSnapshot: () => ({
         cameraX,
-        goalScreenX: (raceWorldOriginX + race.goalDistance * QWOPPhysics.SCALE - cameraX) * viewScale,
+        goalScreenX: (raceWorldOriginX + raceMetersToPhysicalDelta(race.goalDistance) - cameraX) * viewScale,
         width: canvas.clientWidth
       }),
       difficultySnapshot: () => ({
@@ -1218,10 +1265,18 @@
         experiments: physics.diagnostics().experiments,
         panelHidden: difficultyPanel.hidden
       }),
+      setDifficultyAssists: assists => physics.setDifficultyAssists(assists),
       invalidate: reason => invalidateRace(reason || "TEST DEBUG"),
       ready: () => retry({ autoStart: false }),
       selectDifficulty,
       beginCountdown,
+      triggerGameOver: distance => {
+        const event = race.gameOver(performance.now(), distance === undefined ? raceDistance() : distance);
+        if (event.gameOver) finishRace();
+        updateRaceUI(performance.now());
+        return event;
+      },
+      gameOverGraceMs: QWOPRace.DEFAULT_GAME_OVER_GRACE_MS,
       retry
     };
   }

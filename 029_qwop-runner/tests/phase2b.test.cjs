@@ -7,7 +7,7 @@ const path = require("node:path");
 global.window = global;
 global.Matter = require("../../022_pythagora-lab/vendor/matter.min.js");
 require("../physics.js");
-const { RaceController, RACE_STATE, STORAGE_KEYS } = require("../race.js");
+const { RaceController, RACE_STATE, STORAGE_KEYS, DISTANCE_SCALE } = require("../race.js");
 const { RunnerPhysics, DEMO_FORWARD_SEQUENCE, SCALE } = global.QWOPPhysics;
 
 class MemoryStorage {
@@ -81,16 +81,25 @@ let previousDistance = 0;
 let maximumFrameJump = 0;
 let cycles = 0;
 let reached100m = false;
-for (; cycles < 600 && !reached100m; cycles += 1) {
+let selectedScaleTimeMs = null;
+const scaleReachTimesMs = {};
+const comparedScales = [1.5, 2, 2.5, 3];
+for (; cycles < 600 && Object.keys(scaleReachTimesMs).length < comparedScales.length; cycles += 1) {
   for (const phase of DEMO_FORWARD_SEQUENCE) {
     setKeys(phase.keys);
     const frames = Math.round(phase.duration / frame);
     for (let index = 0; index < frames; index += 1) {
       physics.step(frame);
       simulatedMs += frame;
-      const distance = (physics.bodies.torso.position.x - startX) / SCALE;
+      const distance = (physics.bodies.torso.position.x - startX) / SCALE * DISTANCE_SCALE;
       maximumFrameJump = Math.max(maximumFrameJump, Math.abs(distance - previousDistance));
       previousDistance = distance;
+      const physicalDistance = (physics.bodies.torso.position.x - startX) / SCALE;
+      for (const scale of comparedScales) {
+        if (scaleReachTimesMs[scale] === undefined && physicalDistance * scale >= 100) {
+          scaleReachTimesMs[scale] = simulatedMs;
+        }
+      }
       for (const body of Object.values(physics.bodies)) {
         assert(Number.isFinite(body.position.x) && Number.isFinite(body.position.y), "body position remains finite");
         assert(Number.isFinite(body.velocity.x) && Number.isFinite(body.velocity.y), "body velocity remains finite");
@@ -98,14 +107,17 @@ for (; cycles < 600 && !reached100m; cycles += 1) {
       }
       assert.equal(physics.constraints.length, constraintCount, "all constraints remain present");
       reached100m = distance >= 100;
-      if (reached100m) break;
+      if (reached100m && selectedScaleTimeMs === null) selectedScaleTimeMs = simulatedMs;
     }
-    if (reached100m) break;
   }
 }
 setKeys([]);
 assert.equal(reached100m, true, `recommended C demo did not reach 100m; ended at ${previousDistance.toFixed(2)}m`);
-assert(maximumFrameJump < 0.2, `distance jumped ${maximumFrameJump.toFixed(3)}m in one frame`);
+assert.equal(Object.keys(scaleReachTimesMs).length, comparedScales.length, "all distance scales reach 100m");
+assert(scaleReachTimesMs[1.5] > scaleReachTimesMs[2]);
+assert(scaleReachTimesMs[2] > scaleReachTimesMs[2.5]);
+assert(scaleReachTimesMs[2.5] > scaleReachTimesMs[3]);
+assert(maximumFrameJump < 0.5, `distance jumped ${maximumFrameJump.toFixed(3)}m in one frame`);
 const diagnostics = physics.diagnostics();
 for (const side of ["left", "right"]) {
   for (const gap of Object.values(diagnostics.armForm.connections[side].gaps)) {
@@ -118,12 +130,12 @@ longRace.startCountdown(0);
 longRace.update(0, 0);
 longRace.invalidate("DEMO FORWARD");
 let lastElapsed = 0;
-for (let time = frame; time < simulatedMs; time += 1000) {
-  longRace.update(time, Math.min(99.9, time / simulatedMs * 100));
+for (let time = frame; time < selectedScaleTimeMs; time += 1000) {
+  longRace.update(time, Math.min(99.9, time / selectedScaleTimeMs * 100));
   assert(longRace.elapsedMs >= lastElapsed, "timer never runs backward");
   lastElapsed = longRace.elapsedMs;
 }
-longRace.update(simulatedMs, 100);
+longRace.update(selectedScaleTimeMs, 100);
 assert.equal(longRace.state, RACE_STATE.FINISHED);
 assert.equal(longRace.bestTimeMs, null, "100m demo time is never saved as BEST");
 
@@ -144,10 +156,13 @@ assert(cssSource.includes("@media (orientation:portrait)"));
 
 console.log(JSON.stringify({
   phase: "2B",
-  demo100mSeconds: simulatedMs / 1000,
+  distanceScale: DISTANCE_SCALE,
+  demo100mSeconds: selectedScaleTimeMs / 1000,
+  scaleComparisonSeconds: Object.fromEntries(comparedScales.map(scale => [scale, scaleReachTimesMs[scale] / 1000])),
   cycles,
-  finalDistanceMeters: previousDistance,
+  finalDistanceMeters: 100,
   maximumFrameJumpMeters: maximumFrameJump,
+  physicalDistanceMeters: 100 / DISTANCE_SCALE,
   posture: diagnostics.posture
 }));
 console.log("Phase 2B tests passed: race presentation, milestones, result comparison, run again, long-run stability, and responsive UI hooks");

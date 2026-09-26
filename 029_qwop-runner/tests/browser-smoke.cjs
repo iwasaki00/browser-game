@@ -184,6 +184,7 @@ async function viewport(name, width, height) {
   await wait(180);
 
   await evaluate('(() => { for (const [selector, value] of [[".balance-preset", "1"], [".ankle-preset", "1"], [".arm-swing-preset", "1"]]) { const select = document.querySelector(selector); select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); } })()');
+  await evaluate("window.__QWOP_RACE_TEST__.setDifficultyAssists({ neutralAssist: 1, fallAssist: 1 })");
   await evaluate("document.querySelector('.drift-test').click()");
   assert.equal(await evaluate("document.querySelector('.start-demo').disabled && document.querySelector('.recovery-test').disabled"), true);
   await evaluate("document.dispatchEvent(new KeyboardEvent('keydown', { key: 'q', bubbles: true }))");
@@ -364,6 +365,24 @@ async function viewport(name, width, height) {
   assert.equal(await evaluate("document.querySelector('#toGo').textContent"), "100.0 m");
   assert.equal(await evaluate("document.querySelector('#raceProgressFill').style.width"), "0%");
 
+  await evaluate("window.__QWOP_RACE_TEST__.ready(); window.__QWOP_RACE_TEST__.selectDifficulty('NORMAL'); window.__QWOP_RACE_TEST__.beginCountdown()");
+  await wait(80);
+  const bestTimeBeforeGameOver = await evaluate("window.__QWOP_RACE_TEST__.snapshot().bestTimeMs");
+  await evaluate("window.__QWOP_RACE_TEST__.triggerGameOver(38.42)");
+  const gameOverUI = await evaluate('({ race: window.__QWOP_RACE_TEST__.snapshot(), message: document.querySelector("#raceMessage").textContent, result: document.querySelector("#raceResult").textContent, button: document.querySelector("#runAgainButton").textContent })');
+  assert.equal(gameOverUI.race.state, "GAME_OVER");
+  assert.equal(gameOverUI.race.currentDistance, 38.42);
+  assert.equal(gameOverUI.race.bestTimeMs, bestTimeBeforeGameOver, "GAME OVER changed BEST TIME");
+  assert.equal(gameOverUI.message, "GAME OVER");
+  assert(gameOverUI.result.includes("38.42 m"));
+  assert(gameOverUI.result.includes("BEST DISTANCE"));
+  assert.equal(gameOverUI.button, "RETRY");
+  const gameOverFrozenTime = gameOverUI.race.finalTimeMs;
+  await wait(120);
+  assert.equal(await evaluate("window.__QWOP_RACE_TEST__.snapshot().finalTimeMs"), gameOverFrozenTime, "GAME OVER timer did not freeze");
+  assert.equal(await evaluate("window.__QWOP_RACE_TEST__.snapshot().inputEnabled"), false);
+  await screenshot("final-game-over-normal.png");
+
   const difficultyResults = [];
   for (const difficulty of ["EASY", "NORMAL", "HARD"]) {
     await evaluate(`window.__QWOP_RACE_TEST__.ready(); window.__QWOP_RACE_TEST__.selectDifficulty("${difficulty}")`);
@@ -395,13 +414,13 @@ async function viewport(name, width, height) {
     assert.equal(await evaluate("document.querySelector('#resultFlags').textContent"), "DEBUG RUN\nRECORD NOT SAVED");
     difficultyResults.push({ difficulty, bestTimeMs: savedBest });
   }
-  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.EASY.v1'))"), true);
-  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.NORMAL.v1'))"), true);
-  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.HARD.v1'))"), true);
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.EASY.v2'))"), true);
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.NORMAL.v2'))"), true);
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.HARD.v2'))"), true);
   await screenshot("final-difficulty-hard-debug.png");
   console.log("FINAL difficulty browser results", JSON.stringify(difficultyResults));
   assert.deepEqual(errors, []);
-  console.log("QWOP Runner Ver 1.0.0 FINAL browser tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
+  console.log("QWOP Runner Ver 1.1.0 FINAL browser tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

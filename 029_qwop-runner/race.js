@@ -5,15 +5,19 @@
     READY: "READY",
     COUNTDOWN: "COUNTDOWN",
     RUNNING: "RUNNING",
-    FINISHED: "FINISHED"
+    FINISHED: "FINISHED",
+    GAME_OVER: "GAME_OVER"
   });
+  const RECORD_VERSION = 2;
+  const DISTANCE_SCALE = 2.5;
+  const DEFAULT_GAME_OVER_GRACE_MS = 250;
   const STORAGE_KEYS = Object.freeze({
-    bestTime: "qwopRunner.bestTimeMs.v1",
-    bestDistance: "qwopRunner.bestDistanceM.v1"
+    bestTime: `qwopRunner.bestTimeMs.v${RECORD_VERSION}`,
+    bestDistance: `qwopRunner.bestDistanceM.v${RECORD_VERSION}`
   });
   const storageKeysFor = category => category ? Object.freeze({
-    bestTime: `qwopRunner.bestTimeMs.${String(category).toUpperCase()}.v1`,
-    bestDistance: `qwopRunner.bestDistanceM.${String(category).toUpperCase()}.v1`
+    bestTime: `qwopRunner.bestTimeMs.${String(category).toUpperCase()}.v${RECORD_VERSION}`,
+    bestDistance: `qwopRunner.bestDistanceM.${String(category).toUpperCase()}.v${RECORD_VERSION}`
   }) : STORAGE_KEYS;
   const DEFAULT_COUNTDOWN = Object.freeze({
     ready: 400,
@@ -25,6 +29,22 @@
 
   const finiteNumber = value => value === null || value === undefined || value === ""
     ? null : Number.isFinite(Number(value)) ? Number(value) : null;
+
+  class FallGuard {
+    constructor(graceMs = DEFAULT_GAME_OVER_GRACE_MS) {
+      this.graceMs = graceMs;
+      this.elapsedMs = 0;
+    }
+
+    reset() {
+      this.elapsedMs = 0;
+    }
+
+    update(candidate, deltaMs) {
+      this.elapsedMs = candidate ? this.elapsedMs + Math.max(0, deltaMs) : 0;
+      return this.elapsedMs >= this.graceMs;
+    }
+  }
 
   class RaceController {
     constructor(options = {}) {
@@ -92,6 +112,7 @@
       this.firstFinish = false;
       this.halfwayReached = false;
       this.finalTenReached = false;
+      this.newDistanceBest = false;
       this.goVisibleUntil = 0;
       this.resetTime = now;
       return this.snapshot();
@@ -162,6 +183,18 @@
       return { started: false, finished: true, newBest: this.newBest };
     }
 
+    gameOver(now, distance = this.currentDistance) {
+      if (this.state !== RACE_STATE.RUNNING) return { gameOver: false, newDistanceBest: false };
+      this.currentDistance = finiteNumber(distance) ?? this.currentDistance;
+      this.maxDistance = Math.max(this.maxDistance, this.currentDistance);
+      this.elapsedMs = Math.max(0, now - this.raceStartTime);
+      this.finalTimeMs = this.elapsedMs;
+      this.state = RACE_STATE.GAME_OVER;
+      this.updateBestDistance(this.maxDistance);
+      this.newDistanceBest = this.recordValid && this.bestDistance > this.bestDistanceAtStart;
+      return { gameOver: true, newDistanceBest: this.newDistanceBest };
+    }
+
     update(now, distance) {
       const event = { started: false, finished: false, halfway: false, finalTen: false, newBest: false };
       if (this.state === RACE_STATE.COUNTDOWN && now - this.countdownStartTime >= this.countdownRunAt()) {
@@ -192,6 +225,7 @@
     snapshot() {
       return {
         state: this.state,
+        inputEnabled: this.inputEnabled,
         recordCategory: this.recordCategory,
         elapsedMs: this.elapsedMs,
         finalTimeMs: this.finalTimeMs,
@@ -205,13 +239,17 @@
         previousBestTimeMs: this.previousBestTimeMs,
         improvementMs: this.improvementMs,
         firstFinish: this.firstFinish,
+        newDistanceBest: this.newDistanceBest,
         halfwayReached: this.halfwayReached,
         finalTenReached: this.finalTenReached
       };
     }
   }
 
-  const api = { RaceController, RACE_STATE, STORAGE_KEYS, storageKeysFor, DEFAULT_COUNTDOWN };
+  const api = {
+    RaceController, FallGuard, RACE_STATE, STORAGE_KEYS, storageKeysFor, DEFAULT_COUNTDOWN,
+    RECORD_VERSION, DISTANCE_SCALE, DEFAULT_GAME_OVER_GRACE_MS
+  };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (typeof window !== "undefined") window.QWOPRace = api;
 })();

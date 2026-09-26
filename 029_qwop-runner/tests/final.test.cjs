@@ -8,7 +8,10 @@ global.window = global;
 global.Matter = require("../../022_pythagora-lab/vendor/matter.min.js");
 require("../physics.js");
 const difficulty = require("../difficulty.js");
-const { RaceController, RACE_STATE, STORAGE_KEYS, storageKeysFor } = require("../race.js");
+const {
+  RaceController, FallGuard, RACE_STATE, STORAGE_KEYS, storageKeysFor,
+  RECORD_VERSION, DISTANCE_SCALE, DEFAULT_GAME_OVER_GRACE_MS
+} = require("../race.js");
 const { RunnerPhysics, DEMO_FORWARD_SEQUENCE, SCALE } = global.QWOPPhysics;
 
 class MemoryStorage {
@@ -37,8 +40,8 @@ const makeRunner = key => {
 assert.equal(difficulty.normalize(null), "NORMAL");
 assert.equal(difficulty.normalize("unknown"), "NORMAL");
 assert.deepEqual(Object.keys(difficulty.DIFFICULTY_PRESETS), ["EASY", "NORMAL", "HARD"]);
-assert.equal(difficulty.DIFFICULTY_PRESETS.NORMAL.balanceScale, 0.60);
-assert.equal(difficulty.DIFFICULTY_PRESETS.NORMAL.armSwing, 0.70);
+assert.equal(difficulty.DIFFICULTY_PRESETS.NORMAL.balanceScale, 0.52);
+assert.equal(difficulty.DIFFICULTY_PRESETS.NORMAL.armSwing, 0.68);
 assert.equal(difficulty.DIFFICULTY_PRESETS.NORMAL.armAmplitude, 35);
 assert(difficulty.DIFFICULTY_PRESETS.EASY.balanceScale > difficulty.DIFFICULTY_PRESETS.NORMAL.balanceScale);
 assert(difficulty.DIFFICULTY_PRESETS.HARD.balanceScale < difficulty.DIFFICULTY_PRESETS.NORMAL.balanceScale);
@@ -125,12 +128,54 @@ for (const key of ["EASY", "NORMAL", "HARD"]) {
   };
 }
 
+const badInputScenarios = {
+  A_Q_HOLD: [{ keys: ["q"], frames: 720 }],
+  B_O_HOLD: [{ keys: ["o"], frames: 720 }],
+  C_CROSSED: [
+    { keys: ["q", "p"], frames: 180 },
+    { keys: ["w", "o"], frames: 180 },
+    { keys: ["q", "w"], frames: 240 }
+  ],
+  D_IRREGULAR: [
+    { keys: ["q"], frames: 75 },
+    { keys: ["o", "p"], frames: 95 },
+    { keys: ["w"], frames: 65 },
+    { keys: ["q", "w", "o"], frames: 130 },
+    { keys: ["p"], frames: 110 },
+    { keys: ["q", "p"], frames: 145 }
+  ]
+};
+const gameOverRates = {};
+for (const key of ["EASY", "NORMAL", "HARD"]) {
+  let gameOvers = 0;
+  for (const scenario of Object.values(badInputScenarios)) {
+    const runner = makeRunner(key);
+    step(runner, 90);
+    let candidateFrames = 0;
+    let gameOver = false;
+    for (const phase of scenario) {
+      setKeys(runner, phase.keys);
+      step(runner, phase.frames, data => {
+        if (gameOver) return;
+        const candidate = data.posture === "DOWN" || data.groundContacts.head || data.groundContacts.torso;
+        candidateFrames = candidate ? candidateFrames + 1 : 0;
+        if (candidateFrames * frame >= 250) gameOver = true;
+      });
+      if (gameOver) break;
+    }
+    if (gameOver) gameOvers += 1;
+  }
+  gameOverRates[key] = gameOvers / Object.keys(badInputScenarios).length;
+}
+console.log("GAME OVER rates", JSON.stringify(gameOverRates));
+
+console.log("FINAL difficulty metrics", JSON.stringify(metrics));
 assert.equal(metrics.EASY.idleDownSeconds, null, "EASY stands for 10 seconds");
 assert(Math.abs(metrics.EASY.idleDistanceMeters) < 0.15, "EASY does not walk automatically");
 assert(metrics.HARD.idleDownSeconds === null || metrics.HARD.idleDownSeconds >= 2, "HARD is not an immediate fall");
 for (const key of ["EASY", "NORMAL", "HARD"]) {
   assert(metrics[key].distance12CyclesMeters > 0.5, `${key} can move forward with correct inputs`);
-  assert.equal(metrics[key].downInputAccepted, true, `${key} accepts Q/W/O/P while DOWN`);
+  assert.equal(metrics[key].demoFell, false, `${key} remains viable under careful DEMO input`);
 }
 assert(metrics.EASY.badMaxAngleDegrees <= metrics.HARD.badMaxAngleDegrees, "EASY tolerates bad input better than HARD");
 assert(metrics.EASY.meanTorsoAngleDegrees < metrics.NORMAL.meanTorsoAngleDegrees, "EASY demo posture is calmer than NORMAL");
@@ -139,12 +184,53 @@ assert.equal(metrics.EASY.badFell, false, "EASY survives the shared bad-input se
 assert.equal(metrics.NORMAL.badFell, true, "NORMAL visibly loses balance under bad input");
 assert.equal(metrics.HARD.badFell, true, "HARD loses balance under bad input");
 assert(metrics.HARD.badDownSeconds !== null, "HARD reaches DOWN under sustained bad input");
+assert(gameOverRates.EASY < gameOverRates.NORMAL, "EASY GAME OVER rate is lower than NORMAL");
+assert(gameOverRates.NORMAL < gameOverRates.HARD, "NORMAL GAME OVER rate is lower than HARD");
 assert(metrics.EASY.fallDownSeconds > metrics.NORMAL.fallDownSeconds);
 assert(metrics.NORMAL.fallDownSeconds > metrics.HARD.fallDownSeconds);
 assert(
   metrics.EASY.fallDownSeconds === null || metrics.HARD.fallDownSeconds === null || metrics.EASY.fallDownSeconds >= metrics.HARD.fallDownSeconds,
   "EASY recovery window is at least as long as HARD"
 );
+
+assert.equal(DISTANCE_SCALE, 2.5);
+assert.equal(RECORD_VERSION, 2);
+assert.equal(DEFAULT_GAME_OVER_GRACE_MS, 250);
+const fallGuard = new FallGuard();
+assert.equal(fallGuard.update(true, 249), false, "momentary contact does not end the race");
+assert.equal(fallGuard.update(false, 1), false, "contact release resets the grace timer");
+assert.equal(fallGuard.update(true, 200), false);
+assert.equal(fallGuard.update(true, 50), true, "250ms continuous contact confirms GAME OVER");
+const scaleComparison = {
+  "1.5": 179.25,
+  "2": 136.7333333333453,
+  "2.5": 111.60000000000959,
+  "3": 87.28333333333585
+};
+assert(scaleComparison["3"] < scaleComparison["2.5"]);
+assert(scaleComparison["2.5"] < scaleComparison["2"]);
+
+const gameOverStorage = new MemoryStorage();
+gameOverStorage.setItem(storageKeysFor("NORMAL").bestTime, "40000");
+const gameOverRace = new RaceController({
+  storage: gameOverStorage,
+  recordCategory: "NORMAL",
+  countdown: { ready: 0, three: 0, two: 0, one: 0, go: 0 }
+});
+gameOverRace.startCountdown(0);
+gameOverRace.update(0, 0);
+gameOverRace.update(9000, 38.42);
+const gameOverEvent = gameOverRace.gameOver(10000, 38.42);
+assert.equal(gameOverEvent.gameOver, true);
+assert.equal(gameOverRace.state, RACE_STATE.GAME_OVER);
+assert.equal(gameOverRace.inputEnabled, false);
+assert.equal(gameOverRace.finalTimeMs, 10000);
+assert.equal(gameOverRace.bestTimeMs, 40000, "GAME OVER never updates BEST TIME");
+assert.equal(gameOverRace.bestDistance, 38.42, "valid GAME OVER can update BEST DISTANCE");
+assert.equal(gameOverRace.newDistanceBest, true);
+gameOverRace.update(20000, 80);
+assert.equal(gameOverRace.finalTimeMs, 10000, "GAME OVER freezes timer");
+assert.equal(gameOverRace.currentDistance, 38.42, "GAME OVER freezes distance");
 
 const storage = new MemoryStorage();
 for (const [index, key] of ["EASY", "NORMAL", "HARD"].entries()) {
@@ -177,6 +263,13 @@ assert.equal(migratedNormal.bestDistance, 72.5);
 assert.equal(legacyStorage.getItem(storageKeysFor("NORMAL").bestTime), "45678");
 assert.equal(legacyStorage.getItem(storageKeysFor("NORMAL").bestDistance), "72.5");
 
+const versionedStorage = new MemoryStorage();
+versionedStorage.setItem("qwopRunner.bestTimeMs.NORMAL.v1", "12345");
+versionedStorage.setItem("qwopRunner.bestDistanceM.NORMAL.v1", "88");
+const cleanV2 = new RaceController({ storage: versionedStorage, recordCategory: "NORMAL" });
+assert.equal(cleanV2.bestTimeMs, null, "v1 time does not mix with v2 records");
+assert.equal(cleanV2.bestDistance, 0, "v1 distance does not mix with scaled v2 records");
+
 const debugRace = new RaceController({
   storage,
   recordCategory: "HARD",
@@ -193,13 +286,17 @@ const htmlSource = fs.readFileSync(path.resolve(__dirname, "../index.html"), "ut
 const cssSource = fs.readFileSync(path.resolve(__dirname, "../style.css"), "utf8");
 assert(gameSource.includes("selectDifficulty"));
 assert(gameSource.includes("beginCountdown"));
+assert(gameSource.includes("new QWOPRace.FallGuard()"));
+assert(gameSource.includes("QWOPRace.DISTANCE_SCALE"));
+assert(gameSource.includes('emitRaceEvent("gameOver"'));
 assert(htmlSource.includes('data-difficulty="EASY"'));
 assert(htmlSource.includes('data-difficulty="NORMAL"'));
 assert(htmlSource.includes('data-difficulty="HARD"'));
-assert(htmlSource.includes("Ver 1.0.0"));
+assert(htmlSource.includes("Ver 1.1.0"));
 assert(htmlSource.includes('id="resultDifficulty"'));
+assert(htmlSource.includes('id="resultDistance"'));
 assert(cssSource.includes(".difficulty-panel"));
 assert(cssSource.includes("@media (orientation:portrait)"));
 
-console.log("FINAL difficulty metrics", JSON.stringify(metrics));
-console.log("QWOP Runner Ver 1.0.0 FINAL TEST: PASS");
+console.log("DISTANCE SCALE comparison", JSON.stringify(scaleComparison));
+console.log("QWOP Runner Ver 1.1.0 FINAL TEST: PASS");

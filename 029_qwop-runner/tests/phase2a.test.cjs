@@ -41,7 +41,7 @@ assert.equal(race.maxDistance, 12.5, "maximum forward distance does not fall whe
 assert.equal(race.bestDistance, 12.5);
 assert.equal(Number(storage.getItem(STORAGE_KEYS.bestDistance)), 12.5);
 assert.equal(race.state, RACE_STATE.RUNNING, "falling or reversing does not stop a race");
-assert.equal(race.inputEnabled, true, "a running race keeps input enabled, including after a fall");
+assert.equal(race.inputEnabled, true, "a running race keeps input enabled until GAME OVER is explicitly confirmed");
 
 race.update(2399, 99.999);
 assert.equal(race.state, RACE_STATE.RUNNING);
@@ -95,7 +95,7 @@ assert.equal(trainingRace.bestTimeMs, 1000);
 const gameSource = fs.readFileSync(path.resolve(__dirname, "../game.js"), "utf8");
 const htmlSource = fs.readFileSync(path.resolve(__dirname, "../index.html"), "utf8");
 const cssSource = fs.readFileSync(path.resolve(__dirname, "../style.css"), "utf8");
-assert(gameSource.includes("goalX = courseStartX + race.goalDistance * QWOPPhysics.SCALE"));
+assert(gameSource.includes("goalX = courseStartX + raceMetersToPhysicalDelta(race.goalDistance)"));
 assert(gameSource.includes("for (let meter = -50; meter <= 100; meter += 5)"));
 assert(gameSource.includes('invalidateRace("RECOVERY TEST")'));
 assert(gameSource.includes('invalidateRace("ARM FORM TEST")'));

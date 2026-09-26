@@ -1,6 +1,6 @@
-# QWOP Runner Ver 1.0.0
+# QWOP Runner Ver 1.1.0
 
-Q/W/O/Pの4キーで左右の股関節と膝を個別に動かす、横視点の物理100mランニングゲームです。転倒してもレースは続き、後退や這った状態でのゴールも可能です。
+Q/W/O/Pの4キーで左右の股関節と膝を個別に動かす、横視点の物理100mランニングゲームです。転倒姿勢または頭・胴体の接地が250ms継続するとGAME OVERになります。
 
 ## 起動方法
 
@@ -18,8 +18,8 @@ python -m http.server 8000
 2. 必要ならTRAININGを有効にします。
 3. START 100mを押します。
 4. READY → 3 → 2 → 1 → GO! の後、100mを走ります。
-5. GOAL後にTIME、難易度別BEST、BEST DISTANCEを確認します。
-6. RUN AGAINでREADYへ戻ります。
+5. 100m到達時はGOAL、転倒時はGAME OVER画面で結果を確認します。
+6. RUN AGAINまたはRETRYでREADYへ戻ります。
 
 ## 操作
 
@@ -27,7 +27,7 @@ python -m http.server 8000
 - W: 左股関節を前、右股関節を後ろへ動かす
 - O: 右膝を曲げ、左膝を伸ばす
 - P: 左膝を曲げ、右膝を伸ばす
-- Enter / Space: READYからスタート、またはGOAL後にRUN AGAIN
+- Enter / Space: READYからスタート、GOALまたはGAME OVER後に再挑戦
 
 キーボードと画面下部のタッチボタンに対応しています。カウントダウン中の入力は無効で、WAITが表示されます。
 
@@ -38,12 +38,12 @@ python -m http.server 8000
 | 難易度 | Balance | Ankle | Neutral Assist | Fall Assist | Arm Swing | Amplitude |
 |---|---:|---:|---:|---:|---:|---:|
 | EASY / 簡単 | 90% | 100% | 115% | 120% | 70% | 32° |
-| NORMAL / 普通 | 60% | 100% | 100% | 100% | 70% | 35° |
-| HARD / 難しい | 35% | 50% | 60% | 55% | 65% | 35° |
+| NORMAL / 普通 | 52% | 85% | 85% | 85% | 68% | 35° |
+| HARD / 難しい | 35% | 48% | 57% | 52% | 62% | 35° |
 
 - EASY: 姿勢補助が強く、操作練習向け。自動歩行や入力補完はありません。
-- NORMAL: Phase 1で確定した推奨C設定を基準にした標準QWOP体験です。
-- HARD: 姿勢・足首・中立姿勢補助が弱く、誤操作で転倒しやすいモードです。
+- NORMAL: 旧NORMALより姿勢・足首・中立姿勢補助を弱め、雑な長押しで崩れやすくしています。
+- HARD: NORMALより補助が明確に弱く、慎重な入力切替を要求します。
 
 初回はNORMALです。最後に選んだ難易度はlocalStorageへ保存されます。変更できるのはREADY中だけです。
 
@@ -55,9 +55,17 @@ TRAININGは次に押すキー、入力タイミング、GOOD/OK/MISSを表示し
 
 HUDにはDISTANCE、TO GO、TIME、難易度別BESTを表示します。50mでHALFWAY、90mでFINAL 10mを表示し、100mでタイマーと入力を停止します。進捗バー、STARTライン、10m目盛り、50m表示、フィニッシュラインを備えています。
 
+物理座標とレース距離は分離されています。物理X移動をメートルへ換算した後、共通の`DISTANCE_SCALE = 2.5`を適用します。EASY / NORMAL / HARDで倍率は共通であり、物理トルク、重力、摩擦には影響しません。
+
+## GAME OVER
+
+RUNNING中に頭または胴体の接地、もしくはPOSTURE = DOWNが250ms連続するとGAME OVERです。一瞬の接地、LEANING、FALLINGだけでは終了しません。成立時はタイマー、Q/W/O/P、TRAINING、DEMOを停止します。
+
+VALID走行ではGAME OVER地点までのBEST DISTANCEを更新できますが、BEST TIMEは更新しません。DEBUG診断中は自動GAME OVERを抑制し、DEBUG RUNの記録は保存しません。
+
 ## 記録
 
-BEST TIMEとBEST DISTANCEはEASY / NORMAL / HARD別にlocalStorageへ保存します。NEW BEST時は前回記録、新記録、差分を結果画面へ表示します。TRAININGはVALID、DEMOや自動DEBUGテストはINVALIDです。
+BEST TIMEとBEST DISTANCEはEASY / NORMAL / HARD別にlocalStorageへ保存します。Ver 1.1.0では距離換算変更に合わせて記録Versionを`v2`へ分離し、旧`v1`記録と混在させません。TRAININGはVALID、DEMOや自動DEBUGテストはINVALIDです。
 
 ## DEBUG
 
@@ -105,4 +113,4 @@ node 029_qwop-runner/tests/final.test.cjs
 node 029_qwop-runner/tests/browser-smoke.cjs
 ```
 
-FINAL TESTは3難易度の無操作、通常前進、誤操作、転倒、100m GOAL、難易度別記録、TRAINING、DEBUG RUN、縦横UIを検証します。
+FINAL TESTは3難易度の無操作、通常前進、4種の誤操作、GAME OVER率、250ms猶予、100m GOAL、距離倍率、難易度別v2記録、TRAINING、DEBUG RUN、縦横UIを検証します。
