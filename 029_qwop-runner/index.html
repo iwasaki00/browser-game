@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#07111f">
-  <title>RAGDOLL RUN</title>
+  <title>QWOP Runner Ver 1.0.0</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,6 +19,7 @@
       </div>
       <button id="debugButton" type="button" aria-pressed="false">DEBUG</button>
       <button id="retryButton" type="button">RETRY</button>
+      <span id="difficultyBadge" class="difficulty-badge">NORMAL</span>
     </header>
     <section class="stage" aria-label="物理ランニングゲーム">
       <canvas id="gameCanvas"></canvas>
@@ -26,10 +27,22 @@
         <span>0m</span><i><b id="raceProgressFill"></b></i><span>100m</span>
       </div>
       <div id="raceNotice" class="race-notice" aria-live="polite" hidden></div>
+      <section id="difficultyPanel" class="difficulty-panel" aria-label="難易度選択">
+        <b>DIFFICULTY</b>
+        <div>
+          <button type="button" data-difficulty="EASY">簡単<small>EASY</small></button>
+          <button type="button" data-difficulty="NORMAL">普通<small>NORMAL</small></button>
+          <button type="button" data-difficulty="HARD">難しい<small>HARD</small></button>
+        </div>
+        <p id="difficultyDescription"></p>
+        <button id="startRaceButton" type="button">START 100m</button>
+      </section>
       <div id="raceOverlay" class="race-overlay" aria-live="assertive">
         <b id="raceMessage">READY</b>
         <div id="raceResult" class="race-result" hidden>
+          <em>100m CHALLENGE</em>
           <div class="result-grid">
+            <span>DIFFICULTY <b id="resultDifficulty">NORMAL</b></span>
             <span>TIME <b id="resultTime">--.---</b></span>
             <span>BEST <b id="resultBest">--.---</b></span>
             <span>BEST DISTANCE <b id="resultBestDistance">0.00 m</b></span>
@@ -40,6 +53,7 @@
         <button id="runAgainButton" type="button" hidden>RUN AGAIN</button>
       </div>
       <div class="race-records"><b id="recordStatus">VALID RUN</b><span>BEST DISTANCE <strong id="bestDistance">0.00 m</strong></span></div>
+      <span class="version">Ver 1.0.0</span>
       <button id="trainingButton" class="training-toggle" type="button" aria-pressed="false">TRAINING</button>
       <section id="trainingPanel" class="training-panel" hidden aria-live="polite">
         <div class="training-title"><b>FORWARD TRAINING</b><span id="trainingFeedback">YOUR TURN</span></div>
@@ -68,6 +82,7 @@
   </main>
   <script src="../022_pythagora-lab/vendor/matter.min.js"></script>
   <script src="physics.js"></script>
+  <script src="difficulty.js"></script>
   <script src="training.js"></script>
   <script src="race.js"></script>
   <script src="game.js"></script>

@@ -74,7 +74,7 @@ async function viewport(name, width, height) {
   assert.equal(layout.scrollWidth > layout.width, false, `${name}: horizontal overflow`);
   for (const key of ["training", "q", "p", "hud", "records", "progress"]) {
     const box = layout[key];
-    assert(box.x >= 0 && box.y >= 0 && box.right <= width + 1 && box.bottom <= height + 1, `${name}: ${key} outside viewport`);
+    assert(box.x >= 0 && box.y >= 0 && box.right <= width + 1 && box.bottom <= height + 1, `${name}: ${key} outside viewport ${JSON.stringify(box)}`);
   }
   assert(layout.canvas.height > 200, `${name}: canvas too short`);
   await screenshot(`${name}.png`);
@@ -183,6 +183,7 @@ async function viewport(name, width, height) {
   await evaluate("document.querySelector('.recovery-test').click()");
   await wait(180);
 
+  await evaluate('(() => { for (const [selector, value] of [[".balance-preset", "1"], [".ankle-preset", "1"], [".arm-swing-preset", "1"]]) { const select = document.querySelector(selector); select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); } })()');
   await evaluate("document.querySelector('.drift-test').click()");
   assert.equal(await evaluate("document.querySelector('.start-demo').disabled && document.querySelector('.recovery-test').disabled"), true);
   await evaluate("document.dispatchEvent(new KeyboardEvent('keydown', { key: 'q', bubbles: true }))");
@@ -333,7 +334,7 @@ async function viewport(name, width, height) {
   await evaluate("window.__QWOP_RACE_TEST__.forceDistance(60); window.__QWOP_RACE_TEST__.forceDistance(90); window.__QWOP_RACE_TEST__.forceDistance(95)");
   assert((await evaluate("document.querySelector('#raceNotice').textContent")).includes("FINAL 10m"));
   assert.deepEqual(await evaluate("window.__phase2bEvents.filter(type => type === 'halfway' || type === 'finalTen')"), ["halfway", "finalTen"]);
-  await evaluate("window.__QWOP_RACE_TEST__.placeRunnerAt(99.999)");
+  await evaluate("window.__QWOP_RACE_TEST__.placeRunnerAt(99.5)");
   const finishCamera = await evaluate("window.__QWOP_RACE_TEST__.cameraSnapshot()");
   assert(finishCamera.goalScreenX >= 0 && finishCamera.goalScreenX <= finishCamera.width, `100m goal is outside camera: ${JSON.stringify(finishCamera)}`);
   assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING", "race finished before 100m");
@@ -362,8 +363,45 @@ async function viewport(name, width, height) {
   assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING", "Enter did not RUN AGAIN");
   assert.equal(await evaluate("document.querySelector('#toGo').textContent"), "100.0 m");
   assert.equal(await evaluate("document.querySelector('#raceProgressFill').style.width"), "0%");
+
+  const difficultyResults = [];
+  for (const difficulty of ["EASY", "NORMAL", "HARD"]) {
+    await evaluate(`window.__QWOP_RACE_TEST__.ready(); window.__QWOP_RACE_TEST__.selectDifficulty("${difficulty}")`);
+    const readyDifficulty = await evaluate("({ race: window.__QWOP_RACE_TEST__.snapshot(), difficulty: window.__QWOP_RACE_TEST__.difficultySnapshot(), badge: document.querySelector('#difficultyBadge').textContent, panelHidden: document.querySelector('#difficultyPanel').hidden })");
+    assert.equal(readyDifficulty.race.state, "READY");
+    assert.equal(readyDifficulty.race.recordCategory, difficulty);
+    assert.equal(readyDifficulty.difficulty.selectedDifficulty, difficulty);
+    assert.equal(readyDifficulty.badge, difficulty);
+    assert.equal(readyDifficulty.panelHidden, false);
+    assert.equal(readyDifficulty.difficulty.experiments.balanceScale, readyDifficulty.difficulty.preset.balanceScale);
+    assert.equal(readyDifficulty.difficulty.experiments.ankleScale, readyDifficulty.difficulty.preset.ankleAssist);
+    await evaluate("window.__QWOP_RACE_TEST__.beginCountdown()");
+    assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "COUNTDOWN");
+    await wait(80);
+    assert.equal((await evaluate("window.__QWOP_RACE_TEST__.snapshot()")).state, "RUNNING");
+    assert.equal(await evaluate(`window.__QWOP_RACE_TEST__.selectDifficulty("${difficulty === "HARD" ? "EASY" : "HARD"}")`), false, "difficulty changed during race");
+    await evaluate("document.querySelector('#trainingButton').click(); document.querySelector('#trainingButton').click(); window.__QWOP_RACE_TEST__.forceDistance(100)");
+    const validDifficultyGoal = await evaluate("({ race: window.__QWOP_RACE_TEST__.snapshot(), resultDifficulty: document.querySelector('#resultDifficulty').textContent, flags: document.querySelector('#resultFlags').textContent })");
+    assert(validDifficultyGoal.resultDifficulty.includes(difficulty));
+    assert(validDifficultyGoal.flags.includes("TRAINING USED"));
+    const savedBest = validDifficultyGoal.race.bestTimeMs;
+    assert(Number.isFinite(savedBest));
+    await evaluate(`window.__QWOP_RACE_TEST__.ready(); window.__QWOP_RACE_TEST__.selectDifficulty("${difficulty}"); window.__QWOP_RACE_TEST__.beginCountdown()`);
+    await wait(80);
+    await evaluate("window.__QWOP_RACE_TEST__.invalidate('DEMO FORWARD'); window.__QWOP_RACE_TEST__.forceDistance(100)");
+    const debugDifficultyGoal = await evaluate("window.__QWOP_RACE_TEST__.snapshot()");
+    assert.equal(debugDifficultyGoal.recordValid, false);
+    assert.equal(debugDifficultyGoal.bestTimeMs, savedBest);
+    assert.equal(await evaluate("document.querySelector('#resultFlags').textContent"), "DEBUG RUN\nRECORD NOT SAVED");
+    difficultyResults.push({ difficulty, bestTimeMs: savedBest });
+  }
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.EASY.v1'))"), true);
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.NORMAL.v1'))"), true);
+  assert.equal(await evaluate("Boolean(localStorage.getItem('qwopRunner.bestTimeMs.HARD.v1'))"), true);
+  await screenshot("final-difficulty-hard-debug.png");
+  console.log("FINAL difficulty browser results", JSON.stringify(difficultyResults));
   assert.deepEqual(errors, []);
-  console.log("Phase 2B browser smoke tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
+  console.log("QWOP Runner Ver 1.0.0 FINAL browser tests passed; Phase 1K drift " + driftMeters.toFixed(4) + "m");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

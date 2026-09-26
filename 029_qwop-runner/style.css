@@ -4,12 +4,13 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
 body { background:#07111f; color:var(--ink); font-family:Inter,system-ui,sans-serif; overscroll-behavior:none; user-select:none; -webkit-user-select:none; touch-action:none; -webkit-tap-highlight-color:transparent; }
 button, a { color:inherit; font:inherit; }
 main { display:grid; grid-template-rows:62px minmax(0,1fr) 108px; height:100%; }
-header { z-index:4; display:flex; align-items:center; justify-content:center; gap:18px; padding:8px 18px; background:#091827; border-bottom:1px solid #294052; font-size:11px; letter-spacing:.12em; }
+header { position:relative; z-index:4; display:flex; align-items:center; justify-content:center; gap:18px; padding:8px 18px; background:#091827; border-bottom:1px solid #294052; font-size:11px; letter-spacing:.12em; }
 header a { margin-right:auto; color:var(--muted); font-weight:800; text-decoration:none; }
 header div { color:var(--muted); font-weight:800; }
 header b { margin-left:9px; color:#fff; font:700 24px monospace; letter-spacing:0; }
 .race-hud { display:flex; align-items:center; justify-content:center; gap:18px; }
 .hud-stat { display:flex; align-items:center; white-space:nowrap; }
+.difficulty-badge { position:absolute; right:12px; bottom:-22px; z-index:6; min-width:58px; padding:5px 7px; border:1px solid #63e6e266; border-radius:999px; background:#07111fd9; color:var(--cyan); font:900 9px/1 monospace; text-align:center; letter-spacing:.08em; }
 header button, #resetParameters { padding:9px 12px; border:1px solid #355065; border-radius:8px; background:#102436; font-size:10px; font-weight:800; letter-spacing:.08em; cursor:pointer; }
 .stage { position:relative; min-height:0; overflow:hidden; background:#b9e7ee; }
 canvas { display:block; width:100%; height:100%; }
@@ -17,13 +18,23 @@ canvas { display:block; width:100%; height:100%; }
 .race-progress i { display:block; height:9px; overflow:hidden; border:2px solid #163044; border-radius:999px; background:#eef9f4bb; box-shadow:0 2px 8px #0003; }
 .race-progress i b { display:block; width:0; height:100%; background:linear-gradient(90deg,var(--cyan),#fff36b,#ff7068); transition:width .12s linear; }
 .race-notice { position:absolute; z-index:8; top:18%; left:50%; padding:8px 14px; transform:translateX(-50%); border:2px solid #fff; border-radius:9px; background:#07111fe6; color:#fff36b; font:1000 clamp(18px,4vw,34px)/1 monospace; letter-spacing:.06em; text-shadow:0 2px 8px #000; animation:noticePop .22s ease-out; pointer-events:none; }
+.difficulty-panel { position:absolute; z-index:9; left:50%; bottom:12px; width:min(480px,calc(100% - 180px)); padding:10px 12px; transform:translateX(-50%); border:1px solid #63e6e288; border-radius:13px; background:#07111fea; color:#fff; text-align:center; box-shadow:0 8px 28px #0007; }
+.difficulty-panel > b { color:var(--cyan); font:900 10px/1 monospace; letter-spacing:.15em; }
+.difficulty-panel > div { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-top:8px; }
+.difficulty-panel button { min-height:44px; border:1px solid #355065; border-radius:9px; background:#102436; color:#fff; font-size:12px; font-weight:900; cursor:pointer; touch-action:manipulation; }
+.difficulty-panel button small { display:block; margin-top:2px; color:var(--muted); font:800 8px/1 monospace; }
+.difficulty-panel [data-difficulty].selected { border-color:#fff36b; background:#1c4b55; box-shadow:0 0 0 2px #fff36b33; }
+.difficulty-panel p { min-height:14px; margin:7px 0; color:#d4e3eb; font-size:10px; }
+.difficulty-panel #startRaceButton { width:100%; min-height:40px; border-color:var(--cyan); background:#176070; letter-spacing:.1em; }
+.version { position:absolute; z-index:5; left:10px; bottom:8px; color:#163044aa; font:800 8px/1 monospace; pointer-events:none; }
 .race-overlay { position:absolute; z-index:7; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; pointer-events:none; text-align:center; text-shadow:0 3px 12px #000b; }
 .race-overlay:empty, .race-overlay.hidden { display:none; }
 .race-overlay > b { color:#fff; font:1000 clamp(44px,10vw,92px)/1 monospace; letter-spacing:.04em; }
 .race-overlay.go > b { color:#fff36b; animation:goBurst .48s ease-out; }
 .race-overlay.finished { background:radial-gradient(circle,#ffffff38 0,#ffffff00 62%); animation:finishFlash .55s ease-out; }
 .race-result { width:min(520px,calc(100% - 28px)); padding:14px; border:2px solid #63e6e288; border-radius:14px; background:#07111fe8; box-shadow:0 12px 36px #0009; text-shadow:none; }
-.result-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.race-result > em { display:block; margin-bottom:9px; color:var(--cyan); font:900 10px/1 monospace; letter-spacing:.15em; }
+.result-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
 .result-grid span { padding:8px 6px; border:1px solid #29475b; border-radius:8px; color:var(--muted); font:800 9px/1.2 monospace; }
 .result-grid b { display:block; margin-top:4px; color:#fff; font:900 clamp(16px,4vw,25px)/1 monospace; }
 .race-result > strong { display:block; margin-top:11px; color:#fff36b; font:1000 clamp(14px,3vw,22px)/1.4 monospace; white-space:pre-line; }
@@ -110,6 +121,7 @@ aside > span { float:right; color:var(--cyan); }
   .hud-stat { flex-direction:column; gap:1px; font-size:7px; }
   .hud-stat b { margin:0; font-size:14px; }
   header button { padding:8px; font-size:8px; }
+  .difficulty-badge { min-width:45px; padding-inline:4px; font-size:7px; }
   .controls { grid-template-columns:repeat(4,1fr); gap:6px; padding:7px; }
   .controls button { height:68px; }
   .controls i { display:none; }
@@ -118,6 +130,8 @@ aside > span { float:right; color:var(--cyan); }
   .training-panel { top:50px; left:8px; width:min(350px,calc(100% - 16px)); }
   .race-records { right:8px; bottom:7px; max-width:calc(100% - 16px); font-size:7px; }
   .race-progress { top:7px; width:min(360px,calc(100% - 190px)); font-size:7px; }
+  .difficulty-panel { bottom:8px; width:min(430px,calc(100% - 120px)); padding:8px; }
+  .difficulty-panel p { margin:5px 0; font-size:8px; }
 }
 @media (orientation:portrait) and (max-width:760px) {
   main { grid-template-rows:58px minmax(280px,1fr) minmax(218px,30vh); }
@@ -126,6 +140,7 @@ aside > span { float:right; color:var(--cyan); }
   header .distance { line-height:1.05; text-align:center; }
   header .hud-stat b { display:block; margin:3px 0 0; font-size:12px; }
   header button { min-height:38px; }
+  .difficulty-badge { top:auto; right:8px; bottom:-18px; left:auto; min-width:42px; font-size:6px; }
   .controls { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:10px; padding:10px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }
   .controls button { width:100%; height:auto; min-height:88px; }
   .controls button b { font-size:36px; }
@@ -136,7 +151,10 @@ aside > span { float:right; color:var(--cyan); }
   .race-progress { top:50px; width:calc(100% - 28px); }
   .race-notice { top:15%; }
   .race-result { padding:10px; }
-  .result-grid { gap:5px; }
+  .result-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
   .result-grid span { padding:6px 3px; font-size:7px; }
+  .difficulty-panel { bottom:8px; width:calc(100% - 24px); }
+  .difficulty-panel button { min-height:48px; }
+  .version { bottom:4px; font-size:6px; }
   #parameters { grid-template-columns:1fr; }
 }

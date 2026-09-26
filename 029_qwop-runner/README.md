@@ -1,10 +1,91 @@
-# RAGDOLL RUN — Phase 1G
+# QWOP Runner Ver 1.0.0
 
-Q/W/O/Pで左右の股関節とひざを個別に動かす、横視点の物理ランニング実験です。Phase 1Gでは人体としての肘角定義、前後非対称の腕フォーム、ARM FORM TEST、腕・脚の前後描画順を追加しました。
+Q/W/O/Pの4キーで左右の股関節と膝を個別に動かす、横視点の物理100mランニングゲームです。転倒してもレースは続き、後退や這った状態でのゴールも可能です。
 
-## 起動とテスト
+## 起動方法
 
-リポジトリのルートをHTTPサーバーで配信し、`029_qwop-runner/index.html`を開きます。Matter.jsは`022_pythagora-lab/vendor/matter.min.js`を共有しています。
+リポジトリのルートをHTTPサーバーで配信し、`029_qwop-runner/index.html`を開きます。
+
+```sh
+python -m http.server 8000
+```
+
+ブラウザで `http://localhost:8000/029_qwop-runner/` を開いてください。Matter.jsは `022_pythagora-lab/vendor/matter.min.js` を利用します。
+
+## ゲームの流れ
+
+1. READY画面で難易度を選びます。
+2. 必要ならTRAININGを有効にします。
+3. START 100mを押します。
+4. READY → 3 → 2 → 1 → GO! の後、100mを走ります。
+5. GOAL後にTIME、難易度別BEST、BEST DISTANCEを確認します。
+6. RUN AGAINでREADYへ戻ります。
+
+## 操作
+
+- Q: 右股関節を前、左股関節を後ろへ動かす
+- W: 左股関節を前、右股関節を後ろへ動かす
+- O: 右膝を曲げ、左膝を伸ばす
+- P: 左膝を曲げ、右膝を伸ばす
+- Enter / Space: READYからスタート、またはGOAL後にRUN AGAIN
+
+キーボードと画面下部のタッチボタンに対応しています。カウントダウン中の入力は無効で、WAITが表示されます。
+
+## 難易度
+
+難易度は移動速度ではなく、既存物理に掛ける姿勢補助倍率で変化します。操作ルールとQ/W/O/Pの脚目標は全難易度で共通です。
+
+| 難易度 | Balance | Ankle | Neutral Assist | Fall Assist | Arm Swing | Amplitude |
+|---|---:|---:|---:|---:|---:|---:|
+| EASY / 簡単 | 90% | 100% | 115% | 120% | 70% | 32° |
+| NORMAL / 普通 | 60% | 100% | 100% | 100% | 70% | 35° |
+| HARD / 難しい | 35% | 50% | 60% | 55% | 65% | 35° |
+
+- EASY: 姿勢補助が強く、操作練習向け。自動歩行や入力補完はありません。
+- NORMAL: Phase 1で確定した推奨C設定を基準にした標準QWOP体験です。
+- HARD: 姿勢・足首・中立姿勢補助が弱く、誤操作で転倒しやすいモードです。
+
+初回はNORMALです。最後に選んだ難易度はlocalStorageへ保存されます。変更できるのはREADY中だけです。
+
+## TRAINING
+
+TRAININGは次に押すキー、入力タイミング、GOOD/OK/MISSを表示します。全難易度で使用でき、人間操作としてVALID記録になります。WATCH DEMOを使った走行はDEBUG RUNになり、記録されません。
+
+## 100m CHALLENGE
+
+HUDにはDISTANCE、TO GO、TIME、難易度別BESTを表示します。50mでHALFWAY、90mでFINAL 10mを表示し、100mでタイマーと入力を停止します。進捗バー、STARTライン、10m目盛り、50m表示、フィニッシュラインを備えています。
+
+## 記録
+
+BEST TIMEとBEST DISTANCEはEASY / NORMAL / HARD別にlocalStorageへ保存します。NEW BEST時は前回記録、新記録、差分を結果画面へ表示します。TRAININGはVALID、DEMOや自動DEBUGテストはINVALIDです。
+
+## DEBUG
+
+DEBUGには物理パラメータ表示、DEMO FORWARD、DRIFT TEST、FALL TEST、RECOVERY TEST、ARM FORM、ARM CONNECTION、ELBOW MATRIXがあります。自動操作や診断を使ったレースはDEBUG RUNとなり、BESTを更新しません。
+
+## 縦横画面
+
+PC横画面、スマートフォン縦画面の両方に対応します。縦画面ではHUD、難易度選択、結果カード、Q/W/O/Pを再配置します。
+
+## 主要物理仕様
+
+- Matter.js、60Hz固定ステップ
+- Engine iterations: position 14 / velocity 12 / constraint 6
+- Gravity: 0.72
+- Ground friction: 1.05
+- Foot friction: 1.35
+- Joint Constraint: stiffness 0.985 / damping 0.32
+- Balance Kp / Kd / max force: 0.0020 / 0.020 / 0.10
+- Torso PD: 0.15 / 0.08 / 0.20
+- Hip PD: 4.00 / 0.30 / 4.00
+- Knee PD: 6.00 / 0.40 / 6.00
+- Ankle PD: 4.00 / 0.30 / 4.00
+- Shoulder PD: 2.50 / 0.15 / 1.20
+- Elbow PD: 1.50 / 0.12 / 1.00
+
+難易度はこれらの基礎値を書き換えず、`difficulty.js`の倍率を適用します。
+
+## テスト
 
 ```sh
 node 029_qwop-runner/tests/phase1a.test.cjs
@@ -20,117 +101,8 @@ node 029_qwop-runner/tests/phase1j.test.cjs
 node 029_qwop-runner/tests/phase1k.test.cjs
 node 029_qwop-runner/tests/phase2a.test.cjs
 node 029_qwop-runner/tests/phase2b.test.cjs
+node 029_qwop-runner/tests/final.test.cjs
 node 029_qwop-runner/tests/browser-smoke.cjs
 ```
 
-## 操作
-
-- Q: 右股関節を前、左股関節を後ろへ
-- W: 左股関節を前、右股関節を後ろへ
-- O: 右ひざを曲げ、左ひざを伸ばす
-- P: 左ひざを曲げ、右ひざを伸ばす
-
-キーボード、画面下ボタン、DEBUG内のCONTROL TESTは共通の入力状態を更新します。DOWN中も入力は無効化されず、関節トルクによる物理的な動きが続きます。
-
-## Phase 1Fの診断
-
-DEBUG内には次の独立した試験があります。
-
-- `DRIFT TEST 5s`: RETRY相当の初期状態へ戻し、手入力とデモを無効にして5秒計測します。Start X、End X、Drift Distance、平均/最大X速度、左右足の接地時間、推定荷重を表示します。
-- `RECOVERY TEST`: 9フレームの軽い横力でLEANINGと復帰性を確認します。
-- `FALL TEST`: 左右を交互に、胴体上部へ36フレーム、水平0.135の力を加えます。位置・角度・速度の直接変更は行いません。FALLING/DOWN到達時間、現在の手接地、左右手接地時間、最初に地面へ触れた部位を表示します。DOWN到達後はQ/W/O/Pがすぐ有効になります。
-
-静止ドリフトの主因は、足先側へ偏っていた足首Constraintと、Balanceが使う支持点が同一扱いだったことです。機械的な足首アンカーを足中心付近の`+2px`へ移し、足裏の有効支持点を独立した`-18.27px`として定義しました。速度や位置を固定する処理は使っていません。
-
-## デフォルト候補の比較
-
-同じ物理値で、静止5秒、前進デモ12サイクル、FALL TESTを比較した結果です。距離は正が前進です。
-
-| 候補 | Balance | Arm | 5秒ドリフト | デモ距離 | 平均速度 | 胴体角 平均/最大 | デモ転倒 | DOWN到達 | 手接地 |
-|---|---:|---:|---:|---:|---:|---:|---|---:|---|
-| A | 100% | 100% | -0.0217m | 5.98m | 0.680m/s | 14.39° / 23.59° | なし | 0.67s | なし（胴体が先に接地） |
-| B | 75% | 70% | -0.0374m | 5.50m | 0.621m/s | 15.03° / 25.03° | なし | 0.87s | あり |
-| C | 60% | 70% | -0.0208m | 5.51m | 0.629m/s | 15.07° / 25.34° | なし | 0.63s | なし（頭が先に接地） |
-| D | 50% | 70% | +0.0041m | 5.62m | 0.644m/s | 15.07° / 26.57° | なし | 0.75s | あり |
-
-暫定の推奨候補はCです。前進量を保ちつつ、自動BalanceをAより弱くできるため、QWOPらしい操作余地があります。ただし、手接地の再現性を重視するならB、最小ドリフトを重視するならDも有力です。Phase 1Fでは最終デフォルトを決定せず、比較候補として残します。現在の起動時設定は従来互換のAです。
-
-## 固定物理パラメータ
-
-Phase 1Fの比較基準として次を固定します。
-
-| 項目 | 値 |
-|---|---:|
-| Physics update | 60Hz fixed step |
-| Engine iterations | position 14 / velocity 12 / constraint 6 |
-| Gravity | 0.72 |
-| Ground friction | 1.05 |
-| Foot friction | 1.35 |
-| Joint Constraint | stiffness 0.985 / damping 0.32 |
-| Neck Constraint | stiffness 1.0 / damping 0.5 |
-| Foot ankle anchor X | +2px |
-| Foot support point X | -18.27px |
-| Balance Kp / Kd / max force | 0.0020 / 0.020 / 0.10 |
-| Joint limit strength | 20.0 |
-
-### Body密度
-
-| Body | 密度 |
-|---|---:|
-| Torso | 0.0036 |
-| Thigh / Shin / Foot | 0.0023 |
-| Head | 0.0017 |
-| Upper arm | 0.00125 |
-| Forearm | 0.0010 |
-| Hand | 0.00055 |
-
-Arm Massは上腕・前腕・手の密度へLight 65%、Normal 100%、Heavy 145%を乗算します。Hand frictionはLow 0.35、Normal 0.70、High 1.05です。
-
-### PD制御
-
-| 関節 | Kp | Kd | Max Torque |
-|---|---:|---:|---:|
-| Torso | 0.15 | 0.08 | 0.20 |
-| Hip | 4.00 | 0.30 | 4.00 |
-| Knee | 6.00 | 0.40 | 6.00 |
-| Ankle | 4.00 | 0.30 | 4.00 |
-| Neck | 0.45 | 0.12 | 0.30 |
-| Shoulder | 2.50 | 0.15 | 1.20 |
-| Elbow | 1.50 | 0.12 | 1.00 |
-
-可動域はHip `-60°〜60°`、Knee `-6°〜92°`、Ankle `-30°〜30°`、Neck `-25°〜25°`、Shoulder `-85°〜85°`、Elbowは左右鏡像の`25°〜125°`です。中立値は左Hip `+2°`、右Hip `-2°`、左右Knee `+8°`です。
-
-腕PD倍率はSTABLE 100%、LEANING 85%、FALLING 30%、DOWN 8%です。これにArm Swing設定を乗算します。転倒中の腕を強制的に走行フォームへ戻さず、手と地面の物理接触を妨げません。
-
-## 前進デモとTraining
-
-基準デモは`Q+O 220ms → Q 160ms → W+P 220ms → W 160ms`を繰り返します。手入力中の部位ラベルとボタンが点灯し、TrainingではNOW/NEXT、入力タイミング、GOOD/OK/MISS、前進/後退フィードバックを表示します。縦画面では操作ボタンを2×2に配置します。
-
-## Phase 1G 腕フォーム
-
-物理相対角0°は腕が直線なので、人体肘角を`180° - |前腕角 - 上腕角|`として表示します。走行位相が小さい間はPhase 1Fの中立質量配置を維持し、位相0.08を越えた範囲だけ新フォームへ滑らかに補間します。
-
-| 姿勢 | 前側肩 | 前側人体肘角 | 後側肩 | 後側人体肘角 |
-|---|---:|---:|---:|---:|
-| Neutral | ±10° | 91° | ±10° | 91° |
-| Running | 前30° | 80° | 後24° | 95° |
-
-DEBUGの`ARM FORM TEST`はNEUTRAL、LEFT ARM FRONT、RIGHT ARM FRONTを各1.8秒表示します。脚入力は固定しません。DEBUGには左右の肩人体角、肘人体角、前腕画面角、FRONT/REAR ARMを表示します。
-
-描画は奥腕、奥脚、胴体、手前脚、手前腕の順です。通常表示の手は前腕末端に描画し、物理Hand Bodyと接地判定は変更していません。DEBUG輪郭では実際のHand Bodyも確認できます。
-
-推奨候補（Balance 60%、Arm Swing 70%、Amplitude 35°、Hand Friction Normal）の12サイクル実測は5.357mで、Phase 1G基準4.8m以上を維持しています。
-
-## Phase 1Gの範囲
-
-ゴール、タイマー、ランキング、ハイスコア、敵、障害物、キャラクターステージ、腕の手動操作、完成版ゲームループは未実装です。Phase 1Gは腕フォームを確定する段階です。
-
-## Phase 1K 肘Target状態遷移
-
-肘Targetは`getElbowTarget(side, role, phase)`を入口とし、人体肘角と曲げ方向を分離しました。基本人体角はFRONT 80°、REAR 95°、NEUTRAL 91°です。無入力は独立したNEUTRALとして扱い、走行位相±0.12の間は現在Roleを維持してチャタリングを防ぎます。
-
-曲げ方向はside/role表から一度だけ決定します。符号が変わるRole遷移では、符号付き角度を直接補間せず110°の中継姿勢へ寄せてから切り替えます。これにより正規化後のPD誤差が±PI側の遠回りを選ばず、Targetが伸び切りの0°を通りません。相対角と誤差は共通`normalizeAngle()`で`-PI〜+PI`へ正規化します。
-
-DEBUGには左右それぞれのState、Human Current/Target、Physics Current/Target、Bend Direction、Role、Phase、および直近約2秒のTarget Traceを表示します。`ELBOW MATRIX TEST`はNONE、Q、W、O、P、Q+O、Q+P、W+O、W+Pを各1.2秒実行し、左右のRole、人体角、曲げ方向、Direction Correctを記録します。
-
-自動テスト実測では9入力すべて左右CORRECT、無入力3秒は左90.5°／右90.0°、遷移中Targetは人体角110°以内かつ物理角絶対値70°以上、最大Connection Gap 0.366pxでした。推奨Cの12サイクルは4.876m、5秒静止ドリフトは-0.0482mです。実Chromeの5秒DRIFT TESTは-0.0421mでした。
+FINAL TESTは3難易度の無操作、通常前進、誤操作、転倒、100m GOAL、難易度別記録、TRAINING、DEBUG RUN、縦横UIを検証します。

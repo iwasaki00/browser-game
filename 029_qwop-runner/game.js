@@ -12,6 +12,7 @@
   const raceMessage = document.querySelector("#raceMessage");
   const raceResult = document.querySelector("#raceResult");
   const resultTime = document.querySelector("#resultTime");
+  const resultDifficulty = document.querySelector("#resultDifficulty");
   const resultBest = document.querySelector("#resultBest");
   const resultBestDistance = document.querySelector("#resultBestDistance");
   const resultComparison = document.querySelector("#resultComparison");
@@ -22,6 +23,10 @@
   const raceProgressFill = document.querySelector("#raceProgressFill");
   const raceNotice = document.querySelector("#raceNotice");
   const stage = document.querySelector(".stage");
+  const difficultyPanel = document.querySelector("#difficultyPanel");
+  const difficultyDescription = document.querySelector("#difficultyDescription");
+  const difficultyBadge = document.querySelector("#difficultyBadge");
+  const startRaceButton = document.querySelector("#startRaceButton");
   const debugButton = document.querySelector("#debugButton");
   const retryButton = document.querySelector("#retryButton");
   const panel = document.querySelector("#debugPanel");
@@ -37,10 +42,13 @@
   const watchDemoButton = document.querySelector("#watchDemo");
   const demoSpeedButton = document.querySelector("#demoSpeed");
   const physics = new QWOPPhysics.RunnerPhysics();
+  let selectedDifficulty = QWOPDifficulty.load(window.localStorage);
+  QWOPDifficulty.apply(physics, selectedDifficulty);
   const raceTestMode = new URLSearchParams(location.search).has("raceTest")
     && (location.hostname === "127.0.0.1" || location.hostname === "localhost");
   const race = new QWOPRace.RaceController({
     storage: window.localStorage,
+    recordCategory: selectedDifficulty,
     countdown: raceTestMode ? { ready: 10, three: 10, two: 10, one: 10, go: 20 } : undefined
   });
   const phases = QWOPTraining.PHASES;
@@ -109,6 +117,49 @@
     raceNoticeUntil = performance.now() + duration;
   }
 
+  function updateDifficultyUI() {
+    const preset = QWOPDifficulty.DIFFICULTY_PRESETS[selectedDifficulty];
+    difficultyBadge.textContent = preset.key;
+    difficultyDescription.textContent = preset.description;
+    resultDifficulty.textContent = `${preset.key} / ${preset.label}`;
+    difficultyPanel.querySelectorAll("[data-difficulty]").forEach(button => {
+      const selected = button.dataset.difficulty === selectedDifficulty;
+      button.classList.toggle("selected", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function selectDifficulty(value) {
+    if (race.state !== QWOPRace.RACE_STATE.READY) return false;
+    selectedDifficulty = QWOPDifficulty.save(window.localStorage, value);
+    QWOPDifficulty.apply(physics, selectedDifficulty);
+    race.setRecordCategory(selectedDifficulty, performance.now());
+    raceWorldOriginX = physics.bodies.torso.position.x;
+    updateDifficultyUI();
+    updateRaceUI(performance.now());
+    emitRaceEvent("difficulty", { difficulty: selectedDifficulty });
+    return true;
+  }
+
+  function beginCountdown() {
+    if (race.state !== QWOPRace.RACE_STATE.READY) return false;
+    clearInputs();
+    activePointers.clear();
+    physics.reset();
+    QWOPDifficulty.apply(physics, selectedDifficulty);
+    const now = performance.now();
+    race.reset(now);
+    race.startCountdown(now);
+    raceWorldOriginX = physics.bodies.torso.position.x;
+    cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
+    lastTime = now;
+    lastCountdownLabel = "";
+    difficultyPanel.hidden = true;
+    updateRaceUI(now);
+    emitRaceEvent("countdownStart", { difficulty: selectedDifficulty });
+    return true;
+  }
+
   function raceDistance() {
     if (race.state !== QWOPRace.RACE_STATE.RUNNING && race.state !== QWOPRace.RACE_STATE.FINISHED) return 0;
     return (physics.bodies.torso.position.x - raceWorldOriginX) / QWOPPhysics.SCALE;
@@ -152,6 +203,7 @@
     }
     lastCountdownLabel = label;
     if (finished) {
+      resultDifficulty.textContent = `${selectedDifficulty} / ${QWOPDifficulty.DIFFICULTY_PRESETS[selectedDifficulty].label}`;
       resultTime.textContent = formatRaceTime(race.finalTimeMs);
       resultBest.textContent = formatRaceTime(race.bestTimeMs);
       resultBestDistance.textContent = `${race.bestDistance.toFixed(2)} m`;
@@ -175,6 +227,7 @@
     raceOverlay.hidden = !finished && !label;
     raceResult.hidden = !finished;
     runAgainButton.hidden = !finished;
+    difficultyPanel.hidden = race.state !== QWOPRace.RACE_STATE.READY;
     if (!raceNotice.hidden && now >= raceNoticeUntil) raceNotice.hidden = true;
   }
 
@@ -269,6 +322,11 @@
 
   document.addEventListener("keydown", event => {
     const key = event.key.toLowerCase();
+    if ((key === "enter" || key === " ") && race.state === QWOPRace.RACE_STATE.READY) {
+      event.preventDefault();
+      beginCountdown();
+      return;
+    }
     if ((key === "enter" || key === " ") && race.state === QWOPRace.RACE_STATE.FINISHED) {
       event.preventDefault();
       retry();
@@ -307,9 +365,9 @@
   experimentPanel.innerHTML = `
     <h3>STABILITY EXPERIMENTS</h3>
     <label>Dynamic Foot Friction <input class="dynamic-friction" type="checkbox"></label>
-    <label>Balance <select class="balance-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".4">40%</option><option value=".25">25%</option></select></label>
-    <label>Ankle Control <select class="ankle-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">OFF</option></select></label>
-    <label>Arm Swing <select class="arm-swing-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".7">70%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">0%</option></select></label>
+    <label>Balance <select class="balance-preset"><option value="1">100%</option><option value=".9">90%</option><option value=".75">75%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".4">40%</option><option value=".35">35%</option><option value=".25">25%</option></select></label>
+    <label>Ankle Control <select class="ankle-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".65">65%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">OFF</option></select></label>
+    <label>Arm Swing <select class="arm-swing-preset"><option value="1">100%</option><option value=".75">75%</option><option value=".7">70%</option><option value=".65">65%</option><option value=".6">60%</option><option value=".5">50%</option><option value=".25">25%</option><option value="0">0%</option></select></label>
     <label>Arm Mass <select class="arm-mass-preset"><option value="light">Light</option><option value="normal" selected>Normal</option><option value="heavy">Heavy</option></select></label>
     <label>Arm Amplitude <select class="arm-amplitude"><option value="20">20°</option><option value="25">25°</option><option value="30">30°</option><option value="35" selected>35°</option><option value="40">40°</option><option value="42">42°</option></select></label>
     <label>Hand Friction <select class="hand-friction"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option></select></label>
@@ -726,7 +784,7 @@
     parameterRoot.append(row);
   });
 
-  function retry() {
+  function retry(options = {}) {
     stopArmFormTest();
     armConnectionTest.active = false;
     elbowMatrixTest.active = false;
@@ -738,15 +796,18 @@
     clearInputs();
     activePointers.clear();
     physics.reset();
+    QWOPDifficulty.apply(physics, selectedDifficulty);
     const now = performance.now();
-    race.reset(now);
-    race.startCountdown(now);
+    race.setRecordCategory(selectedDifficulty, now);
     trainingUsed = training.active;
     lastCountdownLabel = "";
     raceNoticeUntil = 0;
     raceNotice.hidden = true;
     raceWorldOriginX = physics.bodies.torso.position.x;
-    if (raceTestMode) updateRace(now + race.countdownRunAt());
+    if (raceTestMode && options.autoStart !== false) {
+      race.startCountdown(now);
+      updateRace(now + race.countdownRunAt());
+    }
     cameraX = physics.startX - (canvas.clientWidth / viewScale) * 0.38;
     lastTime = now;
     distanceEl.textContent = "0.00 m";
@@ -757,8 +818,13 @@
     training.history = [];
     training.feedback = "YOUR TURN";
     updateTrainingPanel();
+    updateDifficultyUI();
     updateRaceUI(now);
   }
+  difficultyPanel.querySelectorAll("[data-difficulty]").forEach(button => {
+    button.addEventListener("click", () => selectDifficulty(button.dataset.difficulty));
+  });
+  startRaceButton.addEventListener("click", beginCountdown);
   retryButton.addEventListener("click", retry);
   runAgainButton.addEventListener("click", retry);
   debugButton.addEventListener("click", () => {
@@ -771,17 +837,18 @@
 
   document.querySelector("#resetParameters").addEventListener("click", () => {
     physics.resetParameters();
+    const preset = QWOPDifficulty.apply(physics, selectedDifficulty);
     parameterRoot.querySelectorAll("input").forEach(input => {
       input.value = physics.params[input.dataset.parameter];
       input.dispatchEvent(new Event("input"));
     });
     experimentPanel.querySelector(".dynamic-friction").checked = false;
-    experimentPanel.querySelector(".balance-preset").value = "1";
-    experimentPanel.querySelector(".ankle-preset").value = "1";
-    experimentPanel.querySelector(".arm-swing-preset").value = "1";
+    experimentPanel.querySelector(".balance-preset").value = String(preset.balanceScale);
+    experimentPanel.querySelector(".ankle-preset").value = String(preset.ankleAssist);
+    experimentPanel.querySelector(".arm-swing-preset").value = String(preset.armSwing);
     experimentPanel.querySelector(".arm-mass-preset").value = "normal";
-    experimentPanel.querySelector(".arm-amplitude").value = "35";
-    experimentPanel.querySelector(".hand-friction").value = "normal";
+    experimentPanel.querySelector(".arm-amplitude").value = String(preset.armAmplitude);
+    experimentPanel.querySelector(".hand-friction").value = preset.handFriction;
   });
 
   function bodyPath(body) {
@@ -1145,7 +1212,16 @@
         goalScreenX: (raceWorldOriginX + race.goalDistance * QWOPPhysics.SCALE - cameraX) * viewScale,
         width: canvas.clientWidth
       }),
+      difficultySnapshot: () => ({
+        selectedDifficulty,
+        preset: QWOPDifficulty.DIFFICULTY_PRESETS[selectedDifficulty],
+        experiments: physics.diagnostics().experiments,
+        panelHidden: difficultyPanel.hidden
+      }),
       invalidate: reason => invalidateRace(reason || "TEST DEBUG"),
+      ready: () => retry({ autoStart: false }),
+      selectDifficulty,
+      beginCountdown,
       retry
     };
   }

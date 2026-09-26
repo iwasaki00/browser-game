@@ -11,6 +11,10 @@
     bestTime: "qwopRunner.bestTimeMs.v1",
     bestDistance: "qwopRunner.bestDistanceM.v1"
   });
+  const storageKeysFor = category => category ? Object.freeze({
+    bestTime: `qwopRunner.bestTimeMs.${String(category).toUpperCase()}.v1`,
+    bestDistance: `qwopRunner.bestDistanceM.${String(category).toUpperCase()}.v1`
+  }) : STORAGE_KEYS;
   const DEFAULT_COUNTDOWN = Object.freeze({
     ready: 400,
     three: 600,
@@ -26,9 +30,10 @@
     constructor(options = {}) {
       this.goalDistance = options.goalDistance ?? 100;
       this.storage = options.storage ?? null;
+      this.recordCategory = options.recordCategory ? String(options.recordCategory).toUpperCase() : null;
+      this.storageKeys = storageKeysFor(this.recordCategory);
       this.countdown = { ...DEFAULT_COUNTDOWN, ...(options.countdown || {}) };
-      this.bestTimeMs = this.readNumber(STORAGE_KEYS.bestTime);
-      this.bestDistance = this.readNumber(STORAGE_KEYS.bestDistance) ?? 0;
+      this.loadRecords();
       this.reset(0);
     }
 
@@ -43,6 +48,31 @@
 
     writeNumber(key, value) {
       try { this.storage?.setItem(key, String(value)); } catch {}
+    }
+
+    loadRecords() {
+      this.bestTimeMs = this.readNumber(this.storageKeys.bestTime);
+      const storedDistance = this.readNumber(this.storageKeys.bestDistance);
+      this.bestDistance = storedDistance ?? 0;
+      if (this.recordCategory !== "NORMAL") return;
+      if (this.bestTimeMs === null) {
+        this.bestTimeMs = this.readNumber(STORAGE_KEYS.bestTime);
+        if (this.bestTimeMs !== null) this.writeNumber(this.storageKeys.bestTime, this.bestTimeMs);
+      }
+      if (storedDistance === null) {
+        const legacyDistance = this.readNumber(STORAGE_KEYS.bestDistance);
+        if (legacyDistance !== null) {
+          this.bestDistance = legacyDistance;
+          this.writeNumber(this.storageKeys.bestDistance, legacyDistance);
+        }
+      }
+    }
+
+    setRecordCategory(category, now = 0) {
+      this.recordCategory = category ? String(category).toUpperCase() : null;
+      this.storageKeys = storageKeysFor(this.recordCategory);
+      this.loadRecords();
+      return this.reset(now);
     }
 
     reset(now = 0) {
@@ -76,7 +106,7 @@
     invalidate(reason = "DEBUG") {
       if (this.recordValid && this.bestDistance > this.bestDistanceAtStart) {
         this.bestDistance = this.bestDistanceAtStart;
-        this.writeNumber(STORAGE_KEYS.bestDistance, this.bestDistance);
+        this.writeNumber(this.storageKeys.bestDistance, this.bestDistance);
       }
       if (!this.invalidReasons.includes(reason)) this.invalidReasons.push(reason);
       this.recordValid = false;
@@ -111,7 +141,7 @@
     updateBestDistance(distance) {
       if (!this.recordValid || distance <= this.bestDistance) return false;
       this.bestDistance = distance;
-      this.writeNumber(STORAGE_KEYS.bestDistance, distance);
+      this.writeNumber(this.storageKeys.bestDistance, distance);
       return true;
     }
 
@@ -127,7 +157,7 @@
         this.bestTimeMs = this.finalTimeMs;
         this.newBest = true;
         this.improvementMs = this.previousBestTimeMs === null ? null : this.finalTimeMs - this.previousBestTimeMs;
-        this.writeNumber(STORAGE_KEYS.bestTime, this.bestTimeMs);
+        this.writeNumber(this.storageKeys.bestTime, this.bestTimeMs);
       }
       return { started: false, finished: true, newBest: this.newBest };
     }
@@ -162,6 +192,7 @@
     snapshot() {
       return {
         state: this.state,
+        recordCategory: this.recordCategory,
         elapsedMs: this.elapsedMs,
         finalTimeMs: this.finalTimeMs,
         currentDistance: this.currentDistance,
@@ -180,7 +211,7 @@
     }
   }
 
-  const api = { RaceController, RACE_STATE, STORAGE_KEYS, DEFAULT_COUNTDOWN };
+  const api = { RaceController, RACE_STATE, STORAGE_KEYS, storageKeysFor, DEFAULT_COUNTDOWN };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (typeof window !== "undefined") window.QWOPRace = api;
 })();

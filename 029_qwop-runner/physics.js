@@ -195,6 +195,8 @@
       this.accumulator = 0;
       this.balanceScale = 1;
       this.ankleScale = 1;
+      this.neutralAssistScale = 1;
+      this.fallAssistScale = 1;
       this.dynamicFootFriction = false;
       this.armSwingScale = 1;
       this.armMassMode = "normal";
@@ -394,6 +396,7 @@
       Object.keys(this.params).forEach(name => this.setParameter(name, this.params[name]));
       this.setBalanceScale(1);
       this.setAnkleScale(1);
+      this.setDifficultyAssists({ neutralAssist: 1, fallAssist: 1 });
       this.setDynamicFootFriction(false);
       this.setArmSwingScale(1);
       this.setArmMass("normal");
@@ -407,6 +410,11 @@
 
     setAnkleScale(scale) {
       this.ankleScale = clamp(Number(scale), 0, 1);
+    }
+
+    setDifficultyAssists(options = {}) {
+      this.neutralAssistScale = clamp(Number(options.neutralAssist ?? 1), 0.5, 1.25);
+      this.fallAssistScale = clamp(Number(options.fallAssist ?? 1), 0.5, 1.25);
     }
 
     setDynamicFootFriction(active) {
@@ -599,7 +607,8 @@
       const tiltBalanceFactor = clamp(1 - Math.max(0, torsoTilt - 8 * DEG) / (35 * DEG), 0.12, 1);
       const heightBalanceFactor = clamp(1 - Math.max(0, b.torso.position.y - 320) / 50, 0.12, 1);
       this.balancePostureFactor = down ? 0.08 : Math.min(tiltBalanceFactor, heightBalanceFactor);
-      const effectiveBalance = this.balanceScale * this.balancePostureFactor;
+      const postureDifficultyAssist = this.posture === "STABLE" ? 1 : this.fallAssistScale;
+      const effectiveBalance = clamp(this.balanceScale * this.balancePostureFactor * postureDifficultyAssist, 0, 1);
       const balanceForce = clamp(
         -p.balanceKp * (b.torso.position.x - supportX) - p.balanceKd * (b.torso.velocity.x - supportVelocity),
         -p.balanceMaxForce,
@@ -611,10 +620,12 @@
 
       this.control.torso = this.absolutePD(b.torso, 0, p.torsoKp * effectiveBalance, p.torsoKd * effectiveBalance, p.torsoMaxTorque * effectiveBalance);
       this.control.neck = this.jointPD(b.torso, b.head, 0, p.neckKp, p.neckKd, p.neckMaxTorque);
-      this.control.rightHip = this.jointPD(b.torso, b.rightThigh, target.rightHip, p.hipKp, p.hipKd, p.hipMaxTorque);
-      this.control.leftHip = this.jointPD(b.torso, b.leftThigh, target.leftHip, p.hipKp, p.hipKd, p.hipMaxTorque);
-      this.control.rightKnee = this.jointPD(b.rightThigh, b.rightShin, target.rightKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
-      this.control.leftKnee = this.jointPD(b.leftThigh, b.leftShin, target.leftKnee, p.kneeKp, p.kneeKd, p.kneeMaxTorque);
+      const hasLegInput = Object.values(this.inputState).some(Boolean);
+      const neutralAssist = hasLegInput ? 1 : this.neutralAssistScale;
+      this.control.rightHip = this.jointPD(b.torso, b.rightThigh, target.rightHip, p.hipKp * neutralAssist, p.hipKd * neutralAssist, p.hipMaxTorque * neutralAssist);
+      this.control.leftHip = this.jointPD(b.torso, b.leftThigh, target.leftHip, p.hipKp * neutralAssist, p.hipKd * neutralAssist, p.hipMaxTorque * neutralAssist);
+      this.control.rightKnee = this.jointPD(b.rightThigh, b.rightShin, target.rightKnee, p.kneeKp * neutralAssist, p.kneeKd * neutralAssist, p.kneeMaxTorque * neutralAssist);
+      this.control.leftKnee = this.jointPD(b.leftThigh, b.leftShin, target.leftKnee, p.kneeKp * neutralAssist, p.kneeKd * neutralAssist, p.kneeMaxTorque * neutralAssist);
 
       const neutralHipDifference = NEUTRAL.rightHip - NEUTRAL.leftHip;
       const rawStride = clamp((this.control.rightHip.current - this.control.leftHip.current - neutralHipDifference) / (70 * DEG), -1, 1);
@@ -825,6 +836,8 @@
         experiments: {
           balanceScale: this.balanceScale,
           ankleScale: this.ankleScale,
+          neutralAssistScale: this.neutralAssistScale,
+          fallAssistScale: this.fallAssistScale,
           dynamicFootFriction: this.dynamicFootFriction,
           armSwingScale: this.armSwingScale,
           armMass: this.armMassMode,
