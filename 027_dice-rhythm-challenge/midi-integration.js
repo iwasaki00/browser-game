@@ -80,7 +80,7 @@
 
   class MidiIntegration {
     constructor(options = {}) {
-      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer) throw new Error("MIDI共通基盤を読み込めませんでした。");
+      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer || !global.MidiDiceChartGenerator) throw new Error("MIDI共通基盤を読み込めませんでした。");
       this.synth = new global.MidiAudio.MidiSynth();
       this.player = new MidiPlayer(this.synth, () => options.onEnded?.());
       this.song = null;
@@ -90,6 +90,7 @@
       this.pausedTimelineTime = null;
       this.rhythmAnalyzer = null;
       this.analysisTrack = "all";
+      this.diceCharts = new Map();
     }
 
     async ensureAudio() { return this.synth.ensureContext(); }
@@ -104,8 +105,11 @@
       this.fileName = fileName || song.fileName || "MIDI";
       this.rhythmAnalyzer = new global.MidiRhythmAnalyzer(song);
       this.analysisTrack = "all";
-      this.rhythmAnalyzer.analyze("all");
-      this.rhythmAnalyzer.trackOptions.slice(1).forEach((track) => this.rhythmAnalyzer.analyze(track.value));
+      this.diceCharts = new Map();
+      this.rhythmAnalyzer.trackOptions.forEach((track) => {
+        const analysis = this.rhythmAnalyzer.analyze(track.value);
+        this.diceCharts.set(track.value, new global.MidiDiceChartGenerator(analysis).generate());
+      });
       this.player.setSong(song);
       return this.getInfo();
     }
@@ -150,6 +154,10 @@
       return this.rhythmAnalyzer.analyze(this.analysisTrack);
     }
     getRhythmBeatAtTick(tick, selection = this.analysisTrack) { return this.rhythmAnalyzer?.beatAtTick(tick, selection) || null; }
+    getDiceChart(selection = this.analysisTrack) {
+      const key = selection === "all" ? "all" : String(Number(selection));
+      return this.diceCharts.get(key) || null;
+    }
 
     async startWithCountIn(beats = 4) {
       if (!this.ready) throw new Error("MIDIファイルを読み込んでください。");

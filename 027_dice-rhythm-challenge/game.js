@@ -88,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -284,6 +284,78 @@
       this.analysisCopyStatus.textContent = message;
       this.analysisCopyStatus.classList.toggle("analysis-copy-error", error);
     }
+    chartVisible(visible) { this.diceChartPanel.hidden = !visible; }
+    formatRhythmPositions(positions) { return positions.length ? positions.map((position) => position.toFixed(3).replace(/0$/, "")).join(", ") : "-"; }
+    showChartBeatDetail(beat, trackLabel) {
+      if (!beat) return;
+      this.selectedChartBeatKey = `${beat.measure}:${beat.beat}`;
+      this.chartMeasures.querySelectorAll(".chart-die").forEach((die) => die.classList.toggle("selected", die.dataset.key === this.selectedChartBeatKey));
+      this.chartDetail.textContent = `Measure ${beat.measure} / Beat ${beat.beat} | Dice ${beat.dice === null ? (beat.pattern === "REST" ? "REST" : "?") : beat.dice} | ${beat.pattern} | Onsets ${beat.onsetCount} | Positions ${this.formatRhythmPositions(beat.onsetPositions)} | Notes ${beat.rawNoteCount} | Track ${trackLabel}${beat.reason ? ` | ${beat.reason}` : ""}`;
+    }
+    chartPreview(chart, currentTick = null) {
+      if (!chart?.measures?.length) {
+        this.chartMeasures.replaceChildren();
+        this.chartDetail.textContent = "譜面候補がありません。";
+        return;
+      }
+      const stats = chart.statistics;
+      this.chartTrack.textContent = `Track: ${chart.sourceTrack.label}`;
+      this.chartPlayableRate.textContent = `Playable ${stats.playableRate.toFixed(1)}%`;
+      this.chartStatistics.replaceChildren(...[
+        `Measures ${stats.measures}`, `Playable ${stats.supportedBeats}/${stats.totalBeats}`, `REST ${stats.rest}`,
+        `1 ${stats.dice1}`, `2 ${stats.dice2}`, `4 ${stats.dice4}`, `3! ${stats.unsupportedDice3}`, `OTHER ${stats.unsupportedOther}`
+      ].map((text) => {
+        const item = document.createElement("span");
+        item.textContent = text;
+        return item;
+      }));
+      this.chartWarning.hidden = stats.unsupportedTimeSignature === 0;
+      this.chartWarning.textContent = stats.unsupportedTimeSignature ? `UNSUPPORTED TIME SIGNATURE：${stats.unsupportedTimeSignature}拍（現在4/4のみゲーム譜面化対応）` : "";
+      const currentBeat = currentTick === null ? null : chart.beats.find((beat) => currentTick >= beat.startTick && currentTick < beat.endTick);
+      const currentMeasure = currentBeat?.measure ?? chart.measures[0].measure;
+      let measureIndex = chart.measures.findIndex((measure) => measure.measure === currentMeasure);
+      if (measureIndex < 0) measureIndex = 0;
+      const start = Math.max(0, Math.min(measureIndex - 2, Math.max(0, chart.measures.length - 8)));
+      const shown = chart.measures.slice(start, start + 8);
+      const pipClasses = { 1: ["c"], 2: ["tr", "bl"], 4: ["tl", "tr", "bl", "br"] };
+      this.chartMeasures.replaceChildren(...shown.map((measure) => {
+        const group = document.createElement("section");
+        group.className = `chart-measure${measure.measure === currentMeasure && currentTick !== null ? " current" : ""}${measure.supported ? "" : " unsupported"}`;
+        const label = document.createElement("b");
+        label.textContent = `Measure ${measure.measure} · ${measure.timeSignature.numerator}/${measure.timeSignature.denominator}${measure.supported ? "" : " · UNSUPPORTED"}`;
+        const row = document.createElement("div");
+        row.className = "chart-dice-row";
+        measure.beats.forEach((beat) => {
+          const die = document.createElement("button");
+          die.type = "button";
+          die.dataset.key = `${beat.measure}:${beat.beat}`;
+          const kind = beat.pattern === "REST" ? "rest" : beat.supported ? `value-${beat.dice}` : beat.dice === 3 ? "triplet" : "other";
+          die.className = `chart-die ${kind}${currentBeat?.index === beat.index ? " now" : ""}${die.dataset.key === this.selectedChartBeatKey ? " selected" : ""}`;
+          die.setAttribute("aria-label", `Measure ${beat.measure} Beat ${beat.beat}, ${beat.pattern}`);
+          if (beat.supported && pipClasses[beat.dice]) {
+            pipClasses[beat.dice].forEach((position) => {
+              const pip = document.createElement("i");
+              pip.className = `pip ${position}`;
+              die.append(pip);
+            });
+          } else {
+            const mark = document.createElement("span");
+            mark.textContent = beat.pattern === "REST" ? "□" : beat.dice === 3 ? "3!" : "?";
+            die.append(mark);
+          }
+          die.addEventListener("click", () => this.showChartBeatDetail(beat, chart.sourceTrack.label));
+          row.append(die);
+        });
+        group.append(label, row);
+        return group;
+      }));
+      const selected = chart.beats.find((beat) => `${beat.measure}:${beat.beat}` === this.selectedChartBeatKey) || currentBeat || chart.beats[0];
+      this.showChartBeatDetail(selected, chart.sourceTrack.label);
+    }
+    chartCopyMessage(message, error = false) {
+      this.chartCopyStatus.textContent = message;
+      this.chartCopyStatus.classList.toggle("chart-copy-error", error);
+    }
     results(score, maxCombo, totals, songClear) {
       this.finalScore.textContent = score;
       this.maxCombo.textContent = maxCombo;
@@ -304,6 +376,7 @@
       this.ui = new UIManager();
       this.midi = null;
       this.midiAnalysis = null;
+      this.midiDiceChart = null;
       this.analysisTrackValue = "all";
       this.analysisTick = null;
       try { this.midi = new window.MidiIntegration({ onEnded: () => this.onMidiEnded() }); }
@@ -343,6 +416,7 @@
       document.getElementById("midiLibrary").addEventListener("change", (event) => this.loadLibraryMidi(event.target.value));
       this.ui.analysisTrack.addEventListener("change", (event) => this.selectAnalysisTrack(event.target.value));
       this.ui.copyAnalysisButton.addEventListener("click", () => this.copyAnalysis());
+      this.ui.copyChartButton.addEventListener("click", () => this.copyChart());
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
         if (!button) return;
@@ -380,7 +454,10 @@
     setPlayMode(mode) {
       this.mode = mode === "midi" ? "midi" : "normal";
       this.ui.mode(this.mode === "midi");
-      if (this.mode !== "midi") this.ui.analysisVisible(false);
+      if (this.mode !== "midi") {
+        this.ui.analysisVisible(false);
+        this.ui.chartVisible(false);
+      }
       if (this.mode === "midi" && this.midi?.ready) this.ui.midiInfo(this.midi.getInfo());
       this.ui.bpmDisplay.textContent = this.mode === "midi" && this.midi?.ready ? `MIDI ♪ ${Math.round(this.midi.getInfo().bpm)} BPM` : `♪ = ${this.bpm} BPM`;
     }
@@ -389,16 +466,24 @@
       this.analysisTrackValue = "all";
       this.analysisTick = null;
       this.midiAnalysis = this.midi.getRhythmAnalysis(this.analysisTrackValue);
+      this.midiDiceChart = this.midi.getDiceChart(this.analysisTrackValue);
+      this.ui.selectedChartBeatKey = null;
       this.ui.analysisTracks(this.midi.getAnalysisTracks(), this.analysisTrackValue);
       this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+      this.ui.chartPreview(this.midiDiceChart, this.analysisTick);
       this.ui.analysisCopyMessage("");
+      this.ui.chartCopyMessage("");
     }
     selectAnalysisTrack(selection) {
       if (!this.midi?.ready) return;
       this.analysisTrackValue = selection;
       this.midiAnalysis = this.midi.getRhythmAnalysis(selection);
+      this.midiDiceChart = this.midi.getDiceChart(selection);
+      this.ui.selectedChartBeatKey = null;
       this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+      this.ui.chartPreview(this.midiDiceChart, this.analysisTick);
       this.ui.analysisCopyMessage("");
+      this.ui.chartCopyMessage("");
     }
     async copyAnalysis() {
       if (!this.midiAnalysis) {
@@ -412,6 +497,20 @@
       } catch (error) {
         console.error("Analysis copy failed", error);
         this.ui.analysisCopyMessage("コピーできませんでした", true);
+      }
+    }
+    async copyChart() {
+      if (!this.midiDiceChart) {
+        this.ui.chartCopyMessage("譜面候補がありません", true);
+        return;
+      }
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error("Clipboard APIを利用できません。");
+        await navigator.clipboard.writeText(JSON.stringify(this.midiDiceChart, null, 2));
+        this.ui.chartCopyMessage(`${this.midiDiceChart.measures.length}小節をコピーしました`);
+      } catch (error) {
+        console.error("Chart copy failed", error);
+        this.ui.chartCopyMessage("コピーできませんでした", true);
       }
     }
     async fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
@@ -549,6 +648,7 @@
       this.ui.readyOverlay.hidden = true;
       this.ui.startScreen.hidden = false;
       this.ui.analysisVisible(false);
+      this.ui.chartVisible(false);
       this.ui.judgement.textContent = "";
       this.previewChart();
     }
@@ -593,7 +693,11 @@
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.testPanel.hidden = !this.testMode;
       this.ui.analysisVisible(this.testMode && this.mode === "midi");
-      if (this.testMode && this.mode === "midi" && this.midiAnalysis) this.ui.analysisRows(this.midiAnalysis, null);
+      this.ui.chartVisible(this.testMode && this.mode === "midi");
+      if (this.testMode && this.mode === "midi" && this.midiAnalysis) {
+        this.ui.analysisRows(this.midiAnalysis, null);
+        this.ui.chartPreview(this.midiDiceChart, null);
+      }
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
@@ -631,6 +735,7 @@
           this.running = false;
           this.ui.startScreen.hidden = false;
           this.ui.analysisVisible(false);
+          this.ui.chartVisible(false);
           this.ui.midiMessage(error.message || "ゲームを開始できませんでした。", "error");
         }
       }, 1000);
@@ -641,6 +746,7 @@
       if (this.testMode && this.midiAnalysis) {
         this.analysisTick = timing.countIn ? null : timing.tick;
         this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+        this.ui.chartPreview(this.midiDiceChart, this.analysisTick);
       }
       this.beginBeat(timing.startAudioTime * 1000, timing.duration * 1000);
     }
@@ -773,6 +879,7 @@
       this.ui.results(this.score, this.bestCombo, this.totals, songClear);
       this.ui.gameOver.hidden = false;
       this.ui.analysisVisible(false);
+      this.ui.chartVisible(false);
     }
   }
   new Game();
