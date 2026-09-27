@@ -89,6 +89,11 @@
   class UIManager {
     constructor() {
       ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus"].forEach((id) => { this[id] = document.getElementById(id); });
+      this.midiProgress = document.createElement("div");
+      this.midiProgress.className = "midi-load-progress";
+      this.midiProgress.hidden = true;
+      this.midiProgress.innerHTML = '<div class="midi-progress-head"><span></span><b></b></div><progress max="1" value="0"></progress>';
+      this.midiStatus.before(this.midiProgress);
       this.buttons = [...document.querySelectorAll(".dice-button")];
       this.gridWindow = this.grid.parentElement;
       this.renderId = 0;
@@ -219,6 +224,17 @@
       this.midiStatus.className = `midi-status${type ? ` ${type}` : ""}`;
       this.midiStatus.textContent = message;
     }
+    libraryProgress(current, total, label, state = "loading") {
+      const safeTotal = Math.max(0, Number(total) || 0);
+      const safeCurrent = Math.min(safeTotal, Math.max(0, Number(current) || 0));
+      const progress = this.midiProgress.querySelector("progress");
+      this.midiProgress.hidden = false;
+      this.midiProgress.className = `midi-load-progress ${state}`;
+      this.midiProgress.querySelector("span").textContent = label;
+      this.midiProgress.querySelector("b").textContent = safeTotal ? `${safeCurrent} / ${safeTotal}` : "— / —";
+      progress.max = Math.max(1, safeTotal);
+      progress.value = safeCurrent;
+    }
     midiInfo(info) {
       const minutes = Math.floor(info.duration / 60);
       const seconds = Math.floor(info.duration % 60);
@@ -324,29 +340,74 @@
       if (this.mode === "midi" && this.midi?.ready) this.ui.midiInfo(this.midi.getInfo());
       this.ui.bpmDisplay.textContent = this.mode === "midi" && this.midi?.ready ? `MIDI ♪ ${Math.round(this.midi.getInfo().bpm)} BPM` : `♪ = ${this.bpm} BPM`;
     }
+    async fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+      try { return await fetch(url, { ...options, signal: controller.signal }); }
+      finally { window.clearTimeout(timer); }
+    }
     async loadMidiLibrary() {
       if (!this.midi) {
         this.ui.midiMessage("MIDI共通基盤を読み込めませんでした。", "error");
         return;
       }
+      this.ui.midiLibrary.disabled = true;
+      this.ui.midiLibrary.replaceChildren(new Option("曲目リストを取得中…", ""));
+      this.ui.libraryProgress(0, 0, "曲目リストを取得中");
+      this.ui.midiMessage("assets/midi/library.json を読み込んでいます…");
       try {
-        const response = await fetch("assets/midi/library.json", { cache: "no-store" });
-        if (!response.ok) throw new Error("MIDI曲目リストを読み込めませんでした。");
-        const entries = (await response.json()).filter((entry) => typeof entry?.file === "string" && /^(?!.*\.\.)[^/\\]+\.(mid|midi)$/i.test(entry.file));
-        if (!entries.length) throw new Error("MIDI曲目リストが空です。");
-        this.ui.midiLibrary.replaceChildren(...entries.map((entry) => {
+        if (window.location.protocol === "file:") {
+          const error = new Error("HTMLの直接起動では収録曲を読み込めません。ローカルHTTPサーバーから起動してください。");
+          error.code = "FILE_PROTOCOL";
+          throw error;
+        }
+        const response = await this.fetchWithTimeout("assets/midi/library.json", { cache: "no-store" });
+        if (!response.ok) throw new Error(`曲目リストの取得に失敗しました（HTTP ${response.status}）。`);
+        const source = await response.json();
+        if (!Array.isArray(source)) throw new Error("library.json の形式が正しくありません。");
+        const entries = source.filter((entry) => typeof entry?.file === "string" && /^(?!.*\.\.)[^/\\]+\.(mid|midi)$/i.test(entry.file));
+        if (!entries.length) throw new Error("library.json に有効なMIDI曲がありません。");
+
+        const options = entries.map((entry) => {
           const option = document.createElement("option");
           option.value = entry.file;
           option.textContent = entry.title || entry.file.replace(/_/g, " ").replace(/\.midi?$/i, "");
           return option;
-        }));
-        const initial = entries.find((entry) => entry.file === "sample.mid") || entries[0];
+        });
+        this.ui.midiLibrary.replaceChildren(...options);
+        this.ui.midiMessage(`${entries.length}曲を検出しました。ファイルを確認しています…`);
+
+        const available = [];
+        for (let index = 0; index < entries.length; index += 1) {
+          const entry = entries[index];
+          this.ui.libraryProgress(index, entries.length, `MIDIファイルを確認中：${entry.title || entry.file}`);
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          try {
+            const check = await this.fetchWithTimeout(`assets/midi/${encodeURIComponent(entry.file)}`, { method: "HEAD", cache: "no-store" }, 6000);
+            if (!check.ok) throw new Error(`HTTP ${check.status}`);
+            available.push(entry);
+          } catch (error) {
+            console.warn(`MIDI asset check failed: ${entry.file}`, error);
+            options[index].disabled = true;
+            options[index].textContent += "（読込不可）";
+          }
+          this.ui.libraryProgress(index + 1, entries.length, `MIDIファイルを確認中：${index + 1}/${entries.length}`);
+        }
+        if (!available.length) throw new Error(`${entries.length}曲を確認しましたが、読み込めるMIDIファイルがありません。`);
+
+        this.ui.midiLibrary.disabled = false;
+        const initial = available.find((entry) => entry.file === "sample.mid") || available[0];
         this.ui.midiLibrary.value = initial.file;
         await this.loadLibraryMidi(initial.file);
+        const failed = entries.length - available.length;
+        this.ui.libraryProgress(available.length, entries.length, failed ? `確認完了：${failed}曲を読み込めません` : `確認完了：${available.length}曲を利用できます`, failed ? "warning" : "complete");
       } catch (error) {
         console.error("MIDI library load failed", error);
-        this.ui.midiLibrary.replaceChildren(new Option("端末からMIDIを選択", ""));
-        this.ui.midiMessage("収録曲一覧を読み込めません。端末からファイルを選択してください。", "warning");
+        const directOpen = error.code === "FILE_PROTOCOL";
+        this.ui.midiLibrary.replaceChildren(new Option(directOpen ? "HTTPサーバーで起動してください" : "曲目を読み込めませんでした", ""));
+        this.ui.midiLibrary.disabled = true;
+        this.ui.libraryProgress(0, 0, directOpen ? "直接起動では読込不可" : "曲目リストの読込失敗", "error");
+        this.ui.midiMessage(error.name === "AbortError" ? "曲目リストの読み込みがタイムアウトしました。" : error.message, "error");
       }
     }
     async loadLibraryMidi(fileName) {
@@ -355,26 +416,35 @@
         this.ui.midiMessage("選択されたMIDIファイル名が不正です。", "error");
         return;
       }
-      this.ui.midiMessage("収録MIDIを解析中…");
+      this.ui.midiLibrary.disabled = true;
+      this.ui.libraryProgress(0, 1, `MIDIを解析中：${fileName}`);
+      this.ui.midiMessage(`${fileName} を読み込んでいます…`);
       try {
         const info = await this.midi.loadUrl(`assets/midi/${encodeURIComponent(fileName)}`, fileName);
         this.ui.midiInfo(info);
+        this.ui.libraryProgress(1, 1, `${fileName} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
         console.error("Library MIDI load failed", error);
-        this.ui.midiMessage(`${fileName} を読み込めませんでした。`, "error");
+        this.ui.libraryProgress(0, 1, `${fileName} の読み込み失敗`, "error");
+        this.ui.midiMessage(`${fileName} を読み込めませんでした。${error.message ? ` ${error.message}` : ""}`, "error");
+      } finally {
+        this.ui.midiLibrary.disabled = false;
       }
     }
     async loadMidiFile(file) {
       if (!file || !this.midi) return;
       this.ui.midiLibrary.value = "";
-      this.ui.midiMessage("MIDIを解析中…");
+      this.ui.libraryProgress(0, 1, `端末のMIDIを解析中：${file.name}`);
+      this.ui.midiMessage(`${file.name} を読み込んでいます…`);
       try {
         const info = await this.midi.loadFile(file);
         this.ui.midiInfo(info);
+        this.ui.libraryProgress(1, 1, `${file.name} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
         console.error("MIDI file load failed", error);
+        this.ui.libraryProgress(0, 1, `${file.name} の読み込み失敗`, "error");
         this.ui.midiMessage(error.message || "MIDIファイルを読み込めませんでした。", "error");
       }
     }
