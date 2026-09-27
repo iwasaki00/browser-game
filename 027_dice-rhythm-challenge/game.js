@@ -88,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -246,6 +246,44 @@
       this.midiTempoChanges.textContent = String(info.tempoChanges);
       this.midiMessage(info.recommended ? `${info.notes} notes / MIDI準備完了` : `${info.notes} notes / 現在このゲームでは4/4を推奨`, info.recommended ? "" : "warning");
     }
+    analysisVisible(visible) { this.midiAnalysisPanel.hidden = !visible; }
+    analysisTracks(tracks, selected = "all") {
+      this.analysisTrack.replaceChildren(...tracks.map((track) => {
+        const option = document.createElement("option");
+        option.value = track.value;
+        option.textContent = track.label;
+        return option;
+      }));
+      this.analysisTrack.value = selected;
+    }
+    analysisRows(analysis, currentTick = null) {
+      if (!analysis?.beats?.length) {
+        this.analysisBody.replaceChildren();
+        this.analysisDebug.textContent = "解析可能な拍がありません。";
+        return;
+      }
+      let currentIndex = currentTick === null ? 0 : analysis.beats.findIndex((beat) => currentTick >= beat.startTick && currentTick < beat.endTick);
+      if (currentIndex < 0) currentIndex = Math.max(0, analysis.beats.length - 1);
+      const start = Math.max(0, currentIndex - 3);
+      const shown = analysis.beats.slice(start, start + 12);
+      const formatPositions = (positions) => positions.length ? positions.map((position) => position.toFixed(3).replace(/0$/, "")).join(" ") : "-";
+      this.analysisBody.replaceChildren(...shown.map((beat) => {
+        const row = document.createElement("tr");
+        row.classList.toggle("current", beat.index === currentIndex && currentTick !== null);
+        [beat.measure, beat.beat, beat.rawNoteCount, beat.onsetCount, formatPositions(beat.onsetPositions), beat.pattern, beat.diceCandidate].forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        });
+        return row;
+      }));
+      const beat = analysis.beats[currentIndex];
+      this.analysisDebug.textContent = `Track ${analysis.track.label} | Bar ${beat.measure} Beat ${beat.beat} | Tick ${Math.round(beat.startTick)} | ${Math.round(beat.tempo)} BPM | Notes ${beat.rawNoteCount} | Onsets ${beat.onsetCount} | ${formatPositions(beat.onsetPositions)} | ${beat.pattern} | Dice ${beat.diceCandidate}`;
+    }
+    analysisCopyMessage(message, error = false) {
+      this.analysisCopyStatus.textContent = message;
+      this.analysisCopyStatus.classList.toggle("analysis-copy-error", error);
+    }
     results(score, maxCombo, totals, songClear) {
       this.finalScore.textContent = score;
       this.maxCombo.textContent = maxCombo;
@@ -265,6 +303,9 @@
       this.audio = new AudioManager();
       this.ui = new UIManager();
       this.midi = null;
+      this.midiAnalysis = null;
+      this.analysisTrackValue = "all";
+      this.analysisTick = null;
       try { this.midi = new window.MidiIntegration({ onEnded: () => this.onMidiEnded() }); }
       catch (error) { console.error("MIDI common layer failed to initialize", error); }
       this.mode = "normal";
@@ -300,6 +341,8 @@
       document.querySelectorAll('input[name="playMode"]').forEach((input) => input.addEventListener("change", () => this.setPlayMode(input.value)));
       document.getElementById("midiFile").addEventListener("change", (event) => this.loadMidiFile(event.target.files?.[0]));
       document.getElementById("midiLibrary").addEventListener("change", (event) => this.loadLibraryMidi(event.target.value));
+      this.ui.analysisTrack.addEventListener("change", (event) => this.selectAnalysisTrack(event.target.value));
+      this.ui.copyAnalysisButton.addEventListener("click", () => this.copyAnalysis());
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
         if (!button) return;
@@ -337,8 +380,39 @@
     setPlayMode(mode) {
       this.mode = mode === "midi" ? "midi" : "normal";
       this.ui.mode(this.mode === "midi");
+      if (this.mode !== "midi") this.ui.analysisVisible(false);
       if (this.mode === "midi" && this.midi?.ready) this.ui.midiInfo(this.midi.getInfo());
       this.ui.bpmDisplay.textContent = this.mode === "midi" && this.midi?.ready ? `MIDI ♪ ${Math.round(this.midi.getInfo().bpm)} BPM` : `♪ = ${this.bpm} BPM`;
+    }
+    refreshMidiAnalysis() {
+      if (!this.midi?.ready) return;
+      this.analysisTrackValue = "all";
+      this.analysisTick = null;
+      this.midiAnalysis = this.midi.getRhythmAnalysis(this.analysisTrackValue);
+      this.ui.analysisTracks(this.midi.getAnalysisTracks(), this.analysisTrackValue);
+      this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+      this.ui.analysisCopyMessage("");
+    }
+    selectAnalysisTrack(selection) {
+      if (!this.midi?.ready) return;
+      this.analysisTrackValue = selection;
+      this.midiAnalysis = this.midi.getRhythmAnalysis(selection);
+      this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+      this.ui.analysisCopyMessage("");
+    }
+    async copyAnalysis() {
+      if (!this.midiAnalysis) {
+        this.ui.analysisCopyMessage("解析結果がありません", true);
+        return;
+      }
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error("Clipboard APIを利用できません。");
+        await navigator.clipboard.writeText(JSON.stringify(this.midiAnalysis, null, 2));
+        this.ui.analysisCopyMessage(`${this.midiAnalysis.beats.length}拍をコピーしました`);
+      } catch (error) {
+        console.error("Analysis copy failed", error);
+        this.ui.analysisCopyMessage("コピーできませんでした", true);
+      }
     }
     async fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
       const controller = new AbortController();
@@ -422,6 +496,7 @@
       try {
         const info = await this.midi.loadUrl(`assets/midi/${encodeURIComponent(fileName)}`, fileName);
         this.ui.midiInfo(info);
+        this.refreshMidiAnalysis();
         this.ui.libraryProgress(1, 1, `${fileName} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
@@ -440,6 +515,7 @@
       try {
         const info = await this.midi.loadFile(file);
         this.ui.midiInfo(info);
+        this.refreshMidiAnalysis();
         this.ui.libraryProgress(1, 1, `${file.name} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
@@ -472,6 +548,7 @@
       this.ui.pauseScreen.hidden = true;
       this.ui.readyOverlay.hidden = true;
       this.ui.startScreen.hidden = false;
+      this.ui.analysisVisible(false);
       this.ui.judgement.textContent = "";
       this.previewChart();
     }
@@ -515,6 +592,8 @@
       this.ui.bpmDisplay.textContent = this.mode === "midi" ? `MIDI ♪ ${Math.round(this.currentTempo)} BPM` : `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.testPanel.hidden = !this.testMode;
+      this.ui.analysisVisible(this.testMode && this.mode === "midi");
+      if (this.testMode && this.mode === "midi" && this.midiAnalysis) this.ui.analysisRows(this.midiAnalysis, null);
       this.ui.startScreen.hidden = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
@@ -551,6 +630,7 @@
           console.error("Game start failed", error);
           this.running = false;
           this.ui.startScreen.hidden = false;
+          this.ui.analysisVisible(false);
           this.ui.midiMessage(error.message || "ゲームを開始できませんでした。", "error");
         }
       }, 1000);
@@ -558,6 +638,10 @@
     beginMidiBeat(timing = this.midi.getBeatTiming(this.midiBeatIndex)) {
       this.currentTempo = timing.bpm;
       this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(timing.bpm)} BPM`;
+      if (this.testMode && this.midiAnalysis) {
+        this.analysisTick = timing.countIn ? null : timing.tick;
+        this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
+      }
       this.beginBeat(timing.startAudioTime * 1000, timing.duration * 1000);
     }
     beginBeat(startTime, duration) {
@@ -688,6 +772,7 @@
       this.ui.targetGuide(0, false);
       this.ui.results(this.score, this.bestCombo, this.totals, songClear);
       this.ui.gameOver.hidden = false;
+      this.ui.analysisVisible(false);
     }
   }
   new Game();
