@@ -88,12 +88,13 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
       this.midiProgress.innerHTML = '<div class="midi-progress-head"><span></span><b></b></div><progress max="1" value="0"></progress>';
       this.midiStatus.before(this.midiProgress);
+      this.debugContent.append(this.midiAnalysisPanel, this.diceChartPanel);
       this.buttons = [...document.querySelectorAll(".dice-button")];
       this.gridWindow = this.grid.parentElement;
       this.renderId = 0;
@@ -199,6 +200,16 @@
         label.hidden = !active;
         label.textContent = active ? `TARGET ${value} / ${value} taps` : "";
       });
+    }
+    beatSourceMarker(beat, testMode) {
+      this.grid.querySelectorAll(".source-warning").forEach((item) => item.remove());
+      if (!testMode || !beat?.isFallback) return;
+      const active = this.grid.querySelector(".die.active");
+      if (!active) return;
+      const marker = document.createElement("small");
+      marker.className = "source-warning";
+      marker.textContent = beat.sourcePattern === "TRIPLET" ? "3!" : "?";
+      active.append(marker);
     }
     guideCue(active) {
       this.buttons.forEach((button) => button.classList.toggle("guide-cue", active && button.classList.contains("test-target")));
@@ -356,12 +367,41 @@
       this.chartCopyStatus.textContent = message;
       this.chartCopyStatus.classList.toggle("chart-copy-error", error);
     }
-    results(score, maxCombo, totals, songClear) {
+    gameTracks(options) {
+      this.gameTrack.replaceChildren(...options.map((item) => {
+        const stats = item.chart.statistics;
+        const option = document.createElement("option");
+        option.value = item.value;
+        const active = `${stats.activeBeatRate.toFixed(1)}%`;
+        const playable = stats.playableActiveRate === null ? "N/A" : `${stats.playableActiveRate.toFixed(1)}%`;
+        option.textContent = `${item.label}${item.recommended ? " ★ Recommended" : ""} — Active ${active} / Playable ${playable}${stats.silent ? " [SILENT]" : ""}`;
+        return option;
+      }));
+      const selected = options.find((item) => item.recommended) || options.find((item) => item.value !== "all" && !item.chart.statistics.silent) || options.find((item) => item.value !== "all") || options[0];
+      this.gameTrack.value = selected?.value || "all";
+      return this.gameTrack.value;
+    }
+    gameTrackInfo(chart) {
+      if (!chart) return;
+      const stats = chart.statistics;
+      this.gameTrackActive.textContent = `Active ${stats.activeBeatRate.toFixed(1)}% (${stats.activeBeats})`;
+      this.gameTrackPlayable.textContent = `Playable ${stats.playableActiveRate === null ? "N/A" : `${stats.playableActiveRate.toFixed(1)}%`}`;
+      this.gameTrackFallback.textContent = `Fallback ${stats.fallbackBeats}`;
+      this.gameTrackWarning.textContent = stats.silent ? "このTrackは無音です。ゲーム向けではありません。" : chart.selection === "all" ? "ALL Trackは複雑な譜面になる可能性があります。" : !chart.compatible ? "現在4/4のTrackのみ実ゲームに対応しています。" : "";
+    }
+    debugVisible(visible) { this.debugDrawer.hidden = !visible; }
+    playMetadata(fileName, trackName, visible) {
+      this.midiPlayMeta.hidden = !visible;
+      this.playingSong.textContent = fileName || "";
+      this.playingTrack.textContent = trackName ? `GAME TRACK · ${trackName}` : "";
+    }
+    results(score, maxCombo, totals, songClear, fallbackBeats = 0) {
       this.finalScore.textContent = score;
       this.maxCombo.textContent = maxCombo;
       this.perfectTotal.textContent = totals.PERFECT;
       this.goodTotal.textContent = totals.GOOD;
       this.missTotal.textContent = totals.MISS;
+      this.fallbackTotal.textContent = fallbackBeats;
       this.resultKicker.textContent = songClear ? "MIDI COMPLETE" : "RUN COMPLETE";
       this.resultTitle.textContent = songClear ? "SONG CLEAR" : "GAME OVER";
       this.resultTitle.classList.toggle("song-clear", songClear);
@@ -377,6 +417,10 @@
       this.midi = null;
       this.midiAnalysis = null;
       this.midiDiceChart = null;
+      this.selectedGameTrack = "";
+      this.activeGameChart = null;
+      this.currentGameBeat = null;
+      this.midiMeasureCursor = 0;
       this.analysisTrackValue = "all";
       this.analysisTick = null;
       try { this.midi = new window.MidiIntegration({ onEnded: () => this.onMidiEnded() }); }
@@ -408,7 +452,7 @@
       this.loadMidiLibrary();
     }
     get beatDuration() { return this.currentBeatDuration; }
-    get currentValue() { return this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? 0; }
+    get currentValue() { return this.mode === "midi" && this.currentGameBeat ? (this.currentGameBeat.playDice ?? 0) : (this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? 0); }
     clockNow() { return this.mode === "midi" && this.midi?.context ? this.midi.context.currentTime * 1000 : performance.now(); }
     bind() {
       document.querySelectorAll('input[name="playMode"]').forEach((input) => input.addEventListener("change", () => this.setPlayMode(input.value)));
@@ -417,6 +461,9 @@
       this.ui.analysisTrack.addEventListener("change", (event) => this.selectAnalysisTrack(event.target.value));
       this.ui.copyAnalysisButton.addEventListener("click", () => this.copyAnalysis());
       this.ui.copyChartButton.addEventListener("click", () => this.copyChart());
+      this.ui.gameTrack.addEventListener("change", (event) => this.selectGameTrack(event.target.value));
+      this.ui.debugButton.addEventListener("click", () => this.ui.debugVisible(true));
+      this.ui.closeDebugButton.addEventListener("click", () => this.ui.debugVisible(false));
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
         if (!button) return;
@@ -473,6 +520,13 @@
       this.ui.chartPreview(this.midiDiceChart, this.analysisTick);
       this.ui.analysisCopyMessage("");
       this.ui.chartCopyMessage("");
+      const gameOptions = this.midi.getGameTrackOptions();
+      this.selectedGameTrack = this.ui.gameTracks(gameOptions);
+      this.selectGameTrack(this.selectedGameTrack);
+    }
+    selectGameTrack(selection) {
+      this.selectedGameTrack = selection;
+      this.ui.gameTrackInfo(this.midi?.getGameChart(selection));
     }
     selectAnalysisTrack(selection) {
       if (!this.midi?.ready) return;
@@ -632,6 +686,15 @@
       const blankRow = () => Array(CONFIG.ROW_SIZE).fill(0);
       return [blankRow(), blankRow(), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
     }
+    gameMeasureRow(index) {
+      const beats = this.activeGameChart?.measures?.[index]?.beats || [];
+      return Array.from({ length: CONFIG.ROW_SIZE }, (_, beatIndex) => beats[beatIndex]?.playDice ?? 0);
+    }
+    makeMidiOpeningRows() {
+      const blank = () => Array(CONFIG.ROW_SIZE).fill(0);
+      this.midiMeasureCursor = 3;
+      return [blank(), blank(), this.gameMeasureRow(0), this.gameMeasureRow(1), this.gameMeasureRow(2)];
+    }
     stopTiming() {
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
@@ -649,6 +712,9 @@
       this.ui.startScreen.hidden = false;
       this.ui.analysisVisible(false);
       this.ui.chartVisible(false);
+      this.ui.debugVisible(false);
+      this.ui.debugButton.hidden = true;
+      this.ui.playMetadata("", "", false);
       this.ui.judgement.textContent = "";
       this.previewChart();
     }
@@ -666,6 +732,14 @@
         this.ui.midiMessage("MIDIファイルを読み込んでからSTARTしてください。", "error");
         return;
       }
+      if (this.mode === "midi") {
+        const selectedChart = this.midi.getGameChart(this.selectedGameTrack);
+        if (!selectedChart?.compatible) {
+          this.ui.midiMessage("選択したGAME TRACKは現在4/4の実ゲームに対応していません。", "error");
+          return;
+        }
+        this.activeGameChart = selectedChart;
+      } else this.activeGameChart = null;
       this.stopTiming();
       try {
         const sharedContext = this.mode === "midi" ? await this.midi.ensureAudio() : null;
@@ -686,7 +760,8 @@
       this.midiBeatIndex = -CONFIG.ROW_SIZE;
       this.currentTempo = this.mode === "midi" ? this.midi.getInfo().bpm : this.bpm;
       this.currentBeatDuration = 60000 / this.currentTempo;
-      this.rows = this.makeOpeningRows();
+      this.currentGameBeat = null;
+      this.rows = this.mode === "midi" ? this.makeMidiOpeningRows() : this.makeOpeningRows();
       this.ui.renderChart(this.rows, -1);
       this.ui.stats(this.score, this.combo, this.lives, this.testMode);
       this.ui.bpmDisplay.textContent = this.mode === "midi" ? `MIDI ♪ ${Math.round(this.currentTempo)} BPM` : `♪ = ${this.bpm} BPM`;
@@ -694,6 +769,9 @@
       this.ui.testPanel.hidden = !this.testMode;
       this.ui.analysisVisible(this.testMode && this.mode === "midi");
       this.ui.chartVisible(this.testMode && this.mode === "midi");
+      this.ui.debugButton.hidden = !(this.testMode && this.mode === "midi");
+      this.ui.debugVisible(false);
+      this.ui.playMetadata(this.midi?.getInfo()?.fileName, this.activeGameChart?.sourceTrack?.label, this.mode === "midi");
       if (this.testMode && this.mode === "midi" && this.midiAnalysis) {
         this.ui.analysisRows(this.midiAnalysis, null);
         this.ui.chartPreview(this.midiDiceChart, null);
@@ -706,7 +784,7 @@
     }
     applyBeatCss() {
       document.documentElement.style.setProperty("--beat-duration", `${this.beatDuration}ms`);
-      document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(180, Math.min(260, this.beatDuration * 0.45))}ms`);
+      document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(100, Math.min(180, this.beatDuration * 0.28))}ms`);
     }
     showReady(resuming) {
       this.preparing = true;
@@ -741,6 +819,7 @@
       }, 1000);
     }
     beginMidiBeat(timing = this.midi.getBeatTiming(this.midiBeatIndex)) {
+      this.currentGameBeat = timing.countIn ? null : window.MidiGameChart.beatAtTick(this.activeGameChart, timing.tick);
       this.currentTempo = timing.bpm;
       this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(timing.bpm)} BPM`;
       if (this.testMode && this.midiAnalysis) {
@@ -760,8 +839,10 @@
       const value = this.currentValue;
       this.ui.setActive(this.column, value === 0);
       this.ui.progress(0);
-      this.ui.enableControls(value !== 0);
+      const restInputWindow = this.mode === "midi" && Boolean(this.currentGameBeat?.isRest);
+      this.ui.enableControls(value !== 0 || restInputWindow);
       this.ui.targetGuide(value, this.testMode && value !== 0);
+      this.ui.beatSourceMarker(this.currentGameBeat, this.testMode);
       this.updateGuide(Math.max(0, this.clockNow() - this.beatStart));
       this.audio.metronome(this.column === 0);
       this.updateFrame();
@@ -770,7 +851,8 @@
     }
     onTap(event, value) {
       event.preventDefault();
-      if (!this.running || this.currentValue === 0) return;
+      const restBeat = this.mode === "midi" && Boolean(this.currentGameBeat?.isRest);
+      if (!this.running || (this.currentValue === 0 && !restBeat)) return;
       const button = event.currentTarget;
       button.classList.remove("pressed");
       void button.offsetWidth;
@@ -780,6 +862,12 @@
       this.audio.tap(value);
       const elapsed = this.clockNow() - this.beatStart;
       if (elapsed < 0 || elapsed > this.beatDuration) return;
+      if (restBeat) {
+        this.taps.push(elapsed);
+        this.wrongInput = true;
+        this.updateTest(elapsed);
+        return;
+      }
       if (this.taps.length >= this.currentValue) {
         this.updateTest(elapsed);
         return;
@@ -808,6 +896,17 @@
         }
         this.ui.stats(this.score, this.combo, this.lives, this.testMode);
         if (this.lives <= 0 && !this.testMode) { this.end(false); return; }
+      } else if (this.mode === "midi" && this.currentGameBeat?.isRest) {
+        const restResult = window.MidiGameChart.judgeRest(this.taps.length);
+        if (restResult.miss) {
+          this.totals.MISS += 1;
+          this.combo = 0;
+          if (!this.testMode) this.lives -= 1;
+          this.audio.result("MISS");
+          this.ui.verdict("MISS");
+        } else this.ui.judgement.textContent = "";
+        this.ui.stats(this.score, this.combo, this.lives, this.testMode);
+        if (this.lives <= 0 && !this.testMode) { this.end(false); return; }
       } else this.ui.judgement.textContent = "";
       this.advanceChart();
       if (this.mode === "midi") {
@@ -818,9 +917,10 @@
     advanceChart() {
       if (this.column < CONFIG.ROW_SIZE - 1) this.column += 1;
       else {
-        this.rows = [...this.rows.slice(1), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
+        const nextRow = this.mode === "midi" ? this.gameMeasureRow(this.midiMeasureCursor++) : this.chartGenerator.nextRow(STAGES[this.stageIndex]);
+        this.rows = [...this.rows.slice(1), nextRow];
         this.column = 0;
-        this.ui.scrollChart(this.rows, this.column, this.currentValue === 0);
+        this.ui.scrollChart(this.rows, this.column, nextRow[0] === 0);
       }
     }
     updateFrame() {
@@ -876,8 +976,10 @@
       if (this.mode === "midi") this.midi?.stop();
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
-      this.ui.results(this.score, this.bestCombo, this.totals, songClear);
+      this.ui.results(this.score, this.bestCombo, this.totals, songClear, this.activeGameChart?.statistics?.fallbackBeats || 0);
       this.ui.gameOver.hidden = false;
+      this.ui.debugVisible(false);
+      this.ui.debugButton.hidden = true;
       this.ui.analysisVisible(false);
       this.ui.chartVisible(false);
     }

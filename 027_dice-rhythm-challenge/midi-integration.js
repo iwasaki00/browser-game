@@ -80,7 +80,7 @@
 
   class MidiIntegration {
     constructor(options = {}) {
-      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer || !global.MidiDiceChartGenerator) throw new Error("MIDI共通基盤を読み込めませんでした。");
+      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer || !global.MidiDiceChartGenerator || !global.MidiGameChart) throw new Error("MIDI共通基盤を読み込めませんでした。");
       this.synth = new global.MidiAudio.MidiSynth();
       this.player = new MidiPlayer(this.synth, () => options.onEnded?.());
       this.song = null;
@@ -91,6 +91,7 @@
       this.rhythmAnalyzer = null;
       this.analysisTrack = "all";
       this.diceCharts = new Map();
+      this.gameCharts = new Map();
     }
 
     async ensureAudio() { return this.synth.ensureContext(); }
@@ -106,9 +107,12 @@
       this.rhythmAnalyzer = new global.MidiRhythmAnalyzer(song);
       this.analysisTrack = "all";
       this.diceCharts = new Map();
+      this.gameCharts = new Map();
       this.rhythmAnalyzer.trackOptions.forEach((track) => {
         const analysis = this.rhythmAnalyzer.analyze(track.value);
-        this.diceCharts.set(track.value, new global.MidiDiceChartGenerator(analysis).generate());
+        const diceChart = new global.MidiDiceChartGenerator(analysis).generate();
+        this.diceCharts.set(track.value, diceChart);
+        this.gameCharts.set(track.value, new global.MidiGameChart(diceChart).build());
       });
       this.player.setSong(song);
       return this.getInfo();
@@ -157,6 +161,14 @@
     getDiceChart(selection = this.analysisTrack) {
       const key = selection === "all" ? "all" : String(Number(selection));
       return this.diceCharts.get(key) || null;
+    }
+    getGameChart(selection) {
+      const key = selection === "all" ? "all" : String(Number(selection));
+      return this.gameCharts.get(key) || null;
+    }
+    getGameTrackOptions() {
+      const recommended = global.MidiGameChart.recommend([...this.gameCharts.values()]);
+      return this.rhythmAnalyzer.trackOptions.map((track) => ({ ...track, chart: this.gameCharts.get(track.value), recommended: track.value === recommended?.selection }));
     }
 
     async startWithCountIn(beats = 4) {
