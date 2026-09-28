@@ -1,8 +1,16 @@
 [
   { "file": "sample.mid", "title": "Sample — Tempo Change Test" },
   { "file": "ABBA_-_Dancing_Queen.mid", "title": "ABBA — Dancing Queen" },
+  { "file": "ABBA_-_Gimme_Gimme_Gimme.mid", "title": "ABBA — Gimme! Gimme! Gimme!" },
+  { "file": "ABBA_-_S.O.S.mid", "title": "ABBA — S.O.S." },
+  { "file": "Disney_Themes_-_Hakuna_Matata.mid", "title": "Disney Themes — Hakuna Matata" },
   { "file": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid", "title": "Disney Themes — Pirates Of The Caribbean" },
   { "file": "Disney_Themes_-_Tiki_Room.mid", "title": "Disney Themes — Tiki Room" },
   { "file": "Jamiroquai_-_Virtual_Insanity.mid", "title": "Jamiroquai — Virtual Insanity" },
-  { "file": "Michael_Jackson_-_Billie_Jean.mid", "title": "Michael Jackson — Billie Jean" }
+  { "file": "Michael_Jackson_-_Beat_It.mid", "title": "Michael Jackson — Beat It" },
+  { "file": "Michael_Jackson_-_Billie_Jean.mid", "title": "Michael Jackson — Billie Jean" },
+  { "file": "Michael_Jackson_-_Thriller.mid", "title": "Michael Jackson — Thriller" },
+  { "file": "Movie_Themes_-_Addams_Family.mid", "title": "Movie Themes — Addams Family" },
+  { "file": "Movie_Themes_-_Willie_Wonka.mid", "title": "Movie Themes — Willie Wonka" },
+  { "file": "Queen_-_Killer_Queen.mid", "title": "Queen — Killer Queen" }
 ]
