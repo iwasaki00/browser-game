@@ -11,7 +11,7 @@
     SINGLE: Object.freeze({ dice: 1, supported: true, reason: null }),
     EVEN_2: Object.freeze({ dice: 2, supported: true, reason: null }),
     EVEN_4: Object.freeze({ dice: 4, supported: true, reason: null }),
-    TRIPLET: Object.freeze({ dice: 3, supported: false, reason: "DICE_3_NOT_SUPPORTED" }),
+    TRIPLET: Object.freeze({ dice: 3, supported: true, reason: null }),
     OTHER: Object.freeze({ dice: null, supported: false, reason: "UNSUPPORTED_PATTERN" })
   });
 
@@ -88,6 +88,7 @@
         rest: count((beat) => beat.pattern === "REST"),
         dice1: count((beat) => beat.dice === 1 && beat.supported),
         dice2: count((beat) => beat.dice === 2 && beat.supported),
+        dice3: count((beat) => beat.dice === 3 && beat.supported),
         dice4: count((beat) => beat.dice === 4 && beat.supported),
         unsupportedDice3: count((beat) => beat.reason === "DICE_3_NOT_SUPPORTED"),
         unsupportedOther: count((beat) => beat.reason === "UNSUPPORTED_PATTERN"),

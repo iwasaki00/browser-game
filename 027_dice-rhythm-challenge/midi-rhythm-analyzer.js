@@ -88,7 +88,7 @@
     diceCandidate(onsetCount) {
       if (onsetCount === 0) return "-";
       if (onsetCount === 1 || onsetCount === 2 || onsetCount === 4) return String(onsetCount);
-      if (onsetCount === 3) return "3 ?";
+      if (onsetCount === 3) return "3";
       return "?";
     }
 

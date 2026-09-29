@@ -34,7 +34,7 @@ assert(converted[0].dice === null && converted[0].supported, "REST conversion");
 assert(converted[1].dice === 1 && converted[1].supported, "SINGLE conversion");
 assert(converted[2].dice === 2 && converted[2].supported, "EVEN_2 conversion");
 assert(converted[3].dice === 4 && converted[3].supported, "EVEN_4 conversion");
-assert(converted[4].dice === 3 && !converted[4].supported && converted[4].reason === "DICE_3_NOT_SUPPORTED", "TRIPLET conversion");
+assert(converted[4].dice === 3 && converted[4].supported && converted[4].reason === null, "TRIPLET conversion");
 assert(converted[5].dice === null && !converted[5].supported && converted[5].reason === "UNSUPPORTED_PATTERN", "OTHER conversion");
 
 const row = generate([beat(0, "SINGLE"), beat(1, "EVEN_2"), beat(2, "EVEN_4"), beat(3, "REST")]);

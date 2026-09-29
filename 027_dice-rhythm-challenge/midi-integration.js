@@ -80,7 +80,7 @@
 
   class MidiIntegration {
     constructor(options = {}) {
-      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer || !global.MidiDiceChartGenerator || !global.MidiGameChart) throw new Error("MIDI共通基盤を読み込めませんでした。");
+      if (!global.MidiCommon || !global.MidiAudio || !global.MidiRhythmAnalyzer || !global.MidiDiceChartGenerator || !global.MidiGameChart || !global.MidiChartDiagnostics) throw new Error("MIDI共通基盤を読み込めませんでした。");
       this.synth = new global.MidiAudio.MidiSynth();
       this.player = new MidiPlayer(this.synth, () => options.onEnded?.());
       this.song = null;
@@ -92,6 +92,7 @@
       this.analysisTrack = "all";
       this.diceCharts = new Map();
       this.gameCharts = new Map();
+      this.diagnostics = null;
     }
 
     async ensureAudio() { return this.synth.ensureContext(); }
@@ -108,12 +109,18 @@
       this.analysisTrack = "all";
       this.diceCharts = new Map();
       this.gameCharts = new Map();
+      this.diagnostics = null;
       this.rhythmAnalyzer.trackOptions.forEach((track) => {
         const analysis = this.rhythmAnalyzer.analyze(track.value);
         const diceChart = new global.MidiDiceChartGenerator(analysis).generate();
         this.diceCharts.set(track.value, diceChart);
         this.gameCharts.set(track.value, new global.MidiGameChart(diceChart).build());
       });
+      this.diagnostics = new global.MidiChartDiagnostics(song, {
+        analyzer: this.rhythmAnalyzer,
+        diceCharts: this.diceCharts,
+        gameCharts: this.gameCharts
+      }).diagnose();
       this.player.setSong(song);
       return this.getInfo();
     }
@@ -166,6 +173,8 @@
       const key = selection === "all" ? "all" : String(Number(selection));
       return this.gameCharts.get(key) || null;
     }
+    getDiagnostics() { return this.diagnostics; }
+    getDiagnosticsCsv() { return this.diagnostics ? global.MidiChartDiagnostics.toCsv(this.diagnostics) : ""; }
     getGameTrackOptions() {
       const recommended = global.MidiGameChart.recommend([...this.gameCharts.values()]);
       return this.rhythmAnalyzer.trackOptions.map((track) => ({ ...track, chart: this.gameCharts.get(track.value), recommended: track.value === recommended?.selection }));

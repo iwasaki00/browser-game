@@ -14,7 +14,7 @@
 
     build() {
       const beats = this.sourceChart.beats.map((source) => {
-        const playable = source.supported && [1, 2, 4].includes(source.dice);
+        const playable = source.supported && [1, 2, 3, 4].includes(source.dice);
         const naturalRest = source.pattern === "REST";
         const fallback = !source.supported && !naturalRest;
         return {
@@ -42,7 +42,7 @@
         beats: beats.filter((beat) => beat.measure === sourceMeasure.measure)
       }));
       const activeBeats = beats.filter((beat) => beat.sourcePattern !== "REST").length;
-      const playableActiveBeats = beats.filter((beat) => [1, 2, 4].includes(beat.playDice)).length;
+      const playableActiveBeats = beats.filter((beat) => [1, 2, 3, 4].includes(beat.playDice)).length;
       const fallbackBeats = beats.filter((beat) => beat.isFallback).length;
       const totalBeats = beats.length;
       return {

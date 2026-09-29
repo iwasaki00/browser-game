@@ -49,6 +49,6 @@ assert(chord.diceCandidate === "1", "chord dice candidate");
 const triplet = analyze([note(0), note(160, 62), note(320, 64)]);
 assert(triplet.onsetCount === 3, "triplet onset count");
 assert(Math.abs(triplet.onsetPositions[1] - 1 / 3) < 0.001, "triplet middle position");
-assert(triplet.pattern === "TRIPLET" && triplet.diceCandidate === "3 ?", "triplet classification");
+assert(triplet.pattern === "TRIPLET" && triplet.diceCandidate === "3", "triplet classification");
 
 console.log(JSON.stringify({ tests: 5, assertions: 13, result: "PASS" }));

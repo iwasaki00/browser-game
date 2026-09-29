@@ -78,7 +78,7 @@
       oscillator.stop(start + duration);
     }
     metronome(accent = false) { this.tone(accent ? 950 : 720, 0.045, "square", accent ? 0.045 : 0.026); }
-    tap(value) { this.tone({ 1: 250, 2: 330, 4: 440 }[value], 0.055, "triangle", 0.065); }
+    tap(value) { this.tone({ 1: 250, 2: 330, 3: 385, 4: 440 }[value], 0.055, "triangle", 0.065); }
     result(grade) {
       if (grade === "PERFECT") { this.tone(660, 0.12, "sine", 0.07); this.tone(990, 0.16, "sine", 0.055, 0.055); }
       else if (grade === "GOOD") this.tone(560, 0.13, "triangle", 0.06);
@@ -88,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -105,7 +105,7 @@
       die.className = value === 0 ? `die countdown${isActive ? " active" : ""}` : `die value-${value}${isActive ? " active" : ""}`;
       die.setAttribute("role", "listitem");
       die.setAttribute("aria-label", value === 0 ? `${column + 1}拍目、カウントイン` : `${column + 1}拍目、${value}の目`);
-      const positions = value === 0 ? [] : value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : ["tl", "tr", "bl", "br"];
+      const positions = value === 0 ? [] : value === 1 ? ["c"] : value === 2 ? ["tr", "bl"] : value === 3 ? ["tl", "c", "br"] : ["tl", "tr", "bl", "br"];
       positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
       return die;
     }
@@ -208,7 +208,7 @@
       if (!active) return;
       const marker = document.createElement("small");
       marker.className = "source-warning";
-      marker.textContent = beat.sourcePattern === "TRIPLET" ? "3!" : "?";
+      marker.textContent = "?";
       active.append(marker);
     }
     guideCue(active) {
@@ -314,7 +314,7 @@
       this.chartPlayableRate.textContent = `Playable ${stats.playableRate.toFixed(1)}%`;
       this.chartStatistics.replaceChildren(...[
         `Measures ${stats.measures}`, `Playable ${stats.supportedBeats}/${stats.totalBeats}`, `REST ${stats.rest}`,
-        `1 ${stats.dice1}`, `2 ${stats.dice2}`, `4 ${stats.dice4}`, `3! ${stats.unsupportedDice3}`, `OTHER ${stats.unsupportedOther}`
+        `1 ${stats.dice1}`, `2 ${stats.dice2}`, `3 ${stats.dice3}`, `4 ${stats.dice4}`, `OTHER ${stats.unsupportedOther}`
       ].map((text) => {
         const item = document.createElement("span");
         item.textContent = text;
@@ -328,7 +328,7 @@
       if (measureIndex < 0) measureIndex = 0;
       const start = Math.max(0, Math.min(measureIndex - 2, Math.max(0, chart.measures.length - 8)));
       const shown = chart.measures.slice(start, start + 8);
-      const pipClasses = { 1: ["c"], 2: ["tr", "bl"], 4: ["tl", "tr", "bl", "br"] };
+      const pipClasses = { 1: ["c"], 2: ["tr", "bl"], 3: ["tl", "c", "br"], 4: ["tl", "tr", "bl", "br"] };
       this.chartMeasures.replaceChildren(...shown.map((measure) => {
         const group = document.createElement("section");
         group.className = `chart-measure${measure.measure === currentMeasure && currentTick !== null ? " current" : ""}${measure.supported ? "" : " unsupported"}`;
@@ -340,7 +340,7 @@
           const die = document.createElement("button");
           die.type = "button";
           die.dataset.key = `${beat.measure}:${beat.beat}`;
-          const kind = beat.pattern === "REST" ? "rest" : beat.supported ? `value-${beat.dice}` : beat.dice === 3 ? "triplet" : "other";
+          const kind = beat.pattern === "REST" ? "rest" : beat.supported ? `value-${beat.dice}` : "other";
           die.className = `chart-die ${kind}${currentBeat?.index === beat.index ? " now" : ""}${die.dataset.key === this.selectedChartBeatKey ? " selected" : ""}`;
           die.setAttribute("aria-label", `Measure ${beat.measure} Beat ${beat.beat}, ${beat.pattern}`);
           if (beat.supported && pipClasses[beat.dice]) {
@@ -351,7 +351,7 @@
             });
           } else {
             const mark = document.createElement("span");
-            mark.textContent = beat.pattern === "REST" ? "□" : beat.dice === 3 ? "3!" : "?";
+            mark.textContent = beat.pattern === "REST" ? "□" : "?";
             die.append(mark);
           }
           die.addEventListener("click", () => this.showChartBeatDetail(beat, chart.sourceTrack.label));
@@ -461,6 +461,8 @@
       this.ui.analysisTrack.addEventListener("change", (event) => this.selectAnalysisTrack(event.target.value));
       this.ui.copyAnalysisButton.addEventListener("click", () => this.copyAnalysis());
       this.ui.copyChartButton.addEventListener("click", () => this.copyChart());
+      this.ui.exportDiagnosticsJson.addEventListener("click", () => this.exportDiagnostics("json"));
+      this.ui.exportDiagnosticsCsv.addEventListener("click", () => this.exportDiagnostics("csv"));
       this.ui.gameTrack.addEventListener("change", (event) => this.selectGameTrack(event.target.value));
       this.ui.debugButton.addEventListener("click", () => this.ui.debugVisible(true));
       this.ui.closeDebugButton.addEventListener("click", () => this.ui.debugVisible(false));
@@ -520,6 +522,14 @@
       this.ui.chartPreview(this.midiDiceChart, this.analysisTick);
       this.ui.analysisCopyMessage("");
       this.ui.chartCopyMessage("");
+      const diagnostics = this.midi.getDiagnostics();
+      const active = diagnostics?.summary?.filter((item) => !item.silent) || [];
+      const triplets = active.reduce((sum, item) => sum + item.dice3, 0);
+      const baseline = active.reduce((sum, item) => sum + item.currentPlayableBeats, 0);
+      const withDice3 = active.reduce((sum, item) => sum + item.withDice3PlayableBeats, 0);
+      const activeBeats = active.reduce((sum, item) => sum + item.activeBeats, 0);
+      const benefit = activeBeats ? ((withDice3 - baseline) / activeBeats * 100).toFixed(1) : "0.0";
+      this.ui.diagnosticsStatus.textContent = `DIAGNOSTICS: ${active.length} active tracks / TRIPLET ${triplets} / Dice3 benefit +${benefit}pt`;
       const gameOptions = this.midi.getGameTrackOptions();
       this.selectedGameTrack = this.ui.gameTracks(gameOptions);
       this.selectGameTrack(this.selectedGameTrack);
@@ -566,6 +576,26 @@
         console.error("Chart copy failed", error);
         this.ui.chartCopyMessage("コピーできませんでした", true);
       }
+    }
+    exportDiagnostics(format) {
+      const report = this.midi?.getDiagnostics();
+      if (!report) {
+        this.ui.analysisCopyMessage("診断結果がありません", true);
+        return;
+      }
+      const csv = format === "csv";
+      const content = csv ? this.midi.getDiagnosticsCsv() : JSON.stringify(report, null, 2);
+      const blob = new Blob([content], { type: csv ? "text/csv;charset=utf-8" : "application/json;charset=utf-8" });
+      const link = document.createElement("a");
+      const stem = (report.song || "midi").replace(/\.midi?$/i, "").replace(/[^a-z0-9_-]+/gi, "_");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${stem}-diagnostics.${csv ? "csv" : "json"}`;
+      document.body.append(link);
+      link.click();
+      const objectUrl = link.href;
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+      this.ui.analysisCopyMessage(`診断${csv ? "CSV" : "JSON"}を出力しました`);
     }
     async fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
       const controller = new AbortController();

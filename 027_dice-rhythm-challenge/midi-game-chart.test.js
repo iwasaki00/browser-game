@@ -11,16 +11,16 @@ function sourceChart(beats, selection = "0") {
 function build(beats, selection) { return new MidiGameChart(sourceChart(beats, selection)).build(); }
 function assert(condition, message) { if (!condition) throw new Error(message); }
 
-const beats = [sourceBeat(0, "SINGLE", 1, true), sourceBeat(1, "EVEN_2", 2, true), sourceBeat(2, "EVEN_4", 4, true), sourceBeat(3, "REST", null, true)];
+const beats = [sourceBeat(0, "SINGLE", 1, true), sourceBeat(1, "EVEN_2", 2, true), sourceBeat(2, "TRIPLET", 3, true), sourceBeat(3, "EVEN_4", 4, true), sourceBeat(4, "REST", null, true)];
 const chart = build(beats, "0");
 assert(chart.beats[0].playDice === 1, "SINGLE -> 1");
 assert(chart.beats[1].playDice === 2, "EVEN_2 -> 2");
-assert(chart.beats[2].playDice === 4, "EVEN_4 -> 4");
-assert(chart.beats[3].playDice === null && chart.beats[3].isRest && !chart.beats[3].isFallback, "REST no input");
+assert(chart.beats[2].playDice === 3 && !chart.beats[2].isFallback, "TRIPLET -> 3");
+assert(chart.beats[3].playDice === 4, "EVEN_4 -> 4");
+assert(chart.beats[4].playDice === null && chart.beats[4].isRest && !chart.beats[4].isFallback, "REST no input");
 
-const fallback = build([sourceBeat(0, "TRIPLET", 3, false, "DICE_3_NOT_SUPPORTED"), sourceBeat(1, "OTHER", null, false, "UNSUPPORTED_PATTERN"), sourceBeat(2, "REST", null, true), sourceBeat(3, "REST", null, true)]);
-assert(fallback.beats[0].playDice === null && fallback.beats[0].isFallback && fallback.beats[0].fallbackReason === "DICE_3_NOT_SUPPORTED", "TRIPLET fallback");
-assert(fallback.beats[1].playDice === null && fallback.beats[1].isFallback && fallback.beats[1].fallbackReason === "UNSUPPORTED_PATTERN", "OTHER fallback");
+const fallback = build([sourceBeat(0, "OTHER", null, false, "UNSUPPORTED_PATTERN"), sourceBeat(1, "REST", null, true), sourceBeat(2, "REST", null, true), sourceBeat(3, "REST", null, true)]);
+assert(fallback.beats[0].playDice === null && fallback.beats[0].isFallback && fallback.beats[0].fallbackReason === "UNSUPPORTED_PATTERN", "OTHER fallback");
 
 let selectedGameTrack = "0";
 const activeGameChart = chart;
