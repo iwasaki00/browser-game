@@ -2,38 +2,85 @@
 
 const MidiGameChart = require("./midi-game-chart.js");
 
-function sourceBeat(index, pattern, dice, supported, reason = null) {
-  return { index, measure: 1, beat: index + 1, pattern, dice, supported, reason, startTick: index * 480, endTick: (index + 1) * 480, startTime: index * 0.5, endTime: (index + 1) * 0.5, timeSignature: { numerator: 4, denominator: 4 }, onsetPositions: [] };
+function sourceBeat(index, pattern, dice, supported = true, options = {}) {
+  const signature = options.signature || { numerator: 4, denominator: 4 };
+  const durationTicks = options.durationTicks || 480;
+  const startTick = options.startTick ?? index * durationTicks;
+  return {
+    index,
+    measure: options.measure ?? 1,
+    beat: options.beat ?? index + 1,
+    pattern,
+    dice,
+    supported,
+    reason: options.reason || null,
+    startTick,
+    endTick: options.endTick ?? startTick + durationTicks,
+    startTime: options.startTime ?? index * 0.5,
+    endTime: options.endTime ?? (index + 1) * 0.5,
+    tempo: options.tempo ?? 120,
+    timeSignature: signature,
+    onsetPositions: options.onsetPositions || []
+  };
 }
 function sourceChart(beats, selection = "0") {
-  return { fileName: "test.mid", selection, sourceTrack: { value: selection, label: `Track ${selection}` }, beats, measures: [{ measure: 1, supported: true, timeSignature: { numerator: 4, denominator: 4 }, beats }] };
+  return { fileName: "test.mid", selection, sourceTrack: { value: selection, label: `Track ${selection}` }, beats };
 }
-function build(beats, selection) { return new MidiGameChart(sourceChart(beats, selection)).build(); }
+function build(beats, selection = "0") { return new MidiGameChart(sourceChart(beats, selection)).build(); }
 function assert(condition, message) { if (!condition) throw new Error(message); }
+let assertions = 0;
+function check(condition, message) { assertions += 1; assert(condition, message); }
 
-const beats = [sourceBeat(0, "SINGLE", 1, true), sourceBeat(1, "EVEN_2", 2, true), sourceBeat(2, "TRIPLET", 3, true), sourceBeat(3, "EVEN_4", 4, true), sourceBeat(4, "REST", null, true)];
-const chart = build(beats, "0");
-assert(chart.beats[0].playDice === 1, "SINGLE -> 1");
-assert(chart.beats[1].playDice === 2, "EVEN_2 -> 2");
-assert(chart.beats[2].playDice === 3 && !chart.beats[2].isFallback, "TRIPLET -> 3");
-assert(chart.beats[3].playDice === 4, "EVEN_4 -> 4");
-assert(chart.beats[4].playDice === null && chart.beats[4].isRest && !chart.beats[4].isFallback, "REST no input");
+const fourFour = build([
+  sourceBeat(0, "SINGLE", 1), sourceBeat(1, "EVEN_2", 2),
+  sourceBeat(2, "TRIPLET", 3), sourceBeat(3, "EVEN_4", 4)
+]);
+check(fourFour.rows.length === 1 && fourFour.rows[0].slots.length === 4, "4/4 four beats make one game row");
+check(fourFour.beats.every((beat, index) => beat.gameRowIndex === 0 && beat.slotIndex === index), "game row and slot indexes");
 
-const fallback = build([sourceBeat(0, "OTHER", null, false, "UNSUPPORTED_PATTERN"), sourceBeat(1, "REST", null, true), sourceBeat(2, "REST", null, true), sourceBeat(3, "REST", null, true)]);
-assert(fallback.beats[0].playDice === null && fallback.beats[0].isFallback && fallback.beats[0].fallbackReason === "UNSUPPORTED_PATTERN", "OTHER fallback");
+const twoTwo = build([
+  sourceBeat(0, "SINGLE", 1, true, { measure: 1, beat: 1, signature: { numerator: 2, denominator: 2 }, durationTicks: 960 }),
+  sourceBeat(1, "EVEN_2", 2, true, { measure: 1, beat: 2, signature: { numerator: 2, denominator: 2 }, durationTicks: 960 }),
+  sourceBeat(2, "SINGLE", 1, true, { measure: 2, beat: 1, signature: { numerator: 2, denominator: 2 }, durationTicks: 960 }),
+  sourceBeat(3, "EVEN_4", 4, true, { measure: 2, beat: 2, signature: { numerator: 2, denominator: 2 }, durationTicks: 960 })
+]);
+check(twoTwo.compatible && twoTwo.rows.length === 1, "2/2 measures continue into one four-beat game row");
+check(twoTwo.beats[2].measure === 2 && twoTwo.beats[2].beat === 1 && twoTwo.beats[2].slotIndex === 2, "original 2/2 position is preserved");
 
-let selectedGameTrack = "0";
-const activeGameChart = chart;
-selectedGameTrack = "1";
-assert(activeGameChart.selection === "0" && selectedGameTrack === "1", "START chart remains fixed after GAME TRACK change");
-let analysisTrack = "all";
-analysisTrack = "2";
-assert(activeGameChart.selection === "0" && analysisTrack === "2", "Analysis Track does not change active chart");
-assert(MidiGameChart.beatAtTick(chart, 960).beat === 3, "tick selects measure beat");
-assert(!MidiGameChart.judgeRest(0).miss, "REST no input is not MISS");
-assert(MidiGameChart.judgeRest(1).miss, "REST input is MISS");
+const threeFour = build(Array.from({ length: 6 }, (_, index) => sourceBeat(index, "SINGLE", 1, true, {
+  measure: Math.floor(index / 3) + 1, beat: index % 3 + 1, signature: { numerator: 3, denominator: 4 }
+})));
+check(threeFour.rows.length === 2 && threeFour.beats[3].gameRowIndex === 0 && threeFour.beats[4].gameRowIndex === 1, "3/4 stream crosses measure boundary by groups of four");
+check(threeFour.statistics.emptyEndSlots === 2 && threeFour.rows[1].slots[2] === null && threeFour.rows[1].slots[3] === null, "final partial row exposes empty slots");
+check(!threeFour.beats.some((beat) => beat.isRest && beat.slotIndex >= 2 && beat.gameRowIndex === 1), "empty slots are not REST beats");
 
-const silent = build([sourceBeat(0, "REST", null, true), sourceBeat(1, "REST", null, true), sourceBeat(2, "REST", null, true), sourceBeat(3, "REST", null, true)]);
-assert(silent.statistics.silent && silent.statistics.playableActiveRate === null && silent.statistics.activeBeatRate === 0, "silent track is not 100% game suitable");
+const mixed = build([
+  sourceBeat(0, "SINGLE", 1, true, { signature: { numerator: 3, denominator: 4 } }),
+  sourceBeat(1, "EVEN_2", 2, true, { signature: { numerator: 3, denominator: 4 } }),
+  sourceBeat(2, "EVEN_4", 4, true, { signature: { numerator: 3, denominator: 4 } }),
+  sourceBeat(3, "TRIPLET", 3, true, { measure: 2, beat: 1, signature: { numerator: 2, denominator: 2 } })
+]);
+check(mixed.compatible && mixed.rows.length === 1 && mixed.beats[3].timeSignature.denominator === 2, "mixed signatures remain playable and preserved");
+check(mixed.beats.every((beat) => beat.tempo === 120), "original beat tempo is preserved");
 
-console.log(JSON.stringify({ tests: 12, assertions: 12, result: "PASS" }));
+const mapping = build([
+  sourceBeat(0, "SINGLE", 1), sourceBeat(1, "OTHER", null, false, { reason: "UNSUPPORTED_PATTERN" }),
+  sourceBeat(2, "REST", null), sourceBeat(3, "TRIPLET", 3)
+]);
+check(mapping.beats[0].playDice === 1 && !mapping.beats[0].isDummy, "real Dice 1 is not DUMMY");
+check(mapping.beats[1].playDice === 1 && mapping.beats[1].isDummy && !mapping.beats[1].isFallback, "OTHER maps to DUMMY Dice 1");
+check(mapping.beats[2].playDice === null && mapping.beats[2].isRest && !mapping.beats[2].isDummy, "REST remains no input");
+check(mapping.beats[3].playDice === 3 && !mapping.beats[3].isDummy, "TRIPLET remains real Dice 3");
+check(MidiGameChart.judgeDummy(1, false).assist, "one correct DUMMY tap is ASSIST");
+check(!MidiGameChart.judgeDummy(0, false).assist && !MidiGameChart.judgeDummy(1, true).assist && !MidiGameChart.judgeDummy(2, false).assist, "DUMMY skip, wrong input, or extra input are not ASSIST");
+check(mapping.statistics.realDiceBeats === 2 && mapping.statistics.dummyBeats === 1 && mapping.statistics.restBeats === 1, "real, dummy, and rest statistics are separate");
+check(mapping.statistics.realDiceActiveRate === 66.7 && mapping.statistics.dummyRate === 33.3 && mapping.statistics.restRate === 25, "Phase 4E rates use active and total denominators");
+
+const silent = build(Array.from({ length: 4 }, (_, index) => sourceBeat(index, "REST", null)), "1");
+const dummyHeavy = build([sourceBeat(0, "OTHER", null, false), sourceBeat(1, "OTHER", null, false), sourceBeat(2, "SINGLE", 1), sourceBeat(3, "REST", null)], "2");
+const realHeavy = build([sourceBeat(0, "SINGLE", 1), sourceBeat(1, "EVEN_2", 2), sourceBeat(2, "EVEN_4", 4), sourceBeat(3, "REST", null)], "3");
+check(MidiGameChart.recommend([silent, dummyHeavy, realHeavy]) === realHeavy, "recommendation excludes silent and prioritizes real Dice then low DUMMY");
+check(MidiGameChart.beatAtTick(twoTwo, 1920).measure === 2, "tick lookup follows preserved non-4/4 timing");
+check(!MidiGameChart.judgeRest(0).miss && MidiGameChart.judgeRest(1).miss, "REST judge behavior is unchanged");
+
+console.log(JSON.stringify({ tests: 17, assertions, result: "PASS" }));

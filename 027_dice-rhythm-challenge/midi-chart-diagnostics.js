@@ -55,8 +55,8 @@
       else if (nearestDice && startsOnBeat && distance <= this.thresholds.near && maximumError <= this.thresholds.near * 1.25) confidence = "NEAR";
       else if (nearestDice && distance <= this.thresholds.ambiguous) confidence = "AMBIGUOUS";
       const exactPattern = ["SINGLE", "EVEN_2", "TRIPLET", "EVEN_4"].includes(beat.pattern) && confidence === "EXACT";
-      const gameCompatible = exactPattern && nearestDice !== 3 && beat.timeSignature?.numerator === 4 && beat.timeSignature?.denominator === 4;
-      const compatibleWithDice3 = exactPattern && beat.timeSignature?.numerator === 4 && beat.timeSignature?.denominator === 4;
+      const gameCompatible = exactPattern;
+      const compatibleWithDice3 = exactPattern;
       let auxiliaryClass = beat.pattern;
       if (beat.pattern === "OTHER") {
         if (!startsOnBeat) auxiliaryClass = "LATE_START";
@@ -90,20 +90,33 @@
           pattern: beat.pattern,
           diceCandidate: beat.diceCandidate,
           currentGameDice: game.playDice,
+          isDummy: game.isDummy,
+          gameRowIndex: game.gameRowIndex,
+          slotIndex: game.slotIndex,
           isFallback: game.isFallback,
           fallbackReason: game.fallbackReason,
           ...classification
         };
       });
-      return { ...meta, beats, summary: this.summarize(beats, meta) };
+      const summary = {
+        ...this.summarize(beats, meta),
+        realDiceBeats: gameChart.statistics.realDiceBeats,
+        realDiceActiveRate: gameChart.statistics.realDiceActiveRate,
+        dummyBeats: gameChart.statistics.dummyBeats,
+        dummyRate: gameChart.statistics.dummyRate,
+        restBeats: gameChart.statistics.restBeats,
+        restRate: gameChart.statistics.restRate,
+        emptyEndSlots: gameChart.statistics.emptyEndSlots
+      };
+      return { ...meta, beats, summary };
     }
 
     summarize(beats, meta = {}) {
       const active = beats.filter((beat) => beat.pattern !== "REST");
       const count = (predicate) => beats.filter(predicate).length;
       const activeCount = (predicate) => active.filter(predicate).length;
-      const currentPlayable = activeCount((beat) => [1, 2, 4].includes(beat.currentGameDice));
-      const withDice3 = activeCount((beat) => [1, 2, 4].includes(beat.currentGameDice) || (beat.pattern === "TRIPLET" && beat.compatibleWithDice3));
+      const currentPlayable = activeCount((beat) => !beat.isDummy && [1, 2, 3, 4].includes(beat.currentGameDice));
+      const withDice3 = currentPlayable;
       const otherBeats = active.filter((beat) => beat.pattern === "OTHER");
       const otherOnsetCounts = { onset1: 0, onset2: 0, onset3: 0, onset4: 0, onset5Plus: 0 };
       const nearest = { dice1: 0, dice2: 0, dice3: 0, dice4: 0, unsupported: 0 };
@@ -188,7 +201,7 @@
       const tracks = this.trackUnits();
       const channels = this.channelUnits();
       return {
-        schemaVersion: "1.0.0",
+        schemaVersion: "2.0.0",
         generatedAt: new Date().toISOString(),
         song: this.song.fileName || this.song.title || "MIDI",
         midiFormat: this.song.format,
@@ -203,7 +216,7 @@
 
     static toCsv(report) {
       const quote = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-      const headers = ["song", "sourceType", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
+      const headers = ["song", "sourceType", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isDummy", "gameRowIndex", "slotIndex", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
       const rows = [...report.tracks, ...report.channels].flatMap((unit) => unit.beats).map((beat) => headers.map((key) => quote(Array.isArray(beat[key]) ? beat[key].join("|") : beat[key])).join(","));
       return [headers.join(","), ...rows].join("\n");
     }

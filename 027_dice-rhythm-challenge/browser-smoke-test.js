@@ -59,6 +59,8 @@ async function main() {
     analysisTrack.value = "5";
     analysisTrack.dispatchEvent(new Event("change", { bubbles: true }));
     await new Promise((resolve) => setTimeout(resolve, 200));
+    const addamsDice3PreviewCount = document.querySelectorAll(".chart-die.value-3").length;
+    const addamsSignature = document.getElementById("midiSignature").textContent;
     const buttons = [...document.querySelectorAll(".dice-button")];
     const rects = buttons.map((button) => { const rect = button.getBoundingClientRect(); return { value: Number(button.dataset.value), left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height }; });
     const gameTrack = document.getElementById("gameTrack");
@@ -96,6 +98,31 @@ async function main() {
     }
     await new Promise((resolve) => setTimeout(resolve, 30));
     const dice3Gameplay = { guidePulses, tapsSent, beatDuration, scoreGain: Number(document.getElementById("score").textContent) - scoreBefore };
+    await waitFor(() => !document.getElementById("grid").classList.contains("row-shift"), 1500);
+    const activeOnSecondRow = Boolean(document.querySelector("#grid > .dice-row:nth-child(2) .die.active"));
+    Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
+    document.dispatchEvent(new Event("visibilitychange"));
+    await waitFor(() => !document.getElementById("pauseScreen").hidden, 2000);
+    Object.defineProperty(document, "hidden", { configurable: true, get: () => false });
+    document.getElementById("resumeButton").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    await waitFor(() => document.getElementById("pauseScreen").hidden, 3000);
+    const pauseResume = { paused: true, resumed: document.getElementById("pauseScreen").hidden };
+    document.getElementById("stageMenu").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    library.value = "Disney_Themes_-_Hakuna_Matata.mid";
+    library.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Hakuna_Matata"), 20000);
+    const hakunaSignature = document.getElementById("midiSignature").textContent;
+    document.getElementById("testMode").checked = true;
+    document.getElementById("startButton").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    await waitFor(() => document.getElementById("startScreen").hidden, 5000);
+    await new Promise((resolve) => setTimeout(resolve, 1250));
+    const nonFourFour = {
+      signature: hakunaSignature,
+      started: document.getElementById("startScreen").hidden,
+      dummyPreviewCount: document.querySelectorAll(".chart-die.dummy").length,
+      activeGameTrack: document.getElementById("gameTrack").value,
+      message: document.getElementById("midiStatus").textContent
+    };
     document.getElementById("stageMenu").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
     const normalModeInput = document.querySelector('input[name="playMode"][value="normal"]');
     normalModeInput.checked = true;
@@ -121,9 +148,13 @@ async function main() {
       diceButtons: rects,
       diceButtonOrder: buttons.map((button) => Number(button.dataset.value)),
       controlsFitViewport: rects.every((rect) => rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight),
-      chartDice3Count: document.querySelectorAll(".chart-die.value-3").length,
+      chartDice3Count: addamsDice3PreviewCount,
+      addamsSignature,
+      activeOnSecondRow,
+      pauseResume,
       chartStatistics: document.getElementById("chartStatistics").textContent,
       dice3Gameplay,
+      nonFourFour,
       normalMode,
       errors: [...document.querySelectorAll(".error")].map((node) => node.textContent)
     };
@@ -139,15 +170,20 @@ async function main() {
   }
   const assertions = [
     [!value.preflightError, "library preflight"],
-    [value.version === "VERSION 2.1.0 MIDI DICE 3", "version"],
+    [value.version === "VERSION 3.0.0 MIDI BEAT ROWS", "version"],
     [value.libraryCount === 14, "library count"],
     [value.diceButtonOrder.join(",") === "1,2,3,4", "button order"],
     [value.controlsFitViewport, "mobile controls fit"],
     [value.chartDice3Count > 0, "Dice 3 preview"],
-    [value.diagnosticsStatus.includes("TRIPLET"), "diagnostics summary"],
+    [value.addamsSignature === "4/4", "4/4 MIDI starts"],
+    [value.activeOnSecondRow, "active beat remains on second row"],
+    [value.pauseResume.paused && value.pauseResume.resumed, "pause and resume"],
+    [value.diagnosticsStatus.includes("REAL") && value.diagnosticsStatus.includes("DUMMY"), "diagnostics summary"],
     [value.exportButtons.every(Boolean), "diagnostic exports"],
     [value.dice3Gameplay.guidePulses === 3, "Dice 3 guide pulses"],
     [value.dice3Gameplay.tapsSent === 3 && value.dice3Gameplay.scoreGain >= 300, "Dice 3 three-tap success"],
+    [value.nonFourFour.signature !== "4/4" && value.nonFourFour.started, "non-4/4 MIDI starts"],
+    [value.nonFourFour.dummyPreviewCount > 0, "DUMMY preview"],
     [value.normalMode.midiPanelHidden && value.normalMode.debugHidden && value.normalMode.activeDice.every((name) => name !== "value-3"), "normal mode unchanged"],
     [value.errors.length === 0, "no visible errors"]
   ];

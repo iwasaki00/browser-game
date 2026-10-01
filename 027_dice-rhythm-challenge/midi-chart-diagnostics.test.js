@@ -28,7 +28,7 @@ const benefitBeats = [beat("SINGLE", [0], 0), beat("TRIPLET", [0, 1 / 3, 2 / 3],
 const engine = diagnostics(benefitBeats);
 const charts = engine.buildFromAnalysis(analysis(benefitBeats));
 const unit = engine.diagnoseUnit(analysis(benefitBeats), charts.candidate, charts.game, { sourceType: "TRACK", trackNumber: 1, trackName: "Test", channel: null });
-assert(unit.summary.currentPlayableActiveRate === 33.3 && unit.summary.withDice3PlayableActiveRate === 66.7 && unit.summary.dice3BenefitPoints === 33.3, "Dice3 benefit");
+assert(unit.summary.currentPlayableActiveRate === 66.7 && unit.summary.withDice3PlayableActiveRate === 66.7 && unit.summary.dice3BenefitPoints === 0 && unit.summary.dummyBeats === 1, "Dice3 and DUMMY Phase 4E summary");
 const silentEngine = diagnostics([beat("REST", [])]);
 const silentReport = silentEngine.diagnose();
 assert(silentReport.summary[0].silent && silentReport.summary[0].dice3BenefitPoints === null, "silent excluded");

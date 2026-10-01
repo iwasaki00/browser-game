@@ -23,7 +23,7 @@
 
     convertBeat(source) {
       const rule = PATTERN_RULES[source.pattern] || PATTERN_RULES.OTHER;
-      const signatureSupported = source.timeSignature?.numerator === 4 && source.timeSignature?.denominator === 4;
+
       return {
         index: source.index,
         measure: source.measure,
@@ -32,11 +32,12 @@
         endTick: source.endTick,
         startTime: source.startTime,
         endTime: source.endTime,
+        tempo: source.tempo,
         timeSignature: { ...source.timeSignature },
         pattern: source.pattern,
         dice: rule.dice,
-        supported: rule.supported && signatureSupported,
-        reason: signatureSupported ? rule.reason : "UNSUPPORTED_TIME_SIGNATURE",
+        supported: rule.supported,
+        reason: rule.reason,
         rawNoteCount: source.rawNoteCount,
         onsetCount: source.onsetCount,
         onsetPositions: [...source.onsetPositions],
@@ -52,8 +53,8 @@
           measureMap.set(beat.measure, {
             measure: beat.measure,
             timeSignature: { ...beat.timeSignature },
-            supported: beat.timeSignature.numerator === 4 && beat.timeSignature.denominator === 4,
-            reason: beat.timeSignature.numerator === 4 && beat.timeSignature.denominator === 4 ? null : "UNSUPPORTED_TIME_SIGNATURE",
+            supported: true,
+            reason: null,
             beats: []
           });
         }
@@ -62,7 +63,7 @@
       const measures = [...measureMap.values()].map((measure) => ({
         ...measure,
         beats: measure.beats.sort((a, b) => a.beat - b.beat),
-        dice: measure.supported ? measure.beats.sort((a, b) => a.beat - b.beat).map((beat) => beat.dice) : null
+        dice: measure.beats.sort((a, b) => a.beat - b.beat).map((beat) => beat.dice)
       }));
       const statistics = this.statistics(beats, measures);
       const signatures = [...new Set(beats.map((beat) => `${beat.timeSignature.numerator}/${beat.timeSignature.denominator}`))];

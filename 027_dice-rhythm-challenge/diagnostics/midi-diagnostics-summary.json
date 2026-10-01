@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-29T19:05:38.970Z",
+  "schemaVersion": "2.0.0",
+  "generatedAt": "2026-09-30T15:38:26.157Z",
   "librarySongs": 14,
   "activeTrackUnits": 90,
   "silentTrackUnits": 24,
@@ -21,22 +21,29 @@
     },
     "totalBeats": 41402,
     "activeBeats": 15042,
+    "realDiceBeats": 9336,
+    "dummyBeats": 5706,
+    "restBeats": 26360,
+    "emptyEndSlots": 90,
     "dice1": 5571,
     "dice2": 2623,
     "dice3": 46,
     "dice4": 1096,
     "other": 5706,
     "rest": 26360,
-    "fallback": 6365,
-    "currentPlayableBeats": 8633,
-    "withDice3PlayableBeats": 8677,
+    "fallback": 0,
+    "currentPlayableBeats": 9336,
+    "withDice3PlayableBeats": 9336,
     "exact": 6497,
     "near": 420,
     "ambiguous": 1818,
     "unsupported": 6307,
-    "currentPlayableActiveRate": 57.4,
-    "withDice3PlayableActiveRate": 57.7,
-    "dice3BenefitPoints": 0.3
+    "currentPlayableActiveRate": 62.1,
+    "withDice3PlayableActiveRate": 62.1,
+    "dice3BenefitPoints": 0,
+    "realDiceActiveRate": 62.1,
+    "dummyRate": 37.9,
+    "restRate": 63.7
   },
   "tracks": [
     {
@@ -89,7 +96,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 24,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "sample.mid",
@@ -145,7 +159,14 @@
       "auxiliaryClasses": {
         "SINGLE": 24
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 24,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 0,
+      "restRate": 0,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -179,7 +200,7 @@
       "dice3": 0,
       "dice4": 116,
       "other": 270,
-      "fallback": 270,
+      "fallback": 0,
       "currentPlayableBeats": 122,
       "currentPlayableActiveRate": 31.1,
       "withDice3PlayableBeats": 122,
@@ -191,7 +212,7 @@
       "unsupported": 270,
       "exactRate": 31.1,
       "nearRate": 0,
-      "fallbackRate": 68.9,
+      "fallbackRate": 0,
       "unsupportedRate": 68.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -413,7 +434,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 122,
+      "realDiceActiveRate": 31.1,
+      "dummyBeats": 270,
+      "dummyRate": 68.9,
+      "restBeats": 4,
+      "restRate": 1,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -465,7 +493,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -490,7 +525,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 143,
-      "fallback": 143,
+      "fallback": 0,
       "currentPlayableBeats": 84,
       "currentPlayableActiveRate": 37,
       "withDice3PlayableBeats": 84,
@@ -502,7 +537,7 @@
       "unsupported": 223,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 63,
+      "fallbackRate": 0,
       "unsupportedRate": 98.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -669,7 +704,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 84,
+      "realDiceActiveRate": 37,
+      "dummyBeats": 143,
+      "dummyRate": 63,
+      "restBeats": 349,
+      "restRate": 60.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -694,7 +736,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 121,
-      "fallback": 121,
+      "fallback": 0,
       "currentPlayableBeats": 50,
       "currentPlayableActiveRate": 29.2,
       "withDice3PlayableBeats": 50,
@@ -706,7 +748,7 @@
       "unsupported": 166,
       "exactRate": 1.2,
       "nearRate": 0,
-      "fallbackRate": 70.8,
+      "fallbackRate": 0,
       "unsupportedRate": 97.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -895,7 +937,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 50,
+      "realDiceActiveRate": 29.2,
+      "dummyBeats": 121,
+      "dummyRate": 70.8,
+      "restBeats": 405,
+      "restRate": 70.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -920,7 +969,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 32,
-      "fallback": 32,
+      "fallback": 0,
       "currentPlayableBeats": 404,
       "currentPlayableActiveRate": 92.7,
       "withDice3PlayableBeats": 404,
@@ -932,7 +981,7 @@
       "unsupported": 0,
       "exactRate": 92.7,
       "nearRate": 0,
-      "fallbackRate": 7.3,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -1110,7 +1159,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 404,
+      "realDiceActiveRate": 92.7,
+      "dummyBeats": 32,
+      "dummyRate": 7.3,
+      "restBeats": 140,
+      "restRate": 24.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -1135,7 +1191,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 16,
-      "fallback": 16,
+      "fallback": 0,
       "currentPlayableBeats": 27,
       "currentPlayableActiveRate": 62.8,
       "withDice3PlayableBeats": 27,
@@ -1147,7 +1203,7 @@
       "unsupported": 6,
       "exactRate": 48.8,
       "nearRate": 0,
-      "fallbackRate": 37.2,
+      "fallbackRate": 0,
       "unsupportedRate": 14,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -1314,7 +1370,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 27,
+      "realDiceActiveRate": 62.8,
+      "dummyBeats": 16,
+      "dummyRate": 37.2,
+      "restBeats": 533,
+      "restRate": 92.5,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -1339,7 +1402,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 15,
-      "fallback": 15,
+      "fallback": 0,
       "currentPlayableBeats": 16,
       "currentPlayableActiveRate": 51.6,
       "withDice3PlayableBeats": 16,
@@ -1351,7 +1414,7 @@
       "unsupported": 0,
       "exactRate": 51.6,
       "nearRate": 0,
-      "fallbackRate": 48.4,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -1517,7 +1580,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 16,
+      "realDiceActiveRate": 51.6,
+      "dummyBeats": 15,
+      "dummyRate": 48.4,
+      "restBeats": 545,
+      "restRate": 94.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -1542,11 +1612,11 @@
       "dice3": 0,
       "dice4": 464,
       "other": 6,
-      "fallback": 8,
-      "currentPlayableBeats": 527,
-      "currentPlayableActiveRate": 98.5,
-      "withDice3PlayableBeats": 527,
-      "withDice3PlayableActiveRate": 98.5,
+      "fallback": 0,
+      "currentPlayableBeats": 529,
+      "currentPlayableActiveRate": 98.9,
+      "withDice3PlayableBeats": 529,
+      "withDice3PlayableActiveRate": 98.9,
       "dice3BenefitPoints": 0,
       "exact": 529,
       "near": 0,
@@ -1554,7 +1624,7 @@
       "unsupported": 5,
       "exactRate": 98.9,
       "nearRate": 0,
-      "fallbackRate": 1.5,
+      "fallbackRate": 0,
       "unsupportedRate": 0.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -1658,7 +1728,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 529,
+      "realDiceActiveRate": 98.9,
+      "dummyBeats": 6,
+      "dummyRate": 1.1,
+      "restBeats": 41,
+      "restRate": 7.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -1683,7 +1760,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 63,
-      "fallback": 63,
+      "fallback": 0,
       "currentPlayableBeats": 0,
       "currentPlayableActiveRate": 0,
       "withDice3PlayableBeats": 0,
@@ -1695,7 +1772,7 @@
       "unsupported": 63,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 100,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -1884,7 +1961,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": 0,
+      "dummyBeats": 63,
+      "dummyRate": 100,
+      "restBeats": 513,
+      "restRate": 89.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -1909,7 +1993,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 63,
-      "fallback": 63,
+      "fallback": 0,
       "currentPlayableBeats": 0,
       "currentPlayableActiveRate": 0,
       "withDice3PlayableBeats": 0,
@@ -1921,7 +2005,7 @@
       "unsupported": 63,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 100,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -2110,7 +2194,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": 0,
+      "dummyBeats": 63,
+      "dummyRate": 100,
+      "restBeats": 513,
+      "restRate": 89.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2135,7 +2226,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 217,
-      "fallback": 217,
+      "fallback": 0,
       "currentPlayableBeats": 121,
       "currentPlayableActiveRate": 35.8,
       "withDice3PlayableBeats": 121,
@@ -2147,7 +2238,7 @@
       "unsupported": 336,
       "exactRate": 0.6,
       "nearRate": 0,
-      "fallbackRate": 64.2,
+      "fallbackRate": 0,
       "unsupportedRate": 99.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -2336,7 +2427,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 121,
+      "realDiceActiveRate": 35.8,
+      "dummyBeats": 217,
+      "dummyRate": 64.2,
+      "restBeats": 238,
+      "restRate": 41.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2361,7 +2459,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 1,
-      "fallback": 1,
+      "fallback": 0,
       "currentPlayableBeats": 11,
       "currentPlayableActiveRate": 91.7,
       "withDice3PlayableBeats": 11,
@@ -2373,7 +2471,7 @@
       "unsupported": 6,
       "exactRate": 25,
       "nearRate": 16.7,
-      "fallbackRate": 8.3,
+      "fallbackRate": 0,
       "unsupportedRate": 50,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -2406,7 +2504,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 11,
+      "realDiceActiveRate": 91.7,
+      "dummyBeats": 1,
+      "dummyRate": 8.3,
+      "restBeats": 564,
+      "restRate": 97.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2431,7 +2536,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 246,
-      "fallback": 246,
+      "fallback": 0,
       "currentPlayableBeats": 198,
       "currentPlayableActiveRate": 44.6,
       "withDice3PlayableBeats": 198,
@@ -2443,7 +2548,7 @@
       "unsupported": 0,
       "exactRate": 44.6,
       "nearRate": 5.4,
-      "fallbackRate": 55.4,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -2620,7 +2725,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 198,
+      "realDiceActiveRate": 44.6,
+      "dummyBeats": 246,
+      "dummyRate": 55.4,
+      "restBeats": 132,
+      "restRate": 22.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2645,7 +2757,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 48,
-      "fallback": 48,
+      "fallback": 0,
       "currentPlayableBeats": 93,
       "currentPlayableActiveRate": 66,
       "withDice3PlayableBeats": 93,
@@ -2657,7 +2769,7 @@
       "unsupported": 39,
       "exactRate": 48.2,
       "nearRate": 0,
-      "fallbackRate": 34,
+      "fallbackRate": 0,
       "unsupportedRate": 27.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -2834,7 +2946,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 93,
+      "realDiceActiveRate": 66,
+      "dummyBeats": 48,
+      "dummyRate": 34,
+      "restBeats": 435,
+      "restRate": 75.5,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2886,7 +3005,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2938,7 +3064,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -2990,7 +3123,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -3042,7 +3182,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Gimme_Gimme_Gimme.mid",
@@ -3094,7 +3241,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 576,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -3146,7 +3300,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 406,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -3171,7 +3332,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 365,
-      "fallback": 365,
+      "fallback": 0,
       "currentPlayableBeats": 31,
       "currentPlayableActiveRate": 7.8,
       "withDice3PlayableBeats": 31,
@@ -3183,7 +3344,7 @@
       "unsupported": 329,
       "exactRate": 3.3,
       "nearRate": 0,
-      "fallbackRate": 92.2,
+      "fallbackRate": 0,
       "unsupportedRate": 83.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -3365,7 +3526,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 31,
+      "realDiceActiveRate": 7.8,
+      "dummyBeats": 365,
+      "dummyRate": 92.2,
+      "restBeats": 10,
+      "restRate": 2.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -3391,7 +3559,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 113,
-      "fallback": 113,
+      "fallback": 0,
       "currentPlayableBeats": 154,
       "currentPlayableActiveRate": 57.7,
       "withDice3PlayableBeats": 154,
@@ -3403,7 +3571,7 @@
       "unsupported": 156,
       "exactRate": 37.1,
       "nearRate": 0.4,
-      "fallbackRate": 42.3,
+      "fallbackRate": 0,
       "unsupportedRate": 58.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -3572,7 +3740,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 154,
+      "realDiceActiveRate": 57.7,
+      "dummyBeats": 113,
+      "dummyRate": 42.3,
+      "restBeats": 139,
+      "restRate": 34.2,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -3598,7 +3773,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 63,
-      "fallback": 63,
+      "fallback": 0,
       "currentPlayableBeats": 33,
       "currentPlayableActiveRate": 34.4,
       "withDice3PlayableBeats": 33,
@@ -3610,7 +3785,7 @@
       "unsupported": 70,
       "exactRate": 19.8,
       "nearRate": 2.1,
-      "fallbackRate": 65.6,
+      "fallbackRate": 0,
       "unsupportedRate": 72.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -3794,7 +3969,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 33,
+      "realDiceActiveRate": 34.4,
+      "dummyBeats": 63,
+      "dummyRate": 65.6,
+      "restBeats": 310,
+      "restRate": 76.4,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -3820,7 +4002,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 82,
-      "fallback": 82,
+      "fallback": 0,
       "currentPlayableBeats": 117,
       "currentPlayableActiveRate": 58.8,
       "withDice3PlayableBeats": 117,
@@ -3832,7 +4014,7 @@
       "unsupported": 137,
       "exactRate": 22.6,
       "nearRate": 0,
-      "fallbackRate": 41.2,
+      "fallbackRate": 0,
       "unsupportedRate": 68.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4005,7 +4187,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 117,
+      "realDiceActiveRate": 58.8,
+      "dummyBeats": 82,
+      "dummyRate": 41.2,
+      "restBeats": 207,
+      "restRate": 51,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4031,7 +4220,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 9,
-      "fallback": 9,
+      "fallback": 0,
       "currentPlayableBeats": 123,
       "currentPlayableActiveRate": 93.2,
       "withDice3PlayableBeats": 123,
@@ -4043,7 +4232,7 @@
       "unsupported": 50,
       "exactRate": 56.1,
       "nearRate": 0,
-      "fallbackRate": 6.8,
+      "fallbackRate": 0,
       "unsupportedRate": 37.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4182,7 +4371,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 123,
+      "realDiceActiveRate": 93.2,
+      "dummyBeats": 9,
+      "dummyRate": 6.8,
+      "restBeats": 274,
+      "restRate": 67.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4208,11 +4404,11 @@
       "dice3": 0,
       "dice4": 8,
       "other": 15,
-      "fallback": 17,
-      "currentPlayableBeats": 17,
-      "currentPlayableActiveRate": 50,
-      "withDice3PlayableBeats": 17,
-      "withDice3PlayableActiveRate": 50,
+      "fallback": 0,
+      "currentPlayableBeats": 19,
+      "currentPlayableActiveRate": 55.9,
+      "withDice3PlayableBeats": 19,
+      "withDice3PlayableActiveRate": 55.9,
       "dice3BenefitPoints": 0,
       "exact": 12,
       "near": 0,
@@ -4220,7 +4416,7 @@
       "unsupported": 16,
       "exactRate": 35.3,
       "nearRate": 0,
-      "fallbackRate": 50,
+      "fallbackRate": 0,
       "unsupportedRate": 47.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4407,7 +4603,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 19,
+      "realDiceActiveRate": 55.9,
+      "dummyBeats": 15,
+      "dummyRate": 44.1,
+      "restBeats": 372,
+      "restRate": 91.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4433,11 +4636,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 4,
-      "fallback": 7,
-      "currentPlayableBeats": 28,
-      "currentPlayableActiveRate": 80,
-      "withDice3PlayableBeats": 28,
-      "withDice3PlayableActiveRate": 80,
+      "fallback": 0,
+      "currentPlayableBeats": 31,
+      "currentPlayableActiveRate": 88.6,
+      "withDice3PlayableBeats": 31,
+      "withDice3PlayableActiveRate": 88.6,
       "dice3BenefitPoints": 0,
       "exact": 7,
       "near": 0,
@@ -4445,7 +4648,7 @@
       "unsupported": 28,
       "exactRate": 20,
       "nearRate": 0,
-      "fallbackRate": 20,
+      "fallbackRate": 0,
       "unsupportedRate": 80,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4515,7 +4718,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 31,
+      "realDiceActiveRate": 88.6,
+      "dummyBeats": 4,
+      "dummyRate": 11.4,
+      "restBeats": 371,
+      "restRate": 91.4,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4541,7 +4751,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 88,
-      "fallback": 88,
+      "fallback": 0,
       "currentPlayableBeats": 21,
       "currentPlayableActiveRate": 19.3,
       "withDice3PlayableBeats": 21,
@@ -4553,7 +4763,7 @@
       "unsupported": 99,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 80.7,
+      "fallbackRate": 0,
       "unsupportedRate": 90.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4733,7 +4943,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 21,
+      "realDiceActiveRate": 19.3,
+      "dummyBeats": 88,
+      "dummyRate": 80.7,
+      "restBeats": 297,
+      "restRate": 73.2,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4759,7 +4976,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 200,
-      "fallback": 200,
+      "fallback": 0,
       "currentPlayableBeats": 21,
       "currentPlayableActiveRate": 9.5,
       "withDice3PlayableBeats": 21,
@@ -4771,7 +4988,7 @@
       "unsupported": 148,
       "exactRate": 8.6,
       "nearRate": 0,
-      "fallbackRate": 90.5,
+      "fallbackRate": 0,
       "unsupportedRate": 67,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -4958,7 +5175,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 21,
+      "realDiceActiveRate": 9.5,
+      "dummyBeats": 200,
+      "dummyRate": 90.5,
+      "restBeats": 185,
+      "restRate": 45.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -4984,11 +5208,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 36,
-      "fallback": 37,
-      "currentPlayableBeats": 76,
-      "currentPlayableActiveRate": 67.3,
-      "withDice3PlayableBeats": 76,
-      "withDice3PlayableActiveRate": 67.3,
+      "fallback": 0,
+      "currentPlayableBeats": 77,
+      "currentPlayableActiveRate": 68.1,
+      "withDice3PlayableBeats": 77,
+      "withDice3PlayableActiveRate": 68.1,
       "dice3BenefitPoints": 0,
       "exact": 38,
       "near": 0,
@@ -4996,7 +5220,7 @@
       "unsupported": 62,
       "exactRate": 33.6,
       "nearRate": 0,
-      "fallbackRate": 32.7,
+      "fallbackRate": 0,
       "unsupportedRate": 54.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -5171,7 +5395,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 77,
+      "realDiceActiveRate": 68.1,
+      "dummyBeats": 36,
+      "dummyRate": 31.9,
+      "restBeats": 293,
+      "restRate": 72.2,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -5197,7 +5428,7 @@
       "dice3": 0,
       "dice4": 3,
       "other": 30,
-      "fallback": 30,
+      "fallback": 0,
       "currentPlayableBeats": 23,
       "currentPlayableActiveRate": 43.4,
       "withDice3PlayableBeats": 23,
@@ -5209,7 +5440,7 @@
       "unsupported": 39,
       "exactRate": 13.2,
       "nearRate": 0,
-      "fallbackRate": 56.6,
+      "fallbackRate": 0,
       "unsupportedRate": 73.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -5391,7 +5622,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 23,
+      "realDiceActiveRate": 43.4,
+      "dummyBeats": 30,
+      "dummyRate": 56.6,
+      "restBeats": 353,
+      "restRate": 86.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -5417,7 +5655,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 102,
-      "fallback": 102,
+      "fallback": 0,
       "currentPlayableBeats": 130,
       "currentPlayableActiveRate": 56,
       "withDice3PlayableBeats": 130,
@@ -5429,7 +5667,7 @@
       "unsupported": 34,
       "exactRate": 54.3,
       "nearRate": 0,
-      "fallbackRate": 44,
+      "fallbackRate": 0,
       "unsupportedRate": 14.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -5619,7 +5857,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 130,
+      "realDiceActiveRate": 56,
+      "dummyBeats": 102,
+      "dummyRate": 44,
+      "restBeats": 174,
+      "restRate": 42.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "ABBA_-_S.O.S.mid",
@@ -5645,7 +5890,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 3,
-      "fallback": 3,
+      "fallback": 0,
       "currentPlayableBeats": 64,
       "currentPlayableActiveRate": 95.5,
       "withDice3PlayableBeats": 64,
@@ -5657,7 +5902,7 @@
       "unsupported": 49,
       "exactRate": 22.4,
       "nearRate": 4.5,
-      "fallbackRate": 4.5,
+      "fallbackRate": 0,
       "unsupportedRate": 73.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -5715,7 +5960,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 64,
+      "realDiceActiveRate": 95.5,
+      "dummyBeats": 3,
+      "dummyRate": 4.5,
+      "restBeats": 339,
+      "restRate": 83.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -5767,7 +6019,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -5792,11 +6051,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 36,
-      "fallback": 43,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 7,
+      "currentPlayableActiveRate": 16.3,
+      "withDice3PlayableBeats": 7,
+      "withDice3PlayableActiveRate": 16.3,
       "dice3BenefitPoints": 0,
       "exact": 5,
       "near": 0,
@@ -5804,7 +6063,7 @@
       "unsupported": 29,
       "exactRate": 11.6,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 67.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6035,7 +6294,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 7,
+      "realDiceActiveRate": 16.3,
+      "dummyBeats": 36,
+      "dummyRate": 83.7,
+      "restBeats": 203,
+      "restRate": 82.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6060,11 +6326,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 1,
-      "fallback": 19,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 18,
+      "currentPlayableActiveRate": 94.7,
+      "withDice3PlayableBeats": 18,
+      "withDice3PlayableActiveRate": 94.7,
       "dice3BenefitPoints": 0,
       "exact": 16,
       "near": 0,
@@ -6072,7 +6338,7 @@
       "unsupported": 3,
       "exactRate": 84.2,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 15.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6106,7 +6372,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 18,
+      "realDiceActiveRate": 94.7,
+      "dummyBeats": 1,
+      "dummyRate": 5.3,
+      "restBeats": 227,
+      "restRate": 92.3,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6131,11 +6404,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 27,
-      "fallback": 165,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 138,
+      "currentPlayableActiveRate": 83.6,
+      "withDice3PlayableBeats": 138,
+      "withDice3PlayableActiveRate": 83.6,
       "dice3BenefitPoints": 0,
       "exact": 121,
       "near": 0,
@@ -6143,7 +6416,7 @@
       "unsupported": 21,
       "exactRate": 73.3,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 12.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6317,7 +6590,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 138,
+      "realDiceActiveRate": 83.6,
+      "dummyBeats": 27,
+      "dummyRate": 16.4,
+      "restBeats": 81,
+      "restRate": 32.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6342,11 +6622,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 27,
-      "fallback": 80,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 53,
+      "currentPlayableActiveRate": 66.3,
+      "withDice3PlayableBeats": 53,
+      "withDice3PlayableActiveRate": 66.3,
       "dice3BenefitPoints": 0,
       "exact": 34,
       "near": 1,
@@ -6354,7 +6634,7 @@
       "unsupported": 26,
       "exactRate": 42.5,
       "nearRate": 1.3,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 32.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6533,7 +6813,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 53,
+      "realDiceActiveRate": 66.3,
+      "dummyBeats": 27,
+      "dummyRate": 33.8,
+      "restBeats": 166,
+      "restRate": 67.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6558,11 +6845,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 51,
-      "fallback": 83,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 32,
+      "currentPlayableActiveRate": 38.6,
+      "withDice3PlayableBeats": 32,
+      "withDice3PlayableActiveRate": 38.6,
       "dice3BenefitPoints": 0,
       "exact": 17,
       "near": 0,
@@ -6570,7 +6857,7 @@
       "unsupported": 38,
       "exactRate": 20.5,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 45.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6751,7 +7038,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 32,
+      "realDiceActiveRate": 38.6,
+      "dummyBeats": 51,
+      "dummyRate": 61.4,
+      "restBeats": 163,
+      "restRate": 66.3,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6776,11 +7070,11 @@
       "dice3": 1,
       "dice4": 0,
       "other": 19,
-      "fallback": 39,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 20,
+      "currentPlayableActiveRate": 51.3,
+      "withDice3PlayableBeats": 20,
+      "withDice3PlayableActiveRate": 51.3,
       "dice3BenefitPoints": 0,
       "exact": 15,
       "near": 1,
@@ -6788,7 +7082,7 @@
       "unsupported": 12,
       "exactRate": 38.5,
       "nearRate": 2.6,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 30.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -6962,7 +7256,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 20,
+      "realDiceActiveRate": 51.3,
+      "dummyBeats": 19,
+      "dummyRate": 48.7,
+      "restBeats": 207,
+      "restRate": 84.1,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -6987,11 +7288,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 18,
-      "fallback": 36,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 18,
+      "currentPlayableActiveRate": 50,
+      "withDice3PlayableBeats": 18,
+      "withDice3PlayableActiveRate": 50,
       "dice3BenefitPoints": 0,
       "exact": 9,
       "near": 1,
@@ -6999,7 +7300,7 @@
       "unsupported": 11,
       "exactRate": 25,
       "nearRate": 2.8,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 30.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -7176,7 +7477,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 18,
+      "realDiceActiveRate": 50,
+      "dummyBeats": 18,
+      "dummyRate": 50,
+      "restBeats": 210,
+      "restRate": 85.4,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7201,11 +7509,11 @@
       "dice3": 1,
       "dice4": 4,
       "other": 30,
-      "fallback": 64,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 34,
+      "currentPlayableActiveRate": 53.1,
+      "withDice3PlayableBeats": 34,
+      "withDice3PlayableActiveRate": 53.1,
       "dice3BenefitPoints": 0,
       "exact": 19,
       "near": 2,
@@ -7213,7 +7521,7 @@
       "unsupported": 17,
       "exactRate": 29.7,
       "nearRate": 3.1,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 26.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -7391,7 +7699,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 34,
+      "realDiceActiveRate": 53.1,
+      "dummyBeats": 30,
+      "dummyRate": 46.9,
+      "restBeats": 182,
+      "restRate": 74,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7416,11 +7731,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 2,
-      "fallback": 15,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 13,
+      "currentPlayableActiveRate": 86.7,
+      "withDice3PlayableBeats": 13,
+      "withDice3PlayableActiveRate": 86.7,
       "dice3BenefitPoints": 0,
       "exact": 13,
       "near": 0,
@@ -7428,7 +7743,7 @@
       "unsupported": 0,
       "exactRate": 86.7,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -7476,7 +7791,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 13,
+      "realDiceActiveRate": 86.7,
+      "dummyBeats": 2,
+      "dummyRate": 13.3,
+      "restBeats": 231,
+      "restRate": 93.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7501,11 +7823,11 @@
       "dice3": 0,
       "dice4": 6,
       "other": 170,
-      "fallback": 178,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 8,
+      "currentPlayableActiveRate": 4.5,
+      "withDice3PlayableBeats": 8,
+      "withDice3PlayableActiveRate": 4.5,
       "dice3BenefitPoints": 0,
       "exact": 8,
       "near": 0,
@@ -7513,7 +7835,7 @@
       "unsupported": 0,
       "exactRate": 4.5,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -7691,7 +8013,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 8,
+      "realDiceActiveRate": 4.5,
+      "dummyBeats": 170,
+      "dummyRate": 95.5,
+      "restBeats": 68,
+      "restRate": 27.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7743,7 +8072,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7795,7 +8131,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7847,7 +8190,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7899,7 +8249,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -7924,11 +8281,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 0,
-      "fallback": 1,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 1,
+      "currentPlayableActiveRate": 100,
+      "withDice3PlayableBeats": 1,
+      "withDice3PlayableActiveRate": 100,
       "dice3BenefitPoints": 0,
       "exact": 0,
       "near": 0,
@@ -7936,7 +8293,7 @@
       "unsupported": 1,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 100,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -7955,7 +8312,14 @@
       "auxiliaryClasses": {
         "LATE_START": 1
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 1,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 245,
+      "restRate": 99.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -8007,7 +8371,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Hakuna_Matata.mid",
@@ -8059,7 +8430,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 246,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -8095,19 +8473,19 @@
       "dice3": 2,
       "dice4": 0,
       "other": 116,
-      "fallback": 116,
-      "currentPlayableBeats": 4,
-      "currentPlayableActiveRate": 3.3,
+      "fallback": 0,
+      "currentPlayableBeats": 6,
+      "currentPlayableActiveRate": 4.9,
       "withDice3PlayableBeats": 6,
       "withDice3PlayableActiveRate": 4.9,
-      "dice3BenefitPoints": 1.6,
+      "dice3BenefitPoints": 0,
       "exact": 6,
       "near": 0,
       "ambiguous": 48,
       "unsupported": 68,
       "exactRate": 4.9,
       "nearRate": 0,
-      "fallbackRate": 95.1,
+      "fallbackRate": 0,
       "unsupportedRate": 55.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -8299,7 +8677,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 6,
+      "realDiceActiveRate": 4.9,
+      "dummyBeats": 116,
+      "dummyRate": 95.1,
+      "restBeats": 2,
+      "restRate": 1.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -8351,7 +8736,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 94,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -8376,7 +8768,7 @@
       "dice3": 0,
       "dice4": 23,
       "other": 53,
-      "fallback": 53,
+      "fallback": 0,
       "currentPlayableBeats": 35,
       "currentPlayableActiveRate": 39.8,
       "withDice3PlayableBeats": 35,
@@ -8388,7 +8780,7 @@
       "unsupported": 17,
       "exactRate": 37.5,
       "nearRate": 14.8,
-      "fallbackRate": 60.2,
+      "fallbackRate": 0,
       "unsupportedRate": 19.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -8565,7 +8957,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 35,
+      "realDiceActiveRate": 39.8,
+      "dummyBeats": 53,
+      "dummyRate": 60.2,
+      "restBeats": 6,
+      "restRate": 6.4,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -8590,7 +8989,7 @@
       "dice3": 0,
       "dice4": 19,
       "other": 28,
-      "fallback": 28,
+      "fallback": 0,
       "currentPlayableBeats": 45,
       "currentPlayableActiveRate": 61.6,
       "withDice3PlayableBeats": 45,
@@ -8602,7 +9001,7 @@
       "unsupported": 12,
       "exactRate": 57.5,
       "nearRate": 16.4,
-      "fallbackRate": 38.4,
+      "fallbackRate": 0,
       "unsupportedRate": 16.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -8777,7 +9176,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 45,
+      "realDiceActiveRate": 61.6,
+      "dummyBeats": 28,
+      "dummyRate": 38.4,
+      "restBeats": 21,
+      "restRate": 22.3,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -8802,7 +9208,7 @@
       "dice3": 0,
       "dice4": 2,
       "other": 7,
-      "fallback": 7,
+      "fallback": 0,
       "currentPlayableBeats": 17,
       "currentPlayableActiveRate": 70.8,
       "withDice3PlayableBeats": 17,
@@ -8814,7 +9220,7 @@
       "unsupported": 4,
       "exactRate": 62.5,
       "nearRate": 12.5,
-      "fallbackRate": 29.2,
+      "fallbackRate": 0,
       "unsupportedRate": 16.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -8927,7 +9333,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 17,
+      "realDiceActiveRate": 70.8,
+      "dummyBeats": 7,
+      "dummyRate": 29.2,
+      "restBeats": 70,
+      "restRate": 74.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -8952,7 +9365,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 1,
-      "fallback": 1,
+      "fallback": 0,
       "currentPlayableBeats": 5,
       "currentPlayableActiveRate": 83.3,
       "withDice3PlayableBeats": 5,
@@ -8964,7 +9377,7 @@
       "unsupported": 1,
       "exactRate": 83.3,
       "nearRate": 0,
-      "fallbackRate": 16.7,
+      "fallbackRate": 0,
       "unsupportedRate": 16.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -8998,7 +9411,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 5,
+      "realDiceActiveRate": 83.3,
+      "dummyBeats": 1,
+      "dummyRate": 16.7,
+      "restBeats": 88,
+      "restRate": 93.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -9023,7 +9443,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 1,
-      "fallback": 1,
+      "fallback": 0,
       "currentPlayableBeats": 90,
       "currentPlayableActiveRate": 98.9,
       "withDice3PlayableBeats": 90,
@@ -9035,7 +9455,7 @@
       "unsupported": 2,
       "exactRate": 96.7,
       "nearRate": 0,
-      "fallbackRate": 1.1,
+      "fallbackRate": 0,
       "unsupportedRate": 2.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -9072,7 +9492,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 90,
+      "realDiceActiveRate": 98.9,
+      "dummyBeats": 1,
+      "dummyRate": 1.1,
+      "restBeats": 3,
+      "restRate": 3.2,
+      "emptyEndSlots": 2
     },
     {
       "song": "Disney_Themes_-_Tiki_Room.mid",
@@ -9097,7 +9524,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 52,
-      "fallback": 52,
+      "fallback": 0,
       "currentPlayableBeats": 41,
       "currentPlayableActiveRate": 44.1,
       "withDice3PlayableBeats": 41,
@@ -9109,7 +9536,7 @@
       "unsupported": 44,
       "exactRate": 28,
       "nearRate": 10.8,
-      "fallbackRate": 55.9,
+      "fallbackRate": 0,
       "unsupportedRate": 47.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -9280,7 +9707,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 41,
+      "realDiceActiveRate": 44.1,
+      "dummyBeats": 52,
+      "dummyRate": 55.9,
+      "restBeats": 1,
+      "restRate": 1.1,
+      "emptyEndSlots": 2
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -9332,7 +9766,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 240,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -9357,7 +9798,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 187,
-      "fallback": 187,
+      "fallback": 0,
       "currentPlayableBeats": 45,
       "currentPlayableActiveRate": 19.4,
       "withDice3PlayableBeats": 45,
@@ -9369,7 +9810,7 @@
       "unsupported": 139,
       "exactRate": 2.6,
       "nearRate": 3,
-      "fallbackRate": 80.6,
+      "fallbackRate": 0,
       "unsupportedRate": 59.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -9557,7 +9998,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 45,
+      "realDiceActiveRate": 19.4,
+      "dummyBeats": 187,
+      "dummyRate": 80.6,
+      "restBeats": 8,
+      "restRate": 3.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -9582,7 +10030,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 161,
-      "fallback": 161,
+      "fallback": 0,
       "currentPlayableBeats": 22,
       "currentPlayableActiveRate": 12,
       "withDice3PlayableBeats": 22,
@@ -9594,7 +10042,7 @@
       "unsupported": 134,
       "exactRate": 1.6,
       "nearRate": 2.2,
-      "fallbackRate": 88,
+      "fallbackRate": 0,
       "unsupportedRate": 73.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -9764,7 +10212,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 22,
+      "realDiceActiveRate": 12,
+      "dummyBeats": 161,
+      "dummyRate": 88,
+      "restBeats": 57,
+      "restRate": 23.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -9789,7 +10244,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 68,
-      "fallback": 68,
+      "fallback": 0,
       "currentPlayableBeats": 51,
       "currentPlayableActiveRate": 42.9,
       "withDice3PlayableBeats": 51,
@@ -9801,7 +10256,7 @@
       "unsupported": 90,
       "exactRate": 0.8,
       "nearRate": 0,
-      "fallbackRate": 57.1,
+      "fallbackRate": 0,
       "unsupportedRate": 75.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -9979,7 +10434,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 51,
+      "realDiceActiveRate": 42.9,
+      "dummyBeats": 68,
+      "dummyRate": 57.1,
+      "restBeats": 121,
+      "restRate": 50.4,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10004,19 +10466,19 @@
       "dice3": 3,
       "dice4": 0,
       "other": 150,
-      "fallback": 150,
-      "currentPlayableBeats": 22,
-      "currentPlayableActiveRate": 12.6,
+      "fallback": 0,
+      "currentPlayableBeats": 25,
+      "currentPlayableActiveRate": 14.3,
       "withDice3PlayableBeats": 25,
       "withDice3PlayableActiveRate": 14.3,
-      "dice3BenefitPoints": 1.7,
+      "dice3BenefitPoints": 0,
       "exact": 5,
       "near": 10,
       "ambiguous": 69,
       "unsupported": 91,
       "exactRate": 2.9,
       "nearRate": 5.7,
-      "fallbackRate": 85.7,
+      "fallbackRate": 0,
       "unsupportedRate": 52,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -10198,7 +10660,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 25,
+      "realDiceActiveRate": 14.3,
+      "dummyBeats": 150,
+      "dummyRate": 85.7,
+      "restBeats": 65,
+      "restRate": 27.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10223,7 +10692,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 16,
-      "fallback": 16,
+      "fallback": 0,
       "currentPlayableBeats": 18,
       "currentPlayableActiveRate": 52.9,
       "withDice3PlayableBeats": 18,
@@ -10235,7 +10704,7 @@
       "unsupported": 29,
       "exactRate": 5.9,
       "nearRate": 2.9,
-      "fallbackRate": 47.1,
+      "fallbackRate": 0,
       "unsupportedRate": 85.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -10405,7 +10874,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 18,
+      "realDiceActiveRate": 52.9,
+      "dummyBeats": 16,
+      "dummyRate": 47.1,
+      "restBeats": 206,
+      "restRate": 85.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10430,7 +10906,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 85,
-      "fallback": 85,
+      "fallback": 0,
       "currentPlayableBeats": 15,
       "currentPlayableActiveRate": 15,
       "withDice3PlayableBeats": 15,
@@ -10442,7 +10918,7 @@
       "unsupported": 62,
       "exactRate": 2,
       "nearRate": 4,
-      "fallbackRate": 85,
+      "fallbackRate": 0,
       "unsupportedRate": 62,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -10619,7 +11095,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 15,
+      "realDiceActiveRate": 15,
+      "dummyBeats": 85,
+      "dummyRate": 85,
+      "restBeats": 140,
+      "restRate": 58.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10644,7 +11127,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 9,
-      "fallback": 9,
+      "fallback": 0,
       "currentPlayableBeats": 5,
       "currentPlayableActiveRate": 35.7,
       "withDice3PlayableBeats": 5,
@@ -10656,7 +11139,7 @@
       "unsupported": 7,
       "exactRate": 7.1,
       "nearRate": 7.1,
-      "fallbackRate": 64.3,
+      "fallbackRate": 0,
       "unsupportedRate": 50,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -10788,7 +11271,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 5,
+      "realDiceActiveRate": 35.7,
+      "dummyBeats": 9,
+      "dummyRate": 64.3,
+      "restBeats": 226,
+      "restRate": 94.2,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10813,7 +11303,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 2,
-      "fallback": 2,
+      "fallback": 0,
       "currentPlayableBeats": 1,
       "currentPlayableActiveRate": 33.3,
       "withDice3PlayableBeats": 1,
@@ -10825,7 +11315,7 @@
       "unsupported": 2,
       "exactRate": 0,
       "nearRate": 33.3,
-      "fallbackRate": 66.7,
+      "fallbackRate": 0,
       "unsupportedRate": 66.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -10872,7 +11362,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 1,
+      "realDiceActiveRate": 33.3,
+      "dummyBeats": 2,
+      "dummyRate": 66.7,
+      "restBeats": 237,
+      "restRate": 98.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Jamiroquai_-_Virtual_Insanity.mid",
@@ -10897,7 +11394,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 206,
-      "fallback": 206,
+      "fallback": 0,
       "currentPlayableBeats": 0,
       "currentPlayableActiveRate": 0,
       "withDice3PlayableBeats": 0,
@@ -10909,7 +11406,7 @@
       "unsupported": 191,
       "exactRate": 0,
       "nearRate": 1,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 92.7,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -11118,7 +11615,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_4_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": 0,
+      "dummyBeats": 206,
+      "dummyRate": 100,
+      "restBeats": 34,
+      "restRate": 14.2,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11170,7 +11674,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 588,
+      "restRate": 100,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11195,7 +11706,7 @@
       "dice3": 0,
       "dice4": 63,
       "other": 1,
-      "fallback": 1,
+      "fallback": 0,
       "currentPlayableBeats": 172,
       "currentPlayableActiveRate": 99.4,
       "withDice3PlayableBeats": 172,
@@ -11207,7 +11718,7 @@
       "unsupported": 0,
       "exactRate": 99.4,
       "nearRate": 0,
-      "fallbackRate": 0.6,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -11241,7 +11752,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 172,
+      "realDiceActiveRate": 99.4,
+      "dummyBeats": 1,
+      "dummyRate": 0.6,
+      "restBeats": 415,
+      "restRate": 70.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11299,7 +11817,14 @@
         "EVEN_2": 34,
         "SINGLE": 213
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 449,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 139,
+      "restRate": 23.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11324,7 +11849,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 23,
-      "fallback": 23,
+      "fallback": 0,
       "currentPlayableBeats": 34,
       "currentPlayableActiveRate": 59.6,
       "withDice3PlayableBeats": 34,
@@ -11336,7 +11861,7 @@
       "unsupported": 40,
       "exactRate": 22.8,
       "nearRate": 5.3,
-      "fallbackRate": 40.4,
+      "fallbackRate": 0,
       "unsupportedRate": 70.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -11503,7 +12028,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 34,
+      "realDiceActiveRate": 59.6,
+      "dummyBeats": 23,
+      "dummyRate": 40.4,
+      "restBeats": 531,
+      "restRate": 90.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11528,7 +12060,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 112,
-      "fallback": 112,
+      "fallback": 0,
       "currentPlayableBeats": 259,
       "currentPlayableActiveRate": 69.8,
       "withDice3PlayableBeats": 259,
@@ -11540,7 +12072,7 @@
       "unsupported": 128,
       "exactRate": 38.3,
       "nearRate": 24.5,
-      "fallbackRate": 30.2,
+      "fallbackRate": 0,
       "unsupportedRate": 34.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -11710,7 +12242,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 259,
+      "realDiceActiveRate": 69.8,
+      "dummyBeats": 112,
+      "dummyRate": 30.2,
+      "restBeats": 217,
+      "restRate": 36.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11735,7 +12274,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 4,
-      "fallback": 4,
+      "fallback": 0,
       "currentPlayableBeats": 446,
       "currentPlayableActiveRate": 99.1,
       "withDice3PlayableBeats": 446,
@@ -11747,7 +12286,7 @@
       "unsupported": 198,
       "exactRate": 55.8,
       "nearRate": 0,
-      "fallbackRate": 0.9,
+      "fallbackRate": 0,
       "unsupportedRate": 44,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -11830,7 +12369,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 446,
+      "realDiceActiveRate": 99.1,
+      "dummyBeats": 4,
+      "dummyRate": 0.9,
+      "restBeats": 138,
+      "restRate": 23.5,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -11855,7 +12401,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 118,
-      "fallback": 118,
+      "fallback": 0,
       "currentPlayableBeats": 248,
       "currentPlayableActiveRate": 67.8,
       "withDice3PlayableBeats": 248,
@@ -11867,7 +12413,7 @@
       "unsupported": 270,
       "exactRate": 26.2,
       "nearRate": 0,
-      "fallbackRate": 32.2,
+      "fallbackRate": 0,
       "unsupportedRate": 73.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12032,7 +12578,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 248,
+      "realDiceActiveRate": 67.8,
+      "dummyBeats": 118,
+      "dummyRate": 32.2,
+      "restBeats": 222,
+      "restRate": 37.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12057,7 +12610,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 95,
-      "fallback": 95,
+      "fallback": 0,
       "currentPlayableBeats": 9,
       "currentPlayableActiveRate": 8.7,
       "withDice3PlayableBeats": 9,
@@ -12069,7 +12622,7 @@
       "unsupported": 73,
       "exactRate": 5.8,
       "nearRate": 1.9,
-      "fallbackRate": 91.3,
+      "fallbackRate": 0,
       "unsupportedRate": 70.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12284,7 +12837,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 9,
+      "realDiceActiveRate": 8.7,
+      "dummyBeats": 95,
+      "dummyRate": 91.3,
+      "restBeats": 484,
+      "restRate": 82.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12309,19 +12869,19 @@
       "dice3": 1,
       "dice4": 0,
       "other": 4,
-      "fallback": 4,
-      "currentPlayableBeats": 5,
-      "currentPlayableActiveRate": 50,
+      "fallback": 0,
+      "currentPlayableBeats": 6,
+      "currentPlayableActiveRate": 60,
       "withDice3PlayableBeats": 6,
       "withDice3PlayableActiveRate": 60,
-      "dice3BenefitPoints": 10,
+      "dice3BenefitPoints": 0,
       "exact": 2,
       "near": 1,
       "ambiguous": 1,
       "unsupported": 6,
       "exactRate": 20,
       "nearRate": 10,
-      "fallbackRate": 40,
+      "fallbackRate": 0,
       "unsupportedRate": 60,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12404,7 +12964,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 6,
+      "realDiceActiveRate": 60,
+      "dummyBeats": 4,
+      "dummyRate": 40,
+      "restBeats": 578,
+      "restRate": 98.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12462,7 +13029,14 @@
         "EVEN_2": 95,
         "SINGLE": 149
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 412,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 176,
+      "restRate": 29.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12487,7 +13061,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 133,
-      "fallback": 133,
+      "fallback": 0,
       "currentPlayableBeats": 409,
       "currentPlayableActiveRate": 75.5,
       "withDice3PlayableBeats": 409,
@@ -12499,7 +13073,7 @@
       "unsupported": 2,
       "exactRate": 75.1,
       "nearRate": 0,
-      "fallbackRate": 24.5,
+      "fallbackRate": 0,
       "unsupportedRate": 0.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12678,7 +13252,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 409,
+      "realDiceActiveRate": 75.5,
+      "dummyBeats": 133,
+      "dummyRate": 24.5,
+      "restBeats": 46,
+      "restRate": 7.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12703,7 +13284,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 8,
-      "fallback": 8,
+      "fallback": 0,
       "currentPlayableBeats": 156,
       "currentPlayableActiveRate": 95.1,
       "withDice3PlayableBeats": 156,
@@ -12715,7 +13296,7 @@
       "unsupported": 0,
       "exactRate": 14.6,
       "nearRate": 80.5,
-      "fallbackRate": 4.9,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12841,7 +13422,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 156,
+      "realDiceActiveRate": 95.1,
+      "dummyBeats": 8,
+      "dummyRate": 4.9,
+      "restBeats": 424,
+      "restRate": 72.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -12866,19 +13454,19 @@
       "dice3": 1,
       "dice4": 0,
       "other": 4,
-      "fallback": 4,
-      "currentPlayableBeats": 63,
-      "currentPlayableActiveRate": 92.6,
+      "fallback": 0,
+      "currentPlayableBeats": 64,
+      "currentPlayableActiveRate": 94.1,
       "withDice3PlayableBeats": 64,
       "withDice3PlayableActiveRate": 94.1,
-      "dice3BenefitPoints": 1.5,
+      "dice3BenefitPoints": 0,
       "exact": 57,
       "near": 0,
       "ambiguous": 0,
       "unsupported": 11,
       "exactRate": 83.8,
       "nearRate": 0,
-      "fallbackRate": 5.9,
+      "fallbackRate": 0,
       "unsupportedRate": 16.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -12948,7 +13536,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 64,
+      "realDiceActiveRate": 94.1,
+      "dummyBeats": 4,
+      "dummyRate": 5.9,
+      "restBeats": 520,
+      "restRate": 88.4,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -13004,7 +13599,14 @@
       "auxiliaryClasses": {
         "SINGLE": 14
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 14,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 574,
+      "restRate": 97.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -13060,7 +13662,14 @@
       "auxiliaryClasses": {
         "SINGLE": 14
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 14,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 574,
+      "restRate": 97.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -13085,7 +13694,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 39,
-      "fallback": 39,
+      "fallback": 0,
       "currentPlayableBeats": 187,
       "currentPlayableActiveRate": 82.7,
       "withDice3PlayableBeats": 187,
@@ -13097,7 +13706,7 @@
       "unsupported": 204,
       "exactRate": 9.3,
       "nearRate": 0,
-      "fallbackRate": 17.3,
+      "fallbackRate": 0,
       "unsupportedRate": 90.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -13266,7 +13875,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 187,
+      "realDiceActiveRate": 82.7,
+      "dummyBeats": 39,
+      "dummyRate": 17.3,
+      "restBeats": 362,
+      "restRate": 61.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Beat_It.mid",
@@ -13291,7 +13907,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 18,
-      "fallback": 18,
+      "fallback": 0,
       "currentPlayableBeats": 188,
       "currentPlayableActiveRate": 91.3,
       "withDice3PlayableBeats": 188,
@@ -13303,7 +13919,7 @@
       "unsupported": 116,
       "exactRate": 43.7,
       "nearRate": 0,
-      "fallbackRate": 8.7,
+      "fallbackRate": 0,
       "unsupportedRate": 56.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -13470,7 +14086,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 188,
+      "realDiceActiveRate": 91.3,
+      "dummyBeats": 18,
+      "dummyRate": 8.7,
+      "restBeats": 382,
+      "restRate": 65,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -13522,7 +14145,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 1366,
+      "restRate": 100,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -13547,7 +14177,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 130,
-      "fallback": 130,
+      "fallback": 0,
       "currentPlayableBeats": 176,
       "currentPlayableActiveRate": 57.5,
       "withDice3PlayableBeats": 176,
@@ -13559,7 +14189,7 @@
       "unsupported": 133,
       "exactRate": 18,
       "nearRate": 22.2,
-      "fallbackRate": 42.5,
+      "fallbackRate": 0,
       "unsupportedRate": 43.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -13731,7 +14361,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 176,
+      "realDiceActiveRate": 57.5,
+      "dummyBeats": 130,
+      "dummyRate": 42.5,
+      "restBeats": 1060,
+      "restRate": 77.6,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -13789,7 +14426,14 @@
         "LATE_START": 18,
         "EVEN_2": 3
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 38,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 1328,
+      "restRate": 97.2,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -13814,7 +14458,7 @@
       "dice3": 0,
       "dice4": 11,
       "other": 139,
-      "fallback": 139,
+      "fallback": 0,
       "currentPlayableBeats": 19,
       "currentPlayableActiveRate": 12,
       "withDice3PlayableBeats": 19,
@@ -13826,7 +14470,7 @@
       "unsupported": 109,
       "exactRate": 12,
       "nearRate": 5.7,
-      "fallbackRate": 88,
+      "fallbackRate": 0,
       "unsupportedRate": 69,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -14043,7 +14687,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 19,
+      "realDiceActiveRate": 12,
+      "dummyBeats": 139,
+      "dummyRate": 88,
+      "restBeats": 1208,
+      "restRate": 88.4,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -14068,7 +14719,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 15,
-      "fallback": 15,
+      "fallback": 0,
       "currentPlayableBeats": 137,
       "currentPlayableActiveRate": 90.1,
       "withDice3PlayableBeats": 137,
@@ -14080,7 +14731,7 @@
       "unsupported": 75,
       "exactRate": 43.4,
       "nearRate": 2.6,
-      "fallbackRate": 9.9,
+      "fallbackRate": 0,
       "unsupportedRate": 49.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -14254,7 +14905,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 137,
+      "realDiceActiveRate": 90.1,
+      "dummyBeats": 15,
+      "dummyRate": 9.9,
+      "restBeats": 1214,
+      "restRate": 88.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -14279,7 +14937,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 25,
-      "fallback": 25,
+      "fallback": 0,
       "currentPlayableBeats": 47,
       "currentPlayableActiveRate": 65.3,
       "withDice3PlayableBeats": 47,
@@ -14291,7 +14949,7 @@
       "unsupported": 45,
       "exactRate": 27.8,
       "nearRate": 2.8,
-      "fallbackRate": 34.7,
+      "fallbackRate": 0,
       "unsupportedRate": 62.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -14469,7 +15127,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 47,
+      "realDiceActiveRate": 65.3,
+      "dummyBeats": 25,
+      "dummyRate": 34.7,
+      "restBeats": 1294,
+      "restRate": 94.7,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -14526,7 +15191,14 @@
         "SINGLE": 107,
         "LATE_START": 99
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 206,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 1160,
+      "restRate": 84.9,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -14584,7 +15256,14 @@
         "EVEN_2": 470,
         "SINGLE": 28
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 553,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 813,
+      "restRate": 59.5,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Billie_Jean.mid",
@@ -14609,7 +15288,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 19,
-      "fallback": 19,
+      "fallback": 0,
       "currentPlayableBeats": 541,
       "currentPlayableActiveRate": 96.6,
       "withDice3PlayableBeats": 541,
@@ -14621,7 +15300,7 @@
       "unsupported": 0,
       "exactRate": 96.6,
       "nearRate": 0,
-      "fallbackRate": 3.4,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -14798,7 +15477,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 541,
+      "realDiceActiveRate": 96.6,
+      "dummyBeats": 19,
+      "dummyRate": 3.4,
+      "restBeats": 806,
+      "restRate": 59,
+      "emptyEndSlots": 2
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -14836,7 +15522,7 @@
       "dice3": 0,
       "dice4": 372,
       "other": 256,
-      "fallback": 256,
+      "fallback": 0,
       "currentPlayableBeats": 386,
       "currentPlayableActiveRate": 60.1,
       "withDice3PlayableBeats": 386,
@@ -14848,7 +15534,7 @@
       "unsupported": 90,
       "exactRate": 60,
       "nearRate": 0,
-      "fallbackRate": 39.9,
+      "fallbackRate": 0,
       "unsupportedRate": 14,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15031,7 +15717,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 386,
+      "realDiceActiveRate": 60.1,
+      "dummyBeats": 256,
+      "dummyRate": 39.9,
+      "restBeats": 7,
+      "restRate": 1.1,
+      "emptyEndSlots": 3
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15083,7 +15776,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 103,
+      "restRate": 100,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15108,19 +15808,19 @@
       "dice3": 17,
       "dice4": 0,
       "other": 33,
-      "fallback": 33,
-      "currentPlayableBeats": 32,
-      "currentPlayableActiveRate": 39,
+      "fallback": 0,
+      "currentPlayableBeats": 49,
+      "currentPlayableActiveRate": 59.8,
       "withDice3PlayableBeats": 49,
       "withDice3PlayableActiveRate": 59.8,
-      "dice3BenefitPoints": 20.7,
+      "dice3BenefitPoints": 0,
       "exact": 39,
       "near": 0,
       "ambiguous": 31,
       "unsupported": 12,
       "exactRate": 47.6,
       "nearRate": 0,
-      "fallbackRate": 40.2,
+      "fallbackRate": 0,
       "unsupportedRate": 14.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15287,7 +15987,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 49,
+      "realDiceActiveRate": 59.8,
+      "dummyBeats": 33,
+      "dummyRate": 40.2,
+      "restBeats": 21,
+      "restRate": 20.4,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15312,7 +16019,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 15,
-      "fallback": 15,
+      "fallback": 0,
       "currentPlayableBeats": 27,
       "currentPlayableActiveRate": 64.3,
       "withDice3PlayableBeats": 27,
@@ -15324,7 +16031,7 @@
       "unsupported": 6,
       "exactRate": 50,
       "nearRate": 0,
-      "fallbackRate": 35.7,
+      "fallbackRate": 0,
       "unsupportedRate": 14.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15490,7 +16197,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 27,
+      "realDiceActiveRate": 64.3,
+      "dummyBeats": 15,
+      "dummyRate": 35.7,
+      "restBeats": 61,
+      "restRate": 59.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15515,7 +16229,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 12,
-      "fallback": 12,
+      "fallback": 0,
       "currentPlayableBeats": 30,
       "currentPlayableActiveRate": 71.4,
       "withDice3PlayableBeats": 30,
@@ -15527,7 +16241,7 @@
       "unsupported": 9,
       "exactRate": 50,
       "nearRate": 0,
-      "fallbackRate": 28.6,
+      "fallbackRate": 0,
       "unsupportedRate": 21.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15693,7 +16407,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 30,
+      "realDiceActiveRate": 71.4,
+      "dummyBeats": 12,
+      "dummyRate": 28.6,
+      "restBeats": 61,
+      "restRate": 59.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15718,19 +16439,19 @@
       "dice3": 2,
       "dice4": 0,
       "other": 2,
-      "fallback": 2,
-      "currentPlayableBeats": 46,
-      "currentPlayableActiveRate": 92,
+      "fallback": 0,
+      "currentPlayableBeats": 48,
+      "currentPlayableActiveRate": 96,
       "withDice3PlayableBeats": 48,
       "withDice3PlayableActiveRate": 96,
-      "dice3BenefitPoints": 4,
+      "dice3BenefitPoints": 0,
       "exact": 27,
       "near": 0,
       "ambiguous": 0,
       "unsupported": 23,
       "exactRate": 54,
       "nearRate": 0,
-      "fallbackRate": 4,
+      "fallbackRate": 0,
       "unsupportedRate": 46,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15776,7 +16497,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 48,
+      "realDiceActiveRate": 96,
+      "dummyBeats": 2,
+      "dummyRate": 4,
+      "restBeats": 53,
+      "restRate": 51.5,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15802,11 +16530,11 @@
       "dice4": 0,
       "other": 0,
       "fallback": 0,
-      "currentPlayableBeats": 15,
-      "currentPlayableActiveRate": 50,
+      "currentPlayableBeats": 30,
+      "currentPlayableActiveRate": 100,
       "withDice3PlayableBeats": 30,
       "withDice3PlayableActiveRate": 100,
-      "dice3BenefitPoints": 50,
+      "dice3BenefitPoints": 0,
       "exact": 30,
       "near": 0,
       "ambiguous": 0,
@@ -15833,7 +16561,14 @@
         "TRIPLET": 15,
         "SINGLE": 15
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 30,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 73,
+      "restRate": 70.9,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15889,7 +16624,14 @@
       "auxiliaryClasses": {
         "SINGLE": 20
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 20,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 83,
+      "restRate": 80.6,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Addams_Family.mid",
@@ -15914,19 +16656,19 @@
       "dice3": 3,
       "dice4": 0,
       "other": 1,
-      "fallback": 1,
-      "currentPlayableBeats": 49,
-      "currentPlayableActiveRate": 92.5,
+      "fallback": 0,
+      "currentPlayableBeats": 52,
+      "currentPlayableActiveRate": 98.1,
       "withDice3PlayableBeats": 52,
       "withDice3PlayableActiveRate": 98.1,
-      "dice3BenefitPoints": 5.7,
+      "dice3BenefitPoints": 0,
       "exact": 51,
       "near": 0,
       "ambiguous": 0,
       "unsupported": 2,
       "exactRate": 96.2,
       "nearRate": 0,
-      "fallbackRate": 1.9,
+      "fallbackRate": 0,
       "unsupportedRate": 3.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -15960,7 +16702,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 52,
+      "realDiceActiveRate": 98.1,
+      "dummyBeats": 1,
+      "dummyRate": 1.9,
+      "restBeats": 50,
+      "restRate": 48.5,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16012,7 +16761,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 147,
+      "restRate": 100,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16069,7 +16825,14 @@
         "SINGLE": 107,
         "EVEN_2": 35
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 142,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 5,
+      "restRate": 3.4,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16125,7 +16888,14 @@
       "auxiliaryClasses": {
         "SINGLE": 75
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 75,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 72,
+      "restRate": 49,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16182,7 +16952,14 @@
         "SINGLE": 72,
         "EVEN_2": 26
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 98,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 49,
+      "restRate": 33.3,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16236,7 +17013,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 147,
+      "restRate": 100,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16290,7 +17074,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 147,
+      "restRate": 100,
+      "emptyEndSlots": 1
     },
     {
       "song": "Movie_Themes_-_Willie_Wonka.mid",
@@ -16344,7 +17135,14 @@
         "unsupported": 0
       },
       "auxiliaryClasses": {},
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": null,
+      "dummyBeats": 0,
+      "dummyRate": null,
+      "restBeats": 147,
+      "restRate": 100,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -16380,11 +17178,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 626,
-      "fallback": 935,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 309,
+      "currentPlayableActiveRate": 33,
+      "withDice3PlayableBeats": 309,
+      "withDice3PlayableActiveRate": 33,
       "dice3BenefitPoints": 0,
       "exact": 107,
       "near": 3,
@@ -16392,7 +17190,7 @@
       "unsupported": 768,
       "exactRate": 11.4,
       "nearRate": 0.3,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 82.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -16566,7 +17364,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 309,
+      "realDiceActiveRate": 33,
+      "dummyBeats": 626,
+      "dummyRate": 67,
+      "restBeats": 156,
+      "restRate": 14.3,
+      "emptyEndSlots": 1
     }
   ],
   "type0Channels": [
@@ -16593,7 +17398,7 @@
       "dice3": 0,
       "dice4": 2,
       "other": 201,
-      "fallback": 201,
+      "fallback": 0,
       "currentPlayableBeats": 182,
       "currentPlayableActiveRate": 47.5,
       "withDice3PlayableBeats": 182,
@@ -16605,7 +17410,7 @@
       "unsupported": 155,
       "exactRate": 15.9,
       "nearRate": 0,
-      "fallbackRate": 52.5,
+      "fallbackRate": 0,
       "unsupportedRate": 40.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -16777,7 +17582,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 182,
+      "realDiceActiveRate": 47.5,
+      "dummyBeats": 201,
+      "dummyRate": 52.5,
+      "restBeats": 13,
+      "restRate": 3.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -16802,7 +17614,7 @@
       "dice3": 0,
       "dice4": 2,
       "other": 79,
-      "fallback": 79,
+      "fallback": 0,
       "currentPlayableBeats": 181,
       "currentPlayableActiveRate": 69.6,
       "withDice3PlayableBeats": 181,
@@ -16814,7 +17626,7 @@
       "unsupported": 149,
       "exactRate": 13.8,
       "nearRate": 0,
-      "fallbackRate": 30.4,
+      "fallbackRate": 0,
       "unsupportedRate": 57.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -17002,7 +17814,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 181,
+      "realDiceActiveRate": 69.6,
+      "dummyBeats": 79,
+      "dummyRate": 30.4,
+      "restBeats": 136,
+      "restRate": 34.3,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -17027,7 +17846,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 81,
-      "fallback": 81,
+      "fallback": 0,
       "currentPlayableBeats": 83,
       "currentPlayableActiveRate": 50.6,
       "withDice3PlayableBeats": 83,
@@ -17039,7 +17858,7 @@
       "unsupported": 55,
       "exactRate": 20.7,
       "nearRate": 4.3,
-      "fallbackRate": 49.4,
+      "fallbackRate": 0,
       "unsupportedRate": 33.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -17212,7 +18031,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 83,
+      "realDiceActiveRate": 50.6,
+      "dummyBeats": 81,
+      "dummyRate": 49.4,
+      "restBeats": 232,
+      "restRate": 58.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -17237,7 +18063,7 @@
       "dice3": 0,
       "dice4": 14,
       "other": 50,
-      "fallback": 50,
+      "fallback": 0,
       "currentPlayableBeats": 69,
       "currentPlayableActiveRate": 58,
       "withDice3PlayableBeats": 69,
@@ -17249,7 +18075,7 @@
       "unsupported": 43,
       "exactRate": 22.7,
       "nearRate": 0,
-      "fallbackRate": 42,
+      "fallbackRate": 0,
       "unsupportedRate": 36.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -17421,7 +18247,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 69,
+      "realDiceActiveRate": 58,
+      "dummyBeats": 50,
+      "dummyRate": 42,
+      "restBeats": 277,
+      "restRate": 69.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -17446,7 +18279,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 47,
-      "fallback": 47,
+      "fallback": 0,
       "currentPlayableBeats": 74,
       "currentPlayableActiveRate": 61.2,
       "withDice3PlayableBeats": 74,
@@ -17458,7 +18291,7 @@
       "unsupported": 43,
       "exactRate": 25.6,
       "nearRate": 5,
-      "fallbackRate": 38.8,
+      "fallbackRate": 0,
       "unsupportedRate": 35.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -17631,7 +18464,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 74,
+      "realDiceActiveRate": 61.2,
+      "dummyBeats": 47,
+      "dummyRate": 38.8,
+      "restBeats": 275,
+      "restRate": 69.4,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -17656,7 +18496,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 43,
-      "fallback": 43,
+      "fallback": 0,
       "currentPlayableBeats": 79,
       "currentPlayableActiveRate": 64.8,
       "withDice3PlayableBeats": 79,
@@ -17668,7 +18508,7 @@
       "unsupported": 37,
       "exactRate": 34.4,
       "nearRate": 6.6,
-      "fallbackRate": 35.2,
+      "fallbackRate": 0,
       "unsupportedRate": 30.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -17841,7 +18681,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 79,
+      "realDiceActiveRate": 64.8,
+      "dummyBeats": 43,
+      "dummyRate": 35.2,
+      "restBeats": 274,
+      "restRate": 69.2,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -17866,7 +18713,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 41,
-      "fallback": 41,
+      "fallback": 0,
       "currentPlayableBeats": 106,
       "currentPlayableActiveRate": 72.1,
       "withDice3PlayableBeats": 106,
@@ -17878,7 +18725,7 @@
       "unsupported": 47,
       "exactRate": 40.1,
       "nearRate": 0,
-      "fallbackRate": 27.9,
+      "fallbackRate": 0,
       "unsupportedRate": 32,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18045,7 +18892,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 106,
+      "realDiceActiveRate": 72.1,
+      "dummyBeats": 41,
+      "dummyRate": 27.9,
+      "restBeats": 249,
+      "restRate": 62.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -18070,7 +18924,7 @@
       "dice3": 0,
       "dice4": 202,
       "other": 2,
-      "fallback": 2,
+      "fallback": 0,
       "currentPlayableBeats": 202,
       "currentPlayableActiveRate": 99,
       "withDice3PlayableBeats": 202,
@@ -18082,7 +18936,7 @@
       "unsupported": 0,
       "exactRate": 99,
       "nearRate": 0,
-      "fallbackRate": 1,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18129,7 +18983,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 202,
+      "realDiceActiveRate": 99,
+      "dummyBeats": 2,
+      "dummyRate": 1,
+      "restBeats": 192,
+      "restRate": 48.5,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -18186,7 +19047,14 @@
         "SINGLE": 8,
         "EVEN_4": 384
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 392,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 4,
+      "restRate": 1,
+      "emptyEndSlots": 0
     },
     {
       "song": "ABBA_-_Dancing_Queen.mid",
@@ -18211,7 +19079,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 51,
-      "fallback": 51,
+      "fallback": 0,
       "currentPlayableBeats": 67,
       "currentPlayableActiveRate": 56.8,
       "withDice3PlayableBeats": 67,
@@ -18223,7 +19091,7 @@
       "unsupported": 55,
       "exactRate": 17.8,
       "nearRate": 0,
-      "fallbackRate": 43.2,
+      "fallbackRate": 0,
       "unsupportedRate": 46.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18389,7 +19257,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 67,
+      "realDiceActiveRate": 56.8,
+      "dummyBeats": 51,
+      "dummyRate": 43.2,
+      "restBeats": 278,
+      "restRate": 70.2,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18414,7 +19289,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 15,
-      "fallback": 15,
+      "fallback": 0,
       "currentPlayableBeats": 20,
       "currentPlayableActiveRate": 57.1,
       "withDice3PlayableBeats": 20,
@@ -18426,7 +19301,7 @@
       "unsupported": 0,
       "exactRate": 57.1,
       "nearRate": 0,
-      "fallbackRate": 42.9,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18591,7 +19466,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 20,
+      "realDiceActiveRate": 57.1,
+      "dummyBeats": 15,
+      "dummyRate": 42.9,
+      "restBeats": 89,
+      "restRate": 71.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18616,19 +19498,19 @@
       "dice3": 4,
       "dice4": 0,
       "other": 3,
-      "fallback": 3,
-      "currentPlayableBeats": 2,
-      "currentPlayableActiveRate": 22.2,
+      "fallback": 0,
+      "currentPlayableBeats": 6,
+      "currentPlayableActiveRate": 66.7,
       "withDice3PlayableBeats": 6,
       "withDice3PlayableActiveRate": 66.7,
-      "dice3BenefitPoints": 44.4,
+      "dice3BenefitPoints": 0,
       "exact": 5,
       "near": 0,
       "ambiguous": 3,
       "unsupported": 1,
       "exactRate": 55.6,
       "nearRate": 0,
-      "fallbackRate": 33.3,
+      "fallbackRate": 0,
       "unsupportedRate": 11.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18687,7 +19569,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 6,
+      "realDiceActiveRate": 66.7,
+      "dummyBeats": 3,
+      "dummyRate": 33.3,
+      "restBeats": 115,
+      "restRate": 92.7,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18712,19 +19601,19 @@
       "dice3": 10,
       "dice4": 0,
       "other": 2,
-      "fallback": 2,
-      "currentPlayableBeats": 4,
-      "currentPlayableActiveRate": 25,
+      "fallback": 0,
+      "currentPlayableBeats": 14,
+      "currentPlayableActiveRate": 87.5,
       "withDice3PlayableBeats": 14,
       "withDice3PlayableActiveRate": 87.5,
-      "dice3BenefitPoints": 62.5,
+      "dice3BenefitPoints": 0,
       "exact": 12,
       "near": 0,
       "ambiguous": 2,
       "unsupported": 2,
       "exactRate": 75,
       "nearRate": 0,
-      "fallbackRate": 12.5,
+      "fallbackRate": 0,
       "unsupportedRate": 12.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18771,7 +19660,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 14,
+      "realDiceActiveRate": 87.5,
+      "dummyBeats": 2,
+      "dummyRate": 12.5,
+      "restBeats": 108,
+      "restRate": 87.1,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18797,11 +19693,11 @@
       "dice4": 0,
       "other": 0,
       "fallback": 0,
-      "currentPlayableBeats": 2,
-      "currentPlayableActiveRate": 13.3,
+      "currentPlayableBeats": 15,
+      "currentPlayableActiveRate": 100,
       "withDice3PlayableBeats": 15,
       "withDice3PlayableActiveRate": 100,
-      "dice3BenefitPoints": 86.7,
+      "dice3BenefitPoints": 0,
       "exact": 15,
       "near": 0,
       "ambiguous": 0,
@@ -18828,7 +19724,14 @@
         "TRIPLET": 13,
         "SINGLE": 2
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 15,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 109,
+      "restRate": 87.9,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18884,7 +19787,14 @@
       "auxiliaryClasses": {
         "SINGLE": 8
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 8,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 116,
+      "restRate": 93.5,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18909,7 +19819,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 2,
-      "fallback": 2,
+      "fallback": 0,
       "currentPlayableBeats": 0,
       "currentPlayableActiveRate": 0,
       "withDice3PlayableBeats": 0,
@@ -18921,7 +19831,7 @@
       "unsupported": 2,
       "exactRate": 0,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 100,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -18969,7 +19879,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": 0,
+      "dummyBeats": 2,
+      "dummyRate": 100,
+      "restBeats": 122,
+      "restRate": 98.4,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -18994,19 +19911,19 @@
       "dice3": 3,
       "dice4": 0,
       "other": 4,
-      "fallback": 4,
-      "currentPlayableBeats": 2,
-      "currentPlayableActiveRate": 22.2,
+      "fallback": 0,
+      "currentPlayableBeats": 5,
+      "currentPlayableActiveRate": 55.6,
       "withDice3PlayableBeats": 5,
       "withDice3PlayableActiveRate": 55.6,
-      "dice3BenefitPoints": 33.3,
+      "dice3BenefitPoints": 0,
       "exact": 4,
       "near": 0,
       "ambiguous": 4,
       "unsupported": 1,
       "exactRate": 44.4,
       "nearRate": 0,
-      "fallbackRate": 44.4,
+      "fallbackRate": 0,
       "unsupportedRate": 11.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -19077,7 +19994,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 5,
+      "realDiceActiveRate": 55.6,
+      "dummyBeats": 4,
+      "dummyRate": 44.4,
+      "restBeats": 115,
+      "restRate": 92.7,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -19102,19 +20026,19 @@
       "dice3": 4,
       "dice4": 0,
       "other": 4,
-      "fallback": 4,
-      "currentPlayableBeats": 1,
-      "currentPlayableActiveRate": 11.1,
+      "fallback": 0,
+      "currentPlayableBeats": 5,
+      "currentPlayableActiveRate": 55.6,
       "withDice3PlayableBeats": 5,
       "withDice3PlayableActiveRate": 55.6,
-      "dice3BenefitPoints": 44.4,
+      "dice3BenefitPoints": 0,
       "exact": 5,
       "near": 0,
       "ambiguous": 3,
       "unsupported": 1,
       "exactRate": 55.6,
       "nearRate": 0,
-      "fallbackRate": 44.4,
+      "fallbackRate": 0,
       "unsupportedRate": 11.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -19185,7 +20109,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 5,
+      "realDiceActiveRate": 55.6,
+      "dummyBeats": 4,
+      "dummyRate": 44.4,
+      "restBeats": 115,
+      "restRate": 92.7,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -19241,7 +20172,14 @@
       "auxiliaryClasses": {
         "SINGLE": 7
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 7,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 117,
+      "restRate": 94.4,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -19297,7 +20235,14 @@
       "auxiliaryClasses": {
         "SINGLE": 3
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 3,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 121,
+      "restRate": 97.6,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -19322,7 +20267,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 118,
-      "fallback": 118,
+      "fallback": 0,
       "currentPlayableBeats": 1,
       "currentPlayableActiveRate": 0.8,
       "withDice3PlayableBeats": 1,
@@ -19334,7 +20279,7 @@
       "unsupported": 0,
       "exactRate": 0.8,
       "nearRate": 0,
-      "fallbackRate": 99.2,
+      "fallbackRate": 0,
       "unsupportedRate": 0,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -19499,7 +20444,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 1,
+      "realDiceActiveRate": 0.8,
+      "dummyBeats": 118,
+      "dummyRate": 99.2,
+      "restBeats": 5,
+      "restRate": 4,
+      "emptyEndSlots": 0
     },
     {
       "song": "Disney_Themes_-_Pirates_Of_The_Caribbean.mid",
@@ -19524,19 +20476,19 @@
       "dice3": 2,
       "dice4": 0,
       "other": 74,
-      "fallback": 74,
-      "currentPlayableBeats": 16,
-      "currentPlayableActiveRate": 17.4,
+      "fallback": 0,
+      "currentPlayableBeats": 18,
+      "currentPlayableActiveRate": 19.6,
       "withDice3PlayableBeats": 18,
       "withDice3PlayableActiveRate": 19.6,
-      "dice3BenefitPoints": 2.2,
+      "dice3BenefitPoints": 0,
       "exact": 4,
       "near": 5,
       "ambiguous": 10,
       "unsupported": 73,
       "exactRate": 4.3,
       "nearRate": 5.4,
-      "fallbackRate": 80.4,
+      "fallbackRate": 0,
       "unsupportedRate": 79.3,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -19713,7 +20665,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 18,
+      "realDiceActiveRate": 19.6,
+      "dummyBeats": 74,
+      "dummyRate": 80.4,
+      "restBeats": 32,
+      "restRate": 25.8,
+      "emptyEndSlots": 0
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -19738,7 +20697,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 101,
-      "fallback": 101,
+      "fallback": 0,
       "currentPlayableBeats": 401,
       "currentPlayableActiveRate": 79.9,
       "withDice3PlayableBeats": 401,
@@ -19750,7 +20709,7 @@
       "unsupported": 201,
       "exactRate": 40.4,
       "nearRate": 0.4,
-      "fallbackRate": 20.1,
+      "fallbackRate": 0,
       "unsupportedRate": 40,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -19920,7 +20879,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 401,
+      "realDiceActiveRate": 79.9,
+      "dummyBeats": 101,
+      "dummyRate": 20.1,
+      "restBeats": 147,
+      "restRate": 22.7,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -19945,7 +20911,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 12,
-      "fallback": 12,
+      "fallback": 0,
       "currentPlayableBeats": 95,
       "currentPlayableActiveRate": 88.8,
       "withDice3PlayableBeats": 95,
@@ -19957,7 +20923,7 @@
       "unsupported": 9,
       "exactRate": 81.3,
       "nearRate": 0,
-      "fallbackRate": 11.2,
+      "fallbackRate": 0,
       "unsupportedRate": 8.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -20123,7 +21089,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 95,
+      "realDiceActiveRate": 88.8,
+      "dummyBeats": 12,
+      "dummyRate": 11.2,
+      "restBeats": 542,
+      "restRate": 83.5,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -20148,7 +21121,7 @@
       "dice3": 0,
       "dice4": 5,
       "other": 107,
-      "fallback": 107,
+      "fallback": 0,
       "currentPlayableBeats": 152,
       "currentPlayableActiveRate": 58.7,
       "withDice3PlayableBeats": 152,
@@ -20160,7 +21133,7 @@
       "unsupported": 86,
       "exactRate": 34,
       "nearRate": 3.5,
-      "fallbackRate": 41.3,
+      "fallbackRate": 0,
       "unsupportedRate": 33.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -20337,7 +21310,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 152,
+      "realDiceActiveRate": 58.7,
+      "dummyBeats": 107,
+      "dummyRate": 41.3,
+      "restBeats": 390,
+      "restRate": 60.1,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -20362,7 +21342,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 464,
-      "fallback": 464,
+      "fallback": 0,
       "currentPlayableBeats": 0,
       "currentPlayableActiveRate": 0,
       "withDice3PlayableBeats": 0,
@@ -20374,7 +21354,7 @@
       "unsupported": 116,
       "exactRate": 0,
       "nearRate": 25,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 25,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -20548,7 +21528,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 0,
+      "realDiceActiveRate": 0,
+      "dummyBeats": 464,
+      "dummyRate": 100,
+      "restBeats": 185,
+      "restRate": 28.5,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -20573,7 +21560,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 23,
-      "fallback": 23,
+      "fallback": 0,
       "currentPlayableBeats": 68,
       "currentPlayableActiveRate": 74.7,
       "withDice3PlayableBeats": 68,
@@ -20585,7 +21572,7 @@
       "unsupported": 29,
       "exactRate": 46.2,
       "nearRate": 0,
-      "fallbackRate": 25.3,
+      "fallbackRate": 0,
       "unsupportedRate": 31.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -20759,7 +21746,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 68,
+      "realDiceActiveRate": 74.7,
+      "dummyBeats": 23,
+      "dummyRate": 25.3,
+      "restBeats": 558,
+      "restRate": 86,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -20784,7 +21778,7 @@
       "dice3": 0,
       "dice4": 24,
       "other": 13,
-      "fallback": 13,
+      "fallback": 0,
       "currentPlayableBeats": 50,
       "currentPlayableActiveRate": 79.4,
       "withDice3PlayableBeats": 50,
@@ -20796,7 +21790,7 @@
       "unsupported": 18,
       "exactRate": 61.9,
       "nearRate": 3.2,
-      "fallbackRate": 20.6,
+      "fallbackRate": 0,
       "unsupportedRate": 28.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -20965,7 +21959,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 50,
+      "realDiceActiveRate": 79.4,
+      "dummyBeats": 13,
+      "dummyRate": 20.6,
+      "restBeats": 586,
+      "restRate": 90.3,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21021,7 +22022,14 @@
       "auxiliaryClasses": {
         "SINGLE": 60
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 60,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 589,
+      "restRate": 90.8,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21046,7 +22054,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 1,
-      "fallback": 1,
+      "fallback": 0,
       "currentPlayableBeats": 44,
       "currentPlayableActiveRate": 97.8,
       "withDice3PlayableBeats": 44,
@@ -21058,7 +22066,7 @@
       "unsupported": 27,
       "exactRate": 37.8,
       "nearRate": 0,
-      "fallbackRate": 2.2,
+      "fallbackRate": 0,
       "unsupportedRate": 60,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -21092,7 +22100,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_2_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 44,
+      "realDiceActiveRate": 97.8,
+      "dummyBeats": 1,
+      "dummyRate": 2.2,
+      "restBeats": 604,
+      "restRate": 93.1,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21117,7 +22132,7 @@
       "dice3": 0,
       "dice4": 149,
       "other": 407,
-      "fallback": 407,
+      "fallback": 0,
       "currentPlayableBeats": 235,
       "currentPlayableActiveRate": 36.6,
       "withDice3PlayableBeats": 235,
@@ -21129,7 +22144,7 @@
       "unsupported": 1,
       "exactRate": 36.4,
       "nearRate": 0,
-      "fallbackRate": 63.4,
+      "fallbackRate": 0,
       "unsupportedRate": 0.2,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -21310,7 +22325,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 235,
+      "realDiceActiveRate": 36.6,
+      "dummyBeats": 407,
+      "dummyRate": 63.4,
+      "restBeats": 7,
+      "restRate": 1.1,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21366,7 +22388,14 @@
       "auxiliaryClasses": {
         "LATE_START": 32
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 32,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 617,
+      "restRate": 95.1,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21391,7 +22420,7 @@
       "dice3": 0,
       "dice4": 1,
       "other": 3,
-      "fallback": 3,
+      "fallback": 0,
       "currentPlayableBeats": 11,
       "currentPlayableActiveRate": 78.6,
       "withDice3PlayableBeats": 11,
@@ -21403,7 +22432,7 @@
       "unsupported": 3,
       "exactRate": 57.1,
       "nearRate": 0,
-      "fallbackRate": 21.4,
+      "fallbackRate": 0,
       "unsupportedRate": 21.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -21463,7 +22492,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 11,
+      "realDiceActiveRate": 78.6,
+      "dummyBeats": 3,
+      "dummyRate": 21.4,
+      "restBeats": 635,
+      "restRate": 97.8,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21519,7 +22555,14 @@
       "auxiliaryClasses": {
         "LATE_START": 89
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 89,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 560,
+      "restRate": 86.3,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21544,7 +22587,7 @@
       "dice3": 0,
       "dice4": 0,
       "other": 28,
-      "fallback": 28,
+      "fallback": 0,
       "currentPlayableBeats": 84,
       "currentPlayableActiveRate": 75,
       "withDice3PlayableBeats": 84,
@@ -21556,7 +22599,7 @@
       "unsupported": 28,
       "exactRate": 50,
       "nearRate": 25,
-      "fallbackRate": 25,
+      "fallbackRate": 0,
       "unsupportedRate": 25,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -21735,7 +22778,14 @@
           "confidence": "NEAR",
           "auxiliaryClass": "OTHER_3_NEAR"
         }
-      ]
+      ],
+      "realDiceBeats": 84,
+      "realDiceActiveRate": 75,
+      "dummyBeats": 28,
+      "dummyRate": 25,
+      "restBeats": 537,
+      "restRate": 82.7,
+      "emptyEndSlots": 3
     },
     {
       "song": "Michael_Jackson_-_Thriller.mid",
@@ -21760,7 +22810,7 @@
       "dice3": 0,
       "dice4": 22,
       "other": 44,
-      "fallback": 44,
+      "fallback": 0,
       "currentPlayableBeats": 110,
       "currentPlayableActiveRate": 71.4,
       "withDice3PlayableBeats": 110,
@@ -21772,7 +22822,7 @@
       "unsupported": 66,
       "exactRate": 28.6,
       "nearRate": 0,
-      "fallbackRate": 28.6,
+      "fallbackRate": 0,
       "unsupportedRate": 42.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -21948,7 +22998,14 @@
           "confidence": "AMBIGUOUS",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 110,
+      "realDiceActiveRate": 71.4,
+      "dummyBeats": 44,
+      "dummyRate": 28.6,
+      "restBeats": 495,
+      "restRate": 76.3,
+      "emptyEndSlots": 3
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -21973,11 +23030,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 172,
-      "fallback": 641,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 469,
+      "currentPlayableActiveRate": 73.2,
+      "withDice3PlayableBeats": 469,
+      "withDice3PlayableActiveRate": 73.2,
       "dice3BenefitPoints": 0,
       "exact": 214,
       "near": 0,
@@ -21985,7 +23042,7 @@
       "unsupported": 427,
       "exactRate": 33.4,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 66.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22152,7 +23209,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "IRREGULAR"
         }
-      ]
+      ],
+      "realDiceBeats": 469,
+      "realDiceActiveRate": 73.2,
+      "dummyBeats": 172,
+      "dummyRate": 26.8,
+      "restBeats": 450,
+      "restRate": 41.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22177,11 +23241,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 32,
-      "fallback": 303,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 271,
+      "currentPlayableActiveRate": 89.4,
+      "withDice3PlayableBeats": 271,
+      "withDice3PlayableActiveRate": 89.4,
       "dice3BenefitPoints": 0,
       "exact": 162,
       "near": 0,
@@ -22189,7 +23253,7 @@
       "unsupported": 141,
       "exactRate": 53.5,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 46.5,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22356,7 +23420,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 271,
+      "realDiceActiveRate": 89.4,
+      "dummyBeats": 32,
+      "dummyRate": 10.6,
+      "restBeats": 788,
+      "restRate": 72.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22381,11 +23452,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 3,
-      "fallback": 159,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 156,
+      "currentPlayableActiveRate": 98.1,
+      "withDice3PlayableBeats": 156,
+      "withDice3PlayableActiveRate": 98.1,
       "dice3BenefitPoints": 0,
       "exact": 66,
       "near": 2,
@@ -22393,7 +23464,7 @@
       "unsupported": 90,
       "exactRate": 41.5,
       "nearRate": 1.3,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 56.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22451,7 +23522,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 156,
+      "realDiceActiveRate": 98.1,
+      "dummyBeats": 3,
+      "dummyRate": 1.9,
+      "restBeats": 932,
+      "restRate": 85.4,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22476,11 +23554,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 32,
-      "fallback": 298,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 266,
+      "currentPlayableActiveRate": 89.3,
+      "withDice3PlayableBeats": 266,
+      "withDice3PlayableActiveRate": 89.3,
       "dice3BenefitPoints": 0,
       "exact": 21,
       "near": 19,
@@ -22488,7 +23566,7 @@
       "unsupported": 247,
       "exactRate": 7,
       "nearRate": 6.4,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 82.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22655,7 +23733,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 266,
+      "realDiceActiveRate": 89.3,
+      "dummyBeats": 32,
+      "dummyRate": 10.7,
+      "restBeats": 793,
+      "restRate": 72.7,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22680,11 +23765,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 5,
-      "fallback": 106,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 101,
+      "currentPlayableActiveRate": 95.3,
+      "withDice3PlayableBeats": 101,
+      "withDice3PlayableActiveRate": 95.3,
       "dice3BenefitPoints": 0,
       "exact": 8,
       "near": 7,
@@ -22692,7 +23777,7 @@
       "unsupported": 81,
       "exactRate": 7.5,
       "nearRate": 6.6,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 76.4,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22775,7 +23860,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 101,
+      "realDiceActiveRate": 95.3,
+      "dummyBeats": 5,
+      "dummyRate": 4.7,
+      "restBeats": 985,
+      "restRate": 90.3,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22800,11 +23892,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 4,
-      "fallback": 127,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 123,
+      "currentPlayableActiveRate": 96.9,
+      "withDice3PlayableBeats": 123,
+      "withDice3PlayableActiveRate": 96.9,
       "dice3BenefitPoints": 0,
       "exact": 122,
       "near": 0,
@@ -22812,7 +23904,7 @@
       "unsupported": 5,
       "exactRate": 96.1,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 3.9,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22888,7 +23980,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 123,
+      "realDiceActiveRate": 96.9,
+      "dummyBeats": 4,
+      "dummyRate": 3.1,
+      "restBeats": 964,
+      "restRate": 88.4,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22913,11 +24012,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 0,
-      "fallback": 100,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 100,
+      "currentPlayableActiveRate": 100,
+      "withDice3PlayableBeats": 100,
+      "withDice3PlayableActiveRate": 100,
       "dice3BenefitPoints": 0,
       "exact": 17,
       "near": 10,
@@ -22925,7 +24024,7 @@
       "unsupported": 49,
       "exactRate": 17,
       "nearRate": 10,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 49,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -22945,7 +24044,14 @@
         "LATE_START": 73,
         "SINGLE": 27
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 100,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 991,
+      "restRate": 90.8,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -22970,11 +24076,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 0,
-      "fallback": 74,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 74,
+      "currentPlayableActiveRate": 100,
+      "withDice3PlayableBeats": 74,
+      "withDice3PlayableActiveRate": 100,
       "dice3BenefitPoints": 0,
       "exact": 11,
       "near": 11,
@@ -22982,7 +24088,7 @@
       "unsupported": 43,
       "exactRate": 14.9,
       "nearRate": 14.9,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 58.1,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -23002,7 +24108,14 @@
         "SINGLE": 22,
         "LATE_START": 52
       },
-      "otherExamples": []
+      "otherExamples": [],
+      "realDiceBeats": 74,
+      "realDiceActiveRate": 100,
+      "dummyBeats": 0,
+      "dummyRate": 0,
+      "restBeats": 1017,
+      "restRate": 93.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -23027,11 +24140,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 15,
-      "fallback": 58,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 43,
+      "currentPlayableActiveRate": 74.1,
+      "withDice3PlayableBeats": 43,
+      "withDice3PlayableActiveRate": 74.1,
       "dice3BenefitPoints": 0,
       "exact": 6,
       "near": 8,
@@ -23039,7 +24152,7 @@
       "unsupported": 37,
       "exactRate": 10.3,
       "nearRate": 13.8,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 63.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -23206,7 +24319,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 43,
+      "realDiceActiveRate": 74.1,
+      "dummyBeats": 15,
+      "dummyRate": 25.9,
+      "restBeats": 1033,
+      "restRate": 94.7,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -23231,11 +24351,11 @@
       "dice3": 1,
       "dice4": 0,
       "other": 181,
-      "fallback": 571,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 390,
+      "currentPlayableActiveRate": 68.3,
+      "withDice3PlayableBeats": 390,
+      "withDice3PlayableActiveRate": 68.3,
       "dice3BenefitPoints": 0,
       "exact": 212,
       "near": 0,
@@ -23243,7 +24363,7 @@
       "unsupported": 346,
       "exactRate": 37.1,
       "nearRate": 0,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 60.6,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -23416,7 +24536,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 390,
+      "realDiceActiveRate": 68.3,
+      "dummyBeats": 181,
+      "dummyRate": 31.7,
+      "restBeats": 520,
+      "restRate": 47.7,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -23441,11 +24568,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 1,
-      "fallback": 52,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 51,
+      "currentPlayableActiveRate": 98.1,
+      "withDice3PlayableBeats": 51,
+      "withDice3PlayableActiveRate": 98.1,
       "dice3BenefitPoints": 0,
       "exact": 10,
       "near": 7,
@@ -23453,7 +24580,7 @@
       "unsupported": 28,
       "exactRate": 19.2,
       "nearRate": 13.5,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 53.8,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -23487,7 +24614,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "SYNCOPATED"
         }
-      ]
+      ],
+      "realDiceBeats": 51,
+      "realDiceActiveRate": 98.1,
+      "dummyBeats": 1,
+      "dummyRate": 1.9,
+      "restBeats": 1039,
+      "restRate": 95.2,
+      "emptyEndSlots": 1
     },
     {
       "song": "Queen_-_Killer_Queen.mid",
@@ -23512,11 +24646,11 @@
       "dice3": 0,
       "dice4": 0,
       "other": 4,
-      "fallback": 55,
-      "currentPlayableBeats": 0,
-      "currentPlayableActiveRate": 0,
-      "withDice3PlayableBeats": 0,
-      "withDice3PlayableActiveRate": 0,
+      "fallback": 0,
+      "currentPlayableBeats": 51,
+      "currentPlayableActiveRate": 92.7,
+      "withDice3PlayableBeats": 51,
+      "withDice3PlayableActiveRate": 92.7,
       "dice3BenefitPoints": 0,
       "exact": 5,
       "near": 2,
@@ -23524,7 +24658,7 @@
       "unsupported": 44,
       "exactRate": 9.1,
       "nearRate": 3.6,
-      "fallbackRate": 100,
+      "fallbackRate": 0,
       "unsupportedRate": 80,
       "otherOnsetCounts": {
         "onset1": 0,
@@ -23594,7 +24728,14 @@
           "confidence": "UNSUPPORTED",
           "auxiliaryClass": "LATE_START"
         }
-      ]
+      ],
+      "realDiceBeats": 51,
+      "realDiceActiveRate": 92.7,
+      "dummyBeats": 4,
+      "dummyRate": 7.3,
+      "restBeats": 1036,
+      "restRate": 95,
+      "emptyEndSlots": 1
     }
   ],
   "otherExamples": [

@@ -152,11 +152,16 @@
         tracks: global.MidiCommon.getTracks(this.song).length,
         notes: global.MidiCommon.getNotes(this.song).length,
         tempoChanges: this.song.tempoMap.length,
-        recommended: this.song.timeSignatureMap.every((item) => item.numerator === 4 && item.denominator === 4)
+        recommended: true
       };
     }
 
-    initialBeatDuration() { return 60 / (this.song?.tempoMap?.[0]?.bpm || this.song?.bpm || 120); }
+    timingBeats() { return this.rhythmAnalyzer?.analyze("all")?.beats || []; }
+    getBeatCount() { return this.timingBeats().length; }
+    initialBeatDuration() {
+      const beat = this.timingBeats()[0];
+      return beat ? beat.endTime - beat.startTime : 60 / (this.song?.tempoMap?.[0]?.bpm || this.song?.bpm || 120);
+    }
 
     getAnalysisTracks() { return this.rhythmAnalyzer?.trackOptions || []; }
     getRhythmAnalysis(selection = this.analysisTrack) {
@@ -209,11 +214,10 @@
         const startSongTime = beatIndex * duration;
         return { beatIndex, startAudioTime: this.songStartAudioTime + startSongTime, endAudioTime: this.songStartAudioTime + startSongTime + duration, duration, bpm: 60 / duration, tick: 0, countIn: true };
       }
-      const startTick = beatIndex * this.song.ppq;
-      const endTick = startTick + this.song.ppq;
-      const startSongTime = global.MidiCommon.tickToSeconds(this.song, startTick);
-      const endSongTime = global.MidiCommon.tickToSeconds(this.song, endTick);
-      return { beatIndex, startAudioTime: this.songStartAudioTime + startSongTime, endAudioTime: this.songStartAudioTime + endSongTime, duration: endSongTime - startSongTime, bpm: this.tempoAtTick(startTick).bpm, tick: startTick, countIn: false };
+      const beat = this.timingBeats()[beatIndex];
+      if (!beat) return null;
+      const duration = beat.endTime - beat.startTime;
+      return { beatIndex, startAudioTime: this.songStartAudioTime + beat.startTime, endAudioTime: this.songStartAudioTime + beat.endTime, duration, bpm: beat.tempo, tick: beat.startTick, endTick: beat.endTick, countIn: false, measure: beat.measure, beat: beat.beat, timeSignature: { ...beat.timeSignature } };
     }
 
     getCurrentState() {
@@ -225,8 +229,10 @@
         return { ...timing, timeline, progress: Math.max(0, Math.min(1, (this.context.currentTime - timing.startAudioTime) / timing.duration)) };
       }
       const tick = global.MidiCommon.secondsToTick(this.song, timeline);
-      const beatIndex = Math.max(0, Math.floor(tick / this.song.ppq));
+      const beat = this.rhythmAnalyzer.beatAtTick(tick, "all");
+      const beatIndex = beat?.index ?? 0;
       const timing = this.getBeatTiming(beatIndex);
+      if (!timing) return null;
       return { ...timing, timeline, progress: Math.max(0, Math.min(1, (this.context.currentTime - timing.startAudioTime) / timing.duration)), musicalTime: global.MidiCommon.tickToBarBeat(this.song, tick) };
     }
 

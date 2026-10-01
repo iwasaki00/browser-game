@@ -46,7 +46,8 @@ const unsupportedSignature = generate([
   beat(1, "EVEN_2", 1, 2, { numerator: 3, denominator: 4 }),
   beat(2, "REST", 1, 3, { numerator: 3, denominator: 4 })
 ]);
-assert(!unsupportedSignature.measures[0].supported && unsupportedSignature.measures[0].dice === null, "non-4/4 measure unsupported");
-assert(unsupportedSignature.beats.every((item) => !item.supported && item.reason === "UNSUPPORTED_TIME_SIGNATURE"), "non-4/4 beats unsupported");
+assert(unsupportedSignature.measures[0].supported && JSON.stringify(unsupportedSignature.measures[0].dice) === JSON.stringify([1, 2, null]), "non-4/4 measure remains mapped");
+assert(unsupportedSignature.beats.every((item) => item.supported && item.reason === null), "non-4/4 beats remain supported");
+assert(unsupportedSignature.statistics.unsupportedTimeSignature === 0, "non-4/4 is not counted as unsupported");
 
-console.log(JSON.stringify({ tests: 9, assertions: 10, result: "PASS" }));
+console.log(JSON.stringify({ tests: 10, assertions: 11, result: "PASS" }));

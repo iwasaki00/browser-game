@@ -45,7 +45,7 @@ const summaries = reports.flatMap((report) => report.summary.map((summary) => ({
 const channelSummaries = reports.flatMap((report) => report.channelSummary.map((summary) => ({ song: report.song, title: report.title, midiFormat: report.midiFormat, ...summary })));
 const activeSummaries = summaries.filter((summary) => !summary.silent);
 const totals = activeSummaries.reduce((result, item) => {
-  ["totalBeats", "activeBeats", "dice1", "dice2", "dice3", "dice4", "other", "rest", "fallback", "currentPlayableBeats", "withDice3PlayableBeats", "exact", "near", "ambiguous", "unsupported"].forEach((key) => { result[key] = (result[key] || 0) + item[key]; });
+  ["totalBeats", "activeBeats", "realDiceBeats", "dummyBeats", "restBeats", "emptyEndSlots", "dice1", "dice2", "dice3", "dice4", "other", "rest", "fallback", "currentPlayableBeats", "withDice3PlayableBeats", "exact", "near", "ambiguous", "unsupported"].forEach((key) => { result[key] = (result[key] || 0) + item[key]; });
   Object.entries(item.otherOnsetCounts).forEach(([key, value]) => { result.otherOnsetCounts[key] = (result.otherOnsetCounts[key] || 0) + value; });
   Object.entries(item.otherNearest).forEach(([key, value]) => { result.otherNearest[key] = (result.otherNearest[key] || 0) + value; });
   return result;
@@ -53,9 +53,12 @@ const totals = activeSummaries.reduce((result, item) => {
 totals.currentPlayableActiveRate = totals.activeBeats ? Number((totals.currentPlayableBeats / totals.activeBeats * 100).toFixed(1)) : null;
 totals.withDice3PlayableActiveRate = totals.activeBeats ? Number((totals.withDice3PlayableBeats / totals.activeBeats * 100).toFixed(1)) : null;
 totals.dice3BenefitPoints = totals.activeBeats ? Number(((totals.withDice3PlayableBeats - totals.currentPlayableBeats) / totals.activeBeats * 100).toFixed(1)) : null;
+totals.realDiceActiveRate = totals.activeBeats ? Number((totals.realDiceBeats / totals.activeBeats * 100).toFixed(1)) : null;
+totals.dummyRate = totals.activeBeats ? Number((totals.dummyBeats / totals.activeBeats * 100).toFixed(1)) : null;
+totals.restRate = totals.totalBeats ? Number((totals.restBeats / totals.totalBeats * 100).toFixed(1)) : null;
 
 const report = {
-  schemaVersion: "1.0.0",
+  schemaVersion: "2.0.0",
   generatedAt: new Date().toISOString(),
   librarySongs: reports.length,
   activeTrackUnits: activeSummaries.length,
@@ -66,7 +69,7 @@ const report = {
   otherExamples: reports.flatMap((songReport) => songReport.summary.flatMap((summary) => summary.otherExamples.map((example) => ({ song: songReport.song, trackNumber: summary.trackNumber, trackName: summary.trackName, ...example })))).slice(0, 250)
 };
 
-const csvHeaders = ["song", "midiFormat", "sourceType", "trackNumber", "trackName", "channel", "silent", "activeBeats", "activeBeatRate", "dice1", "dice2", "dice3", "dice4", "other", "rest", "currentPlayableActiveRate", "withDice3PlayableActiveRate", "dice3BenefitPoints", "exact", "near", "ambiguous", "unsupported", "fallbackRate", "nearest1", "nearest2", "nearest3", "nearest4"];
+const csvHeaders = ["song", "midiFormat", "sourceType", "trackNumber", "trackName", "channel", "silent", "activeBeats", "activeBeatRate", "realDiceBeats", "realDiceActiveRate", "dummyBeats", "dummyRate", "restBeats", "restRate", "emptyEndSlots", "dice1", "dice2", "dice3", "dice4", "other", "rest", "currentPlayableActiveRate", "withDice3PlayableActiveRate", "dice3BenefitPoints", "exact", "near", "ambiguous", "unsupported", "fallbackRate", "nearest1", "nearest2", "nearest3", "nearest4"];
 const quote = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
 const csvRows = [...summaries, ...channelSummaries].map((item) => csvHeaders.map((key) => {
   const nearestMatch = /^nearest([1-4])$/.exec(key);
