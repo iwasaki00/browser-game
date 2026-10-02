@@ -90,6 +90,7 @@
       this.pausedTimelineTime = null;
       this.rhythmAnalyzer = null;
       this.analysisTrack = "all";
+      this.quantizeEnabled = true;
       this.diceCharts = new Map();
       this.gameCharts = new Map();
       this.diagnostics = null;
@@ -112,15 +113,9 @@
       this.diagnostics = null;
       this.rhythmAnalyzer.trackOptions.forEach((track) => {
         const analysis = this.rhythmAnalyzer.analyze(track.value);
-        const diceChart = new global.MidiDiceChartGenerator(analysis).generate();
-        this.diceCharts.set(track.value, diceChart);
-        this.gameCharts.set(track.value, new global.MidiGameChart(diceChart).build());
+        this.diceCharts.set(track.value, new global.MidiDiceChartGenerator(analysis).generate());
       });
-      this.diagnostics = new global.MidiChartDiagnostics(song, {
-        analyzer: this.rhythmAnalyzer,
-        diceCharts: this.diceCharts,
-        gameCharts: this.gameCharts
-      }).diagnose();
+      this.rebuildGameCharts();
       this.player.setSong(song);
       return this.getInfo();
     }
@@ -178,6 +173,25 @@
       const key = selection === "all" ? "all" : String(Number(selection));
       return this.gameCharts.get(key) || null;
     }
+    rebuildGameCharts() {
+      this.gameCharts = new Map();
+      this.diceCharts.forEach((diceChart, key) => this.gameCharts.set(key, new global.MidiGameChart(diceChart, { quantizeEnabled: this.quantizeEnabled }).build()));
+      this.diagnostics = new global.MidiChartDiagnostics(this.song, {
+        analyzer: this.rhythmAnalyzer,
+        diceCharts: this.diceCharts,
+        gameCharts: this.gameCharts,
+        quantizeEnabled: this.quantizeEnabled
+      }).diagnose();
+      return this.gameCharts;
+    }
+    setQuantizeEnabled(enabled) {
+      const next = Boolean(enabled);
+      if (next === this.quantizeEnabled) return false;
+      this.quantizeEnabled = next;
+      if (this.song) this.rebuildGameCharts();
+      return true;
+    }
+    getQuantizeEnabled() { return this.quantizeEnabled; }
     getDiagnostics() { return this.diagnostics; }
     getDiagnosticsCsv() { return this.diagnostics ? global.MidiChartDiagnostics.toCsv(this.diagnostics) : ""; }
     getGameTrackOptions() {

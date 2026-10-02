@@ -16,6 +16,40 @@
 
   const round = (value, digits = 4) => Number(Number(value).toFixed(digits));
   const rate = (part, whole) => whole ? round(part / whole * 100, 1) : null;
+  const patternDistances = (positions) => {
+    const result = { 1: null, 2: null, 3: null, 4: null };
+    const target = STANDARD_PATTERNS[positions.length];
+    if (!target) return result;
+    result[positions.length] = round(positions.reduce((sum, value, index) => sum + Math.abs(value - target[index]), 0) / positions.length, 6);
+    return result;
+  };
+
+  const classifyBeat = (beat, thresholdOverrides = {}) => {
+    const thresholds = { ...DEFAULT_THRESHOLDS, ...thresholdOverrides };
+    const rawPositions = [...(beat.onsetPositions || [])];
+    if (!rawPositions.length) return { distances: patternDistances(rawPositions), nearestDice: null, distance: 0, confidence: "EXACT", quantizedPositions: [], firstOnsetPosition: null, gameCompatible: true, compatibleWithDice3: true, auxiliaryClass: "REST" };
+    const distances = patternDistances(rawPositions);
+    const nearestDice = rawPositions.length >= 1 && rawPositions.length <= 4 ? rawPositions.length : null;
+    const distance = nearestDice ? distances[nearestDice] : null;
+    const target = nearestDice ? STANDARD_PATTERNS[nearestDice] : [];
+    const maximumError = target.length ? Math.max(...rawPositions.map((value, index) => Math.abs(value - target[index]))) : Infinity;
+    const firstOnsetPosition = rawPositions[0];
+    const startsOnBeat = firstOnsetPosition <= thresholds.firstOnset;
+    const formalPattern = ["SINGLE", "EVEN_2", "TRIPLET", "EVEN_4"].includes(beat.pattern);
+    let confidence = "UNSUPPORTED";
+    if (nearestDice && startsOnBeat && distance <= thresholds.exact && maximumError <= thresholds.exact) confidence = formalPattern ? "EXACT" : "NEAR";
+    else if (nearestDice && startsOnBeat && distance <= thresholds.near && maximumError <= thresholds.near * 1.25) confidence = "NEAR";
+    else if (nearestDice && distance <= thresholds.ambiguous) confidence = "AMBIGUOUS";
+    const exactPattern = formalPattern && confidence === "EXACT";
+    let auxiliaryClass = beat.pattern;
+    if (beat.pattern === "OTHER") {
+      if (!startsOnBeat) auxiliaryClass = "LATE_START";
+      else if (nearestDice && (confidence === "NEAR" || confidence === "AMBIGUOUS")) auxiliaryClass = `OTHER_${nearestDice}_NEAR`;
+      else if (rawPositions.some((position) => position > thresholds.firstOnset) && nearestDice) auxiliaryClass = "SYNCOPATED";
+      else auxiliaryClass = "IRREGULAR";
+    } else if (!startsOnBeat) auxiliaryClass = "LATE_START";
+    return { distances, nearestDice, distance, confidence, quantizedPositions: [...target], firstOnsetPosition, gameCompatible: exactPattern, compatibleWithDice3: exactPattern, auxiliaryClass };
+  };
 
   class MidiChartDiagnostics {
     constructor(song, options = {}) {
@@ -30,42 +64,12 @@
       this.diceCharts = options.diceCharts || null;
       this.gameCharts = options.gameCharts || null;
       this.thresholds = Object.freeze({ ...DEFAULT_THRESHOLDS, ...(options.thresholds || {}) });
+      this.quantizeEnabled = options.quantizeEnabled ?? true;
     }
 
-    patternDistances(positions) {
-      const result = { 1: null, 2: null, 3: null, 4: null };
-      const target = STANDARD_PATTERNS[positions.length];
-      if (!target) return result;
-      result[positions.length] = round(positions.reduce((sum, value, index) => sum + Math.abs(value - target[index]), 0) / positions.length, 6);
-      return result;
-    }
+    patternDistances(positions) { return patternDistances(positions); }
 
-    classify(beat) {
-      const rawPositions = [...beat.onsetPositions];
-      if (!rawPositions.length) return { distances: this.patternDistances(rawPositions), nearestDice: null, distance: 0, confidence: "EXACT", quantizedPositions: [], firstOnsetPosition: null, gameCompatible: true, compatibleWithDice3: true, auxiliaryClass: "REST" };
-      const distances = this.patternDistances(rawPositions);
-      const nearestDice = rawPositions.length >= 1 && rawPositions.length <= 4 ? rawPositions.length : null;
-      const distance = nearestDice ? distances[nearestDice] : null;
-      const target = nearestDice ? STANDARD_PATTERNS[nearestDice] : [];
-      const maximumError = target.length ? Math.max(...rawPositions.map((value, index) => Math.abs(value - target[index]))) : Infinity;
-      const firstOnsetPosition = rawPositions[0];
-      const startsOnBeat = firstOnsetPosition <= this.thresholds.firstOnset;
-      let confidence = "UNSUPPORTED";
-      if (nearestDice && startsOnBeat && distance <= this.thresholds.exact && maximumError <= this.thresholds.exact) confidence = "EXACT";
-      else if (nearestDice && startsOnBeat && distance <= this.thresholds.near && maximumError <= this.thresholds.near * 1.25) confidence = "NEAR";
-      else if (nearestDice && distance <= this.thresholds.ambiguous) confidence = "AMBIGUOUS";
-      const exactPattern = ["SINGLE", "EVEN_2", "TRIPLET", "EVEN_4"].includes(beat.pattern) && confidence === "EXACT";
-      const gameCompatible = exactPattern;
-      const compatibleWithDice3 = exactPattern;
-      let auxiliaryClass = beat.pattern;
-      if (beat.pattern === "OTHER") {
-        if (!startsOnBeat) auxiliaryClass = "LATE_START";
-        else if (nearestDice && (confidence === "NEAR" || confidence === "AMBIGUOUS")) auxiliaryClass = `OTHER_${nearestDice}_NEAR`;
-        else if (rawPositions.some((position) => position > 0.08) && nearestDice) auxiliaryClass = "SYNCOPATED";
-        else auxiliaryClass = "IRREGULAR";
-      } else if (!startsOnBeat) auxiliaryClass = "LATE_START";
-      return { distances, nearestDice, distance, confidence, quantizedPositions: [...target], firstOnsetPosition, gameCompatible, compatibleWithDice3, auxiliaryClass };
-    }
+    classify(beat) { return classifyBeat(beat, this.thresholds); }
 
     diagnoseUnit(analysis, candidateChart, gameChart, meta) {
       const beats = analysis.beats.map((beat, index) => {
@@ -89,21 +93,40 @@
           quantizedPositions: classification.quantizedPositions,
           pattern: beat.pattern,
           diceCandidate: beat.diceCandidate,
+          ...classification,
           currentGameDice: game.playDice,
           isDummy: game.isDummy,
+          isQuantized: game.isQuantized,
+          quantizedDice: game.quantizedDice,
+          quantizeConfidence: game.quantizeConfidence,
+          quantizeDistance: game.quantizeDistance,
+          originalPositions: [...game.originalOnsetPositions],
+          quantizedPositions: [...game.quantizedOnsetPositions],
+          notQuantizedReason: game.notQuantizedReason,
           gameRowIndex: game.gameRowIndex,
           slotIndex: game.slotIndex,
           isFallback: game.isFallback,
-          fallbackReason: game.fallbackReason,
-          ...classification
+          fallbackReason: game.fallbackReason
         };
       });
       const summary = {
         ...this.summarize(beats, meta),
+        beforeRealDiceBeats: gameChart.statistics.beforeRealDiceBeats,
+        beforeRealDiceActiveRate: gameChart.statistics.beforeRealDiceActiveRate,
+        beforeDummyBeats: gameChart.statistics.beforeDummyBeats,
+        beforeDummyRate: gameChart.statistics.beforeDummyRate,
         realDiceBeats: gameChart.statistics.realDiceBeats,
         realDiceActiveRate: gameChart.statistics.realDiceActiveRate,
+        afterRealDiceActiveRate: gameChart.statistics.afterRealDiceActiveRate,
         dummyBeats: gameChart.statistics.dummyBeats,
         dummyRate: gameChart.statistics.dummyRate,
+        afterDummyRate: gameChart.statistics.afterDummyRate,
+        realImprovementPoints: gameChart.statistics.realImprovementPoints,
+        quantizedBeats: gameChart.statistics.quantizedBeats,
+        quantizedDice1: gameChart.statistics.quantizedDice1,
+        quantizedDice2: gameChart.statistics.quantizedDice2,
+        quantizedDice3: gameChart.statistics.quantizedDice3,
+        quantizedDice4: gameChart.statistics.quantizedDice4,
         restBeats: gameChart.statistics.restBeats,
         restRate: gameChart.statistics.restRate,
         emptyEndSlots: gameChart.statistics.emptyEndSlots
@@ -163,7 +186,7 @@
 
     buildFromAnalysis(analysis) {
       const candidate = new this.Generator(analysis).generate();
-      return { candidate, game: new this.GameChart(candidate).build() };
+      return { candidate, game: new this.GameChart(candidate, { quantizeEnabled: this.quantizeEnabled }).build() };
     }
 
     trackUnits() {
@@ -201,7 +224,7 @@
       const tracks = this.trackUnits();
       const channels = this.channelUnits();
       return {
-        schemaVersion: "2.0.0",
+        schemaVersion: "3.0.0",
         generatedAt: new Date().toISOString(),
         song: this.song.fileName || this.song.title || "MIDI",
         midiFormat: this.song.format,
@@ -216,12 +239,14 @@
 
     static toCsv(report) {
       const quote = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-      const headers = ["song", "sourceType", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isDummy", "gameRowIndex", "slotIndex", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
+      const headers = ["song", "sourceType", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isDummy", "isQuantized", "quantizedDice", "quantizeConfidence", "quantizeDistance", "originalPositions", "quantizedPositions", "notQuantizedReason", "gameRowIndex", "slotIndex", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
       const rows = [...report.tracks, ...report.channels].flatMap((unit) => unit.beats).map((beat) => headers.map((key) => quote(Array.isArray(beat[key]) ? beat[key].join("|") : beat[key])).join(","));
       return [headers.join(","), ...rows].join("\n");
     }
   }
 
+  MidiChartDiagnostics.classifyBeat = classifyBeat;
+  MidiChartDiagnostics.patternDistances = patternDistances;
   MidiChartDiagnostics.STANDARD_PATTERNS = STANDARD_PATTERNS;
   MidiChartDiagnostics.DEFAULT_THRESHOLDS = DEFAULT_THRESHOLDS;
   return MidiChartDiagnostics;

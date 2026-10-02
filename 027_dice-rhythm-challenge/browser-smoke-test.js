@@ -108,6 +108,26 @@ async function main() {
     await waitFor(() => document.getElementById("pauseScreen").hidden, 3000);
     const pauseResume = { paused: true, resumed: document.getElementById("pauseScreen").hidden };
     document.getElementById("stageMenu").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    document.getElementById("testMode").dispatchEvent(new Event("change", { bubbles: true }));
+    library.value = "Disney_Themes_-_Tiki_Room.mid";
+    library.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Tiki_Room"), 20000);
+    const tikiAnalysisTrack = document.getElementById("analysisTrack");
+    tikiAnalysisTrack.value = "1";
+    tikiAnalysisTrack.dispatchEvent(new Event("change", { bubbles: true }));
+    const quantizeToggle = document.getElementById("quantizeToggle");
+    const quantizeControlVisible = !document.getElementById("quantizeControl").hidden;
+    const qOnText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    quantizeToggle.checked = false;
+    quantizeToggle.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => ([...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "").includes("Q 0"), 5000);
+    const qOffText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    const offDiagnostics = document.getElementById("diagnosticsStatus").textContent;
+    quantizeToggle.checked = true;
+    quantizeToggle.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => !([...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "").includes("Q 0"), 5000);
+    const qRestoredText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    const quantizeAB = { quantizeControlVisible, qOnText, qOffText, offDiagnostics, qRestoredText };
     library.value = "Disney_Themes_-_Hakuna_Matata.mid";
     library.dispatchEvent(new Event("change", { bubbles: true }));
     await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Hakuna_Matata"), 20000);
@@ -155,6 +175,7 @@ async function main() {
       chartStatistics: document.getElementById("chartStatistics").textContent,
       dice3Gameplay,
       nonFourFour,
+      quantizeAB,
       normalMode,
       errors: [...document.querySelectorAll(".error")].map((node) => node.textContent)
     };
@@ -170,7 +191,7 @@ async function main() {
   }
   const assertions = [
     [!value.preflightError, "library preflight"],
-    [value.version === "VERSION 3.0.0 MIDI BEAT ROWS", "version"],
+    [value.version === "VERSION 3.1.0 MIDI QUANTIZE", "version"],
     [value.libraryCount === 14, "library count"],
     [value.diceButtonOrder.join(",") === "1,2,3,4", "button order"],
     [value.controlsFitViewport, "mobile controls fit"],
@@ -178,12 +199,15 @@ async function main() {
     [value.addamsSignature === "4/4", "4/4 MIDI starts"],
     [value.activeOnSecondRow, "active beat remains on second row"],
     [value.pauseResume.paused && value.pauseResume.resumed, "pause and resume"],
-    [value.diagnosticsStatus.includes("REAL") && value.diagnosticsStatus.includes("DUMMY"), "diagnostics summary"],
+    [value.diagnosticsStatus.includes("BEFORE REAL") && value.diagnosticsStatus.includes("AFTER REAL"), "diagnostics summary"],
     [value.exportButtons.every(Boolean), "diagnostic exports"],
     [value.dice3Gameplay.guidePulses === 3, "Dice 3 guide pulses"],
     [value.dice3Gameplay.tapsSent === 3 && value.dice3Gameplay.scoreGain >= 300, "Dice 3 three-tap success"],
     [value.nonFourFour.signature !== "4/4" && value.nonFourFour.started, "non-4/4 MIDI starts"],
     [value.nonFourFour.dummyPreviewCount > 0, "DUMMY preview"],
+    [value.quantizeAB.quantizeControlVisible && /Q [1-9]/.test(value.quantizeAB.qOnText), "Quantize ON metrics"],
+    [value.quantizeAB.qOffText.includes("Q 0") && value.quantizeAB.offDiagnostics.includes("Q 0"), "Quantize OFF restores Phase 4E"],
+    [/Q [1-9]/.test(value.quantizeAB.qRestoredText), "Quantize ON restored"],
     [value.normalMode.midiPanelHidden && value.normalMode.debugHidden && value.normalMode.activeDice.every((name) => name !== "value-3"), "normal mode unchanged"],
     [value.errors.length === 0, "no visible errors"]
   ];
