@@ -16,6 +16,11 @@
     excludedClasses: Object.freeze(["LATE_START", "SYNCOPATED", "IRREGULAR"])
   });
   const roundRate = (part, whole) => whole ? Number((part / whole * 100).toFixed(1)) : null;
+  const SOURCE_RECOMMENDATION = Object.freeze({
+    minActiveBeatRate: 15,
+    minActiveBeats: 16,
+    weights: Object.freeze({ real: 0.45, clean: 0.15, active: 0.15, restRun: 0.10, variety: 0.10, balance: 0.05 })
+  });
 
   class MidiGameChart {
     constructor(candidateChart, options = {}) {
@@ -102,13 +107,39 @@
       const restBeats = beats.filter((beat) => beat.isRest).length;
       const fallbackBeats = beats.filter((beat) => beat.isFallback).length;
       const emptyEndSlots = rows.length ? rows[rows.length - 1].slots.filter((slot) => slot === null).length : 0;
+      const diceCounts = {
+        1: beats.filter((beat) => !beat.isDummy && beat.playDice === 1).length,
+        2: beats.filter((beat) => beat.playDice === 2).length,
+        3: beats.filter((beat) => beat.playDice === 3).length,
+        4: beats.filter((beat) => beat.playDice === 4).length
+      };
+      let currentRestRun = 0;
+      let maxRestRun = 0;
+      beats.forEach((beat) => {
+        currentRestRun = beat.isRest ? currentRestRun + 1 : 0;
+        maxRestRun = Math.max(maxRestRun, currentRestRun);
+      });
+      const diceDistribution = Object.fromEntries([1, 2, 3, 4].map((dice) => [dice, roundRate(diceCounts[dice], realDiceBeats) ?? 0]));
+      const usedDiceTypes = [1, 2, 3, 4].filter((dice) => diceCounts[dice] > 0).length;
+      const diceVariety = usedDiceTypes <= 1 ? "LOW" : usedDiceTypes === 2 ? "MEDIUM" : "HIGH";
+      const dominantDice = [1, 2, 3, 4].sort((left, right) => diceCounts[right] - diceCounts[left])[0];
+      const dominantDiceRate = realDiceBeats ? diceDistribution[dominantDice] : 0;
       const beforeRealDiceActiveRate = roundRate(beforeRealDiceBeats, activeBeats);
       const beforeDummyRate = roundRate(beforeDummyBeats, activeBeats);
       const realDiceActiveRate = roundRate(realDiceBeats, activeBeats);
       const dummyRate = roundRate(dummyBeats, activeBeats);
+      const activeBeatRate = roundRate(activeBeats, totalBeats) ?? 0;
+      const varietyScore = diceVariety === "HIGH" ? 100 : diceVariety === "MEDIUM" ? 55 : 0;
+      const restRunScore = Math.max(0, 100 - maxRestRun * 4);
+      const balanceScore = Math.max(0, 100 - dominantDiceRate);
+      const weights = SOURCE_RECOMMENDATION.weights;
+      const sourceSuitabilityScore = Number((((realDiceActiveRate ?? 0) * weights.real) + ((100 - (dummyRate ?? 100)) * weights.clean) + (activeBeatRate * weights.active) + (restRunScore * weights.restRun) + (varietyScore * weights.variety) + (balanceScore * weights.balance)).toFixed(2));
+      const source = this.sourceChart.source || this.sourceChart.sourceTrack || { type: this.sourceChart.selection === "all" ? "all" : "track", value: this.sourceChart.selection };
+      const recommendationEligible = source.type !== "all" && activeBeats >= SOURCE_RECOMMENDATION.minActiveBeats && activeBeatRate >= SOURCE_RECOMMENDATION.minActiveBeatRate;
       return {
         fileName: this.sourceChart.fileName,
-        sourceTrack: { ...this.sourceChart.sourceTrack },
+        source: { ...source },
+        sourceTrack: { ...source },
         selection: this.sourceChart.selection,
         quantizeEnabled: this.quantizeConfig.enabled,
         quantizeConfig: { ...this.quantizeConfig },
@@ -119,7 +150,7 @@
         statistics: {
           totalBeats,
           activeBeats,
-          activeBeatRate: roundRate(activeBeats, totalBeats) ?? 0,
+          activeBeatRate,
           beforeRealDiceBeats,
           beforeRealDiceActiveRate,
           beforeDummyBeats,
@@ -139,10 +170,18 @@
           restBeats,
           restRate: roundRate(restBeats, totalBeats) ?? 0,
           emptyEndSlots,
-          dice1: beats.filter((beat) => !beat.isDummy && beat.playDice === 1).length,
-          dice2: beats.filter((beat) => beat.playDice === 2).length,
-          dice3: beats.filter((beat) => beat.playDice === 3).length,
-          dice4: beats.filter((beat) => beat.playDice === 4).length,
+          dice1: diceCounts[1],
+          dice2: diceCounts[2],
+          dice3: diceCounts[3],
+          dice4: diceCounts[4],
+          diceDistribution,
+          dominantDice,
+          dominantDiceRate,
+          diceVariety,
+          usedDiceTypes,
+          maxRestRun,
+          sourceSuitabilityScore,
+          recommendationEligible,
           playableActiveBeats: realDiceBeats,
           playableActiveRate: realDiceActiveRate,
           fallbackBeats,
@@ -165,9 +204,9 @@
     }
 
     static recommend(charts) {
-      return charts.filter((chart) => chart.selection !== "all" && !chart.statistics.silent && chart.statistics.activeBeatRate >= 15 && chart.compatible)
-        .sort((left, right) => (right.statistics.afterRealDiceActiveRate ?? -1) - (left.statistics.afterRealDiceActiveRate ?? -1)
-          || (left.statistics.afterDummyRate ?? Infinity) - (right.statistics.afterDummyRate ?? Infinity)
+      return charts.filter((chart) => chart.statistics.recommendationEligible && !chart.statistics.silent && chart.compatible)
+        .sort((left, right) => right.statistics.sourceSuitabilityScore - left.statistics.sourceSuitabilityScore
+          || (right.statistics.afterRealDiceActiveRate ?? -1) - (left.statistics.afterRealDiceActiveRate ?? -1)
           || right.statistics.activeBeatRate - left.statistics.activeBeatRate)[0] || null;
     }
 
@@ -177,5 +216,6 @@
 
   MidiGameChart.ROW_SIZE = ROW_SIZE;
   MidiGameChart.QUANTIZE_CONFIG = QUANTIZE_CONFIG;
+  MidiGameChart.SOURCE_RECOMMENDATION = SOURCE_RECOMMENDATION;
   return MidiGameChart;
 });

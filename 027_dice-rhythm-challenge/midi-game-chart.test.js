@@ -76,9 +76,9 @@ check(!MidiGameChart.judgeDummy(0, false).assist && !MidiGameChart.judgeDummy(1,
 check(mapping.statistics.realDiceBeats === 2 && mapping.statistics.dummyBeats === 1 && mapping.statistics.restBeats === 1, "real, dummy, and rest statistics are separate");
 check(mapping.statistics.realDiceActiveRate === 66.7 && mapping.statistics.dummyRate === 33.3 && mapping.statistics.restRate === 25, "Phase 4E rates use active and total denominators");
 
-const silent = build(Array.from({ length: 4 }, (_, index) => sourceBeat(index, "REST", null)), "1");
-const dummyHeavy = build([sourceBeat(0, "OTHER", null, false), sourceBeat(1, "OTHER", null, false), sourceBeat(2, "SINGLE", 1), sourceBeat(3, "REST", null)], "2");
-const realHeavy = build([sourceBeat(0, "SINGLE", 1), sourceBeat(1, "EVEN_2", 2), sourceBeat(2, "EVEN_4", 4), sourceBeat(3, "REST", null)], "3");
+const silent = build(Array.from({ length: 24 }, (_, index) => sourceBeat(index, "REST", null)), "1");
+const dummyHeavy = build(Array.from({ length: 24 }, (_, index) => index % 4 === 3 ? sourceBeat(index, "REST", null) : index % 4 === 2 ? sourceBeat(index, "SINGLE", 1) : sourceBeat(index, "OTHER", null, false)), "2");
+const realHeavy = build(Array.from({ length: 24 }, (_, index) => index % 4 === 3 ? sourceBeat(index, "REST", null) : sourceBeat(index, ["SINGLE", "EVEN_2", "EVEN_4"][index % 4], [1, 2, 4][index % 4])), "3");
 check(MidiGameChart.recommend([silent, dummyHeavy, realHeavy]) === realHeavy, "recommendation excludes silent and prioritizes real Dice then low DUMMY");
 check(MidiGameChart.beatAtTick(twoTwo, 1920).measure === 2, "tick lookup follows preserved non-4/4 timing");
 check(!MidiGameChart.judgeRest(0).miss && MidiGameChart.judgeRest(1).miss, "REST judge behavior is unchanged");

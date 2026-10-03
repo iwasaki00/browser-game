@@ -54,8 +54,14 @@ check(rates.statistics.beforeRealDiceActiveRate === 25 && rates.statistics.after
 check(rates.statistics.beforeDummyRate === 75 && rates.statistics.afterDummyRate === 25, "before and after Dummy rates");
 check(rates.statistics.quantizedBeats === 2 && rates.statistics.quantizedDice2 === 1 && rates.statistics.quantizedDice3 === 1, "quantized statistics by Dice");
 
-const lowerBeforeBetterAfter = chart([beat(0, "SINGLE", 1, [0]), beat(1, "OTHER", null, [0.01, 0.49]), beat(2, "OTHER", null, [0.01, 0.34, 0.67]), beat(3, "REST", null, [])], "1");
-const higherBeforeWorseAfter = chart([beat(0, "SINGLE", 1, [0]), beat(1, "SINGLE", 1, [0]), beat(2, "OTHER", null, [0.25, 0.75]), beat(3, "REST", null, [])], "2");
+const lowerBeforeBetterAfter = chart(Array.from({ length: 24 }, (_, index) => {
+  const slot = index % 4;
+  return slot === 0 ? beat(index, "SINGLE", 1, [0]) : slot === 1 ? beat(index, "OTHER", null, [0.01, 0.49]) : slot === 2 ? beat(index, "OTHER", null, [0.01, 0.34, 0.67]) : beat(index, "REST", null, []);
+}), "1");
+const higherBeforeWorseAfter = chart(Array.from({ length: 24 }, (_, index) => {
+  const slot = index % 4;
+  return slot < 2 ? beat(index, "SINGLE", 1, [0]) : slot === 2 ? beat(index, "OTHER", null, [0.25, 0.75]) : beat(index, "REST", null, []);
+}), "2");
 check(MidiGameChart.recommend([higherBeforeWorseAfter, lowerBeforeBetterAfter]) === lowerBeforeBetterAfter, "recommendation uses After rates");
 const off = chart([beat(0, "OTHER", null, [0.01, 0.49])], "3", false);
 check(!off.beats[0].isQuantized && off.beats[0].isDummy && off.statistics.afterDummyRate === 100 && off.beats[0].notQuantizedReason === "QUANTIZE_DISABLED", "Quantize OFF restores Phase 4E DUMMY behavior");

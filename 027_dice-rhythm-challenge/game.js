@@ -88,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -263,14 +263,25 @@
       this.midiMessage(info.recommended ? `${info.notes} notes / MIDI準備完了` : `${info.notes} notes / MIDI解析結果を確認してください`, info.recommended ? "" : "warning");
     }
     analysisVisible(visible) { this.midiAnalysisPanel.hidden = !visible; }
-    analysisTracks(tracks, selected = "all") {
-      this.analysisTrack.replaceChildren(...tracks.map((track) => {
-        const option = document.createElement("option");
-        option.value = track.value;
-        option.textContent = track.label;
-        return option;
-      }));
-      this.analysisTrack.value = selected;
+    analysisSources(sources, selected = "all") {
+      const groups = [
+        { label: "Tracks", items: sources.filter((source) => source.type === "track") },
+        { label: "Channels", items: sources.filter((source) => source.type === "channel") },
+        { label: "ALL", items: sources.filter((source) => source.type === "all") }
+      ];
+      const nodes = groups.filter((group) => group.items.length).map((group) => {
+        const optgroup = document.createElement("optgroup");
+        optgroup.label = group.label;
+        group.items.forEach((source) => {
+          const option = document.createElement("option");
+          option.value = source.value;
+          option.textContent = source.label;
+          optgroup.append(option);
+        });
+        return optgroup;
+      });
+      this.analysisTrack.replaceChildren(...nodes);
+      this.analysisTrack.value = sources.some((source) => source.value === selected) ? selected : "all";
     }
     analysisRows(analysis, currentTick = null) {
       if (!analysis?.beats?.length) {
@@ -294,7 +305,9 @@
         return row;
       }));
       const beat = analysis.beats[currentIndex];
-      this.analysisDebug.textContent = `Track ${analysis.track.label} | Bar ${beat.measure} Beat ${beat.beat} | Tick ${Math.round(beat.startTick)} | ${Math.round(beat.tempo)} BPM | Notes ${beat.rawNoteCount} | Onsets ${beat.onsetCount} | ${formatPositions(beat.onsetPositions)} | ${beat.pattern} | Dice ${beat.diceCandidate}`;
+      const source = analysis.source || analysis.track;
+      const sourceDetail = source.type === "channel" ? ` | Channel ${source.channel + 1} | Percussion ${source.percussion ? "YES" : "NO"}` : source.type === "track" ? ` | Track ${source.trackIndex + 1}` : "";
+      this.analysisDebug.textContent = `Source ${source.type.toUpperCase()} · ${source.label}${sourceDetail} | Bar ${beat.measure} Beat ${beat.beat} | Tick ${Math.round(beat.startTick)} | ${Math.round(beat.tempo)} BPM | Notes ${beat.rawNoteCount} | Onsets ${beat.onsetCount} | ${formatPositions(beat.onsetPositions)} | ${beat.pattern} | Dice ${beat.diceCandidate}`;
     }
     analysisCopyMessage(message, error = false) {
       this.analysisCopyStatus.textContent = message;
@@ -308,7 +321,7 @@
       this.chartMeasures.querySelectorAll(".chart-die").forEach((die) => die.classList.toggle("selected", die.dataset.key === this.selectedChartBeatKey));
       const displayDice = gameBeat?.isQuantized ? `Q Dice ${gameBeat.quantizedDice}` : gameBeat?.isDummy ? "DUMMY 1" : beat.dice === null ? "REST" : beat.dice;
       const quantizeDetail = beat.pattern === "OTHER" ? ` | Source Pattern OTHER | Original ${this.formatRhythmPositions(gameBeat?.originalOnsetPositions || beat.onsetPositions)} | Nearest Dice ${gameBeat?.nearestDice ?? "-"} | Distance ${gameBeat?.quantizeDistance ?? "-"} | Confidence ${gameBeat?.diagnosticConfidence ?? "-"} | Quantized ${gameBeat?.isQuantized ? "YES" : "NO"}${gameBeat?.notQuantizedReason ? ` | Reason ${gameBeat.notQuantizedReason}` : ""}` : "";
-      this.chartDetail.textContent = `Measure ${beat.measure} / Beat ${beat.beat} | Dice ${displayDice} | ${beat.pattern} | Onsets ${beat.onsetCount} | Positions ${this.formatRhythmPositions(beat.onsetPositions)} | Track ${trackLabel}${quantizeDetail}`;
+      this.chartDetail.textContent = `Measure ${beat.measure} / Beat ${beat.beat} | Dice ${displayDice} | ${beat.pattern} | Onsets ${beat.onsetCount} | Positions ${this.formatRhythmPositions(beat.onsetPositions)} | Source ${trackLabel}${quantizeDetail}`;
     }
     chartPreview(chart, currentTick = null, gameChart = null) {
       if (!chart?.measures?.length) {
@@ -319,7 +332,7 @@
       const stats = chart.statistics;
       const gameStats = gameChart?.statistics;
       const gameByIndex = new Map((gameChart?.beats || []).map((beat) => [beat.index, beat]));
-      this.chartTrack.textContent = `Track: ${chart.sourceTrack.label}`;
+      this.chartTrack.textContent = `Source: ${(chart.source || chart.sourceTrack).label}`;
       this.chartPlayableRate.textContent = gameStats ? `REAL ${gameStats.beforeRealDiceActiveRate?.toFixed(1) ?? "N/A"}→${gameStats.afterRealDiceActiveRate?.toFixed(1) ?? "N/A"}% · DUMMY ${gameStats.beforeDummyRate?.toFixed(1) ?? "N/A"}→${gameStats.afterDummyRate?.toFixed(1) ?? "N/A"}% · Q ${gameStats.quantizedBeats}` : `Game mapped ${stats.totalBeats ? "100.0" : "0.0"}%`;
       this.chartStatistics.replaceChildren(...[
         `Measures ${stats.measures}`, `Mapped ${stats.totalBeats}/${stats.totalBeats}`, `REST ${stats.rest}`,
@@ -369,47 +382,66 @@
             mark.textContent = beat.pattern === "REST" ? "□" : "?";
             die.append(mark);
           }
-          die.addEventListener("click", () => this.showChartBeatDetail(beat, chart.sourceTrack.label, gameBeat));
+          die.addEventListener("click", () => this.showChartBeatDetail(beat, (chart.source || chart.sourceTrack).label, gameBeat));
           row.append(die);
         });
         group.append(label, row);
         return group;
       }));
       const selected = chart.beats.find((beat) => `${beat.measure}:${beat.beat}` === this.selectedChartBeatKey) || currentBeat || chart.beats[0];
-      this.showChartBeatDetail(selected, chart.sourceTrack.label, gameByIndex.get(selected.index));
+      this.showChartBeatDetail(selected, (chart.source || chart.sourceTrack).label, gameByIndex.get(selected.index));
     }
     chartCopyMessage(message, error = false) {
       this.chartCopyStatus.textContent = message;
       this.chartCopyStatus.classList.toggle("chart-copy-error", error);
     }
-    gameTracks(options) {
-      this.gameTrack.replaceChildren(...options.map((item) => {
+    gameSources(options) {
+      const createOption = (item) => {
         const stats = item.chart.statistics;
         const option = document.createElement("option");
         option.value = item.value;
         const active = `${stats.activeBeatRate.toFixed(1)}%`;
         const real = stats.afterRealDiceActiveRate === null ? "N/A" : `${stats.afterRealDiceActiveRate.toFixed(1)}%`;
         const dummy = stats.afterDummyRate === null ? "N/A" : `${stats.afterDummyRate.toFixed(1)}%`;
-        option.textContent = `${item.label}${item.recommended ? " ★ Recommended" : ""} — Active ${active} / REAL ${real} / DUMMY ${dummy} / Q ${stats.quantizedBeats}${stats.silent ? " [SILENT]" : ""}`;
+        option.textContent = `${item.label}${item.recommended ? " ★" : ""} — Active ${active} / REAL ${real} / DUMMY ${dummy} / Q ${stats.quantizedBeats} / ${stats.diceVariety}${stats.silent ? " [SILENT]" : ""}`;
         return option;
-      }));
-      const selected = options.find((item) => item.recommended) || options.find((item) => item.value !== "all" && !item.chart.statistics.silent) || options.find((item) => item.value !== "all") || options[0];
+      };
+      const recommended = options.find((item) => item.recommended);
+      const categories = [
+        { label: "Recommended", items: recommended ? [recommended] : [] },
+        { label: "Tracks", items: options.filter((item) => item.type === "track" && item !== recommended) },
+        { label: "Channels", items: options.filter((item) => item.type === "channel" && item !== recommended) },
+        { label: "ALL", items: options.filter((item) => item.type === "all") }
+      ];
+      const groups = categories.filter((category) => category.items.length).map((category) => {
+        const optgroup = document.createElement("optgroup");
+        optgroup.label = category.label;
+        category.items.forEach((item) => optgroup.append(createOption(item)));
+        return optgroup;
+      });
+      this.gameTrack.replaceChildren(...groups);
+      const selected = recommended || options.find((item) => item.value !== "all" && !item.chart.statistics.silent) || options.find((item) => item.value !== "all") || options[0];
       this.gameTrack.value = selected?.value || "all";
       return this.gameTrack.value;
     }
-    gameTrackInfo(chart) {
+    gameSourceInfo(chart) {
       if (!chart) return;
       const stats = chart.statistics;
+      const source = chart.source || chart.sourceTrack;
+      const distribution = [1, 2, 3, 4].map((dice) => `${dice}:${(stats.diceDistribution?.[dice] || 0).toFixed(0)}%`).join(" ");
       this.gameTrackActive.textContent = `Active ${stats.activeBeatRate.toFixed(1)}% (${stats.activeBeats})`;
       this.gameTrackPlayable.textContent = `REAL ${stats.beforeRealDiceActiveRate === null ? "N/A" : stats.beforeRealDiceActiveRate.toFixed(1)}→${stats.afterRealDiceActiveRate === null ? "N/A" : stats.afterRealDiceActiveRate.toFixed(1)}%`;
       this.gameTrackFallback.textContent = `DUMMY ${stats.beforeDummyRate === null ? "N/A" : stats.beforeDummyRate.toFixed(1)}→${stats.afterDummyRate === null ? "N/A" : stats.afterDummyRate.toFixed(1)}% / Q ${stats.quantizedBeats}`;
-      this.gameTrackWarning.textContent = stats.silent ? "このTrackは無音です。ゲーム向けではありません。" : chart.selection === "all" ? "ALL Trackは複雑な譜面になる可能性があります。" : stats.dummyRate >= 50 ? "補助サイコロが多く、原曲リズムとの一致度が低い譜面です。" : stats.dummyRate >= 20 ? "補助サイコロがやや多い譜面です。" : !chart.compatible ? "解析Beatをゲーム譜面化できません。" : "";
+      this.gameSourceRest.textContent = `Max REST ${stats.maxRestRun}`;
+      this.gameSourceVariety.textContent = `Variety ${stats.diceVariety} · Main ${stats.dominantDice} (${stats.dominantDiceRate.toFixed(1)}%)`;
+      this.gameSourceDistribution.textContent = `Dice ${distribution}`;
+      this.gameTrackWarning.textContent = stats.silent ? "このSourceは無音です。ゲーム向けではありません。" : source.type === "all" ? "ALLは複雑な譜面になる可能性があります。" : !stats.recommendationEligible ? "Active 15%未満または16拍未満のため推奨対象外です。" : stats.afterDummyRate >= 50 ? "補助サイコロが多く、原曲リズムとの一致度が低い譜面です。" : stats.afterDummyRate >= 20 ? "補助サイコロがやや多い譜面です。" : !chart.compatible ? "解析Beatをゲーム譜面化できません。" : "";
     }
     debugVisible(visible) { this.debugDrawer.hidden = !visible; }
     playMetadata(fileName, trackName, visible) {
       this.midiPlayMeta.hidden = !visible;
       this.playingSong.textContent = fileName || "";
-      this.playingTrack.textContent = trackName ? `GAME TRACK · ${trackName}` : "";
+      this.playingTrack.textContent = trackName ? `GAME SOURCE · ${trackName}` : "";
     }
     results(score, maxCombo, totals, songClear) {
       this.finalScore.textContent = score;
@@ -433,7 +465,7 @@
       this.midi = null;
       this.midiAnalysis = null;
       this.midiDiceChart = null;
-      this.selectedGameTrack = "";
+      this.selectedGameSource = "";
       this.activeGameChart = null;
       this.currentGameBeat = null;
       this.midiMeasureCursor = 0;
@@ -479,7 +511,7 @@
       this.ui.copyChartButton.addEventListener("click", () => this.copyChart());
       this.ui.exportDiagnosticsJson.addEventListener("click", () => this.exportDiagnostics("json"));
       this.ui.exportDiagnosticsCsv.addEventListener("click", () => this.exportDiagnostics("csv"));
-      this.ui.gameTrack.addEventListener("change", (event) => this.selectGameTrack(event.target.value));
+      this.ui.gameTrack.addEventListener("change", (event) => this.selectGameSource(event.target.value));
       document.getElementById("testMode").addEventListener("change", (event) => this.setTestModeOption(event.target.checked));
       this.ui.quantizeToggle.addEventListener("change", (event) => this.setQuantizeEnabled(event.target.checked));
       this.ui.debugButton.addEventListener("click", () => this.ui.debugVisible(true));
@@ -549,7 +581,7 @@
       this.midiAnalysis = this.midi.getRhythmAnalysis(this.analysisTrackValue);
       this.midiDiceChart = this.midi.getDiceChart(this.analysisTrackValue);
       this.ui.selectedChartBeatKey = null;
-      this.ui.analysisTracks(this.midi.getAnalysisTracks(), this.analysisTrackValue);
+      this.ui.analysisSources(this.midi.getAnalysisSources(), this.analysisTrackValue);
       this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
       this.ui.chartPreview(this.midiDiceChart, this.analysisTick, this.midi.getGameChart(this.analysisTrackValue));
       this.ui.analysisCopyMessage("");
@@ -564,13 +596,13 @@
       const activeBeats = active.reduce((sum, item) => sum + item.activeBeats, 0);
       const rate = (value) => activeBeats ? (value / activeBeats * 100).toFixed(1) : "0.0";
       this.ui.diagnosticsStatus.textContent = `BEFORE REAL ${rate(beforeReal)}% / DUMMY ${rate(beforeDummy)}% · AFTER REAL ${rate(afterReal)}% / DUMMY ${rate(afterDummy)}% · Q ${quantized}`;
-      const gameOptions = this.midi.getGameTrackOptions();
-      this.selectedGameTrack = this.ui.gameTracks(gameOptions);
-      this.selectGameTrack(this.selectedGameTrack);
+      const gameOptions = this.midi.getGameSourceOptions();
+      this.selectedGameSource = this.ui.gameSources(gameOptions);
+      this.selectGameSource(this.selectedGameSource);
     }
-    selectGameTrack(selection) {
-      this.selectedGameTrack = selection;
-      this.ui.gameTrackInfo(this.midi?.getGameChart(selection));
+    selectGameSource(selection) {
+      this.selectedGameSource = selection;
+      this.ui.gameSourceInfo(this.midi?.getGameChart(selection));
     }
     selectAnalysisTrack(selection) {
       if (!this.midi?.ready) return;
@@ -803,9 +835,9 @@
         return;
       }
       if (this.mode === "midi") {
-        const selectedChart = this.midi.getGameChart(this.selectedGameTrack);
+        const selectedChart = this.midi.getGameChart(this.selectedGameSource);
         if (!selectedChart?.compatible) {
-          this.ui.midiMessage("選択したGAME TRACKからGame Beatを生成できません。", "error");
+          this.ui.midiMessage("選択したGAME SOURCEからGame Beatを生成できません。", "error");
           return;
         }
         this.activeGameChart = selectedChart;
@@ -841,7 +873,7 @@
       this.ui.chartVisible(this.testMode && this.mode === "midi");
       this.ui.debugButton.hidden = !(this.testMode && this.mode === "midi");
       this.ui.debugVisible(false);
-      this.ui.playMetadata(this.midi?.getInfo()?.fileName, this.activeGameChart?.sourceTrack?.label, this.mode === "midi");
+      this.ui.playMetadata(this.midi?.getInfo()?.fileName, (this.activeGameChart?.source || this.activeGameChart?.sourceTrack)?.label, this.mode === "midi");
       if (this.testMode && this.mode === "midi" && this.midiAnalysis) {
         this.ui.analysisRows(this.midiAnalysis, null);
         this.ui.chartPreview(this.midiDiceChart, null, this.midi.getGameChart(this.analysisTrackValue));

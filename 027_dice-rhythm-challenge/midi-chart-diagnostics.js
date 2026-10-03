@@ -79,9 +79,11 @@
         return {
           song: this.song.fileName || this.song.title || "MIDI",
           sourceType: meta.sourceType,
+          sourceValue: meta.sourceValue,
           trackNumber: meta.trackNumber,
           trackName: meta.trackName,
           channel: meta.channel ?? (meta.channels?.length ? meta.channels.join("|") : null),
+          percussion: Boolean(meta.percussion),
           measure: beat.measure,
           beat: beat.beat,
           tempo: beat.tempo,
@@ -129,7 +131,14 @@
         quantizedDice4: gameChart.statistics.quantizedDice4,
         restBeats: gameChart.statistics.restBeats,
         restRate: gameChart.statistics.restRate,
-        emptyEndSlots: gameChart.statistics.emptyEndSlots
+        emptyEndSlots: gameChart.statistics.emptyEndSlots,
+        maxRestRun: gameChart.statistics.maxRestRun,
+        diceDistribution: gameChart.statistics.diceDistribution,
+        dominantDice: gameChart.statistics.dominantDice,
+        dominantDiceRate: gameChart.statistics.dominantDiceRate,
+        diceVariety: gameChart.statistics.diceVariety,
+        sourceSuitabilityScore: gameChart.statistics.sourceSuitabilityScore,
+        recommendationEligible: gameChart.statistics.recommendationEligible
       };
       return { ...meta, beats, summary };
     }
@@ -189,42 +198,35 @@
       return { candidate, game: new this.GameChart(candidate, { quantizeEnabled: this.quantizeEnabled }).build() };
     }
 
-    trackUnits() {
-      return this.song.tracks.map((track, trackIndex) => {
-        const analysis = this.analyzer.analyze(String(trackIndex));
-        const charts = this.diceCharts?.get(String(trackIndex)) && this.gameCharts?.get(String(trackIndex)) ? { candidate: this.diceCharts.get(String(trackIndex)), game: this.gameCharts.get(String(trackIndex)) } : this.buildFromAnalysis(analysis);
-        return this.diagnoseUnit(analysis, charts.candidate, charts.game, {
-          sourceType: "TRACK", trackNumber: trackIndex + 1, trackIndex, trackName: track.name || `Track ${trackIndex + 1}`, channel: null,
-          channels: [...new Set((track.channels || []).map((channel) => channel + 1))],
-          label: `Track ${trackIndex + 1} : ${track.name || `Track ${trackIndex + 1}`}`
-        });
+    sourceUnit(source) {
+      const analysis = this.analyzer.analyze(source.value);
+      const charts = this.diceCharts?.get(source.value) && this.gameCharts?.get(source.value)
+        ? { candidate: this.diceCharts.get(source.value), game: this.gameCharts.get(source.value) }
+        : this.buildFromAnalysis(analysis);
+      return this.diagnoseUnit(analysis, charts.candidate, charts.game, {
+        sourceType: source.type.toUpperCase(), sourceValue: source.value,
+        trackNumber: source.type === "track" ? source.trackIndex + 1 : null,
+        trackIndex: source.trackIndex, trackName: source.type === "track" ? source.name : null,
+        channel: source.type === "channel" ? source.channel + 1 : null,
+        percussion: Boolean(source.percussion), label: source.label
       });
     }
 
-    channelUnits() {
-      if (this.song.format !== 0) return [];
-      const units = [];
-      this.song.tracks.forEach((track, trackIndex) => {
-        [...new Set((track.notes || []).map((note) => note.channel))].sort((a, b) => a - b).forEach((channel) => {
-          const filteredTrack = { ...track, notes: track.notes.filter((note) => note.channel === channel), channels: [channel] };
-          const virtualSong = { ...this.song, tracks: [filteredTrack] };
-          const analyzer = new this.Analyzer(virtualSong, { timing: this.timing });
-          const analysis = analyzer.analyze("0");
-          const charts = this.diceCharts?.get(String(trackIndex)) && this.gameCharts?.get(String(trackIndex)) ? { candidate: this.diceCharts.get(String(trackIndex)), game: this.gameCharts.get(String(trackIndex)) } : this.buildFromAnalysis(analysis);
-          units.push(this.diagnoseUnit(analysis, charts.candidate, charts.game, {
-            sourceType: "CHANNEL", trackNumber: trackIndex + 1, trackIndex, trackName: track.name || `Track ${trackIndex + 1}`, channel: channel + 1, channels: [channel + 1],
-            label: `Track ${trackIndex + 1} / Channel ${channel + 1}`
-          }));
-        });
-      });
-      return units;
+    sourceUnits() {
+      const fallbackChannels = [...new Set(this.song.tracks.flatMap((track) => track.channels || []).filter(Number.isInteger))].map((channel) => ({ value: `channel:${channel}`, type: "channel", trackIndex: null, channel, percussion: channel === 9, label: `Channel ${channel + 1}${channel === 9 ? " [Percussion]" : ""}` }));
+      const fallback = [{ value: "all", type: "all", trackIndex: null, channel: null, label: "ALL" }, ...this.song.tracks.map((track, trackIndex) => ({ value: `track:${trackIndex}`, type: "track", trackIndex, channel: null, name: track.name || `Track ${trackIndex + 1}`, label: `Track ${trackIndex + 1}` })), ...fallbackChannels];
+      return (this.analyzer.sourceOptions || this.analyzer.trackOptions || fallback).map((source) => this.sourceUnit(source));
     }
+    trackUnits(units = this.sourceUnits()) { return units.filter((unit) => unit.sourceType === "TRACK"); }
+    channelUnits(units = this.sourceUnits()) { return units.filter((unit) => unit.sourceType === "CHANNEL"); }
 
     diagnose() {
-      const tracks = this.trackUnits();
-      const channels = this.channelUnits();
+      const sources = this.sourceUnits();
+      const tracks = this.trackUnits(sources);
+      const channels = this.channelUnits(sources);
+      const all = sources.filter((unit) => unit.sourceType === "ALL");
       return {
-        schemaVersion: "3.0.0",
+        schemaVersion: "3.2.0",
         generatedAt: new Date().toISOString(),
         song: this.song.fileName || this.song.title || "MIDI",
         midiFormat: this.song.format,
@@ -232,15 +234,19 @@
         standardPatterns: Object.fromEntries(Object.entries(STANDARD_PATTERNS).map(([key, value]) => [key, [...value]])),
         summary: tracks.map((unit) => unit.summary),
         channelSummary: channels.map((unit) => unit.summary),
+        allSummary: all.map((unit) => unit.summary),
+        sourceSummary: sources.map((unit) => unit.summary),
+        sources,
         tracks,
-        channels
+        channels,
+        all
       };
     }
 
     static toCsv(report) {
       const quote = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-      const headers = ["song", "sourceType", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isDummy", "isQuantized", "quantizedDice", "quantizeConfidence", "quantizeDistance", "originalPositions", "quantizedPositions", "notQuantizedReason", "gameRowIndex", "slotIndex", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
-      const rows = [...report.tracks, ...report.channels].flatMap((unit) => unit.beats).map((beat) => headers.map((key) => quote(Array.isArray(beat[key]) ? beat[key].join("|") : beat[key])).join(","));
+      const headers = ["song", "sourceType", "sourceValue", "trackNumber", "trackName", "channel", "measure", "beat", "tempo", "timeSignature", "rawNoteCount", "onsetCount", "rawPositions", "pattern", "diceCandidate", "currentGameDice", "isDummy", "isQuantized", "quantizedDice", "quantizeConfidence", "quantizeDistance", "originalPositions", "quantizedPositions", "notQuantizedReason", "gameRowIndex", "slotIndex", "isFallback", "fallbackReason", "nearestDice", "distance", "confidence", "firstOnsetPosition", "gameCompatible", "compatibleWithDice3", "auxiliaryClass"];
+      const rows = (report.sources || [...report.tracks, ...report.channels]).flatMap((unit) => unit.beats).map((beat) => headers.map((key) => quote(Array.isArray(beat[key]) ? beat[key].join("|") : beat[key])).join(","));
       return [headers.join(","), ...rows].join("\n");
     }
   }

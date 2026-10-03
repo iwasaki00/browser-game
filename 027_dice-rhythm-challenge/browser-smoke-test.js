@@ -56,19 +56,24 @@ async function main() {
     library.dispatchEvent(new Event("change", { bubbles: true }));
     await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Addams_Family"), 20000);
     const analysisTrack = document.getElementById("analysisTrack");
-    analysisTrack.value = "5";
+    analysisTrack.value = "track:5";
     analysisTrack.dispatchEvent(new Event("change", { bubbles: true }));
     await new Promise((resolve) => setTimeout(resolve, 200));
     const addamsDice3PreviewCount = document.querySelectorAll(".chart-die.value-3").length;
     const addamsSignature = document.getElementById("midiSignature").textContent;
     const buttons = [...document.querySelectorAll(".dice-button")];
     const rects = buttons.map((button) => { const rect = button.getBoundingClientRect(); return { value: Number(button.dataset.value), left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height }; });
+    const startButtonRect = (() => { const rect = document.getElementById("startButton").getBoundingClientRect(); return { top: rect.top, bottom: rect.bottom, left: rect.left, right: rect.right }; })();
     const gameTrack = document.getElementById("gameTrack");
-    gameTrack.value = "5";
+    gameTrack.value = "track:5";
     gameTrack.dispatchEvent(new Event("change", { bubbles: true }));
     document.getElementById("testMode").checked = true;
     document.getElementById("startButton").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
-    await waitFor(() => document.getElementById("startScreen").hidden, 5000);
+    try {
+      await waitFor(() => document.getElementById("startScreen").hidden, 5000);
+    } catch (error) {
+      return { startError: error.message, selectedGameSource: gameTrack.value, midiStatus: document.getElementById("midiStatus").textContent, warning: document.getElementById("gameTrackWarning").textContent, visibleErrors: [...document.querySelectorAll(".error")].map((node) => node.textContent), version: document.querySelector(".version")?.textContent };
+    }
     const greenButton = document.querySelector('.dice-button[data-value="3"]');
     await new Promise((resolve, reject) => {
       const deadline = performance.now() + 22000;
@@ -113,20 +118,20 @@ async function main() {
     library.dispatchEvent(new Event("change", { bubbles: true }));
     await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Tiki_Room"), 20000);
     const tikiAnalysisTrack = document.getElementById("analysisTrack");
-    tikiAnalysisTrack.value = "1";
+    tikiAnalysisTrack.value = "track:1";
     tikiAnalysisTrack.dispatchEvent(new Event("change", { bubbles: true }));
     const quantizeToggle = document.getElementById("quantizeToggle");
     const quantizeControlVisible = !document.getElementById("quantizeControl").hidden;
-    const qOnText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    const qOnText = [...document.getElementById("gameTrack").options].find((option) => option.value === "track:1")?.textContent || "";
     quantizeToggle.checked = false;
     quantizeToggle.dispatchEvent(new Event("change", { bubbles: true }));
-    await waitFor(() => ([...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "").includes("Q 0"), 5000);
-    const qOffText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    await waitFor(() => ([...document.getElementById("gameTrack").options].find((option) => option.value === "track:1")?.textContent || "").includes("Q 0"), 5000);
+    const qOffText = [...document.getElementById("gameTrack").options].find((option) => option.value === "track:1")?.textContent || "";
     const offDiagnostics = document.getElementById("diagnosticsStatus").textContent;
     quantizeToggle.checked = true;
     quantizeToggle.dispatchEvent(new Event("change", { bubbles: true }));
-    await waitFor(() => !([...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "").includes("Q 0"), 5000);
-    const qRestoredText = [...document.getElementById("gameTrack").options].find((option) => option.value === "1")?.textContent || "";
+    await waitFor(() => !([...document.getElementById("gameTrack").options].find((option) => option.value === "track:1")?.textContent || "").includes("Q 0"), 5000);
+    const qRestoredText = [...document.getElementById("gameTrack").options].find((option) => option.value === "track:1")?.textContent || "";
     const quantizeAB = { quantizeControlVisible, qOnText, qOffText, offDiagnostics, qRestoredText };
     library.value = "Disney_Themes_-_Hakuna_Matata.mid";
     library.dispatchEvent(new Event("change", { bubbles: true }));
@@ -140,8 +145,38 @@ async function main() {
       signature: hakunaSignature,
       started: document.getElementById("startScreen").hidden,
       dummyPreviewCount: document.querySelectorAll(".chart-die.dummy").length,
-      activeGameTrack: document.getElementById("gameTrack").value,
+      activeGameSource: document.getElementById("gameTrack").value,
       message: document.getElementById("midiStatus").textContent
+    };
+    document.getElementById("stageMenu").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    library.value = "ABBA_-_Dancing_Queen.mid";
+    library.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => !library.disabled && document.getElementById("midiName").textContent.includes("Dancing_Queen"), 20000);
+    const sourceGroups = [...document.getElementById("gameTrack").querySelectorAll("optgroup")].map((group) => group.label);
+    const percussionOption = [...document.getElementById("gameTrack").options].find((option) => option.value === "channel:9");
+    const dancingAnalysisSource = document.getElementById("analysisTrack");
+    dancingAnalysisSource.value = "channel:9";
+    dancingAnalysisSource.dispatchEvent(new Event("change", { bubbles: true }));
+    document.getElementById("gameTrack").value = "channel:9";
+    document.getElementById("gameTrack").dispatchEvent(new Event("change", { bubbles: true }));
+    const sourceStats = ["gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution"].map((id) => document.getElementById(id).textContent);
+    document.getElementById("testMode").checked = true;
+    document.getElementById("startButton").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    await waitFor(() => document.getElementById("startScreen").hidden, 5000);
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    const channelAnalysisDebug = document.getElementById("analysisDebug").textContent;
+    dancingAnalysisSource.value = "track:0";
+    dancingAnalysisSource.dispatchEvent(new Event("change", { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    const type0Channel = {
+      started: document.getElementById("startScreen").hidden,
+      selected: document.getElementById("gameTrack").value,
+      groups: sourceGroups,
+      percussionLabel: percussionOption?.textContent || "",
+      channelAnalysisDebug,
+      analysisAfterSwitch: document.getElementById("analysisDebug").textContent,
+      playingSource: document.getElementById("playingTrack").textContent,
+      sourceStats
     };
     document.getElementById("stageMenu").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
     const normalModeInput = document.querySelector('input[name="playMode"][value="normal"]');
@@ -168,6 +203,8 @@ async function main() {
       diceButtons: rects,
       diceButtonOrder: buttons.map((button) => Number(button.dataset.value)),
       controlsFitViewport: rects.every((rect) => rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight),
+      startButtonFitsViewport: startButtonRect.top >= 0 && startButtonRect.bottom <= innerHeight && startButtonRect.left >= 0 && startButtonRect.right <= innerWidth,
+      startButtonRect,
       chartDice3Count: addamsDice3PreviewCount,
       addamsSignature,
       activeOnSecondRow,
@@ -176,6 +213,7 @@ async function main() {
       dice3Gameplay,
       nonFourFour,
       quantizeAB,
+      type0Channel,
       normalMode,
       errors: [...document.querySelectorAll(".error")].map((node) => node.textContent)
     };
@@ -184,6 +222,11 @@ async function main() {
   socket.close();
   if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
   const value = result.result.value;
+  if (value.startError) {
+    console.log(JSON.stringify({ tests: 1, result: "FAIL", failed: ["MIDI game start"], value }, null, 2));
+    process.exitCode = 1;
+    return;
+  }
   if (value.preflightError) {
     console.log(JSON.stringify({ tests: 1, result: "FAIL", failed: ["library preflight"], value }, null, 2));
     process.exitCode = 1;
@@ -191,10 +234,11 @@ async function main() {
   }
   const assertions = [
     [!value.preflightError, "library preflight"],
-    [value.version === "VERSION 3.1.0 MIDI QUANTIZE", "version"],
+    [value.version === "VERSION 3.2.0 MIDI GAME SOURCE", "version"],
     [value.libraryCount === 14, "library count"],
     [value.diceButtonOrder.join(",") === "1,2,3,4", "button order"],
     [value.controlsFitViewport, "mobile controls fit"],
+    [value.startButtonFitsViewport, "mobile GAME SOURCE keeps START visible"],
     [value.chartDice3Count > 0, "Dice 3 preview"],
     [value.addamsSignature === "4/4", "4/4 MIDI starts"],
     [value.activeOnSecondRow, "active beat remains on second row"],
@@ -207,6 +251,11 @@ async function main() {
     [value.nonFourFour.dummyPreviewCount > 0, "DUMMY preview"],
     [value.quantizeAB.quantizeControlVisible && /Q [1-9]/.test(value.quantizeAB.qOnText), "Quantize ON metrics"],
     [value.quantizeAB.qOffText.includes("Q 0") && value.quantizeAB.offDiagnostics.includes("Q 0"), "Quantize OFF restores Phase 4E"],
+    [value.type0Channel.groups.join(",") === "Recommended,Tracks,Channels,ALL", "source groups"],
+    [value.type0Channel.percussionLabel.includes("Channel 10 [Percussion]"), "percussion channel display"],
+    [value.type0Channel.started && value.type0Channel.selected === "channel:9" && value.type0Channel.playingSource.includes("GAME SOURCE"), "Type 0 channel source starts"],
+    [value.type0Channel.channelAnalysisDebug.includes("Source CHANNEL") && value.type0Channel.channelAnalysisDebug.includes("Percussion YES") && value.type0Channel.analysisAfterSwitch.includes("Source TRACK") && value.type0Channel.playingSource.includes("Channel 10"), "analysis source switches independently from fixed game source"],
+    [value.type0Channel.sourceStats.every(Boolean) && value.type0Channel.sourceStats[3].includes("Max REST") && value.type0Channel.sourceStats[5].includes("Dice"), "source statistics visible"],
     [/Q [1-9]/.test(value.quantizeAB.qRestoredText), "Quantize ON restored"],
     [value.normalMode.midiPanelHidden && value.normalMode.debugHidden && value.normalMode.activeDice.every((name) => name !== "value-3"), "normal mode unchanged"],
     [value.errors.length === 0, "no visible errors"]

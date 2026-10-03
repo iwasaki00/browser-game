@@ -111,9 +111,9 @@
       this.diceCharts = new Map();
       this.gameCharts = new Map();
       this.diagnostics = null;
-      this.rhythmAnalyzer.trackOptions.forEach((track) => {
-        const analysis = this.rhythmAnalyzer.analyze(track.value);
-        this.diceCharts.set(track.value, new global.MidiDiceChartGenerator(analysis).generate());
+      this.rhythmAnalyzer.sourceOptions.forEach((source) => {
+        const analysis = this.rhythmAnalyzer.analyze(source.value);
+        this.diceCharts.set(source.value, new global.MidiDiceChartGenerator(analysis).generate());
       });
       this.rebuildGameCharts();
       this.player.setSong(song);
@@ -158,21 +158,17 @@
       return beat ? beat.endTime - beat.startTime : 60 / (this.song?.tempoMap?.[0]?.bpm || this.song?.bpm || 120);
     }
 
-    getAnalysisTracks() { return this.rhythmAnalyzer?.trackOptions || []; }
+    sourceKey(selection = "all") { return this.rhythmAnalyzer?.sourceValue(selection) || "all"; }
+    getAnalysisSources() { return this.rhythmAnalyzer?.sourceOptions || []; }
+    getAnalysisTracks() { return this.getAnalysisSources(); }
     getRhythmAnalysis(selection = this.analysisTrack) {
       if (!this.rhythmAnalyzer) return null;
-      this.analysisTrack = selection === "all" ? "all" : String(Number(selection));
+      this.analysisTrack = this.sourceKey(selection);
       return this.rhythmAnalyzer.analyze(this.analysisTrack);
     }
-    getRhythmBeatAtTick(tick, selection = this.analysisTrack) { return this.rhythmAnalyzer?.beatAtTick(tick, selection) || null; }
-    getDiceChart(selection = this.analysisTrack) {
-      const key = selection === "all" ? "all" : String(Number(selection));
-      return this.diceCharts.get(key) || null;
-    }
-    getGameChart(selection) {
-      const key = selection === "all" ? "all" : String(Number(selection));
-      return this.gameCharts.get(key) || null;
-    }
+    getRhythmBeatAtTick(tick, selection = this.analysisTrack) { return this.rhythmAnalyzer?.beatAtTick(tick, this.sourceKey(selection)) || null; }
+    getDiceChart(selection = this.analysisTrack) { return this.diceCharts.get(this.sourceKey(selection)) || null; }
+    getGameChart(selection) { return this.gameCharts.get(this.sourceKey(selection)) || null; }
     rebuildGameCharts() {
       this.gameCharts = new Map();
       this.diceCharts.forEach((diceChart, key) => this.gameCharts.set(key, new global.MidiGameChart(diceChart, { quantizeEnabled: this.quantizeEnabled }).build()));
@@ -194,10 +190,11 @@
     getQuantizeEnabled() { return this.quantizeEnabled; }
     getDiagnostics() { return this.diagnostics; }
     getDiagnosticsCsv() { return this.diagnostics ? global.MidiChartDiagnostics.toCsv(this.diagnostics) : ""; }
-    getGameTrackOptions() {
+    getGameSourceOptions() {
       const recommended = global.MidiGameChart.recommend([...this.gameCharts.values()]);
-      return this.rhythmAnalyzer.trackOptions.map((track) => ({ ...track, chart: this.gameCharts.get(track.value), recommended: track.value === recommended?.selection }));
+      return this.rhythmAnalyzer.sourceOptions.map((source) => ({ ...source, chart: this.gameCharts.get(source.value), recommended: source.value === recommended?.selection }));
     }
+    getGameTrackOptions() { return this.getGameSourceOptions(); }
 
     async startWithCountIn(beats = 4) {
       if (!this.ready) throw new Error("MIDIファイルを読み込んでください。");

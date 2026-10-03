@@ -69,7 +69,8 @@
       const signatures = [...new Set(beats.map((beat) => `${beat.timeSignature.numerator}/${beat.timeSignature.denominator}`))];
       return {
         fileName: this.analysis.fileName,
-        sourceTrack: { ...this.analysis.track },
+        source: { ...(this.analysis.source || this.analysis.track) },
+        sourceTrack: { ...(this.analysis.source || this.analysis.track) },
         selection: this.analysis.selection,
         timeSignature: signatures.length === 1 ? signatures[0] : "MIXED",
         measures,

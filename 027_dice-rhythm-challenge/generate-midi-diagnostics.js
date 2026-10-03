@@ -43,6 +43,12 @@ for (const entry of library) {
 
 const summaries = reports.flatMap((report) => report.summary.map((summary) => ({ song: report.song, title: report.title, midiFormat: report.midiFormat, ...summary })));
 const channelSummaries = reports.flatMap((report) => report.channelSummary.map((summary) => ({ song: report.song, title: report.title, midiFormat: report.midiFormat, ...summary })));
+const sourceSummaries = reports.flatMap((report) => report.sourceSummary.map((summary) => ({ song: report.song, title: report.title, midiFormat: report.midiFormat, ...summary })));
+const recommendedSources = reports.map((songReport) => {
+  const best = songReport.sourceSummary.filter((summary) => summary.sourceType !== "ALL" && summary.recommendationEligible && !summary.silent)
+    .sort((left, right) => right.sourceSuitabilityScore - left.sourceSuitabilityScore || (right.afterRealDiceActiveRate ?? -1) - (left.afterRealDiceActiveRate ?? -1) || right.activeBeatRate - left.activeBeatRate)[0];
+  return best ? { song: songReport.song, title: songReport.title, midiFormat: songReport.midiFormat, ...best } : { song: songReport.song, title: songReport.title, midiFormat: songReport.midiFormat, sourceType: null, sourceValue: null, label: "NO ELIGIBLE SOURCE" };
+});
 const activeSummaries = summaries.filter((summary) => !summary.silent);
 const totals = activeSummaries.reduce((result, item) => {
   ["totalBeats", "activeBeats", "beforeRealDiceBeats", "beforeDummyBeats", "realDiceBeats", "dummyBeats", "quantizedBeats", "quantizedDice1", "quantizedDice2", "quantizedDice3", "quantizedDice4", "restBeats", "emptyEndSlots", "dice1", "dice2", "dice3", "dice4", "other", "rest", "fallback", "currentPlayableBeats", "withDice3PlayableBeats", "exact", "near", "ambiguous", "unsupported"].forEach((key) => { result[key] = (result[key] || 0) + item[key]; });
@@ -70,25 +76,28 @@ totals.notQuantizedReasons = reports.flatMap((songReport) => songReport.tracks.f
   }, {});
 
 const report = {
-  schemaVersion: "3.0.0",
+  schemaVersion: "3.2.0",
   generatedAt: new Date().toISOString(),
   librarySongs: reports.length,
   activeTrackUnits: activeSummaries.length,
   silentTrackUnits: summaries.length - activeSummaries.length,
+  sourceUnits: sourceSummaries.length,
+  recommendedSources,
   totals,
   tracks: summaries,
   type0Channels: channelSummaries,
+  sources: sourceSummaries,
   otherExamples: reports.flatMap((songReport) => songReport.summary.flatMap((summary) => summary.otherExamples.map((example) => ({ song: songReport.song, trackNumber: summary.trackNumber, trackName: summary.trackName, ...example })))).slice(0, 250)
 };
 
-const csvHeaders = ["song", "midiFormat", "sourceType", "trackNumber", "trackName", "channel", "silent", "activeBeats", "activeBeatRate", "beforeRealDiceBeats", "beforeRealDiceActiveRate", "beforeDummyBeats", "beforeDummyRate", "realDiceBeats", "afterRealDiceActiveRate", "dummyBeats", "afterDummyRate", "realImprovementPoints", "quantizedBeats", "quantizedDice1", "quantizedDice2", "quantizedDice3", "quantizedDice4", "restBeats", "restRate", "emptyEndSlots", "dice1", "dice2", "dice3", "dice4", "other", "rest", "currentPlayableActiveRate", "withDice3PlayableActiveRate", "dice3BenefitPoints", "exact", "near", "ambiguous", "unsupported", "fallbackRate", "nearest1", "nearest2", "nearest3", "nearest4"];
+const csvHeaders = ["song", "midiFormat", "sourceType", "sourceValue", "label", "trackNumber", "trackName", "channel", "percussion", "silent", "activeBeats", "activeBeatRate", "beforeRealDiceBeats", "beforeRealDiceActiveRate", "beforeDummyBeats", "beforeDummyRate", "realDiceBeats", "afterRealDiceActiveRate", "dummyBeats", "afterDummyRate", "realImprovementPoints", "quantizedBeats", "quantizedDice1", "quantizedDice2", "quantizedDice3", "quantizedDice4", "restBeats", "restRate", "maxRestRun", "emptyEndSlots", "dice1", "dice2", "dice3", "dice4", "diceDistribution", "dominantDice", "dominantDiceRate", "diceVariety", "sourceSuitabilityScore", "recommendationEligible", "other", "rest", "currentPlayableActiveRate", "withDice3PlayableActiveRate", "dice3BenefitPoints", "exact", "near", "ambiguous", "unsupported", "fallbackRate", "nearest1", "nearest2", "nearest3", "nearest4"];
 const quote = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-const csvRows = [...summaries, ...channelSummaries].map((item) => csvHeaders.map((key) => {
+const csvRows = sourceSummaries.map((item) => csvHeaders.map((key) => {
   const nearestMatch = /^nearest([1-4])$/.exec(key);
-  return quote(nearestMatch ? item.otherNearest[`dice${nearestMatch[1]}`] : item[key]);
+  return quote(nearestMatch ? item.otherNearest[`dice${nearestMatch[1]}`] : key === "diceDistribution" ? [1, 2, 3, 4].map((dice) => `${dice}:${item.diceDistribution?.[dice] ?? 0}`).join("|") : item[key]);
 }).join(","));
 
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(path.join(outputDir, "midi-diagnostics-summary.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
 fs.writeFileSync(path.join(outputDir, "midi-diagnostics-summary.csv"), `${csvHeaders.join(",")}\n${csvRows.join("\n")}\n`, "utf8");
-console.log(JSON.stringify({ songs: reports.length, tracks: summaries.length, channels: channelSummaries.length, totals }, null, 2));
+console.log(JSON.stringify({ songs: reports.length, tracks: summaries.length, channels: channelSummaries.length, sources: sourceSummaries.length, recommendedSources, totals }, null, 2));
