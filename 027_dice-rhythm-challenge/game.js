@@ -88,7 +88,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "cellStateDetail", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -99,25 +99,45 @@
       this.gridWindow = this.grid.parentElement;
       this.renderId = 0;
     }
-    createDie(value, rowIndex, column, activeColumn) {
+    createDie(cell, rowIndex, column, activeColumn) {
       const die = document.createElement("div");
-      const isActive = rowIndex === CONFIG.ACTIVE_ROW && column === activeColumn;
-      const dummy = value === -1;
-      const empty = value === null;
-      const rest = value === 0;
-      const displayValue = dummy ? 1 : value;
-      die.className = dummy ? `die dummy${isActive ? " active" : ""}` : empty ? `die empty countdown${isActive ? " active" : ""}` : rest ? `die rest${isActive ? " active" : ""}` : `die value-${value}${isActive ? " active" : ""}`;
+      const info = window.DiceCellState.classify(cell);
+      const isEmpty = info.state === window.DiceCellState.STATES.EMPTY;
+      const isActive = rowIndex === CONFIG.ACTIVE_ROW && column === activeColumn && !isEmpty;
+      const legacyClass = info.state === window.DiceCellState.STATES.REAL ? `value-${info.playValue} real-dice` : info.state === window.DiceCellState.STATES.DUMMY ? "dummy dummy-dice" : info.state === window.DiceCellState.STATES.REST ? "rest rest-beat" : info.state === window.DiceCellState.STATES.EMPTY ? "empty empty-slot" : "countdown count-in-slot";
+      die.className = `die ${legacyClass} cell-${info.className}${isActive ? " active" : ""}`;
+      die.dataset.state = info.state;
+      die.dataset.rowIndex = String(rowIndex);
+      die.dataset.slotIndex = String(column);
+      die._cellStateDetail = { ...info, playDice: info.playValue || null };
       die.setAttribute("role", "listitem");
-      die.setAttribute("aria-label", dummy ? `${column + 1}拍目、DUMMY 1` : empty ? `${column + 1}拍目、空き` : rest ? `${column + 1}拍目、REST` : `${column + 1}拍目、${value}の目`);
-      const positions = displayValue === 1 ? ["c"] : displayValue === 2 ? ["tr", "bl"] : displayValue === 3 ? ["tl", "c", "br"] : displayValue === 4 ? ["tl", "tr", "bl", "br"] : [];
-      positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
+      die.setAttribute("aria-label", info.state === window.DiceCellState.STATES.DUMMY ? `${column + 1}拍目、DUMMY Dice 1` : info.state === window.DiceCellState.STATES.REST ? `${column + 1}拍目、REST、入力しない拍` : info.state === window.DiceCellState.STATES.EMPTY ? `${column + 1}枠目、END、Beatなし` : info.state === window.DiceCellState.STATES.COUNT_IN ? `カウント${column + 1}` : `${column + 1}拍目、${info.playValue}の目`);
+      if (info.inputTarget) {
+        const positions = info.playValue === 1 ? ["c"] : info.playValue === 2 ? ["tr", "bl"] : info.playValue === 3 ? ["tl", "c", "br"] : ["tl", "tr", "bl", "br"];
+        positions.forEach((position) => { const pip = document.createElement("i"); pip.className = `pip ${position}`; die.append(pip); });
+        if (info.state === window.DiceCellState.STATES.DUMMY || info.isQuantized) {
+          const badge = document.createElement("small");
+          badge.className = `cell-badge${info.isQuantized ? " quantized" : ""}`;
+          badge.textContent = info.isQuantized ? "Q" : "D";
+          die.append(badge);
+        }
+      } else {
+        const mark = document.createElement("span");
+        mark.className = "cell-state-mark";
+        const symbol = document.createElement("b");
+        const label = document.createElement("small");
+        symbol.textContent = info.state === window.DiceCellState.STATES.REST ? "–" : info.state === window.DiceCellState.STATES.EMPTY ? "╱" : String(column + 1);
+        label.textContent = info.label;
+        mark.append(symbol, label);
+        die.append(mark);
+      }
       return die;
     }
     createRow(values, rowIndex, activeColumn) {
       const row = document.createElement("div");
       row.className = "dice-row";
       row.setAttribute("role", "group");
-      row.replaceChildren(...values.map((value, column) => this.createDie(value, rowIndex, column, activeColumn)));
+      row.replaceChildren(...values.map((cell, column) => this.createDie(cell, rowIndex, column, activeColumn)));
       return row;
     }
     positionPlayLine() {
@@ -133,7 +153,7 @@
       this.grid.style.removeProperty("--row-shift-distance");
       this.gridWindow.style.removeProperty("height");
       this.grid.replaceChildren(...rows.map((row, rowIndex) => this.createRow(row, rowIndex, activeColumn)));
-      this.setActive(activeColumn, rows[CONFIG.ACTIVE_ROW]?.[activeColumn] === null);
+      this.setActive(activeColumn, window.DiceCellState.classify(rows[CONFIG.ACTIVE_ROW]?.[activeColumn]).state === window.DiceCellState.STATES.COUNT_IN);
       this.positionPlayLine();
     }
     scrollChart(rows, activeColumn = 0, countIn = false) {
@@ -171,12 +191,17 @@
       const activeDomRow = CONFIG.ACTIVE_ROW + (shifting ? 1 : 0);
       [...this.grid.querySelectorAll(".dice-row")].forEach((row, rowIndex) => {
         const logicalRow = rowIndex - (shifting ? 1 : 0);
-        row.classList.toggle("play-line", rowIndex === activeDomRow);
-        row.classList.toggle("past-row", logicalRow <= 0);
-        row.setAttribute("aria-label", rowIndex === activeDomRow ? "現在の演奏ライン" : `${Math.max(1, logicalRow + 1)}段目`);
+        const isCurrentRow = rowIndex === activeDomRow;
+        row.classList.toggle("play-line", isCurrentRow);
+        row.classList.toggle("past-row", logicalRow < CONFIG.ACTIVE_ROW);
+        row.classList.toggle("current-row", isCurrentRow);
+        row.classList.toggle("future-row", logicalRow > CONFIG.ACTIVE_ROW);
+        row.setAttribute("aria-label", isCurrentRow ? "現在の演奏ライン" : logicalRow < CONFIG.ACTIVE_ROW ? "過去の演奏ライン" : "未来の演奏ライン");
         [...row.children].forEach((die, cellColumn) => {
-          die.classList.toggle("active", rowIndex === activeDomRow && cellColumn === column);
-          die.classList.toggle("done", logicalRow < CONFIG.ACTIVE_ROW || (rowIndex === activeDomRow && cellColumn < column));
+          const activeCell = isCurrentRow && cellColumn === column && die.dataset.state !== window.DiceCellState.STATES.EMPTY;
+          die.classList.toggle("active", activeCell);
+          die.classList.toggle("next-beat", isCurrentRow && cellColumn === column + 1);
+          die.classList.toggle("done", logicalRow < CONFIG.ACTIVE_ROW || (isCurrentRow && cellColumn < column));
         });
       });
       this.beatNumber.textContent = countIn ? `COUNT IN ${column + 1} / ${CONFIG.ROW_SIZE}` : `BEAT ${String(column + 1).padStart(2, "0")} / ${String(CONFIG.ROW_SIZE).padStart(2, "0")}`;
@@ -225,6 +250,13 @@
       void button.offsetWidth;
       button.classList.add("guide-hit");
       window.setTimeout(() => button.classList.remove("guide-hit"), 110);
+    }
+    showCellState(detail, visible) {
+      this.cellStateDetail.hidden = !visible || !detail;
+      if (!visible || !detail) return;
+      const text = `State: ${detail.state.replace("_DICE", "").replace("_BEAT", "").replace("_SLOT", "")} | Source Pattern: ${detail.sourcePattern} | Play Dice: ${detail.playDice ?? "—"} | isQuantized: ${detail.isQuantized} | isDummy: ${detail.isDummy} | Measure/Beat: ${detail.measure ?? "—"}/${detail.beat ?? "—"} | Row/Slot: ${detail.gameRowIndex ?? "—"}/${detail.slotIndex ?? "—"}`;
+      this.cellStateDetail.textContent = text;
+      this.cellStateDetail.title = text;
     }
     test(data) {
       this.testBpm.textContent = `${Math.round(data.bpm)} BPM`;
@@ -500,7 +532,8 @@
       this.loadMidiLibrary();
     }
     get beatDuration() { return this.currentBeatDuration; }
-    get currentValue() { return this.mode === "midi" && this.currentGameBeat ? (this.currentGameBeat.playDice ?? 0) : (this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? 0); }
+    get currentCell() { return this.rows[CONFIG.ACTIVE_ROW]?.[this.column] ?? null; }
+    get currentValue() { return this.mode === "midi" && this.currentGameBeat ? (this.currentGameBeat.playDice ?? 0) : window.DiceCellState.classify(this.currentCell).playValue; }
     clockNow() { return this.mode === "midi" && this.midi?.context ? this.midi.context.currentTime * 1000 : performance.now(); }
     bind() {
       document.querySelectorAll('input[name="playMode"]').forEach((input) => input.addEventListener("change", () => this.setPlayMode(input.value)));
@@ -512,6 +545,11 @@
       this.ui.exportDiagnosticsJson.addEventListener("click", () => this.exportDiagnostics("json"));
       this.ui.exportDiagnosticsCsv.addEventListener("click", () => this.exportDiagnostics("csv"));
       this.ui.gameTrack.addEventListener("change", (event) => this.selectGameSource(event.target.value));
+      this.ui.grid.addEventListener("pointerdown", (event) => {
+        if (!this.testMode) return;
+        const die = event.target.closest(".die");
+        if (die?._cellStateDetail) this.ui.showCellState(die._cellStateDetail, true);
+      });
       document.getElementById("testMode").addEventListener("change", (event) => this.setTestModeOption(event.target.checked));
       this.ui.quantizeToggle.addEventListener("change", (event) => this.setQuantizeEnabled(event.target.checked));
       this.ui.debugButton.addEventListener("click", () => this.ui.debugVisible(true));
@@ -552,6 +590,7 @@
     }
     setTestModeOption(enabled) {
       this.ui.quantizeControl.hidden = !enabled || this.mode !== "midi";
+      if (!enabled) this.ui.showCellState(null, false);
       if (!enabled && this.midi?.getQuantizeEnabled && !this.midi.getQuantizeEnabled()) {
         this.ui.quantizeToggle.checked = true;
         this.setQuantizeEnabled(true);
@@ -779,23 +818,17 @@
     }
     makeOpeningRows() {
       this.chartGenerator.reset();
-      const blankRow = () => Array(CONFIG.ROW_SIZE).fill(null);
-      return [blankRow(), blankRow(), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
+      const countInRow = () => Array.from({ length: CONFIG.ROW_SIZE }, (_, slotIndex) => window.DiceCellState.countInCell(slotIndex));
+      return [countInRow(), countInRow(), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex]), this.chartGenerator.nextRow(STAGES[this.stageIndex])];
     }
     gameRowValues(index) {
       const slots = this.activeGameChart?.rows?.[index]?.slots || [];
-      return Array.from({ length: CONFIG.ROW_SIZE }, (_, slotIndex) => {
-        const beat = slots[slotIndex];
-        if (!beat) return null;
-        if (beat.isDummy) return -1;
-        if (beat.isRest || beat.isFallback) return 0;
-        return beat.playDice;
-      });
+      return Array.from({ length: CONFIG.ROW_SIZE }, (_, slotIndex) => window.DiceCellState.fromGameBeat(slots[slotIndex], index, slotIndex));
     }
     makeMidiOpeningRows() {
-      const blank = () => Array(CONFIG.ROW_SIZE).fill(null);
+      const countInRow = () => Array.from({ length: CONFIG.ROW_SIZE }, (_, slotIndex) => window.DiceCellState.countInCell(slotIndex));
       this.midiMeasureCursor = 3;
-      return [blank(), blank(), this.gameRowValues(0), this.gameRowValues(1), this.gameRowValues(2)];
+      return [countInRow(), countInRow(), this.gameRowValues(0), this.gameRowValues(1), this.gameRowValues(2)];
     }
     stopTiming() {
       clearTimeout(this.beatTimer);
@@ -817,6 +850,7 @@
       this.ui.debugVisible(false);
       this.ui.debugButton.hidden = true;
       this.ui.playMetadata("", "", false);
+      this.ui.showCellState(null, false);
       this.ui.judgement.textContent = "";
       this.previewChart();
     }
@@ -869,6 +903,7 @@
       this.ui.bpmDisplay.textContent = this.mode === "midi" ? `MIDI ♪ ${Math.round(this.currentTempo)} BPM` : `♪ = ${this.bpm} BPM`;
       this.ui.currentStage.textContent = `L${this.stageIndex + 1}`;
       this.ui.testPanel.hidden = !this.testMode;
+      this.ui.showCellState(null, false);
       this.ui.analysisVisible(this.testMode && this.mode === "midi");
       this.ui.chartVisible(this.testMode && this.mode === "midi");
       this.ui.debugButton.hidden = !(this.testMode && this.mode === "midi");
@@ -941,7 +976,7 @@
       this.currentBeatDuration = duration;
       this.applyBeatCss();
       const value = this.currentValue;
-      const countIn = this.rows[CONFIG.ACTIVE_ROW]?.[this.column] === null && !this.currentGameBeat;
+      const countIn = window.DiceCellState.classify(this.currentCell).state === window.DiceCellState.STATES.COUNT_IN && !this.currentGameBeat;
       this.ui.setActive(this.column, countIn);
       this.ui.progress(0);
       const restInputWindow = this.mode === "midi" && Boolean(this.currentGameBeat?.isRest);
@@ -1033,7 +1068,7 @@
         const nextRow = this.mode === "midi" ? this.gameRowValues(this.midiMeasureCursor++) : this.chartGenerator.nextRow(STAGES[this.stageIndex]);
         this.rows = [...this.rows.slice(1), nextRow];
         this.column = 0;
-        this.ui.scrollChart(this.rows, this.column, nextRow[0] === null);
+        this.ui.scrollChart(this.rows, this.column, window.DiceCellState.classify(nextRow[0]).state === window.DiceCellState.STATES.COUNT_IN);
       }
     }
     updateFrame() {

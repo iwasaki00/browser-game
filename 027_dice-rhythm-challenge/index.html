@@ -18,6 +18,7 @@
   <script src="midi-chart-diagnostics.js" defer></script>
   <script src="midi-game-chart.js" defer></script>
   <script src="midi-integration.js" defer></script>
+  <script src="dice-cell-state.js" defer></script>
   <script src="game.js" defer></script>
 </head>
 <body>
@@ -39,7 +40,7 @@
       <div class="grid-window"><div class="grid" id="grid" role="list" aria-label="スクロールするサイコロ譜面"></div></div>
       <div class="beat-track" aria-hidden="true"><i id="beatProgress"></i></div>
       <div class="judgement" id="judgement" aria-live="polite"></div>
-      <div class="test-panel" id="testPanel" hidden><span>TEST</span><b id="testBpm">120 BPM</b><b id="testCell">BEAT 1 / 4</b><b id="testTaps">TAPS 0 / 1</b><b id="testElapsed">TIME 0 / 500ms</b></div>
+      <div class="test-panel" id="testPanel" hidden><span>TEST</span><b id="testBpm">120 BPM</b><b id="testCell">BEAT 1 / 4</b><b id="testTaps">TAPS 0 / 1</b><b id="testElapsed">TIME 0 / 500ms</b></div><p class="cell-state-detail" id="cellStateDetail" hidden aria-live="polite"></p>
       <section class="midi-analysis-panel" id="midiAnalysisPanel" hidden aria-label="MIDIリズム解析">
         <header><strong>MIDI RHYTHM ANALYSIS</strong><div class="analysis-actions"><button id="copyAnalysisButton" type="button">COPY ANALYSIS</button><button id="exportDiagnosticsJson" type="button">EXPORT JSON</button><button id="exportDiagnosticsCsv" type="button">EXPORT CSV</button></div></header>
         <div class="analysis-controls"><label>Analysis Source<select id="analysisTrack"><option value="all">ALL</option></select></label><span id="analysisCopyStatus" aria-live="polite"></span></div>
@@ -70,7 +71,7 @@
       <div class="start-card">
         <div class="logo-die face-4" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <p class="kicker">TAP THE BEAT</p><h1>Dice Rhythm<br><em>Challenge</em></h1>
-        <p class="version">VERSION 3.2.0 MIDI GAME SOURCE</p>
+        <p class="version">VERSION 3.3.0 CELL STATES</p>
         <p class="howto">同じパターンを繰り返して、<strong>少しずつステップアップ！</strong></p>
         <fieldset class="mode-picker"><legend>PLAY MODE</legend><div><label><input type="radio" name="playMode" value="normal" checked><span>NORMAL</span></label><label><input type="radio" name="playMode" value="midi"><span>MIDI</span></label></div></fieldset>
         <fieldset class="stage-picker"><legend>STAGE SELECT</legend><div id="stageOptions"><button class="selected" type="button" data-stage="0"><b>LEVEL 1</b><span>1だけ</span><small>1 1 1 1</small></button><button type="button" data-stage="1"><b>LEVEL 2</b><span>2だけ</span><small>2 2 2 2</small></button><button type="button" data-stage="2"><b>LEVEL 3</b><span>4だけ</span><small>4 4 4 4</small></button><button type="button" data-stage="3"><b>LEVEL 4</b><span>1と2</span><small>1 1 2 2</small></button><button type="button" data-stage="4"><b>LEVEL 5</b><span>2を練習</span><small>2 2 1 2</small></button><button type="button" data-stage="5"><b>LEVEL 6</b><span>4を練習</span><small>1 2 4 4</small></button><button type="button" data-stage="6"><b>LEVEL 7</b><span>ミックス</span><small>2 4 1 2</small></button><button type="button" data-stage="7"><b>LEVEL 8</b><span>シャッフル</span><small>? ? ? ?</small></button></div><p id="stageHint">1の目だけ。まずは1拍に1回のタップを覚えよう。</p></fieldset><fieldset class="bpm-picker"><legend>BPM SELECT</legend><div id="bpmOptions"><button type="button" data-bpm="60">60</button><button type="button" data-bpm="80">80</button><button type="button" data-bpm="100">100</button><button class="selected" type="button" data-bpm="120">120</button><button type="button" data-bpm="140">140</button><button type="button" data-bpm="160">160</button><button type="button" data-bpm="180">180</button><button type="button" data-bpm="200">200</button></div></fieldset>

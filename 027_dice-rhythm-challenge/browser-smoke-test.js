@@ -74,6 +74,15 @@ async function main() {
     } catch (error) {
       return { startError: error.message, selectedGameSource: gameTrack.value, midiStatus: document.getElementById("midiStatus").textContent, warning: document.getElementById("gameTrackWarning").textContent, visibleErrors: [...document.querySelectorAll(".error")].map((node) => node.textContent), version: document.querySelector(".version")?.textContent };
     }
+    const openingBoard = {
+      rows: document.querySelectorAll("#grid > .dice-row").length,
+      countIn: document.querySelectorAll("#grid .cell-count-in-slot").length,
+      empty: document.querySelectorAll("#grid .cell-empty-slot").length,
+      countLabels: [...document.querySelectorAll("#grid .cell-count-in-slot .cell-state-mark small")].map((node) => node.textContent)
+    };
+    const currentCountCell = document.querySelector("#grid .current-row .cell-count-in-slot");
+    currentCountCell?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    const countInDetail = document.getElementById("cellStateDetail").textContent;
     const greenButton = document.querySelector('.dice-button[data-value="3"]');
     await new Promise((resolve, reject) => {
       const deadline = performance.now() + 22000;
@@ -104,6 +113,16 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 30));
     const dice3Gameplay = { guidePulses, tapsSent, beatDuration, scoreGain: Number(document.getElementById("score").textContent) - scoreBefore };
     await waitFor(() => !document.getElementById("grid").classList.contains("row-shift"), 1500);
+    const visibleBoardStates = {
+      real: document.querySelectorAll("#grid .cell-real-dice").length,
+      dummy: document.querySelectorAll("#grid .cell-dummy-dice").length,
+      rest: document.querySelectorAll("#grid .cell-rest-beat").length,
+      empty: document.querySelectorAll("#grid .cell-empty-slot").length,
+      rows: document.querySelectorAll("#grid > .dice-row").length
+    };
+    const inspectableStateCell = document.querySelector("#grid .cell-dummy-dice, #grid .cell-rest-beat");
+    inspectableStateCell?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    const cellStateDetail = document.getElementById("cellStateDetail").textContent;
     const activeOnSecondRow = Boolean(document.querySelector("#grid > .dice-row:nth-child(2) .die.active"));
     Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
     document.dispatchEvent(new Event("visibilitychange"));
@@ -211,6 +230,10 @@ async function main() {
       pauseResume,
       chartStatistics: document.getElementById("chartStatistics").textContent,
       dice3Gameplay,
+      openingBoard,
+      countInDetail,
+      visibleBoardStates,
+      cellStateDetail,
       nonFourFour,
       quantizeAB,
       type0Channel,
@@ -234,7 +257,7 @@ async function main() {
   }
   const assertions = [
     [!value.preflightError, "library preflight"],
-    [value.version === "VERSION 3.2.0 MIDI GAME SOURCE", "version"],
+    [value.version === "VERSION 3.3.0 CELL STATES", "version"],
     [value.libraryCount === 14, "library count"],
     [value.diceButtonOrder.join(",") === "1,2,3,4", "button order"],
     [value.controlsFitViewport, "mobile controls fit"],
@@ -245,6 +268,10 @@ async function main() {
     [value.pauseResume.paused && value.pauseResume.resumed, "pause and resume"],
     [value.diagnosticsStatus.includes("BEFORE REAL") && value.diagnosticsStatus.includes("AFTER REAL"), "diagnostics summary"],
     [value.exportButtons.every(Boolean), "diagnostic exports"],
+    [value.openingBoard.rows === 5 && value.openingBoard.countIn === 8 && value.openingBoard.countLabels.every((label) => label === "COUNT"), "five rows and explicit COUNT IN cells"],
+    [value.countInDetail.includes("State: COUNT_IN") && value.countInDetail.includes("Source Pattern: COUNT_IN"), "COUNT IN TEST detail"],
+    [value.visibleBoardStates.rows === 5 && value.visibleBoardStates.real > 0 && value.visibleBoardStates.dummy + value.visibleBoardStates.rest > 0, "REAL and non-real board states remain visible"],
+    [value.cellStateDetail.includes("State:") && value.cellStateDetail.includes("Source Pattern:") && value.cellStateDetail.includes("Row/Slot:"), "cell state TEST detail"],
     [value.dice3Gameplay.guidePulses === 3, "Dice 3 guide pulses"],
     [value.dice3Gameplay.tapsSent === 3 && value.dice3Gameplay.scoreGain >= 300, "Dice 3 three-tap success"],
     [value.nonFourFour.signature !== "4/4" && value.nonFourFour.started, "non-4/4 MIDI starts"],
