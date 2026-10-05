@@ -7,6 +7,7 @@ const path = require("node:path");
 const EDGE = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const DEBUG_PORT = 9230;
 const GAME_URL = "http://127.0.0.1:8030/030_minesweeper-sequencer/index.html";
+const MENU_URL = "http://127.0.0.1:8030/index.html";
 const profileDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mine-seq-edge-"));
 const screenshots = {
   desktop: path.join(os.tmpdir(), "mine-seq-desktop.png"),
@@ -225,8 +226,26 @@ async function main() {
     });
     await evaluate('document.querySelector("#closeResult").click()');
     assert.equal(await evaluate('document.querySelector("#resultOverlay").hidden'), true);
+
+    await call("Page.navigate", { url: MENU_URL });
+    await retry(async () => {
+      const ready = await evaluate("document.readyState === 'complete' && document.querySelectorAll('.game-card').length === 30");
+      if (!ready) throw new Error("Top menu did not render 30 cards");
+    });
+    const menu = await evaluate(`({
+      cards: document.querySelectorAll(".game-card").length,
+      firstTitle: document.querySelector(".game-card h2").textContent,
+      firstHref: document.querySelector(".game-card").getAttribute("href"),
+      count: document.querySelector(".game-count strong").textContent
+    })`);
+    assert.deepEqual(menu, {
+      cards: 30,
+      firstTitle: "マインスイーパシーケンサ",
+      firstHref: "./030_minesweeper-sequencer/index.html",
+      count: "30"
+    });
     socket.close();
-    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, gameOver, cleared, screenshots }, null, 2));
+    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, gameOver, cleared, menu, screenshots }, null, 2));
   } finally {
     const edgeExited = new Promise((resolve) => edge.once("exit", resolve));
     edge.kill();
