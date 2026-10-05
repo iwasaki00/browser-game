@@ -51,13 +51,17 @@
   function createGame(options = {}) {
     const rows = options.rows || ROWS;
     const columns = options.columns || COLUMNS;
+    const maximumMines = Math.max(1, rows * columns - 1);
+    const mineCount = Math.max(1, Math.min(maximumMines,
+      options.mineCount == null ? MINE_COUNT : Math.round(options.mineCount)));
     const tempo = options.bpm == null
       ? generateTempo(options.random || Math.random)
       : { bpm: options.bpm, category: options.tempoCategory || categoryForBpm(options.bpm) };
     return {
       rows,
       columns,
-      mineCount: options.mineCount == null ? MINE_COUNT : options.mineCount,
+      steps: columns,
+      mineCount,
       maxMisses: options.maxMisses || MAX_MISSES,
       board: Array.from({ length: rows }, (_, row) =>
         Array.from({ length: columns }, (_, column) => createCell(row, column))
@@ -218,10 +222,47 @@
 
   function toggleFlag(game, row, column) {
     const cell = game.board[row] && game.board[row][column];
+    if (!cell) return false;
+    return setFlag(game, row, column, !cell.isFlagged);
+  }
+
+  function setFlag(game, row, column, flagged) {
+    const cell = game.board[row] && game.board[row][column];
     if (!cell || cell.isOpen || game.gameState === "gameover" || game.gameState === "clear") return false;
-    cell.isFlagged = !cell.isFlagged;
+    cell.isFlagged = Boolean(flagged);
     cell.mineAccentEnabled = cell.isMine && cell.isFlagged;
     return cell.isFlagged;
+  }
+
+  function chordOpen(game, row, column, random = Math.random, now = Date.now()) {
+    const target = game.board[row] && game.board[row][column];
+    if (!target || !target.isOpen || target.isMine || target.adjacentMines <= 0 ||
+        game.gameState === "gameover" || game.gameState === "clear") {
+      return { type: "ignored", opened: [], minesHit: 0, cleared: false, gameOver: false };
+    }
+    const surrounding = neighbors(game, row, column);
+    const flagCount = surrounding.filter((cell) => cell.isFlagged).length;
+    if (flagCount !== target.adjacentMines) {
+      return { type: "ignored", opened: [], minesHit: 0, cleared: false, gameOver: false };
+    }
+
+    const opened = [];
+    let minesHit = 0;
+    let cleared = false;
+    for (const cell of surrounding) {
+      if (cell.isOpen || cell.isFlagged || game.gameState === "gameover") continue;
+      const result = openCell(game, cell.row, cell.column, random, now);
+      opened.push(...result.opened);
+      if (result.type === "mine") minesHit += 1;
+      if (result.cleared) cleared = true;
+    }
+    return {
+      type: "chord",
+      opened,
+      minesHit,
+      cleared,
+      gameOver: game.gameState === "gameover"
+    };
   }
 
   function getCorrectFlagCount(game) {
@@ -293,6 +334,8 @@
     expandFrom,
     openCell,
     toggleFlag,
+    setFlag,
+    chordOpen,
     getCorrectFlagCount,
     isPerfectSweep,
     nextStep,

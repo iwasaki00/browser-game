@@ -3,13 +3,18 @@
 
   const Core = window.MinesweeperCore;
   const AudioEngine = window.MinesweeperAudio;
-  const INSTRUMENTS = ["KICK", "SNARE", "CHH", "OHH", "TOM", "BASS", "SYN", "FX"];
+  const Settings = window.MinesweeperSettings;
+  const Input = window.MinesweeperInput;
+  const INSTRUMENTS = ["KICK", "SNARE", "CHH", "OHH", "TOM", "BASS", "SYN", "FX", "CLAP", "PERC", "SUB", "PLUCK"];
   const LONG_PRESS_MS = 520;
+  const DOUBLE_TAP_MS = 230;
   const SCHEDULE_AHEAD = 0.12;
   const LOOKAHEAD_MS = 25;
   const debugMode = new URLSearchParams(location.search).get("debug") === "1";
 
   const boardElement = document.querySelector("#board");
+  const boardWrap = document.querySelector("#boardWrap");
+  const boardSummary = document.querySelector("#boardSummary");
   const statusElement = document.querySelector("#gameStatus");
   const missElement = document.querySelector("#missCount");
   const tempoReadout = document.querySelector("#tempoReadout");
@@ -30,8 +35,35 @@
   const completionProgress = document.querySelector("#completionProgress");
   const forceClearButton = document.querySelector("#forceClearButton");
   const forcePerfectButton = document.querySelector("#forcePerfectButton");
+  const testOpenButton = document.querySelector("#testOpenButton");
+  const testFlagButton = document.querySelector("#testFlagButton");
+  const testChordButton = document.querySelector("#testChordButton");
+  const testMissButton = document.querySelector("#testMissButton");
+  const quickTouchMode = document.querySelector("#quickTouchMode");
+  const switchControls = document.querySelector("#switchControls");
+  const twoHandControls = document.querySelector("#twoHandControls");
+  const touchHint = document.querySelector("#touchHint");
+  const settingsButton = document.querySelector("#settingsButton");
+  const settingsDialog = document.querySelector("#settingsDialog");
+  const settingsForm = document.querySelector("#settingsForm");
+  const settingsClose = document.querySelector("#settingsClose");
+  const settingsCancel = document.querySelector("#settingsCancel");
+  const settingPreset = document.querySelector("#settingPreset");
+  const settingRows = document.querySelector("#settingRows");
+  const settingSteps = document.querySelector("#settingSteps");
+  const settingDifficulty = document.querySelector("#settingDifficulty");
+  const settingMines = document.querySelector("#settingMines");
+  const settingDensity = document.querySelector("#settingDensity");
+  const settingRandomBpm = document.querySelector("#settingRandomBpm");
+  const settingFixedBpm = document.querySelector("#settingFixedBpm");
+  const settingCurrentTempo = document.querySelector("#settingCurrentTempo");
+  const settingTouchMode = document.querySelector("#settingTouchMode");
+  const settingBoardView = document.querySelector("#settingBoardView");
+  const settingFollowPlayhead = document.querySelector("#settingFollowPlayhead");
+  const settingsValidation = document.querySelector("#settingsValidation");
 
-  let game = Core.createGame();
+  let settings = Settings.loadSettings();
+  let game = Core.createGame(Settings.toGameOptions(settings));
   let schedulerId = 0;
   let nextNoteTime = 0;
   let nextStepToSchedule = 0;
@@ -42,9 +74,17 @@
   let pressedCell = null;
   let pressStart = null;
   let longPressTriggered = false;
+  let pointerContext = null;
+  let doubleTapTimer = 0;
+  let pendingDoubleCell = null;
+  let switchAction = "OPEN";
+  let modifierAction = null;
+  let userScrollUntil = 0;
 
   function buildBoard() {
     boardElement.replaceChildren();
+    boardElement.style.setProperty("--steps", game.columns);
+    boardElement.setAttribute("aria-label", `${game.rows}行${game.columns}列のマインスイーパ盤面`);
     const corner = document.createElement("span");
     corner.className = "grid-corner";
     corner.textContent = "TRACK";
@@ -117,6 +157,46 @@
     });
   }
 
+  function followCurrentStep() {
+    if (!settings.followPlayhead || settings.boardView !== "SCROLL" ||
+        performance.now() < userScrollUntil) return;
+    const header = boardElement.querySelector(`.step-label[data-column="${game.currentStep}"]`);
+    if (!header) return;
+    const viewport = boardWrap.getBoundingClientRect();
+    const target = header.getBoundingClientRect();
+    const margin = 14;
+    if (target.left < viewport.left + margin || target.right > viewport.right - margin) {
+      const offset = target.left - viewport.left - viewport.width / 2 + target.width / 2;
+      boardWrap.scrollBy({ left: offset, behavior: "smooth" });
+    }
+  }
+
+  function applyBoardPresentation() {
+    boardWrap.classList.remove("view-fit", "view-scroll", "view-compact");
+    boardWrap.classList.add(`view-${settings.boardView.toLowerCase()}`);
+    boardSummary.textContent = `${game.rows} × ${game.columns} / ${game.mineCount} MINES`;
+  }
+
+  function updateTouchControls() {
+    quickTouchMode.value = settings.touchMode;
+    switchControls.hidden = settings.touchMode !== "SWITCH";
+    twoHandControls.hidden = settings.touchMode !== "TWO HAND";
+    const hints = {
+      STANDARD: "TAP OPEN · LONG PRESS FLAG",
+      SWITCH: `${switchAction} MODE · TAP CELL`,
+      "TWO HAND": "HOLD A MODE + TAP CELL",
+      "DOUBLE TAP": "SINGLE OPEN · DOUBLE FLAG",
+      FLICK: "TAP OPEN · FLICK ↑ FLAG / ↓ UNFLAG"
+    };
+    touchHint.textContent = hints[settings.touchMode];
+    switchControls.querySelectorAll("button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.switchAction === switchAction);
+    });
+    twoHandControls.querySelectorAll("button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.modifier === modifierAction);
+    });
+  }
+
   function render() {
     game.board.flat().forEach(renderCell);
     missElement.textContent = `${game.missCount} / ${game.maxMisses}`;
@@ -127,6 +207,8 @@
     statusElement.dataset.state = game.gameState;
     playButton.classList.toggle("active", game.isPlaying);
     playButton.setAttribute("aria-pressed", String(game.isPlaying));
+    applyBoardPresentation();
+    updateTouchControls();
     renderPlayhead();
     if (debugMode) {
       Core.refreshGlitch(game);
@@ -139,6 +221,9 @@
         `glitch=${game.glitchState.active}`,
         `completion=${game.completionMode} ${game.completionLoopCount}/${game.completionLoopTarget}`,
         `perfect=${game.isPerfect}`
+        ,`board=${game.rows}x${game.columns}/${game.mineCount} (${(Settings.mineDensity(settings) * 100).toFixed(1)}%)`
+        ,`preset=${settings.preset}/${settings.difficulty}`
+        ,`touch=${settings.touchMode}/view=${settings.boardView}/follow=${settings.followPlayhead}`
       ].join(" / ");
     }
   }
@@ -178,16 +263,21 @@
 
   async function openSelectedCell(row, column) {
     await wakeAudio();
-    const result = Core.openCell(game, row, column);
+    const target = game.board[row] && game.board[row][column];
+    const isChord = target && target.isOpen && !target.isMine && target.adjacentMines > 0;
+    const result = isChord
+      ? Core.chordOpen(game, row, column)
+      : Core.openCell(game, row, column);
     if (result.type === "ignored") return;
     render();
     const now = AudioEngine.currentTime();
-    if (result.type === "safe") {
+    if (result.type === "safe" || result.type === "chord") {
       result.opened.filter((cell) => cell.isNote).forEach((cell, index) => {
-        AudioEngine.playCellNote(cell, now + Math.min(index, 7) * 0.018, { preview: true });
+        AudioEngine.playCellNote(cell, now + Math.min(index, 12) * (isChord ? 0.032 : 0.018), { preview: true });
       });
       if (result.cleared) startCompletionSequence();
-    } else if (result.type === "mine") {
+    }
+    if (result.type === "mine" || result.minesHit > 0) {
       if (result.gameOver) stopSequence();
       AudioEngine.playMissEffect(AudioEngine.currentTime());
       document.body.classList.add("glitching");
@@ -197,15 +287,35 @@
     }
   }
 
-  async function flagSelectedCell(row, column) {
+  async function flagSelectedCell(row, column, desiredState) {
     await wakeAudio();
-    Core.toggleFlag(game, row, column);
+    if (typeof desiredState === "boolean") Core.setFlag(game, row, column, desiredState);
+    else Core.toggleFlag(game, row, column);
     const cell = game.board[row][column];
     if (cell.mineAccentEnabled) {
       AudioEngine.playMineAccent(cell.row, AudioEngine.currentTime(), { preview: true });
     }
     render();
     if (navigator.vibrate) navigator.vibrate(18);
+  }
+
+  function performAction(action, row, column) {
+    switch (action) {
+      case Input.ACTIONS.OPEN:
+        openSelectedCell(row, column);
+        break;
+      case Input.ACTIONS.TOGGLE_FLAG:
+        flagSelectedCell(row, column);
+        break;
+      case Input.ACTIONS.SET_FLAG:
+        flagSelectedCell(row, column, true);
+        break;
+      case Input.ACTIONS.REMOVE_FLAG:
+        flagSelectedCell(row, column, false);
+        break;
+      default:
+        break;
+    }
   }
 
   function positionFromElement(element) {
@@ -218,47 +328,107 @@
     if (pressedCell) pressedCell.classList.remove("pressing");
   }
 
+  function resetInputState() {
+    clearPress();
+    window.clearTimeout(doubleTapTimer);
+    doubleTapTimer = 0;
+    pendingDoubleCell = null;
+    pressedCell = null;
+    pressStart = null;
+    pointerContext = null;
+    longPressTriggered = false;
+    modifierAction = null;
+    updateTouchControls();
+  }
+
+  function handleDoubleTap(row, column) {
+    if (doubleTapTimer && pendingDoubleCell &&
+        pendingDoubleCell.row === row && pendingDoubleCell.column === column) {
+      window.clearTimeout(doubleTapTimer);
+      doubleTapTimer = 0;
+      pendingDoubleCell = null;
+      performAction(Input.doubleTapAction(settings.touchMode), row, column);
+      return;
+    }
+    if (doubleTapTimer && pendingDoubleCell) {
+      window.clearTimeout(doubleTapTimer);
+      performAction(Input.ACTIONS.OPEN, pendingDoubleCell.row, pendingDoubleCell.column);
+    }
+    pendingDoubleCell = { row, column };
+    doubleTapTimer = window.setTimeout(() => {
+      const pending = pendingDoubleCell;
+      doubleTapTimer = 0;
+      pendingDoubleCell = null;
+      if (pending) performAction(Input.ACTIONS.OPEN, pending.row, pending.column);
+    }, DOUBLE_TAP_MS);
+  }
+
   boardElement.addEventListener("pointerdown", (event) => {
     const cell = event.target.closest(".cell");
     if (!cell || cell.disabled || (event.pointerType === "mouse" && event.button !== 0)) return;
     clearPress();
     pressedCell = cell;
     pressStart = { x: event.clientX, y: event.clientY };
+    pointerContext = {
+      cell,
+      row: Number(cell.dataset.row),
+      column: Number(cell.dataset.column),
+      startX: event.clientX,
+      startY: event.clientY,
+      pointerType: event.pointerType || "mouse",
+      moved: false
+    };
     longPressTriggered = false;
     cell.classList.add("pressing");
-    pressTimer = window.setTimeout(() => {
-      longPressTriggered = true;
-      const position = positionFromElement(cell);
-      flagSelectedCell(position.row, position.column);
-      clearPress();
-    }, LONG_PRESS_MS);
+    if (pointerContext.pointerType !== "mouse" &&
+        Input.longPressAction(settings.touchMode) !== Input.ACTIONS.NONE) {
+      pressTimer = window.setTimeout(() => {
+        longPressTriggered = true;
+        performAction(Input.longPressAction(settings.touchMode), pointerContext.row, pointerContext.column);
+        clearPress();
+      }, LONG_PRESS_MS);
+    }
   });
 
   boardElement.addEventListener("pointermove", (event) => {
-    if (!pressedCell || !pressStart) return;
-    if (Math.hypot(event.clientX - pressStart.x, event.clientY - pressStart.y) > 12) {
+    if (!pointerContext) return;
+    const distance = Math.hypot(event.clientX - pointerContext.startX, event.clientY - pointerContext.startY);
+    if (distance > 10) pointerContext.moved = true;
+    if (settings.touchMode !== "FLICK" && distance > 12) {
       clearPress();
-      pressedCell = null;
-      pressStart = null;
     }
   });
 
   boardElement.addEventListener("pointerup", (event) => {
-    const cell = event.target.closest(".cell");
-    const shouldOpen = cell && cell === pressedCell && !longPressTriggered && event.button === 0;
+    const context = pointerContext;
     clearPress();
     pressedCell = null;
     pressStart = null;
-    if (shouldOpen) {
-      const position = positionFromElement(cell);
-      openSelectedCell(position.row, position.column);
+    pointerContext = null;
+    if (!context || longPressTriggered || event.button !== 0) return;
+    if (context.pointerType === "mouse") {
+      if (!context.moved) performAction(Input.ACTIONS.OPEN, context.row, context.column);
+      return;
     }
+    if (settings.touchMode === "FLICK") {
+      performAction(Input.flickAction(
+        event.clientX - context.startX,
+        event.clientY - context.startY
+      ), context.row, context.column);
+      return;
+    }
+    if (context.moved) return;
+    const action = Input.tapAction(settings.touchMode, {
+      pointerType: context.pointerType,
+      switchAction,
+      modifier: modifierAction
+    });
+    if (action === Input.ACTIONS.WAIT_FOR_DOUBLE) handleDoubleTap(context.row, context.column);
+    else performAction(action, context.row, context.column);
   });
 
   boardElement.addEventListener("pointercancel", () => {
-    clearPress();
-    pressedCell = null;
-    pressStart = null;
+    resetInputState();
   });
 
   boardElement.addEventListener("contextmenu", (event) => {
@@ -266,8 +436,12 @@
     if (!cell) return;
     event.preventDefault();
     const position = positionFromElement(cell);
-    flagSelectedCell(position.row, position.column);
+    performAction(Input.ACTIONS.TOGGLE_FLAG, position.row, position.column);
   });
+
+  boardWrap.addEventListener("scroll", () => {
+    userScrollUntil = performance.now() + 900;
+  }, { passive: true });
 
   function scheduleStep(step, time) {
     const glitch = Core.refreshGlitch(game);
@@ -284,6 +458,7 @@
       game.currentStep = step;
       stepReadout.textContent = `STEP ${step + 1}`;
       renderPlayhead();
+      followCurrentStep();
       if (game.completionMode && step === game.columns - 1) {
         const completed = Core.recordCompletionLoop(game);
         updateCompletionBanner(completed);
@@ -345,14 +520,115 @@
   }
 
   function newGame() {
+    resetInputState();
     stopSequence();
-    game = Core.newGame();
+    game = Core.newGame(Settings.toGameOptions(settings));
+    AudioEngine.setTrackCount(game.rows);
     hideResult();
     completionBanner.hidden = true;
     document.body.classList.remove("glitching");
     window.clearTimeout(glitchVisualTimer);
     buildBoard();
+    boardWrap.scrollLeft = 0;
     render();
+  }
+
+  function populateSelect(select, values) {
+    select.replaceChildren(...values.map((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      return option;
+    }));
+  }
+
+  function settingsDraft() {
+    return {
+      preset: settingPreset.value,
+      rows: settingRows.value,
+      steps: settingSteps.value,
+      difficulty: settingDifficulty.value,
+      mines: settingMines.value,
+      randomBpm: settingRandomBpm.checked,
+      fixedBpm: settingFixedBpm.value,
+      touchMode: settingTouchMode.value,
+      boardView: settingBoardView.value,
+      followPlayhead: settingFollowPlayhead.checked
+    };
+  }
+
+  function updateSettingsPreview() {
+    const normalized = Settings.normalizeSettings(settingsDraft());
+    const customBoard = settingPreset.value === "CUSTOM";
+    settingRows.disabled = !customBoard;
+    settingSteps.disabled = !customBoard;
+    settingMines.disabled = settingDifficulty.value !== "CUSTOM";
+    settingFixedBpm.disabled = settingRandomBpm.checked;
+    settingRows.value = normalized.rows;
+    settingSteps.value = normalized.steps;
+    settingMines.max = String(normalized.rows * normalized.steps - 1);
+    settingMines.value = normalized.mines;
+    settingDensity.textContent = `DENSITY ${(Settings.mineDensity(normalized) * 100).toFixed(1)}%`;
+    settingCurrentTempo.textContent = `CURRENT BPM ${game.bpm} / ${game.tempoCategory}`;
+    settingsValidation.textContent = customBoard
+      ? `CUSTOM RANGE: ROWS 6–12 / STEPS 6–16 / MINES 1–${normalized.rows * normalized.steps - 1}`
+      : "";
+  }
+
+  function fillSettingsForm() {
+    settingPreset.value = settings.preset;
+    settingRows.value = settings.rows;
+    settingSteps.value = settings.steps;
+    settingDifficulty.value = settings.difficulty;
+    settingMines.value = settings.mines;
+    settingRandomBpm.checked = settings.randomBpm;
+    settingFixedBpm.value = settings.fixedBpm;
+    settingTouchMode.value = settings.touchMode;
+    settingBoardView.value = settings.boardView;
+    settingFollowPlayhead.checked = settings.followPlayhead;
+    updateSettingsPreview();
+  }
+
+  function openSettings() {
+    fillSettingsForm();
+    if (typeof settingsDialog.showModal === "function") settingsDialog.showModal();
+    else settingsDialog.setAttribute("open", "");
+  }
+
+  function closeSettings() {
+    if (typeof settingsDialog.close === "function") settingsDialog.close();
+    else settingsDialog.removeAttribute("open");
+  }
+
+  function debugOpen() {
+    if (!game.minesPlaced) return openSelectedCell(0, 0);
+    const cell = game.board.flat().find((item) => !item.isMine && !item.isOpen && !item.isFlagged);
+    if (cell) openSelectedCell(cell.row, cell.column);
+  }
+
+  function debugFlag() {
+    if (!game.minesPlaced) Core.placeMines(game, 0, 0);
+    const cell = game.board.flat().find((item) => item.isMine && !item.isOpen);
+    if (cell) flagSelectedCell(cell.row, cell.column);
+  }
+
+  function debugMiss() {
+    if (!game.minesPlaced) Core.placeMines(game, 0, 0);
+    const cell = game.board.flat().find((item) => item.isMine && !item.isOpen && !item.isFlagged);
+    if (cell) openSelectedCell(cell.row, cell.column);
+  }
+
+  async function debugChord() {
+    if (!game.minesPlaced) Core.placeMines(game, 0, 0);
+    const target = game.board.flat().find((item) => !item.isMine && item.adjacentMines > 0);
+    if (!target) return;
+    await openSelectedCell(target.row, target.column);
+    game.board.flat().filter((cell) =>
+      cell.isMine && Math.abs(cell.row - target.row) <= 1 &&
+      Math.abs(cell.column - target.column) <= 1
+    ).forEach((cell) => Core.setFlag(game, cell.row, cell.column, true));
+    render();
+    openSelectedCell(target.row, target.column);
   }
 
   function forceCompletion(perfect) {
@@ -384,13 +660,72 @@
   closeResultButton.addEventListener("click", hideResult);
   forceClearButton.addEventListener("click", () => forceCompletion(false));
   forcePerfectButton.addEventListener("click", () => forceCompletion(true));
-  document.addEventListener("visibilitychange", () => { if (document.hidden && game.isPlaying) stopSequence(); });
+  testOpenButton.addEventListener("click", debugOpen);
+  testFlagButton.addEventListener("click", debugFlag);
+  testChordButton.addEventListener("click", debugChord);
+  testMissButton.addEventListener("click", debugMiss);
+
+  quickTouchMode.addEventListener("change", () => {
+    settings = Settings.saveSettings({ ...settings, touchMode: quickTouchMode.value });
+    resetInputState();
+    render();
+  });
+
+  switchControls.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-switch-action]");
+    if (!button) return;
+    switchAction = button.dataset.switchAction;
+    updateTouchControls();
+  });
+
+  twoHandControls.querySelectorAll("[data-modifier]").forEach((button) => {
+    button.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      modifierAction = button.dataset.modifier;
+      updateTouchControls();
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+      button.addEventListener(eventName, () => {
+        modifierAction = null;
+        updateTouchControls();
+      });
+    });
+  });
+
+  settingsButton.addEventListener("click", openSettings);
+  settingsClose.addEventListener("click", closeSettings);
+  settingsCancel.addEventListener("click", closeSettings);
+  settingsDialog.addEventListener("click", (event) => {
+    if (event.target === settingsDialog) closeSettings();
+  });
+  [settingPreset, settingRows, settingSteps, settingDifficulty, settingMines,
+    settingRandomBpm, settingFixedBpm].forEach((control) => {
+    control.addEventListener("input", updateSettingsPreview);
+    control.addEventListener("change", updateSettingsPreview);
+  });
+  settingsForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    settings = Settings.saveSettings(settingsDraft());
+    closeSettings();
+    newGame();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && game.isPlaying) stopSequence();
+    if (document.hidden) resetInputState();
+  });
+  window.addEventListener("blur", resetInputState);
 
   if (debugMode) {
     document.body.classList.add("debug-mode");
     debugPanel.hidden = false;
   }
   if (!AudioEngine.isAvailable()) document.querySelector("#audioNotice").hidden = false;
+  populateSelect(settingPreset, Settings.PRESET_NAMES);
+  populateSelect(settingDifficulty, Settings.DIFFICULTIES);
+  populateSelect(settingTouchMode, Settings.TOUCH_MODES);
+  populateSelect(settingBoardView, Settings.BOARD_VIEWS);
+  AudioEngine.setTrackCount(game.rows);
   buildBoard();
   render();
 })();

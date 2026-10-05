@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#071116">
   <meta name="description" content="マインスイーパを解くほど音楽が育つ、8ステップのブラウザ・シーケンサゲーム。">
-  <title>マインスイーパシーケンサ Ver 0.2.0</title>
+  <title>マインスイーパシーケンサ Ver 0.3.0</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">← ARCADE</a>
-      <span class="version">PHASE 2 · VER 0.2.0</span>
+      <div class="topbar-actions">
+        <span class="version">BOARD &amp; TOUCH LAB · VER 0.3.0</span>
+        <button id="settingsButton" class="settings-button" type="button" aria-label="ゲーム設定を開く">⚙ SETTING</button>
+      </div>
     </header>
 
     <section class="hero">
@@ -20,7 +23,10 @@
         <p class="eyebrow">DIG THE BEAT / 8 STEP LOOP</p>
         <h1>MINESWEEPER<br><span>SEQUENCER</span></h1>
       </div>
-      <p class="concept">盤面をひらく。<br>リズムが育つ。</p>
+      <div class="hero-meta">
+        <p class="concept">盤面をひらく。<br>リズムが育つ。</p>
+        <p id="boardSummary" class="board-summary">8 × 8 / 10 MINES</p>
+      </div>
     </section>
 
     <section class="console" aria-label="マインスイーパシーケンサ">
@@ -37,9 +43,26 @@
         <span id="completionProgress">LOOP 1 / 4</span>
       </div>
 
-      <div class="board-wrap">
+      <div id="boardWrap" class="board-wrap view-fit">
         <div id="board" class="board" role="grid" aria-label="8行8列のマインスイーパ盤面"></div>
       </div>
+
+      <section id="touchControls" class="touch-controls" aria-label="タッチ操作モード">
+        <label>TOUCH
+          <select id="quickTouchMode">
+            <option>STANDARD</option><option>SWITCH</option><option>TWO HAND</option><option>DOUBLE TAP</option><option>FLICK</option>
+          </select>
+        </label>
+        <div id="switchControls" class="mode-buttons" hidden>
+          <button type="button" data-switch-action="OPEN">OPEN MODE</button>
+          <button type="button" data-switch-action="FLAG">FLAG MODE</button>
+        </div>
+        <div id="twoHandControls" class="mode-buttons" hidden>
+          <button type="button" data-modifier="OPEN">HOLD OPEN</button>
+          <button type="button" data-modifier="FLAG">HOLD FLAG</button>
+        </div>
+        <span id="touchHint">TAP OPEN · LONG PRESS FLAG</span>
+      </section>
 
       <div class="transport" aria-label="シーケンサ操作">
         <button id="playButton" class="transport-button play" type="button"><span aria-hidden="true">▶</span> PLAY</button>
@@ -56,11 +79,48 @@
       <span id="debugState"></span>
       <span>セル内: row,column / 隣接数 / note / velocity</span>
       <div class="debug-actions">
+        <button id="testOpenButton" type="button">TEST OPEN</button>
+        <button id="testFlagButton" type="button">TEST FLAG</button>
+        <button id="testChordButton" type="button">TEST CHORD</button>
+        <button id="testMissButton" type="button">TEST MISS</button>
         <button id="forceClearButton" type="button">FORCE CLEAR</button>
         <button id="forcePerfectButton" type="button">FORCE PERFECT</button>
       </div>
     </aside>
   </main>
+
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+    <form id="settingsForm" method="dialog">
+      <header><div><small>BOARD &amp; TOUCH LAB</small><h2 id="settingsTitle">GAME SETTINGS</h2></div><button id="settingsClose" type="button" aria-label="設定を閉じる">×</button></header>
+      <div class="settings-grid">
+        <fieldset>
+          <legend>BOARD</legend>
+          <label>PRESET<select id="settingPreset"></select></label>
+          <div class="field-pair"><label>ROWS<input id="settingRows" type="number" min="6" max="12"></label><label>STEPS<input id="settingSteps" type="number" min="6" max="16"></label></div>
+        </fieldset>
+        <fieldset>
+          <legend>MINES</legend>
+          <label>DIFFICULTY<select id="settingDifficulty"></select></label>
+          <label>MINES<input id="settingMines" type="number" min="1"></label>
+          <output id="settingDensity">DENSITY 15.6%</output>
+        </fieldset>
+        <fieldset>
+          <legend>TEMPO</legend>
+          <label class="check-label"><input id="settingRandomBpm" type="checkbox"> RANDOM BPM</label>
+          <label>FIXED BPM<input id="settingFixedBpm" type="number" min="90" max="150"></label>
+          <output id="settingCurrentTempo">CURRENT BPM ---</output>
+        </fieldset>
+        <fieldset>
+          <legend>CONTROL / VIEW</legend>
+          <label>TOUCH MODE<select id="settingTouchMode"></select></label>
+          <label>BOARD VIEW<select id="settingBoardView"></select></label>
+          <label class="check-label"><input id="settingFollowPlayhead" type="checkbox"> FOLLOW PLAYHEAD</label>
+        </fieldset>
+      </div>
+      <p id="settingsValidation" class="settings-validation" aria-live="polite"></p>
+      <footer><button id="settingsCancel" type="button">CANCEL</button><button id="settingsApply" class="apply-settings" type="submit">APPLY &amp; NEW GAME</button></footer>
+    </form>
+  </dialog>
 
   <div id="resultOverlay" class="result-overlay" aria-live="assertive" hidden>
     <div>
@@ -73,6 +133,8 @@
   </div>
 
   <script src="game-core.js"></script>
+  <script src="settings.js"></script>
+  <script src="input-controller.js"></script>
   <script src="audio-engine.js"></script>
   <script src="app.js"></script>
 </body>

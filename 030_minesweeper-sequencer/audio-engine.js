@@ -5,6 +5,7 @@
   let master = null;
   let compressor = null;
   let noiseBuffer = null;
+  let trackCount = 8;
   const activeSources = new Set();
 
   function ensureContext() {
@@ -13,7 +14,7 @@
       if (!AudioContextClass) return null;
       context = new AudioContextClass();
       master = context.createGain();
-      master.gain.value = 0.32;
+      master.gain.value = Math.max(0.25, Math.min(0.34, 0.32 * Math.sqrt(8 / trackCount)));
       compressor = context.createDynamicsCompressor();
       compressor.threshold.value = -16;
       compressor.knee.value = 18;
@@ -125,9 +126,24 @@
       case 6:
         oscillator("triangle", midiToFrequency(pitch + pitchOffset), when, options.glitch ? 0.09 : 0.3, strength * 0.32, master);
         break;
-      default:
+      case 7:
         noiseHit(when, options.glitch ? 0.035 : 0.09, strength, 1200, 5500);
         oscillator("sine", options.glitch ? 780 : 520, when, 0.07, strength * 0.16, master, 260);
+        break;
+      case 8:
+        noiseHit(when, 0.075, strength, 900, 5200);
+        noiseHit(when + 0.012, 0.045, strength * 0.55, 1800, 7600);
+        break;
+      case 9:
+        oscillator("triangle", 430, when, 0.1, strength * 0.3, master, 245);
+        noiseHit(when, 0.04, strength * 0.4, 2600, 7200);
+        break;
+      case 10:
+        oscillator("sine", midiToFrequency(pitch - 24), when, 0.34, strength * 0.65, master);
+        break;
+      default:
+        oscillator("square", midiToFrequency(pitch + 12), when, 0.13, strength * 0.2, master);
+        oscillator("sine", midiToFrequency(pitch), when, 0.2, strength * 0.16, master);
     }
   }
 
@@ -179,6 +195,15 @@
     activeSources.clear();
   }
 
+  function setTrackCount(count) {
+    trackCount = Math.max(1, Number(count) || 8);
+    if (master) master.gain.setTargetAtTime(
+      Math.max(0.25, Math.min(0.34, 0.32 * Math.sqrt(8 / trackCount))),
+      context.currentTime,
+      0.03
+    );
+  }
+
   root.MinesweeperAudio = {
     resume,
     playInstrument,
@@ -187,6 +212,7 @@
     playMissEffect,
     playGlitchTick,
     playClearEffect,
+    setTrackCount,
     stopAll,
     currentTime() { return context ? context.currentTime : 0; },
     isAvailable() { return Boolean(root.AudioContext || root.webkitAudioContext); }

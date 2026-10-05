@@ -213,3 +213,61 @@ test("new game resets Phase 2 state", () => {
     accents: 0
   });
 });
+
+test("variable board dimensions and mine counts are generated safely", () => {
+  [
+    [6, 8, 6],
+    [8, 8, 10],
+    [8, 12, 15],
+    [8, 16, 20],
+    [10, 12, 19],
+    [12, 16, 30]
+  ].forEach(([rows, columns, mines]) => {
+    const game = Core.createGame({ rows, columns, mineCount: mines });
+    Core.openCell(game, rows - 1, columns - 1, fixedRandom(0.37));
+    assert.equal(game.board.length, rows);
+    assert.equal(game.board[0].length, columns);
+    assert.equal(game.board.flat().filter((cell) => cell.isMine).length, mines);
+    assert.equal(game.board[rows - 1][columns - 1].isMine, false);
+  });
+});
+
+test("sequencer wraps for 8, 12, and 16 steps", () => {
+  [8, 12, 16].forEach((steps) => {
+    assert.equal(Core.nextStep(steps - 2, steps), steps - 1);
+    assert.equal(Core.nextStep(steps - 1, steps), 0);
+  });
+});
+
+test("chord open does nothing when surrounding flag count differs", () => {
+  const game = Core.createGame({ rows: 3, columns: 3, mineCount: 1 });
+  setMines(game, [[0, 0]]);
+  Core.openCell(game, 1, 1);
+  const result = Core.chordOpen(game, 1, 1);
+  assert.equal(result.type, "ignored");
+  assert.equal(Core.countOpenSafeCells(game), 1);
+});
+
+test("chord open with a correct flag opens only safe neighbors", () => {
+  const game = Core.createGame({ rows: 3, columns: 3, mineCount: 1 });
+  setMines(game, [[0, 0]]);
+  Core.openCell(game, 1, 1);
+  Core.setFlag(game, 0, 0, true);
+  const result = Core.chordOpen(game, 1, 1);
+  assert.equal(result.type, "chord");
+  assert.equal(result.minesHit, 0);
+  assert.equal(game.missCount, 0);
+  assert.equal(game.gameState, "clear");
+});
+
+test("chord open with a wrong flag can hit a mine through normal MISS handling", () => {
+  const game = Core.createGame({ rows: 3, columns: 3, mineCount: 1 });
+  setMines(game, [[0, 0]]);
+  Core.openCell(game, 1, 1);
+  Core.setFlag(game, 0, 1, true);
+  const result = Core.chordOpen(game, 1, 1, Math.random, 500);
+  assert.equal(result.type, "chord");
+  assert.equal(result.minesHit, 1);
+  assert.equal(game.missCount, 1);
+  assert.equal(Core.refreshGlitch(game, 501), true);
+});
