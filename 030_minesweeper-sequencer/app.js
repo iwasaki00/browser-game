@@ -12,6 +12,7 @@
   const boardElement = document.querySelector("#board");
   const statusElement = document.querySelector("#gameStatus");
   const missElement = document.querySelector("#missCount");
+  const tempoReadout = document.querySelector("#tempoReadout");
   const stepReadout = document.querySelector("#stepReadout");
   const playButton = document.querySelector("#playButton");
   const stopButton = document.querySelector("#stopButton");
@@ -24,12 +25,19 @@
   const resultMessage = document.querySelector("#resultMessage");
   const debugPanel = document.querySelector("#debugPanel");
   const debugState = document.querySelector("#debugState");
+  const completionBanner = document.querySelector("#completionBanner");
+  const completionTitle = document.querySelector("#completionTitle");
+  const completionProgress = document.querySelector("#completionProgress");
+  const forceClearButton = document.querySelector("#forceClearButton");
+  const forcePerfectButton = document.querySelector("#forcePerfectButton");
 
   let game = Core.createGame();
   let schedulerId = 0;
   let nextNoteTime = 0;
   let nextStepToSchedule = 0;
   let visualTimers = [];
+  let completionStopTimer = 0;
+  let glitchVisualTimer = 0;
   let pressTimer = 0;
   let pressedCell = null;
   let pressStart = null;
@@ -84,6 +92,7 @@
     if (cell.isOpen) element.classList.add("open");
     if (cell.isFlagged) {
       element.classList.add("flagged");
+      if (cell.mineAccentEnabled) element.classList.add("mine-accent");
       element.textContent = "⚑";
     } else if (cell.isOpen && cell.isMine) {
       element.classList.add("mine");
@@ -93,7 +102,7 @@
       element.textContent = String(cell.adjacentMines);
     }
     if (debugMode) {
-      element.dataset.debug = `${cell.row},${cell.column} · ${cell.adjacentMines}\n${cell.isNote ? "N" : "–"} · ${cell.velocity.toFixed(2)}`;
+      element.dataset.debug = `${cell.row},${cell.column} · ${cell.adjacentMines}\n${cell.isNote ? "N" : "–"}${cell.mineAccentEnabled ? " A" : ""} · ${cell.velocity.toFixed(2)}`;
       if (cell.isMine && !cell.isOpen) element.classList.add("debug-mine");
     }
     element.setAttribute("aria-label", cellDescription(cell));
@@ -111,16 +120,40 @@
   function render() {
     game.board.flat().forEach(renderCell);
     missElement.textContent = `${game.missCount} / ${game.maxMisses}`;
+    tempoReadout.textContent = `BPM ${game.bpm} / ${game.tempoCategory}`;
     stepReadout.textContent = `STEP ${game.currentStep + 1}`;
     const labels = { ready: "READY", playing: "DIGGING", clear: "CLEAR", gameover: "GAME OVER" };
-    statusElement.textContent = labels[game.gameState];
+    statusElement.textContent = game.completionMode ? "COMPLETE" : labels[game.gameState];
     statusElement.dataset.state = game.gameState;
     playButton.classList.toggle("active", game.isPlaying);
     playButton.setAttribute("aria-pressed", String(game.isPlaying));
     renderPlayhead();
     if (debugMode) {
-      debugState.textContent = `state=${game.gameState} / currentStep=${game.currentStep} / playing=${game.isPlaying}`;
+      Core.refreshGlitch(game);
+      debugState.textContent = [
+        `state=${game.gameState}`,
+        `step=${game.currentStep + 1}`,
+        `playing=${game.isPlaying}`,
+        `tempo=${game.bpm}/${game.tempoCategory}`,
+        `accents=${Core.getCorrectFlagCount(game)}`,
+        `glitch=${game.glitchState.active}`,
+        `completion=${game.completionMode} ${game.completionLoopCount}/${game.completionLoopTarget}`,
+        `perfect=${game.isPerfect}`
+      ].join(" / ");
     }
+  }
+
+  function updateCompletionBanner(finished = false) {
+    if (game.gameState !== "clear") {
+      completionBanner.hidden = true;
+      return;
+    }
+    completionBanner.hidden = false;
+    completionBanner.classList.toggle("perfect", game.isPerfect);
+    completionTitle.textContent = game.isPerfect ? "PERFECT SWEEP" : "COMPLETE SEQUENCE";
+    completionProgress.textContent = finished
+      ? "PLAY TO REPEAT"
+      : `LOOP ${Math.min(game.completionLoopCount + 1, game.completionLoopTarget)} / ${game.completionLoopTarget}`;
   }
 
   function showResult(type) {
@@ -140,24 +173,37 @@
   }
 
   async function wakeAudio() {
-    try { await AudioEngine.resume(); } catch (_) { /* The game remains playable without sound. */ }
+    try { return await AudioEngine.resume(); } catch (_) { return null; }
   }
 
-  function openSelectedCell(row, column) {
-    wakeAudio();
+  async function openSelectedCell(row, column) {
+    await wakeAudio();
     const result = Core.openCell(game, row, column);
     if (result.type === "ignored") return;
-    if (result.gameOver) {
-      stopSequence();
-      showResult("gameover");
-    } else if (result.cleared) {
-      showResult("clear");
-    }
     render();
+    const now = AudioEngine.currentTime();
+    if (result.type === "safe") {
+      result.opened.filter((cell) => cell.isNote).forEach((cell, index) => {
+        AudioEngine.playCellNote(cell, now + Math.min(index, 7) * 0.018, { preview: true });
+      });
+      if (result.cleared) startCompletionSequence();
+    } else if (result.type === "mine") {
+      if (result.gameOver) stopSequence();
+      AudioEngine.playMissEffect(AudioEngine.currentTime());
+      document.body.classList.add("glitching");
+      window.clearTimeout(glitchVisualTimer);
+      glitchVisualTimer = window.setTimeout(() => document.body.classList.remove("glitching"), Core.GLITCH_DURATION_MS);
+      if (result.gameOver) showResult("gameover");
+    }
   }
 
-  function flagSelectedCell(row, column) {
+  async function flagSelectedCell(row, column) {
+    await wakeAudio();
     Core.toggleFlag(game, row, column);
+    const cell = game.board[row][column];
+    if (cell.mineAccentEnabled) {
+      AudioEngine.playMineAccent(cell.row, AudioEngine.currentTime(), { preview: true });
+    }
     render();
     if (navigator.vibrate) navigator.vibrate(18);
   }
@@ -224,15 +270,31 @@
   });
 
   function scheduleStep(step, time) {
+    const glitch = Core.refreshGlitch(game);
     Core.getNotesAtStep(game, step).forEach((cell) => {
-      AudioEngine.playInstrument(cell.row, cell.velocity, cell.pitch, time);
+      AudioEngine.playCellNote(cell, time, { glitch });
     });
+    Core.getMineAccentsAtStep(game, step).forEach((cell) => {
+      AudioEngine.playMineAccent(cell.row, time);
+    });
+    if (glitch) AudioEngine.playGlitchTick(time);
     const delay = Math.max(0, (time - AudioEngine.currentTime()) * 1000);
     visualTimers.push(window.setTimeout(() => {
       if (!game.isPlaying) return;
       game.currentStep = step;
       stepReadout.textContent = `STEP ${step + 1}`;
       renderPlayhead();
+      if (game.completionMode && step === game.columns - 1) {
+        const completed = Core.recordCompletionLoop(game);
+        updateCompletionBanner(completed);
+        if (completed) {
+          const tail = ((60 / game.bpm) / 2) * 850;
+          completionStopTimer = window.setTimeout(() => {
+            stopSequence();
+            updateCompletionBanner(true);
+          }, tail);
+        }
+      }
     }, delay));
   }
 
@@ -245,14 +307,14 @@
     }
   }
 
-  async function startSequence() {
+  async function startSequence(options = {}) {
     if (game.gameState === "gameover" || game.isPlaying) return;
     const context = await AudioEngine.resume();
     if (!context) return;
     game.isPlaying = true;
     game.currentStep = 0;
     nextStepToSchedule = 0;
-    nextNoteTime = AudioEngine.currentTime() + 0.06;
+    nextNoteTime = AudioEngine.currentTime() + (options.delay == null ? 0.06 : options.delay);
     schedulerTick();
     schedulerId = window.setInterval(schedulerTick, LOOKAHEAD_MS);
     render();
@@ -261,6 +323,8 @@
   function stopSequence() {
     window.clearInterval(schedulerId);
     schedulerId = 0;
+    window.clearTimeout(completionStopTimer);
+    completionStopTimer = 0;
     visualTimers.forEach(window.clearTimeout);
     visualTimers = [];
     AudioEngine.stopAll();
@@ -269,19 +333,57 @@
     render();
   }
 
+  async function startCompletionSequence() {
+    stopSequence();
+    Core.beginCompletion(game);
+    updateCompletionBanner();
+    render();
+    const context = await wakeAudio();
+    if (!context) return;
+    AudioEngine.playClearEffect(game.isPerfect, AudioEngine.currentTime());
+    await startSequence({ delay: 0.42 });
+  }
+
   function newGame() {
     stopSequence();
-    game = Core.createGame();
+    game = Core.newGame();
     hideResult();
+    completionBanner.hidden = true;
+    document.body.classList.remove("glitching");
+    window.clearTimeout(glitchVisualTimer);
     buildBoard();
     render();
   }
 
+  function forceCompletion(perfect) {
+    stopSequence();
+    if (!game.minesPlaced) Core.placeMines(game, 0, 0);
+    game.board.flat().forEach((cell) => {
+      if (cell.isMine) {
+        cell.isFlagged = perfect;
+        cell.mineAccentEnabled = perfect;
+      } else {
+        cell.isFlagged = false;
+        cell.isOpen = true;
+        Core.updateNote(cell);
+      }
+    });
+    Core.checkClear(game);
+    render();
+    startCompletionSequence();
+  }
+
   playButton.addEventListener("click", startSequence);
-  stopButton.addEventListener("click", stopSequence);
+  stopButton.addEventListener("click", () => {
+    game.completionMode = false;
+    stopSequence();
+    updateCompletionBanner(true);
+  });
   newGameButton.addEventListener("click", newGame);
   overlayNewGame.addEventListener("click", newGame);
   closeResultButton.addEventListener("click", hideResult);
+  forceClearButton.addEventListener("click", () => forceCompletion(false));
+  forcePerfectButton.addEventListener("click", () => forceCompletion(true));
   document.addEventListener("visibilitychange", () => { if (document.hidden && game.isPlaying) stopSequence(); });
 
   if (debugMode) {

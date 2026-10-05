@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#071116">
   <meta name="description" content="マインスイーパを解くほど音楽が育つ、8ステップのブラウザ・シーケンサゲーム。">
-  <title>マインスイーパシーケンサ Ver 0.1.0</title>
+  <title>マインスイーパシーケンサ Ver 0.2.0</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">← ARCADE</a>
-      <span class="version">PHASE 1 · VER 0.1.0</span>
+      <span class="version">PHASE 2 · VER 0.2.0</span>
     </header>
 
     <section class="hero">
@@ -27,8 +27,14 @@
       <div class="status-strip">
         <div><small>STATUS</small><strong id="gameStatus" data-state="ready">READY</strong></div>
         <div><small>MISS</small><strong id="missCount">0 / 3</strong></div>
-        <div><small>TEMPO</small><strong>BPM 120</strong></div>
+        <div><small>TEMPO</small><strong id="tempoReadout">BPM --- / ---</strong></div>
         <div><small>POSITION</small><strong id="stepReadout">STEP 1</strong></div>
+      </div>
+
+      <div id="completionBanner" class="completion-banner" aria-live="polite" hidden>
+        <small>4 LOOP PERFORMANCE</small>
+        <strong id="completionTitle">COMPLETE SEQUENCE</strong>
+        <span id="completionProgress">LOOP 1 / 4</span>
       </div>
 
       <div class="board-wrap">
@@ -49,6 +55,10 @@
       <b>DEBUG MODE</b>
       <span id="debugState"></span>
       <span>セル内: row,column / 隣接数 / note / velocity</span>
+      <div class="debug-actions">
+        <button id="forceClearButton" type="button">FORCE CLEAR</button>
+        <button id="forcePerfectButton" type="button">FORCE PERFECT</button>
+      </div>
     </aside>
   </main>
 

@@ -4,7 +4,7 @@
 
 ## Version
 
-0.1.0（Phase 1A〜1C）
+0.2.0（音楽フィードバック拡張）
 
 ## 起動
 
@@ -16,11 +16,23 @@
 
 - PC: 左クリックで開く、右クリックでフラグ
 - スマートフォン: タップで開く、長押しでフラグ
-- PLAY / STOP: 120 BPMの8ステップ・ループを開始 / 停止
+- PLAY / STOP: ランダムBPMの8ステップ・ループを開始 / 停止
 - NEW GAME: 盤面・MISS・再生位置を初期化
+
+## Phase 2
+
+- NEW GAMEごとにSLOW（90〜105）、MID（110〜125）、FAST（130〜150）からBPMを抽選
+- 開封した数字セルのNOTEを短くプレビュー
+- 正しくフラグした地雷をMINE ACCENTとして再生
+- MISS直後の短いグリッチ音と画面演出
+- CLEAR後に完成シーケンスを4ループ自動演奏
+- 全地雷を正しくフラグしてCLEARするとPERFECT SWEEP
+- DEBUG画面にFORCE CLEAR / FORCE PERFECTを追加
 
 ## テスト
 
 node --test .\tests\game-core.test.cjs
+
+node .\tests\browser-smoke.cjs
 
 外部ライブラリ、MIDI、外部音源ファイルは使用していません。

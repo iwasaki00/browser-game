@@ -91,3 +91,125 @@ test("flagged and closed cells never become sequencer notes", () => {
   game.board[0][1].isFlagged = true;
   assert.deepEqual(Core.getNotesAtStep(game, 1), []);
 });
+
+test("tempo generation stays inside each category range", () => {
+  const slow = Core.generateTempo(() => 0);
+  const midValues = [0.34, 0.5];
+  const mid = Core.generateTempo(() => midValues.shift());
+  const fastValues = [0.99, 0.99];
+  const fast = Core.generateTempo(() => fastValues.shift());
+  assert.equal(slow.category, "SLOW");
+  assert.ok(slow.bpm >= 90 && slow.bpm <= 105);
+  assert.equal(mid.category, "MID");
+  assert.ok(mid.bpm >= 110 && mid.bpm <= 125);
+  assert.equal(fast.category, "FAST");
+  assert.ok(fast.bpm >= 130 && fast.bpm <= 150);
+});
+
+test("generated BPM never leaves the declared category ranges", () => {
+  for (let index = 0; index <= 100; index += 1) {
+    let call = 0;
+    const value = index / 100;
+    const tempo = Core.generateTempo(() => (call++ === 0 ? value : 1 - value));
+    const [minimum, maximum] = Core.TEMPO_RANGES[tempo.category];
+    assert.ok(tempo.bpm >= minimum && tempo.bpm <= maximum);
+    assert.equal(Number.isInteger(tempo.bpm), true);
+  }
+});
+
+test("new game calls tempo generation again", () => {
+  const values = [0, 0, 0.99, 0.99];
+  const random = () => values.shift();
+  const first = Core.newGame({ random });
+  const second = Core.newGame({ random });
+  assert.deepEqual([first.tempoCategory, first.bpm], ["SLOW", 90]);
+  assert.deepEqual([second.tempoCategory, second.bpm], ["FAST", 150]);
+});
+
+test("only a correctly flagged mine becomes a mine accent and unflag removes it", () => {
+  const game = Core.createGame({ rows: 2, columns: 2, mineCount: 1 });
+  setMines(game, [[0, 0]]);
+  Core.toggleFlag(game, 0, 1);
+  assert.equal(game.board[0][1].mineAccentEnabled, false);
+  assert.equal(Core.getMineAccentsAtStep(game, 1).length, 0);
+  Core.toggleFlag(game, 0, 0);
+  assert.equal(game.board[0][0].mineAccentEnabled, true);
+  assert.deepEqual(Core.getMineAccentsAtStep(game, 0), [game.board[0][0]]);
+  Core.toggleFlag(game, 0, 0);
+  assert.equal(game.board[0][0].mineAccentEnabled, false);
+});
+
+test("mine hit activates a temporary glitch and third miss still ends the game", () => {
+  const game = Core.createGame({ rows: 2, columns: 2, mineCount: 3 });
+  setMines(game, [[0, 0], [0, 1], [1, 0]]);
+  Core.openCell(game, 0, 0, Math.random, 1000);
+  assert.equal(game.missCount, 1);
+  assert.equal(Core.refreshGlitch(game, 1001), true);
+  assert.equal(Core.refreshGlitch(game, 1000 + Core.GLITCH_DURATION_MS), false);
+  Core.openCell(game, 0, 1, Math.random, 2000);
+  const result = Core.openCell(game, 1, 0, Math.random, 3000);
+  assert.equal(result.gameOver, true);
+  assert.equal(game.gameState, "gameover");
+});
+
+test("clear is normal without all mine flags and perfect with every mine flagged", () => {
+  const normal = Core.createGame({ rows: 2, columns: 2, mineCount: 1 });
+  setMines(normal, [[0, 0]]);
+  [[0, 1], [1, 0], [1, 1]].forEach(([row, column]) => Core.openCell(normal, row, column));
+  assert.equal(normal.gameState, "clear");
+  assert.equal(normal.isPerfect, false);
+  assert.equal(Core.beginCompletion(normal), true);
+  assert.equal(normal.completionMode, true);
+
+  const perfect = Core.createGame({ rows: 2, columns: 2, mineCount: 1 });
+  setMines(perfect, [[0, 0]]);
+  Core.toggleFlag(perfect, 0, 0);
+  [[0, 1], [1, 0], [1, 1]].forEach(([row, column]) => Core.openCell(perfect, row, column));
+  assert.equal(perfect.gameState, "clear");
+  assert.equal(perfect.isPerfect, true);
+});
+
+test("completion mode stops after the configured four loops", () => {
+  const game = Core.createGame({ rows: 2, columns: 2, mineCount: 1 });
+  setMines(game, [[0, 0]]);
+  [[0, 1], [1, 0], [1, 1]].forEach(([row, column]) => Core.openCell(game, row, column));
+  Core.beginCompletion(game);
+  assert.equal(Core.recordCompletionLoop(game), false);
+  assert.equal(Core.recordCompletionLoop(game), false);
+  assert.equal(Core.recordCompletionLoop(game), false);
+  assert.equal(Core.recordCompletionLoop(game), true);
+  assert.equal(game.completionLoopCount, 4);
+  assert.equal(game.completionMode, false);
+});
+
+test("new game resets Phase 2 state", () => {
+  const previous = Core.createGame({ bpm: 120, tempoCategory: "MID" });
+  previous.glitchState = { active: true, step: 4, expiresAt: 9999 };
+  previous.completionMode = true;
+  previous.completionLoopCount = 3;
+  previous.isPerfect = true;
+  previous.currentStep = 6;
+  previous.isPlaying = true;
+  const next = Core.newGame({ bpm: 96, tempoCategory: "SLOW" });
+  assert.deepEqual({
+    bpm: next.bpm,
+    tempoCategory: next.tempoCategory,
+    glitch: next.glitchState.active,
+    completionMode: next.completionMode,
+    completionLoopCount: next.completionLoopCount,
+    perfect: next.isPerfect,
+    currentStep: next.currentStep,
+    playing: next.isPlaying,
+    accents: Core.getCorrectFlagCount(next)
+  }, {
+    bpm: 96,
+    tempoCategory: "SLOW",
+    glitch: false,
+    completionMode: false,
+    completionLoopCount: 0,
+    perfect: false,
+    currentStep: 0,
+    playing: false,
+    accents: 0
+  });
+});

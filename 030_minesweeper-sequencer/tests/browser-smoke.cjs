@@ -96,25 +96,43 @@ async function main() {
       steps: document.querySelectorAll(".step-label").length,
       tracks: document.querySelectorAll(".instrument-label").length,
       status: document.querySelector("#gameStatus").textContent,
+      tempo: document.querySelector("#tempoReadout").textContent,
       errors: document.querySelector("#audioNotice").hidden
     })`);
-    assert.deepEqual(initial, { cells: 64, steps: 8, tracks: 8, status: "READY", errors: true });
+    assert.equal(initial.cells, 64);
+    assert.equal(initial.steps, 8);
+    assert.equal(initial.tracks, 8);
+    assert.equal(initial.status, "READY");
+    assert.match(initial.tempo, /^BPM (9[0-9]|10[0-5]) \/ SLOW$|^BPM (11[0-9]|12[0-5]) \/ MID$|^BPM (13[0-9]|14[0-9]|150) \/ FAST$/);
+    assert.equal(initial.errors, true);
 
-    const firstOpen = await evaluate(`(() => {
+    const firstOpen = await evaluate(`(async () => {
+      window.__previewCount = 0;
+      const original = window.MinesweeperAudio.playCellNote;
+      window.MinesweeperAudio.playCellNote = (...args) => {
+        if (args[2] && args[2].preview) window.__previewCount += 1;
+        return original(...args);
+      };
       const cell = document.querySelector('.cell[data-row="3"][data-column="3"]');
       cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
       cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      await new Promise((resolve) => setTimeout(resolve, 80));
       return {
         open: cell.classList.contains("open"),
         mine: cell.classList.contains("mine"),
-        status: document.querySelector("#gameStatus").textContent
+        status: document.querySelector("#gameStatus").textContent,
+        previews: window.__previewCount
       };
     })()`);
-    assert.deepEqual(firstOpen, { open: true, mine: false, status: "DIGGING" });
+    assert.equal(firstOpen.open, true);
+    assert.equal(firstOpen.mine, false);
+    assert.equal(firstOpen.status, "DIGGING");
+    assert.ok(firstOpen.previews >= 1);
 
-    const flagResult = await evaluate(`(() => {
+    const flagResult = await evaluate(`(async () => {
       const cell = [...document.querySelectorAll(".cell")].find((item) => !item.classList.contains("open"));
       cell.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, button: 2 }));
+      await new Promise((resolve) => setTimeout(resolve, 30));
       return cell.classList.contains("flagged");
     })()`);
     assert.equal(flagResult, true);
@@ -176,13 +194,57 @@ async function main() {
       const ready = await evaluate("document.readyState === 'complete' && !document.querySelector('#debugPanel').hidden");
       if (!ready) throw new Error("Debug UI is not ready");
     });
-    await evaluate(`(() => {
+    const accent = await evaluate(`(async () => {
       const tap = (cell) => {
         cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
         cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
       };
       tap(document.querySelector('.cell[data-row="3"][data-column="3"]'));
-      [...document.querySelectorAll(".cell.debug-mine")].slice(0, 3).forEach(tap);
+      await new Promise((resolve) => setTimeout(resolve, 70));
+      window.__accentPreviewCount = 0;
+      const originalAccent = window.MinesweeperAudio.playMineAccent;
+      window.MinesweeperAudio.playMineAccent = (...args) => {
+        if (args[2] && args[2].preview) window.__accentPreviewCount += 1;
+        return originalAccent(...args);
+      };
+      const mine = document.querySelector(".cell.debug-mine");
+      mine.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, button: 2 }));
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      const enabled = mine.classList.contains("mine-accent");
+      mine.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, button: 2 }));
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      return {
+        enabled,
+        previewed: window.__accentPreviewCount === 1,
+        removed: !mine.classList.contains("mine-accent")
+      };
+    })()`);
+    assert.deepEqual(accent, { enabled: true, previewed: true, removed: true });
+
+    const glitchStarted = await evaluate(`(async () => {
+      const mine = document.querySelector(".cell.debug-mine");
+      mine.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+      mine.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      return {
+        miss: document.querySelector("#missCount").textContent,
+        visual: document.body.classList.contains("glitching"),
+        debug: document.querySelector("#debugState").textContent.includes("glitch=true")
+      };
+    })()`);
+    assert.deepEqual(glitchStarted, { miss: "1 / 3", visual: true, debug: true });
+    await delay(780);
+    assert.equal(await evaluate('document.body.classList.contains("glitching")'), false);
+
+    await evaluate(`(async () => {
+      const tap = (cell) => {
+        cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+        cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      };
+      for (const mine of [...document.querySelectorAll(".cell.debug-mine:not(.open)")].slice(0, 2)) {
+        tap(mine);
+        await new Promise((resolve) => setTimeout(resolve, 35));
+      }
     })()`);
     const gameOver = await evaluate(`({
       status: document.querySelector("#gameStatus").textContent,
@@ -200,32 +262,52 @@ async function main() {
     });
 
     await evaluate('document.querySelector("#overlayNewGame").click()');
-    await evaluate(`(() => {
+    await evaluate(`(async () => {
       const tap = (cell) => {
         cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
         cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
       };
       tap(document.querySelector('.cell[data-row="3"][data-column="3"]'));
+      await new Promise((resolve) => setTimeout(resolve, 50));
       [...document.querySelectorAll(".cell:not(.debug-mine)")].forEach((cell) => {
         if (!cell.classList.contains("open")) tap(cell);
       });
+      await new Promise((resolve) => setTimeout(resolve, 120));
     })()`);
     const cleared = await evaluate(`({
       status: document.querySelector("#gameStatus").textContent,
-      result: document.querySelector("#resultTitle").textContent,
-      overlayVisible: !document.querySelector("#resultOverlay").hidden,
-      returnVisible: !document.querySelector("#closeResult").hidden,
+      title: document.querySelector("#completionTitle").textContent,
+      bannerVisible: !document.querySelector("#completionBanner").hidden,
+      playing: document.querySelector("#playButton").getAttribute("aria-pressed"),
       openSafe: document.querySelectorAll(".cell.open:not(.mine)").length
     })`);
     assert.deepEqual(cleared, {
-      status: "CLEAR",
-      result: "CLEAR",
-      overlayVisible: true,
-      returnVisible: true,
+      status: "COMPLETE",
+      title: "COMPLETE SEQUENCE",
+      bannerVisible: true,
+      playing: "true",
       openSafe: 54
     });
-    await evaluate('document.querySelector("#closeResult").click()');
-    assert.equal(await evaluate('document.querySelector("#resultOverlay").hidden'), true);
+
+    await delay(500);
+    await evaluate('document.querySelector("#stopButton").click()');
+    const completionStopped = await evaluate(`({
+      status: document.querySelector("#gameStatus").textContent,
+      playing: document.querySelector("#playButton").getAttribute("aria-pressed"),
+      progress: document.querySelector("#completionProgress").textContent
+    })`);
+    assert.deepEqual(completionStopped, { status: "CLEAR", playing: "false", progress: "PLAY TO REPEAT" });
+
+    await evaluate('document.querySelector("#newGameButton").click(); document.querySelector("#forcePerfectButton").click()');
+    await delay(100);
+    const perfect = await evaluate(`({
+      title: document.querySelector("#completionTitle").textContent,
+      bannerPerfect: document.querySelector("#completionBanner").classList.contains("perfect"),
+      accents: document.querySelectorAll(".cell.mine-accent").length,
+      playing: document.querySelector("#playButton").getAttribute("aria-pressed")
+    })`);
+    assert.deepEqual(perfect, { title: "PERFECT SWEEP", bannerPerfect: true, accents: 10, playing: "true" });
+    await evaluate('document.querySelector("#stopButton").click()');
 
     await call("Page.navigate", { url: MENU_URL });
     await retry(async () => {
@@ -245,7 +327,7 @@ async function main() {
       count: "30"
     });
     socket.close();
-    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, gameOver, cleared, menu, screenshots }, null, 2));
+    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, accent, glitchStarted, gameOver, cleared, completionStopped, perfect, menu, screenshots }, null, 2));
   } finally {
     const edgeExited = new Promise((resolve) => edge.once("exit", resolve));
     edge.kill();

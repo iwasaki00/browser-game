@@ -10,6 +10,13 @@
   const MINE_COUNT = 10;
   const MAX_MISSES = 3;
   const DEFAULT_BPM = 120;
+  const COMPLETION_LOOPS = 4;
+  const GLITCH_DURATION_MS = 700;
+  const TEMPO_RANGES = {
+    SLOW: [90, 105],
+    MID: [110, 125],
+    FAST: [130, 150]
+  };
   const PITCHES = [48, 51, 53, 55, 58, 60, 63, 65];
 
   function createCell(row, column) {
@@ -21,14 +28,32 @@
       isOpen: false,
       isFlagged: false,
       isNote: false,
+      mineAccentEnabled: false,
       velocity: 0,
       pitch: PITCHES[(row * 3 + column) % PITCHES.length]
     };
   }
 
+  function categoryForBpm(bpm) {
+    if (bpm <= TEMPO_RANGES.SLOW[1]) return "SLOW";
+    if (bpm >= TEMPO_RANGES.FAST[0]) return "FAST";
+    return "MID";
+  }
+
+  function generateTempo(random = Math.random) {
+    const categories = Object.keys(TEMPO_RANGES);
+    const category = categories[Math.min(categories.length - 1, Math.floor(random() * categories.length))];
+    const [minimum, maximum] = TEMPO_RANGES[category];
+    const bpm = minimum + Math.min(maximum - minimum, Math.floor(random() * (maximum - minimum + 1)));
+    return { category, bpm };
+  }
+
   function createGame(options = {}) {
     const rows = options.rows || ROWS;
     const columns = options.columns || COLUMNS;
+    const tempo = options.bpm == null
+      ? generateTempo(options.random || Math.random)
+      : { bpm: options.bpm, category: options.tempoCategory || categoryForBpm(options.bpm) };
     return {
       rows,
       columns,
@@ -40,10 +65,20 @@
       gameState: "ready",
       missCount: 0,
       currentStep: 0,
-      bpm: options.bpm || DEFAULT_BPM,
+      bpm: tempo.bpm,
+      tempoCategory: tempo.category,
       isPlaying: false,
-      minesPlaced: false
+      minesPlaced: false,
+      glitchState: { active: false, step: null, expiresAt: 0 },
+      completionMode: false,
+      completionLoopCount: 0,
+      completionLoopTarget: options.completionLoops || COMPLETION_LOOPS,
+      isPerfect: false
     };
+  }
+
+  function newGame(options = {}) {
+    return createGame(options);
   }
 
   function neighbors(game, row, column) {
@@ -82,6 +117,9 @@
     candidates.slice(0, game.mineCount).forEach((cell) => { cell.isMine = true; });
     game.minesPlaced = true;
     calculateAdjacentMines(game);
+    game.board.flat().forEach((cell) => {
+      cell.mineAccentEnabled = cell.isMine && cell.isFlagged;
+    });
     return game;
   }
 
@@ -106,6 +144,7 @@
     const safeCellCount = game.rows * game.columns - game.mineCount;
     if (game.minesPlaced && countOpenSafeCells(game) === safeCellCount) {
       game.gameState = "clear";
+      game.isPerfect = isPerfectSweep(game);
       return true;
     }
     return false;
@@ -138,7 +177,23 @@
     return opened;
   }
 
-  function openCell(game, row, column, random = Math.random) {
+  function triggerGlitch(game, step, now = Date.now()) {
+    game.glitchState = {
+      active: true,
+      step,
+      expiresAt: now + GLITCH_DURATION_MS
+    };
+    return game.glitchState;
+  }
+
+  function refreshGlitch(game, now = Date.now()) {
+    if (game.glitchState.active && now >= game.glitchState.expiresAt) {
+      game.glitchState = { active: false, step: null, expiresAt: 0 };
+    }
+    return game.glitchState.active;
+  }
+
+  function openCell(game, row, column, random = Math.random, now = Date.now()) {
     const cell = game.board[row] && game.board[row][column];
     if (!cell || game.gameState === "gameover" || cell.isOpen || cell.isFlagged) {
       return { type: "ignored", opened: [] };
@@ -149,6 +204,7 @@
     if (cell.isMine) {
       cell.isOpen = true;
       game.missCount += 1;
+      triggerGlitch(game, cell.column, now);
       if (game.missCount >= game.maxMisses) {
         game.gameState = "gameover";
       }
@@ -164,7 +220,18 @@
     const cell = game.board[row] && game.board[row][column];
     if (!cell || cell.isOpen || game.gameState === "gameover" || game.gameState === "clear") return false;
     cell.isFlagged = !cell.isFlagged;
+    cell.mineAccentEnabled = cell.isMine && cell.isFlagged;
     return cell.isFlagged;
+  }
+
+  function getCorrectFlagCount(game) {
+    return game.board.flat().filter((cell) => cell.mineAccentEnabled).length;
+  }
+
+  function isPerfectSweep(game) {
+    return game.minesPlaced &&
+      countOpenSafeCells(game) === game.rows * game.columns - game.mineCount &&
+      getCorrectFlagCount(game) === game.mineCount;
   }
 
   function nextStep(currentStep, columns = COLUMNS) {
@@ -177,23 +244,61 @@
       .filter((cell) => cell.isOpen && !cell.isMine && !cell.isFlagged && cell.isNote);
   }
 
+  function getMineAccentsAtStep(game, step) {
+    return game.board
+      .map((row) => row[step])
+      .filter((cell) => cell.mineAccentEnabled);
+  }
+
+  function beginCompletion(game) {
+    if (game.gameState !== "clear") return false;
+    game.completionMode = true;
+    game.completionLoopCount = 0;
+    game.currentStep = 0;
+    game.isPerfect = isPerfectSweep(game);
+    return true;
+  }
+
+  function recordCompletionLoop(game) {
+    if (!game.completionMode) return false;
+    game.completionLoopCount += 1;
+    if (game.completionLoopCount >= game.completionLoopTarget) {
+      game.completionMode = false;
+      return true;
+    }
+    return false;
+  }
+
   return {
     ROWS,
     COLUMNS,
     MINE_COUNT,
     MAX_MISSES,
     DEFAULT_BPM,
+    COMPLETION_LOOPS,
+    GLITCH_DURATION_MS,
+    TEMPO_RANGES,
+    categoryForBpm,
+    generateTempo,
     createGame,
+    newGame,
     calculateAdjacentMines,
     placeMines,
     velocityForAdjacentMines,
     updateNote,
     countOpenSafeCells,
     checkClear,
+    triggerGlitch,
+    refreshGlitch,
     expandFrom,
     openCell,
     toggleFlag,
+    getCorrectFlagCount,
+    isPerfectSweep,
     nextStep,
-    getNotesAtStep
+    getNotesAtStep,
+    getMineAccentsAtStep,
+    beginCompletion,
+    recordCompletionLoop
   };
 });

@@ -3,6 +3,7 @@
 
   let context = null;
   let master = null;
+  let compressor = null;
   let noiseBuffer = null;
   const activeSources = new Set();
 
@@ -12,8 +13,15 @@
       if (!AudioContextClass) return null;
       context = new AudioContextClass();
       master = context.createGain();
-      master.gain.value = 0.42;
-      master.connect(context.destination);
+      master.gain.value = 0.32;
+      compressor = context.createDynamicsCompressor();
+      compressor.threshold.value = -16;
+      compressor.knee.value = 18;
+      compressor.ratio.value = 5;
+      compressor.attack.value = 0.004;
+      compressor.release.value = 0.18;
+      master.connect(compressor);
+      compressor.connect(context.destination);
     }
     return context;
   }
@@ -89,36 +97,79 @@
     return 440 * Math.pow(2, (pitch - 69) / 12);
   }
 
-  function playInstrument(row, velocity, pitch, time) {
+  function playInstrument(row, velocity, pitch, time, options = {}) {
     if (!ensureContext()) return;
     const when = Math.max(time || context.currentTime, context.currentTime);
+    const strength = velocity * (options.gainScale == null ? 1 : options.gainScale);
+    const pitchOffset = options.glitch ? 6 : 0;
     switch (row) {
       case 0:
-        oscillator("sine", 145, when, 0.22, velocity * 1.1, master, 48);
+        oscillator("sine", options.glitch ? 190 : 145, when, options.glitch ? 0.09 : 0.22, strength * 1.1, master, 48);
         break;
       case 1:
-        noiseHit(when, 0.14, velocity, 700, 9000);
-        oscillator("triangle", 190, when, 0.08, velocity * 0.22, master, 130);
+        noiseHit(when, options.glitch ? 0.055 : 0.14, strength, options.glitch ? 2300 : 700, 9000);
+        oscillator("triangle", 190, when, 0.08, strength * 0.22, master, 130);
         break;
       case 2:
-        noiseHit(when, 0.055, velocity, 6500);
+        noiseHit(when, options.glitch ? 0.025 : 0.055, strength, 6500);
         break;
       case 3:
-        noiseHit(when, 0.28, velocity, 5200);
+        noiseHit(when, options.glitch ? 0.07 : 0.28, strength, 5200);
         break;
       case 4:
-        oscillator("sine", 210, when, 0.24, velocity * 0.76, master, 105);
+        oscillator("sine", options.glitch ? 315 : 210, when, options.glitch ? 0.1 : 0.24, strength * 0.76, master, 105);
         break;
       case 5:
-        oscillator("square", midiToFrequency(pitch - 12), when, 0.25, velocity * 0.34, master);
+        oscillator("square", midiToFrequency(pitch - 12 + pitchOffset), when, options.glitch ? 0.08 : 0.25, strength * 0.34, master);
         break;
       case 6:
-        oscillator("triangle", midiToFrequency(pitch), when, 0.3, velocity * 0.32, master);
+        oscillator("triangle", midiToFrequency(pitch + pitchOffset), when, options.glitch ? 0.09 : 0.3, strength * 0.32, master);
         break;
       default:
-        noiseHit(when, 0.09, velocity, 1200, 5500);
-        oscillator("sine", 520, when, 0.07, velocity * 0.16, master, 260);
+        noiseHit(when, options.glitch ? 0.035 : 0.09, strength, 1200, 5500);
+        oscillator("sine", options.glitch ? 780 : 520, when, 0.07, strength * 0.16, master, 260);
     }
+  }
+
+  function playCellNote(cell, time, options = {}) {
+    if (!cell || !cell.isNote) return;
+    playInstrument(cell.row, cell.velocity, cell.pitch, time, {
+      gainScale: options.preview ? 0.58 : 1,
+      glitch: Boolean(options.glitch)
+    });
+  }
+
+  function playMineAccent(row, time, options = {}) {
+    if (!ensureContext()) return;
+    const when = Math.max(time || context.currentTime, context.currentTime);
+    const scale = options.preview ? 0.6 : 0.82;
+    noiseHit(when, 0.045, scale, 3800, 10500);
+    oscillator("square", 760 + row * 37, when, 0.065, 0.16 * scale, master, 430 + row * 20);
+  }
+
+  function playMissEffect(time) {
+    if (!ensureContext()) return;
+    const when = Math.max(time || context.currentTime, context.currentTime);
+    noiseHit(when, 0.2, 0.72, 80, 2400);
+    oscillator("sawtooth", 230, when, 0.3, 0.22, master, 44);
+  }
+
+  function playGlitchTick(time) {
+    if (!ensureContext()) return;
+    const when = Math.max(time || context.currentTime, context.currentTime);
+    for (let index = 0; index < 3; index += 1) {
+      noiseHit(when + index * 0.025, 0.016, 0.22, 1700 + index * 1200, 7000);
+    }
+  }
+
+  function playClearEffect(isPerfect, time) {
+    if (!ensureContext()) return;
+    const when = Math.max(time || context.currentTime, context.currentTime);
+    const chord = isPerfect ? [60, 63, 67, 72] : [60, 63, 67];
+    chord.forEach((pitch, index) => {
+      oscillator("sine", midiToFrequency(pitch), when + index * 0.055, 0.5, 0.14, master);
+    });
+    if (isPerfect) playMineAccent(7, when + 0.24, { preview: false });
   }
 
   function stopAll() {
@@ -131,6 +182,11 @@
   root.MinesweeperAudio = {
     resume,
     playInstrument,
+    playCellNote,
+    playMineAccent,
+    playMissEffect,
+    playGlitchTick,
+    playClearEffect,
     stopAll,
     currentTime() { return context ? context.currentTime : 0; },
     isAvailable() { return Boolean(root.AudioContext || root.webkitAudioContext); }
