@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#071116">
+  <meta name="description" content="マインスイーパを解くほど音楽が育つ、8ステップのブラウザ・シーケンサゲーム。">
+  <title>マインスイーパシーケンサ Ver 0.1.0</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">← ARCADE</a>
+      <span class="version">PHASE 1 · VER 0.1.0</span>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">DIG THE BEAT / 8 STEP LOOP</p>
+        <h1>MINESWEEPER<br><span>SEQUENCER</span></h1>
+      </div>
+      <p class="concept">盤面をひらく。<br>リズムが育つ。</p>
+    </section>
+
+    <section class="console" aria-label="マインスイーパシーケンサ">
+      <div class="status-strip">
+        <div><small>STATUS</small><strong id="gameStatus" data-state="ready">READY</strong></div>
+        <div><small>MISS</small><strong id="missCount">0 / 3</strong></div>
+        <div><small>TEMPO</small><strong>BPM 120</strong></div>
+        <div><small>POSITION</small><strong id="stepReadout">STEP 1</strong></div>
+      </div>
+
+      <div class="board-wrap">
+        <div id="board" class="board" role="grid" aria-label="8行8列のマインスイーパ盤面"></div>
+      </div>
+
+      <div class="transport" aria-label="シーケンサ操作">
+        <button id="playButton" class="transport-button play" type="button"><span aria-hidden="true">▶</span> PLAY</button>
+        <button id="stopButton" class="transport-button stop" type="button"><span aria-hidden="true">■</span> STOP</button>
+        <button id="newGameButton" class="new-game" type="button">NEW GAME</button>
+      </div>
+
+      <p class="instructions"><b>OPEN</b> タップ / 左クリック <span></span> <b>FLAG</b> 長押し / 右クリック</p>
+      <p id="audioNotice" class="audio-notice" hidden>このブラウザではWeb Audio APIを利用できません。</p>
+    </section>
+
+    <aside id="debugPanel" class="debug-panel" hidden>
+      <b>DEBUG MODE</b>
+      <span id="debugState"></span>
+      <span>セル内: row,column / 隣接数 / note / velocity</span>
+    </aside>
+  </main>
+
+  <div id="resultOverlay" class="result-overlay" aria-live="assertive" hidden>
+    <div>
+      <small id="resultKicker">SEQUENCE COMPLETE</small>
+      <strong id="resultTitle">CLEAR</strong>
+      <p id="resultMessage">完成した盤面をPLAYしてみよう。</p>
+      <button id="closeResult" class="close-result" type="button">盤面に戻る</button>
+      <button id="overlayNewGame" type="button">NEW GAME</button>
+    </div>
+  </div>
+
+  <script src="game-core.js"></script>
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

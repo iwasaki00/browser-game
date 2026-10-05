@@ -2,6 +2,15 @@
   "use strict";
 
   const games = [
+    {
+      number: "030",
+      title: "マインスイーパシーケンサ",
+      genre: "Puzzle / Music",
+      description: "8×8の地雷原がそのまま8ステップの楽器になる音楽パズル。安全なマスを開くほど、ループするビートが少しずつ育ちます。",
+      href: "./030_minesweeper-sequencer/index.html",
+      icon: "./assets/game-icons/030-minesweeper-sequencer.svg",
+      alt: "光るマインスイーパ盤面をシーケンサの再生ラインが横切るゲームアイコン"
+    },
     { number: "029", title: "RAGDOLL RUN", genre: "Physics / Action", description: "Q・W・O・Pの4キーで左右の股関節とひざを操る、横視点の物理ランニング実験。転んでも、その姿勢から走り続けられます。", href: "./029_qwop-runner/index.html", icon: "./assets/game-icons/029-ragdoll-run.svg", alt: "四つの操作キーの上を走るカラフルな物理人形のアイコン" },
     {
       number: "028",
