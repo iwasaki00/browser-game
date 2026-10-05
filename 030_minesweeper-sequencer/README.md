@@ -4,7 +4,7 @@
 
 ## Version
 
-0.2.0（音楽フィードバック拡張）
+0.3.0 BOARD & TOUCH LAB
 
 ## 起動
 
@@ -28,6 +28,20 @@
 - CLEAR後に完成シーケンスを4ループ自動演奏
 - 全地雷を正しくフラグしてCLEARするとPERFECT SWEEP
 - DEBUG画面にFORCE CLEAR / FORCE PERFECTを追加
+
+## Version 0.3.0
+
+- BOARD PRESET: COMPACT、STANDARD、WIDE、16 STEP、LARGE、CUSTOM
+- Rows 6〜12、Steps 6〜16、可変地雷数
+- Difficulty: EASY（約12%）、NORMAL（約16%）、HARD（約22%）、CUSTOM
+- BOARD VIEW: FIT、SCROLL、COMPACT
+- SCROLL時のFOLLOW PLAYHEAD
+- TOUCH MODE: STANDARD、SWITCH、TWO HAND、DOUBLE TAP、FLICK
+- 開封済み数字セルの再操作によるCHORD OPEN
+- GAME SETTINGSとlocalStorage保存
+- 追加TRACK: CLAP、PERC、SUB、PLUCK
+
+初期値は従来互換のSTANDARD 8×8、NORMAL 10地雷、STANDARD操作、FIT表示です。
 
 ## テスト
 

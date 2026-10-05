@@ -11,7 +11,8 @@ const MENU_URL = "http://127.0.0.1:8030/index.html";
 const profileDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mine-seq-edge-"));
 const screenshots = {
   desktop: path.join(os.tmpdir(), "mine-seq-desktop.png"),
-  mobile: path.join(os.tmpdir(), "mine-seq-mobile.png")
+  mobile: path.join(os.tmpdir(), "mine-seq-mobile.png"),
+  sixteenStep: path.join(os.tmpdir(), "mine-seq-16-step.png")
 };
 
 function delay(milliseconds) {
@@ -309,6 +310,223 @@ async function main() {
     assert.deepEqual(perfect, { title: "PERFECT SWEEP", bannerPerfect: true, accents: 10, playing: "true" });
     await evaluate('document.querySelector("#stopButton").click()');
 
+    async function applySettings(values) {
+      await evaluate(`(() => {
+        const values = ${JSON.stringify(values)};
+        document.querySelector("#settingsButton").click();
+        Object.entries(values).forEach(([id, value]) => {
+          const control = document.querySelector("#" + id);
+          if (typeof value === "boolean") control.checked = value;
+          else control.value = value;
+          control.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+        document.querySelector("#settingsForm").requestSubmit();
+      })()`);
+      await delay(90);
+    }
+
+    await applySettings({
+      settingPreset: "WIDE",
+      settingDifficulty: "NORMAL",
+      settingBoardView: "SCROLL"
+    });
+    const wideBoard = await evaluate(`({
+      cells: document.querySelectorAll(".cell").length,
+      steps: document.querySelectorAll(".step-label").length,
+      tracks: document.querySelectorAll(".instrument-label").length,
+      summary: document.querySelector("#boardSummary").textContent,
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: window.innerWidth,
+      internalScroll: document.querySelector("#boardWrap").scrollWidth > document.querySelector("#boardWrap").clientWidth
+    })`);
+    assert.deepEqual(wideBoard, {
+      cells: 96, steps: 12, tracks: 8, summary: "8 × 12 / 15 MINES",
+      pageWidth: 390, viewportWidth: 390, internalScroll: true
+    });
+
+    await applySettings({
+      settingPreset: "16 STEP",
+      settingDifficulty: "NORMAL",
+      settingBoardView: "SCROLL",
+      settingRandomBpm: false,
+      settingFixedBpm: 150,
+      settingFollowPlayhead: true
+    });
+    const sixteenBoard = await evaluate(`({
+      cells: document.querySelectorAll(".cell").length,
+      steps: document.querySelectorAll(".step-label").length,
+      summary: document.querySelector("#boardSummary").textContent,
+      tempo: document.querySelector("#tempoReadout").textContent,
+      pageWidth: document.documentElement.scrollWidth,
+      internalScroll: document.querySelector("#boardWrap").scrollWidth > document.querySelector("#boardWrap").clientWidth,
+      cellWidth: document.querySelector(".cell").getBoundingClientRect().width
+    })`);
+    assert.equal(sixteenBoard.cells, 128);
+    assert.equal(sixteenBoard.steps, 16);
+    assert.equal(sixteenBoard.summary, "8 × 16 / 20 MINES");
+    assert.equal(sixteenBoard.tempo, "BPM 150 / FAST");
+    assert.equal(sixteenBoard.pageWidth, 390);
+    assert.equal(sixteenBoard.internalScroll, true);
+    assert.ok(sixteenBoard.cellWidth >= 39);
+    const sixteenCapture = await call("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(screenshots.sixteenStep, Buffer.from(sixteenCapture.data, "base64"));
+
+    await evaluate(`(() => {
+      const cell = document.querySelector(".cell");
+      cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+      cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      document.querySelector("#playButton").click();
+    })()`);
+    await delay(1900);
+    const followed = await evaluate(`({
+      scrollLeft: document.querySelector("#boardWrap").scrollLeft,
+      current: document.querySelectorAll(".cell.is-current").length,
+      step: document.querySelector("#stepReadout").textContent
+    })`);
+    assert.ok(followed.scrollLeft > 0);
+    assert.equal(followed.current, 8);
+    const manualScroll = await evaluate(`(async () => {
+      const wrap = document.querySelector("#boardWrap");
+      wrap.scrollLeft = 25;
+      wrap.dispatchEvent(new Event("scroll"));
+      const before = wrap.scrollLeft;
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      return { before, after: wrap.scrollLeft };
+    })()`);
+    assert.ok(Math.abs(manualScroll.after - manualScroll.before) < 3);
+    await evaluate('document.querySelector("#stopButton").click()');
+    await evaluate('document.querySelector("#forceClearButton").click()');
+    await delay(100);
+    const sixteenCompletion = await evaluate(`({
+      status: document.querySelector("#gameStatus").textContent,
+      playing: document.querySelector("#playButton").getAttribute("aria-pressed"),
+      steps: document.querySelectorAll(".step-label").length,
+      banner: document.querySelector("#completionTitle").textContent
+    })`);
+    assert.deepEqual(sixteenCompletion, {
+      status: "COMPLETE", playing: "true", steps: 16, banner: "COMPLETE SEQUENCE"
+    });
+    await evaluate('document.querySelector("#stopButton").click()');
+
+    const touchModes = await evaluate(`(async () => {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const mode = (value) => {
+        const select = document.querySelector("#quickTouchMode");
+        select.value = value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      };
+      const tap = (cell, x = 100, y = 100) => {
+        cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch", clientX: x, clientY: y }));
+        cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "touch", clientX: x, clientY: y }));
+      };
+      const fresh = () => [...document.querySelectorAll(".cell")].find((cell) => !cell.classList.contains("open") && !cell.classList.contains("flagged"));
+      const result = {};
+
+      document.querySelector("#newGameButton").click();
+      mode("STANDARD");
+      tap(document.querySelector(".cell"));
+      await wait(50);
+      const standardFlag = fresh();
+      standardFlag.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch", clientX: 100, clientY: 100 }));
+      await wait(550);
+      standardFlag.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "touch", clientX: 100, clientY: 100 }));
+      await wait(30);
+      result.standard = document.querySelectorAll(".cell.open").length > 0 && standardFlag.classList.contains("flagged");
+
+      document.querySelector("#newGameButton").click();
+      mode("SWITCH");
+      document.querySelector('[data-switch-action="FLAG"]').click();
+      const switchFlag = fresh();
+      tap(switchFlag);
+      await wait(25);
+      document.querySelector('[data-switch-action="OPEN"]').click();
+      const switchOpen = fresh();
+      tap(switchOpen);
+      await wait(45);
+      result.switchMode = switchFlag.classList.contains("flagged") && switchOpen.classList.contains("open");
+
+      document.querySelector("#newGameButton").click();
+      mode("TWO HAND");
+      const modifier = document.querySelector('[data-modifier="FLAG"]');
+      modifier.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerType: "touch" }));
+      const twoFlag = fresh();
+      tap(twoFlag);
+      await wait(25);
+      modifier.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerType: "touch" }));
+      const twoOpen = fresh();
+      tap(twoOpen);
+      await wait(45);
+      result.twoHand = twoFlag.classList.contains("flagged") && twoOpen.classList.contains("open");
+
+      document.querySelector("#newGameButton").click();
+      mode("DOUBLE TAP");
+      const doubleFlag = fresh();
+      tap(doubleFlag); await wait(60); tap(doubleFlag); await wait(400);
+      const singleOpen = fresh();
+      tap(singleOpen); await wait(450);
+      result.doubleTap = doubleFlag.classList.contains("flagged") && !doubleFlag.classList.contains("open") && singleOpen.classList.contains("open");
+
+      document.querySelector("#newGameButton").click();
+      mode("FLICK");
+      const flickFlag = fresh();
+      flickFlag.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch", clientX: 100, clientY: 110 }));
+      flickFlag.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "touch", clientX: 103, clientY: 75 }));
+      await wait(25);
+      const set = flickFlag.classList.contains("flagged");
+      flickFlag.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch", clientX: 100, clientY: 80 }));
+      flickFlag.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "touch", clientX: 102, clientY: 116 }));
+      await wait(25);
+      const removed = !flickFlag.classList.contains("flagged");
+      const flickOpen = fresh();
+      tap(flickOpen); await wait(45);
+      const horizontal = fresh();
+      horizontal.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "touch", clientX: 90, clientY: 100 }));
+      horizontal.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "touch", clientX: 130, clientY: 105 }));
+      await wait(25);
+      result.flick = set && removed && flickOpen.classList.contains("open") && !horizontal.classList.contains("open") && !horizontal.classList.contains("flagged");
+      return result;
+    })()`);
+    assert.deepEqual(touchModes, { standard: true, switchMode: true, twoHand: true, doubleTap: true, flick: true });
+
+    await evaluate('document.querySelector("#newGameButton").click(); document.querySelector("#testChordButton").click()');
+    await delay(180);
+    const chord = await evaluate(`({
+      open: document.querySelectorAll(".cell.open").length,
+      accents: document.querySelectorAll(".cell.mine-accent").length,
+      miss: document.querySelector("#missCount").textContent
+    })`);
+    assert.ok(chord.open > 1);
+    assert.ok(chord.accents >= 1);
+    assert.equal(chord.miss, "0 / 3");
+
+    await applySettings({
+      settingPreset: "LARGE",
+      settingDifficulty: "NORMAL",
+      settingBoardView: "COMPACT"
+    });
+    const largeBoard = await evaluate(`({
+      cells: document.querySelectorAll(".cell").length,
+      tracks: [...document.querySelectorAll(".instrument-label")].map((item) => item.textContent.trim()),
+      summary: document.querySelector("#boardSummary").textContent
+    })`);
+    assert.equal(largeBoard.cells, 120);
+    assert.deepEqual(largeBoard.tracks.slice(-2), ["CLAP", "PERC"]);
+    assert.equal(largeBoard.summary, "10 × 12 / 19 MINES");
+
+    await call("Page.navigate", { url: GAME_URL + "?debug=1&restore=1" });
+    await retry(async () => {
+      const count = await evaluate("document.readyState === 'complete' ? document.querySelectorAll('.cell').length : 0");
+      if (count !== 120) throw new Error(`Saved settings did not restore: ${count} cells`);
+    });
+    const restored = await evaluate(`({
+      summary: document.querySelector("#boardSummary").textContent,
+      view: document.querySelector("#boardWrap").className,
+      touch: document.querySelector("#quickTouchMode").value
+    })`);
+    assert.equal(restored.summary, "10 × 12 / 19 MINES");
+    assert.match(restored.view, /view-compact/);
+    assert.equal(restored.touch, "FLICK");
+
     await call("Page.navigate", { url: MENU_URL });
     await retry(async () => {
       const ready = await evaluate("document.readyState === 'complete' && document.querySelectorAll('.game-card').length === 30");
@@ -327,7 +545,7 @@ async function main() {
       count: "30"
     });
     socket.close();
-    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, accent, glitchStarted, gameOver, cleared, completionStopped, perfect, menu, screenshots }, null, 2));
+    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, accent, glitchStarted, gameOver, cleared, completionStopped, perfect, wideBoard, sixteenBoard, followed, manualScroll, sixteenCompletion, touchModes, chord, largeBoard, restored, menu, screenshots }, null, 2));
   } finally {
     const edgeExited = new Promise((resolve) => edge.once("exit", resolve));
     edge.kill();

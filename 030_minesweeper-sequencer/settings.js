@@ -1,8 +1,8 @@
 (function (root, factory) {
-  const api = factory();
+  const api = factory(root);
   if (typeof module === "object" && module.exports) module.exports = api;
   root.MinesweeperSettings = api;
-})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+})(typeof globalThis !== "undefined" ? globalThis : this, function (root) {
   "use strict";
   const STORAGE_KEY = "minesweeper-sequencer.settings.v3";
   const PRESETS = { COMPACT: { rows: 6, steps: 8 }, STANDARD: { rows: 8, steps: 8 }, WIDE: { rows: 8, steps: 12 }, "16 STEP": { rows: 8, steps: 16 }, LARGE: { rows: 10, steps: 12 } };

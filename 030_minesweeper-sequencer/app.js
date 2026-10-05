@@ -273,7 +273,7 @@
     const now = AudioEngine.currentTime();
     if (result.type === "safe" || result.type === "chord") {
       result.opened.filter((cell) => cell.isNote).forEach((cell, index) => {
-        AudioEngine.playCellNote(cell, now + Math.min(index, 12) * (isChord ? 0.032 : 0.018), { preview: true });
+        AudioEngine.playCellNote(cell, now + index * (isChord ? 0.032 : 0.018), { preview: true });
       });
       if (result.cleared) startCompletionSequence();
     }
@@ -725,6 +725,7 @@
   populateSelect(settingDifficulty, Settings.DIFFICULTIES);
   populateSelect(settingTouchMode, Settings.TOUCH_MODES);
   populateSelect(settingBoardView, Settings.BOARD_VIEWS);
+  document.documentElement.dataset.version = "0.3.0";
   AudioEngine.setTrackCount(game.rows);
   buildBoard();
   render();

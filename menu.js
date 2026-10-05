@@ -6,7 +6,7 @@
       number: "030",
       title: "マインスイーパシーケンサ",
       genre: "Puzzle / Music",
-      description: "8×8の地雷原がそのまま楽器になる音楽パズル。マスを開く音、正解フラグのアクセント、毎回変わるテンポでビートが育ちます。",
+      description: "地雷原がそのまま楽器になる音楽パズル。8〜16 STEPの盤面実験と5種類のタッチ操作で、自分に合う演奏スタイルを探せます。",
       href: "./030_minesweeper-sequencer/index.html",
       icon: "./assets/game-icons/030-minesweeper-sequencer.svg",
       alt: "光るマインスイーパ盤面をシーケンサの再生ラインが横切るゲームアイコン"
