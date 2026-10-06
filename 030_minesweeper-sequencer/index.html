@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#071116">
   <meta name="description" content="マインスイーパを解くほど音楽が育つ、8ステップのブラウザ・シーケンサゲーム。">
-  <title>マインスイーパシーケンサ Ver 0.3.1</title>
-  <link rel="stylesheet" href="style.css?v=0.3.1">
+  <title>マインスイーパシーケンサ Ver 0.3.2</title>
+  <link rel="stylesheet" href="style.css?v=0.3.2">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">← ARCADE</a>
       <div class="topbar-actions">
-        <span class="version">MOBILE BOARD FIX · VER 0.3.1</span>
+        <span class="version">PLAYHEAD SCROLL FIX · VER 0.3.2</span>
         <button id="settingsButton" class="settings-button" type="button" aria-label="ゲーム設定を開く">⚙ SETTING</button>
       </div>
     </header>
@@ -115,6 +115,7 @@
           <label>TOUCH MODE<select id="settingTouchMode"></select></label>
           <label>BOARD VIEW<select id="settingBoardView"></select></label>
           <label class="check-label"><input id="settingFollowPlayhead" type="checkbox"> FOLLOW PLAYHEAD</label>
+          <small class="setting-note">現在STEPが画面外に出た時だけ盤面内を横方向へ追従</small>
         </fieldset>
       </div>
       <p id="settingsValidation" class="settings-validation" aria-live="polite"></p>
@@ -132,10 +133,11 @@
     </div>
   </div>
 
-  <script src="game-core.js?v=0.3.1"></script>
-  <script src="settings.js?v=0.3.1"></script>
-  <script src="input-controller.js?v=0.3.1"></script>
-  <script src="audio-engine.js?v=0.3.1"></script>
-  <script src="app.js?v=0.3.1"></script>
+  <script src="game-core.js?v=0.3.2"></script>
+  <script src="settings.js?v=0.3.2"></script>
+  <script src="input-controller.js?v=0.3.2"></script>
+  <script src="playhead-scroll.js?v=0.3.2"></script>
+  <script src="audio-engine.js?v=0.3.2"></script>
+  <script src="app.js?v=0.3.2"></script>
 </body>
 </html>

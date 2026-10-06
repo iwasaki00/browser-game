@@ -370,6 +370,7 @@ h1 span { color: transparent; -webkit-text-stroke: 1px rgba(238, 247, 244, 0.65)
 .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .field-pair label { grid-template-columns: 1fr; gap: 3px; }
 .settings-grid output { display: block; margin-top: 6px; color: var(--yellow); font: 750 .57rem monospace; }
+.settings-grid .setting-note { display: block; margin: 2px 0 0 29px; color: #789197; font: 650 .52rem/1.45 sans-serif; }
 .settings-validation { min-height: 1.3em; margin: 0 0 8px; color: var(--coral); font-size: .68rem; }
 .settings-dialog footer { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
 .settings-dialog footer button { min-height: 44px; color: var(--ink); font: 850 .65rem monospace; cursor: pointer; background: #1a3039; border: 1px solid #405c64; border-radius: 9px; }

@@ -87,6 +87,7 @@ async function main() {
 
     await call("Runtime.enable");
     await call("Page.enable");
+    await call("Page.bringToFront");
     await retry(async () => {
       const ready = await evaluate("document.readyState === 'complete' && document.querySelectorAll('.cell').length === 64");
       if (!ready) throw new Error("Game UI is not ready");
@@ -98,7 +99,8 @@ async function main() {
       tracks: document.querySelectorAll(".instrument-label").length,
       status: document.querySelector("#gameStatus").textContent,
       tempo: document.querySelector("#tempoReadout").textContent,
-      errors: document.querySelector("#audioNotice").hidden
+      errors: document.querySelector("#audioNotice").hidden,
+      followDefault: document.querySelector("#settingFollowPlayhead").checked
     })`);
     assert.equal(initial.cells, 64);
     assert.equal(initial.steps, 8);
@@ -106,6 +108,7 @@ async function main() {
     assert.equal(initial.status, "READY");
     assert.match(initial.tempo, /^BPM (9[0-9]|10[0-5]) \/ SLOW$|^BPM (11[0-9]|12[0-5]) \/ MID$|^BPM (13[0-9]|14[0-9]|150) \/ FAST$/);
     assert.equal(initial.errors, true);
+    assert.equal(initial.followDefault, false);
 
     const firstOpen = await evaluate(`(async () => {
       window.__previewCount = 0;
@@ -359,7 +362,7 @@ async function main() {
       settingBoardView: "SCROLL",
       settingRandomBpm: false,
       settingFixedBpm: 150,
-      settingFollowPlayhead: true
+      settingFollowPlayhead: false
     });
     const sixteenBoard = await evaluate(`({
       cells: document.querySelectorAll(".cell").length,
@@ -404,19 +407,86 @@ async function main() {
     const sixteenCapture = await call("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(screenshots.sixteenStep, Buffer.from(sixteenCapture.data, "base64"));
 
-    await evaluate(`(() => {
-      const cell = document.querySelector(".cell");
-      cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
-      cell.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+    const followOff = await evaluate(`(async () => {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const wrap = document.querySelector("#boardWrap");
+      wrap.scrollLeft = 40;
+      window.scrollTo(0, Math.min(180, document.documentElement.scrollHeight - innerHeight));
+      const before = { x: wrap.scrollLeft, y: window.scrollY };
+      const first = document.querySelector(".cell");
+      first.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+      first.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      await wait(60);
+      await window.MinesweeperAudio.resume();
       document.querySelector("#playButton").click();
+      await wait(1900);
+      const after = { x: wrap.scrollLeft, y: window.scrollY, step: document.querySelector("#stepReadout").textContent };
+      document.querySelector("#stopButton").click();
+      return { before, after };
     })()`);
-    await delay(1900);
-    const followed = await evaluate(`({
-      scrollLeft: document.querySelector("#boardWrap").scrollLeft,
-      current: document.querySelectorAll(".cell.is-current").length,
-      step: document.querySelector("#stepReadout").textContent
-    })`);
-    assert.ok(followed.scrollLeft > 0);
+    assert.equal(followOff.after.x, followOff.before.x);
+    assert.ok(Math.abs(followOff.after.y - followOff.before.y) < 1);
+
+    const pageYBeforeApply = await evaluate("window.scrollY");
+    await applySettings({
+      settingPreset: "16 STEP",
+      settingDifficulty: "NORMAL",
+      settingBoardView: "SCROLL",
+      settingRandomBpm: false,
+      settingFixedBpm: 150,
+      settingFollowPlayhead: true
+    });
+    const pageYAfterApply = await evaluate("window.scrollY");
+    assert.ok(Math.abs(pageYAfterApply - pageYBeforeApply) < 1);
+
+    await call("Page.bringToFront");
+    const followed = await evaluate(`(async () => {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const waitForStep = async (step, timeout = 5000) => {
+        const startedAt = performance.now();
+        while (document.querySelector("#stepReadout").textContent !== step) {
+          if (performance.now() - startedAt > timeout) {
+            throw new Error("Timed out waiting for " + step + " at " +
+              document.querySelector("#stepReadout").textContent + " playing=" +
+              document.querySelector("#playButton").getAttribute("aria-pressed") + " status=" +
+              document.querySelector("#gameStatus").textContent + " visibility=" + document.visibilityState);
+          }
+          await wait(20);
+        }
+      };
+      const wrap = document.querySelector("#boardWrap");
+      await wait(1150);
+      window.scrollTo(0, Math.min(180, document.documentElement.scrollHeight - innerHeight));
+      const before = { x: wrap.scrollLeft, y: window.scrollY };
+      const first = document.querySelector(".cell");
+      first.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+      first.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      await wait(60);
+      await window.MinesweeperAudio.resume();
+      document.querySelector("#playButton").click();
+      await wait(100);
+      if (document.querySelector("#playButton").getAttribute("aria-pressed") !== "true") {
+        throw new Error("FOLLOW ON PLAY failed: status=" + document.querySelector("#gameStatus").textContent +
+          " audio=" + window.MinesweeperAudio.isAvailable());
+      }
+      await wait(80);
+      const started = { x: wrap.scrollLeft, y: window.scrollY };
+      await waitForStep("STEP 10");
+      const right = { x: wrap.scrollLeft, y: window.scrollY };
+      await waitForStep("STEP 16");
+      const last = { x: wrap.scrollLeft, y: window.scrollY };
+      await waitForStep("STEP 1");
+      await wait(30);
+      const wrapped = { x: wrap.scrollLeft, y: window.scrollY };
+      return { before, started, right, last, wrapped, current: document.querySelectorAll(".cell.is-current").length };
+    })()`);
+    assert.equal(followed.started.x, followed.before.x);
+    assert.ok(followed.right.x > followed.before.x);
+    assert.ok(followed.last.x >= followed.right.x);
+    assert.ok(followed.wrapped.x < followed.last.x);
+    [followed.started, followed.right, followed.last, followed.wrapped].forEach((sample) => {
+      assert.ok(Math.abs(sample.y - followed.before.y) < 1);
+    });
     assert.equal(followed.current, 8);
     const manualScroll = await evaluate(`(async () => {
       const wrap = document.querySelector("#boardWrap");
@@ -428,17 +498,49 @@ async function main() {
     })()`);
     assert.ok(Math.abs(manualScroll.after - manualScroll.before) < 3);
     await evaluate('document.querySelector("#stopButton").click()');
-    await evaluate('document.querySelector("#forceClearButton").click()');
-    await delay(100);
-    const sixteenCompletion = await evaluate(`({
-      status: document.querySelector("#gameStatus").textContent,
-      playing: document.querySelector("#playButton").getAttribute("aria-pressed"),
-      steps: document.querySelectorAll(".step-label").length,
-      banner: document.querySelector("#completionTitle").textContent
-    })`);
-    assert.deepEqual(sixteenCompletion, {
-      status: "COMPLETE", playing: "true", steps: 16, banner: "COMPLETE SEQUENCE"
-    });
+    const newGameScroll = await evaluate(`(() => {
+      const wrap = document.querySelector("#boardWrap");
+      window.scrollTo(0, Math.min(160, document.documentElement.scrollHeight - innerHeight));
+      wrap.scrollLeft = 90;
+      const beforeY = window.scrollY;
+      document.querySelector("#newGameButton").click();
+      return { beforeY, afterY: window.scrollY, boardX: wrap.scrollLeft };
+    })()`);
+    assert.ok(Math.abs(newGameScroll.afterY - newGameScroll.beforeY) < 1);
+    assert.equal(newGameScroll.boardX, 0);
+    const sixteenCompletion = await evaluate(`(async () => {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const waitForStep = async (step, timeout = 5000) => {
+        const startedAt = performance.now();
+        while (document.querySelector("#stepReadout").textContent !== step) {
+          if (performance.now() - startedAt > timeout) throw new Error("Timed out waiting for completion " + step);
+          await wait(20);
+        }
+      };
+      window.scrollTo(0, Math.min(160, document.documentElement.scrollHeight - innerHeight));
+      const beforeY = window.scrollY;
+      document.querySelector("#forceClearButton").click();
+      await wait(100);
+      const startedPlaying = document.querySelector("#playButton").getAttribute("aria-pressed");
+      await waitForStep("STEP 10");
+      return {
+        status: document.querySelector("#gameStatus").textContent,
+        playing: document.querySelector("#playButton").getAttribute("aria-pressed"),
+        steps: document.querySelectorAll(".step-label").length,
+        banner: document.querySelector("#completionTitle").textContent,
+        startedPlaying,
+        beforeY,
+        afterY: window.scrollY,
+        boardX: document.querySelector("#boardWrap").scrollLeft
+      };
+    })()`);
+    assert.equal(sixteenCompletion.status, "COMPLETE");
+    assert.equal(sixteenCompletion.startedPlaying, "true");
+    assert.equal(sixteenCompletion.playing, "true");
+    assert.equal(sixteenCompletion.steps, 16);
+    assert.equal(sixteenCompletion.banner, "COMPLETE SEQUENCE");
+    assert.ok(Math.abs(sixteenCompletion.afterY - sixteenCompletion.beforeY) < 1);
+    assert.ok(sixteenCompletion.boardX > 0);
     await evaluate('document.querySelector("#stopButton").click()');
 
     const touchModes = await evaluate(`(async () => {
@@ -530,7 +632,10 @@ async function main() {
     await applySettings({
       settingPreset: "LARGE",
       settingDifficulty: "NORMAL",
-      settingBoardView: "COMPACT"
+      settingBoardView: "SCROLL",
+      settingRandomBpm: false,
+      settingFixedBpm: 150,
+      settingFollowPlayhead: true
     });
     const largeBoard = await evaluate(`({
       cells: document.querySelectorAll(".cell").length,
@@ -544,6 +649,34 @@ async function main() {
     assert.equal(largeBoard.summary, "10 × 12 / 19 MINES");
     assert.equal(largeBoard.stepRows, 1);
     assert.equal(largeBoard.lastTrackRows, 1);
+    await call("Page.bringToFront");
+    const largeFollow = await evaluate(`(async () => {
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const waitForStep = async (step, timeout = 5000) => {
+        const startedAt = performance.now();
+        while (document.querySelector("#stepReadout").textContent !== step) {
+          if (performance.now() - startedAt > timeout) throw new Error("Timed out waiting for large " + step);
+          await wait(20);
+        }
+      };
+      await wait(1150);
+      const wrap = document.querySelector("#boardWrap");
+      window.scrollTo(0, Math.min(220, document.documentElement.scrollHeight - innerHeight));
+      const before = { x: wrap.scrollLeft, y: window.scrollY };
+      const first = document.querySelector(".cell");
+      first.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
+      first.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, button: 0, pointerType: "mouse" }));
+      await wait(60);
+      await window.MinesweeperAudio.resume();
+      document.querySelector("#playButton").click();
+      await waitForStep("STEP 10");
+      const after = { x: wrap.scrollLeft, y: window.scrollY };
+      document.querySelector("#stopButton").click();
+      return { before, after };
+    })()`);
+    assert.ok(largeFollow.before.y > 0);
+    assert.ok(Math.abs(largeFollow.after.y - largeFollow.before.y) < 1);
+    assert.ok(largeFollow.after.x > largeFollow.before.x);
 
     await evaluate(`(() => {
       const key = window.MinesweeperSettings.STORAGE_KEY;
@@ -560,11 +693,13 @@ async function main() {
     const restored = await evaluate(`({
       summary: document.querySelector("#boardSummary").textContent,
       view: document.querySelector("#boardWrap").className,
-      touch: document.querySelector("#quickTouchMode").value
+      touch: document.querySelector("#quickTouchMode").value,
+      follow: document.querySelector("#settingFollowPlayhead").checked
     })`);
     assert.equal(restored.summary, "10 × 12 / 19 MINES");
-    assert.match(restored.view, /view-compact/);
+    assert.match(restored.view, /view-scroll/);
     assert.equal(restored.touch, "STANDARD");
+    assert.equal(restored.follow, true);
 
     await call("Emulation.setDeviceMetricsOverride", {
       width: 1280,
@@ -623,7 +758,7 @@ async function main() {
       count: "30"
     });
     socket.close();
-    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, accent, glitchStarted, gameOver, cleared, completionStopped, perfect, wideBoard, sixteenBoard, stickyTrack, followed, manualScroll, sixteenCompletion, touchModes, chord, largeBoard, restored, pcBoards, pcInput, menu, screenshots }, null, 2));
+    console.log(JSON.stringify({ ok: true, initial, firstOpen, playing, stopped, mobile, reset, accent, glitchStarted, gameOver, cleared, completionStopped, perfect, wideBoard, sixteenBoard, stickyTrack, followOff, followed, manualScroll, newGameScroll, sixteenCompletion, touchModes, chord, largeBoard, largeFollow, restored, pcBoards, pcInput, menu, screenshots }, null, 2));
   } finally {
     const edgeExited = new Promise((resolve) => edge.once("exit", resolve));
     edge.kill();

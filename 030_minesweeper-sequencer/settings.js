@@ -11,7 +11,7 @@
   const BOARD_VIEWS = ["FIT", "SCROLL", "COMPACT"];
   const DIFFICULTIES = ["EASY", "NORMAL", "HARD", "CUSTOM"];
   const PRESET_NAMES = [...Object.keys(PRESETS), "CUSTOM"];
-  const DEFAULTS = { preset: "STANDARD", rows: 8, steps: 8, difficulty: "NORMAL", mines: 10, randomBpm: true, fixedBpm: 120, touchMode: "STANDARD", boardView: "FIT", followPlayhead: true };
+  const DEFAULTS = { preset: "STANDARD", rows: 8, steps: 8, difficulty: "NORMAL", mines: 10, randomBpm: true, fixedBpm: 120, touchMode: "STANDARD", boardView: "FIT", followPlayhead: false };
   function clampInteger(value, minimum, maximum, fallback) {
     const number = Number(value);
     if (!Number.isFinite(number)) return fallback;

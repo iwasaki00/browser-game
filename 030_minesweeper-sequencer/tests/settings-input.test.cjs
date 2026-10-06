@@ -86,6 +86,13 @@ test("corrupt stored settings fall back safely", () => {
   assert.deepEqual(Settings.loadSettings(storage), Settings.normalizeSettings(Settings.DEFAULTS));
 });
 
+test("FOLLOW defaults OFF without storage and preserves explicit saved values", () => {
+  const emptyStorage = { getItem: () => null, setItem() {} };
+  assert.equal(Settings.loadSettings(emptyStorage).followPlayhead, false);
+  assert.equal(Settings.normalizeSettings({ followPlayhead: true }).followPlayhead, true);
+  assert.equal(Settings.normalizeSettings({ followPlayhead: false }).followPlayhead, false);
+});
+
 test("touch modes exclude FLICK and legacy FLICK falls back to STANDARD", () => {
   assert.deepEqual(Settings.TOUCH_MODES, ["STANDARD", "SWITCH", "TWO HAND", "DOUBLE TAP"]);
   assert.equal(Settings.normalizeSettings({ touchMode: "FLICK" }).touchMode, "STANDARD");

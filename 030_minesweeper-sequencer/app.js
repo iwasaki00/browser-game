@@ -5,6 +5,7 @@
   const AudioEngine = window.MinesweeperAudio;
   const Settings = window.MinesweeperSettings;
   const Input = window.MinesweeperInput;
+  const PlayheadScroll = window.MinesweeperPlayheadScroll;
   const INSTRUMENTS = ["KICK", "SNARE", "CHH", "OHH", "TOM", "BASS", "SYN", "FX", "CLAP", "PERC", "SUB", "PLUCK"];
   const LONG_PRESS_MS = 520;
   const LONG_PRESS_MOVE_PX = 10;
@@ -82,6 +83,8 @@
   let modifierAction = null;
   let userScrollUntil = 0;
   let followSuspended = false;
+  let programmaticScrollUntil = 0;
+  let lastFollowState = { visible: true, requested: null };
 
   function buildBoard() {
     boardElement.replaceChildren();
@@ -160,17 +163,29 @@
   }
 
   function followCurrentStep() {
-    if (!settings.followPlayhead || settings.boardView !== "SCROLL" || followSuspended ||
-        performance.now() < userScrollUntil) return;
     const header = boardElement.querySelector(`.step-label[data-column="${game.currentStep}"]`);
     if (!header) return;
-    const viewport = boardWrap.getBoundingClientRect();
-    const target = header.getBoundingClientRect();
-    const margin = 14;
-    if (target.left < viewport.left + margin || target.right > viewport.right - margin) {
-      const offset = target.left - viewport.left - viewport.width / 2 + target.width / 2;
-      boardWrap.scrollBy({ left: offset, behavior: "smooth" });
-    }
+    const corner = boardElement.querySelector(".grid-corner");
+    const options = {
+      followEnabled: settings.followPlayhead && settings.boardView === "SCROLL" &&
+        performance.now() >= userScrollUntil,
+      followSuspended,
+      scrollLeft: boardWrap.scrollLeft,
+      clientWidth: boardWrap.clientWidth,
+      scrollWidth: boardWrap.scrollWidth,
+      stepLeft: header.offsetLeft,
+      stepWidth: header.offsetWidth,
+      leadingInset: corner ? corner.offsetWidth : 0,
+      margin: 2
+    };
+    const requested = PlayheadScroll.getFollowScrollLeft(options);
+    lastFollowState = {
+      visible: PlayheadScroll.isStepVisible(options),
+      requested
+    };
+    if (requested == null) return;
+    programmaticScrollUntil = performance.now() + 120;
+    boardWrap.scrollLeft = requested;
   }
 
   function applyBoardPresentation() {
@@ -226,6 +241,8 @@
         ,`preset=${settings.preset}/${settings.difficulty}`
         ,`touch=${settings.touchMode}/view=${settings.boardView}/follow=${settings.followPlayhead}`
         ,`pointer=${Boolean(pointerContext)}/longPress=${Boolean(pressTimer)}/followSuspended=${followSuspended}`
+        ,`windowY=${Math.round(window.scrollY)}/boardX=${Math.round(boardWrap.scrollLeft)}/userScrolling=${performance.now() < userScrollUntil}`
+        ,`stepVisible=${lastFollowState.visible}/followRequest=${lastFollowState.requested == null ? "none" : Math.round(lastFollowState.requested)}`
       ].join(" / ");
     }
   }
@@ -435,6 +452,7 @@
   });
 
   boardWrap.addEventListener("scroll", () => {
+    if (performance.now() < programmaticScrollUntil) return;
     userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
   }, { passive: true });
 
@@ -524,6 +542,7 @@
     document.body.classList.remove("glitching");
     window.clearTimeout(glitchVisualTimer);
     buildBoard();
+    programmaticScrollUntil = performance.now() + 120;
     boardWrap.scrollLeft = 0;
     render();
   }
@@ -721,7 +740,7 @@
   populateSelect(settingDifficulty, Settings.DIFFICULTIES);
   populateSelect(settingTouchMode, Settings.TOUCH_MODES);
   populateSelect(settingBoardView, Settings.BOARD_VIEWS);
-  document.documentElement.dataset.version = "0.3.1";
+  document.documentElement.dataset.version = "0.3.2";
   AudioEngine.setTrackCount(game.rows);
   buildBoard();
   render();
