@@ -75,7 +75,7 @@ test("settings save and load round-trip through storage", () => {
     steps: 16,
     mines: 28,
     fixedBpm: 133,
-    touchMode: "FLICK",
+    touchMode: "STANDARD",
     boardView: "SCROLL",
     followPlayhead: false
   });
@@ -84,6 +84,17 @@ test("settings save and load round-trip through storage", () => {
 test("corrupt stored settings fall back safely", () => {
   const storage = { getItem: () => "{broken", setItem() {} };
   assert.deepEqual(Settings.loadSettings(storage), Settings.normalizeSettings(Settings.DEFAULTS));
+});
+
+test("touch modes exclude FLICK and legacy FLICK falls back to STANDARD", () => {
+  assert.deepEqual(Settings.TOUCH_MODES, ["STANDARD", "SWITCH", "TWO HAND", "DOUBLE TAP"]);
+  assert.equal(Settings.normalizeSettings({ touchMode: "FLICK" }).touchMode, "STANDARD");
+});
+
+test("FIT falls back to SCROLL when a board has more than 8 steps", () => {
+  assert.equal(Settings.normalizeSettings({ preset: "STANDARD", boardView: "FIT" }).boardView, "FIT");
+  assert.equal(Settings.normalizeSettings({ preset: "WIDE", boardView: "FIT" }).boardView, "SCROLL");
+  assert.equal(Settings.normalizeSettings({ preset: "16 STEP", boardView: "FIT" }).boardView, "SCROLL");
 });
 
 test("touch mode tap interpretation maps to game actions", () => {
@@ -97,9 +108,8 @@ test("touch mode tap interpretation maps to game actions", () => {
   assert.equal(Input.doubleTapAction("DOUBLE TAP"), Input.ACTIONS.TOGGLE_FLAG);
 });
 
-test("flick interpretation uses only dominant vertical gestures", () => {
-  assert.equal(Input.flickAction(2, -30), Input.ACTIONS.SET_FLAG);
-  assert.equal(Input.flickAction(2, 30), Input.ACTIONS.REMOVE_FLAG);
-  assert.equal(Input.flickAction(4, 5), Input.ACTIONS.OPEN);
-  assert.equal(Input.flickAction(40, 8), Input.ACTIONS.NONE);
+test("input controller does not expose flick gestures", () => {
+  assert.equal(Input.flickAction, undefined);
+  assert.equal(Input.ACTIONS.SET_FLAG, undefined);
+  assert.equal(Input.ACTIONS.REMOVE_FLAG, undefined);
 });

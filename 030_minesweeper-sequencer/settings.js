@@ -7,7 +7,7 @@
   const STORAGE_KEY = "minesweeper-sequencer.settings.v3";
   const PRESETS = { COMPACT: { rows: 6, steps: 8 }, STANDARD: { rows: 8, steps: 8 }, WIDE: { rows: 8, steps: 12 }, "16 STEP": { rows: 8, steps: 16 }, LARGE: { rows: 10, steps: 12 } };
   const DENSITIES = { EASY: 0.12, NORMAL: 0.16, HARD: 0.22 };
-  const TOUCH_MODES = ["STANDARD", "SWITCH", "TWO HAND", "DOUBLE TAP", "FLICK"];
+  const TOUCH_MODES = ["STANDARD", "SWITCH", "TWO HAND", "DOUBLE TAP"];
   const BOARD_VIEWS = ["FIT", "SCROLL", "COMPACT"];
   const DIFFICULTIES = ["EASY", "NORMAL", "HARD", "CUSTOM"];
   const PRESET_NAMES = [...Object.keys(PRESETS), "CUSTOM"];
@@ -30,7 +30,9 @@
     const difficulty = DIFFICULTIES.includes(input.difficulty) ? input.difficulty : DEFAULTS.difficulty;
     const maximumMines = Math.max(1, rows * steps - 1);
     const mines = difficulty === "CUSTOM" ? clampInteger(input.mines, 1, maximumMines, Math.min(DEFAULTS.mines, maximumMines)) : Math.min(maximumMines, calculateMines(rows, steps, difficulty));
-    return { preset, rows, steps, difficulty, mines, randomBpm: typeof input.randomBpm === "boolean" ? input.randomBpm : DEFAULTS.randomBpm, fixedBpm: clampInteger(input.fixedBpm, 90, 150, DEFAULTS.fixedBpm), touchMode: TOUCH_MODES.includes(input.touchMode) ? input.touchMode : DEFAULTS.touchMode, boardView: BOARD_VIEWS.includes(input.boardView) ? input.boardView : DEFAULTS.boardView, followPlayhead: typeof input.followPlayhead === "boolean" ? input.followPlayhead : DEFAULTS.followPlayhead };
+    const requestedView = BOARD_VIEWS.includes(input.boardView) ? input.boardView : DEFAULTS.boardView;
+    const boardView = steps > 8 && requestedView === "FIT" ? "SCROLL" : requestedView;
+    return { preset, rows, steps, difficulty, mines, randomBpm: typeof input.randomBpm === "boolean" ? input.randomBpm : DEFAULTS.randomBpm, fixedBpm: clampInteger(input.fixedBpm, 90, 150, DEFAULTS.fixedBpm), touchMode: TOUCH_MODES.includes(input.touchMode) ? input.touchMode : DEFAULTS.touchMode, boardView, followPlayhead: typeof input.followPlayhead === "boolean" ? input.followPlayhead : DEFAULTS.followPlayhead };
   }
   function mineDensity(settings) { return settings.mines / (settings.rows * settings.steps); }
   function loadSettings(storage) {

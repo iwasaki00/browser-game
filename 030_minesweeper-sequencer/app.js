@@ -7,7 +7,9 @@
   const Input = window.MinesweeperInput;
   const INSTRUMENTS = ["KICK", "SNARE", "CHH", "OHH", "TOM", "BASS", "SYN", "FX", "CLAP", "PERC", "SUB", "PLUCK"];
   const LONG_PRESS_MS = 520;
+  const LONG_PRESS_MOVE_PX = 10;
   const DOUBLE_TAP_MS = 230;
+  const FOLLOW_RESUME_MS = 1100;
   const SCHEDULE_AHEAD = 0.12;
   const LOOKAHEAD_MS = 25;
   const debugMode = new URLSearchParams(location.search).get("debug") === "1";
@@ -72,7 +74,6 @@
   let glitchVisualTimer = 0;
   let pressTimer = 0;
   let pressedCell = null;
-  let pressStart = null;
   let longPressTriggered = false;
   let pointerContext = null;
   let doubleTapTimer = 0;
@@ -80,6 +81,7 @@
   let switchAction = "OPEN";
   let modifierAction = null;
   let userScrollUntil = 0;
+  let followSuspended = false;
 
   function buildBoard() {
     boardElement.replaceChildren();
@@ -158,7 +160,7 @@
   }
 
   function followCurrentStep() {
-    if (!settings.followPlayhead || settings.boardView !== "SCROLL" ||
+    if (!settings.followPlayhead || settings.boardView !== "SCROLL" || followSuspended ||
         performance.now() < userScrollUntil) return;
     const header = boardElement.querySelector(`.step-label[data-column="${game.currentStep}"]`);
     if (!header) return;
@@ -185,8 +187,7 @@
       STANDARD: "TAP OPEN · LONG PRESS FLAG",
       SWITCH: `${switchAction} MODE · TAP CELL`,
       "TWO HAND": "HOLD A MODE + TAP CELL",
-      "DOUBLE TAP": "SINGLE OPEN · DOUBLE FLAG",
-      FLICK: "TAP OPEN · FLICK ↑ FLAG / ↓ UNFLAG"
+      "DOUBLE TAP": "SINGLE OPEN · DOUBLE FLAG"
     };
     touchHint.textContent = hints[settings.touchMode];
     switchControls.querySelectorAll("button").forEach((button) => {
@@ -224,6 +225,7 @@
         ,`board=${game.rows}x${game.columns}/${game.mineCount} (${(Settings.mineDensity(settings) * 100).toFixed(1)}%)`
         ,`preset=${settings.preset}/${settings.difficulty}`
         ,`touch=${settings.touchMode}/view=${settings.boardView}/follow=${settings.followPlayhead}`
+        ,`pointer=${Boolean(pointerContext)}/longPress=${Boolean(pressTimer)}/followSuspended=${followSuspended}`
       ].join(" / ");
     }
   }
@@ -307,12 +309,6 @@
       case Input.ACTIONS.TOGGLE_FLAG:
         flagSelectedCell(row, column);
         break;
-      case Input.ACTIONS.SET_FLAG:
-        flagSelectedCell(row, column, true);
-        break;
-      case Input.ACTIONS.REMOVE_FLAG:
-        flagSelectedCell(row, column, false);
-        break;
       default:
         break;
     }
@@ -334,10 +330,11 @@
     doubleTapTimer = 0;
     pendingDoubleCell = null;
     pressedCell = null;
-    pressStart = null;
     pointerContext = null;
     longPressTriggered = false;
     modifierAction = null;
+    followSuspended = false;
+    userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
     updateTouchControls();
   }
 
@@ -368,7 +365,7 @@
     if (!cell || cell.disabled || (event.pointerType === "mouse" && event.button !== 0)) return;
     clearPress();
     pressedCell = cell;
-    pressStart = { x: event.clientX, y: event.clientY };
+    followSuspended = true;
     pointerContext = {
       cell,
       row: Number(cell.dataset.row),
@@ -393,8 +390,8 @@
   boardElement.addEventListener("pointermove", (event) => {
     if (!pointerContext) return;
     const distance = Math.hypot(event.clientX - pointerContext.startX, event.clientY - pointerContext.startY);
-    if (distance > 10) pointerContext.moved = true;
-    if (settings.touchMode !== "FLICK" && distance > 12) {
+    if (distance > LONG_PRESS_MOVE_PX) {
+      pointerContext.moved = true;
       clearPress();
     }
   });
@@ -403,18 +400,12 @@
     const context = pointerContext;
     clearPress();
     pressedCell = null;
-    pressStart = null;
     pointerContext = null;
+    followSuspended = false;
+    userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
     if (!context || longPressTriggered || event.button !== 0) return;
     if (context.pointerType === "mouse") {
       if (!context.moved) performAction(Input.ACTIONS.OPEN, context.row, context.column);
-      return;
-    }
-    if (settings.touchMode === "FLICK") {
-      performAction(Input.flickAction(
-        event.clientX - context.startX,
-        event.clientY - context.startY
-      ), context.row, context.column);
       return;
     }
     if (context.moved) return;
@@ -432,15 +423,19 @@
   });
 
   boardElement.addEventListener("contextmenu", (event) => {
-    const cell = event.target.closest(".cell");
-    if (!cell) return;
     event.preventDefault();
+    const cell = event.target.closest(".cell");
+    if (!cell || event.button !== 2) return;
     const position = positionFromElement(cell);
     performAction(Input.ACTIONS.TOGGLE_FLAG, position.row, position.column);
   });
 
+  ["selectstart", "dragstart"].forEach((eventName) => {
+    boardElement.addEventListener(eventName, (event) => event.preventDefault());
+  });
+
   boardWrap.addEventListener("scroll", () => {
-    userScrollUntil = performance.now() + 900;
+    userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
   }, { passive: true });
 
   function scheduleStep(step, time) {
@@ -568,6 +563,7 @@
     settingSteps.value = normalized.steps;
     settingMines.max = String(normalized.rows * normalized.steps - 1);
     settingMines.value = normalized.mines;
+    settingBoardView.value = normalized.boardView;
     settingDensity.textContent = `DENSITY ${(Settings.mineDensity(normalized) * 100).toFixed(1)}%`;
     settingCurrentTempo.textContent = `CURRENT BPM ${game.bpm} / ${game.tempoCategory}`;
     settingsValidation.textContent = customBoard
@@ -699,7 +695,7 @@
     if (event.target === settingsDialog) closeSettings();
   });
   [settingPreset, settingRows, settingSteps, settingDifficulty, settingMines,
-    settingRandomBpm, settingFixedBpm].forEach((control) => {
+    settingRandomBpm, settingFixedBpm, settingBoardView].forEach((control) => {
     control.addEventListener("input", updateSettingsPreview);
     control.addEventListener("change", updateSettingsPreview);
   });
@@ -725,7 +721,7 @@
   populateSelect(settingDifficulty, Settings.DIFFICULTIES);
   populateSelect(settingTouchMode, Settings.TOUCH_MODES);
   populateSelect(settingBoardView, Settings.BOARD_VIEWS);
-  document.documentElement.dataset.version = "0.3.0";
+  document.documentElement.dataset.version = "0.3.1";
   AudioEngine.setTrackCount(game.rows);
   buildBoard();
   render();

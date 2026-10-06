@@ -4,7 +4,7 @@
 
 ## Version
 
-0.3.0 BOARD & TOUCH LAB
+0.3.1 MOBILE BOARD FIX
 
 ## 起動
 
@@ -29,14 +29,19 @@
 - 全地雷を正しくフラグしてCLEARするとPERFECT SWEEP
 - DEBUG画面にFORCE CLEAR / FORCE PERFECTを追加
 
-## Version 0.3.0
+## Version 0.3.1
 
 - BOARD PRESET: COMPACT、STANDARD、WIDE、16 STEP、LARGE、CUSTOM
 - Rows 6〜12、Steps 6〜16、可変地雷数
 - Difficulty: EASY（約12%）、NORMAL（約16%）、HARD（約22%）、CUSTOM
 - BOARD VIEW: FIT、SCROLL、COMPACT
 - SCROLL時のFOLLOW PLAYHEAD
-- TOUCH MODE: STANDARD、SWITCH、TWO HAND、DOUBLE TAP、FLICK
+- TOUCH MODE: STANDARD、SWITCH、TWO HAND、DOUBLE TAP
+- iPhoneでの長押し文字選択・Touch Calloutを盤面内だけ抑止
+- 長押し中に10pxを超えて移動した場合はFLAGをキャンセル
+- 12 / 16 STEPを単一Grid行で保持し、盤面Viewport内だけ横スクロール
+- 大盤面ではTRACK名を左端へsticky表示
+- 旧設定のFLICKはSTANDARDへ安全にフォールバック
 - 開封済み数字セルの再操作によるCHORD OPEN
 - GAME SETTINGSとlocalStorage保存
 - 追加TRACK: CLAP、PERC、SUB、PLUCK

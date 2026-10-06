@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#071116">
   <meta name="description" content="マインスイーパを解くほど音楽が育つ、8ステップのブラウザ・シーケンサゲーム。">
-  <title>マインスイーパシーケンサ Ver 0.3.0</title>
-  <link rel="stylesheet" href="style.css">
+  <title>マインスイーパシーケンサ Ver 0.3.1</title>
+  <link rel="stylesheet" href="style.css?v=0.3.1">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">← ARCADE</a>
       <div class="topbar-actions">
-        <span class="version">BOARD &amp; TOUCH LAB · VER 0.3.0</span>
+        <span class="version">MOBILE BOARD FIX · VER 0.3.1</span>
         <button id="settingsButton" class="settings-button" type="button" aria-label="ゲーム設定を開く">⚙ SETTING</button>
       </div>
     </header>
@@ -50,7 +50,7 @@
       <section id="touchControls" class="touch-controls" aria-label="タッチ操作モード">
         <label>TOUCH
           <select id="quickTouchMode">
-            <option>STANDARD</option><option>SWITCH</option><option>TWO HAND</option><option>DOUBLE TAP</option><option>FLICK</option>
+            <option>STANDARD</option><option>SWITCH</option><option>TWO HAND</option><option>DOUBLE TAP</option>
           </select>
         </label>
         <div id="switchControls" class="mode-buttons" hidden>
@@ -132,10 +132,10 @@
     </div>
   </div>
 
-  <script src="game-core.js"></script>
-  <script src="settings.js"></script>
-  <script src="input-controller.js"></script>
-  <script src="audio-engine.js"></script>
-  <script src="app.js"></script>
+  <script src="game-core.js?v=0.3.1"></script>
+  <script src="settings.js?v=0.3.1"></script>
+  <script src="input-controller.js?v=0.3.1"></script>
+  <script src="audio-engine.js?v=0.3.1"></script>
+  <script src="app.js?v=0.3.1"></script>
 </body>
 </html>
