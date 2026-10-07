@@ -198,6 +198,10 @@ async function main() {
       const ready = await evaluate("document.readyState === 'complete' && !document.querySelector('#debugPanel').hidden");
       if (!ready) throw new Error("Debug UI is not ready");
     });
+    await evaluate(`(() => {
+      Object.defineProperty(document, "hidden", { configurable: true, get: () => false });
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+    })()`);
     const accent = await evaluate(`(async () => {
       const tap = (cell) => {
         cell.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }));
@@ -690,12 +694,17 @@ async function main() {
       const count = await evaluate("document.readyState === 'complete' ? document.querySelectorAll('.cell').length : 0");
       if (count !== 120) throw new Error(`Saved settings did not restore: ${count} cells`);
     });
-    const restored = await evaluate(`({
-      summary: document.querySelector("#boardSummary").textContent,
-      view: document.querySelector("#boardWrap").className,
-      touch: document.querySelector("#quickTouchMode").value,
-      follow: document.querySelector("#settingFollowPlayhead").checked
-    })`);
+    const restored = await evaluate(`(() => {
+      document.querySelector("#settingsButton").click();
+      const result = {
+        summary: document.querySelector("#boardSummary").textContent,
+        view: document.querySelector("#boardWrap").className,
+        touch: document.querySelector("#quickTouchMode").value,
+        follow: document.querySelector("#settingFollowPlayhead").checked
+      };
+      document.querySelector("#settingsClose").click();
+      return result;
+    })()`);
     assert.equal(restored.summary, "10 × 12 / 19 MINES");
     assert.match(restored.view, /view-scroll/);
     assert.equal(restored.touch, "STANDARD");
