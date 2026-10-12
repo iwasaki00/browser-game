@@ -62,22 +62,6 @@ body::after {
   align-items: start;
 }
 
-.topbar {
-  grid-column: 1 / -1;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: rgba(255, 250, 239, 0.82);
-  color: var(--ink);
-  text-decoration: none;
-  box-shadow: 0 12px 24px var(--shadow);
-}
-
 .hero,
 .board-panel {
   background: var(--paper);
@@ -156,6 +140,20 @@ button {
   box-shadow: 0 12px 24px rgba(122, 39, 29, 0.24);
 }
 
+/* 操作領域だけ選択・長押しメニューを抑制し、入力欄や本文は対象外にする。 */
+.board-frame,
+.stone,
+button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+button,
+select {
+  touch-action: manipulation;
+}
+
 button:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 28px rgba(122, 39, 29, 0.28);
@@ -185,6 +183,10 @@ button:hover {
 .online-controls {
   display: grid;
   gap: 12px;
+}
+
+.online-controls[hidden] {
+  display: none;
 }
 
 .room-row {
@@ -417,10 +419,5 @@ button:hover {
 
   .legend {
     gap: 14px;
-  }
-
-  .back-link {
-    width: 100%;
-    justify-content: center;
   }
 }
