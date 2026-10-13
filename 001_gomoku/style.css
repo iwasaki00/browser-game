@@ -421,3 +421,163 @@ button:hover {
     gap: 14px;
   }
 }
+
+/* スマートフォンでは表示領域の高さに合わせ、盤面を正方形のまま収める。 */
+@media (max-width: 920px) {
+  body {
+    min-height: 100svh;
+  }
+
+  .app {
+    width: calc(100% - 20px);
+    height: 100vh;
+    height: 100svh;
+    padding: 10px 0;
+    gap: 10px;
+    grid-template-rows: minmax(0, auto) minmax(min(270px, 50svh), 1fr);
+    align-items: stretch;
+  }
+
+  .hero,
+  .board-panel {
+    padding: 12px;
+  }
+
+  .hero {
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .eyebrow {
+    margin-bottom: 4px;
+    font-size: 0.7rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .lead {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .controls {
+    margin-top: 10px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 8px;
+  }
+
+  .mode-picker {
+    min-width: 0;
+    gap: 4px;
+    font-size: 0.8rem;
+  }
+
+  select,
+  input {
+    min-width: 0;
+    padding: 10px 8px;
+    font-size: 1rem;
+  }
+
+  .controls button {
+    min-height: 44px;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+
+  #resetButton {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .status-card {
+    margin-top: 10px;
+    padding: 8px 12px;
+  }
+
+  .status-label {
+    font-size: 0.7rem;
+  }
+
+  .status-text {
+    margin-top: 4px;
+    font-size: 1rem;
+  }
+
+  .online-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  .room-row,
+  .room-info,
+  .chat-panel {
+    grid-column: 1 / -1;
+  }
+
+  .room-info {
+    font-size: 0.8rem;
+  }
+
+  .room-info:empty {
+    display: none;
+  }
+
+  .chat-panel,
+  .chat-row {
+    gap: 6px;
+  }
+
+  .chat-messages {
+    min-height: 0;
+    height: clamp(44px, 8svh, 72px);
+    padding: 6px;
+  }
+
+  .board-panel {
+    min-height: 0;
+    container-type: size;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .board-frame {
+    width: min(100%, calc(100cqh - 34px));
+    aspect-ratio: 1;
+    padding: 10px;
+  }
+
+  .legend {
+    margin-top: 8px;
+    gap: 14px;
+  }
+
+  .legend-item {
+    font-size: 0.8rem;
+  }
+
+  .legend .stone {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* 横向きでは設定と盤面を左右に配置する。 */
+@media (max-width: 920px) and (orientation: landscape) {
+  .app {
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .hero {
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
