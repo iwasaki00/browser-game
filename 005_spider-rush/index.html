@@ -42,6 +42,7 @@
     }
 
     body {
+      height: 100dvh;
       position: fixed;
       inset: 0;
     }
@@ -292,24 +293,24 @@
 <body>
   <div id="app">
     <div id="gameArea">
-    <canvas id="gameCanvas" aria-label="Spider Rush game canvas"></canvas>
+      <canvas id="gameCanvas" aria-label="Spider Rush game canvas"></canvas>
 
-    <div class="hud">
-      <div class="hud-top">
-        <div class="hud-stats">
-          <div class="chip"><span>Distance</span><strong id="distanceText">0 m</strong></div>
-          <div class="chip"><span>Score</span><strong id="scoreText">0</strong></div>
-          <div class="chip"><span>Combo</span><strong id="comboText">x1.0</strong></div>
+      <div class="hud">
+        <div class="hud-top">
+          <div class="hud-stats">
+            <div class="chip"><span>Distance</span><strong id="distanceText">0 m</strong></div>
+            <div class="chip"><span>Score</span><strong id="scoreText">0</strong></div>
+            <div class="chip"><span>Combo</span><strong id="comboText">x1.0</strong></div>
+          </div>
+          <div class="hud-details">
+            <div class="chip"><span>Status</span><strong id="statusText">BARRIER 5.0s</strong></div>
+            <div class="chip"><span>Next Ability</span><strong id="abilityText">12.0s</strong></div>
+          </div>
         </div>
-        <div class="hud-details">
-          <div class="chip"><span>Status</span><strong id="statusText">BARRIER 5.0s</strong></div>
-          <div class="chip"><span>Next Ability</span><strong id="abilityText">12.0s</strong></div>
+        <div class="hud-bottom">
+          <div class="hint" id="hintText">長押しで接続・離して解除</div>
         </div>
       </div>
-      <div class="hud-bottom">
-        <div class="hint" id="hintText">長押しで接続・離して解除</div>
-      </div>
-    </div>
     </div>
 
     <div class="center-overlay show" id="titleOverlay">
@@ -1281,6 +1282,7 @@
       });
       titleButton.addEventListener("click", backToTitle);
       window.addEventListener("resize", resizeCanvas);
+      new ResizeObserver(resizeCanvas).observe(app);
 
       resizeCanvas();
       backToTitle();

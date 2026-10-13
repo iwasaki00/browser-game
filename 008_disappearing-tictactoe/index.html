@@ -24,9 +24,9 @@
           <button class="mode-button active" type="button" data-mode="normal">ノーマル</button>
           <button class="mode-button" type="button" data-mode="replace">置き直し三目並べ</button>
           <button class="mode-button" type="button" data-mode="four">4×4モード</button>
-          <button class="mode-button" type="button" data-mode="move">移動あり</button>
-          <button class="mode-button" type="button" data-mode="king">王様駒</button>
-          <button class="mode-button" type="button" data-mode="bomb">爆弾マス</button>
+          <button class="mode-button" type="button" data-mode="move">移動あり <small>追加予定</small></button>
+          <button class="mode-button" type="button" data-mode="king">王様駒 <small>追加予定</small></button>
+          <button class="mode-button" type="button" data-mode="bomb">爆弾マス <small>追加予定</small></button>
         </div>
         <label class="setting-row" for="maxMovesSelect">
           <span>置ける駒</span>
@@ -75,6 +75,7 @@
       </div>
 
       <div class="move-order" aria-label="置いた順番">
+        <p class="order-hint" id="orderHint"></p>
         <div>
           <span class="label">○の順番</span>
           <ol id="playerOrder"></ol>

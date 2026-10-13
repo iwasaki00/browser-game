@@ -357,7 +357,7 @@ h2 {
   display: grid;
   gap: 10px;
   min-height: 0;
-  max-height: 100%;
+  max-height: min(30dvh, 100%);
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -511,4 +511,10 @@ button { touch-action: manipulation; }
   .ending-chip { padding: 5px 8px; }
 }
 
-.choices { max-height: min(30dvh, 100%); }
+
+@media (max-width: 759px) {
+  .title-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .title-actions #truthButton { grid-column: 1 / -1; }
+  .ending-records { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ending-chip { overflow-wrap: anywhere; }
+}

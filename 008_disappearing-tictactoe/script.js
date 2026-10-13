@@ -78,7 +78,7 @@ const modeConfigs = {
 };
 
 const modeTexts = {
-  normal: "3×3盤面で、3つ揃えると勝利です。各プレイヤーの駒は最大3つで、4手目を置くと自分の一番古い駒が消えます。",
+  normal: "3×3盤面で、縦・横・斜めに3つ揃えると勝利です。",
   replace: "各プレイヤーの駒は3つまで。4手目以降は、自分の駒を1つ選んで空きマスへ移動します。消えるのではなく、自分で置き直す三目並べです。",
   four: "4×4盤面で、横・縦・斜めのいずれかに4つ揃えると勝利です。",
   move: "新しく駒を置く代わりに、自分の駒を別の空きマスへ移動できます。",
@@ -103,12 +103,35 @@ let dragSourceIndex = null;
 let dragHoverIndex = null;
 let hasDraggedPiece = false;
 let dragStartedSelected = false;
-let suppressNextTap = false;
+let suppressedPointerId = null;
+let activePointerId = null;
+const ignoredPointerIds = new Set();
+let dragCaptureElement = null;
+let dragStartX = 0;
+let dragStartY = 0;
+let gameGeneration = 0;
+let cpuTimerId = null;
+const removalTimerIds = new Set();
+let winningCells = [];
+
+function cancelPendingGameWork() {
+  gameGeneration += 1;
+  window.clearTimeout(cpuTimerId);
+  cpuTimerId = null;
+  removalTimerIds.forEach((id) => window.clearTimeout(id));
+  removalTimerIds.clear();
+  fadingMarks = {};
+  resetDragState();
+  suppressedPointerId = null;
+  ignoredPointerIds.clear();
+}
 let maxMovesByMode = Object.fromEntries(
   Object.entries(modeConfigs).map(([mode, config]) => [mode, config.maxMoves])
 );
 
 function initGame() {
+  cancelPendingGameWork();
+  winningCells = [];
   const config = getModeConfig();
   boardSize = config.boardSize;
   maxMoves = getSelectedMaxMoves();
@@ -126,6 +149,7 @@ function initGame() {
   winLine.className = "win-line hidden";
   resetWinLine();
   boardElement.style.setProperty("--board-size", boardSize);
+  gameScreen.style.setProperty("--board-controls-height", boardSize === 4 ? "356px" : "324px");
   boardElement.setAttribute("aria-label", `${boardSize}×${boardSize}盤面`);
   boardElement.classList.toggle("board-four", boardSize === 4);
   modeName.textContent = config.label;
@@ -134,7 +158,7 @@ function initGame() {
   updateStatus();
 }
 
-function renderBoard(winningCells = []) {
+function renderBoard(cells = winningCells) {
   boardElement.innerHTML = "";
 
   board.forEach((cell, index) => {
@@ -151,7 +175,7 @@ function renderBoard(winningCells = []) {
       button.classList.add("unavailable");
     }
 
-    if (winningCells.includes(index)) {
+    if (cells.includes(index)) {
       button.classList.add("winner");
     }
 
@@ -202,7 +226,7 @@ function renderBoard(winningCells = []) {
       }
     }
 
-    button.addEventListener("click", () => handleCellTap(index));
+    button.addEventListener("click", (event) => handleCellTap(index, event));
     button.addEventListener("pointerdown", (event) => handleCellPointerDown(event, index));
     boardElement.appendChild(button);
   });
@@ -210,9 +234,11 @@ function renderBoard(winningCells = []) {
   renderMoveOrder();
 }
 
-function handleCellTap(index) {
-  if (suppressNextTap) {
-    suppressNextTap = false;
+function handleCellTap(index, event) {
+  // Ignore only compatibility clicks from the pointer gesture we handled.
+  if ((event && ignoredPointerIds.has(event.pointerId)) || activePointerId !== null || (event && event.detail !== 0 &&
+      (event.pointerId === suppressedPointerId ||
+       (suppressedPointerId !== null && !("pointerId" in event))))) {
     return;
   }
 
@@ -234,32 +260,45 @@ function handleCellTap(index) {
 }
 
 function handleCellPointerDown(event, index) {
-  if (!canDragReplacePiece(index)) {
-    return;
-  }
-
+  if (activePointerId !== null || event.isPrimary === false || event.button !== 0) return;
+  suppressedPointerId = null;
+  if (!canDragReplacePiece(index)) return;
   event.preventDefault();
-  suppressNextTap = true;
+  activePointerId = event.pointerId;
+  suppressedPointerId = event.pointerId;
+  dragCaptureElement = event.currentTarget;
+  dragStartX = event.clientX;
+  dragStartY = event.clientY;
   dragSourceIndex = index;
   dragHoverIndex = null;
   hasDraggedPiece = false;
   dragStartedSelected = selectedPieceIndex === index;
   selectedPieceIndex = index;
   boardElement.classList.add("dragging");
+  try { dragCaptureElement.setPointerCapture(event.pointerId); } catch {
+    // Window listeners also finish gestures when capture is unavailable.
+  }
   updateStatus();
-  renderBoard();
+  updateReplaceSelection();
+}
+
+function updateReplaceSelection() {
+  Array.from(boardElement.children).forEach((cell, index) => {
+    cell.classList.toggle("selected", selectedPieceIndex === index);
+    cell.classList.toggle("move-target", selectedPieceIndex !== null && board[index] === null);
+    cell.setAttribute("aria-disabled", String(isCellDisabled(index)));
+    cell.classList.toggle("unavailable", isCellDisabled(index));
+  });
+  updateDragHoverClass();
+  renderMoveOrder();
 }
 
 function handleBoardPointerMove(event) {
-  if (dragSourceIndex === null) {
-    return;
-  }
-
+  if (activePointerId === null || event.pointerId !== activePointerId) return;
   event.preventDefault();
-  hasDraggedPiece = true;
+  if (Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY) >= 6) hasDraggedPiece = true;
   const targetIndex = getPointerCellIndex(event);
   const nextHoverIndex = targetIndex !== null && board[targetIndex] === null ? targetIndex : null;
-
   if (dragHoverIndex !== nextHoverIndex) {
     dragHoverIndex = nextHoverIndex;
     updateDragHoverClass();
@@ -267,40 +306,30 @@ function handleBoardPointerMove(event) {
 }
 
 function handleBoardPointerUp(event) {
-  if (dragSourceIndex === null) {
-    return;
-  }
-
+  if (activePointerId === null || event.pointerId !== activePointerId) return;
   event.preventDefault();
   const sourceIndex = dragSourceIndex;
   const targetIndex = getPointerCellIndex(event);
-  const wasDragged = hasDraggedPiece;
+  const wasDragged = hasDraggedPiece || Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY) >= 6;
+  const startedSelected = dragStartedSelected;
   resetDragState();
-
   if (wasDragged && targetIndex !== null && board[targetIndex] === null) {
-    moveMark(PLAYER, sourceIndex, targetIndex);
     selectedPieceIndex = null;
+    moveMark(PLAYER, sourceIndex, targetIndex);
     completePlayerTurn();
     return;
   }
-
-  if (!wasDragged) {
-    selectedPieceIndex = dragStartedSelected ? null : sourceIndex;
-  }
-
+  selectedPieceIndex = wasDragged || targetIndex !== sourceIndex ? null : startedSelected ? null : sourceIndex;
   updateStatus();
-  renderBoard();
+  updateReplaceSelection();
 }
 
-function handleBoardPointerCancel() {
-  if (dragSourceIndex === null) {
-    return;
-  }
-
+function handleBoardPointerCancel(event) {
+  if (activePointerId === null || (event && event.pointerId !== activePointerId)) return;
   resetDragState();
   selectedPieceIndex = null;
   updateStatus();
-  renderBoard();
+  updateReplaceSelection();
 }
 
 function canDragReplacePiece(index) {
@@ -319,7 +348,7 @@ function getPointerCellIndex(event) {
 
   const element = document.elementFromPoint(event.clientX, event.clientY);
   const cell = element ? element.closest(".cell") : null;
-  if (!cell || !cell.dataset) {
+  if (!cell || !boardElement.contains(cell) || !cell.dataset) {
     return null;
   }
 
@@ -334,11 +363,21 @@ function updateDragHoverClass() {
 }
 
 function resetDragState() {
+  const captureElement = dragCaptureElement;
+  const pointerId = activePointerId;
+  activePointerId = null;
+  dragCaptureElement = null;
+  if (captureElement && pointerId !== null) {
+    try {
+      if (captureElement.hasPointerCapture(pointerId)) captureElement.releasePointerCapture(pointerId);
+    } catch { /* Capture may already have been released by the browser. */ }
+  }
   dragSourceIndex = null;
   dragHoverIndex = null;
   hasDraggedPiece = false;
   dragStartedSelected = false;
   boardElement.classList.remove("dragging");
+  updateDragHoverClass();
 }
 
 function handleReplacePlayerTap(index) {
@@ -390,11 +429,13 @@ function completePlayerTurn() {
   updateStatus("CPUが考えています...");
   renderBoard();
 
-  window.setTimeout(() => {
-    if (gameOver) {
+  const generation = gameGeneration;
+  cpuTimerId = window.setTimeout(() => {
+    if (generation !== gameGeneration || gameOver || currentTurn !== CPU || !cpuThinking) {
       return;
     }
 
+    cpuTimerId = null;
     const cpuAction = getCpuAction();
     applyCpuAction(cpuAction);
     const cpuResult = checkWinner(CPU);
@@ -449,10 +490,14 @@ function removeOldestMove(player) {
   if (typeof removedIndex === "number") {
     board[removedIndex] = null;
     fadingMarks[removedIndex] = player;
-    window.setTimeout(() => {
+    const generation = gameGeneration;
+    const timerId = window.setTimeout(() => {
+      removalTimerIds.delete(timerId);
+      if (generation !== gameGeneration) return;
       delete fadingMarks[removedIndex];
       renderBoard();
     }, 170);
+    removalTimerIds.add(timerId);
   }
 }
 
@@ -632,8 +677,8 @@ function updateStatus(message) {
   } else if (currentTurn === PLAYER) {
     if (modeType === "replace" && playerMoves.length >= maxMoves) {
       statusText.textContent = selectedPieceIndex === null
-        ? "動かす駒をドラッグしてください。"
-        : "移動先で指を離してください。";
+        ? "駒をタップして選択、またはドラッグ。"
+        : activePointerId !== null ? "移動先で指を離してください。" : "空きマスをタップして移動。";
     } else {
       statusText.textContent = "空いているマスをタップしてください。";
     }
@@ -660,7 +705,10 @@ function selectMode(mode) {
   const modeChanged = selectedMode !== mode;
   selectedMode = mode;
   document.querySelectorAll(".mode-button").forEach((button) => {
-    button.classList.toggle("active", button.dataset.mode === mode);
+    const active = button.dataset.mode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+    button.classList.toggle("future-mode", !modeConfigs[button.dataset.mode].playable);
   });
 
   const config = getModeConfig();
@@ -677,6 +725,7 @@ function selectMode(mode) {
 }
 
 function finishGame(winner, result) {
+  winningCells = result.cells;
   gameOver = true;
   cpuThinking = false;
   currentTurn = winner;
@@ -708,6 +757,9 @@ function getOpacityForAge(ageIndex, length) {
 }
 
 function renderMoveOrder() {
+  document.getElementById("orderHint").textContent = modeType === "replace"
+    ? "自動消滅なし・数字は駒の順番"
+    : "1が最も古い駒・点滅する1は次の自分の手で消滅";
   renderOrderList(playerOrder, playerMoves);
   renderOrderList(cpuOrder, cpuMoves);
 }
@@ -716,7 +768,10 @@ function renderOrderList(listElement, moves) {
   listElement.innerHTML = "";
   moves.forEach((index, orderIndex) => {
     const item = document.createElement("li");
-    item.textContent = String(index + 1);
+    item.textContent = String(orderIndex + 1);
+    item.setAttribute("aria-label", `${orderIndex + 1}番目：${getCellLabel(index, board[index])}`);
+    item.title = `${orderIndex + 1}番目・${Math.floor(index / boardSize) + 1}行${index % boardSize + 1}列`;
+    if (modeType !== "replace" && orderIndex === 0 && moves.length === maxMoves) item.title += "・次の自分の手で消滅";
     if (modeType !== "replace" && orderIndex === 0 && moves.length === maxMoves) {
       item.classList.add("oldest");
     }
@@ -768,14 +823,14 @@ function renderMaxMovesOptions() {
 }
 
 function updateModeDescription() {
-  if (getModeConfig().type === "replace") {
+  if (getModeConfig().type !== "disappear") {
     modeDescription.textContent = modeTexts[selectedMode];
     return;
   }
 
   const selectedMaxMoves = getSelectedMaxMoves();
   const nextRemovalTurn = selectedMaxMoves + 1;
-  modeDescription.textContent = `${modeTexts[selectedMode]} 現在の設定では各プレイヤーが${selectedMaxMoves}個まで保持でき、${nextRemovalTurn}手目を置くと自分の1手目が消えます。`;
+  modeDescription.textContent = `${modeTexts[selectedMode]} 各${selectedMaxMoves}個まで保持し、${nextRemovalTurn}手目以降は自分の最も古い駒が消えます。`;
 }
 
 function isCellDisabled(index) {
@@ -902,9 +957,21 @@ modeGrid.addEventListener("click", handleModeSelectEvent);
 modeGrid.addEventListener("touchend", handleModeSelectEvent, { passive: false });
 
 if (window.addEventListener) {
+  window.addEventListener("pointerdown", (event) => {
+    if (event.isPrimary === false || (activePointerId !== null && event.pointerId !== activePointerId)) {
+      ignoredPointerIds.add(event.pointerId);
+    } else {
+      ignoredPointerIds.delete(event.pointerId);
+    }
+  }, true);
   window.addEventListener("pointermove", handleBoardPointerMove, { passive: false });
   window.addEventListener("pointerup", handleBoardPointerUp, { passive: false });
   window.addEventListener("pointercancel", handleBoardPointerCancel);
+  boardElement.addEventListener("lostpointercapture", handleBoardPointerCancel);
+  window.addEventListener("blur", () => handleBoardPointerCancel());
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) handleBoardPointerCancel();
+  });
 }
 
 maxMovesSelect.addEventListener("change", () => {

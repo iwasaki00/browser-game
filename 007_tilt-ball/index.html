@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -11,11 +11,10 @@
 </head>
 <body>
   <main id="app">
-    <canvas id="gameCanvas" width="390" height="640" aria-label="傾き操作のバランスゲーム"></canvas>
+    <div id="boardViewport"><canvas id="gameCanvas" width="390" height="640" aria-label="傾き操作のバランスゲーム"></canvas></div>
 
     <section class="hud" aria-label="ゲーム情報">
       <div class="hud-row">
-        <a class="icon-link" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
         <div class="stat">
           <span>MODE</span>
           <strong id="modeNameText">玉ころがし</strong>
@@ -33,28 +32,35 @@
       <div class="tilt-readout water-readout" id="waterText">water 80 / goal 0</div>
     </section>
 
-    <section class="mode-switch" aria-label="モード選択">
-      <button class="mode-button active" data-mode="ball" type="button">玉ころがし</button>
-      <button class="mode-button" data-mode="water" type="button">水バランス</button>
-      <button class="mode-button" data-mode="tray" type="button">お盆バランス</button>
-    </section>
-
-    <section class="controls" aria-label="ゲーム操作">
-      <label class="range-control">
-        <span>傾き感度</span>
-        <input id="sensitivitySlider" type="range" min="0.5" max="2.2" step="0.1" value="1.0">
-        <strong id="sensitivityText">1.0x</strong>
-      </label>
-      <button id="resetButton" class="secondary-button" type="button">リセット</button>
-    </section>
-
-    <section class="virtual-pad" id="virtualPad" aria-label="仮想操作ボタン">
-      <button data-dir="up" type="button" aria-label="上へ傾ける">↑</button>
-      <div>
+    <section class="control-dock" aria-label="ゲーム操作">
+      <div class="control-bar">
+        <button id="calibrateButton" class="secondary-button" type="button" disabled>この角度を基準にする</button>
+        <button id="resetButton" class="secondary-button" type="button">リセット</button>
+        <button id="settingsButton" class="secondary-button" type="button" aria-expanded="false" aria-controls="settingsPanel">設定</button>
+      </div>
+      <p id="sensorStatus" class="sensor-status" role="status">センサーは開始時に確認します</p>
+      <div id="settingsPanel" class="settings-panel" hidden>
+        <label class="range-control">
+          <span>傾き感度</span>
+          <input id="sensitivitySlider" type="range" min="0.5" max="2.2" step="0.1" value="1.0">
+          <strong id="sensitivityText">1.0x</strong>
+        </label>
+        <div class="sensor-actions">
+          <button id="sensorRetryButton" class="secondary-button" type="button">センサーを再試行</button>
+          <button id="virtualButton" class="secondary-button" type="button">仮想操作に切替</button>
+        </div>
+        <section class="mode-switch" aria-label="モード選択">
+          <button class="mode-button active" data-mode="ball" type="button">玉ころがし</button>
+          <button class="mode-button" data-mode="water" type="button">水バランス</button>
+          <button class="mode-button" data-mode="tray" type="button">お盆バランス</button>
+        </section>
+      </div>
+      <section class="virtual-pad" id="virtualPad" aria-label="仮想操作ボタン">
         <button data-dir="left" type="button" aria-label="左へ傾ける">←</button>
+        <button data-dir="up" type="button" aria-label="上へ傾ける">↑</button>
         <button data-dir="down" type="button" aria-label="下へ傾ける">↓</button>
         <button data-dir="right" type="button" aria-label="右へ傾ける">→</button>
-      </div>
+      </section>
     </section>
 
     <section class="overlay show" id="startOverlay" aria-label="ゲーム開始">

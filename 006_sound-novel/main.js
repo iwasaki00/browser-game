@@ -194,10 +194,7 @@
 
   function advance() {
     if (!canAdvance()) return;
-    if (els.titleScreen.classList.contains("hidden") === false) return;
-    if (els.menuOverlay.classList.contains("hidden") === false) return;
-    if (els.backlogOverlay.classList.contains("hidden") === false) return;
-    if (!state.currentNode || state.currentNode.ending ) return;
+    if (!state.currentNode || state.currentNode.ending) return;
 
     if (state.isTyping) {
       finishText();
@@ -369,7 +366,6 @@
       row.append(speaker, text);
       els.backlogList.appendChild(row);
     });
-    els.backlogOverlay.classList.remove("hidden");
   }
 
   function closeBacklog() {

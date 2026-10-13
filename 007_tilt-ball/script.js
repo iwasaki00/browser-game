@@ -20,6 +20,10 @@
   const startModeName = document.getElementById("startModeName");
   const waterText = document.getElementById("waterText");
   const virtualPad = document.getElementById("virtualPad");
+  const calibrateButton = document.getElementById("calibrateButton");
+  const sensorStatus = document.getElementById("sensorStatus");
+  const sensorRetryButton = document.getElementById("sensorRetryButton");
+  const SENSOR_TIMEOUT = 3000;
   const modeButtons = [...document.querySelectorAll(".mode-button")];
 
   const modes = {
@@ -106,8 +110,14 @@
       tray: loadBestTime("tray")
     },
     bestTrayRemaining: loadBestTrayRemaining(),
-    sensorAvailable: false,
-    sensorPermissionAsked: false,
+    sensorStatus: "idle",
+    sensorPermission: "unknown",
+    inputMode: "virtual",
+    rawOrientation: null,
+    baseline: { beta: 0, gamma: 0 },
+    lastSensorAt: 0,
+    sensorWatchStartedAt: 0,
+    permissionPending: false,
     goalWaterCount: 0
   };
 
@@ -181,10 +191,14 @@
   }
 
   function resizeCanvas() {
+    const viewport = document.getElementById("boardViewport");
+    const scale = Math.min(viewport.clientWidth / VIEW.width, viewport.clientHeight / VIEW.height);
+    canvas.style.width = `${VIEW.width * scale}px`;
+    canvas.style.height = `${VIEW.height * scale}px`;
     const ratio = window.devicePixelRatio || 1;
-    canvas.width = Math.floor(VIEW.width * ratio);
-    canvas.height = Math.floor(VIEW.height * ratio);
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    canvas.width = Math.round(VIEW.width * ratio);
+    canvas.height = Math.round(VIEW.height * ratio);
+    ctx.setTransform(canvas.width / VIEW.width, 0, 0, canvas.height / VIEW.height, 0, 0);
   }
 
   function clamp(value, min, max) {
@@ -202,6 +216,9 @@
   }
 
   function resetStage(keepPlaying = true) {
+    clearDirections();
+    clearTilt();
+    applyOrientation();
     resetModeState();
     state.elapsed = 0;
     state.startedAt = performance.now();
@@ -235,42 +252,122 @@
     state.trayPerfect = false;
   }
 
+  function clearTilt() {
+    state.beta = state.gamma = state.targetBeta = state.targetGamma = 0;
+  }
+
+  function hasFreshSensor() {
+    return state.rawOrientation !== null && performance.now() - state.lastSensorAt < SENSOR_TIMEOUT;
+  }
+
+  function updateSensorUi() {
+    const labels = {
+      idle: "センサーは開始時に確認します",
+      requesting: "センサーの許可を確認中",
+      unsupported: "センサー未対応：仮想操作でプレイできます",
+      denied: "センサー権限拒否：設定を確認して再試行できます",
+      error: "センサー許可の取得失敗：再試行できます",
+      waiting: "センサー許可済み・データ待ち（仮想操作も使えます）",
+      unavailable: "センサーデータ未受信・停止：仮想操作でプレイできます",
+      active: "センサー操作中：持ちやすい角度で基準を設定できます"
+    };
+    sensorStatus.textContent = state.inputMode === "virtual" && state.sensorStatus === "active"
+      ? "仮想操作中（センサーへ戻すには再試行）" : labels[state.sensorStatus];
+    calibrateButton.disabled = state.inputMode !== "sensor" || !hasFreshSensor();
+    sensorRetryButton.disabled = state.permissionPending;
+    virtualPad.classList.toggle("show", state.inputMode === "virtual" || state.sensorStatus !== "active");
+  }
+
+  function useVirtualInput() {
+    state.inputMode = "virtual";
+    clearTilt();
+    clearDirections();
+    updateSensorUi();
+  }
+
   async function requestMotionPermission() {
-    if (state.sensorPermissionAsked) return;
-    state.sensorPermissionAsked = true;
+    if (state.permissionPending) return;
+    clearDirections();
+    clearTilt();
+    state.rawOrientation = null;
+    state.inputMode = "virtual";
+    state.sensorStatus = "requesting";
     if (!window.DeviceOrientationEvent) {
-      state.sensorAvailable = false;
+      state.sensorStatus = "unsupported";
+      updateSensorUi();
       return;
     }
-
-    const requestPermission = window.DeviceOrientationEvent.requestPermission;
-    if (typeof requestPermission === "function") {
-      try {
-        const result = await requestPermission();
-        state.sensorAvailable = result === "granted";
-      } catch {
-        state.sensorAvailable = false;
+    state.permissionPending = true;
+    updateSensorUi();
+    // Invoke directly in the button gesture, with the constructor as receiver (Safari).
+    try {
+      const result = typeof DeviceOrientationEvent.requestPermission === "function"
+        ? await DeviceOrientationEvent.requestPermission() : "granted";
+      state.sensorPermission = result;
+      if (result !== "granted") {
+        state.sensorStatus = "denied";
+        return;
       }
-    } else {
-      state.sensorAvailable = true;
-    }
-
-    if (state.sensorAvailable) {
+      state.sensorStatus = "waiting";
+      state.inputMode = "sensor";
+      state.sensorWatchStartedAt = performance.now();
       window.addEventListener("deviceorientation", handleOrientation, true);
+    } catch {
+      state.sensorPermission = "error";
+      state.sensorStatus = "error";
+    } finally {
+      state.permissionPending = false;
+      updateSensorUi();
     }
+  }
+
+  function angleDifference(value, base) {
+    return ((value - base + 540) % 360) - 180;
+  }
+
+  function applyOrientation() {
+    if (!hasFreshSensor()) return;
+    const beta = angleDifference(state.rawOrientation.beta, state.baseline.beta);
+    const gamma = angleDifference(state.rawOrientation.gamma, state.baseline.gamma);
+    // Sensor axes remain tied to the device's natural orientation.
+    const angle = (screen.orientation?.angle ?? window.orientation ?? 0) * Math.PI / 180;
+    state.targetGamma = clamp(gamma * Math.cos(angle) + beta * Math.sin(angle), -35, 35);
+    state.targetBeta = clamp(beta * Math.cos(angle) - gamma * Math.sin(angle), -35, 35);
   }
 
   function handleOrientation(event) {
-    const beta = Number.isFinite(event.beta) ? event.beta : 0;
-    const gamma = Number.isFinite(event.gamma) ? event.gamma : 0;
-    state.targetBeta = clamp(beta, -35, 35);
-    state.targetGamma = clamp(gamma, -35, 35);
+    if (state.sensorPermission !== "granted" || state.permissionPending ||
+        !Number.isFinite(event.beta) || !Number.isFinite(event.gamma)) return;
+    state.rawOrientation = { beta: event.beta, gamma: event.gamma };
+    state.lastSensorAt = performance.now();
+    state.sensorStatus = "active";
+    applyOrientation();
+    updateSensorUi();
+  }
+
+  function checkSensorTimeout() {
+    if (state.inputMode !== "sensor") return;
+    const since = state.rawOrientation ? state.lastSensorAt : state.sensorWatchStartedAt;
+    if (performance.now() - since >= SENSOR_TIMEOUT) {
+      state.sensorStatus = "unavailable";
+      state.rawOrientation = null;
+      useVirtualInput();
+    }
+  }
+
+  function calibrate() {
+    if (state.inputMode !== "sensor" || !hasFreshSensor()) return;
+    state.baseline = { ...state.rawOrientation };
+    // Remove the previous smoothed input without changing any body's velocity.
+    clearTilt();
+    updateHud();
   }
 
   async function startGame() {
+    startButton.disabled = true;
     await requestMotionPermission();
+    startButton.disabled = false;
     setOverlay(startOverlay, false);
-    virtualPad.classList.toggle("show", !state.sensorAvailable);
     resetStage(true);
   }
 
@@ -294,7 +391,7 @@
       resultTitle.textContent = clear ? "水を集めた！" : "水が足りない";
       resultDetail.textContent = clear
         ? `Time ${formatTime(state.elapsed)} / water ${state.goalWaterCount}`
-        : `残り水量 ${getAliveWaterCount()} / ${waterRules.failBelow} 未満で失敗`;
+        : `残り水量 ${getAliveWaterCount()} / ${getWaterThresholds().failBelow} 未満で失敗`;
     } else {
       resultTitle.textContent = clear ? "クリア" : "落とし穴";
       resultDetail.textContent = clear
@@ -324,17 +421,23 @@
     tiltText.textContent = `beta ${state.beta.toFixed(1)} / gamma ${state.gamma.toFixed(1)}`;
     waterText.textContent = state.mode === "tray"
       ? `items ${state.trayRemaining}/${trayItems.length}`
-      : `water ${getAliveWaterCount()} / goal ${state.goalWaterCount}`;
+      : `water ${getAliveWaterCount()}/${state.water.length} / goal ${state.goalWaterCount}/${getWaterThresholds().goalCount}`;
     waterText.classList.toggle("show", state.mode === "water" || state.mode === "tray");
     modeButtons.forEach((button) => {
       button.classList.toggle("active", button.dataset.mode === state.mode);
     });
   }
 
+  function getWaterThresholds() {
+    const count = state.water.length;
+    return { goalCount: Math.ceil(count * waterRules.goalCount / waterRules.initialCount),
+      failBelow: Math.ceil(count * waterRules.failBelow / waterRules.initialCount) };
+  }
+
   function getInputTilt() {
     const keyboardTilt = 18;
-    const beta = state.sensorAvailable ? state.targetBeta : 0;
-    const gamma = state.sensorAvailable ? state.targetGamma : 0;
+    const beta = state.inputMode === "sensor" && hasFreshSensor() ? state.targetBeta : 0;
+    const gamma = state.inputMode === "sensor" && hasFreshSensor() ? state.targetGamma : 0;
     return {
       beta: beta + state.keyY * keyboardTilt + state.padY * keyboardTilt,
       gamma: gamma + state.keyX * keyboardTilt + state.padX * keyboardTilt
@@ -342,6 +445,7 @@
   }
 
   function update(dt) {
+    checkSensorTimeout();
     const input = getInputTilt();
     state.beta += (input.beta - state.beta) * 0.16;
     state.gamma += (input.gamma - state.gamma) * 0.16;
@@ -425,12 +529,12 @@
       }
     }
 
-    if (state.goalWaterCount >= waterRules.goalCount) {
+    if (state.goalWaterCount >= getWaterThresholds().goalCount) {
       finishGame(true);
       return;
     }
 
-    if (getAliveWaterCount() < waterRules.failBelow) {
+    if (getAliveWaterCount() < getWaterThresholds().failBelow) {
       finishGame(false);
     }
   }
@@ -921,19 +1025,26 @@
     ctx.closePath();
   }
 
-  function setKey(code, pressed) {
-    if (code === "ArrowLeft") state.keyX = pressed ? -1 : state.keyX === -1 ? 0 : state.keyX;
-    if (code === "ArrowRight") state.keyX = pressed ? 1 : state.keyX === 1 ? 0 : state.keyX;
-    if (code === "ArrowUp") state.keyY = pressed ? -1 : state.keyY === -1 ? 0 : state.keyY;
-    if (code === "ArrowDown") state.keyY = pressed ? 1 : state.keyY === 1 ? 0 : state.keyY;
+  const heldKeys = new Set();
+  const heldPointers = new Map();
+
+  function refreshDirections() {
+    state.keyX = Number(heldKeys.has("ArrowRight")) - Number(heldKeys.has("ArrowLeft"));
+    state.keyY = Number(heldKeys.has("ArrowDown")) - Number(heldKeys.has("ArrowUp"));
+    const dirs = new Set(heldPointers.values());
+    state.padX = Number(dirs.has("right")) - Number(dirs.has("left"));
+    state.padY = Number(dirs.has("down")) - Number(dirs.has("up"));
   }
 
-  function setPadDirection(direction, pressed) {
-    const value = pressed ? 1 : 0;
-    if (direction === "left") state.padX = -value;
-    if (direction === "right") state.padX = value;
-    if (direction === "up") state.padY = -value;
-    if (direction === "down") state.padY = value;
+  function clearDirections() {
+    heldKeys.clear();
+    heldPointers.clear();
+    refreshDirections();
+  }
+
+  function setKey(code, pressed) {
+    if (pressed) heldKeys.add(code); else heldKeys.delete(code);
+    refreshDirections();
   }
 
   function frame(time) {
@@ -946,7 +1057,20 @@
   }
 
   startButton.addEventListener("click", startGame);
-  retryButton.addEventListener("click", () => resetStage(true));
+  retryButton.addEventListener("click", async () => {
+    retryButton.disabled = true;
+    if (state.sensorStatus !== "active") await requestMotionPermission();
+    retryButton.disabled = false;
+    resetStage(true);
+  });
+  sensorRetryButton.addEventListener("click", requestMotionPermission);
+  calibrateButton.addEventListener("click", calibrate);
+  document.getElementById("virtualButton").addEventListener("click", useVirtualInput);
+  document.getElementById("settingsButton").addEventListener("click", (event) => {
+    const panel = document.getElementById("settingsPanel");
+    panel.hidden = !panel.hidden;
+    event.currentTarget.setAttribute("aria-expanded", String(!panel.hidden));
+  });
   resetButton.addEventListener("click", () => resetStage(state.phase !== "title"));
   sensitivitySlider.addEventListener("input", () => {
     state.sensitivity = Number(sensitivitySlider.value);
@@ -957,10 +1081,9 @@
   });
 
   window.addEventListener("keydown", (event) => {
-    if (event.code.startsWith("Arrow")) {
+    if (event.code.startsWith("Arrow") && event.target !== sensitivitySlider) {
       event.preventDefault();
       setKey(event.code, true);
-      virtualPad.classList.add("show");
     }
   });
   window.addEventListener("keyup", (event) => {
@@ -971,23 +1094,41 @@
   });
 
   virtualPad.querySelectorAll("button").forEach((button) => {
-    const direction = button.dataset.dir;
     button.addEventListener("pointerdown", (event) => {
       event.preventDefault();
       button.setPointerCapture(event.pointerId);
-      setPadDirection(direction, true);
+      heldPointers.set(event.pointerId, button.dataset.dir);
+      refreshDirections();
     });
-    button.addEventListener("pointerup", () => setPadDirection(direction, false));
-    button.addEventListener("pointercancel", () => setPadDirection(direction, false));
-    button.addEventListener("pointerleave", () => setPadDirection(direction, false));
+    const release = (event) => {
+      heldPointers.delete(event.pointerId);
+      refreshDirections();
+    };
+    button.addEventListener("pointerup", release);
+    button.addEventListener("pointercancel", release);
+    button.addEventListener("lostpointercapture", release);
   });
 
-  document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
+  window.addEventListener("blur", () => { clearDirections(); clearTilt(); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      clearDirections();
+      clearTilt();
+      state.rawOrientation = null;
+    }
+    updateSensorUi();
+  });
+  [canvas, virtualPad].forEach((area) => {
+    area.addEventListener("contextmenu", (event) => event.preventDefault());
+  });
+  const orientationChanged = () => { clearDirections(); clearTilt(); applyOrientation(); resizeCanvas(); };
+  window.addEventListener("orientationchange", orientationChanged);
+  screen.orientation?.addEventListener("change", orientationChanged);
   window.addEventListener("resize", resizeCanvas);
+  new ResizeObserver(resizeCanvas).observe(document.getElementById("boardViewport"));
 
   resizeCanvas();
+  updateSensorUi();
   updateHud();
   requestAnimationFrame(frame);
 })();
