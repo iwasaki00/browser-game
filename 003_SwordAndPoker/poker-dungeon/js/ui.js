@@ -44,13 +44,14 @@ function syncMobilePrimaryActions() {
   }
 
   if (mobileLayoutMediaQuery.matches) {
-    mobilePrimaryActionsElement.append(confirmButton, passButton);
+    mobilePrimaryActionsElement.append(clearButton, confirmButton, passButton);
     return;
   }
 
   const controlsElement = document.querySelector(".controls");
   if (controlsElement) {
     controlsElement.prepend(passButton);
+    controlsElement.prepend(clearButton);
     controlsElement.prepend(confirmButton);
   }
 }
@@ -147,6 +148,8 @@ function renderBoard(handlers) {
       button.innerHTML = `<span class="muted">${cell.index + 1}</span>`;
     }
 
+    button.setAttribute("aria-label", `${Math.floor(cell.index / 5) + 1}行${cell.index % 5 + 1}列${cell.card ? ` ${cell.card.isJoker ? "ジョーカー" : cell.card.rank + cell.card.suitSymbol}` : " 空きマス"}${pendingPlacement ? " 仮置き" : ""}`);
+    button.setAttribute("aria-pressed", String(state.selectedCells.includes(cell.index)));
     button.addEventListener("click", () => handlers.onCellClick(cell.index));
     boardElement.appendChild(button);
   });
@@ -168,6 +171,8 @@ function renderHands(handlers) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "hand-card-button";
+    button.setAttribute("aria-label", card.isJoker ? "ジョーカー" : `${card.rank}${card.suitSymbol}`);
+    button.setAttribute("aria-pressed", String(state.selectedHandIds.includes(card.id) || state.pendingPlacements.some((placement) => placement.cardId === card.id)));
     button.draggable = state.currentTurn === "player" && !state.winner;
     const cardElement = createCardElement(card, {
       selected:
@@ -234,6 +239,7 @@ function renderStatus() {
 }
 
 function renderLogs() {
+  document.querySelector("#mobile-latest-log").textContent = state.logs[0] || "ログはまだありません。";
   logListElement.innerHTML = "";
   if (mobileLogListElement) {
     mobileLogListElement.innerHTML = "";
@@ -250,13 +256,16 @@ function renderLogs() {
     }
     logListElement.appendChild(item);
 
-    if (mobileLogListElement && index < 2) {
+    if (mobileLogListElement) {
       mobileLogListElement.appendChild(item.cloneNode(true));
     }
   });
 }
 
 function renderBattleBanner() {
+  const mobileBanner = document.querySelector("#mobile-battle-banner");
+  mobileBanner.textContent = "";
+  mobileBanner.className = "mobile-battle-banner";
   enemyBattleBannerElement.innerHTML = "";
   playerBattleBannerElement.innerHTML = "";
   enemyBattleBannerElement.className = "combat-result";
@@ -270,6 +279,8 @@ function renderBattleBanner() {
   const targetElement = banner.actor === "player" ? playerBattleBannerElement : enemyBattleBannerElement;
   const modeClass = banner.mode === "preview" ? "preview-mode" : banner.actor === "player" ? "player-hit" : "enemy-hit";
   targetElement.classList.add("visible", modeClass);
+  mobileBanner.classList.add("visible", modeClass);
+  mobileBanner.textContent = `${banner.mode === "preview" ? "予測" : banner.actor === "player" ? "自分の攻撃" : "敵の攻撃"}: ${banner.totalDamage}ダメージ · ${banner.lines.map((line) => line.handResult.name).join(" / ") || "役なし"}`;
   const details =
     banner.lines.length > 0
       ? banner.lines.map((line) => `<li>${line.handResult.name} ${line.handResult.damage}</li>`).join("")

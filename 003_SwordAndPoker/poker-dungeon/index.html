@@ -85,6 +85,7 @@
 
         <section class="board-stage panel">
           <section id="board" class="board" aria-label="5x5盤面"></section>
+          <div id="mobile-battle-banner" class="mobile-battle-banner" aria-live="polite"></div>
         </section>
 
         <section class="panel mobile-player-panel" aria-label="プレイヤー手札">
@@ -120,12 +121,13 @@
         </aside>
       </main>
 
-      <section class="panel mobile-log-panel" aria-label="最新ログ">
-        <div class="log-header">
-          <h3>Battle Log</h3>
+      <details class="panel mobile-log-panel">
+        <summary><span>戦闘ログ</span><span id="mobile-latest-log" aria-live="polite"></span><span class="log-toggle-hint">履歴</span></summary>
+        <div class="mobile-log-history">
+          <p>戦闘ログ（最新16件）・「戦闘ログ」をタップで閉じる</p>
+          <ul id="mobile-log-list" class="log-list"></ul>
         </div>
-        <ul id="mobile-log-list" class="log-list" aria-live="polite"></ul>
-      </section>
+      </details>
 
       <footer class="panel combatant-panel player-panel">
         <div class="combatant-meta">
