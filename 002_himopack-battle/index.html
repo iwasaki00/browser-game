@@ -11,22 +11,21 @@
 </head>
 <body>
   <main class="game-shell">
-    <a class="back-link" href="../index.html">← ゲーム一覧へ戻る</a>
-
     <section class="hud" aria-label="ゲーム情報">
       <div class="hud-card hud-card-main">
         <p class="eyebrow">Physics Action</p>
         <h1>ひもパックバトル</h1>
-        <p class="lead">紐の先を引っ張って勢いをつけ、敵パックを机の上で蹴散らす 2D 物理アクション。</p>
+        <div class="score-stats">
+          <p class="stat-line"><span>スコア</span><strong id="scoreValue">0</strong></p>
+          <p class="stat-line"><span>撃破数</span><strong id="defeatValue">0</strong></p>
+        </div>
       </div>
 
       <div class="hud-card stats">
-        <p class="stat-line"><span>スコア</span><strong id="scoreValue">0</strong></p>
-        <p class="stat-line"><span>撃破数</span><strong id="defeatValue">0</strong></p>
         <p class="stat-line"><span>紐の長さ Lv</span><strong id="ropeLengthValue">1</strong></p>
         <p class="stat-line"><span>紐の伸縮 Lv</span><strong id="springValue">1</strong></p>
-        <p class="stat-line"><span>パックの大きさ Lv</span><strong id="sizeValue">1</strong></p>
-        <p class="stat-line"><span>パックの重さ Lv</span><strong id="massValue">1</strong></p>
+        <p class="stat-line"><span>大きさ Lv</span><strong id="sizeValue">1</strong></p>
+        <p class="stat-line"><span>重さ Lv</span><strong id="massValue">1</strong></p>
       </div>
     </section>
 
@@ -37,16 +36,17 @@
         <div class="overlay-card">
           <p class="eyebrow">Ready</p>
           <h2>紐を引いて、ぶつける。</h2>
+          <p>紐の先を引っ張って勢いをつけ、敵パックを蹴散らす物理アクションです。</p>
           <p>プレイヤーパックの近くをドラッグすると紐が伸び、その方向へ力が加わります。敵パックを高速で弾けば撃破です。</p>
           <button id="startButton" type="button">スタート</button>
         </div>
       </div>
-
-      <div class="corner-ui">
-        <p id="messageText">スタートすると敵パックが配置されます。</p>
-        <button id="restartButton" type="button">リスタート</button>
-      </div>
     </section>
+
+    <div class="corner-ui" aria-label="ゲーム操作">
+      <p id="messageText" role="status">スタートすると敵パックが配置されます。</p>
+      <button id="restartButton" type="button">リスタート</button>
+    </div>
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>

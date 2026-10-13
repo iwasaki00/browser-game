@@ -123,13 +123,32 @@
   function resizeCanvas() {
     dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
     const rect = canvas.getBoundingClientRect();
-    worldWidth = Math.max(320, Math.round(rect.width));
-    worldHeight = Math.max(320, Math.round(rect.height));
+    if (rect.width <= 0 || rect.height <= 0) {
+      return;
+    }
+    const nextWidth = rect.width;
+    const nextHeight = rect.height;
+    const nextCanvasWidth = Math.max(1, Math.round(nextWidth * dpr));
+    const nextCanvasHeight = Math.max(1, Math.round(nextHeight * dpr));
+    if (worldWidth === nextWidth && worldHeight === nextHeight &&
+        canvas.width === nextCanvasWidth && canvas.height === nextCanvasHeight) {
+      return;
+    }
 
-    canvas.width = Math.round(worldWidth * dpr);
-    canvas.height = Math.round(worldHeight * dpr);
+    // A layout change ends the gesture so its old anchor cannot pull the puck.
+    if (pointerState.id !== null && canvas.hasPointerCapture(pointerState.id)) {
+      canvas.releasePointerCapture(pointerState.id);
+    }
+    pointerState.active = false;
+    pointerState.id = null;
+    canvas.classList.remove("is-dragging");
+    worldWidth = nextWidth;
+    worldHeight = nextHeight;
 
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    canvas.width = nextCanvasWidth;
+    canvas.height = nextCanvasHeight;
+
+    ctx.setTransform(canvas.width / worldWidth, 0, 0, canvas.height / worldHeight, 0, 0);
     rebuildWalls();
     clampBodiesInsideArena();
   }
@@ -153,8 +172,10 @@
     const allBodies = [player].concat(enemies, items).filter(Boolean);
     for (const body of allBodies) {
       const radius = body.circleRadius || ITEM_RADIUS;
-      const x = clamp(body.position.x, radius + 12, worldWidth - radius - 12);
-      const y = clamp(body.position.y, radius + 12, worldHeight - radius - 12);
+      const insetX = Math.min(radius + 12, worldWidth / 2);
+      const insetY = Math.min(radius + 12, worldHeight / 2);
+      const x = clamp(body.position.x, insetX, worldWidth - insetX);
+      const y = clamp(body.position.y, insetY, worldHeight - insetY);
       Body.setPosition(body, { x, y });
     }
   }
@@ -611,6 +632,12 @@
 
   window.addEventListener("resize", resizeCanvas);
   window.addEventListener("orientationchange", resizeCanvas);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", resizeCanvas);
+  }
+  // HUD wrapping, browser chrome and container changes can resize the board alone.
+  const canvasResizeObserver = new ResizeObserver(resizeCanvas);
+  canvasResizeObserver.observe(canvas);
   canvas.addEventListener("pointerdown", handlePointerDown);
   canvas.addEventListener("pointermove", handlePointerMove);
   canvas.addEventListener("pointerup", endPointer);
