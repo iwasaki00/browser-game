@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
-  <title>Trace Escape MVP</title>
+  <title>Trace Escape</title>
   <style>
     :root {
       --bg-top: #fff9ef;
@@ -22,7 +22,6 @@
       margin: 0;
       min-height: 100%;
       overscroll-behavior: none;
-      touch-action: none;
       color: var(--ink);
       font-family: "Hiragino Sans", "Yu Gothic UI", "Segoe UI", sans-serif;
       background:
@@ -32,44 +31,51 @@
     body {
       display: flex;
       justify-content: center;
-      padding: max(12px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom));
+      height: 100vh;
+      height: 100dvh;
+      min-height: 420px;
+      padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
     }
-    .app { width: min(100%, 430px); display: grid; gap: 12px; }
+    .app {
+      width: min(100%, 430px);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
     .panel {
-      padding: 14px 16px;
+      padding: 10px 12px;
       border-radius: 22px;
       background: var(--panel);
       backdrop-filter: blur(10px);
       box-shadow: 0 14px 36px var(--shadow);
     }
-    .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .topbar, .footer { flex: none; }
     .eyebrow {
-      margin: 0 0 6px;
+      margin: 0 0 3px;
       color: var(--accent-strong);
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
     }
-    h1 { margin: 0; font-size: clamp(1.8rem, 7vw, 2.5rem); line-height: 1.05; }
-    .subtitle { margin: 8px 0 0; font-size: 0.98rem; line-height: 1.6; }
-    .back-link, button { border: 0; border-radius: 999px; font: inherit; }
-    .back-link {
-      display: inline-flex;
+    h1 { margin: 0; font-size: clamp(1.15rem, 5vw, 1.5rem); line-height: 1.15; }
+    .canvas-panel {
+      flex: 1;
+      min-height: 256px;
+      padding: 8px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
-      padding: 0 14px;
-      color: var(--accent-strong);
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.7);
-      white-space: nowrap;
     }
-    .canvas-panel { position: relative; padding: 10px; }
+    .game-surface { position: relative; width: 160px; height: 240px; flex: none; }
     canvas {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
       border-radius: 18px;
       background: linear-gradient(180deg, #fffaf2 0%, #f5e5be 58%, #ddb67b 100%);
       box-shadow: inset 0 0 0 1px rgba(106, 70, 19, 0.08);
@@ -77,34 +83,44 @@
     }
     .status {
       position: absolute;
-      left: 22px;
-      right: 22px;
-      top: 18px;
+      left: 6px;
+      right: 6px;
+      top: 6px;
       display: flex;
       justify-content: space-between;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 4px;
       pointer-events: none;
     }
     .chip {
-      padding: 8px 12px;
+      padding: 5px 7px;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.7rem;
       font-weight: 700;
       background: rgba(255, 255, 255, 0.82);
       box-shadow: 0 8px 20px rgba(88, 54, 18, 0.12);
     }
-    .footer { display: flex; align-items: center; gap: 10px; }
-    .hint { flex: 1; margin: 0; font-size: 0.95rem; line-height: 1.5; }
+    .footer { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; }
+    .hint { flex: 1; margin: 0; font-size: 0.75rem; line-height: 1.4; }
     button {
-      min-width: 112px;
-      min-height: 46px;
-      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      min-height: 44px;
+      padding: 0 12px;
+      font-size: 0.8rem;
       font-weight: 700;
       color: #fff;
       background: linear-gradient(180deg, var(--accent), var(--accent-strong));
       box-shadow: 0 10px 24px rgba(143, 53, 34, 0.24);
+      touch-action: manipulation;
     }
     button:active { transform: translateY(1px); }
+    .instructions { flex-basis: 100%; font-size: 0.75rem; }
+    .instructions summary { width: fit-content; min-height: 44px; display: flex; align-items: center; cursor: pointer; touch-action: manipulation; }
+    .instructions summary::before { content: '＋'; margin-right: 4px; }
+    .instructions[open] summary::before { content: '−'; }
+    .instructions p { margin: 0 0 4px; line-height: 1.5; }
     .overlay {
       position: absolute;
       inset: 0;
@@ -134,38 +150,38 @@
       letter-spacing: 0.06em;
     }
     .overlay-card .desc { font-size: 0.95rem; line-height: 1.55; }
-    @media (max-width: 380px) {
-      .footer { flex-direction: column; align-items: stretch; }
-      .back-link, button { min-height: 44px; }
-    }
   </style>
 </head>
 <body>
   <main class="app">
     <section class="panel topbar">
       <div>
-        <p class="eyebrow">Trace Escape MVP</p>
+        <p class="eyebrow">Trace Escape</p>
         <h1>線を描いて助けろ</h1>
-        <p class="subtitle">走るキャラの前に橋を描き、穴を越えてゴールへ。</p>
       </div>
-      <a class="back-link" href="../index.html">一覧へ</a>
     </section>
     <section class="panel canvas-panel">
-      <div class="status" aria-hidden="true">
-        <div class="chip" id="statusText">ドラッグで橋を描く</div>
-        <div class="chip" id="drawText">線 0%</div>
-      </div>
-      <canvas id="gameCanvas" width="360" height="540" aria-label="Trace Escapeのゲーム画面"></canvas>
-      <div class="overlay" id="clearOverlay">
-        <div class="overlay-card">
-          <p class="result">CLEAR</p>
-          <p class="desc">橋がつながった。リスタートでもう一度遊べます。</p>
+      <div class="game-surface">
+        <div class="status">
+          <div class="chip" id="statusText">ドラッグで橋を描く</div>
+          <div class="chip" id="drawText">線 残り100%</div>
+        </div>
+        <canvas id="gameCanvas" width="360" height="540" aria-label="Trace Escapeのゲーム画面"></canvas>
+        <div class="overlay" id="clearOverlay">
+          <div class="overlay-card">
+            <p class="result">CLEAR</p>
+            <p class="desc">橋がつながった。リスタートでもう一度遊べます。</p>
+          </div>
         </div>
       </div>
     </section>
     <section class="panel footer">
-      <p class="hint">操作: 画面をなぞって足場線を描く。落ちたら即リトライ。</p>
+      <p class="hint">なぞって橋を描く。<br>引き直すと前の線は消えます。</p>
       <button id="restartButton" type="button">リスタート</button>
+      <details class="instructions">
+        <summary>遊び方</summary>
+        <p>走るキャラの前に橋を描いて、穴を越えて旗へ。線の残量には上限があります。新しく描き始めると前の線は消えます。落ちたら自動でリトライします。</p>
+      </details>
     </section>
   </main>
   <script>
@@ -183,13 +199,23 @@
       const drawConfig = { maxLength: 220, minPointDistance: 8, snapRadius: 18 };
 
       let pointerDown = false;
+      let activePointerId = null;
       let currentStroke = [];
       let currentStrokeLength = 0;
       let segments = [];
       let state = {};
       let lastTime = 0;
 
+      function releasePointer() {
+        if (activePointerId !== null && canvas.hasPointerCapture(activePointerId)) {
+          canvas.releasePointerCapture(activePointerId);
+        }
+        activePointerId = null;
+        pointerDown = false;
+      }
+
       function resetGame() {
+        releasePointer();
         state = {
           player: { x: 40, y: stage.floorY - 14, radius: 14, vy: 0, grounded: false },
           cleared: false,
@@ -207,12 +233,12 @@
 
       function updateDrawMeter() {
         const ratio = Math.min(1, currentStrokeLength / drawConfig.maxLength);
-        drawText.textContent = `線 ${Math.round(ratio * 100)}%`;
+        drawText.textContent = `線 残り${Math.round((1 - ratio) * 100)}%`;
       }
 
       function getCanvasPoint(event) {
         const rect = canvas.getBoundingClientRect();
-        const source = event.touches ? event.touches[0] : event;
+        const source = event;
         return {
           x: (source.clientX - rect.left) * (world.width / rect.width),
           y: (source.clientY - rect.top) * (world.height / rect.height)
@@ -227,8 +253,10 @@
       }
 
       function beginStroke(event) {
-        if (state.cleared) return;
+        if (state.cleared || activePointerId !== null || !event.isPrimary || event.button !== 0) return;
         event.preventDefault();
+        activePointerId = event.pointerId;
+        canvas.setPointerCapture(activePointerId);
         pointerDown = true;
         const point = clampPoint(getCanvasPoint(event));
         currentStroke = [point];
@@ -239,7 +267,7 @@
       }
 
       function extendStroke(event) {
-        if (!pointerDown || state.cleared) return;
+        if (!pointerDown || event.pointerId !== activePointerId || state.cleared) return;
         event.preventDefault();
         const point = clampPoint(getCanvasPoint(event));
         const lastPoint = currentStroke[currentStroke.length - 1];
@@ -266,9 +294,9 @@
       }
 
       function endStroke(event) {
-        if (!pointerDown) return;
-        if (event) event.preventDefault();
-        pointerDown = false;
+        if (!pointerDown || event.pointerId !== activePointerId) return;
+        if (event.cancelable) event.preventDefault();
+        releasePointer();
         rebuildSegments();
       }
 
@@ -306,6 +334,16 @@
         return groundY;
       }
 
+      // The character must touch the flag area while standing on current support.
+      function hasReachedGoal(player, supportY) {
+        const feet = player.y + player.radius;
+        return player.grounded && player.vy === 0 && supportY !== null
+          && Math.abs(feet - supportY) <= 2
+          && player.x + player.radius >= stage.goalX
+          && player.x - player.radius <= stage.goalX + stage.goalWidth
+          && feet >= stage.floorY - 78 && player.y - player.radius <= stage.floorY;
+      }
+
       function updatePlayer(dt) {
         const player = state.player;
         const previousY = player.y;
@@ -325,7 +363,7 @@
           }
         }
 
-        if (!state.cleared && player.x + player.radius >= stage.goalX) {
+        if (!state.cleared && hasReachedGoal(player, supportY)) {
           state.cleared = true;
           player.x = Math.min(player.x, stage.goalX);
           clearOverlay.classList.add("is-visible");
@@ -335,7 +373,7 @@
         if (player.y - player.radius > world.height + 40) {
           state.failed = true;
           state.retryTimer = 0.45;
-          statusText.textContent = "落下... 即リトライ";
+          statusText.textContent = "足場がなく落下！ リトライ";
         }
       }
 
@@ -445,9 +483,23 @@
         requestAnimationFrame(frame);
       }
 
-      ["mousedown", "touchstart"].forEach((name) => canvas.addEventListener(name, beginStroke, { passive: false }));
-      ["mousemove", "touchmove"].forEach((name) => canvas.addEventListener(name, extendStroke, { passive: false }));
-      ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((name) => canvas.addEventListener(name, endStroke, { passive: false }));
+      canvas.addEventListener("pointerdown", beginStroke);
+      canvas.addEventListener("pointermove", extendStroke);
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach((name) => canvas.addEventListener(name, endStroke));
+
+      // Fit the display only; physics and input remain in the 360 × 540 world.
+      const surface = document.querySelector(".game-surface");
+      const canvasPanel = document.querySelector(".canvas-panel");
+      function fitCanvas(width, height) {
+        const scale = Math.min(width / world.width, height / world.height);
+        surface.style.width = `${world.width * scale}px`;
+        surface.style.height = `${world.height * scale}px`;
+      }
+      new ResizeObserver(([entry]) => {
+        fitCanvas(entry.contentRect.width, entry.contentRect.height);
+      }).observe(canvasPanel);
+      fitCanvas(canvasPanel.clientWidth - 16, canvasPanel.clientHeight - 16);
+
       restartButton.addEventListener("click", resetGame);
       canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 

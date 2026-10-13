@@ -13,7 +13,6 @@
   <main class="app" id="app">
     <section class="title-screen" id="titleScreen" aria-label="タイトル画面">
       <div class="title-inner">
-        <p class="title-kicker">Sound Novel MVP</p>
         <h1>AI遺産</h1>
         <p class="title-sub">Last Memory Protocol</p>
         <p class="title-copy">死者を再現するAIが告げた。「どうして今回も失敗したの？」</p>
@@ -70,9 +69,10 @@
           <button type="button" id="backTitleButton">タイトルへ戻る</button>
         </div>
         <label class="volume-row">
-          <span>音量</span>
-          <input id="volumeInput" type="range" min="0" max="100" value="60">
+          <span>音量（音声未実装）</span>
+          <input id="volumeInput" type="range" min="0" max="100" value="60" disabled aria-describedby="audioStatus">
         </label>
+        <p id="audioStatus" class="audio-status">BGM・SEは未実装です。音量調整は今後対応予定です。</p>
         <button class="close-button" id="closeMenuButton" type="button">閉じる</button>
       </div>
     </section>

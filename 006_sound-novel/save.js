@@ -14,11 +14,12 @@
   }
 
   function normalize(data) {
-    const merged = Object.assign(clone(defaults), data || {});
+    if (!data || typeof data !== "object" || Array.isArray(data)) data = {};
+    const merged = Object.assign(clone(defaults), data);
     merged.endings = Object.assign({}, data && data.endings);
     merged.read = Object.assign({}, data && data.read);
     merged.truthUnlocked = Boolean(merged.truthUnlocked);
-    merged.volume = Number.isFinite(Number(merged.volume)) ? Number(merged.volume) : defaults.volume;
+    merged.volume = Number.isFinite(Number(merged.volume)) ? Math.min(100, Math.max(0, Number(merged.volume))) : defaults.volume;
     return merged;
   }
 
@@ -27,6 +28,18 @@
       return normalize(JSON.parse(localStorage.getItem(key)));
     } catch (_error) {
       return clone(defaults);
+    }
+  }
+
+  // Defaults are usable for new games, but do not represent an existing save.
+  function hasSave() {
+    try {
+      const data = JSON.parse(localStorage.getItem(key));
+      return Boolean(data && typeof data === "object" && !Array.isArray(data) &&
+        typeof data.currentId === "string" &&
+        Object.hasOwn(window.SCENARIO, data.currentId));
+    } catch (_error) {
+      return false;
     }
   }
 
@@ -73,6 +86,7 @@
 
   window.SaveStore = {
     load,
+    hasSave,
     save,
     clearProgress,
     markRead,

@@ -36,7 +36,8 @@ button {
 
 .app {
   position: relative;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: #070605;
   touch-action: manipulation;
@@ -60,7 +61,7 @@ button {
   z-index: 20;
   display: grid;
   place-items: center;
-  padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+  padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
   background:
     linear-gradient(180deg, rgba(26, 19, 12, 0.42), rgba(7, 6, 5, 0.94)),
     radial-gradient(circle at 68% 28%, rgba(202, 164, 82, 0.22), transparent 34%),
@@ -73,7 +74,10 @@ button {
   border: 1px solid var(--line);
   background: var(--panel-strong);
   box-shadow: 0 18px 70px var(--shadow);
-  padding: clamp(22px, 6vw, 34px);
+  padding: clamp(18px, 5vw, 34px);
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
 }
 
 .title-kicker,
@@ -276,7 +280,7 @@ h2 {
 .menu-button {
   position: absolute;
   top: max(12px, env(safe-area-inset-top));
-  right: 12px;
+  right: max(12px, env(safe-area-inset-right));
   z-index: 5;
   min-width: 72px;
   min-height: 42px;
@@ -289,21 +293,25 @@ h2 {
 }
 
 .message-area {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: max(10px, env(safe-area-inset-bottom));
+  position: relative;
+  grid-row: 3;
   z-index: 4;
-  min-height: 35dvh;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--panel);
   box-shadow: 0 18px 60px var(--shadow);
   padding: 14px 14px 28px;
+  overflow: hidden;
 }
 
 .name-box {
   display: inline-flex;
+  align-self: flex-start;
+  flex-shrink: 0;
   min-width: 7rem;
   margin-bottom: 8px;
   padding: 7px 12px;
@@ -315,7 +323,10 @@ h2 {
 
 .message-text {
   margin: 0;
-  min-height: 6.4em;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   font-size: clamp(1.02rem, 4.3vw, 1.32rem);
   font-weight: 700;
   line-height: 1.72;
@@ -340,14 +351,19 @@ h2 {
 }
 
 .choices {
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: calc(max(10px, env(safe-area-inset-bottom)) + 35dvh + 18px);
+  position: relative;
+  grid-row: 2;
   z-index: 6;
   display: grid;
   gap: 10px;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
+
+.choices:empty { display: none; }
 
 .choice-button {
   padding: 12px 14px;
@@ -368,7 +384,7 @@ h2 {
 
 .menu-card,
 .backlog-card {
-  max-height: calc(100dvh - 32px);
+  max-height: 100%;
   overflow: auto;
 }
 
@@ -450,24 +466,49 @@ h2 {
 }
 
 @media (min-width: 760px) {
-  .message-area {
-    left: 50%;
-    right: auto;
-    width: min(900px, calc(100% - 40px));
-    transform: translateX(-50%);
-    min-height: 240px;
-  }
-
-  .choices {
-    left: 50%;
-    right: auto;
-    width: min(860px, calc(100% - 56px));
-    transform: translateX(-50%);
-    bottom: 280px;
-  }
-
   .title-actions,
   .modal-actions {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Keep controls and text in separate viewport-bounded rows. */
+.game-screen {
+  display: grid;
+  grid-template-columns: minmax(0, 900px);
+  justify-content: center;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 35%);
+  gap: 12px;
+  padding: calc(max(12px, env(safe-area-inset-top)) + 54px)
+    max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+}
+
+.game-screen.has-choices {
+  grid-template-rows: minmax(0, 1fr) minmax(0, auto) minmax(0, 40%);
+}
+
+.game-screen, button, .title-screen, .ending-screen, .menu-card {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.backlog-list, .backlog-list * {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+button:disabled, input:disabled { opacity: 0.45; cursor: default; }
+.audio-status { color: var(--muted); font-size: 0.85rem; }
+.volume-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+button { touch-action: manipulation; }
+
+@media (max-height: 600px) {
+  .title-copy { margin: 16px 0; }
+  .ending-records { gap: 5px; margin-top: 12px; }
+  .ending-chip { padding: 5px 8px; }
+}
+
+.choices { max-height: min(30dvh, 100%); }

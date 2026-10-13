@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -26,7 +26,6 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
     }
 
     html, body {
@@ -35,7 +34,6 @@
       height: 100%;
       overflow: hidden;
       overscroll-behavior: none;
-      touch-action: none;
       background:
         radial-gradient(circle at 50% 0%, rgba(125, 240, 255, 0.18), transparent 30%),
         linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 52%, var(--bg-bottom) 100%);
@@ -53,6 +51,15 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+        env(safe-area-inset-bottom) env(safe-area-inset-left);
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Canvas and HUD share the fitted 390 × 844 game area. */
+    #gameArea {
+      position: absolute;
     }
 
     #gameCanvas {
@@ -61,45 +68,48 @@
       width: 100%;
       height: 100%;
       display: block;
+      touch-action: none;
+      -webkit-touch-callout: none;
     }
 
     .hud {
       position: absolute;
       inset: 0;
       pointer-events: none;
-      padding:
-        max(12px, env(safe-area-inset-top))
-        14px
-        max(14px, env(safe-area-inset-bottom))
-        14px;
+      padding: 6px;
     }
 
-    .hud-top,
-    .hud-bottom {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: flex-start;
+    .hud-top {
+      display: grid;
+      gap: 4px;
+    }
+
+    .hud-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .hud-details {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px;
     }
 
     .hud-bottom {
       position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: max(14px, env(safe-area-inset-bottom));
-      align-items: flex-end;
-    }
-
-    .stack {
-      display: grid;
-      gap: 8px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      text-align: center;
     }
 
     .chip,
     .hint {
-      padding: 9px 12px;
+      min-width: 0;
+      padding: 4px 6px;
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 12px;
       background: var(--panel);
       backdrop-filter: blur(14px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
@@ -107,15 +117,26 @@
 
     .chip strong {
       display: block;
-      font-size: 1.04rem;
-      letter-spacing: 0.02em;
+      font-size: 0.85rem;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
     }
 
     .chip span,
     .hint {
       color: var(--subtle);
-      font-size: 0.8rem;
-      line-height: 1.4;
+      font-size: 0.68rem;
+      line-height: 1.3;
+    }
+
+    .hud-details .chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .hud-details strong {
+      font-size: 0.7rem;
     }
 
     .combo-live {
@@ -129,7 +150,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 18px;
+      padding: max(12px, env(safe-area-inset-top))
+        max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom))
+        max(12px, env(safe-area-inset-left));
       background: rgba(2, 6, 15, 0.24);
       opacity: 0;
       visibility: hidden;
@@ -145,6 +169,10 @@
 
     .panel {
       width: min(100%, 360px);
+      max-height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      touch-action: pan-y pinch-zoom;
       padding: 18px;
       border-radius: 24px;
       border: 1px solid var(--line);
@@ -194,9 +222,9 @@
       margin-top: 16px;
     }
 
-    button,
-    .link-button {
+    button {
       width: 100%;
+      touch-action: manipulation;
       border: 0;
       border-radius: 18px;
       padding: 14px 16px;
@@ -215,7 +243,22 @@
       box-shadow: none;
     }
 
+    #abilityOverlay .panel {
+      padding: 14px;
+    }
+
+    #abilityOverlay .small {
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .ability-list {
+      margin-top: 12px;
+      gap: 8px;
+    }
+
     .ability-button {
+      padding: 10px 12px;
       text-align: left;
       color: var(--text);
       background: rgba(255, 255, 255, 0.08);
@@ -248,23 +291,25 @@
 </head>
 <body>
   <div id="app">
+    <div id="gameArea">
     <canvas id="gameCanvas" aria-label="Spider Rush game canvas"></canvas>
 
     <div class="hud">
       <div class="hud-top">
-        <div class="stack">
+        <div class="hud-stats">
           <div class="chip"><span>Distance</span><strong id="distanceText">0 m</strong></div>
           <div class="chip"><span>Score</span><strong id="scoreText">0</strong></div>
-        </div>
-        <div class="stack" style="justify-items:end;">
           <div class="chip"><span>Combo</span><strong id="comboText">x1.0</strong></div>
+        </div>
+        <div class="hud-details">
           <div class="chip"><span>Status</span><strong id="statusText">BARRIER 5.0s</strong></div>
+          <div class="chip"><span>Next Ability</span><strong id="abilityText">12.0s</strong></div>
         </div>
       </div>
       <div class="hud-bottom">
-        <div class="hint" id="hintText">タップ中にワイヤー接続。離すと解除。障害物をかすめるとコンボ上昇。</div>
-        <div class="chip"><span>Next Ability</span><strong id="abilityText">12.0s</strong></div>
+        <div class="hint" id="hintText">長押しで接続・離して解除</div>
       </div>
+    </div>
     </div>
 
     <div class="center-overlay show" id="titleOverlay">
@@ -275,16 +320,15 @@
         <p class="small">開始5秒は保護バリアあり。良い角度でワイヤーを離すと <span class="inline-accent">Perfect Swing</span> で加速します。</p>
         <div class="button-row">
           <button id="startButton" type="button">Start Run</button>
-          <a class="link-button secondary" href="../index.html">ゲーム一覧へ</a>
         </div>
       </div>
     </div>
 
     <div class="center-overlay" id="abilityOverlay">
       <div class="panel">
-        <p class="eyebrow">Ability Choice</p>
+        <p class="eyebrow">強化選択</p>
         <h2>3つから1つ選択</h2>
-        <p class="small">約12秒ごとに一時停止します。次の区間をどう伸ばすか選んでください。</p>
+        <p class="small">強化を1つ選ぶと再開します。</p>
         <div class="ability-list" id="abilityList"></div>
       </div>
     </div>
@@ -307,6 +351,8 @@
   <script>
     (() => {
       const VIEW = { width: 390, height: 844 };
+      const app = document.getElementById("app");
+      const gameArea = document.getElementById("gameArea");
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
 
@@ -386,6 +432,7 @@
         nextObstacleX: 520,
         pointer: {
           active: false,
+          id: null,
           x: VIEW.width * 0.7,
           y: VIEW.height * 0.25
         },
@@ -395,40 +442,40 @@
 
       const abilityPool = [
         {
-          name: "Wire Length +15%",
-          desc: "Longer rope range for safer distant hooks.",
+          name: "ワイヤー長 +15%",
+          desc: "遠くのフックにも届きやすくなります。",
           apply() {
             state.wireLengthFactor *= 1.15;
             showStatus("Wire Length Up", 2.2);
           }
         },
         {
-          name: "Perfect Window Up",
-          desc: "Wider angle window for Perfect Swing.",
+          name: "Perfect Swing 判定拡大",
+          desc: "Perfect Swingの成功角度が広がります。",
           apply() {
             state.perfectWindow += 8;
             showStatus("Perfect Window Up", 2.2);
           }
         },
         {
-          name: "One Free Hit",
-          desc: "Ignore one obstacle hit with a shield.",
+          name: "シールド +1回",
+          desc: "障害物への衝突を1回防ぎます。",
           apply() {
             state.shieldHits += 1;
             showStatus("Emergency Shield", 2.2);
           }
         },
         {
-          name: "Combo Time +20%",
-          desc: "Keep near-miss combo alive for longer.",
+          name: "コンボ時間 +20%",
+          desc: "かすめた後のコンボが長く続きます。",
           apply() {
             state.comboWindow *= 1.2;
             showStatus("Combo Window Up", 2.2);
           }
         },
         {
-          name: "Swing Speed Up",
-          desc: "More forward power from swing momentum.",
+          name: "スイング速度アップ",
+          desc: "スイングの加速と前進速度が上がります。",
           apply() {
             state.swingBoostFactor *= 1.12;
             state.speedBonus += 14;
@@ -438,6 +485,19 @@
       ];
 
       function resizeCanvas() {
+        cancelPointer();
+        const style = getComputedStyle(app);
+        const top = parseFloat(style.paddingTop) || 0;
+        const right = parseFloat(style.paddingRight) || 0;
+        const bottom = parseFloat(style.paddingBottom) || 0;
+        const left = parseFloat(style.paddingLeft) || 0;
+        const width = app.clientWidth - left - right;
+        const height = app.clientHeight - top - bottom;
+        const scale = Math.min(width / VIEW.width, height / VIEW.height);
+        gameArea.style.width = `${VIEW.width * scale}px`;
+        gameArea.style.height = `${VIEW.height * scale}px`;
+        gameArea.style.left = `${left + (width - VIEW.width * scale) / 2}px`;
+        gameArea.style.top = `${top + (height - VIEW.height * scale) / 2}px`;
         const ratio = window.devicePixelRatio || 1;
         canvas.width = Math.floor(VIEW.width * ratio);
         canvas.height = Math.floor(VIEW.height * ratio);
@@ -477,6 +537,7 @@
       }
 
       function resetRun() {
+        cancelPointer();
         state.mode = "playing";
         state.time = 0;
         state.cameraX = 0;
@@ -587,10 +648,9 @@
 
       function getPointerPosition(event) {
         const rect = canvas.getBoundingClientRect();
-        const source = event.touches ? event.touches[0] : event;
         return {
-          x: ((source.clientX - rect.left) / rect.width) * VIEW.width,
-          y: ((source.clientY - rect.top) / rect.height) * VIEW.height
+          x: ((event.clientX - rect.left) / rect.width) * VIEW.width,
+          y: ((event.clientY - rect.top) / rect.height) * VIEW.height
         };
       }
 
@@ -714,6 +774,7 @@
       }
 
       function triggerGameOver(reason) {
+        cancelPointer();
         state.mode = "gameover";
         state.hook = null;
         state.gameOverClock = 0.5;
@@ -735,6 +796,7 @@
       }
 
       function openAbilityChoice() {
+        cancelPointer();
         state.mode = "ability";
         state.hook = null;
         const picks = [];
@@ -771,6 +833,7 @@
       }
 
       function backToTitle() {
+        cancelPointer();
         state.mode = "title";
         state.hook = null;
         setOverlay(titleOverlay, true);
@@ -943,8 +1006,8 @@
 
         if (state.mode === "playing") {
           hintText.innerHTML = state.combo > 0
-            ? `<span class="combo-live">Combo Active</span> Keep threading close calls. Perfect Swing is your burst option.`
-            : "Hold to hook. Release to drop. Graze obstacles to build combo.";
+            ? `<span class="combo-live">コンボ中</span> 長押しで接続・離して解除`
+            : "長押しで接続・離して解除";
         }
       }
 
@@ -1149,9 +1212,16 @@
       }
 
       function handlePress(event) {
-        if (state.mode !== "playing") return;
+        if (state.mode !== "playing" || state.pointer.id !== null ||
+            !event.isPrimary || event.button !== 0) return;
         event.preventDefault();
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch {
+          return;
+        }
         const point = getPointerPosition(event);
+        state.pointer.id = event.pointerId;
         state.pointer.active = true;
         state.pointer.x = point.x;
         state.pointer.y = point.y;
@@ -1159,7 +1229,7 @@
       }
 
       function handleMove(event) {
-        if (!state.pointer.active || state.mode !== "playing") return;
+        if (event.pointerId !== state.pointer.id || state.mode !== "playing") return;
         event.preventDefault();
         const point = getPointerPosition(event);
         state.pointer.x = point.x;
@@ -1167,27 +1237,43 @@
         engageHook(point);
       }
 
-      function handleRelease(event) {
-        if (event) event.preventDefault();
+      function finishPointer(completed) {
+        const id = state.pointer.id;
+        // Clear ownership first: releasing capture may dispatch lostpointercapture.
+        state.pointer.id = null;
         state.pointer.active = false;
-        releaseHook();
+        if (completed) releaseHook();
+        else state.hook = null;
+        if (id !== null && canvas.hasPointerCapture(id)) {
+          canvas.releasePointerCapture(id);
+        }
       }
 
-      ["touchstart", "mousedown"].forEach((name) => {
-        canvas.addEventListener(name, handlePress, { passive: false });
-      });
-      ["touchmove", "mousemove"].forEach((name) => {
-        canvas.addEventListener(name, handleMove, { passive: false });
-      });
-      ["touchend", "touchcancel", "mouseup", "mouseleave"].forEach((name) => {
-        canvas.addEventListener(name, handleRelease, { passive: false });
-      });
+      function cancelPointer() {
+        finishPointer(false);
+      }
 
-      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-      document.addEventListener("touchmove", (event) => {
-        if (event.target === canvas) event.preventDefault();
-      }, { passive: false });
-      document.addEventListener("contextmenu", (event) => event.preventDefault());
+      function handleRelease(event) {
+        if (event.pointerId !== state.pointer.id) return;
+        event.preventDefault();
+        finishPointer(true);
+      }
+
+      function handleCancel(event) {
+        if (event.pointerId !== state.pointer.id) return;
+        cancelPointer();
+      }
+
+      canvas.addEventListener("pointerdown", handlePress);
+      canvas.addEventListener("pointermove", handleMove);
+      canvas.addEventListener("pointerup", handleRelease);
+      canvas.addEventListener("pointercancel", handleCancel);
+      canvas.addEventListener("lostpointercapture", handleCancel);
+      canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+      window.addEventListener("blur", cancelPointer);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) cancelPointer();
+      });
 
       startButton.addEventListener("click", startGame);
       retryButton.addEventListener("click", () => {

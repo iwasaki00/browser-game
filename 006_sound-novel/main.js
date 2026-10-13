@@ -68,6 +68,9 @@
     els.messageArea.addEventListener("click", advance);
     els.background.addEventListener("click", advance);
     document.addEventListener("keydown", (event) => {
+      if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.altKey || event.metaKey) return;
+      if (event.target instanceof Element && event.target.closest("button, input, select, textarea, a, [contenteditable]")) return;
+      if (!canAdvance()) return;
       if (event.key === " " || event.key === "Enter") {
         event.preventDefault();
         advance();
@@ -81,7 +84,7 @@
 
   function showTitle() {
     stopAuto();
-    state.skip = false;
+    stopText();
     closeMenu();
     closeBacklog();
     els.gameScreen.classList.add("hidden");
@@ -90,6 +93,13 @@
     state.saveData = store.load();
     renderEndingRecords();
     renderTruthButton();
+    refreshLoadButtons();
+  }
+
+  function refreshLoadButtons() {
+    const available = store.hasSave() && Object.hasOwn(scenario, state.saveData.currentId);
+    document.getElementById("loadButton").disabled = !available;
+    document.getElementById("menuLoadButton").disabled = !available;
   }
 
   function startGame(id, resetBacklog) {
@@ -119,7 +129,8 @@
 
   function loadGame() {
     state.saveData = store.load();
-    if (!scenario[state.saveData.currentId]) {
+    refreshLoadButtons();
+    if (!store.hasSave() || !Object.hasOwn(scenario, state.saveData.currentId)) {
       showToast("ロードできるセーブがありません");
       return;
     }
@@ -144,6 +155,7 @@
     }
 
     stopText();
+    pauseAuto();
     const wasRead = Boolean(state.saveData.read[id]);
     state.currentId = id;
     state.currentNode = node;
@@ -172,17 +184,27 @@
     }
   }
 
+  function canAdvance() {
+    return els.titleScreen.classList.contains("hidden") &&
+      els.endingScreen.classList.contains("hidden") &&
+      els.menuOverlay.classList.contains("hidden") &&
+      els.backlogOverlay.classList.contains("hidden") &&
+      !els.gameScreen.classList.contains("hidden");
+  }
+
   function advance() {
+    if (!canAdvance()) return;
     if (els.titleScreen.classList.contains("hidden") === false) return;
     if (els.menuOverlay.classList.contains("hidden") === false) return;
     if (els.backlogOverlay.classList.contains("hidden") === false) return;
-    if (!state.currentNode || state.currentNode.ending || state.currentNode.choices) return;
+    if (!state.currentNode || state.currentNode.ending ) return;
 
     if (state.isTyping) {
       finishText();
       return;
     }
 
+    if (state.currentNode.choices) return;
     if (state.currentNode.next) {
       gotoNode(state.currentNode.next);
     }
@@ -191,6 +213,7 @@
   function typeText(text, done) {
     stopText();
     els.messageText.textContent = "";
+    els.messageText.scrollTop = 0;
     els.tapIndicator.classList.add("hidden");
     state.isTyping = true;
 
@@ -227,6 +250,8 @@
 
   function renderChoices(choices) {
     els.choices.innerHTML = "";
+    els.choices.scrollTop = 0;
+    els.gameScreen.classList.toggle("has-choices", choices.length > 0);
     choices.forEach((choice) => {
       const button = document.createElement("button");
       button.type = "button";
@@ -310,14 +335,20 @@
   }
 
   function openMenu() {
+    pauseAuto();
+    state.saveData = store.load();
+    refreshLoadButtons();
     els.menuOverlay.classList.remove("hidden");
   }
 
   function closeMenu() {
     els.menuOverlay.classList.add("hidden");
+    scheduleAuto();
   }
 
   function openBacklog() {
+    pauseAuto();
+    els.backlogOverlay.classList.remove("hidden");
     closeMenu();
     els.backlogList.innerHTML = "";
     if (!state.backlog.length) {
@@ -343,6 +374,7 @@
 
   function closeBacklog() {
     els.backlogOverlay.classList.add("hidden");
+    scheduleAuto();
   }
 
   function toggleAuto() {
@@ -363,17 +395,25 @@
   }
 
   function scheduleAuto() {
-    window.clearTimeout(state.autoTimer);
-    if ((!state.auto && !state.skip) || !state.currentNode || state.currentNode.choices || state.currentNode.ending) {
+    pauseAuto();
+    if (!canAdvance() || state.isTyping || (!state.auto && !state.skip) || !state.currentNode || state.currentNode.choices || state.currentNode.ending) {
       return;
     }
     const wait = state.skip ? 120 : 1300;
     state.autoTimer = window.setTimeout(advance, wait);
   }
 
-  function stopAuto() {
+  function pauseAuto() {
     window.clearTimeout(state.autoTimer);
+    state.autoTimer = 0;
+  }
+
+  function stopAuto() {
+    pauseAuto();
     state.auto = false;
+    state.skip = false;
+    document.getElementById("autoButton").classList.remove("active");
+    document.getElementById("skipButton").classList.remove("active");
   }
 
   function showToast(message) {
