@@ -12,15 +12,14 @@
 <body>
   <main class="app">
     <header class="hero">
-      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">← MENU</a>
       <p class="kicker">GENETIC BATTLE ARENA</p>
-      <h1>最強生物<br><span>トーナメント</span></h1>
-      <p class="intro">64体の小さなモンスターが戦い、勝者の遺伝子を次世代へつないでいきます。</p>
+      <h1>最強生物 <span>トーナメント</span></h1>
+      <p class="intro">64体で対戦。上位25%（16体）が親となり次世代へ。</p>
     </header>
 
     <section class="status-grid" aria-label="現在の状態">
-      <article class="status-card generation-card"><span>GENERATION</span><strong id="generation">1</strong><small>世代</small></article>
-      <article class="status-card"><span>POPULATION</span><strong id="population">64</strong><small>体</small></article>
+      <article class="status-card generation-card"><span>第</span><strong id="generation">1</strong><small>世代</small></article>
+      <article class="status-card"><span>個体</span><strong id="population">64</strong><small>体</small></article>
     </section>
 
     <section class="arena-panel" aria-label="バトルアリーナ">
@@ -52,12 +51,20 @@
     <section class="controls" aria-label="世代操作">
       <button class="primary-button" id="next-generation" type="button"><span>▶</span><strong>1世代</strong></button>
       <button class="secondary-button" id="next-ten" type="button">10世代</button>
-      <button class="auto-button" id="auto-evolve" type="button">自動進化</button>
+      <button class="auto-button" id="auto-evolve" type="button" aria-pressed="false">自動進化 開始</button>
       <button class="reset-button" id="reset" type="button">↻ リセット</button>
       <p class="progress-text" id="progress" aria-live="polite"></p>
     </section>
 
-    <section class="panel pack-panel" aria-label="群れエリア">
+    <aside class="champion-summary" aria-label="代表個体の要約"><span id="summary-label">現在の最強個体</span><strong id="summary-name">---</strong><span id="summary-power">総合 --</span></aside>
+    <section class="details-area" aria-label="詳細情報">
+      <div class="detail-tabs" role="tablist" aria-label="情報の切り替え">
+        <button type="button" role="tab" id="tab-pack" aria-controls="detail-pack" aria-selected="true">群れ</button>
+        <button type="button" role="tab" id="tab-champion" aria-controls="detail-champion" aria-selected="false" tabindex="-1">個体詳細</button>
+        <button type="button" role="tab" id="tab-average" aria-controls="detail-average" aria-selected="false" tabindex="-1">平均能力</button>
+        <button type="button" role="tab" id="tab-log" aria-controls="detail-log" aria-selected="false" tabindex="-1">進化ログ</button>
+      </div>
+    <section id="detail-pack" role="tabpanel" aria-labelledby="tab-pack" tabindex="0" class="panel pack-panel" aria-label="群れエリア">
       <div class="panel-heading compact">
         <div><p class="section-label">PACK VIEW</p><h2>群れの世代交代</h2></div>
         <span class="pack-note">上位25%が親</span>
@@ -65,9 +72,9 @@
       <div class="pack-grid" id="pack-grid"></div>
     </section>
 
-    <section class="panel champion-panel">
+    <section id="detail-champion" role="tabpanel" aria-labelledby="tab-champion" tabindex="0" class="panel champion-panel" hidden>
       <div class="panel-heading">
-        <div><p class="section-label">CURRENT ALPHA</p><h2>優勝個体</h2></div>
+        <div><p class="section-label">CURRENT ALPHA</p><h2 id="profile-label">現在の最強個体</h2></div>
         <span class="title-badge" id="creature-title">原初の王</span>
       </div>
       <div class="creature-profile">
@@ -77,21 +84,31 @@
       <div class="stats" id="best-stats" aria-label="最強個体の能力値"></div>
     </section>
 
-    <section class="panel">
+    <section id="detail-average" role="tabpanel" aria-labelledby="tab-average" tabindex="0" class="panel" hidden>
       <div class="panel-heading compact">
-        <div><p class="section-label">AVERAGE GENES</p><h2>群れの平均</h2></div>
+        <div><p class="section-label">AVERAGE GENES</p><h2>現在の64体の平均</h2></div>
         <strong class="average-score" id="average-score">--</strong>
       </div>
+      <p class="detail-note">右上は5能力の平均。各能力は現在の群れ全体の平均値です。</p>
       <div class="stats average-stats" id="average-stats" aria-label="平均能力値"></div>
     </section>
 
-    <section class="panel log-panel">
+    <section id="detail-log" role="tabpanel" aria-labelledby="tab-log" tabindex="0" class="panel log-panel" hidden>
       <div class="panel-heading compact"><div><p class="section-label">SHORT LOG</p><h2>進化ログ</h2></div></div>
       <ol class="battle-log" id="battle-log" aria-live="polite"><li class="empty-message">1世代目、64体が待機中</li></ol>
     </section>
 
-    <footer>Mutation 5% · Gene range 1-100 · Lightweight DOM animation</footer>
+    </section>
+    <footer>突然変異：子の各遺伝子に5%で±10%（値域1–100）</footer>
   </main>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description">
+    <h2 id="reset-title">最初からやり直しますか？</h2>
+    <p id="reset-description">世代・個体・進化ログを初期化します。</p>
+    <form method="dialog" class="dialog-actions">
+      <button value="cancel" class="secondary-button" autofocus>キャンセル</button>
+      <button value="reset" class="reset-button">リセットする</button>
+    </form>
+  </dialog>
   <script src="script.js"></script>
 </body>
 </html>

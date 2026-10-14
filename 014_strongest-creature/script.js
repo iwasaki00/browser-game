@@ -62,6 +62,7 @@ let lastChampion = null;
 let idCounter = 1;
 let isRunning = false;
 let autoTimer = null;
+let stopPending = false;
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -252,8 +253,8 @@ function renderPack(phase = "current") {
 
 function renderLogs() {
   if (!latestLogs.length) return;
-  elements.battleLog.innerHTML = latestLogs.slice(-5).map((log) => `<li>${log.text}</li>`).join("");
-  elements.battleLog.scrollTop = elements.battleLog.scrollHeight;
+  elements.battleLog.innerHTML = latestLogs.slice(-5).map((log) => `<li><span class="log-generation">第${history[history.length - 1].generation}世代</span>${log.text}</li>`).join("");
+  // Preserve the reader's scroll position during automatic evolution.
 }
 
 function render() {
@@ -261,6 +262,11 @@ function render() {
   const averages = getAverages();
   elements.generation.textContent = generation;
   elements.population.textContent = population.length;
+  const label = lastChampion && history.length && history[history.length - 1].generation === generation ? `第${generation}世代の優勝個体` : "現在の最強個体";
+  $("#profile-label").textContent = label;
+  $("#summary-label").textContent = label;
+  $("#summary-name").textContent = best.name;
+  $("#summary-power").textContent = `総合 ${power(best)}`;
   elements.bestName.textContent = best.name;
   elements.bestCode.textContent = `ID: CR-${String(best.id).padStart(4, "0")} · 総合 ${power(best)}`;
   elements.creatureTitle.textContent = TITLES[Math.min(history.length, TITLES.length - 1)];
@@ -356,42 +362,58 @@ function setRunning(running) {
   [elements.next, elements.nextTen, elements.reset].forEach((button) => {
     button.disabled = running;
   });
-  elements.auto.disabled = false;
+  elements.auto.disabled = (running && autoTimer === null) || stopPending;
+}
+
+function updateProgress(message = "") {
+  elements.progress.textContent = stopPending ? "停止待ち：実行中の世代が完了すると停止します" : autoTimer !== null ? "自動進化中 · 停止で現在の世代まで進めます" : message;
 }
 
 async function advance(count, visualFirst = true) {
-  if (isRunning) return;
+  if (isRunning || $("#reset-dialog").open) return;
   setRunning(true);
-  for (let i = 0; i < count; i += 1) {
-    elements.progress.textContent = `${i + 1} / ${count} 世代を進化中`;
-    await advanceOneGeneration(visualFirst && i === 0);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+  try {
+    for (let i = 0; i < count; i += 1) {
+      updateProgress(`${i + 1} / ${count} 世代を進化中`);
+      await advanceOneGeneration(visualFirst && i === 0);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    updateProgress(`第${generation}世代が誕生`);
+  } finally {
+    const stopped = stopPending;
+    stopPending = false;
+    setRunning(false);
+    elements.auto.textContent = autoTimer !== null ? "自動進化 停止" : "自動進化 開始";
+    updateProgress(stopped ? "自動進化を停止しました" : elements.progress.textContent);
   }
-  elements.progress.textContent = `第${generation}世代が誕生`;
-  setRunning(false);
 }
 
 function stopAuto() {
-  if (!autoTimer) return;
+  if (autoTimer === null) return;
   clearInterval(autoTimer);
   autoTimer = null;
-  elements.auto.textContent = "自動進化";
+  stopPending = isRunning;
+  elements.auto.textContent = stopPending ? "停止待ち…" : "自動進化 開始";
   elements.auto.classList.remove("is-running");
-  elements.progress.textContent = "自動進化を停止";
+  elements.auto.setAttribute("aria-pressed", "false");
+  elements.auto.disabled = isRunning;
+  updateProgress("自動進化を停止しました");
 }
 
 function toggleAuto() {
-  if (autoTimer) {
+  if (autoTimer !== null) {
     stopAuto();
     return;
   }
-  elements.auto.textContent = "停止";
-  elements.auto.classList.add("is-running");
-  elements.progress.textContent = "自動進化中";
-  advance(1, true);
+  if (isRunning || stopPending || $("#reset-dialog").open) return;
   autoTimer = setInterval(() => {
     if (!isRunning) advance(1, false);
   }, AUTO_INTERVAL_MS);
+  elements.auto.textContent = "自動進化 停止";
+  elements.auto.classList.add("is-running");
+  elements.auto.setAttribute("aria-pressed", "true");
+  updateProgress();
+  advance(1, true);
 }
 
 function resetGame() {
@@ -420,5 +442,34 @@ function resetGame() {
 elements.next.addEventListener("click", () => advance(1, true));
 elements.nextTen.addEventListener("click", () => advance(10, true));
 elements.auto.addEventListener("click", toggleAuto);
-elements.reset.addEventListener("click", resetGame);
+elements.reset.addEventListener("click", () => {
+  if (!isRunning) $("#reset-dialog").showModal();
+});
+$("#reset-dialog").addEventListener("close", () => {
+  if ($("#reset-dialog").returnValue === "reset") resetGame();
+  $("#reset-dialog").returnValue = "";
+});
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(tab) {
+  tabs.forEach((item) => {
+    const selected = item === tab;
+    item.setAttribute("aria-selected", String(selected));
+    item.tabIndex = selected ? 0 : -1;
+    document.getElementById(item.getAttribute("aria-controls")).hidden = !selected;
+  });
+}
+tabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => selectTab(tab));
+  tab.addEventListener("keydown", (event) => {
+    let next = index;
+    if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+    else if (event.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = tabs.length - 1;
+    else return;
+    event.preventDefault();
+    selectTab(tabs[next]);
+    tabs[next].focus();
+  });
+});
 resetGame();
