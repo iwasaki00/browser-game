@@ -26,6 +26,9 @@
   const BEST_KEY_PREFIX = "rallyRushBestTime:";
   const view = { width: 390, height: 844, dpr: 1, scale: 1.65, carY: 0 };
   const input = { keyLeft: false, keyRight: false, dragging: false, pointerId: null, dragStartX: 0, dragStartSteer: 0 };
+  const activity = { blurred: !document.hasFocus(), hidden: document.hidden };
+
+  function isInactive() { return activity.blurred || activity.hidden; }
 
   const COURSE_PROFILES = {
     forest: {
@@ -241,6 +244,8 @@
   }
 
   function resetRace(playNow) {
+    clearInput();
+    state.lastTime = 0;
     generateCourse();
     const start = courseAt(0);
     Object.assign(state, {
@@ -250,10 +255,6 @@
       elapsed: 0, turbos: 3, turboTime: 0, jumpTime: 0, jumpDuration: .58, jumpCooldown: 0,
       waterSlip: 0, landingWobble: 0, shake: 0, collisionLock: 0, surface: "asphalt", particles: []
     });
-    input.keyLeft = false;
-    input.keyRight = false;
-    input.dragging = false;
-    wheelControl.classList.remove("dragging");
     resultOverlay.classList.remove("show");
     startOverlay.classList.toggle("show", !playNow);
     updateCourseCards();
@@ -263,7 +264,7 @@
   function startRace() { resetRace(true); }
 
   function useTurbo() {
-    if (state.phase !== "playing" || state.turbos <= 0 || state.turboTime > 0) return;
+    if (isInactive() || state.phase !== "playing" || state.turbos <= 0 || state.turboTime > 0) return;
     state.turbos -= 1;
     state.turboTime = 1.2;
     state.shake = 0.15;
@@ -272,7 +273,7 @@
   }
 
   function useJump() {
-    if (state.phase !== "playing" || state.jumpCooldown > 0 || state.jumpTime > 0) return;
+    if (isInactive() || state.phase !== "playing" || state.jumpCooldown > 0 || state.jumpTime > 0) return;
     state.jumpDuration = state.turboTime > 0 ? .72 : .58;
     state.jumpTime = state.jumpDuration;
     state.jumpCooldown = 2;
@@ -385,6 +386,10 @@
       const returnRate = keyTarget ? 4.6 : 2.8;
       state.steerInput = moveTowards(state.steerInput, keyTarget, returnRate * dt);
     }
+    syncWheel();
+  }
+
+  function syncWheel() {
     steeringWheel.style.setProperty("--wheel-angle", `${state.steerInput * 120}deg`);
     wheelControl.setAttribute("aria-valuenow", Math.round(state.steerInput * 100));
   }
@@ -507,6 +512,7 @@
 
   function finishRace() {
     state.phase = "finished";
+    clearInput();
     const previous = getBest();
     const isRecord = !previous || state.elapsed < previous;
     if (isRecord) localStorage.setItem(bestKey(), state.elapsed.toFixed(3));
@@ -809,6 +815,11 @@
   }
 
   function frame(now) {
+    if (isInactive()) {
+      state.lastTime = 0;
+      requestAnimationFrame(frame);
+      return;
+    }
     if (!state.lastTime) state.lastTime = now;
     const dt = Math.min(.033, (now - state.lastTime) / 1000);
     state.lastTime = now;
@@ -818,20 +829,47 @@
   }
 
   function releaseWheel(event) {
-    if (event && input.pointerId !== null && event.pointerId !== input.pointerId) return;
+    if (event && event.pointerId !== input.pointerId) return;
+    const pointerId = input.pointerId;
     input.dragging = false;
     input.pointerId = null;
+    input.dragStartX = 0;
+    input.dragStartSteer = 0;
     wheelControl.classList.remove("dragging");
+    // Clear ownership before release: lostpointercapture must not cancel a normal release.
+    if (pointerId !== null && wheelControl.hasPointerCapture(pointerId)) {
+      wheelControl.releasePointerCapture(pointerId);
+    }
+    if (!event || event.type !== "pointerup") {
+      state.steerInput = 0;
+      syncWheel();
+    }
+  }
+
+  function clearInput() {
+    input.keyLeft = false;
+    input.keyRight = false;
+    releaseWheel();
+  }
+
+  function activityChanged() {
+    clearInput();
+    state.lastTime = 0;
   }
 
   wheelControl.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    if (isInactive() || state.phase !== "playing" || input.pointerId !== null || event.button !== 0) return;
     input.dragging = true;
     input.pointerId = event.pointerId;
     input.dragStartX = event.clientX;
     input.dragStartSteer = state.steerInput;
     wheelControl.classList.add("dragging");
-    wheelControl.setPointerCapture(event.pointerId);
+    try {
+      wheelControl.setPointerCapture(event.pointerId);
+    } catch {
+      releaseWheel();
+    }
   });
   wheelControl.addEventListener("pointermove", (event) => {
     if (!input.dragging || event.pointerId !== input.pointerId) return;
@@ -854,6 +892,7 @@
   });
 
   window.addEventListener("keydown", (event) => {
+    if (isInactive()) return;
     if (["ArrowLeft", "ArrowRight", "Space", "ShiftLeft", "ShiftRight"].includes(event.code)) event.preventDefault();
     if (event.code === "ArrowLeft") input.keyLeft = true;
     if (event.code === "ArrowRight") input.keyRight = true;
@@ -865,14 +904,23 @@
     if (event.code === "ArrowRight") input.keyRight = false;
   });
   window.addEventListener("blur", () => {
-    input.keyLeft = false;
-    input.keyRight = false;
-    releaseWheel();
+    activity.blurred = true;
+    activityChanged();
+  });
+  window.addEventListener("focus", () => {
+    activity.blurred = false;
+    activityChanged();
+  });
+  document.addEventListener("visibilitychange", () => {
+    activity.hidden = document.hidden;
+    activity.blurred = !document.hasFocus();
+    activityChanged();
   });
   window.addEventListener("resize", resizeCanvas);
-  document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
+  // Only game surfaces suppress long-press menus; overlays retain scrolling and pinch zoom.
+  for (const area of [canvas, wheelControl, turboButton, jumpButton]) {
+    area.addEventListener("contextmenu", (event) => event.preventDefault());
+  }
 
   resizeCanvas();
   resetRace(false);

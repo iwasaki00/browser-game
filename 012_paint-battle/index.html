@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#101827">
@@ -12,7 +12,6 @@
 <body>
   <main class="app-shell">
     <section id="titleScreen" class="screen title-screen">
-      <a class="back-link" href="../index.html">← ゲーム一覧</a>
       <div class="logo" aria-label="Paint Battle">
         <span>PAINT</span>
         <strong>BATTLE</strong>
@@ -150,15 +149,12 @@
         <div class="timer"><span>TIME</span><strong id="timeView">60</strong></div>
         <div class="score orange-score"><span>ORANGE</span><strong id="orangeScore">0</strong></div>
       </header>
-      <div class="canvas-frame">
-        <canvas id="gameCanvas" width="900" height="900" aria-label="30×30マスの塗りつぶしフィールド"></canvas>
-        <div id="countdown" class="countdown hidden" aria-live="assertive"></div>
-        <div id="specialAnnouncement" class="special-announcement hidden"><strong>SPECIAL!</strong><span id="specialAnnouncementName"></span></div>
-      </div>
-      <div class="special-panel">
-        <button id="specialButton" class="special-button" type="button" disabled>SP</button>
-        <div class="sp-gauge"><i id="spGaugeFill"></i></div>
-        <span id="spGaugeValue">0</span>
+      <div class="board-area">
+        <div class="canvas-frame">
+          <canvas id="gameCanvas" width="900" height="900" aria-label="30×30マスの塗りつぶしフィールド"></canvas>
+          <div id="countdown" class="countdown hidden" aria-live="assertive"></div>
+          <div id="specialAnnouncement" class="special-announcement hidden"><strong>SPECIAL!</strong><span id="specialAnnouncementName"></span></div>
+        </div>
       </div>
       <div class="weapon-readout"><span>WEAPON</span><strong id="currentWeaponView">ローラー</strong><span>SPECIAL</span><strong id="currentSpecialView">ペイントストーム</strong></div>
       <p id="battleStatus" class="battle-status">スティックを倒して移動</p>
@@ -166,6 +162,11 @@
         <div id="joystick" class="joystick" aria-label="移動スティック" role="application">
           <div class="joystick-ring"></div>
           <div id="joystickKnob" class="joystick-knob"></div>
+        </div>
+        <div class="special-panel">
+          <button id="specialButton" class="special-button" type="button" disabled>SP</button>
+          <div class="sp-gauge"><i id="spGaugeFill"></i></div>
+          <span id="spGaugeValue">0</span>
         </div>
         <div class="action-area">
           <button id="actionButton" class="action-button hidden" type="button"><span id="actionButtonLabel">撃つ</span><i id="chargeFill"></i></button>

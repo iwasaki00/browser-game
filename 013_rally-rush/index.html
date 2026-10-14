@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -14,7 +14,6 @@
     <canvas id="gameCanvas" aria-label="俯瞰視点のラリーゲーム"></canvas>
 
     <header class="hud" aria-label="レース情報">
-      <a class="back" href="../index.html" aria-label="ゲーム一覧へ戻る">‹</a>
       <div class="meter"><span>TIME</span><strong id="timeText">0:00.00</strong></div>
       <div class="meter"><span>SPEED</span><strong><b id="speedText">0</b> km/h</strong></div>
       <div class="meter turbo-meter"><span>TURBO</span><strong id="turboText">★★★</strong></div>
@@ -43,7 +42,7 @@
       <div class="panel">
         <p class="kicker">TOP-DOWN RALLY</p>
         <h1>RALLY<br><em>RUSH</em></h1>
-        <p>コースを選んでスタート。ハンドル操作、ターボ、ジャンプでランダム生成ラリーを走破してください。</p>
+        <p>コースを選んでスタート。ハンドルを左へドラッグで左旋回、右へドラッグで右旋回。指を離すと徐々に直進へ戻ります。</p>
         <div class="course-select" id="courseSelect" aria-label="コース選択">
           <button class="course-card active" type="button" data-course="forest">
             <strong>ビギナー林道</strong><span>広い道 / 緩いカーブ / 少なめ</span>
@@ -58,7 +57,7 @@
             <strong>沼地ステージ</strong><span>水たまり / 滑る / やや狭い</span>
           </button>
         </div>
-        <div class="tips"><span>◎ ドラッグで旋回</span><span>⚡ ターボ × 3</span><span>↥ JUMP</span></div>
+        <div class="tips"><span>⚡ ターボは3回・星が残数</span><span>↥ READYでジャンプ可・再使用まで2秒</span></div>
         <p class="best">BEST <strong id="startBestText">--:--.--</strong></p>
         <button id="startButton" class="primary" type="button">START</button>
         <small class="keyboard">PC: ← → / SPACE / SHIFT</small>
@@ -72,7 +71,6 @@
         <p class="result-time" id="resultTime">0:00.00</p>
         <p class="best" id="resultBest">BEST --:--.--</p>
         <button id="retryButton" class="primary" type="button">RETRY</button>
-        <a class="menu-link" href="../index.html">ゲーム一覧へ</a>
       </div>
     </section>
   </main>

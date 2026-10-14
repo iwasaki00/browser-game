@@ -11,10 +11,6 @@
 </head>
 <body>
   <main class="app">
-    <nav class="topbar" aria-label="サイトナビゲーション">
-      <a class="back-link" href="../index.html">← ゲーム一覧へ戻る</a>
-    </nav>
-
     <header class="header">
       <p class="eyebrow">Browser Game</p>
       <h1>スキルオセロ</h1>
@@ -31,15 +27,20 @@
     </header>
 
     <section id="onlinePanel" class="online-panel" hidden>
-      <div class="online-actions">
-        <button id="createRoomButton" type="button">部屋を作る</button>
-        <button id="joinRoomButton" type="button">部屋に入る</button>
-        <button id="leaveRoomButton" type="button">退出</button>
-      </div>
-      <label class="room-field">
-        <span>部屋ID</span>
-        <input id="roomIdInput" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
-      </label>
+      <details id="roomControls" class="room-controls" open>
+        <summary>部屋操作</summary>
+        <div class="online-actions">
+          <button id="createRoomButton" type="button">部屋を作る</button>
+          <button id="joinRoomButton" type="button">部屋に入る</button>
+          <button id="leaveRoomButton" type="button">退出</button>
+        </div>
+        <label class="room-field">
+          <span>部屋ID</span>
+          <input id="roomIdInput" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
+        </label>
+        <p id="onlineHint" class="online-hint">部屋を作るか、6桁の部屋IDを入力して参加してください。</p>
+        <p id="roomInfo" class="room-info"></p>
+      </details>
       <div class="online-status-grid" aria-label="オンライン状況">
         <div>
           <span class="label">接続</span>
@@ -58,15 +59,17 @@
           <strong id="onlineTurnText">-</strong>
         </div>
       </div>
-      <p id="onlineHint" class="online-hint">部屋を作るか、6桁の部屋IDを入力して参加してください。</p>
-      <p id="roomInfo" class="room-info"></p>
-      <section class="chat-panel" aria-label="チャット">
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-row">
-          <input id="chatInput" type="text" maxlength="80" placeholder="メッセージ" autocomplete="off" disabled>
-          <button id="sendChatButton" type="button" disabled>送信</button>
-        </div>
-      </section>
+      <p class="room-badge">部屋 <strong id="roomIdText">未参加</strong></p>
+      <details class="chat-details">
+        <summary>チャット</summary>
+        <section class="chat-panel" aria-label="チャット">
+          <div id="chatMessages" class="chat-messages"></div>
+          <div class="chat-row">
+            <input id="chatInput" type="text" maxlength="80" placeholder="メッセージ" autocomplete="off" disabled>
+            <button id="sendChatButton" type="button" disabled>送信</button>
+          </div>
+        </section>
+      </details>
     </section>
 
     <section class="status-panel" aria-label="ゲーム状況">
@@ -74,6 +77,7 @@
         <span class="label">状況</span>
         <strong id="messageText">置ける場所を選んでください</strong>
       </div>
+      <span id="stoneCounts" class="stone-counts" aria-label="石数">黒 2 · 白 2</span>
     </section>
 
     <section class="board-wrap" aria-label="オセロ盤">
@@ -109,9 +113,8 @@
         <span class="skill-icon trap-icon"></span>
         <span>トラップ石(<b data-skill-count="trap">2</b>)</span>
       </button>
+      <button id="skillHelpButton" class="skill-help-button" type="button">スキル説明</button>
     </section>
-
-    <button id="skillHelpButton" class="skill-help-button" type="button">スキル説明</button>
 
     <section id="summaryPanel" class="summary-panel" aria-label="戦績サマリー" hidden>
       <h2>戦績サマリー</h2>
@@ -138,6 +141,6 @@
     </section>
   </div>
 
-  <script type="module" src="script.js?v=skill-othello-20260620-new-skills"></script>
+  <script type="module" src="script.js?v=skill-othello-20261014-mobile"></script>
 </body>
 </html>

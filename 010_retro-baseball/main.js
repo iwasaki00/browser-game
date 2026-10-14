@@ -4,6 +4,10 @@
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   const debugButton = document.getElementById("debugButton");
+  const debugCanvas = document.getElementById("debugCanvas");
+  const debugCtx = debugCanvas.getContext("2d");
+  const debugMode = new URLSearchParams(window.location.search).get("debug") === "1";
+  debugButton.hidden = !debugMode;
 
   const W = canvas.width;
   const H = canvas.height;
@@ -83,6 +87,7 @@
     swing: "swing",
     hit: "hit",
     result: "result",
+    gameover: "gameover",
   };
 
   const PLATE_PROGRESS = 0.84;
@@ -228,6 +233,7 @@
       this.fielderAnim = new AnimationPlayer(SPRITES.fielder.idle, 2, true);
       this.ball = new Ball();
       this.debug = false;
+      this.showGuide = true;
       this.reset();
     }
 
@@ -238,12 +244,13 @@
       this.outs = 0;
       this.waitTimer = 0.75;
       this.resultTimer = 0;
-      this.resultText = "TAPでスイング";
+      this.resultText = "";
       this.resultKind = "";
       this.shake = 0;
       this.ball.reset();
       this.pitcherAnim.reset(SPRITES.pitcher.idle, 3, true);
       this.batterAnim.reset(SPRITES.batter.ready, 3, true);
+      this.fielderAnim.reset(SPRITES.fielder.idle, 2, true);
     }
 
     update(deltaTime) {
@@ -279,6 +286,7 @@
     }
 
     startPitch() {
+      if (this.state === STATE.gameover || this.outs >= 3) return;
       this.state = STATE.pitching;
       this.resultText = "";
       this.resultKind = "";
@@ -288,11 +296,12 @@
     }
 
     swing() {
-      if (this.outs >= 3) {
+      if (this.state === STATE.gameover) {
         this.reset();
         return;
       }
       if (this.state !== STATE.pitching) return;
+      this.showGuide = false;
 
       const delta = this.ball.deltaFromPlate;
       this.state = STATE.swing;
@@ -346,14 +355,14 @@
 
     prepareNextPitch() {
       if (this.outs >= 3) {
-        this.resultText = "TAPでリスタート";
-        this.resultTimer = 0.25;
-        this.state = STATE.result;
+        this.resultText = "";
+        this.resultTimer = 0;
+        this.state = STATE.gameover;
         return;
       }
       this.state = STATE.waiting;
       this.waitTimer = 0.65;
-      this.resultText = "TAPでスイング";
+      this.resultText = "";
       this.pitcherAnim.reset(SPRITES.pitcher.idle, 3, true);
       this.batterAnim.reset(SPRITES.batter.ready, 3, true);
     }
@@ -396,9 +405,14 @@
     drawField();
     drawSprites(g);
     drawHud(g);
-    drawResultText(g);
+    if (g.state === STATE.gameover) drawGameOver(g);
+    else drawResultText(g);
     drawPrompt(g);
-    if (g.debug) drawDebug(g);
+    if (g.debug) {
+      debugCtx.imageSmoothingEnabled = false;
+      debugCtx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
+      drawDebug(g);
+    }
 
     ctx.restore();
   }
@@ -495,43 +509,56 @@
 
   function drawPrompt(g) {
     if (g.outs >= 3) return;
+    if (g.showGuide) {
+      panel(12, 664, W - 24, 40);
+      text("ボールが近づいたらタップしてスイング", W / 2, 684, 17, COLORS.ink, "center");
+      return;
+    }
     const blink = Math.floor(performance.now() / 440) % 2 === 0;
     if (!blink && g.state === STATE.pitching) return;
     panel(45, 662, W - 90, 42);
     text("TAPでスイング", W / 2, 685, 18, COLORS.ink, "center");
   }
 
+  function drawGameOver(g) {
+    panel(28, 280, W - 56, 160);
+    text("GAME SET", W / 2, 312, 32, COLORS.red, "center");
+    text(`FINAL SCORE  ${String(g.score).padStart(2, "0")}`, W / 2, 360, 24, COLORS.ink, "center");
+    text("TAP TO RETRY", W / 2, 408, 22, COLORS.ink, "center");
+  }
+
   function drawDebug(g) {
-    const scale = 0.22;
+    const ctx = debugCtx;
+    const scale = 0.15;
     const sheetW = image.width * scale;
     const sheetH = image.height * scale;
     const x = 10;
-    const y = 96;
+    const y = 8;
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.72)";
-    ctx.fillRect(6, 92, sheetW + 108, Math.min(sheetH, 382) + 84);
+    ctx.fillRect(0, 0, debugCanvas.width, debugCanvas.height);
     ctx.drawImage(image, x, y, sheetW, sheetH);
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
     ctx.lineWidth = 1;
     for (let gx = 0; gx <= image.width; gx += CELL) {
       const px = x + gx * scale;
-      line(px, y, px, y + sheetH);
+      line(px, y, px, y + sheetH, ctx);
     }
     for (let gy = 0; gy <= image.height; gy += CELL) {
       const py = y + gy * scale;
-      line(x, py, x + sheetW, py);
+      line(x, py, x + sheetW, py, ctx);
     }
 
     ctx.strokeStyle = "rgba(255, 216, 90, 0.9)";
     ctx.lineWidth = 2;
     for (let gx = 0; gx <= image.width; gx += SOURCE_CELL) {
       const px = x + gx * scale;
-      line(px, y, px, y + sheetH);
+      line(px, y, px, y + sheetH, ctx);
     }
     for (let gy = 0; gy <= image.height; gy += SOURCE_CELL) {
       const py = y + gy * scale;
-      line(x, py, x + sheetW, py);
+      line(x, py, x + sheetW, py, ctx);
     }
 
     const used = [
@@ -541,7 +568,7 @@
       ["O", g.ball.anim.getCurrentFrame()],
     ];
     used.forEach(([name, frame], index) => {
-      text(`${name}: c${frame.col} r${frame.row}`, x + sheetW + 12, y + 18 + index * 18, 12, COLORS.panel);
+      text(`${name}: c${frame.col} r${frame.row}`, x + sheetW + 12, y + 18 + index * 18, 12, COLORS.panel, "left", ctx);
       ctx.strokeStyle = index === 0 ? "#ff3d3d" : index === 1 ? "#35a7ff" : index === 2 ? "#55ff74" : "#ffffff";
       ctx.lineWidth = 2;
       ctx.strokeRect(
@@ -552,15 +579,19 @@
       );
     });
 
-    // Ball and judgement range overlay.
+    // Show the same ball/plate coordinates in a small diagnostic field.
+    ctx.save();
+    ctx.translate(166, 76);
+    ctx.scale(0.25, 0.25);
     ctx.strokeStyle = "#ff3d3d";
     ctx.lineWidth = 2;
     const zoneY = lerp(225, 488, easeInQuad(PLATE_PROGRESS));
     ctx.strokeRect(W / 2 - 74, zoneY - 24, 148, 48);
     ctx.fillStyle = "#ff3d3d";
     ctx.fillRect(g.ball.x - 3, g.ball.y - 3, 6, 6);
-    text(`ball ${g.ball.progress.toFixed(2)} delta ${g.ball.deltaFromPlate.toFixed(2)}`, 18, 612, 12, COLORS.panel);
-    text(`state ${g.state}`, 18, 630, 12, COLORS.panel);
+    ctx.restore();
+    text(`ball ${g.ball.progress.toFixed(2)} delta ${g.ball.deltaFromPlate.toFixed(2)}`, 166, 100, 12, COLORS.panel, "left", ctx);
+    text(`state ${g.state}`, 166, 118, 12, COLORS.panel, "left", ctx);
   }
 
   function drawLoadError() {
@@ -583,7 +614,7 @@
     text(value, x, y + 26, 26, COLORS.ink);
   }
 
-  function text(value, x, y, size, color, align = "left") {
+  function text(value, x, y, size, color, align = "left", ctx = canvas.getContext("2d")) {
     ctx.fillStyle = color;
     ctx.font = `700 ${size}px "Courier New", "Yu Gothic UI", monospace`;
     ctx.textAlign = align;
@@ -591,7 +622,7 @@
     ctx.fillText(value, x, y);
   }
 
-  function line(x1, y1, x2, y2) {
+  function line(x1, y1, x2, y2, ctx = canvas.getContext("2d")) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -627,12 +658,14 @@
   }
 
   function toggleDebug() {
-    if (!game) return;
+    if (!debugMode || !game) return;
     game.debug = !game.debug;
+    debugCanvas.hidden = !game.debug;
     debugButton.setAttribute("aria-pressed", String(game.debug));
   }
 
   function handleSwing(event) {
+    if (!event.isPrimary || event.button !== 0) return;
     event.preventDefault();
     if (game) game.swing();
   }
@@ -644,6 +677,6 @@
     toggleDebug();
   });
   window.addEventListener("keydown", (event) => {
-    if (event.key.toLowerCase() === "d") toggleDebug();
+    if (debugMode && !event.repeat && event.key.toLowerCase() === "d") toggleDebug();
   });
 })();

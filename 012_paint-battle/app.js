@@ -67,6 +67,11 @@ let recentPaint = new Map();
 let cpuFinished = false;
 let onlinePlayerCount = 0;
 let actionHeld = false;
+// Pointer and keyboard actions have separate ownership.
+let actionPointerId = null;
+let actionKeyboardHeld = false;
+let announcementTimer = 0;
+let shakeTimer = 0;
 let chargeStartedAt = 0;
 let nextActionAt = 0;
 let bombEffects = [];
@@ -134,6 +139,10 @@ async function loadFirebase() {
   firebase = databaseModule;
   databaseModule.onValue(databaseModule.ref(db, ".info/serverTimeOffset"), (snapshot) => {
     serverOffset = snapshot.val() || 0;
+  });
+
+  databaseModule.onValue(databaseModule.ref(db, ".info/connected"), (snapshot) => {
+    if (snapshot.val() === false) clearDirectionState();
   });
 
   cleanupOldPaintBattleRooms().catch((error) => console.warn("Room cleanup skipped:", error));
@@ -393,6 +402,8 @@ function startOnlineGame(endAt) {
 
 function startGame(endAt) {
   showScreen("#gameScreen");
+  clearDirectionState();
+  stopBattleEffects();
   gameEndAt = endAt;
   gameRunning = true;
   lastFrameAt = performance.now();
@@ -763,6 +774,8 @@ function updateHud() {
 
 function finishGame() {
   gameRunning = false;
+  cancelAnimationFrame(animationFrame);
+  stopBattleEffects();
   clearDirectionState();
   const scores = countScores();
   if (gameMode === "cpu") {
@@ -798,6 +811,8 @@ function showResult(blue, orange) {
   gameRunning = false;
   clearDirectionState();
   cancelAnimationFrame(animationFrame);
+  stopBattleEffects();
+  updateSpecialHud();
   $("#resultBlueScore").textContent = blue;
   $("#resultOrangeScore").textContent = orange;
   let title = "引き分け";
@@ -815,6 +830,7 @@ function showResult(blue, orange) {
 async function leaveRoom(showTitle = true) {
   gameRunning = false;
   cancelAnimationFrame(animationFrame);
+  stopBattleEffects();
   clearDirectionState();
   clearSubscriptions();
   const leavingRoom = roomId;
@@ -856,6 +872,8 @@ function handleRemoteRoomRemoval() {
   if (!roomId) return;
   roomId = "";
   gameRunning = false;
+  cancelAnimationFrame(animationFrame);
+  stopBattleEffects();
   clearDirectionState();
   disconnectHandle = null;
   onlinePlayerCount = 0;
@@ -946,7 +964,8 @@ function showSpecialAnnouncement(slot, name) {
   announcement.classList.add("hidden");
   void announcement.offsetWidth;
   announcement.classList.remove("hidden");
-  window.setTimeout(() => announcement.classList.add("hidden"), 850);
+  clearTimeout(announcementTimer);
+  announcementTimer = window.setTimeout(() => announcement.classList.add("hidden"), 850);
 }
 
 function shakeScreen() {
@@ -954,7 +973,19 @@ function shakeScreen() {
   frame.classList.remove("shaking");
   void frame.offsetWidth;
   frame.classList.add("shaking");
-  window.setTimeout(() => frame.classList.remove("shaking"), 360);
+  clearTimeout(shakeTimer);
+  shakeTimer = window.setTimeout(() => frame.classList.remove("shaking"), 360);
+}
+
+function stopBattleEffects() {
+  clearTimeout(announcementTimer);
+  clearTimeout(shakeTimer);
+  announcementTimer = shakeTimer = 0;
+  $("#specialAnnouncement").classList.add("hidden");
+  $(".canvas-frame").classList.remove("shaking");
+  $("#timeView").parentElement.classList.remove("danger");
+  $("#specialButton").classList.remove("ready");
+  specialManager.reset();
 }
 
 function renderWeaponSelection() {
@@ -999,22 +1030,34 @@ function updateJoystick(event) {
 
 function resetJoystick(event) {
   if (event && joystickInput.pointerId !== event.pointerId) return;
+  const pointerId = joystickInput.pointerId;
   joystickInput = { x: 0, y: 0, magnitude: 0, pointerId: null };
+  releaseControlPointer(joystick, pointerId);
   joystickKnob.style.transform = "translate(-50%, -50%)";
+}
+
+function releaseControlPointer(element, pointerId) {
+  if (pointerId !== null && element.hasPointerCapture?.(pointerId)) {
+    element.releasePointerCapture(pointerId);
+  }
 }
 
 function clearDirectionState() {
   resetJoystick();
   keyboardInput = { up: false, down: false, left: false, right: false };
-  actionHeld = false;
-  chargeStartedAt = 0;
-  actionButton.classList.remove("active");
+  endAction();
 }
 
 function startAction(event) {
-  if (!gameRunning || selectedWeapon === "roller") return;
+  if (!gameRunning || selectedWeapon === "roller" || actionPointerId !== null || actionKeyboardHeld) return;
+  if (event.type === "pointerdown" && event.button !== 0) return;
   event.preventDefault();
-  if (Number.isFinite(event.pointerId)) actionButton.setPointerCapture?.(event.pointerId);
+  if (Number.isFinite(event.pointerId)) {
+    actionPointerId = event.pointerId;
+    actionButton.setPointerCapture?.(event.pointerId);
+  } else {
+    actionKeyboardHeld = true;
+  }
   actionButton.classList.add("active");
   const now = performance.now();
   if (selectedWeapon === "shooter") {
@@ -1029,18 +1072,31 @@ function startAction(event) {
 }
 
 function endAction(event) {
-  if (event) event.preventDefault();
+  if (event) {
+    if (Number.isFinite(event.pointerId)) {
+      if (actionPointerId !== event.pointerId) return;
+    } else if (!actionKeyboardHeld) return;
+    event.preventDefault();
+  }
+  // Clear ownership before releasing capture: the ensuing lost event is a no-op.
+  const pointerId = actionPointerId;
+  actionPointerId = null;
+  actionKeyboardHeld = false;
+  releaseControlPointer(actionButton, pointerId);
   actionButton.classList.remove("active");
   actionHeld = false;
   if (selectedWeapon === "charger" && chargeStartedAt) {
+    const normalRelease = event && (event.type === "pointerup" || event.type === "keyup");
     const now = performance.now();
-    const ratio = Math.min(1, (now - chargeStartedAt) / 1500);
-    if (ratio >= .08) paintCharger(ratio);
-    chargeStartedAt = 0;
-    nextActionAt = now + 700;
-    $("#chargeFill").style.height = "0%";
-    $("#actionStatus").textContent = "長押しでチャージ";
+    if (normalRelease && gameRunning) {
+      const ratio = Math.min(1, (now - chargeStartedAt) / 1500);
+      if (ratio >= .08) paintCharger(ratio);
+    }
+    if (event) nextActionAt = now + 700;
   }
+  chargeStartedAt = 0;
+  $("#chargeFill").style.height = "0%";
+  if (selectedWeapon === "charger") $("#actionStatus").textContent = "長押しでチャージ";
 }
 
 document.querySelectorAll(".weapon-option").forEach((button) => {
@@ -1052,6 +1108,7 @@ document.querySelectorAll(".special-select").forEach((select) => {
 $("#specialButton").addEventListener("click", () => activateSpecial());
 
 joystick.addEventListener("pointerdown", (event) => {
+  if (!gameRunning || joystickInput.pointerId !== null || event.button !== 0) return;
   event.preventDefault();
   joystickInput.pointerId = event.pointerId;
   joystick.setPointerCapture?.(event.pointerId);
@@ -1068,6 +1125,7 @@ actionButton.addEventListener("pointerdown", startAction);
 });
 
 window.addEventListener("keydown", (event) => {
+  if (!gameRunning || event.target.matches?.("input, select, textarea, [contenteditable]")) return;
   const direction = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" }[event.key];
   if (direction) {
     event.preventDefault();
@@ -1081,12 +1139,21 @@ window.addEventListener("keyup", (event) => {
   if (event.code === "Space") endAction(event);
 });
 window.addEventListener("blur", clearDirectionState);
-window.addEventListener("pagehide", () => { if (disconnectHandle) disconnectHandle.remove(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) clearDirectionState();
+});
+window.addEventListener("offline", clearDirectionState);
+window.addEventListener("pagehide", () => {
+  clearDirectionState();
+  if (disconnectHandle) disconnectHandle.remove();
+});
 
 // iOS Safariでゲーム中のドラッグがページスクロールへ伝播するのを防ぐ。
-$("#gameScreen").addEventListener("touchmove", (event) => {
-  if (gameRunning) event.preventDefault();
-}, { passive: false });
+[canvas, $(".control-deck")].forEach((element) => {
+  element.addEventListener("touchmove", (event) => {
+    if (gameRunning) event.preventDefault();
+  }, { passive: false });
+});
 
 $("#createRoomButton").addEventListener("click", createRoom);
 $("#joinRoomButton").addEventListener("click", joinRoom);

@@ -24,6 +24,7 @@
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   color: var(--ink);
   font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
   background:
@@ -46,31 +47,32 @@ input {
 button {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input, .chat-messages, .room-badge {
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
+}
+
+button:disabled { cursor: default; }
+button:focus-visible, summary:focus-visible, select:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .app {
-  width: min(980px, calc(100% - 24px));
+  width: min(980px, calc(100% - max(12px, env(safe-area-inset-left)) - max(12px, env(safe-area-inset-right))));
   margin: 0 auto;
   padding: max(16px, env(safe-area-inset-top)) 0 max(24px, env(safe-area-inset-bottom));
   display: grid;
   gap: 10px;
 }
 
-.topbar {
-  display: flex;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink);
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.08);
-}
+.app > *, .mode-picker, .room-field, input, select { min-width: 0; }
 
 .header,
 .status-panel,
@@ -104,7 +106,7 @@ h1 {
 .mode-row {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: end;
 }
@@ -130,6 +132,7 @@ input,
 select,
 input {
   width: 100%;
+  font-size: 16px;
   padding: 0 12px;
   color: var(--ink-dark);
   background: rgba(255, 255, 255, 0.94);
@@ -148,11 +151,35 @@ input {
   padding: 10px;
   display: grid;
   gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
+
+.room-controls { grid-column: 1 / -1; grid-row: 3; }
+.room-controls > :not(summary) { margin-top: 8px; }
+summary {
+  min-height: 44px;
+  padding: 12px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.room-badge { margin: 0; align-self: center; font-size: 0.78rem; overflow-wrap: anywhere; }
+.chat-details { grid-column: 3; grid-row: 2; }
+.chat-details[open] { grid-column: 1 / -1; grid-row: 4; }
+.chat-details[open] .chat-panel { margin-top: 8px; }
+.online-status-grid { grid-column: 1 / -1; grid-row: 1; }
+.room-controls:not([open]) { grid-column: 2; grid-row: 2; }
+.room-badge { grid-column: 1; grid-row: 2; }
 
 .online-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -214,13 +241,13 @@ input {
 
 .chat-row {
   display: grid;
-  grid-template-columns: 1fr 58px;
+  grid-template-columns: minmax(0, 1fr) 58px;
   gap: 7px;
 }
 
 .chat-row input,
 .chat-row button {
-  min-height: 38px;
+  min-height: 44px;
   border-radius: 8px;
 }
 
@@ -269,8 +296,13 @@ input {
 
 .status-panel {
   padding: 7px 9px;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
+
+.stone-counts { flex-shrink: 0; font-size: 0.78rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 
 .status-panel div {
   min-width: 0;
@@ -299,11 +331,17 @@ input {
 }
 
 .board {
-  width: min(100%, 620px, calc(100vh - 250px));
-  min-width: 300px;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  width: min(100%, 620px, max(200px, calc(100vh - var(--layout-height, 250px))));
+  width: min(100%, 620px, max(200px, calc(100dvh - var(--layout-height, 250px))));
+  min-width: 0;
   aspect-ratio: 1;
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
   gap: 3px;
   padding: 8px;
   border: 2px solid rgba(255, 255, 255, 0.18);
@@ -315,6 +353,9 @@ input {
 }
 
 .cell {
+  min-width: 0;
+  min-height: 0;
+  touch-action: manipulation;
   position: relative;
   display: grid;
   place-items: center;
@@ -511,12 +552,15 @@ input {
 .skill-panel {
   padding: 7px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 
 .skill-button {
-  min-height: 42px;
+  min-height: 48px;
+  min-width: 0;
+  padding: 4px 1px;
+  touch-action: manipulation;
   display: grid;
   justify-items: center;
   align-content: center;
@@ -525,7 +569,8 @@ input {
   border-radius: 8px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.08);
-  font-size: 0.74rem;
+  font-size: clamp(0.62rem, 2.5vw, 0.74rem);
+  line-height: 1.1;
   font-weight: 800;
   cursor: pointer;
 }
@@ -535,6 +580,11 @@ input {
   background: var(--accent);
   box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.24);
 }
+
+.skill-button.active::after { content: "選択中"; font-size: 0.6rem; line-height: 1; }
+.skill-button.exhausted { border-style: dashed; }
+.skill-button.exhausted::after { content: "残り0"; font-size: 0.6rem; line-height: 1; }
+[data-skill-count] { font-size: 1.1em; font-variant-numeric: tabular-nums; }
 
 .skill-button:disabled {
   opacity: 0.42;
@@ -570,7 +620,9 @@ input {
 }
 
 .skill-help-button {
-  min-height: 38px;
+  min-height: 48px;
+  padding: 4px 1px;
+  font-size: 0.72rem;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
@@ -624,6 +676,7 @@ input {
   position: relative;
   width: min(440px, 100%);
   max-height: min(76vh, 620px);
+  max-height: min(76dvh, 620px);
   overflow-y: auto;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -766,21 +819,37 @@ input {
 
 @media (max-width: 720px) {
   .app {
-    width: min(100% - 16px, 100%);
-    gap: 8px;
+    width: calc(100% - max(8px, env(safe-area-inset-left)) - max(8px, env(safe-area-inset-right)));
+    padding-top: max(6px, env(safe-area-inset-top));
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    gap: 6px;
   }
 
   .header {
-    padding: 10px;
+    padding: 7px 9px;
   }
 
+  .eyebrow { display: none; }
+  h1 { font-size: 1.25rem; line-height: 1.15; }
+  .mode-picker { grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+  .mode-picker > span { font-size: 0.65rem; }
+  .mode-row button { padding: 0 9px; font-size: 0.72rem; }
+  .mode-row select, .mode-row button { min-height: 44px; }
+  .status-panel .label { display: none; }
+  .status-panel strong { font-size: 0.75rem; }
+  .online-panel { padding: 6px; gap: 4px; }
+  .online-status-grid { gap: 4px; }
+  .online-status-grid div { padding: 3px 5px; }
+  .online-status-grid strong { font-size: 0.72rem; }
+  .online-actions button { padding: 0 4px; font-size: 0.72rem; }
+
   .mode-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-top: 5px;
+    gap: 6px;
   }
 
   .board {
-    width: min(100%, calc(100vh - 300px));
-    min-width: 304px;
     gap: 2px;
     padding: 6px;
   }
@@ -790,20 +859,10 @@ input {
   }
 
   .online-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .online-status-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 380px) {
-  .board {
-    min-width: 288px;
-  }
-
-  .skill-button {
-    font-size: 0.9rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

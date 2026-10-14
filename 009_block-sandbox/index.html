@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -11,75 +11,78 @@
 </head>
 <body>
   <main id="app">
-    <canvas id="gameCanvas" aria-label="Frontier Below game world"></canvas>
+    <canvas id="gameCanvas" aria-label="Frontier Belowのワールド"></canvas>
 
     <header class="hud">
-      <a class="icon-button back-button" href="../index.html" aria-label="Back to games">&larr;</a>
       <div class="health-panel">
-        <span>HP</span>
+        <span>体力</span>
         <div class="health-track"><div id="healthFill"></div></div>
         <strong id="healthText">100</strong>
       </div>
       <div class="world-status">
-        <strong id="timeText">Day</strong>
-        <span id="depthText">Surface</span>
+        <strong id="timeText">昼</strong>
+        <span id="depthText">地表</span>
       </div>
-      <button id="pauseButton" class="icon-button" type="button" aria-label="Pause">II</button>
+      <button id="pauseButton" class="icon-button" type="button" aria-label="一時停止">II</button>
     </header>
 
-    <div class="message" id="messageText" aria-live="polite">Tap the world to aim.</div>
-    <div class="rotate-tip">Landscape mode recommended</div>
+    <div class="message" id="messageText" aria-live="polite">ワールドをタップして対象を選択</div>
+    <div class="rotate-tip">横画面がおすすめです</div>
 
-    <section class="move-controls" aria-label="move controls">
-      <button id="leftButton" class="round-control" type="button" aria-label="Move left">&larr;</button>
-      <button id="rightButton" class="round-control" type="button" aria-label="Move right">&rarr;</button>
+    <section class="move-controls" aria-label="移動操作">
+      <button id="leftButton" class="round-control" type="button" aria-label="左へ移動">&larr;</button>
+      <button id="rightButton" class="round-control" type="button" aria-label="右へ移動">&rarr;</button>
     </section>
 
-    <section class="action-controls" aria-label="action controls">
-      <button id="jumpButton" class="action jump" type="button">Jump</button>
-      <button id="mineButton" class="action mine" type="button">Mine</button>
-      <button id="placeButton" class="action place" type="button">Place</button>
-      <button id="attackButton" class="action attack" type="button">Attack</button>
-      <button id="craftButton" class="action craft" type="button">Craft</button>
+    <section class="action-controls" aria-label="アクション操作">
+      <button id="jumpButton" class="action jump" type="button">ジャンプ</button>
+      <button id="mineButton" class="action mine" type="button">採掘</button>
+      <button id="placeButton" class="action place" type="button">配置</button>
+      <button id="attackButton" class="action attack" type="button">攻撃</button>
+      <button id="craftButton" class="action craft" type="button">クラフト</button>
     </section>
 
-    <section class="hotbar" id="hotbar" aria-label="hotbar"></section>
+    <section class="hotbar" id="hotbar" aria-label="アイテム選択（左右にスクロール）"></section>
 
-    <section class="modal" id="craftModal" aria-label="crafting menu">
+    <section class="modal" id="craftModal" aria-label="クラフトメニュー">
       <div class="modal-card craft-card">
         <div class="modal-head">
           <div>
-            <p class="eyebrow">Workshop</p>
-            <h2>Craft</h2>
+            <p class="eyebrow">作業場</p>
+            <h2>クラフト</h2>
           </div>
-          <button id="closeCraftButton" class="icon-button" type="button" aria-label="Close crafting">X</button>
+          <button id="closeCraftButton" class="icon-button" type="button" aria-label="クラフトを閉じる">X</button>
         </div>
-        <p class="craft-note" id="craftNote">Basic recipes are available anywhere.</p>
+        <p class="craft-note" id="craftNote">基本の道具はどこでも作れます。</p>
         <div class="recipe-list" id="recipeList"></div>
       </div>
     </section>
 
-    <section class="modal" id="pauseModal" aria-label="pause menu">
+    <section class="modal" id="pauseModal" aria-label="ポーズメニュー">
       <div class="modal-card pause-card">
         <p class="eyebrow">Frontier Below</p>
-        <h2>Paused</h2>
-        <button id="resumeButton" class="menu-button primary" type="button">Resume</button>
-        <button id="saveButton" class="menu-button" type="button">Save</button>
-        <button id="resetButton" class="menu-button danger" type="button">Reset World</button>
+        <h2>一時停止</h2>
+        <button id="resumeButton" class="menu-button primary" type="button">再開</button>
+        <button id="saveButton" class="menu-button" type="button">保存して再開</button>
+        <button id="resetButton" class="menu-button danger" type="button">ワールドを初期化</button>
       </div>
     </section>
 
-    <section class="modal show" id="startModal" aria-label="game introduction">
+    <section class="modal show" id="startModal" aria-label="はじめての操作ガイド">
       <div class="modal-card intro-card">
-        <p class="eyebrow">Original 2D Sandbox</p>
+        <p class="eyebrow">探索・建築サンドボックス</p>
         <h1>Frontier Below</h1>
-        <p>Explore a changing frontier, dig into caves, build shelters, craft tools, and fend off wandering slimes.</p>
+        <p>洞窟を掘り、家を建て、道具を作ってスライムに立ち向かおう。世界は自動保存されます。</p>
         <ul>
-          <li>Tap the world to choose a target.</li>
-          <li>Hold Mine for continuous digging.</li>
-          <li>Craft a workbench to unlock better gear.</li>
+          <li>対象選択：ワールドをタップ。実体のあるマスは採掘、空きマスは配置の対象です。</li>
+          <li>採掘：「採掘」を押し続けるか、ワールドを長押し。指を離すと停止します。</li>
+          <li>配置：下のアイテムを選び、空きマスをタップして「配置」。自分の体には重ねられません。</li>
+          <li>攻撃：「攻撃」で向いている側の近くの敵を攻撃します。</li>
+          <li>クラフト：「クラフト」で材料を道具に。作業台を持つか近くに置くと上位レシピが使えます。</li>
+          <li>移動：← →とジャンプ。移動しながら採掘もできます。アイテム欄は左右にスクロールできます。</li>
+          <li>PC：← → / A Dで移動、↑ / W / Spaceでジャンプ、Eで配置、Fで攻撃。</li>
         </ul>
-        <button id="startButton" class="menu-button primary" type="button">Start Exploring</button>
+        <button id="startButton" class="menu-button primary" type="button">探索を始める</button>
       </div>
     </section>
   </main>

@@ -21,6 +21,8 @@ const DIRECTIONS = [
 ];
 
 const boardElement = document.getElementById("board");
+const appElement = document.querySelector(".app");
+let layoutFrame = null;
 const modeSelect = document.getElementById("modeSelect");
 const restartButton = document.getElementById("restartButton");
 const messageText = document.getElementById("messageText");
@@ -30,6 +32,9 @@ const joinRoomButton = document.getElementById("joinRoomButton");
 const leaveRoomButton = document.getElementById("leaveRoomButton");
 const roomIdInput = document.getElementById("roomIdInput");
 const roomInfo = document.getElementById("roomInfo");
+const roomIdText = document.getElementById("roomIdText");
+const roomControls = document.getElementById("roomControls");
+const stoneCountsElement = document.getElementById("stoneCounts");
 const onlineConnectionText = document.getElementById("onlineConnectionText");
 const onlinePlayersText = document.getElementById("onlinePlayersText");
 const onlineColorText = document.getElementById("onlineColorText");
@@ -67,6 +72,43 @@ let chatUnsubscribe = null;
 let heartbeatTimer = null;
 let firebaseTools = null;
 let firebaseLoadPromise = null;
+let cpuTimer = null;
+let gameGeneration = 0;
+let onlineMovePending = false;
+let onlineActionPending = false;
+let chatSending = false;
+
+function invalidateCpuTurn() {
+  gameGeneration += 1;
+  if (cpuTimer !== null) {
+    window.clearTimeout(cpuTimer);
+    cpuTimer = null;
+  }
+}
+
+function updateOperationButtons() {
+  const busy = onlineMovePending || onlineActionPending;
+  modeSelect.disabled = busy;
+  restartButton.disabled = busy;
+  for (const button of [createRoomButton, joinRoomButton, leaveRoomButton]) {
+    button.disabled = busy;
+  }
+}
+
+async function runOnlineAction(action) {
+  if (onlineMovePending || onlineActionPending) return;
+  invalidateCpuTurn();
+  onlineActionPending = true;
+  render();
+  try {
+    await action();
+  } catch (error) {
+    showOnlineError(error);
+  } finally {
+    onlineActionPending = false;
+    render();
+  }
+}
 
 async function ensureFirebase() {
   if (firebaseTools) {
@@ -85,6 +127,9 @@ async function ensureFirebase() {
         db: databaseModule.getDatabase(app)
       };
       return firebaseTools;
+    }).catch((error) => {
+      firebaseLoadPromise = null;
+      throw error;
     });
   }
 
@@ -598,6 +643,8 @@ function canUseSelectedSkill() {
 }
 
 function chooseSkill(skill) {
+  if (onlineMovePending || onlineActionPending || gameOver || !isHumanTurn()
+    || (skill !== NORMAL && (ownSkillCounts()[skill] || 0) <= 0)) return;
   selectedSkill = skill;
   updateSkillButtons();
 }
@@ -612,7 +659,11 @@ function updateSkillButtons() {
   for (const button of skillButtons) {
     const skill = button.dataset.skill;
     button.classList.toggle("active", skill === selectedSkill);
-    button.disabled = skill !== NORMAL && (!isHumanTurn() || (counts[skill] || 0) <= 0);
+    const exhausted = skill !== NORMAL && (counts[skill] || 0) <= 0;
+    button.classList.toggle("exhausted", exhausted);
+    button.setAttribute("aria-pressed", String(skill === selectedSkill));
+    button.setAttribute("aria-label", `${SKILLS[skill].label}、${skill === NORMAL ? "無制限" : exhausted ? "使い切りました" : `残り${counts[skill]}個`}${skill === selectedSkill ? "、選択中" : ""}`);
+    button.disabled = onlineMovePending || onlineActionPending || gameOver || !isHumanTurn() || exhausted;
   }
 
   for (const [skill, element] of Object.entries(skillCountElements)) {
@@ -683,7 +734,7 @@ function renderBoard() {
         cellButton.appendChild(stone);
       }
 
-      cellButton.disabled = !legalKeys.has(key);
+      cellButton.disabled = onlineMovePending || onlineActionPending || !legalKeys.has(key);
       cellButton.addEventListener("click", () => handleCellClick(row, col));
       boardElement.appendChild(cellButton);
     }
@@ -714,8 +765,12 @@ function renderSummary() {
 
 function renderStatus() {
   messageText.textContent = message;
+  const counts = countStones(board);
+  stoneCountsElement.textContent = `黒 ${counts.black} · 白 ${counts.white}`;
+  updateOperationButtons();
   updateSkillButtons();
   renderSummary();
+  scheduleBoardLayout();
 }
 
 function render() {
@@ -735,6 +790,7 @@ function setLocalState(nextState) {
 }
 
 function resetLocalGame() {
+  invalidateCpuTurn();
   board = createInitialBoard();
   currentPlayer = BLACK;
   selectedSkill = NORMAL;
@@ -758,14 +814,18 @@ function getBestCpuMove() {
 }
 
 function runCpuTurn() {
-  if (gameOver || currentPlayer !== WHITE || isOnlineMode()) {
+  if (cpuTimer !== null || gameOver || currentPlayer !== WHITE || isOnlineMode()) {
     return;
   }
 
   message = "CPUが考えています";
   renderStatus();
 
-  window.setTimeout(() => {
+  const generation = gameGeneration;
+  cpuTimer = window.setTimeout(() => {
+    if (generation !== gameGeneration) return;
+    cpuTimer = null;
+    if (isOnlineMode() || gameOver || currentPlayer !== WHITE) return;
     const move = getBestCpuMove();
     if (!move || gameOver || currentPlayer !== WHITE) {
       return;
@@ -800,7 +860,7 @@ function handleLocalMove(row, col) {
 }
 
 async function handleOnlineMove(row, col) {
-  await ensureFirebase();
+  if (onlineMovePending || onlineActionPending || gameOver || !isOnlineMode()) return;
 
   if (!onlineRoomId || !onlinePlayerColor) {
     message = "オンライン部屋に参加してください";
@@ -817,56 +877,75 @@ async function handleOnlineMove(row, col) {
   }
 
   const moveSkill = selectedSkill;
-  const result = await firebaseTools.runTransaction(roomRef(onlineRoomId), (roomData) => {
-    if (!roomData || roomData.gameOver || roomData.currentPlayer !== onlinePlayerColor) {
-      return roomData;
+  const moveRoomId = onlineRoomId;
+  const moveColor = onlinePlayerColor;
+  const generation = gameGeneration;
+  onlineMovePending = true;
+  message = "着手を送信しています";
+  render();
+  try {
+    await ensureFirebase();
+    if (generation !== gameGeneration || !isOnlineMode() || onlineRoomId !== moveRoomId) return;
+    const result = await firebaseTools.runTransaction(roomRef(moveRoomId), (roomData) => {
+      if (generation !== gameGeneration || !isOnlineMode() || onlineRoomId !== moveRoomId
+        || !roomData || roomData.gameOver || roomData.currentPlayer !== moveColor
+        || roomData.players?.[clientId]?.color !== moveColor) {
+        return;
+      }
+
+      if (getPlayerList(roomData).length < 2) {
+        return;
+      }
+
+      const counts = normalizeSkillCounts(roomData.skillCounts);
+      if (moveSkill !== NORMAL && (counts[moveColor]?.[moveSkill] || 0) <= 0) {
+        return;
+      }
+
+      const nextState = applyMoveToState({
+        board: normalizeBoard(roomData.board || createInitialBoard()),
+        currentPlayer: roomData.currentPlayer || BLACK,
+        skillCounts: counts,
+        matchStats: normalizeMatchStats(roomData.matchStats)
+      }, row, col, moveColor, moveSkill);
+
+      if (!nextState) {
+        return;
+      }
+
+      return {
+        ...roomData,
+        board: nextState.board,
+        currentPlayer: nextState.currentPlayer,
+        skillCounts: nextState.skillCounts,
+        matchStats: nextState.matchStats,
+        gameOver: nextState.gameOver,
+        message: nextState.message,
+        lastEffect: nextState.lastEffect,
+        lastMove: { row, col, color: moveColor, skill: moveSkill, at: Date.now() },
+        updatedAt: Date.now()
+      };
+    });
+
+    if (generation !== gameGeneration || onlineRoomId !== moveRoomId || !isOnlineMode()) return;
+    if (result.committed && moveSkill !== NORMAL) {
+      selectedSkill = NORMAL;
     }
 
-    if (getPlayerList(roomData).length < 2) {
-      return roomData;
+    if (!result.committed) {
+      message = "手を送信できませんでした。参加人数と手番を確認してください。";
+      renderStatus();
     }
-
-    const counts = normalizeSkillCounts(roomData.skillCounts);
-    if (moveSkill !== NORMAL && (counts[onlinePlayerColor]?.[moveSkill] || 0) <= 0) {
-      return roomData;
-    }
-
-    const nextState = applyMoveToState({
-      board: normalizeBoard(roomData.board || createInitialBoard()),
-      currentPlayer: roomData.currentPlayer || BLACK,
-      skillCounts: counts,
-      matchStats: normalizeMatchStats(roomData.matchStats)
-    }, row, col, onlinePlayerColor, moveSkill);
-
-    if (!nextState) {
-      return roomData;
-    }
-
-    return {
-      ...roomData,
-      board: nextState.board,
-      currentPlayer: nextState.currentPlayer,
-      skillCounts: nextState.skillCounts,
-      matchStats: nextState.matchStats,
-      gameOver: nextState.gameOver,
-      message: nextState.message,
-      lastEffect: nextState.lastEffect,
-      lastMove: { row, col, color: onlinePlayerColor, skill: moveSkill, at: Date.now() },
-      updatedAt: Date.now()
-    };
-  });
-
-  if (result.committed && moveSkill !== NORMAL) {
-    selectedSkill = NORMAL;
-  }
-
-  if (!result.committed) {
-    message = "手を送信できませんでした。参加人数と手番を確認してください。";
-    renderStatus();
+  } catch (error) {
+    if (generation === gameGeneration && isOnlineMode()) showOnlineError(error);
+  } finally {
+    onlineMovePending = false;
+    render();
   }
 }
 
 function handleCellClick(row, col) {
+  if (onlineMovePending || onlineActionPending) return;
   if (isOnlineMode()) {
     handleOnlineMove(row, col).catch(showOnlineError);
     return;
@@ -877,11 +956,12 @@ function handleCellClick(row, col) {
 
 function updateRoomInfo(text = "") {
   roomInfo.textContent = text;
+  roomIdText.textContent = onlineRoomId || "未参加";
 }
 
 function setChatEnabled(enabled) {
   chatInput.disabled = !enabled;
-  sendChatButton.disabled = !enabled;
+  sendChatButton.disabled = !enabled || chatSending;
 }
 
 function clearChat() {
@@ -962,20 +1042,29 @@ function stopHeartbeat() {
 }
 
 async function sendChatMessage() {
-  await ensureFirebase();
-
+  if (chatSending || chatInput.disabled) return;
   const text = chatInput.value.trim();
   if (!onlineRoomId || !onlinePlayerColor || !text) {
     return;
   }
 
-  await firebaseTools.push(messagesRef(onlineRoomId), {
-    senderId: clientId,
-    text: text.slice(0, 80),
-    createdAt: Date.now()
-  });
+  const sendingRoomId = onlineRoomId;
+  const originalValue = chatInput.value;
+  chatSending = true;
+  sendChatButton.disabled = true;
+  try {
+    await ensureFirebase();
+    await firebaseTools.push(messagesRef(sendingRoomId), {
+      senderId: clientId,
+      text: text.slice(0, 80),
+      createdAt: Date.now()
+    });
 
-  chatInput.value = "";
+    if (onlineRoomId === sendingRoomId && chatInput.value === originalValue) chatInput.value = "";
+  } finally {
+    chatSending = false;
+    setChatEnabled(Boolean(onlineRoomId && onlinePlayerColor));
+  }
 }
 
 async function cleanupStaleRoomPlayers(roomId) {
@@ -1099,6 +1188,7 @@ async function subscribeOnlineRoom(roomId) {
   startHeartbeat(roomId);
 
   onlineRoomCallback = (snapshot) => {
+    if (!isOnlineMode() || onlineRoomId !== roomId) return;
     const roomData = snapshot.val();
     if (!roomData) {
       onlineRoomId = "";
@@ -1165,6 +1255,7 @@ async function createOnlineRoom() {
   roomIdInput.value = roomId;
   onlinePlayerColor = BLACK;
   await subscribeOnlineRoom(roomId);
+  roomControls.open = false;
 }
 
 async function joinOnlineRoom() {
@@ -1238,22 +1329,17 @@ async function joinOnlineRoom() {
 
   onlinePlayerColor = color;
   await subscribeOnlineRoom(roomId);
+  roomControls.open = false;
 }
 
 async function leaveOnlineRoom() {
+  invalidateCpuTurn();
   const leavingRoomId = onlineRoomId;
+  const leavingPlayerRef = onlinePlayerRef;
   stopHeartbeat();
 
   if (onlineRoomRef && onlineRoomCallback) {
     firebaseTools.off(onlineRoomRef, "value", onlineRoomCallback);
-  }
-
-  if (onlinePlayerRef) {
-    await firebaseTools.onDisconnect(onlinePlayerRef).cancel();
-  }
-
-  if (leavingRoomId) {
-    await leaveRoomData(leavingRoomId);
   }
 
   onlineRoomId = "";
@@ -1264,6 +1350,13 @@ async function leaveOnlineRoom() {
   updateRoomInfo("");
   updateOnlineDetails();
   stopChat();
+
+  if (leavingPlayerRef) {
+    await firebaseTools.onDisconnect(leavingPlayerRef).cancel();
+  }
+  if (leavingRoomId) {
+    await leaveRoomData(leavingRoomId);
+  }
 }
 
 async function leaveRoomData(roomIdValue) {
@@ -1329,19 +1422,26 @@ function closeSkillModal() {
 }
 
 modeSelect.addEventListener("change", async () => {
+  invalidateCpuTurn();
   const online = isOnlineMode();
   onlinePanel.hidden = !online;
-  await leaveOnlineRoom();
-  resetLocalGame();
-  if (online) {
-    message = "部屋を作るか、部屋IDで参加してください";
-    renderStatus();
-  }
+  roomControls.open = true;
+  await runOnlineAction(async () => {
+    try {
+      await leaveOnlineRoom();
+    } finally {
+      resetLocalGame();
+      if (online) {
+        message = "部屋を作るか、部屋IDで参加してください";
+        renderStatus();
+      }
+    }
+  });
 });
 
 restartButton.addEventListener("click", () => {
   if (isOnlineMode()) {
-    resetOnlineRoom().catch(showOnlineError);
+    runOnlineAction(resetOnlineRoom);
     return;
   }
 
@@ -1349,16 +1449,16 @@ restartButton.addEventListener("click", () => {
 });
 
 createRoomButton.addEventListener("click", () => {
-  createOnlineRoom().catch(showOnlineError);
+  runOnlineAction(createOnlineRoom);
 });
 joinRoomButton.addEventListener("click", () => {
-  joinOnlineRoom().catch(showOnlineError);
+  runOnlineAction(joinOnlineRoom);
 });
 sendChatButton.addEventListener("click", () => {
   sendChatMessage().catch(showOnlineError);
 });
 chatInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" && !event.isComposing) {
     sendChatMessage().catch(showOnlineError);
   }
 });
@@ -1375,10 +1475,16 @@ document.addEventListener("keydown", (event) => {
   }
 });
 leaveRoomButton.addEventListener("click", async () => {
-  await leaveOnlineRoom().catch(showOnlineError);
-  resetLocalGame();
-  message = "部屋から退出しました";
-  renderStatus();
+  await runOnlineAction(async () => {
+    try {
+      await leaveOnlineRoom();
+    } finally {
+      resetLocalGame();
+      message = "部屋から退出しました";
+      renderStatus();
+      roomControls.open = true;
+    }
+  });
 });
 
 for (const button of skillButtons) {
@@ -1390,3 +1496,27 @@ window.addEventListener("beforeunload", handlePageExit);
 
 onlinePanel.hidden = true;
 render();
+
+// Reserve the measured space occupied by controls; CSS supplies the dvh and safe-area budget.
+function scheduleBoardLayout() {
+  if (layoutFrame !== null) return;
+  layoutFrame = window.requestAnimationFrame(() => {
+    layoutFrame = null;
+    const style = getComputedStyle(appElement);
+    const controls = Array.from(appElement.children).filter((element) =>
+      !element.classList.contains("board-wrap") && !element.hidden);
+    const height = controls.reduce((sum, element) => sum + element.getBoundingClientRect().height, 0)
+      + parseFloat(style.paddingTop) + parseFloat(style.paddingBottom)
+      + parseFloat(style.rowGap) * controls.length;
+    appElement.style.setProperty("--layout-height", `${Math.ceil(height)}px`);
+  });
+}
+const layoutObserver = new ResizeObserver(scheduleBoardLayout);
+layoutObserver.observe(appElement);
+for (const element of appElement.children) {
+  if (!element.classList.contains("board-wrap")) layoutObserver.observe(element);
+}
+window.addEventListener("resize", scheduleBoardLayout);
+window.visualViewport?.addEventListener("resize", scheduleBoardLayout);
+document.fonts?.ready.then(scheduleBoardLayout);
+scheduleBoardLayout();

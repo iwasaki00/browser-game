@@ -24,16 +24,16 @@
   });
 
   const defs = {
-    [BLOCK.AIR]: { key: "air", name: "Air", solid: false, hardness: 0, color: "transparent" },
-    [BLOCK.GRASS]: { key: "grass", name: "Grass", solid: true, hardness: 0.55, color: "#63bd4d", drop: "dirt", tool: "hand" },
-    [BLOCK.DIRT]: { key: "dirt", name: "Dirt", solid: true, hardness: 0.48, color: "#985b32", drop: "dirt", tool: "hand" },
-    [BLOCK.STONE]: { key: "stone", name: "Stone", solid: true, hardness: 1.7, color: "#747f85", drop: "stone", tool: "pick" },
-    [BLOCK.WOOD]: { key: "wood", name: "Wood", solid: true, hardness: 1.0, color: "#9d602c", drop: "wood", tool: "axe" },
-    [BLOCK.LEAF]: { key: "leaf", name: "Leaves", solid: false, hardness: 0.25, color: "#3c9c4c", drop: null, tool: "hand" },
-    [BLOCK.ORE]: { key: "ore", name: "Bright Ore", solid: true, hardness: 2.5, color: "#505b65", drop: "ore", tool: "pick" },
-    [BLOCK.BENCH]: { key: "bench", name: "Workbench", solid: true, hardness: 0.9, color: "#b57535", drop: "bench", tool: "axe" },
-    [BLOCK.TORCH]: { key: "torch", name: "Torch", solid: false, hardness: 0.16, color: "#f4bb3d", drop: "torch", tool: "hand", light: true },
-    [BLOCK.CHEST]: { key: "chest", name: "Cache Box", solid: true, hardness: 1.1, color: "#9b5b29", drop: "chest", tool: "axe" }
+    [BLOCK.AIR]: { key: "air", name: "空きマス", solid: false, hardness: 0, color: "transparent" },
+    [BLOCK.GRASS]: { key: "grass", name: "草地", solid: true, hardness: 0.55, color: "#63bd4d", drop: "dirt", tool: "hand" },
+    [BLOCK.DIRT]: { key: "dirt", name: "土", solid: true, hardness: 0.48, color: "#985b32", drop: "dirt", tool: "hand" },
+    [BLOCK.STONE]: { key: "stone", name: "石", solid: true, hardness: 1.7, color: "#747f85", drop: "stone", tool: "pick" },
+    [BLOCK.WOOD]: { key: "wood", name: "木材", solid: true, hardness: 1.0, color: "#9d602c", drop: "wood", tool: "axe" },
+    [BLOCK.LEAF]: { key: "leaf", name: "葉", solid: false, hardness: 0.25, color: "#3c9c4c", drop: null, tool: "hand" },
+    [BLOCK.ORE]: { key: "ore", name: "輝く鉱石", solid: true, hardness: 2.5, color: "#505b65", drop: "ore", tool: "pick" },
+    [BLOCK.BENCH]: { key: "bench", name: "作業台", solid: true, hardness: 0.9, color: "#b57535", drop: "bench", tool: "axe" },
+    [BLOCK.TORCH]: { key: "torch", name: "たいまつ", solid: false, hardness: 0.16, color: "#f4bb3d", drop: "torch", tool: "hand", light: true },
+    [BLOCK.CHEST]: { key: "chest", name: "宝箱", solid: true, hardness: 1.1, color: "#9b5b29", drop: "chest", tool: "axe" }
   };
 
   const itemToBlock = {
@@ -46,25 +46,25 @@
   };
 
   const toolDefs = {
-    hand: { name: "Hand", power: 1, damage: 1, kind: "hand", color: "#d59a62" },
-    woodPick: { name: "Wood Pick", power: 1.9, damage: 1, kind: "pick", color: "#9e682f" },
-    stonePick: { name: "Stone Pick", power: 3.2, damage: 2, kind: "pick", color: "#758087" },
-    woodSword: { name: "Wood Sword", power: 1, damage: 3, kind: "sword", color: "#b77735" }
+    hand: { name: "素手", power: 1, damage: 1, kind: "hand", color: "#d59a62" },
+    woodPick: { name: "木のツルハシ", power: 1.9, damage: 1, kind: "pick", color: "#9e682f" },
+    stonePick: { name: "石のツルハシ", power: 3.2, damage: 2, kind: "pick", color: "#758087" },
+    woodSword: { name: "木の剣", power: 1, damage: 3, kind: "sword", color: "#b77735" }
   };
 
   const hotbarOrder = ["dirt", "stone", "wood", "ore", "torch", "bench", "chest", "woodPick", "stonePick", "woodSword"];
   const itemNames = {
-    dirt: "Dirt",
-    stone: "Stone",
-    wood: "Wood",
-    ore: "Ore",
-    torch: "Torch",
-    bench: "Bench",
-    chest: "Cache",
-    gel: "Gel",
-    woodPick: "Wood Pick",
-    stonePick: "Stone Pick",
-    woodSword: "Wood Sword"
+    dirt: "土",
+    stone: "石",
+    wood: "木材",
+    ore: "鉱石",
+    torch: "たいまつ",
+    bench: "作業台",
+    chest: "宝箱",
+    gel: "ジェル",
+    woodPick: "木のツルハシ",
+    stonePick: "石のツルハシ",
+    woodSword: "木の剣"
   };
   const itemColors = {
     dirt: "#985b32",
@@ -78,11 +78,11 @@
   };
 
   const recipes = [
-    { id: "bench", name: "Workbench", cost: { wood: 5 }, gain: { bench: 1 }, note: "Unlocks advanced crafting" },
-    { id: "torch", name: "Torch x2", cost: { wood: 1 }, gain: { torch: 2 }, note: "Lights dark caves" },
-    { id: "woodPick", name: "Wood Pick", cost: { wood: 3 }, tool: "woodPick", note: "Mines stone faster" },
-    { id: "stonePick", name: "Stone Pick", cost: { wood: 3, stone: 5 }, tool: "stonePick", bench: true, note: "Fast mining tool" },
-    { id: "woodSword", name: "Wood Sword", cost: { wood: 3, stone: 3 }, tool: "woodSword", bench: true, note: "Stronger melee attack" }
+    { id: "bench", name: "作業台", cost: { wood: 5 }, gain: { bench: 1 }, note: "上位レシピを解放" },
+    { id: "torch", name: "たいまつ ×2", cost: { wood: 1 }, gain: { torch: 2 }, note: "暗い洞窟を照らす" },
+    { id: "woodPick", name: "木のツルハシ", cost: { wood: 3 }, tool: "woodPick", note: "石を速く掘れる" },
+    { id: "stonePick", name: "石のツルハシ", cost: { wood: 3, stone: 5 }, tool: "stonePick", bench: true, note: "採掘が速い道具" },
+    { id: "woodSword", name: "木の剣", cost: { wood: 3, stone: 3 }, tool: "woodSword", bench: true, note: "近接攻撃を強化" }
   ];
 
   const canvas = document.getElementById("gameCanvas");
@@ -162,7 +162,7 @@
       dirty: true,
       lastSave: 0,
       introSeen: false,
-      message: "Tap the world to aim.",
+      message: "ワールドをタップして対象を選択",
       messageUntil: 0,
       attackFlash: 0,
       longPressTimer: 0,
@@ -339,14 +339,15 @@
       state.lastSave = now;
       state.dirty = false;
     } catch {
-      showMessage("Save storage is full.");
+      showMessage("保存できません。端末の保存領域を確認してください。");
     }
   }
 
   function resizeCanvas() {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    state.width = window.innerWidth;
-    state.height = window.innerHeight;
+    const rect = canvas.getBoundingClientRect();
+    state.width = rect.width;
+    state.height = rect.height;
     canvas.width = Math.floor(state.width * ratio);
     canvas.height = Math.floor(state.height * ratio);
     lightCanvas.width = Math.max(1, Math.floor(state.width));
@@ -476,7 +477,7 @@
     setBlock(x, y, BLOCK.AIR);
     if (block.drop) state.inventory[block.drop] = (state.inventory[block.drop] || 0) + 1;
     if (id === BLOCK.LEAF && Math.random() < 0.18) state.inventory.wood += 1;
-    showMessage(`${block.name} collected.`);
+    showMessage(`${block.name}を入手。`);
     renderHotbar();
   }
 
@@ -484,31 +485,31 @@
     const item = state.selected;
     const id = itemToBlock[item];
     if (!id) {
-      showMessage("Select a block item first.");
+      showMessage("下のアイテム欄からブロックを選んでください。");
       return;
     }
     const { tileX, tileY } = state.pointer;
     if (!canReachTile(tileX, tileY)) {
-      showMessage("Target is too far away.");
+      showMessage("対象が遠すぎます。近づいてください。");
       return;
     }
     if (getBlock(tileX, tileY) !== BLOCK.AIR) {
-      showMessage("That space is occupied.");
+      showMessage("配置するには空きマスを選んでください。");
       return;
     }
     if ((state.inventory[item] || 0) <= 0) {
-      showMessage(`No ${itemNames[item]} available.`);
+      showMessage(`${itemNames[item]}がありません。`);
       return;
     }
     const bx = tileX * TILE;
     const by = tileY * TILE;
     if (rectsOverlap(bx, by, TILE, TILE, state.player.x, state.player.y, state.player.w, state.player.h)) {
-      showMessage("You cannot build inside the player.");
+      showMessage("自分の体に重ねて配置できません。");
       return;
     }
     setBlock(tileX, tileY, id);
     state.inventory[item] -= 1;
-    showMessage(`${itemNames[item]} placed.`);
+    showMessage(`${itemNames[item]}を配置。`);
     renderHotbar();
   }
 
@@ -607,13 +608,13 @@
         if (slime.hp <= 0) {
           state.inventory.gel += 1;
           if (Math.random() < 0.22) state.inventory.ore += 1;
-          showMessage("Slime defeated. Gel collected.");
+          showMessage("スライムを倒し、ジェルを入手しました。");
           state.dirty = true;
           renderHotbar();
         }
       }
     }
-    if (!hit) showMessage("Attack missed.");
+    if (!hit) showMessage("攻撃は届きませんでした。");
   }
 
   function damagePlayer(amount, knockDirection) {
@@ -623,7 +624,7 @@
     state.player.vx = knockDirection * 150;
     state.player.vy = -165;
     state.dirty = true;
-    showMessage(`Damage -${amount}`);
+    showMessage(`ダメージ −${amount}`);
   }
 
   function respawnPlayer() {
@@ -634,7 +635,7 @@
     state.player.vy = 0;
     state.player.invincible = 2;
     state.slimes = [];
-    showMessage("You returned to the frontier camp.");
+    showMessage("拠点に戻りました。");
     state.dirty = true;
   }
 
@@ -644,18 +645,18 @@
     if (roll < 0.34) {
       state.inventory.wood += 5;
       state.inventory.torch += 3;
-      showMessage("Cache found: wood and torches.");
+      showMessage("宝箱から木材とたいまつを入手。");
     } else if (roll < 0.68) {
       state.inventory.stone += 6;
       state.inventory.ore += 3;
-      showMessage("Cache found: stone and bright ore.");
+      showMessage("宝箱から石と輝く鉱石を入手。");
     } else if (!state.tools.woodPick) {
       state.tools.woodPick = true;
-      showMessage("Cache found: Wood Pick.");
+      showMessage("宝箱から木のツルハシを入手。");
     } else {
       state.inventory.ore += 5;
       state.inventory.chest += 1;
-      showMessage("Cache found: ore and a cache box.");
+      showMessage("宝箱から鉱石と宝箱を入手。");
     }
     state.dirty = true;
     renderHotbar();
@@ -681,7 +682,7 @@
 
   function craft(recipe) {
     if (!canCraft(recipe)) {
-      showMessage(recipe.bench && !nearWorkbench() ? "A workbench is required." : "Not enough materials.");
+      showMessage(recipe.bench && !nearWorkbench() ? "作業台が必要です。" : "材料が足りません。");
       return;
     }
     for (const [item, count] of Object.entries(recipe.cost)) state.inventory[item] -= count;
@@ -690,7 +691,7 @@
     }
     if (recipe.tool) state.tools[recipe.tool] = true;
     state.dirty = true;
-    showMessage(`${recipe.name} crafted.`);
+    showMessage(`${recipe.name}を作りました。`);
     renderRecipes();
     renderHotbar();
   }
@@ -970,18 +971,21 @@
   function updateHud() {
     healthFill.style.width = `${state.hp}%`;
     healthText.textContent = String(Math.ceil(state.hp));
-    timeText.textContent = getDayPhase();
+    timeText.textContent = { Dawn: "夜明け", Day: "昼", Dusk: "夕暮れ", Night: "夜" }[getDayPhase()];
     const tx = clamp(Math.floor(state.player.x / TILE), 0, MAP_W - 1);
     const depth = Math.floor((state.player.y + state.player.h) / TILE) - state.surface[tx];
-    depthText.textContent = depth < 2 ? "Surface" : depth < 12 ? "Underground" : "Deep Caves";
+    depthText.textContent = depth < 2 ? "地表" : depth < 12 ? "地下" : "深い洞窟";
     if (performance.now() < state.messageUntil) messageText.textContent = state.message;
     else messageText.textContent = targetDescription();
   }
 
   function targetDescription() {
     const id = getBlock(state.pointer.tileX, state.pointer.tileY);
-    const range = canReachTile(state.pointer.tileX, state.pointer.tileY) ? "in range" : "too far";
-    return `${defs[id].name} - ${range}`;
+    const range = canReachTile(state.pointer.tileX, state.pointer.tileY) ? "届く距離" : "遠すぎます";
+    const action = id === BLOCK.AIR
+      ? (itemToBlock[state.selected] ? `配置先：${itemNames[state.selected]}` : "空きマス：ブロックを選択")
+      : `採掘対象：${defs[id].name}`;
+    return `${action}（${range}）`;
   }
 
   function showMessage(message) {
@@ -996,7 +1000,7 @@
       const unlocked = isTool ? Boolean(state.tools[item]) : true;
       const count = isTool ? "" : String(state.inventory[item] || 0);
       const color = isTool ? toolDefs[item].color : itemColors[item] || "#777";
-      return `<button class="hotbar-slot${state.selected === item ? " selected" : ""}${unlocked ? "" : " locked"}" data-item="${item}" type="button">
+      return `<button class="hotbar-slot${state.selected === item ? " selected" : ""}${unlocked ? "" : " locked"}" data-item="${item}" aria-pressed="${state.selected === item}" aria-label="${itemNames[item]}${isTool ? (unlocked ? ", 所持済み" : ", 未作成") : `, ${count}個`}" type="button">
         <span class="slot-icon${isTool ? " tool" : ""}" style="--slot-color:${color}"></span>
         <span>${itemNames[item]}</span>
         ${count ? `<strong class="slot-count">${count}</strong>` : ""}
@@ -1006,22 +1010,22 @@
 
   function renderRecipes() {
     const benchReady = nearWorkbench();
-    craftNote.textContent = benchReady ? "Workbench recipes are available." : "Carry or stand near a workbench for advanced recipes.";
+    craftNote.textContent = benchReady ? "作業台の上位レシピを作れます。" : "作業台を持つか近くに置くと、上位レシピが使えます。";
     recipeList.innerHTML = recipes.map((recipe) => {
       const cost = Object.entries(recipe.cost).map(([item, count]) => `${itemNames[item]} x${count}`).join(" + ");
       const available = canCraft(recipe);
       const owned = recipe.tool && state.tools[recipe.tool];
       return `<button class="recipe-button${available ? "" : " disabled"}" data-recipe="${recipe.id}" type="button">
-        <span><strong>${recipe.name}</strong><span>${cost}${recipe.bench ? " / Bench" : ""}<br>${recipe.note}</span></span>
-        <span class="make-label">${owned ? "Owned" : "Make"}</span>
+        <span><strong>${recipe.name}</strong><span>${cost}${recipe.bench ? " / 作業台が必要" : ""}<br>${recipe.note}</span></span>
+        <span class="make-label">${owned ? "所持済み" : "作る"}</span>
       </button>`;
     }).join("");
   }
 
   function setPointerFromEvent(event) {
     const rect = canvas.getBoundingClientRect();
-    const screenX = event.clientX - rect.left;
-    const screenY = event.clientY - rect.top;
+    const screenX = (event.clientX - rect.left) * state.width / rect.width;
+    const screenY = (event.clientY - rect.top) * state.height / rect.height;
     state.pointer.tileX = clamp(Math.floor((screenX + state.camera.x) / TILE), 0, MAP_W - 1);
     state.pointer.tileY = clamp(Math.floor((screenY + state.camera.y) / TILE), 0, MAP_H - 1);
     state.pointer.active = true;
@@ -1030,23 +1034,76 @@
     if (Math.abs(targetCenter - playerCenter) > 4) state.player.facing = targetCenter < playerCenter ? -1 : 1;
   }
 
+  // Pointer ownership is separate from keyboard state and from saved game data.
+  const heldBindings = [];
+  const keysDown = new Set();
+  const touchHeld = { left: false, right: false, mine: false };
+  let canvasPointerId = null;
+
+  function syncHeldInput() {
+    state.input.left = touchHeld.left || keysDown.has("ArrowLeft") || keysDown.has("KeyA");
+    state.input.right = touchHeld.right || keysDown.has("ArrowRight") || keysDown.has("KeyD");
+    state.mine.held = touchHeld.mine;
+  }
+
+  function stopCanvasHold() {
+    const pointerId = canvasPointerId;
+    canvasPointerId = null;
+    clearTimeout(state.longPressTimer);
+    state.longPressTimer = 0;
+    state.longPressMining = false;
+    if (pointerId !== null && canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
+  }
+
+  function clearInputs() {
+    stopCanvasHold();
+    keysDown.clear();
+    for (const binding of heldBindings) binding.clear();
+    touchHeld.left = touchHeld.right = touchHeld.mine = false;
+    syncHeldInput();
+    state.input.jumpQueued = false;
+    state.mine.key = -1;
+    state.mine.progress = 0;
+  }
+
   function bindHoldButton(button, onStart, onEnd) {
-    button.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      button.setPointerCapture(event.pointerId);
-      onStart();
-    });
-    button.addEventListener("pointerup", (event) => {
-      event.preventDefault();
+    const pointers = new Set();
+    function finish(event) {
+      if (!pointers.delete(event.pointerId)) return;
+      if (!pointers.size) {
+        button.classList.remove("held");
+        onEnd();
+      }
+      if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+    }
+    heldBindings.push({ clear() {
+      const ids = [...pointers];
+      pointers.clear();
+      button.classList.remove("held");
       onEnd();
+      for (const id of ids) if (button.hasPointerCapture(id)) button.releasePointerCapture(id);
+    } });
+    button.addEventListener("pointerdown", (event) => {
+      if (state.paused || event.button !== 0) return;
+      event.preventDefault();
+      if (pointers.has(event.pointerId)) return;
+      pointers.add(event.pointerId);
+      button.setPointerCapture(event.pointerId);
+      if (pointers.size === 1) {
+        button.classList.add("held");
+        onStart();
+      }
     });
-    button.addEventListener("pointercancel", onEnd);
-    button.addEventListener("pointerleave", (event) => {
-      if (event.buttons === 0) onEnd();
+    for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) button.addEventListener(type, finish);
+    // Native keyboard activation of a focused control remains usable.
+    button.addEventListener("click", (event) => {
+      if (event.detail === 0 && !state.paused) { onStart(); onEnd(); }
     });
   }
 
   function openCraft() {
+    if (state.paused) return;
+    clearInputs();
     state.paused = true;
     renderRecipes();
     craftModal.classList.add("show");
@@ -1058,6 +1115,7 @@
   }
 
   function openPause() {
+    clearInputs();
     state.paused = true;
     pauseModal.classList.add("show");
   }
@@ -1067,16 +1125,12 @@
     state.paused = false;
   }
 
-  bindHoldButton(leftButton, () => { state.input.left = true; }, () => { state.input.left = false; });
-  bindHoldButton(rightButton, () => { state.input.right = true; }, () => { state.input.right = false; });
-  bindHoldButton(mineButton, () => { state.mine.held = true; }, () => { state.mine.held = false; });
-
-  jumpButton.addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    state.input.jumpQueued = true;
-  });
-  placeButton.addEventListener("click", placeSelected);
-  attackButton.addEventListener("click", attack);
+  bindHoldButton(leftButton, () => { touchHeld.left = true; syncHeldInput(); }, () => { touchHeld.left = false; syncHeldInput(); });
+  bindHoldButton(rightButton, () => { touchHeld.right = true; syncHeldInput(); }, () => { touchHeld.right = false; syncHeldInput(); });
+  bindHoldButton(mineButton, () => { touchHeld.mine = true; syncHeldInput(); }, () => { touchHeld.mine = false; syncHeldInput(); });
+  bindHoldButton(jumpButton, () => { state.input.jumpQueued = true; }, () => {});
+  placeButton.addEventListener("click", () => { if (!state.paused) placeSelected(); });
+  attackButton.addEventListener("click", () => { if (!state.paused) attack(); });
   craftButton.addEventListener("click", openCraft);
   pauseButton.addEventListener("click", openPause);
   closeCraftButton.addEventListener("click", closeCraft);
@@ -1084,10 +1138,12 @@
   saveButton.addEventListener("click", () => {
     state.dirty = true;
     saveGame(true);
-    showMessage("World saved.");
+    showMessage("ワールドを保存しました。");
     closePause();
   });
   resetButton.addEventListener("click", () => {
+    if (!window.confirm("保存済みのワールドを削除し、新しい世界を作ります。この操作は取り消せません。初期化しますか？")) return;
+    clearInputs();
     localStorage.removeItem(SAVE_KEY);
     state = createNewState();
     resizeCanvas();
@@ -1106,16 +1162,16 @@
 
   hotbar.addEventListener("click", (event) => {
     const button = event.target.closest(".hotbar-slot");
-    if (!button) return;
+    if (!button || state.paused) return;
     const item = button.dataset.item;
     if (toolDefs[item] && !state.tools[item]) {
-      showMessage(`Craft ${itemNames[item]} first.`);
+      showMessage(`先に${itemNames[item]}を作ってください。`);
       return;
     }
     state.selected = item;
     state.dirty = true;
     renderHotbar();
-    showMessage(`${itemNames[item]} selected.`);
+    showMessage(`${itemNames[item]}を選択。`);
   });
 
   recipeList.addEventListener("click", (event) => {
@@ -1126,44 +1182,51 @@
   });
 
   canvas.addEventListener("pointerdown", (event) => {
+    if (state.paused || event.button !== 0 || canvasPointerId !== null) return;
     event.preventDefault();
+    canvasPointerId = event.pointerId;
+    canvas.setPointerCapture(event.pointerId);
     setPointerFromEvent(event);
-    clearTimeout(state.longPressTimer);
-    state.longPressMining = false;
     state.longPressTimer = window.setTimeout(() => {
-      state.longPressMining = true;
+      if (canvasPointerId === event.pointerId && !state.paused) state.longPressMining = true;
     }, 360);
   });
   canvas.addEventListener("pointermove", (event) => {
-    if (event.buttons !== 0 || event.pointerType === "touch") setPointerFromEvent(event);
+    if (!state.paused && event.pointerId === canvasPointerId) setPointerFromEvent(event);
   });
-  canvas.addEventListener("pointerup", (event) => {
-    event.preventDefault();
-    clearTimeout(state.longPressTimer);
-    state.longPressMining = false;
-  });
-  canvas.addEventListener("pointercancel", () => {
-    clearTimeout(state.longPressTimer);
-    state.longPressMining = false;
-  });
+  function finishCanvasPointer(event) {
+    if (event.pointerId === canvasPointerId) stopCanvasHold();
+  }
+  for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) canvas.addEventListener(type, finishCanvasPointer);
 
+  const gameKeys = ["ArrowLeft", "KeyA", "ArrowRight", "KeyD", "ArrowUp", "KeyW", "Space", "KeyE", "KeyF"];
   window.addEventListener("keydown", (event) => {
-    if (event.code === "ArrowLeft" || event.code === "KeyA") state.input.left = true;
-    if (event.code === "ArrowRight" || event.code === "KeyD") state.input.right = true;
-    if (event.code === "ArrowUp" || event.code === "KeyW" || event.code === "Space") state.input.jumpQueued = true;
+    if (state.paused || !gameKeys.includes(event.code)) return;
+    event.preventDefault();
+    keysDown.add(event.code);
+    syncHeldInput();
+    if (["ArrowUp", "KeyW", "Space"].includes(event.code)) state.input.jumpQueued = true;
     if (event.code === "KeyE") placeSelected();
     if (event.code === "KeyF") attack();
   });
   window.addEventListener("keyup", (event) => {
-    if (event.code === "ArrowLeft" || event.code === "KeyA") state.input.left = false;
-    if (event.code === "ArrowRight" || event.code === "KeyD") state.input.right = false;
+    keysDown.delete(event.code);
+    syncHeldInput();
   });
 
-  document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
-  window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("pagehide", () => saveGame(true));
+  // Keep menu scrolling and page zoom available; suppress callouts only on game surfaces.
+  for (const surface of [canvas, document.querySelector(".move-controls"), document.querySelector(".action-controls"), hotbar]) {
+    surface.addEventListener("contextmenu", (event) => event.preventDefault());
+  }
+  function suspendGame() {
+    clearInputs();
+    if (!state.paused) openPause();
+  }
+  window.addEventListener("blur", suspendGame);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) suspendGame(); });
+  window.addEventListener("resize", () => { clearInputs(); resizeCanvas(); });
+  window.visualViewport?.addEventListener("resize", resizeCanvas);
+  window.addEventListener("pagehide", () => { suspendGame(); saveGame(true); });
 
   function frame(time) {
     if (!frame.lastTime) frame.lastTime = time;

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -11,8 +11,11 @@
 </head>
 <body>
   <main id="app">
-    <canvas id="gameCanvas" width="390" height="720" aria-label="レトロ野球ゲーム"></canvas>
-    <button id="debugButton" class="debug-button" type="button" aria-pressed="false">Debug</button>
+    <div class="game-stage">
+      <canvas id="gameCanvas" width="390" height="720" aria-label="レトロ野球ゲーム"></canvas>
+    </div>
+    <button id="debugButton" class="debug-button" type="button" aria-pressed="false" aria-controls="debugCanvas" hidden>Debug</button>
+    <canvas id="debugCanvas" width="390" height="180" aria-label="Debug: sprites and timing" hidden></canvas>
   </main>
   <script src="main.js"></script>
 </body>
