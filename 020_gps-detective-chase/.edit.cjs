@@ -1,0 +1,11 @@
+﻿const fs=require('node:fs');
+const old=fs.readFileSync('js/main.js','utf8');
+let render=old.slice(old.indexOf('function renderRoom(next)'),old.indexOf('const escapeHtml='));
+render=render.replace('data=null;toast("部屋が終了しました");show("home");return','void leave();toast("部屋が終了しました");return');
+render=render.replace('debugController?.render(data)','if(room?.isLocal)debugController?.render(data)');
+render=render.replace('if(!me)return','if(!me){void leave();return}');
+render=render.replace('const host=data.meta.hostUid===uid','const host=data.meta.hostUid===uid');
+render=render.replace('if(!roleSeen){','if(!roleSeen){resetSessionUI();startGps();');
+render=render.replace('clearInterval(sendTimer);clearInterval(tickTimer);witnessUnsub?.();witnessUnsub=null;gps?.stop();','stopRuntime();debugController?.pause();');
+render=render.replace('show("result")','show("result")');
+fs.writeFileSync('.render.tmp',render);

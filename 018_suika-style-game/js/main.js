@@ -149,26 +149,23 @@
           y: height - 6 - r - (oldHeight - 6 - r - body.position.y) * height / oldHeight
         }));
       }
-      // Position projection resolves compression without injecting velocities.
-      // Leave the top open, as in the original world, for a crowded stack.
-      for (let pass = 0; pass < 120; pass++) {
-        let overlap = 0;
-        for (let i = 0; i < bodies.length; i++) {
-          for (let j = i + 1; j < bodies.length; j++) {
-            const a = bodies[i], b = bodies[j];
-            const dx = b.position.x - a.position.x, dy = b.position.y - a.position.y;
-            const distance = Math.hypot(dx, dy);
-            const depth = a.circleRadius + b.circleRadius - distance;
-            if (depth <= 0.04) continue;
-            overlap = Math.max(overlap, depth);
-            const nx = distance > 0 ? dx / distance : 0;
-            const ny = distance > 0 ? dy / distance : 1;
-            const shift = (depth + 0.01) / 2;
-            Body.setPosition(a, contain(a, { x: a.position.x - nx * shift, y: a.position.y - ny * shift }));
-            Body.setPosition(b, contain(b, { x: b.position.x + nx * shift, y: b.position.y + ny * shift }));
+      // Resolve compression geometrically, from the floor upwards. Keep x and
+      // velocity intact; the open top provides room when a stack no longer fits.
+      const placed = [];
+      for (const body of [...bodies].sort((a, b) => b.position.y - a.position.y || a.id - b.id)) {
+        for (let pass = 0; pass <= placed.length; pass++) {
+          let moved = false;
+          for (const lower of placed) {
+            const dx = body.position.x - lower.position.x;
+            const separation = body.circleRadius + lower.circleRadius;
+            if (Math.hypot(dx, body.position.y - lower.position.y) >= separation - 0.04) continue;
+            const y = lower.position.y - Math.sqrt((separation + 0.01) ** 2 - dx ** 2);
+            Body.setPosition(body, { x: body.position.x, y });
+            moved = true;
           }
+          if (!moved) break;
         }
-        if (overlap <= 0.04) break;
+        placed.push(body);
       }
       for (const body of bodies) {
         body.positionImpulse.x = body.positionImpulse.y = 0;
@@ -626,10 +623,10 @@
     }
 
     resize() {
-      // client dimensions exclude the border and match the Canvas CSS content box.
-      const width = this.playArea.clientWidth;
-      const height = this.playArea.clientHeight;
+      // Use the actual Canvas content box, including fractional CSS pixels.
+      const { width, height } = this.canvas.getBoundingClientRect();
       if (!width || !height) return;
+      if (width === this.renderer.width && height === this.renderer.height) return;
       const x = this.dropX * width / (this.renderer.width || width);
       this.canvas.logicalWidth = width;
       this.canvas.logicalHeight = height;
@@ -682,7 +679,7 @@
     setDropX(x) {
       const nextRadius = FRUIT_DEFS[this.fruitManager?.nextLevel || 0].radius;
       this.dropX = clamp(x, nextRadius + 8, this.renderer.width - nextRadius - 8);
-      this.ui.setDropGuide((this.dropX / this.renderer.width) * this.playArea.clientWidth);
+      this.ui.setDropGuide(this.dropX);
     }
 
     dropFruit(x) {

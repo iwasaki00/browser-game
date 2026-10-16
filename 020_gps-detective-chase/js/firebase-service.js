@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gsta
 import { getDatabase, ref, get, set, update, remove, onValue, onDisconnect, runTransaction, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig); export const db = getDatabase(app); const auth = getAuth(app);
+export const connectionRef = ref(db, ".info/connected");
 export const pathRef = p => ref(db, `rooms/gps-detective-chase/${p}`);
 export async function authenticate() { if (!auth.currentUser) await signInAnonymously(auth); return auth.currentUser || await new Promise(r => onAuthStateChanged(auth, r)); }
 export { get, set, update, remove, onValue, onDisconnect, runTransaction, push, serverTimestamp };

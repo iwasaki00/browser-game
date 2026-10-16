@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -13,7 +13,6 @@
 <body>
   <main class="app">
     <header class="hud" aria-label="Game status">
-      <a class="back-link" href="../index.html" aria-label="Back to menu">←</a>
       <div class="hud-item"><span>HP</span><strong id="hpText">3/3</strong></div>
       <div class="hud-item"><span>Score</span><strong id="scoreText">0</strong></div>
       <div class="hud-item"><span>Stage</span><strong id="stageText">1</strong></div>
@@ -30,9 +29,9 @@
     <section class="touch-ui" aria-label="Touch controls">
       <div id="stick" class="stick" aria-label="Move stick"><div id="stickKnob"></div></div>
       <div class="action-pad">
-        <button id="spButton" class="action-button sp" type="button">SP</button>
-        <button id="dashButton" class="action-button dash" type="button">Dash</button>
-        <button id="bombButton" class="action-button bomb" type="button">Bomb</button>
+        <button id="spButton" class="action-button sp" type="button" aria-label="スペシャル能力 (E)">SP</button>
+        <button id="dashButton" class="action-button dash" type="button" aria-label="ダッシュ (Shift)">Dash</button>
+        <button id="bombButton" class="action-button bomb" type="button" aria-label="爆弾を設置・遠隔起爆 (Space)">Bomb</button>
       </div>
     </section>
   </main>
@@ -52,7 +51,7 @@
         <span>Best Stage <strong id="bestStageText">1</strong></span>
       </div>
       <button id="startButton" class="primary" type="button">Start</button>
-      <p class="help">PC: WASD/Arrow move, Space bomb, Shift dash, E SP. Mobile: stick and buttons.</p>
+      <p class="help">PC: WASD / 矢印で移動、SpaceでBomb、ShiftでDash、EでSP。スマホ: スティックで移動しながら、Bombで爆弾設置・遠隔起爆、Dashでダッシュ、SPで選択した能力を発動。</p>
     </div>
   </section>
 
@@ -60,6 +59,7 @@
     <div class="panel">
       <p class="eyebrow">Stage Clear</p>
       <h2>Choose One Upgrade</h2>
+      <p class="copy">強化を1つ選ぶと次のステージへ進みます。</p>
       <div id="upgradeChoices" class="upgrade-grid"></div>
     </div>
   </section>

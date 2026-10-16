@@ -1,0 +1,8 @@
+﻿{
+  "private": true,
+  "scripts": { "test": "node regression.cjs" },
+  "devDependencies": {
+    "matter-js": "0.20.0",
+    "playwright": "1.61.1"
+  }
+}

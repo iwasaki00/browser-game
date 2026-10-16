@@ -37,6 +37,18 @@ const ITEM_LABELS = {
   heart: "1UP"
 };
 
+// Storage may be unavailable in private or restricted browsing.
+function readStored(key, fallback) {
+  try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
+}
+function writeStored(key, value) {
+  try { localStorage.setItem(key, value); } catch { /* Keep in-memory records. */ }
+}
+function readRecord(key, fallback) {
+  const value = Number(readStored(key, fallback));
+  return Number.isFinite(value) && value >= fallback ? value : fallback;
+}
+
 // Sprite management
 const SPRITE_SHEET_SRC = "./assets/bomber_sprites.png";
 const DEBUG_SPRITE_DEST = false;
@@ -122,9 +134,9 @@ const state = {
   mode: "title",
   stage: 1,
   score: 0,
-  bestScore: Number(localStorage.getItem(STORAGE.score) || 0),
-  bestStage: Number(localStorage.getItem(STORAGE.stage) || 1),
-  selectedSp: localStorage.getItem(STORAGE.sp) || "mega",
+  bestScore: readRecord(STORAGE.score, 0),
+  bestStage: readRecord(STORAGE.stage, 1),
+  selectedSp: readStored(STORAGE.sp, "mega"),
   map: [],
   player: null,
   enemies: [],
@@ -146,6 +158,23 @@ const state = {
   spritesReady: false,
   spritesFailed: false
 };
+
+if (!Object.hasOwn(SP_LABELS, state.selectedSp)) state.selectedSp = "mega";
+let stageGeneration = 0;
+const chainTimers = new Set();
+function invalidateChains() {
+  stageGeneration += 1;
+  for (const timer of chainTimers) clearTimeout(timer);
+  chainTimers.clear();
+}
+function scheduleChain(bomb) {
+  const generation = stageGeneration;
+  const timer = setTimeout(() => {
+    chainTimers.delete(timer);
+    if (generation === stageGeneration && state.mode === "play" && state.bombs.includes(bomb)) explodeBomb(bomb);
+  }, 40);
+  chainTimers.add(timer);
+}
 
 const spriteImage = new Image();
 let spriteSource = spriteImage;
@@ -247,70 +276,110 @@ const keyMap = {
   KeyD: "right"
 };
 
+const heldKeys = new Set();
+const stickDirections = { up: false, down: false, left: false, right: false };
+const actionPointers = new Map();
+let stickPointer = null;
+function syncDirections() {
+  for (const direction of Object.keys(stickDirections)) {
+    input[direction] = stickDirections[direction] || [...heldKeys].some(code => keyMap[code] === direction);
+  }
+}
+function capturePointer(element, id) {
+  try { element.setPointerCapture(id); } catch { /* Window release handlers remain available. */ }
+}
+function releasePointer(element, id) {
+  try { if (element.hasPointerCapture(id)) element.releasePointerCapture(id); } catch { /* Already released. */ }
+}
+function resetStick() {
+  const id = stickPointer;
+  stickPointer = null;
+  for (const direction of Object.keys(stickDirections)) stickDirections[direction] = false;
+  syncDirections();
+  els.knob.style.transform = "translate(0, 0)";
+  if (id !== null) releasePointer(els.stick, id);
+}
+function resetInputs() {
+  heldKeys.clear();
+  resetStick();
+  for (const [button, pointer] of actionPointers) {
+    actionPointers.delete(button);
+    button.classList.remove("pressed");
+    releasePointer(button, pointer.id);
+  }
+  input.bomb = input.dash = input.sp = false;
+}
+window.addEventListener("blur", resetInputs);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) resetInputs();
+});
 window.addEventListener("keydown", (event) => {
+  if (state.mode !== "play" || document.hidden) return;
   if (keyMap[event.code]) {
-    input[keyMap[event.code]] = true;
+    // Ignore repeats after focus returns until a fresh press arrives.
+    if (!event.repeat) heldKeys.add(event.code);
+    syncDirections();
     event.preventDefault();
   }
+  if (event.repeat) return;
   if (event.code === "Space") pressAction("bomb", event);
   if (event.code === "ShiftLeft" || event.code === "ShiftRight") pressAction("dash", event);
   if (event.code === "KeyE") pressAction("sp", event);
 });
-
 window.addEventListener("keyup", (event) => {
-  if (keyMap[event.code]) {
-    input[keyMap[event.code]] = false;
-    event.preventDefault();
-  }
+  heldKeys.delete(event.code);
+  syncDirections();
+  if (state.mode === "play" && keyMap[event.code]) event.preventDefault();
 });
-
-let lastTouchEnd = 0;
-document.addEventListener("touchmove", (event) => {
-  event.preventDefault();
-}, { passive: false });
-document.addEventListener("touchend", (event) => {
-  const now = performance.now();
-  if (now - lastTouchEnd < 360) event.preventDefault();
-  lastTouchEnd = now;
-}, { passive: false });
-document.addEventListener("gesturestart", (event) => {
-  event.preventDefault();
-}, { passive: false });
-
 function pressAction(action, event) {
+  if (state.mode !== "play" || document.hidden) return;
   input[action] = true;
   if (event) event.preventDefault();
 }
-
-function bindHoldButton(button, action) {
-  const down = (event) => {
+function bindActionButton(button, action) {
+  button.addEventListener("pointerdown", (event) => {
+    if ((event.pointerType === "mouse" && event.button !== 0) || button.disabled || actionPointers.has(button) || state.mode !== "play") return;
     event.preventDefault();
-    input[action] = true;
+    actionPointers.set(button, { id: event.pointerId, action });
+    button.classList.add("pressed");
+    capturePointer(button, event.pointerId);
+    pressAction(action);
+  });
+  // Keyboard and assistive activation have no physical pointer click.
+  button.addEventListener("click", (event) => {
+    if (event.detail === 0 && !event.pointerType && !button.disabled) pressAction(action, event);
+  });
+  const finish = (event) => {
+    const pointer = actionPointers.get(button);
+    if (!pointer || pointer.id !== event.pointerId) return;
+    actionPointers.delete(button);
+    button.classList.remove("pressed");
+    if (event.type !== "pointerup") input[action] = false;
+    releasePointer(button, pointer.id);
   };
-  button.addEventListener("pointerdown", down);
-  button.addEventListener("click", down);
+  window.addEventListener("pointerup", finish);
+  window.addEventListener("pointercancel", finish);
+  button.addEventListener("lostpointercapture", finish);
 }
-
-bindHoldButton(els.bombButton, "bomb");
-bindHoldButton(els.dashButton, "dash");
-bindHoldButton(els.spButton, "sp");
-
-let stickPointer = null;
+bindActionButton(els.bombButton, "bomb");
+bindActionButton(els.dashButton, "dash");
+bindActionButton(els.spButton, "sp");
 els.stick.addEventListener("pointerdown", (event) => {
+  if (stickPointer !== null || state.mode !== "play" || (event.pointerType === "mouse" && event.button !== 0)) return;
+  event.preventDefault();
   stickPointer = event.pointerId;
-  els.stick.setPointerCapture(stickPointer);
+  capturePointer(els.stick, stickPointer);
   updateStick(event);
 });
-els.stick.addEventListener("pointermove", (event) => {
+window.addEventListener("pointermove", (event) => {
   if (event.pointerId === stickPointer) updateStick(event);
 });
-["pointerup", "pointercancel"].forEach((type) => {
-  els.stick.addEventListener(type, () => {
-    stickPointer = null;
-    input.up = input.down = input.left = input.right = false;
-    els.knob.style.transform = "translate(0, 0)";
-  });
-});
+const finishStick = (event) => {
+  if (event.pointerId === stickPointer) resetStick();
+};
+window.addEventListener("pointerup", finishStick);
+window.addEventListener("pointercancel", finishStick);
+els.stick.addEventListener("lostpointercapture", finishStick);
 
 function updateStick(event) {
   const rect = els.stick.getBoundingClientRect();
@@ -324,19 +393,29 @@ function updateStick(event) {
   const ny = dy / len;
   const mag = Math.min(max, len);
   els.knob.style.transform = `translate(${nx * mag}px, ${ny * mag}px)`;
-  input.left = dx < -18;
-  input.right = dx > 18;
-  input.up = dy < -18;
-  input.down = dy > 18;
+  stickDirections.left = dx < -18;
+  stickDirections.right = dx > 18;
+  stickDirections.up = dy < -18;
+  stickDirections.down = dy > 18;
+  syncDirections();
   if (len > 18) input.lastAxis = Math.abs(nx) > Math.abs(ny) ? { x: Math.sign(nx), y: 0 } : { x: 0, y: Math.sign(ny) };
 }
 
+function updateSpSelection() {
+  document.querySelectorAll("[data-sp]").forEach(button => {
+    const selected = button.dataset.sp === state.selectedSp;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  els.spButton.title = "SP: " + SP_LABELS[state.selectedSp] + " (E)";
+  els.spButton.setAttribute("aria-label", "SP: " + SP_LABELS[state.selectedSp]);
+}
+updateSpSelection();
 document.querySelectorAll("[data-sp]").forEach((button) => {
-  button.classList.toggle("active", button.dataset.sp === state.selectedSp);
   button.addEventListener("click", () => {
     state.selectedSp = button.dataset.sp;
-    localStorage.setItem(STORAGE.sp, state.selectedSp);
-    document.querySelectorAll("[data-sp]").forEach((b) => b.classList.toggle("active", b === button));
+    writeStored(STORAGE.sp, state.selectedSp);
+    updateSpSelection();
   });
 });
 
@@ -375,6 +454,8 @@ function startGame() {
 }
 
 function generateStage() {
+  invalidateChains();
+  resetInputs();
   state.map = Array.from({ length: ROWS }, (_, y) => Array.from({ length: COLS }, (_, x) => {
     if (x === 0 || y === 0 || x === COLS - 1 || y === ROWS - 1) return TILE_SOLID;
     if (x % 2 === 0 && y % 2 === 0) return TILE_SOLID;
@@ -580,7 +661,7 @@ function slideBomb(bomb, dt) {
 }
 
 function explodeBomb(bomb) {
-  if (bomb.exploded) return;
+  if (state.mode !== "play" || !state.bombs.includes(bomb) || bomb.exploded) return;
   bomb.exploded = true;
   bomb.remove = true;
   state.shake = 0.28;
@@ -593,7 +674,7 @@ function explodeBomb(bomb) {
       if (state.map[y]?.[x] === TILE_SOLID) break;
       cells.push({ x, y, kind: flameKind(dir) });
       const chained = state.bombs.find((b) => !b.exploded && b.x === x && b.y === y);
-      if (chained) setTimeout(() => explodeBomb(chained), 40);
+      if (chained) scheduleChain(chained);
       if (state.map[y]?.[x] === TILE_CRATE) {
         breakCrate(x, y);
         break;
@@ -795,6 +876,8 @@ function useSp() {
 
 // Roguelite upgrades
 function clearStage() {
+  invalidateChains();
+  resetInputs();
   state.mode = "upgrade";
   playSound("clear");
   state.score += 500 + state.stage * 120;
@@ -819,6 +902,7 @@ function showUpgrades() {
     button.type = "button";
     button.innerHTML = `<strong>${choice.name}</strong><span>${choice.desc}</span>`;
     button.addEventListener("click", () => {
+      if (state.mode !== "upgrade") return;
       choice.apply();
       state.stage += 1;
       state.mode = "play";
@@ -1129,6 +1213,8 @@ function updateUi() {
 }
 
 function showTitle() {
+  invalidateChains();
+  resetInputs();
   state.mode = "title";
   hideOverlays();
   els.bestScore.textContent = state.bestScore;
@@ -1143,6 +1229,8 @@ function hideOverlays() {
 }
 
 function endGame() {
+  invalidateChains();
+  resetInputs();
   state.mode = "gameover";
   saveRecords();
   els.finalScore.textContent = Math.floor(state.score);
@@ -1153,9 +1241,9 @@ function endGame() {
 function saveRecords() {
   state.bestScore = Math.max(state.bestScore, Math.floor(state.score));
   state.bestStage = Math.max(state.bestStage, state.stage);
-  localStorage.setItem(STORAGE.score, state.bestScore);
-  localStorage.setItem(STORAGE.stage, state.bestStage);
-  localStorage.setItem(STORAGE.sp, state.selectedSp);
+  writeStored(STORAGE.score, state.bestScore);
+  writeStored(STORAGE.stage, state.bestStage);
+  writeStored(STORAGE.sp, state.selectedSp);
 }
 
 function ensureAudio() {
@@ -1196,10 +1284,10 @@ function loop(time) {
   state.animationTimer += dt;
   if (state.mode === "play") {
     updatePlayer(dt);
-    updateBombs(dt);
-    updateFlames(dt);
-    updateEnemies(dt);
-    updateEffects(dt);
+    if (state.mode === "play") updateBombs(dt);
+    if (state.mode === "play") updateFlames(dt);
+    if (state.mode === "play") updateEnemies(dt);
+    if (state.mode === "play") updateEffects(dt);
     updateUi();
   }
   draw();

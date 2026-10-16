@@ -256,47 +256,6 @@ h1 {
   margin-top: 16px;
 }
 
-@media (max-width: 560px) {
-  .app-shell {
-    width: min(100% - 16px, 100%);
-    gap: 8px;
-  }
-
-  .score-grid {
-    grid-template-columns: 1fr 1fr 88px;
-    gap: 8px;
-  }
-
-  .score-card,
-  .next-card {
-    min-height: 70px;
-    padding: 10px;
-  }
-
-  .next-card {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 0;
-  }
-
-  .next-card span {
-    font-size: 0.62rem;
-  }
-
-  #nextCanvas {
-    width: 44px;
-    height: 44px;
-  }
-
-  .play-area {
-    width: 100%;
-  }
-
-  #gameCanvas {
-    min-height: 430px;
-  }
-}
-
 /* Restrict selection and touch suppression to game controls. */
 .app-shell, .overlay {
   user-select: none;
@@ -333,6 +292,7 @@ h1 {
   .score-card, .next-card { min-height: 52px; padding: 6px 8px; }
   .score-card strong { margin-top: 3px; font-size: 1.4rem; }
   .next-card { grid-template-columns: 1fr 40px; gap: 2px; }
+  .next-card span { font-size: .62rem; }
   #nextCanvas { width: 40px; height: 40px; }
   .primary-button, .secondary-button { min-height: 44px; padding: 0 8px; }
   .play-area { width: 100%; }
