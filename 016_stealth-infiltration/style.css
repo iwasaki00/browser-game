@@ -24,7 +24,6 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
-  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -32,6 +31,9 @@ body {
 .game-shell {
   position: fixed;
   inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: grid;
   place-items: center;
   background:
@@ -42,6 +44,7 @@ body {
 canvas {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   display: block;
   image-rendering: pixelated;
   touch-action: none;
@@ -51,7 +54,7 @@ canvas {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 8px);
   left: max(8px, env(safe-area-inset-left));
-  right: calc(max(8px, env(safe-area-inset-right)) + 48px);
+  right: max(8px, env(safe-area-inset-right));
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -123,7 +126,8 @@ canvas {
   display: flex;
   align-items: center;
   gap: 5px;
-  min-width: 96px;
+  min-width: 0;
+  margin-left: auto;
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 800;
@@ -172,8 +176,8 @@ meter {
 
 .stick-knob {
   position: absolute;
-  left: 40px;
-  top: 40px;
+  left: calc(50% - 26px);
+  top: calc(50% - 26px);
   width: 52px;
   height: 52px;
   border: 1px solid rgba(255, 255, 255, 0.38);
@@ -197,10 +201,10 @@ meter {
   color: var(--text);
   border: 2px solid rgba(255, 255, 255, 0.28);
   border-radius: 50%;
-  font-size: 1.12rem;
+  font-size: 0.85rem;
   font-weight: 800;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
-  touch-action: manipulation;
+  touch-action: none;
 }
 
 .round-button.primary {
@@ -209,7 +213,10 @@ meter {
 }
 
 .round-button.secondary {
-  width: 60px;
+  width: 72px;
+  padding: 0;
+  font-size: 0.72rem;
+  white-space: nowrap;
   height: 60px;
   background: rgba(103, 215, 255, 0.54);
 }
@@ -224,7 +231,7 @@ meter {
   z-index: 8;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
   background: rgba(3, 5, 6, 0.76);
 }
 
@@ -234,6 +241,13 @@ meter {
 
 .panel {
   width: min(420px, 100%);
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y pinch-zoom;
+  overflow-wrap: anywhere;
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -263,14 +277,13 @@ h1 {
   line-height: 1.7;
 }
 
-.panel button,
-.panel a {
+.panel button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 120px;
   min-height: 44px;
-  margin-right: 8px;
+  max-width: 100%;
   padding: 0 18px;
   color: #0b0d0e;
   background: var(--green);
@@ -278,18 +291,11 @@ h1 {
   border-radius: 7px;
   font-size: 1rem;
   font-weight: 800;
-  text-decoration: none;
-}
-
-.panel a {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid var(--line);
 }
 
 @media (orientation: landscape) and (max-height: 520px) {
   .hud {
-    right: calc(max(8px, env(safe-area-inset-right)) + 44px);
+    right: max(8px, env(safe-area-inset-right));
     gap: 2px;
     padding: 5px 8px;
   }
@@ -300,8 +306,8 @@ h1 {
   }
 
   .stick-knob {
-    left: 34px;
-    top: 34px;
+    left: calc(50% - 22px);
+    top: calc(50% - 22px);
     width: 44px;
     height: 44px;
   }
@@ -312,16 +318,12 @@ h1 {
   }
 
   .round-button.secondary {
-    width: 52px;
+    width: 68px;
     height: 52px;
   }
 }
 
 @media (max-width: 430px) {
-  .hud {
-    right: calc(max(8px, env(safe-area-inset-right)) + 44px);
-  }
-
   .hud-main {
     display: block;
   }
@@ -347,4 +349,27 @@ h1 {
   meter {
     width: min(78px, 22vw);
   }
+}
+
+[hidden] { display: none !important; }
+.debug-mode .hud { right: calc(max(8px, env(safe-area-inset-right)) + 44px); }
+.hud-status { display: flex; gap: 10px; font-size: 0.66rem; color: var(--muted); }
+#postureLabel.is-active { color: var(--cyan); font-weight: 800; }
+#guardLabel[data-state="chase"] { color: var(--red); }
+#guardLabel[data-state="search"], #guardLabel[data-state="suspicious"] { color: var(--amber); }
+canvas, .stick, .round-button, .debug-button { -webkit-touch-callout: none; }
+button { touch-action: manipulation; }
+@media (max-width: 374px) {
+  .stick { left: max(12px, env(safe-area-inset-left)); width: 108px; height: 108px; }
+  .stick-knob { width: 44px; height: 44px; left: calc(50% - 22px); top: calc(50% - 22px); }
+  .actions { right: max(12px, env(safe-area-inset-right)); gap: 8px; }
+  .round-button { width: 64px; height: 64px; }
+  .round-button.secondary { width: 68px; height: 60px; }
+  meter { width: 48px; }
+  .panel { padding: 18px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .panel { padding: 16px 20px; }
+  .panel h1 { font-size: 2rem; }
+  .panel p:not(.eyebrow) { line-height: 1.45; margin-bottom: 12px; }
 }

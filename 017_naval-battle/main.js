@@ -125,8 +125,21 @@ const onlineState = {
   roomData: null,
   roomRef: null,
   unsubscribe: null,
-  syncing: false
+  syncing: false,
+  error: "",
+  connectionRef: null,
+  connectionListener: null
 };
+
+let onlineOperationId = 0;
+let cpuAttackTimer = null;
+let gameGeneration = 0;
+
+function invalidateCpuTurn() {
+  gameGeneration += 1;
+  window.clearTimeout(cpuAttackTimer);
+  cpuAttackTimer = null;
+}
 
 let firebaseApp = null;
 let database = null;
@@ -200,6 +213,9 @@ function initGame() {
 }
 
 function startCpuMode() {
+  onlineOperationId += 1;
+  onlineState.syncing = false;
+  invalidateCpuTurn();
   leaveRoom(false);
   gameState.mode = "cpu";
   gameState.phase = "setup";
@@ -249,6 +265,7 @@ function createCardCounts() {
 }
 
 function resetLocalPlacement() {
+  if (gameState.phase !== "setup" || getLocalOwner().ready || (gameState.mode === "online" && (onlineState.syncing || !onlineState.connected))) return;
   const owner = getLocalOwner();
   owner.board = createEmptyBoard();
   owner.ships = [];
@@ -261,6 +278,7 @@ function resetLocalPlacement() {
 }
 
 function randomPlaceFleet(ownerKey = "player", shouldSync = true) {
+  if (ownerKey === "player" && (gameState.phase !== "setup" || getLocalOwner().ready || (gameState.mode === "online" && (onlineState.syncing || !onlineState.connected)))) return;
   const owner = gameState[ownerKey];
   owner.board = createEmptyBoard();
   owner.ships = [];
@@ -292,7 +310,7 @@ function placeRandomFleetOnOwner(owner) {
 }
 
 function placePlayerShip(x, y) {
-  if (gameState.phase !== "setup") return;
+  if (gameState.phase !== "setup" || getLocalOwner().ready || (gameState.mode === "online" && (onlineState.syncing || !onlineState.connected))) return;
   const owner = getLocalOwner();
   const ship = SHIPS[gameState.placementIndex];
   if (!ship) return;
@@ -371,7 +389,9 @@ function render() {
   const compactBattle = ["playerTurn", "cpuTurn", "victory", "defeat"].includes(gameState.phase);
 
   elements.app.classList.toggle("battle-compact", compactBattle);
+  elements.app.classList.toggle("fleet-setup", gameState.phase === "setup" || gameState.phase === "waiting");
   elements.modePanel.hidden = gameState.phase !== "menu";
+  [elements.cpuModeButton, elements.createRoomButton, elements.joinRoomButton].forEach(button => button.disabled = onlineState.syncing);
   elements.onlinePanel.hidden = !online || gameState.phase === "menu";
   elements.commandPanel.hidden = gameState.phase === "menu";
   elements.setupPanel.hidden = gameState.phase !== "setup";
@@ -385,7 +405,7 @@ function render() {
   elements.phaseText.textContent = phaseLabels[gameState.phase] || "-";
   elements.turnText.textContent = String(gameState.turnCount);
   elements.battleRoomText.textContent = online ? onlineState.roomId || "------" : "CPU";
-  elements.messageText.textContent = gameState.logs[0] || "モードを選択してください。";
+  elements.messageText.textContent = onlineState.error && online ? onlineState.error : gameState.logs[0] || "モードを選択してください。";
   elements.directionButton.textContent = `向き: ${gameState.placementDirection === "horizontal" ? "横" : "縦"}`;
   elements.startButton.textContent = online ? "準備完了" : "ゲーム開始";
   elements.startButton.disabled = !placementDone || (online && localOwner.ready);
@@ -397,6 +417,11 @@ function render() {
     ? online ? "配置完了。準備完了を押してください。" : "配置完了。ゲーム開始を押してください。"
     : `配置中: ${currentShip.name} (${currentShip.size}マス)`;
 
+  if (online && (onlineState.syncing || !onlineState.connected)) {
+    [elements.readyButton, elements.startButton, elements.randomButton, elements.clearPlacementButton, elements.directionButton].forEach(button => button.disabled = true);
+  }
+  elements.restartButton.disabled = online && (onlineState.syncing || !onlineState.connected);
+  elements.resultRestartButton.disabled = elements.restartButton.disabled;
   renderOnlineStatus();
   renderCards();
   renderBoard("remote", elements.enemyBoard);
@@ -413,7 +438,11 @@ function renderOnlineStatus() {
   elements.hostStatusText.textContent = formatParticipant(roomData?.players?.host, roomData?.hostId);
   elements.guestStatusText.textContent = formatParticipant(roomData?.players?.guest, roomData?.guestId);
 
-  if (!onlineState.roomId) {
+  if (onlineState.error) {
+    elements.onlineMessage.textContent = onlineState.error;
+  } else if (!onlineState.connected && onlineState.roomId) {
+    elements.onlineMessage.textContent = "接続が切れています。再接続を待つか、戻るで退出してください。";
+  } else if (!onlineState.roomId) {
     elements.onlineMessage.textContent = "オンライン未接続です。";
   } else if (!roomData?.guestId) {
     elements.onlineMessage.textContent = "相手の参加を待っています。";
@@ -527,7 +556,9 @@ function renderCards() {
     button.type = "button";
     button.className = `card-button${gameState.selectedCardId === card.id ? " active" : ""}`;
     button.disabled = gameState.phase !== "playerTurn" || !isLocalTurn() || count <= 0;
-    button.innerHTML = `<strong>${card.name}</strong><span>${card.description}</span><b>${count}</b>`;
+    button.setAttribute("aria-pressed", String(gameState.selectedCardId === card.id));
+    button.setAttribute("aria-label", `${card.name}、残り${count}回、${card.description}`);
+    button.innerHTML = `<strong>${card.name}</strong><span>${card.description}</span><b>残 ${count}</b>`;
     button.addEventListener("click", () => selectCard(card.id));
     elements.cards.appendChild(button);
   });
@@ -549,6 +580,7 @@ function renderLogs() {
 }
 
 function selectCard(cardId) {
+  if (gameState.phase !== "playerTurn" || !isLocalTurn()) return;
   const localOwner = getLocalOwner();
   if ((localOwner.cards[cardId] ?? 0) <= 0) return;
   gameState.selectedCardId = cardId;
@@ -585,7 +617,7 @@ function previewAttackPattern(x, y) {
 }
 
 function playerAttack(x, y) {
-  if (gameState.phase !== "playerTurn") return;
+  if (gameState.mode !== "cpu" || gameState.phase !== "playerTurn" || !isLocalTurn()) return;
   const card = getCard(gameState.selectedCardId);
   const localOwner = getLocalOwner();
   if ((localOwner.cards[card.id] ?? 0) <= 0) return;
@@ -604,11 +636,16 @@ function playerAttack(x, y) {
   gameState.phase = "cpuTurn";
   gameState.turn = "cpu";
   render();
-  window.setTimeout(cpuTurn, 620);
+  const generation = gameGeneration;
+  cpuAttackTimer = window.setTimeout(() => {
+    if (generation !== gameGeneration) return;
+    cpuAttackTimer = null;
+    cpuTurn(generation);
+  }, 620);
 }
 
-function cpuTurn() {
-  if (gameState.phase !== "cpuTurn") return;
+function cpuTurn(generation = gameGeneration) {
+  if (generation !== gameGeneration || gameState.mode !== "cpu" || gameState.phase !== "cpuTurn") return;
   const card = pickCpuCard();
   const target = pickCpuTarget(card);
   const result = resolveAttack(gameState.player, card, target.x, target.y, "local");
@@ -800,25 +837,35 @@ function awaitlessRoomNotFoundMessage(roomId) {
 
 function listenRoom(roomId) {
   detachRoomListener();
+  onlineState.connectionRef = database.ref(".info/connected");
+  onlineState.connectionListener = onlineState.connectionRef.on("value", snapshot => {
+    if (onlineState.roomId !== roomId) return;
+    onlineState.connected = snapshot.val() === true;
+    render();
+  });
   onlineState.roomRef = roomRef(roomId);
   onlineState.unsubscribe = onlineState.roomRef.on("value", (snapshot) => {
     const roomData = snapshot.val();
-    onlineState.connected = Boolean(roomData);
-    onlineState.syncing = false;
+    if (onlineState.roomId !== roomId) return;
     if (!roomData) {
       addLog("部屋が削除されました。");
       backToMenu();
+      setModeMessage("部屋が削除されたか、ホストが退出しました。", true);
       return;
     }
     applyRemoteState(roomData);
   }, (error) => {
+    if (onlineState.roomId !== roomId) return;
     onlineState.connected = false;
-    setModeMessage(error.message, true);
+    onlineState.error = `同期できません。戻るで退出し、再参加してください。${error.message}`;
+    setModeMessage(onlineState.error, true);
     render();
   });
 }
 
 function attachOnlineRoom(roomId, role) {
+  invalidateCpuTurn();
+  onlineState.error = "";
   onlineState.roomId = roomId;
   onlineState.role = role;
   onlineState.opponentRole = role === "host" ? "guest" : "host";
@@ -831,15 +878,47 @@ function attachOnlineRoom(roomId, role) {
   listenRoom(roomId);
 }
 
+function roomPlayersSignature(players) {
+  return JSON.stringify(players, function(key, value) {
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return Object.keys(value).sort().reduce((sorted, name) => { sorted[name] = value[name]; return sorted; }, {});
+    }
+    return value;
+  });
+}
+
+async function commitRoomUpdate(expected, updates) {
+  const roomId = onlineState.roomId;
+  const generation = gameGeneration;
+  const ref = roomRef(roomId);
+  const result = await ref.transaction(room => {
+    if (!room || room.status !== expected.status || room.currentTurn !== expected.currentTurn ||
+        room.turnCount !== expected.turnCount || room.hostId !== expected.hostId || room.guestId !== expected.guestId ||
+        roomPlayersSignature(room.players) !== roomPlayersSignature(expected.players)) return;
+    Object.entries(updates).forEach(([key, value]) => {
+      const parts = key.split("/");
+      let target = room;
+      parts.slice(0, -1).forEach(part => { target = target[part] ||= {}; });
+      target[parts[parts.length - 1]] = value;
+    });
+    room.updatedAt = Date.now();
+    return room;
+  }, undefined, false);
+  if (onlineState.roomId !== roomId || generation !== gameGeneration) return;
+  if (!result.committed) {
+    if (result.snapshot.exists()) applyRemoteState(result.snapshot.val());
+    throw new Error("部屋の状態が変わりました。最新の状態を確認してください。");
+  }
+  applyRemoteState(result.snapshot.val());
+}
+
 function updateRoomState(partialData) {
   if (!onlineState.roomId) return Promise.resolve();
-  onlineState.syncing = true;
-  render();
   return roomRef(onlineState.roomId).update({ ...partialData, updatedAt: Date.now() });
 }
 
 function setPlayerReady() {
-  if (gameState.mode !== "online" || !onlineState.role) return;
+  if (gameState.mode !== "online" || !onlineState.role || onlineState.syncing || !onlineState.connected) return;
   if (gameState.phase === "victory" || gameState.phase === "defeat") {
     prepareOnlineRematch();
     return;
@@ -850,29 +929,25 @@ function setPlayerReady() {
     render();
     return;
   }
+  if (gameState.phase !== "setup" || localOwner.ready) return;
+  const readyRoomId = onlineState.roomId;
   localOwner.ready = true;
   withFirebase(async () => {
     await updateRoomState({
       [`players/${onlineState.role}`]: { ...serializeOwner(localOwner), name: onlineState.role, ready: true },
       logs: prependLog(onlineState.roomData?.logs, `${onlineState.role} が準備完了しました。`)
     });
-    await startOnlineGameIfReady();
+    if (onlineState.roomId === readyRoomId) await startOnlineGameIfReady(readyRoomId);
   }, "準備完了の同期に失敗しました。");
 }
 
-async function startOnlineGameIfReady() {
-  const snapshot = await roomRef(onlineState.roomId).get();
-  const roomData = snapshot.val();
-  if (!roomData || !roomData.hostId || !roomData.guestId) return;
-  if (roomData.players?.host?.ready && roomData.players?.guest?.ready && roomData.status !== "playing") {
-    await roomRef(onlineState.roomId).update({
-      status: "playing",
-      currentTurn: "host",
-      turnCount: 1,
-      updatedAt: Date.now(),
-      logs: prependLog(roomData.logs, "オンライン対戦開始。hostの攻撃です。")
-    });
-  }
+async function startOnlineGameIfReady(roomId = onlineState.roomId) {
+  await roomRef(roomId).transaction(room => {
+    if (!room || !room.hostId || !room.guestId || !["setup", "waiting"].includes(room.status) ||
+        !room.players?.host?.ready || !room.players?.guest?.ready) return;
+    return { ...room, status: "playing", currentTurn: "host", turnCount: 1,
+      updatedAt: Date.now(), logs: prependLog(room.logs, "オンライン対戦開始。hostの攻撃です。") };
+  }, undefined, false);
 }
 
 function onlinePlayerAttack(x, y) {
@@ -887,6 +962,7 @@ function onlinePlayerAttack(x, y) {
     return;
   }
 
+  const expected = JSON.parse(JSON.stringify(onlineState.roomData));
   localOwner.cards[card.id] -= 1;
   const result = resolveAttack(remoteOwner, card, x, y, "remote");
   localOwner.attacks.push({
@@ -920,12 +996,15 @@ function onlinePlayerAttack(x, y) {
   };
 
   withFirebase(async () => {
-    await updateRoomState(updates);
+    await commitRoomUpdate(expected, updates);
   }, "攻撃結果の同期に失敗しました。");
 }
 
 function applyRemoteState(roomData) {
+  const opponentLeft = Boolean(onlineState.roomData?.guestId && !roomData.guestId);
   onlineState.roomData = roomData;
+  if (opponentLeft) onlineState.error = "相手が退出しました。新しい参加者を待つか、戻るで退出してください。";
+  else if (roomData.guestId && onlineState.error.startsWith("相手が退出")) onlineState.error = "";
   if (!onlineState.role) {
     if (roomData.hostId === onlineState.playerId) onlineState.role = "host";
     if (roomData.guestId === onlineState.playerId) onlineState.role = "guest";
@@ -958,13 +1037,16 @@ function applyRemoteState(roomData) {
 }
 
 async function leaveRoom(removeLocal = true) {
+  const roomId = onlineState.roomId;
+  const role = onlineState.role;
   detachRoomListener();
-  if (!onlineState.roomId || !database) {
+  const departingRoomData = onlineState.roomData;
+  if (removeLocal) backToMenu();
+  clearOnlineLocalState();
+  if (!roomId || !database) {
     if (removeLocal) clearOnlineLocalState();
     return;
   }
-  const roomId = onlineState.roomId;
-  const role = onlineState.role;
   try {
     if (role === "host") {
       await roomRef(roomId).remove();
@@ -974,13 +1056,13 @@ async function leaveRoom(removeLocal = true) {
         status: "waiting",
         "players/guest": emptyRoomPlayer("guest"),
         updatedAt: Date.now(),
-        logs: prependLog(onlineState.roomData?.logs, "guest が退出しました。")
+        logs: prependLog(departingRoomData?.logs, "guest が退出しました。")
       });
     }
   } catch (error) {
     setModeMessage(error.message, true);
   }
-  if (removeLocal) backToMenu();
+
 }
 
 function cleanupOldRooms() {
@@ -1010,15 +1092,15 @@ function getCurrentPlayerRole() {
 
 function isLocalTurn() {
   if (gameState.mode !== "online") return gameState.turn === "player";
-  return onlineState.roomData?.currentTurn === onlineState.role;
+  return onlineState.connected && !onlineState.syncing && onlineState.roomData?.status === "playing" && Boolean(onlineState.roomData?.hostId && onlineState.roomData?.guestId) && onlineState.roomData?.currentTurn === onlineState.role;
 }
 
 function syncLocalPlayerIfOnline() {
   if (gameState.mode !== "online" || !onlineState.roomId || !onlineState.role) return;
   const localOwner = getLocalOwner();
-  updateRoomState({
+  withFirebase(() => updateRoomState({
     [`players/${onlineState.role}`]: { ...serializeOwner(localOwner), name: onlineState.role }
-  }).catch((error) => setModeMessage(error.message, true));
+  }), "配置の同期に失敗しました。");
 }
 
 function serializeOwner(owner) {
@@ -1033,6 +1115,7 @@ function serializeOwner(owner) {
 }
 
 function deserializeOwner(owner) {
+  owner = owner ? JSON.parse(JSON.stringify(owner)) : owner;
   return {
     name: owner?.name || "",
     ready: Boolean(owner?.ready),
@@ -1076,12 +1159,19 @@ function initFirebase() {
 }
 
 function withFirebase(task, fallbackMessage) {
-  if (!initFirebase()) return;
+  if (onlineState.syncing || !initFirebase()) return;
+  onlineState.error = "";
+  const operationId = ++onlineOperationId;
   onlineState.syncing = true;
   render();
-  task().catch((error) => {
-    setModeMessage(`${fallbackMessage} ${error.message}`, true);
+  const session = onlineState.roomId;
+  return task().catch((error) => {
+    if (operationId !== onlineOperationId || session !== onlineState.roomId) return;
+    if (onlineState.roomData) applyRemoteState(onlineState.roomData);
+    onlineState.error = `${fallbackMessage} ${error.message}`;
+    setModeMessage(onlineState.error, true);
   }).finally(() => {
+    if (operationId !== onlineOperationId) return;
     onlineState.syncing = false;
     render();
   });
@@ -1096,6 +1186,9 @@ function roomPath(roomId) {
 }
 
 function detachRoomListener() {
+  if (onlineState.connectionRef && onlineState.connectionListener) onlineState.connectionRef.off("value", onlineState.connectionListener);
+  onlineState.connectionRef = null;
+  onlineState.connectionListener = null;
   if (onlineState.roomRef && onlineState.unsubscribe) {
     onlineState.roomRef.off("value", onlineState.unsubscribe);
   }
@@ -1117,9 +1210,13 @@ function restoreOnlineRoom() {
 }
 
 function backToMenu() {
+  onlineOperationId += 1;
+  onlineState.syncing = false;
+  invalidateCpuTurn();
   clearOnlineLocalState();
   gameState.mode = null;
   gameState.phase = "menu";
+  gameState.placementIndex = 0;
   gameState.player = createEmptyOwner();
   gameState.cpu = createEmptyOwner();
   gameState.logs = [];
@@ -1135,6 +1232,7 @@ function clearOnlineLocalState() {
   onlineState.opponentRole = null;
   onlineState.connected = false;
   onlineState.roomData = null;
+  onlineState.error = "";
 }
 
 function addLog(message) {
@@ -1143,6 +1241,7 @@ function addLog(message) {
 }
 
 function restartGame() {
+  invalidateCpuTurn();
   if (gameState.mode === "online") {
     prepareOnlineRematch();
     return;
@@ -1151,8 +1250,9 @@ function restartGame() {
 }
 
 function prepareOnlineRematch() {
-  if (gameState.mode !== "online" || !onlineState.roomId || !onlineState.role) return;
-  const roomData = onlineState.roomData || {};
+  if (gameState.mode !== "online" || !onlineState.roomId || !onlineState.role || onlineState.syncing || !onlineState.connected) return;
+  const roomData = JSON.parse(JSON.stringify(onlineState.roomData || {}));
+  if (!["playing", "finished"].includes(roomData.status)) return;
   const hostOwner = createPreparedOwner("host", true);
   const guestOwner = roomData.guestId ? createPreparedOwner("guest", true) : emptyRoomPlayer("guest");
   const updates = {
@@ -1170,7 +1270,7 @@ function prepareOnlineRematch() {
   };
 
   withFirebase(async () => {
-    await updateRoomState(updates);
+    await commitRoomUpdate(roomData, updates);
   }, "再戦準備に失敗しました。");
 }
 
@@ -1215,15 +1315,20 @@ function bindEvents() {
   elements.resultRestartButton.onclick = restartGame;
 }
 
-function copyRoomId() {
+async function copyRoomId() {
   if (!onlineState.roomId) return;
-  navigator.clipboard?.writeText(onlineState.roomId)
-    .then(() => {
-      elements.onlineMessage.textContent = "部屋IDをコピーしました。";
-    })
-    .catch(() => {
-      elements.onlineMessage.textContent = `部屋ID: ${onlineState.roomId}`;
-    });
+  try {
+    if (typeof navigator.clipboard?.writeText !== "function") throw new Error("Clipboard unavailable");
+    await navigator.clipboard.writeText(onlineState.roomId);
+    elements.onlineMessage.textContent = "部屋IDをコピーしました。";
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(elements.roomIdText);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    elements.onlineMessage.textContent = "コピーできませんでした。表示中の部屋IDを長押しして手動コピーしてください。";
+  }
 }
 
 function setModeMessage(message, isError = false) {
@@ -1283,7 +1388,7 @@ function escapeHtml(value) {
 }
 
 window.addEventListener("pagehide", () => {
-  if (onlineState.roomId && database) updateRoomState({ updatedAt: Date.now() });
+  if (onlineState.roomId && database) updateRoomState({ updatedAt: Date.now() }).catch(() => {});
 });
 
 initGame();

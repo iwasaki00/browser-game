@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -19,23 +19,24 @@
         <strong id="objectiveLabel">目的: 潜入開始</strong>
       </div>
       <div id="hudSub" class="hud-sub">
-        <span id="itemLabel" class="items">CARD:- DATA:-</span>
+        <span id="itemLabel" class="items">カード:未 データ:未</span>
         <span class="alert-wrap" aria-label="警戒ゲージ">
           <span>警戒</span>
           <meter id="alertMeter" min="0" max="100" value="0"></meter>
         </span>
       </div>
+      <div class="hud-status"><span id="postureLabel">立ち</span><span id="guardLabel">通常巡回</span></div>
     </section>
 
-    <button id="debugButton" class="debug-button" type="button" aria-label="デバッグ表示">D</button>
+    <button id="debugButton" class="debug-button" type="button" hidden aria-label="デバッグ表示">D</button>
 
     <section class="touch-layer" aria-label="タッチ操作">
       <div id="stick" class="stick" aria-label="移動スティック">
         <div id="stickKnob" class="stick-knob"></div>
       </div>
       <div class="actions">
-        <button id="crouchButton" class="round-button secondary" type="button">屈</button>
-        <button id="actionButton" class="round-button primary" type="button">調</button>
+        <button id="crouchButton" class="round-button secondary" type="button" aria-pressed="false">しゃがむ</button>
+        <button id="actionButton" class="round-button primary" type="button">調べる</button>
       </div>
     </section>
 
@@ -45,7 +46,6 @@
         <h1>潜入コード: ゼロ</h1>
         <p id="overlayText">敵の視界を避け、端末やカードキーを使って重要データを回収し、脱出口へ向かえ。</p>
         <button id="startButton" type="button">START</button>
-        <a href="../index.html">メニューへ</a>
       </div>
     </section>
   </main>

@@ -18,7 +18,6 @@ const ui = {
   addHerb: document.getElementById("add-herb"),
   addPredator: document.getElementById("add-predator"),
   speedButtons: Array.from(document.querySelectorAll(".speed")),
-  worldWrap: document.getElementById("world-wrap"),
   setup: document.getElementById("setup"),
   setupForm: document.getElementById("setup-form"),
   setupWidth: document.getElementById("setup-width"),
@@ -79,7 +78,7 @@ const distSq = (a, b) => {
 
 function setInitialInputs() {
   const availableWidth = Math.max(280, Math.min(window.innerWidth - 20, 520));
-  ui.setupWidth.value = Math.round(availableWidth);
+  ui.setupWidth.value = Math.round(availableWidth / 10) * 10;
   ui.setupHeight.value = DEFAULT_SETTINGS.height;
 }
 
@@ -94,19 +93,19 @@ function readSettings() {
 }
 
 function applyWorldSize() {
-  ui.worldWrap.style.setProperty("--canvas-width", `${settings.width}px`);
-  ui.worldWrap.style.setProperty("--canvas-height", `${settings.height}px`);
   resizeCanvas();
 }
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
+  // Settings define stable simulation coordinates; only the display bitmap resizes.
+  // In particular, a display smaller than 280px must not change world bounds.
   world.dpr = Math.min(window.devicePixelRatio || 1, 2);
-  world.width = Math.max(280, rect.width);
-  world.height = Math.max(280, rect.height);
-  canvas.width = Math.floor(world.width * world.dpr);
-  canvas.height = Math.floor(world.height * world.dpr);
-  ctx.setTransform(world.dpr, 0, 0, world.dpr, 0, 0);
+  world.width = settings.width;
+  world.height = settings.height;
+  canvas.width = Math.max(1, Math.round(rect.width * world.dpr));
+  canvas.height = Math.max(1, Math.round(rect.height * world.dpr));
+  ctx.setTransform(canvas.width / world.width, 0, 0, canvas.height / world.height, 0, 0);
 }
 
 function randomGenes(type) {
@@ -702,7 +701,12 @@ ui.setupForm.addEventListener("submit", (event) => {
   reset();
 });
 
-ui.reset.addEventListener("click", reset);
+ui.reset.addEventListener("click", () => {
+  if (started && window.confirm("現在の生態系をリセットしますか？現在の開始設定の個体数でやり直します。")) reset();
+});
+document.getElementById("show-details").addEventListener("click", () => {
+  document.getElementById("details").showModal();
+});
 ui.pause.addEventListener("click", () => {
   if (!started) return;
   paused = !paused;
@@ -721,23 +725,41 @@ ui.speedButtons.forEach((button) => {
   });
 });
 
+// A single pointer-up handles taps; dragging and pinch gestures cancel removal.
+let pendingTap = null;
 canvas.addEventListener("pointerdown", (event) => {
-  if (!started) return;
+  pendingTap = started && event.isPrimary && event.button === 0
+    ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null;
+});
+canvas.addEventListener("pointermove", (event) => {
+  if (pendingTap && Math.hypot(event.clientX - pendingTap.x, event.clientY - pendingTap.y) > 8) pendingTap = null;
+});
+canvas.addEventListener("pointerup", (event) => {
+  const tap = pendingTap;
+  pendingTap = null;
+  if (!tap || tap.id !== event.pointerId || !event.isPrimary) return;
+  if (Math.hypot(event.clientX - tap.x, event.clientY - tap.y) > 8) return;
   const point = canvasPoint(event);
   removeNearestAt(point.x, point.y);
 });
+canvas.addEventListener("pointercancel", () => { pendingTap = null; });
+canvas.addEventListener("pointerleave", () => { pendingTap = null; });
 
-window.addEventListener("resize", () => {
-  applyWorldSize();
-  grass.forEach((blade) => {
-    blade.x = clamp(blade.x, 4, world.width - 4);
-    blade.y = clamp(blade.y, 4, world.height - 4);
-  });
-  herbs.concat(predators).forEach((animal) => {
-    animal.x = clamp(animal.x, 8, world.width - 8);
-    animal.y = clamp(animal.y, 8, world.height - 8);
-  });
-});
+window.addEventListener("resize", resizeCanvas);
+// Observe layout changes as well as window resizing, without moving organisms.
+new ResizeObserver(resizeCanvas).observe(canvas);
+
+function updateSetupViewport() {
+  const viewport = window.visualViewport;
+  ui.setup.style.setProperty("--setup-viewport-height", `${viewport ? viewport.height : window.innerHeight}px`);
+  ui.setup.style.setProperty("--setup-viewport-top", `${viewport ? viewport.offsetTop : 0}px`);
+}
+window.addEventListener("resize", updateSetupViewport);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", updateSetupViewport);
+  window.visualViewport.addEventListener("scroll", updateSetupViewport);
+}
+updateSetupViewport();
 
 setInitialInputs();
 settings = readSettings();

@@ -182,6 +182,9 @@ const stick = document.getElementById("stick");
 const stickKnob = document.getElementById("stickKnob");
 const actionButton = document.getElementById("actionButton");
 const crouchButton = document.getElementById("crouchButton");
+const postureLabel = document.getElementById("postureLabel");
+const guardLabel = document.getElementById("guardLabel");
+const debugMode = new URLSearchParams(window.location.search).get("debug") === "1";
 const debugButton = document.getElementById("debugButton");
 
 const spriteSheet = new Image();
@@ -205,7 +208,10 @@ let debug = false;
 let systemsOff = false;
 let lastDKeyTap = 0;
 let dKeyDownAt = 0;
-let lastTouchEnd = 0;
+let appActive = !document.hidden && document.hasFocus();
+let resetTouchControls = () => {};
+debugButton.hidden = !debugMode;
+document.body.classList.toggle("debug-mode", debugMode);
 
 const input = {
   x: 0,
@@ -231,8 +237,9 @@ const player = {
 
 function resize() {
   dpr = Math.min(window.devicePixelRatio || 1, 2);
-  screenW = window.innerWidth;
-  screenH = window.innerHeight;
+  screenW = canvas.clientWidth;
+  screenH = canvas.clientHeight;
+  resetInputs();
   canvas.width = Math.floor(screenW * dpr);
   canvas.height = Math.floor(screenH * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -243,6 +250,7 @@ function cloneMap(lines) {
 }
 
 function startStage(index) {
+  resetInputs();
   stageIndex = index;
   stage = STAGES[stageIndex];
   map = cloneMap(stage.map);
@@ -308,6 +316,7 @@ function findAndClear(ch) {
 }
 
 function showOverlay(kind, text, buttonText) {
+  resetInputs();
   state = kind;
   overlayText.textContent = text;
   startButton.textContent = buttonText;
@@ -323,7 +332,14 @@ function updateHud() {
   stageLabel.textContent = `STAGE ${stageIndex + 1}`;
   objectiveLabel.textContent = `目的: ${message || stage.objective}`;
   alertMeter.value = player.alert;
-  itemLabel.textContent = `CARD:${player.hasKey ? "OK" : "-"} DATA:${player.hasData ? "OK" : "-"}`;
+  itemLabel.textContent = `カード:${player.hasKey ? "取得済" : "未"} データ:${player.hasData ? "取得済" : "未"}`;
+  postureLabel.textContent = player.hidden ? "隠れている" : player.crouch ? "しゃがみ中" : "立ち";
+  postureLabel.classList.toggle("is-active", player.crouch || player.hidden);
+  const status = guards.some(g => g.state === GuardState.CHASE) ? "chase"
+    : guards.some(g => g.state === GuardState.SEARCH) ? "search"
+    : guards.some(g => g.state === GuardState.SUSPICIOUS || g.spotted) ? "suspicious" : "patrol";
+  guardLabel.textContent = { chase: "発見・追跡中", search: "探索中", suspicious: "警戒中", patrol: "通常巡回" }[status];
+  guardLabel.dataset.state = status;
 }
 
 function tileAt(tx, ty) {
@@ -387,7 +403,7 @@ function updatePlayer(dt) {
 
   player.hidden = player.hidden && len < 0.2;
   player.crouch = input.crouch || keys.has("ShiftLeft") || keys.has("ShiftRight");
-  crouchButton.classList.toggle("is-active", player.crouch);
+  syncCrouchButton();
 
   const speed = player.crouch ? 58 : 96;
   const nx = player.x + ix * speed * dt;
@@ -622,7 +638,7 @@ function updateLasers(dt) {
 }
 
 function update(dt) {
-  if (state !== GameState.PLAYING) return;
+  if (!appActive || state !== GameState.PLAYING) return;
   updatePlayer(dt);
   updateGuards(dt);
   updateCameras(dt);
@@ -794,7 +810,8 @@ function draw() {
 }
 
 function worldTopClearance() {
-  return screenH <= 520 || screenW > screenH ? HUD_CLEARANCE_LANDSCAPE : HUD_CLEARANCE_PORTRAIT;
+  const fallback = screenH <= 520 || screenW > screenH ? HUD_CLEARANCE_LANDSCAPE : HUD_CLEARANCE_PORTRAIT;
+  return Math.max(fallback, document.getElementById("hud").getBoundingClientRect().bottom + 6);
 }
 
 function drawBackdrop() {
@@ -1034,19 +1051,47 @@ function clamp(value, min, max) {
 }
 
 function loop(time) {
-  const dt = Math.min(0.033, (time - lastTime) / 1000 || 0);
+  const dt = lastTime === 0 ? 0 : Math.min(0.033, (time - lastTime) / 1000);
   lastTime = time;
   update(dt);
   draw();
   requestAnimationFrame(loop);
 }
 
+function releaseCapture(element, pointerId) {
+  if (pointerId === null) return;
+  try {
+    if (element.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
+  } catch (_) {
+    // The browser may already have cancelled this pointer.
+  }
+}
+
+function syncCrouchButton() {
+  crouchButton.classList.toggle("is-active", player.crouch);
+  crouchButton.setAttribute("aria-pressed", String(player.crouch));
+  crouchButton.textContent = player.crouch ? "しゃがみ中" : "しゃがむ";
+}
+
+function resetInputs() {
+  resetTouchControls();
+  keys.clear();
+  input.x = input.y = 0;
+  input.action = input.actionPressed = input.crouch = false;
+  player.vx = player.vy = 0;
+  player.crouch = false;
+  dKeyDownAt = lastDKeyTap = 0;
+  syncCrouchButton();
+  updateHud();
+}
+
 function setupTouchControls() {
   let stickPointer = null;
-  let rect = null;
+  let actionPointer = null;
+  let crouchPointer = null;
 
   function updateStick(clientX, clientY) {
-    if (!rect) rect = stick.getBoundingClientRect();
+    const rect = stick.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
     const max = rect.width * 0.34;
@@ -1054,75 +1099,113 @@ function setupTouchControls() {
     const dy = clientY - cy;
     const dist = Math.hypot(dx, dy);
     const ratio = dist > max ? max / dist : 1;
-    const kx = dx * ratio;
-    const ky = dy * ratio;
     input.x = clamp(dx / max, -1, 1);
     input.y = clamp(dy / max, -1, 1);
-    stickKnob.style.transform = `translate(${kx}px, ${ky}px)`;
+    stickKnob.style.transform = `translate(${dx * ratio}px, ${dy * ratio}px)`;
   }
 
-  function resetStick() {
-    input.x = 0;
-    input.y = 0;
-    stickKnob.style.transform = "translate(0, 0)";
+  function resetStick(event) {
+    if (event && event.pointerId !== stickPointer) return;
+    const pointerId = stickPointer;
     stickPointer = null;
-    rect = null;
+    input.x = input.y = 0;
+    stickKnob.style.transform = "translate(0, 0)";
+    releaseCapture(stick, pointerId);
+  }
+
+  function resetAction(event) {
+    if (event && event.pointerId !== actionPointer) return;
+    const pointerId = actionPointer;
+    actionPointer = null;
+    input.action = false;
+    // Completed taps are consumed once by the next frame; interrupted taps are discarded.
+    if (!event || event.type !== "pointerup") input.actionPressed = false;
+    actionButton.classList.remove("is-active");
+    releaseCapture(actionButton, pointerId);
+  }
+
+  function resetCrouchPointer(event) {
+    if (event && event.pointerId !== crouchPointer) return;
+    const pointerId = crouchPointer;
+    crouchPointer = null;
+    releaseCapture(crouchButton, pointerId);
+  }
+
+  function toggleCrouch() {
+    if (!appActive || state !== GameState.PLAYING) return;
+    input.crouch = !input.crouch;
+    player.crouch = input.crouch || keys.has("ShiftLeft") || keys.has("ShiftRight");
+    syncCrouchButton();
+    updateHud();
   }
 
   stick.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    if (!appActive || state !== GameState.PLAYING || stickPointer !== null || event.button !== 0) return;
     stickPointer = event.pointerId;
-    stick.setPointerCapture(stickPointer);
-    rect = stick.getBoundingClientRect();
+    try { stick.setPointerCapture(stickPointer); } catch (_) { resetStick(); return; }
     updateStick(event.clientX, event.clientY);
   });
   stick.addEventListener("pointermove", (event) => {
     if (event.pointerId === stickPointer) updateStick(event.clientX, event.clientY);
   });
-  stick.addEventListener("pointerup", resetStick);
-  stick.addEventListener("pointercancel", resetStick);
-
   actionButton.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    if (!appActive || state !== GameState.PLAYING || actionPointer !== null || event.button !== 0) return;
+    actionPointer = event.pointerId;
+    try { actionButton.setPointerCapture(actionPointer); } catch (_) { resetAction(); return; }
     input.action = true;
     input.actionPressed = true;
     actionButton.classList.add("is-active");
   });
-  actionButton.addEventListener("pointerup", () => {
-    input.action = false;
-    actionButton.classList.remove("is-active");
+  crouchButton.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    if (!appActive || state !== GameState.PLAYING || crouchPointer !== null || event.button !== 0) return;
+    crouchPointer = event.pointerId;
+    try { crouchButton.setPointerCapture(crouchPointer); } catch (_) { resetCrouchPointer(); return; }
+    toggleCrouch();
   });
-  actionButton.addEventListener("pointercancel", () => {
-    input.action = false;
-    actionButton.classList.remove("is-active");
+  for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) {
+    stick.addEventListener(type, resetStick);
+    actionButton.addEventListener(type, resetAction);
+    crouchButton.addEventListener(type, resetCrouchPointer);
+  }
+  for (const type of ["pointerup", "pointercancel"]) {
+    window.addEventListener(type, resetStick);
+    window.addEventListener(type, resetAction);
+    window.addEventListener(type, resetCrouchPointer);
+  }
+  crouchButton.addEventListener("click", (event) => {
+    // Keyboard/assistive clicks have no pointer press; pointer clicks were handled above.
+    if (event.detail === 0) toggleCrouch();
   });
-
-  crouchButton.addEventListener("click", () => {
-    input.crouch = !input.crouch;
-  });
+  resetTouchControls = () => { resetStick(); resetAction(); resetCrouchPointer(); };
 }
 
 function setupKeyboard() {
   window.addEventListener("keydown", (event) => {
+    if (!appActive) return;
+    if (event.code === "Space" && event.repeat) { event.preventDefault(); return; }
     if (event.code === "KeyR") {
       startStage(stageIndex);
       return;
     }
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD", "Space", "ShiftLeft", "ShiftRight"].includes(event.code)) {
       event.preventDefault();
-      if (event.code === "KeyD" && !keys.has("KeyD")) dKeyDownAt = performance.now();
+      if (debugMode && event.code === "KeyD" && !keys.has("KeyD")) dKeyDownAt = performance.now();
       keys.add(event.code);
     }
   });
   window.addEventListener("keyup", (event) => {
-    if (event.code === "KeyD") {
+    if (debugMode && event.code === "KeyD" && keys.has("KeyD")) {
       const now = performance.now();
-      if (now - dKeyDownAt < 180 && now - lastDKeyTap < 320) debug = !debug;
+      if (lastDKeyTap > 0 && now - dKeyDownAt < 180 && now - lastDKeyTap < 320) debug = !debug;
       lastDKeyTap = now;
     }
     keys.delete(event.code);
   });
   debugButton.addEventListener("click", () => {
-    debug = !debug;
+    if (debugMode) debug = !debug;
   });
 }
 
@@ -1133,13 +1216,22 @@ startButton.addEventListener("click", () => {
 
 window.addEventListener("resize", resize);
 window.addEventListener("orientationchange", resize);
-document.addEventListener("gesturestart", (event) => event.preventDefault());
-document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
-document.addEventListener("touchend", (event) => {
-  const now = performance.now();
-  if (now - lastTouchEnd < 350) event.preventDefault();
-  lastTouchEnd = now;
-}, { passive: false });
+function suspendInput() {
+  appActive = false;
+  lastTime = 0;
+  resetInputs();
+}
+function resumeInput() {
+  resetInputs();
+  lastTime = 0;
+  appActive = !document.hidden && document.hasFocus();
+}
+window.addEventListener("blur", suspendInput);
+window.addEventListener("focus", resumeInput);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) suspendInput();
+  else resumeInput();
+});
 
 resize();
 setupTouchControls();

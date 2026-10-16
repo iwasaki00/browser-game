@@ -12,21 +12,18 @@
 <body>
   <main class="app">
     <header class="topbar">
-      <a class="back-link" href="../index.html" aria-label="ゲームメニューへ戻る">MENU</a>
       <div>
         <p class="kicker">ECOSYSTEM SIMULATOR</p>
         <h1>いのちの箱庭</h1>
       </div>
+      <button id="show-details" type="button" aria-haspopup="dialog">統計・説明</button>
     </header>
 
     <section class="stats" aria-label="生態系の統計">
       <div class="stat"><span>時間</span><strong id="time">0:00</strong></div>
-      <div class="stat"><span>最大世代</span><strong id="generation">1</strong></div>
       <div class="stat grass"><span>草</span><strong id="grass-count">0</strong></div>
       <div class="stat herb"><span>草食</span><strong id="herb-count">0</strong></div>
       <div class="stat pred"><span>肉食</span><strong id="pred-count">0</strong></div>
-      <div class="stat"><span>草食 速/視</span><strong id="herb-avg">-- / --</strong></div>
-      <div class="stat"><span>肉食 速/視</span><strong id="pred-avg">-- / --</strong></div>
       <p class="comment" id="comment">開始設定を選んでください</p>
     </section>
 
@@ -59,18 +56,42 @@
 
     <section class="setup" id="setup" aria-label="開始設定">
       <form class="setup-panel" id="setup-form">
-        <p class="kicker">START SETTINGS</p>
-        <h2>開始設定</h2>
+        <header>
+          <p class="kicker">START SETTINGS</p>
+          <h2>開始設定</h2>
+        </header>
+        <div class="setup-scroll">
+        <p class="setup-note" id="size-help">Canvas幅・高さは箱庭の内部座標の大きさです。表示は観察領域に合わせて縦横それぞれ拡大・縮小され、画面回転でも生物の座標は変わりません。</p>
         <div class="setup-grid">
-          <label>Canvas幅<input id="setup-width" type="number" min="280" max="900" step="10"></label>
-          <label>Canvas高さ<input id="setup-height" type="number" min="320" max="1200" step="10" value="500"></label>
+          <label>Canvas幅<input id="setup-width" type="number" min="280" max="900" step="10" aria-describedby="size-help"></label>
+          <label>Canvas高さ<input id="setup-height" type="number" min="320" max="1200" step="10" value="500" aria-describedby="size-help"></label>
           <label>初期草数<input id="setup-grass" type="number" min="0" max="400" step="10" value="150"></label>
           <label>初期草食動物数<input id="setup-herbs" type="number" min="0" max="120" step="1" value="25"></label>
           <label>初期肉食動物数<input id="setup-predators" type="number" min="0" max="50" step="1" value="6"></label>
         </div>
+        </div>
         <button class="start-button" type="submit">開始</button>
       </form>
     </section>
+    <dialog id="details" aria-labelledby="details-title">
+      <div class="details-panel">
+        <h2 id="details-title">詳細統計・操作説明</h2>
+        <div class="detail-stats">
+          <div class="stat"><span>最大世代</span><strong id="generation">1</strong></div>
+          <div class="stat"><span>草食 平均速度 / 視野</span><strong id="herb-avg">-- / --</strong></div>
+          <div class="stat"><span>肉食 平均速度 / 視野</span><strong id="pred-avg">-- / --</strong></div>
+        </div>
+        <p>最大世代は、今生きている動物の中で最も進んだ世代です。最初の個体は1世代、子は親の世代＋1になります。</p>
+        <p>平均能力値は、今生きている草食・肉食それぞれの遺伝子の「移動速度」と「視野の広さ」の平均です。内部座標を基準とし、速度倍率を掛ける前の値です。</p>
+        <ul>
+          <li>箱庭の草や動物をタップすると、近くの1個体を取り除きます。</li>
+          <li>追加ボタンで草を20、草食動物を5、肉食動物を2個体追加します。個体数の上限まで追加できます。</li>
+          <li>速度はシミュレーション時間の進み方を変えます。x2なら時間・移動・成長などが2倍の速さで進みます。</li>
+          <li>一時停止中も追加や取り除く操作ができます。リセットは確認後、現在の開始設定の個体数でやり直します。</li>
+        </ul>
+        <form method="dialog"><button type="submit">閉じる</button></form>
+      </div>
+    </dialog>
   </main>
   <script src="script.js"></script>
 </body>
