@@ -49,6 +49,8 @@
       this.canvas.height = Math.max(1, Math.round(rect.height * ratio));
       this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       this.width = Math.max(280, rect.width); this.height = Math.max(480, rect.height);
+      // Fit the existing logical board without changing physics or hit tests.
+      this.ctx.setTransform(ratio * rect.width / this.width, 0, 0, ratio * rect.height / this.height, 0, 0);
       this.paddle.y = this.height - 72;
       this.paddle.x = clamp(this.paddle.x || (this.width - this.paddle.w) / 2, 8, this.width - this.paddle.w - 8);
       this.targetPaddleX = this.targetPaddleX == null ? this.paddle.x + this.paddle.w / 2 : clamp(this.targetPaddleX, 0, this.width);
@@ -64,7 +66,7 @@
     bind() {
       const point = event => {
         const rect = this.canvas.getBoundingClientRect();
-        return clamp(event.clientX - rect.left, 0, rect.width);
+        return clamp((event.clientX - rect.left) * this.width / rect.width, 0, this.width);
       };
       const down = event => {
         event.preventDefault(); this.pointerActive = true; this.targetPaddleX = point(event);

@@ -51,6 +51,7 @@
     makePlayer() { return { pointerId: null, cooldownUntil: 0 }; }
 
     reset() {
+      this.releaseInputs();
       this.active = false;
       this.exploding = false;
       this.bombOwner = null;
@@ -78,7 +79,7 @@
         const down = (event) => {
           if (!this.active || this.exploding || (event.pointerType === "mouse" && event.button !== 0)) return;
           const player = this.players[index];
-          if (player.pointerId !== null) return;
+          if (player.pointerId !== null || this.players.some((other) => other.pointerId === event.pointerId)) return;
           event.preventDefault();
           player.pointerId = event.pointerId;
           if (control.setPointerCapture) control.setPointerCapture(event.pointerId);
@@ -88,6 +89,7 @@
           if (this.players[index].pointerId !== event.pointerId) return;
           event.preventDefault();
           this.players[index].pointerId = null;
+          if (control.hasPointerCapture?.(event.pointerId)) control.releasePointerCapture(event.pointerId);
         };
         control.addEventListener("pointerdown", down, { passive: false });
         control.addEventListener("pointerup", release, { passive: false });
@@ -138,7 +140,15 @@
       this.updateHud(performance.now());
     }
 
+    releaseInputs() {
+      if (this.players) this.players.forEach((player, index) => {
+        const id = player.pointerId; player.pointerId = null;
+        if (id !== null && this.controls[index].hasPointerCapture?.(id)) this.controls[index].releasePointerCapture(id);
+      });
+      this.controls.forEach((control) => control.classList.remove("pressed"));
+    }
     stop() {
+      this.releaseInputs();
       this.active = false;
       this.exploding = false;
       cancelAnimationFrame(this.animationId);
@@ -211,7 +221,7 @@
       this.active = false;
       this.exploding = true;
       this.explosionStartedAt = now;
-      this.players.forEach((player) => { player.pointerId = null; });
+      this.releaseInputs();
       if (this.onExplosionSound) this.onExplosionSound();
       if (navigator.vibrate) navigator.vibrate([80, 35, 140]);
     }

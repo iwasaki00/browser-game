@@ -10,7 +10,7 @@ export class Room {
     for(let i=0;i<20;i++) {
       if(this.closed||epoch!==this.epoch)throw Error("部屋操作を中止しました");
       const id=String(Math.floor(100000+Math.random()*900000));
-      const r=await runTransaction(pathRef(id),v=>this.closed||epoch!==this.epoch||v?undefined:{meta:{hostUid:this.uid,status:"lobby",createdAt:Date.now(),expiresAt:Date.now()+21600000},settings:DEFAULTS,game:{phase:"lobby",generationId:0},players:{[this.uid]:this.player(name)}});
+      const r=await runTransaction(pathRef(id),v=>this.closed||epoch!==this.epoch||v?undefined:{meta:{hostUid:this.uid,status:"lobby",createdAt:Date.now(),expiresAt:Date.now()+21600000},settings:DEFAULTS,game:{phase:"lobby",generationId:0},players:{[this.uid]:this.player(name)}},{applyLocally:false});
       if(r.committed){if(this.closed||epoch!==this.epoch){await remove(pathRef(`${id}/players/${this.uid}`));throw Error("部屋操作を中止しました")}await this.watch(id);return id;}
     }
     throw Error("部屋IDを作成できませんでした");
@@ -20,10 +20,14 @@ export class Room {
     if(!/^\d{6}$/.test(id))throw Error("6桁の部屋IDを入力してください");
     const epoch=this.epoch;
     const r=await runTransaction(pathRef(id),d=>{
-      if(this.closed||epoch!==this.epoch||!d||d.meta?.status!=="lobby"||Object.keys(d.players||{}).length>=6&&!d.players?.[this.uid])return;
+      if(this.closed||epoch!==this.epoch)return;
+      // A transaction may first receive null before the server value is cached.
+      // Return null as a no-op candidate so Firebase can retry with server data.
+      if(d===null)return null;
+      if(d.meta?.status!=="lobby"||Object.keys(d.players||{}).length>=6&&!d.players?.[this.uid])return;
       return {...d,players:{...d.players,[this.uid]:this.player(name)}};
-    });
-    if(!r.committed)throw Error("参加できません：部屋ID・人数・開始状態を確認してください");
+    },{applyLocally:false});
+    if(!r.committed||!r.snapshot.val()?.players?.[this.uid])throw Error("参加できません：部屋ID・人数・開始状態を確認してください");
     if(this.closed||epoch!==this.epoch){await remove(pathRef(`${id}/players/${this.uid}`));throw Error("部屋操作を中止しました")}
     await this.watch(id);
   }
@@ -49,18 +53,20 @@ export class Room {
     if(this.connected===false)throw Error("通信切断中です。復帰後に操作してください");
     return pathRef(`${this.id}/${path}`);
   }
+  async checkConnection(){const s=await get(connectionRef);this.connected=s.val()===true;return this.connected}
+  async transactionRoom(mutator){const epoch=this.epoch;return runTransaction(this.target(),d=>this.closed||epoch!==this.epoch?undefined:mutator(d),{applyLocally:false})}
   async patch(path,data){return update(this.target(path),data)}
   async bulkPatch(updates){return update(this.target(),updates)}
-  async transactionGame(mutator){const epoch=this.epoch;return runTransaction(this.target("game"),g=>this.closed||epoch!==this.epoch?undefined:mutator(g))}
+  async transactionGame(mutator){const epoch=this.epoch;return runTransaction(this.target("game"),g=>this.closed||epoch!==this.epoch?undefined:mutator(g),{applyLocally:false})}
   async addWitness(report){return push(this.target("witnessReports"),report)}
   // Generation claim and report are one atomic write; retrying a slow transaction cannot publish a duplicate.
-  async publishWitness(generation,report,startedAt) {
+  async publishWitness(generation,report,startedAt,active=()=>true) {
     const epoch=this.epoch;
     return runTransaction(this.target(),d=>{
-      if(this.closed||epoch!==this.epoch||!d||d.meta?.hostUid!==this.uid||d.game?.phase!=="playing"||d.game.startedAt!==startedAt||(d.game.generationId||0)>=generation||!freshPosition(report.sourcePosition,Date.now()))return;
+      if(!active()||this.closed||epoch!==this.epoch||!d||d.meta?.hostUid!==this.uid||d.game?.phase!=="playing"||d.game.startedAt!==startedAt||(d.game.generationId||0)>=generation||!freshPosition(report.sourcePosition,Date.now()))return;
       const {sourcePosition,...publicReport}=report;
       return {...d,game:{...d.game,generationId:generation},witnessReports:{...d.witnessReports,[`generation_${generation}`]:publicReport}};
-    });
+    },{applyLocally:false});
   }
   subscribeWitness(callback){const epoch=this.epoch;return onValue(this.target("witnessReports"),s=>{if(!this.closed&&epoch===this.epoch)callback(s.val()||{})},e=>this.onStatus(`目撃情報取得失敗：${e.code||e.message}`,false))}
   async removeNode(path){return remove(this.target(path))}

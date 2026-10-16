@@ -84,14 +84,28 @@
       });
       const index = works.findIndex((item) => item.id === record.id);
       if (index >= 0) works[index] = record;
-      else works.unshift(record);
-      this.write(KEYS.works, works.slice(0, 24));
+      else {
+        if (works.length >= 24) throw new Error("保存は24作品までです。保存済みの工作を整理してから再度保存してください。");
+        works.unshift(record);
+      }
+      // Commit the in-memory copy only after persistent storage succeeds.
+      try {
+        global.localStorage.setItem(KEYS.works, JSON.stringify(works));
+      } catch {
+        throw new Error("保存できませんでした。ブラウザの空き容量や保存設定を確認してください。工作内容はそのまま残っています。");
+      }
+      this.memory.set(KEYS.works, P.util.deepClone(works));
       return record;
     }
 
     deleteWork(id) {
       const next = this.listWorks().filter((work) => work.id !== id);
-      this.write(KEYS.works, next);
+      try {
+        global.localStorage.setItem(KEYS.works, JSON.stringify(next));
+      } catch {
+        throw new Error("工作を削除できませんでした。ブラウザの保存設定を確認してください。");
+      }
+      this.memory.set(KEYS.works, P.util.deepClone(next));
       return next;
     }
   }

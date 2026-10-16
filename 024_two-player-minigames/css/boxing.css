@@ -90,5 +90,12 @@
   .game-screen[data-game="boxing"] {
     grid-template-rows: 132px minmax(0, 1fr) 132px;
   }
-  .joint-grid button { min-height: 40px; }
+  .game-screen[data-game="boxing"] .energy-name { display: none; }
+  .game-screen[data-game="boxing"] .control-zone { padding: 6px 12px; }
+}
+
+@media (orientation: landscape) and (max-height:450px) {
+  .game-screen[data-game="boxing"] { grid-template-rows:88px minmax(0,1fr) 88px; }
+  .game-screen[data-game="boxing"] .joint-grid { grid-template-columns:repeat(4,minmax(0,1fr));width:min(600px,92%); }
+  .game-screen[data-game="boxing"] .energy-track { margin-bottom:4px; }
 }

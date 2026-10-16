@@ -41,6 +41,7 @@
       const rect=this.canvas.getBoundingClientRect(),ratio=Math.min(2,window.devicePixelRatio||1);
       this.canvas.width=Math.max(1,Math.round(rect.width*ratio)); this.canvas.height=Math.max(1,Math.round(rect.height*ratio)); this.ctx.setTransform(ratio,0,0,ratio,0,0);
       this.width=Math.max(300,rect.width); this.height=Math.max(520,rect.height); this.groundY=this.height-190;
+      this.ctx.setTransform(ratio*rect.width/this.width,0,0,ratio*rect.height/this.height,0,0);
       if(this.player){this.player.y=this.groundY;this.cpu.y=this.groundY;this.player.x=clamp(this.player.x,30,this.width-30);this.cpu.x=clamp(this.cpu.x,30,this.width-30);}
     }
 

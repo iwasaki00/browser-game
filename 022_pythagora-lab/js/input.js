@@ -24,6 +24,8 @@
       this.listen(this.canvas, "pointermove", (event) => this.onPointerMove(event), { passive: false });
       this.listen(this.canvas, "pointerup", (event) => this.onPointerUp(event), { passive: false });
       this.listen(this.canvas, "pointercancel", (event) => this.onPointerCancel(event), { passive: false });
+      this.listen(this.canvas, "lostpointercapture", (event) => this.onPointerCancel(event));
+      this.listen(global, "blur", () => this.cancelAll());
       this.listen(global, "keydown", (event) => this.onKeyDown(event));
     }
 
@@ -34,8 +36,7 @@
       try { this.canvas.setPointerCapture(event.pointerId); } catch {}
 
       if (this.pointers.size >= 2) {
-        if (this.drag?.moved) this.game.restoreDesign(this.drag.before);
-        this.drag = null;
+        this.cancelDrag();
         this.startPinch();
         return;
       }
@@ -84,6 +85,7 @@
         this.drag = null;
       }
       if (this.pointers.size < 2) this.pinch = null;
+      else this.startPinch();
       try { this.canvas.releasePointerCapture(event.pointerId); } catch {}
     }
 
@@ -92,10 +94,29 @@
       event.preventDefault();
       this.pointers.delete(event.pointerId);
       if (this.drag?.pointerId === event.pointerId) {
-        if (this.drag.moved) this.game.restoreDesign(this.drag.before);
-        this.drag = null;
+        this.cancelDrag();
       }
       if (this.pointers.size < 2) this.pinch = null;
+      else this.startPinch();
+      try { this.canvas.releasePointerCapture(event.pointerId); } catch {}
+    }
+
+    cancelDrag() {
+      const drag = this.drag;
+      this.drag = null;
+      if (drag?.moved && this.game.mode === "edit" && this.game.designParts.includes(drag.part)) {
+        this.game.restoreDesign(drag.before);
+      }
+    }
+
+    cancelAll() {
+      this.cancelDrag();
+      const ids = Array.from(this.pointers.keys());
+      this.pointers.clear();
+      this.pinch = null;
+      for (const id of ids) {
+        try { this.canvas.releasePointerCapture(id); } catch {}
+      }
     }
 
     startPinch() {
@@ -146,9 +167,7 @@
 
     destroy() {
       for (const remove of this.listeners.splice(0)) remove();
-      this.pointers.clear();
-      this.drag = null;
-      this.pinch = null;
+      this.cancelAll();
     }
   }
 

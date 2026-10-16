@@ -6,6 +6,7 @@
     constructor(storage) {
       this.storage = storage;
       this.toastTimer = 0;
+      this.hintTimer = 0;
       this.elements = {};
       for (const id of [
         "homeScreen", "gameScreen", "stageList", "progressText", "savedWorks", "newFreeButton",
@@ -111,9 +112,10 @@
     }
 
     setHint(message, persist = false) {
+      global.clearTimeout(this.hintTimer);
       this.elements.fieldHint.textContent = message;
       this.elements.fieldHint.classList.remove("is-hidden");
-      if (!persist) global.setTimeout(() => this.elements.fieldHint.classList.add("is-hidden"), 2400);
+      if (!persist) this.hintTimer = global.setTimeout(() => this.elements.fieldHint.classList.add("is-hidden"), 2400);
     }
 
     openOverlay(id) {

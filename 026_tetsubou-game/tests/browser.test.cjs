@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),path=require('node:path');
 const {webkit,chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const root=path.resolve(__dirname,'../..'),out=path.join(root,'.tmp-chrome-test','026');fs.mkdirSync(out,{recursive:true});
+const root=path.resolve(__dirname,'../..'),out=process.env.BROWSER_TEST_OUTPUT || path.join(__dirname,'.browser-output');fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
   let file=path.resolve(root,'.'+decodeURIComponent(req.url.split('?')[0]));
   if(!file.startsWith(root+path.sep)&&file!==root){res.writeHead(403).end();return;}
@@ -12,8 +12,8 @@ const server=http.createServer((req,res)=>{
 (async()=>{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const url=`http://127.0.0.1:${server.address().port}/026_tetsubou-game/`;
- for(const [name,engine,viewport,mobile] of [['iphone-landscape',webkit,{width:844,height:390},true],['iphone-small',webkit,{width:667,height:375},true],['iphone-portrait',webkit,{width:390,height:844},true],['desktop',chromium,{width:1280,height:800},false]]){
-  const browser=await engine.launch({headless:true});
+ for(const [name,engine,viewport,mobile] of [['iphone-landscape',webkit,{width:844,height:390},true],['iphone-small',webkit,{width:667,height:375},true],['iphone-portrait',webkit,{width:390,height:844},true],['iphone-320',webkit,{width:320,height:568},true],['iphone-375',webkit,{width:375,height:667},true],['iphone-430',webkit,{width:430,height:932},true],['desktop',chromium,{width:1280,height:800},false]]){
+  const browser=await engine.launch({headless:true,...(process.env[name==='desktop'?'CHROMIUM_EXECUTABLE_PATH':'WEBKIT_EXECUTABLE_PATH']?{executablePath:process.env[name==='desktop'?'CHROMIUM_EXECUTABLE_PATH':'WEBKIT_EXECUTABLE_PATH']}:{})});
   try{
    const page=await browser.newPage({viewport,isMobile:mobile,hasTouch:mobile,deviceScaleFactor:1});
    await page.addInitScript(()=>{

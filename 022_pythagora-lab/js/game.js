@@ -256,7 +256,7 @@
     }
 
     stopExperiment() {
-      if (!this.runSnapshot) return false;
+      if (this.mode === "edit" || !this.runSnapshot) return false;
       this.fixedParts = this.createStageFixedParts(this.stage);
       this.designParts = P.PartFactory.createMany(this.runSnapshot);
       this.runtimeParts = [];
@@ -271,6 +271,7 @@
       this.clearPendingElapsed = 0;
       this.clearResult = null;
       this.effects = [];
+      this.runSnapshot = null;
       this.rebuild("edit");
       this.callbacks.onModeChange?.(this.mode);
       this.emitChange();
@@ -278,11 +279,22 @@
     }
 
     reset() {
-      if (this.mode === "edit" && !this.runSnapshot) {
-        this.loadStage(this.stage);
-        return true;
-      }
-      return this.stopExperiment();
+      if (!this.stage) return false;
+      if (this.mode !== "edit") return this.stopExperiment();
+      const before = this.serializeDesign();
+      const initial = P.PartFactory.createMany(this.stage.starterParts || []).map((part) => part.serialize());
+      this.history.push(before, initial);
+      this.runSnapshot = null;
+      this.accumulator = 0;
+      this.elapsed = 0;
+      this.chain = 0;
+      this.chainSeen.clear();
+      this.goalCandidate = null;
+      this.clearPendingElapsed = 0;
+      this.clearResult = null;
+      this.effects = [];
+      this.restoreDesign(initial);
+      return true;
     }
 
     update(frameDelta) {

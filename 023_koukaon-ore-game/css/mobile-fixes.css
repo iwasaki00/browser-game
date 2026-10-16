@@ -1,0 +1,40 @@
+/* Preserve scrolling and browser zoom outside direct game controls. */
+body,.app-shell{min-height:100dvh}
+.app-shell{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+.topbar{grid-template-columns:1fr 44px;gap:8px}
+.topbar .top-label{text-align:left}
+.screen,.sound-copy,.pack-card>span,.page-header>div{min-width:0;overflow-wrap:anywhere}
+button{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{font-size:16px!important;-webkit-user-select:text;user-select:text;touch-action:auto;scroll-margin-block:90px}
+select{max-width:100%;font-size:16px}
+.game-screen{height:100dvh;--control-height:0px}
+#gameCanvas,.action-controls,.race-controls,.rhythm-controls,.fight-controls,.pinball-controls{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.game-hud{left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));grid-template-columns:40px minmax(0,1fr) minmax(0,1fr) 40px;gap:5px}
+.game-hud>div{min-width:0;padding:6px}
+.game-hud b{font-size:clamp(.68rem,2.8vw,.86rem)}
+.action-controls,.race-controls,.rhythm-controls,.fight-controls,.pinball-controls{padding-left:max(6px,env(safe-area-inset-left));padding-right:max(6px,env(safe-area-inset-right));max-width:100%}
+.action-controls>div{gap:5px}
+.action-controls{gap:5px}
+.action-controls button{width:clamp(44px,15vw,66px);height:clamp(44px,15vw,66px)}
+.action-controls .jump-control,.action-controls .attack-control{width:clamp(48px,18vw,76px);height:clamp(48px,18vw,76px)}
+.rhythm-controls{position:absolute;bottom:0;padding-bottom:max(5px,env(safe-area-inset-bottom));grid-template-columns:repeat(4,minmax(0,1fr))}
+.game-screen.is-rhythm #gameCanvas{height:calc(100% - 86px - env(safe-area-inset-bottom))}
+.record-screen{position:relative;min-height:calc(100dvh - 24px);padding-bottom:max(20px,env(safe-area-inset-bottom))}
+.close-record{position:sticky;top:max(8px,env(safe-area-inset-top));display:block;margin-left:auto;right:auto;width:auto;min-height:44px;padding:0 13px;border-radius:14px;font-size:.8rem;z-index:5;background:var(--surface2)}
+.record-heading{padding-top:12px}
+.record-heading #recordState{margin:8px 0;color:var(--cyan);font-size:.75rem;letter-spacing:normal}
+.countdown,.record-live,.record-review{min-height:0;padding:18px 0;gap:8px}
+.rec-orb{width:clamp(90px,25dvh,180px);height:clamp(90px,25dvh,180px)}
+.record-live>b{margin-top:12px}.stop-button{min-height:52px;margin-top:16px}
+.record-review h3{margin:8px 0}.record-review .preview-button{margin-top:12px}
+.review-actions{max-width:100%;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+.review-actions button{min-height:48px}.library-record-metadata{width:min(100%,360px)}
+.overlay{overflow:auto}.dialog{margin:auto;max-width:100%;overflow-wrap:anywhere}
+.audio-notice{max-width:calc(100% - 24px);width:max-content}
+button:disabled{opacity:.55}
+@media(max-width:350px){.sound-row{grid-template-columns:20px minmax(0,1fr) 42px;grid-template-areas:"num copy play" "status record record";padding:9px;gap:6px}.settings-list input[type=range]{width:90px}.pack-now{grid-template-columns:auto minmax(0,1fr)}.pack-now i{grid-column:2}.page-header{gap:6px}.page-header h2{font-size:1.15rem}}
+@media(max-height:450px) and (orientation:landscape){.fight-controls button{min-height:44px}.fight-controls{gap:5px}.action-controls{padding-top:4px}.action-controls button,.action-controls .jump-control,.action-controls .attack-control{width:48px;height:48px}.game-screen.is-action #gameCanvas{height:calc(100% - 66px - env(safe-area-inset-bottom))}.rhythm-controls button{min-height:48px}.game-screen.is-rhythm #gameCanvas{height:calc(100% - 60px - env(safe-area-inset-bottom))}.record-heading strong{font-size:1rem}.countdown b{font-size:5rem}.record-live{padding-top:6px}.rec-orb{width:70px;height:70px}.record-live>b{margin-top:4px}.stop-button{margin-top:6px}.game-tip{display:none}}
+
+.game-screen.is-pinball #gameCanvas{height:calc(100% - 80px - env(safe-area-inset-bottom))}
+.game-screen.is-fight #gameCanvas{height:calc(100% - 132px - env(safe-area-inset-bottom))}
+@media(max-height:450px) and (orientation:landscape){.game-screen.is-fight #gameCanvas{height:calc(100% - 116px - env(safe-area-inset-bottom))}}

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#070910">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -57,7 +57,6 @@
   <main id="gameShell" class="game-shell" hidden>
     <header class="topbar">
       <div class="topbar__brand">
-        <a class="back-link" href="../" aria-label="ゲームメニューへ戻る">‹</a>
         <div>
           <p class="eyebrow">LIVE SESSION</p>
           <h1>BEAT STACK</h1>
@@ -99,11 +98,18 @@
     <section class="transport" aria-label="シーケンサー設定">
       <div class="transport__status">
         <i id="transportLamp" class="transport-lamp"></i>
-        <span id="transportStatus">SEQUENCER READY</span>
+        <span id="transportStatus" role="status">SEQUENCER READY</span>
       </div>
       <div class="bpm-control">
         <span>BPM</span>
         <strong id="bpmValue">100</strong>
+        <select id="liveBpm" class="live-bpm" aria-label="演奏BPMを変更">
+          <option value="80">80</option>
+          <option value="100" selected>100</option>
+          <option value="120">120</option>
+          <option value="140">140</option>
+          <option value="160">160</option>
+        </select>
         <div id="bpmButtons" class="bpm-buttons" aria-label="BPMを変更">
           <button type="button" data-bpm="80">80</button>
           <button type="button" data-bpm="100" class="is-active">100</button>
@@ -242,6 +248,7 @@
         <button id="closeSettingsButton" class="close-button" type="button" aria-label="閉じる">×</button>
       </header>
 
+      <p class="settings-best">BEST <strong id="settingsHighScoreValue">0</strong></p>
       <div class="settings-group mixer-settings">
         <header><b>MIXER</b><small>各チャンネルの音量とミュート</small></header>
         <div class="mixer-channel" data-mixer-bus="master">

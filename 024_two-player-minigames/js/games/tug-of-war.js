@@ -51,6 +51,7 @@
     }
 
     reset() {
+      this.releaseInputs();
       this.ropePosition = 0; this.ropeVelocity = 0; this.elapsed = 0; this.lastRumbleAt = 0; this.shake = 0; this.active = false;
       this.players = [this.makePlayer(), this.makePlayer()]; this.lastFrame = performance.now();
       this.dangers.forEach((danger) => danger.classList.remove("visible"));
@@ -62,15 +63,23 @@
     }
 
     bindInput() {
+      this.inputPointers = new Map();
       this.pointerHandlers = this.controls.map((control, index) => {
         const handler = (event) => {
-          if (event.pointerType === "mouse" && event.button !== 0) return;
+          if (!this.active || (event.pointerType === "mouse" && event.button !== 0) || this.inputPointers.has(event.pointerId)) return;
+          this.inputPointers.set(event.pointerId, index);
           event.preventDefault(); if (control.setPointerCapture) control.setPointerCapture(event.pointerId);
           this.tap(index, performance.now());
         };
+        const release = (event) => {
+          if (this.inputPointers.get(event.pointerId) !== index) return;
+          this.inputPointers.delete(event.pointerId);
+          if (control.hasPointerCapture?.(event.pointerId)) control.releasePointerCapture(event.pointerId);
+        };
+        for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) control.addEventListener(type, release);
         control.addEventListener("pointerdown", handler, { passive: false });
         control.addEventListener("contextmenu", this.preventMenu);
-        return handler;
+        return { down: handler, release };
       });
       this.keyHandler = (event) => {
         if (event.repeat) return;
@@ -87,12 +96,20 @@
       this.animationId = requestAnimationFrame((time) => this.frame(time));
     }
 
-    stop() { this.active = false; cancelAnimationFrame(this.animationId); }
+    releaseInputs() {
+      if (this.inputPointers) {
+        const pointers = [...this.inputPointers]; this.inputPointers.clear();
+        pointers.forEach(([id, index]) => { const control = this.controls[index]; if (control.hasPointerCapture?.(id)) control.releasePointerCapture(id); });
+      }
+      this.controls.forEach((control) => control.classList.remove("pressed"));
+    }
+    stop() { this.active = false; cancelAnimationFrame(this.animationId); this.releaseInputs(); }
 
     destroy() {
       this.stop(); this.resizeObserver.disconnect();
       this.controls.forEach((control, index) => {
-        control.removeEventListener("pointerdown", this.pointerHandlers[index]);
+        control.removeEventListener("pointerdown", this.pointerHandlers[index].down);
+        for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) control.removeEventListener(type, this.pointerHandlers[index].release);
         control.removeEventListener("contextmenu", this.preventMenu);
       });
       window.removeEventListener("keydown", this.keyHandler);
@@ -159,7 +176,7 @@
 
     finish(winner, reason) {
       if (!this.active) return;
-      this.active = false; cancelAnimationFrame(this.animationId); this.render(); this.onFinish(winner, reason);
+      this.stop(); this.render(); this.onFinish(winner, reason);
     }
 
     updateHud() {

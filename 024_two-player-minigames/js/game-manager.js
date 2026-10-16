@@ -4,6 +4,7 @@
     constructor(elements) {
       this.elements = elements; this.scores = [0, 0]; this.currentGame = null; this.countdownTimers = [];
       this.currentGameKey = "sumo";
+      this.matchId = 0; this.resultTimer = null; this.countdownFrame = null; this.resultScheduled = false;
       this.audioContext = null; this.muted = false;
       this.bombExplosionTime = 0;
       const params = new URLSearchParams(location.search);
@@ -32,7 +33,7 @@
     launch(gameKey) {
       this.currentGameKey = gameKey; this.configureGameScreen();
       this.resumeAudio(); this.elements.menuScreen.hidden = true; this.elements.gameScreen.hidden = false; this.elements.resultPanel.hidden = true;
-      this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); });
+      this.createGame(); this.scheduleCountdown();
     }
     configureGameScreen() {
       this.elements.debugPanel.hidden = !this.debug;
@@ -79,12 +80,14 @@
       this.elements.centerBadge.textContent = tug ? "PULL" : "VS";
     }
     createGame() {
+      this.invalidateMatch();
       if (this.currentGame) this.currentGame.destroy();
       const tug = this.currentGameKey === "tug";
       const bomb = this.currentGameKey === "bomb";
       const boxing = this.currentGameKey === "boxing";
       const hockey = this.currentGameKey === "hockey";
       const GameClass = hockey ? window.TableHockeyGame : boxing ? window.WobbleBoxingGame : bomb ? window.BombHotPotatoGame : tug ? window.TugOfWarGame : window.SumoGame;
+      const matchId = this.matchId;
       this.currentGame = new GameClass({
         canvas: this.elements.canvas, controls: [this.elements.p1Control, this.elements.p2Control],
         spriteUrls: (bomb || hockey) ? undefined : tug
@@ -94,7 +97,7 @@
         jointButtons: this.elements.jointButtons,
         actionLabels: this.elements.controlActions,
         energyBars: [this.elements.p1Energy, this.elements.p2Energy], dangers: [this.elements.dangerLeft, this.elements.dangerRight],
-        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: (bomb || boxing || hockey) && this.testMode, gameSpeed: this.testSpeed,
+        debugPanel: this.elements.debugPanel, debug: this.debug, testMode: (bomb || boxing || hockey) && this.testMode, gameSpeed: this.testMode ? this.testSpeed : 1,
         testExplosionTime: bomb && this.testMode ? this.bombExplosionTime : 0,
         centerRivet: this.elements.centerBadge.parentElement,
         onTapSound: (power, player) => this.playTap(power, player), onImpactSound: (power) => this.playImpact(power),
@@ -107,23 +110,41 @@
         onPaddleSound: (power, player) => this.playHockeyPaddle(power, player),
         onWallSound: (power) => this.playHockeyWall(power),
         onGoalSound: (player) => this.playHockeyGoal(player),
-        onFinish: (winner, reason) => this.showResult(winner, reason)
+        onFinish: (winner, reason) => { if (matchId === this.matchId) this.showResult(winner, reason); }
       });
     }
-    beginCountdown() {
-      this.clearCountdown(); this.currentGame.reset();
+    invalidateMatch() {
+      this.matchId += 1;
+      this.clearCountdown();
+      if (this.resultTimer !== null) window.clearTimeout(this.resultTimer);
+      this.resultTimer = null; this.resultScheduled = false;
+    }
+    scheduleCountdown() {
+      const game = this.currentGame; const matchId = this.matchId;
+      this.countdownFrame = requestAnimationFrame(() => {
+        if (game !== this.currentGame || matchId !== this.matchId || this.elements.gameScreen.hidden) return;
+        this.countdownFrame = null; game.resize(); this.beginCountdown(game, matchId);
+      });
+    }
+    beginCountdown(game = this.currentGame, matchId = this.matchId) {
+      this.clearCountdown(); game.reset();
       ["3", "2", "1", "START!"].forEach((step, index) => {
         const timer = window.setTimeout(() => {
+          if (game !== this.currentGame || matchId !== this.matchId || this.elements.gameScreen.hidden) return;
           this.elements.countdown.textContent = step; this.elements.countdown.classList.remove("pop"); void this.elements.countdown.offsetWidth;
           this.elements.countdown.dataset.label = step;
           this.elements.countdown.classList.add("pop"); this.playCount(step === "START!");
-          if (step === "START!") { this.currentGame.start(); this.countdownTimers.push(window.setTimeout(() => { this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }, 570)); }
+          if (step === "START!") { game.start(); this.countdownTimers.push(window.setTimeout(() => { if (game !== this.currentGame || matchId !== this.matchId) return; this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }, 570)); }
         }, index * 680);
         this.countdownTimers.push(timer);
       });
     }
-    clearCountdown() { this.countdownTimers.forEach(window.clearTimeout); this.countdownTimers = []; this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }
+    clearCountdown() { if (this.countdownFrame !== null) cancelAnimationFrame(this.countdownFrame); this.countdownFrame = null; this.countdownTimers.forEach(window.clearTimeout); this.countdownTimers = []; this.elements.countdown.textContent = ""; this.elements.countdown.dataset.label = ""; }
     showResult(winner, reason) {
+      if (!this.currentGame || this.elements.gameScreen.hidden || this.resultScheduled) return;
+      this.resultScheduled = true;
+      const game = this.currentGame; const matchId = this.matchId;
+      this.clearCountdown(); this.releaseInputs();
       if (winner === 0) {
         this.elements.resultTitle.textContent = "DRAW!"; this.elements.resultTitle.style.color = "var(--gold)"; this.playCount(true);
       } else {
@@ -136,13 +157,22 @@
       }
       this.elements.resultReason.textContent = reason;
       if (this.elements.resultReasonTop) this.elements.resultReasonTop.textContent = reason;
-      window.setTimeout(() => { this.elements.resultPanel.hidden = false; this.elements.replayButton.focus({ preventScroll: true }); }, 420);
+      this.resultTimer = window.setTimeout(() => {
+        if (game !== this.currentGame || matchId !== this.matchId || this.elements.gameScreen.hidden) return;
+        this.resultTimer = null; this.elements.resultPanel.hidden = false; this.elements.replayButton.focus({ preventScroll: true });
+      }, 420);
     }
-    replay() { this.resumeAudio(); this.elements.resultPanel.hidden = true; this.createGame(); requestAnimationFrame(() => { this.currentGame.resize(); this.beginCountdown(); }); }
+    replay() {
+      if (!this.currentGame || this.elements.gameScreen.hidden || this.elements.resultPanel.hidden) return;
+      this.resumeAudio(); this.elements.resultPanel.hidden = true; this.createGame(); this.scheduleCountdown();
+    }
     showMenu() {
-      this.clearCountdown(); if (this.currentGame) { this.currentGame.destroy(); this.currentGame = null; }
+      this.invalidateMatch(); if (this.currentGame) { this.currentGame.destroy(); this.currentGame = null; }
       this.scores = [0, 0]; this.updateScore(); this.elements.gameScreen.hidden = true; this.elements.resultPanel.hidden = true; this.elements.menuScreen.hidden = false;
       this.elements.sumoCard.focus({ preventScroll: true });
+    }
+    releaseInputs() {
+      if (this.currentGame && this.currentGame.releaseInputs) this.currentGame.releaseInputs();
     }
     updateScore() { this.elements.p1Score.textContent = this.scores[0]; this.elements.p2Score.textContent = this.scores[1]; }
     toggleMute() {
@@ -154,15 +184,15 @@
       this.testMode = !this.testMode;
       this.syncTestModeButtons();
       if (!this.currentGame || !["bomb", "boxing", "hockey"].includes(this.currentGameKey)) return;
-      this.currentGame.testMode = this.testMode;
-      if (this.currentGameKey === "bomb") {
-        this.currentGame.testExplosionTime = this.testMode ? this.bombExplosionTime : 0;
-      }
-      this.elements.debugPanel.hidden = !(this.debug || this.testMode);
-      this.elements.testSpeedButton.hidden = !this.testMode || (this.currentGameKey !== "boxing" && this.currentGameKey !== "bomb");
-      this.syncTestSpeedButton();
-      this.currentGame.updateHud();
-      this.currentGame.render();
+      this.releaseInputs();
+      // Leaving TEST starts a clean normal match; showing TEST data keeps its timer.
+      if (!this.testMode) { this.launch(this.currentGameKey); return; }
+      this.currentGame.testMode = true;
+      if (this.currentGameKey === "bomb") this.currentGame.testExplosionTime = this.bombExplosionTime;
+      if (this.currentGameKey === "boxing") this.currentGame.gameSpeed = this.testSpeed;
+      this.elements.debugPanel.hidden = false;
+      this.elements.testSpeedButton.hidden = this.currentGameKey !== "boxing" && this.currentGameKey !== "bomb";
+      this.syncTestSpeedButton(); this.currentGame.updateHud(); this.currentGame.render();
     }
     syncTestModeButtons() {
       const label = this.testMode ? "TEST ON" : "TEST OFF";

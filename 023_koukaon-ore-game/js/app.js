@@ -19,7 +19,7 @@
   const initialPack = { id: config.defaultPackId, name: "オレ基本セット", createdAt: Date.now(), updatedAt: Date.now(), sounds: {} };
   const state = {
     packs: [initialPack], currentPack: initialPack, settings: { ...config.defaultSettings }, selectedGameId: config.defaultGameId,
-    ready: true,
+    ready: true, screenId: null, recordingSession: 0, recordingPhase: "idle", gameSession: 0, gameStarting: false, resultTimer: null, recordWait: null, gameWait: null, gameEnded: false,
     recordingId: null, recordingMode: "slot", libraryRecordingName: "", pendingBlob: null, errors: [], shooterBest: 0, actionBest: 0, actionBestTime: null, puzzleBest: 0, puzzleBestChain: 0, puzzlePlays: 0, raceBest: 0, rhythmBest: 0, breakoutBest: 0, fightBest: 0, pinballBest: 0, rhythmBestAccuracy: 0, rhythmMaxCombo: 0, rhythmBestByStage: {}, rhythmAccuracyByStage: {}, rhythmStage: "eight", lastPuzzleChainKey: "puzzleMatch",
     lastGameId: config.defaultGameId, lastDebug: null, hudTimer: null, copyTargetId: null, rhythmTimers: [], metronomeTimer: null, calibration: null
   };
@@ -37,13 +37,56 @@
     toast: (message) => toast(message),
     error: (error) => showError(error, "general")
   });
-  function showScreen(id) {
+  function stopRhythmTools(){state.rhythmTimers.splice(0).forEach(clearTimeout);if(state.metronomeTimer){clearTimeout(state.metronomeTimer);state.metronomeTimer=null;}$("#rhythmMetronome").classList.remove("is-running");$("#rhythmMetronomeButton").textContent="オレメトロノーム";}
 
-    if (id !== "gameScreen") { games.stop(); sound.stopAllLoops(); }
+  function showScreen(id) {
+    if (id !== "testScreen") stopRhythmTools();
+
+    if (state.screenId === "recordScreen" && id !== "recordScreen") {
+      ++state.recordingSession; cancelWait("recordWait"); state.recordingPhase = "idle"; recorder.release();
+    }
+    if (id !== "gameScreen") invalidateGame();
+    state.screenId = id;
     screens.forEach((screen) => { screen.hidden = screen.id !== id; });
     $("#bottomNav").hidden = id === "gameScreen" || id === "recordScreen";
     $$(`[data-nav]`).forEach((button) => button.classList.toggle("is-active", button.dataset.nav === id));
     window.scrollTo(0, 0);
+  }
+
+  function cancelWait(key) {
+    const waiting = state[key]; state[key] = null;
+    if (waiting) { clearTimeout(waiting.timer); waiting.resolve(); }
+  }
+
+  function sessionWait(key, milliseconds) {
+    return new Promise(resolve => {
+      const waiting = { resolve, timer: null };
+      waiting.timer = setTimeout(() => { if (state[key] === waiting) state[key] = null; resolve(); }, milliseconds);
+      state[key] = waiting;
+    });
+  }
+
+  function setGameStarting(value) {
+    state.gameStarting = value;
+    ["#quickStartButton", "#studioGameButton", "#playGameButton", "#replayButton"].forEach(id => { $(id).disabled = value; });
+  }
+
+  function invalidateGame() {
+    ++state.gameSession;
+    cancelWait("gameWait");
+    clearTimeout(state.resultTimer); state.resultTimer = null;
+    clearInterval(state.hudTimer); state.hudTimer = null;
+    setGameStarting(false);
+    $("#gameCountdown").hidden = true;
+    games.stop(); sound.stopAllLoops();
+  }
+
+  function recordingPhase(phase, message) {
+    state.recordingPhase = phase;
+    $("#recordPermissionStatus").textContent = message;
+    $("#recordState").textContent = message;
+    $("#retryRecordingButton").disabled = phase === "saving";
+    $("#cancelRecordingButton").disabled = phase === "saving";
   }
 
   function toast(message) {
@@ -74,7 +117,7 @@
       title: "録音を保存できませんでした",
       body: error?.name === "QuotaExceededError"
         ? "端末の保存容量が不足しています。不要な録音を削除して、もう一度お試しください。"
-        : "録音データの保存領域でエラーが発生しました。画面を再読み込みして、もう一度お試しください。録音データはこの画面に残っています。",
+        : "録音データの保存領域でエラーが発生しました。もう一度保存をお試しください。録音データはこの画面に残っています。",
       detail: `${error?.name || "UnknownError"}: ${error?.message || "No details"}`
     } : {
       title: "処理を完了できませんでした", body: "もう一度お試しください。問題が続く場合は画面を再読み込みしてください。",
@@ -155,6 +198,7 @@
 
   async function selectGame(id, announce = true) {
     const definition = gameDef(id); if (!definition?.playable) return false;
+    invalidateGame();
     state.selectedGameId = id;
     renderAll();
     storage.setState("selectedGameId", id).catch(logError); sound.loadPack(state.currentPack, definition.sounds).catch(logError);
@@ -240,15 +284,19 @@
 
   function openRecordingStudio() {
     showScreen("studioScreen");
+    const session = state.recordingSession;
+    const current = () => state.screenId === "studioScreen" && session === state.recordingSession;
     const status = $("#studioMicStatus");
     status.dataset.state = "checking";
     status.textContent = "● マイクの許可を確認しています…";
     recorder.requestPermission()
       .then(() => {
+        if (!current()) return;
         status.dataset.state = "ready";
         status.textContent = "✓ マイクを使用できます。録音したい効果音を選んでください。";
       })
       .catch((error) => {
+        if (!current()) return;
         status.dataset.state = "error";
         status.textContent = "! マイクを使用できません。Safariのサイト設定を確認してください。";
         showError(error, "microphone");
@@ -258,7 +306,9 @@
   async function startRecording(id) {
     const libraryRecording = id === "__library__";
     const definition = libraryRecording ? { id, label: state.libraryRecordingName || "新しいオレ音", example: "好きな音を録音", max: 5 } : config.soundCatalog[id];
-    if (!definition) return;
+    if (!definition || ["preparing", "countdown", "recording", "saving"].includes(state.recordingPhase)) return;
+    const session = ++state.recordingSession;
+    const valid = () => session === state.recordingSession && state.screenId === "recordScreen";
     state.recordingId = id; state.recordingMode = libraryRecording ? "library" : "slot"; state.pendingBlob = null;
     $("#recordSoundName").textContent = definition.label; $("#recordExample").textContent = `「${definition.example}」`; $("#recordMax").textContent = `最大 ${definition.max} 秒`;
     $("#libraryRecordMetadata").hidden = !libraryRecording;
@@ -266,15 +316,22 @@
     $("#libraryRecordTags").value = libraryRecording ? "声" : "";
     $("#recordReview").hidden = true; $("#recordLive").hidden = true; $("#countdown").hidden = false; showScreen("recordScreen");
     try {
-      $("#recordPermissionStatus").textContent = "マイクの許可を確認しています…";
+      recordingPhase("preparing", "録音準備中：マイクの許可を確認しています…");
+      $("#countdownNumber").textContent = "…";
       await recorder.ensureStream();
-      $("#recordPermissionStatus").textContent = "マイクを許可しました。声の準備はいい？";
-      for (const value of [3, 2, 1]) { $("#countdownNumber").textContent = value; await new Promise((resolve) => setTimeout(resolve, 650)); }
+      if (!valid()) return;
+      recordingPhase("countdown", "カウントダウン中：声の準備はいい？");
+      for (const value of [3, 2, 1]) { if (!valid()) return; $("#countdownNumber").textContent = value; await sessionWait("recordWait", 650); }
+      if (!valid()) return;
+      recordingPhase("recording", "録音中：停止ボタンで終了できます");
       $("#countdown").hidden = true; $("#recordLive").hidden = false; $("#recordMeterBar").style.width = "0%";
-      state.pendingBlob = await recorder.start(definition.max, (level) => { $("#recordMeterBar").style.width = `${Math.round(level * 100)}%`; }, (seconds) => { $("#recordTimer").textContent = `${seconds.toFixed(1)} / ${definition.max.toFixed(1)} 秒`; });
+      const blob = await recorder.start(definition.max, (level) => { $("#recordMeterBar").style.width = `${Math.round(level * 100)}%`; }, (seconds) => { $("#recordTimer").textContent = `${seconds.toFixed(1)} / ${definition.max.toFixed(1)} 秒`; });
+      if (!valid()) return;
+      state.pendingBlob = blob; recorder.release();
+      recordingPhase("review", "録音完了：試聴して保存してください");
       $("#recordLive").hidden = true; $("#recordReview").hidden = false;
       $("#reviewSize").textContent = `${Math.max(1, Math.round(state.pendingBlob.size / 1024))} KB · ${state.pendingBlob.type || "audio"}`; toast("録れました！ まずは聞いてみよう");
-    } catch (error) { showScreen(libraryRecording ? "libraryScreen" : "studioScreen"); showError(error, "microphone"); }
+    } catch (error) { if (!valid()) return; recorder.release(); showScreen(libraryRecording ? "libraryScreen" : "studioScreen"); showError(error, "microphone"); }
   }
 
   function recordingPreviewGain(buffer) {
@@ -311,6 +368,7 @@
   async function acceptRecording() {
     if (!state.pendingBlob || !state.recordingId) return;
     const button = $("#acceptRecordingButton"); if (button.disabled) return; button.disabled = true;
+    recordingPhase("saving", "保存中：録音データを保存しています…");
     const recordingMode = state.recordingMode; const recordingId = state.recordingId; const blob = state.pendingBlob;
     try {
       if (recordingMode === "library") {
@@ -326,8 +384,8 @@
       state.pendingBlob = null; state.recordingId = null; state.recordingMode = "slot"; recorder.release();
       showScreen("studioScreen"); renderAll(); toast("オレ効果音に登録しました");
       sound.loadPack(pack, soundIds).catch((error) => { logError(error); toast("音声はゲーム開始時に再読込します"); });
-    } catch (error) { showError(error, "save"); }
-    finally { button.disabled = false; }
+    } catch (error) { recordingPhase("review", "保存できませんでした。録音は残っています。再試行できます。"); showError(error, "save"); }
+    finally { button.disabled = false; $("#retryRecordingButton").disabled = false; $("#cancelRecordingButton").disabled = false; }
   }
 
   async function resetRecordedSound(id) {
@@ -379,21 +437,27 @@
     finally { button.disabled = false; }
   }
 
-  async function gameCountdown() {
+  async function gameCountdown(valid) {
     const overlay = $("#gameCountdown"); overlay.hidden = false;
     const values=state.selectedGameId==="pinball"?["PINBALL","3","2","1","全部オレ！"]:["3","2","1","全部オレ！"];
-    for (const value of values) { $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await new Promise((resolve) => setTimeout(resolve, value === "全部オレ！" ? 700 : 540)); }
-    overlay.hidden = true;
+    for (const value of values) { if (!valid()) return; $("#gameCountdownText").textContent = value; overlay.classList.remove("is-pop"); void overlay.offsetWidth; overlay.classList.add("is-pop"); await sessionWait("gameWait", value === "全部オレ！" ? 700 : 540); }
+    if (valid()) overlay.hidden = true;
   }
 
   function bestScoreFor(id) { return id === "pinball" ? state.pinballBest : id === "fight" ? state.fightBest : id === "breakout" ? state.breakoutBest : id === "rhythm" ? (state.rhythmBestByStage[state.rhythmStage] || 0) : id === "race" ? state.raceBest : id === "puzzle" ? state.puzzleBest : id === "action" ? state.actionBest : state.shooterBest; }
 
   async function startSelectedGame() {
+    if (state.gameStarting) return;
+    invalidateGame();
+    const session = state.gameSession;
+    const selectedId = state.selectedGameId;
+    const valid = () => session === state.gameSession && selectedId === state.selectedGameId && !state.gameEnded;
+    state.gameEnded = false; setGameStarting(true);
     try {
       const definition = gameDef(); state.lastGameId = definition.id;
       startupStatus("ゲームを準備中", `${definition.name}を開始しています…`, "loading");
       games.stop(); sound.stopAllLoops();
-      const audioReady = sound.unlock().then(() => sound.loadPack(state.currentPack, definition.sounds)).then(() => true).catch((error) => { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("ゲーム起動済み（音声エラー）", error?.message || String(error), "warning"); return false; });
+      const audioReady = sound.unlock().then(() => valid() ? sound.loadPack(state.currentPack, definition.sounds) : false).then(loaded => loaded !== false).catch((error) => { if (!valid()) return false; logError(error); $("#audioResumeNotice").hidden = false; startupStatus("ゲーム起動済み（音声エラー）", error?.message || String(error), "warning"); return false; });
       $("#gameScreen").classList.toggle("is-action", definition.id === "action");
       $("#gameScreen").classList.toggle("is-puzzle", definition.id === "puzzle");
       $("#gameScreen").classList.toggle("is-race", definition.id === "race");
@@ -410,6 +474,7 @@
       $("#pinballResumeButton").hidden = true;
       $("#pinballDebugTools").hidden = true;
       await library.refresh(state.currentPack, definition.id);
+      if (!valid()) return;
       $("#bossBar").hidden = true; $("#gameModeLabel").textContent = "SCORE"; $("#gameScore").textContent = "000000";
       $("#gameTip").textContent = definition.id === "pinball" ? "下部左右でフリッパー · 右レーンを下へ引いて発射 · NでNUDGE" : definition.id === "fight" ? "← →で移動 · Aパンチ · Sキック · Dガード · F必殺 · Spaceジャンプ" : definition.id === "breakout" ? "下部を左右ドラッグ · タップで発射 · Pでポーズ" : "シューティングはドラッグ · アクションはボタン · パズルはスワイプ · リズムは4パッド";
       $("#gameAuxLabel").textContent = definition.id === "pinball" ? "BALL" : definition.id === "rhythm" ? "COMBO" : definition.id === "puzzle" ? "TIME" : "HP"; $("#gameHp").textContent = definition.id === "pinball" ? "3 · ×1" : definition.id === "rhythm" ? "0" : definition.id === "puzzle" ? "60" : "♥ ♥ ♥";
@@ -417,12 +482,15 @@
       const canvas = $("#gameCanvas"); const context = canvas.getContext("2d");
       context.save(); context.setTransform(1, 0, 0, 1, 0, 0); context.fillStyle = "#080b14"; context.fillRect(0, 0, canvas.width, canvas.height); context.restore();
       showScreen("gameScreen");
-      await gameCountdown();
-      await games.startGame(definition.id, $("#gameCanvas"), state.settings, finishGame, { controlsRoot: ["breakout", "fight", "pinball"].includes(definition.id) ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
+      await gameCountdown(valid);
+      if (!valid()) return;
+      await games.startGame(definition.id, $("#gameCanvas"), state.settings, result => { if (valid()) { state.gameEnded = true; setGameStarting(false); finishGame(result, session).catch(error => { logError(error); if (session === state.gameSession) { showScreen("titleScreen"); showError(error); } }); } }, { controlsRoot: ["breakout", "fight", "pinball"].includes(definition.id) ? $("#gameScreen") : definition.id === "rhythm" ? $("#rhythmControls") : definition.id === "race" ? $("#raceControls") : $("#actionControls"), bestScore: bestScoreFor(definition.id), rhythmStage: state.rhythmStage });
+      if (!valid()) return;
+      setGameStarting(false);
       clearInterval(state.hudTimer);
       state.hudTimer = setInterval(updateGameHud, 100);
-      audioReady.then((ready) => { if (ready && games.current?.running && state.lastGameId === definition.id) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
-    } catch (error) { startupStatus("ゲーム開始エラー", error?.message || String(error), "error"); showScreen("titleScreen"); showError(error); }
+      audioReady.then((ready) => { if (ready && valid() && games.current?.running) sound.startLoop(definition.bgm, { gain: .35 }).catch(logError); });
+    } catch (error) { if (!valid()) return; startupStatus("ゲーム開始エラー", error?.message || String(error), "error"); showScreen("titleScreen"); showError(error); }
   }
 
   function updateGameHud() {
@@ -449,7 +517,7 @@
     if (!$("#gameDebugOverlay").hidden) renderLiveDebug();
   }
 
-  async function finishGame(result) {
+  async function finishGame(result, session) {
     clearInterval(state.hudTimer);
     sound.stopAllLoops();
     if (result.mode === "rhythm") { const stage=result.stats.stageId;state.rhythmBest=Math.max(state.rhythmBest,result.score);state.rhythmBestAccuracy=Math.max(state.rhythmBestAccuracy,result.stats.accuracy);state.rhythmMaxCombo=Math.max(state.rhythmMaxCombo,result.stats.maxCombo);state.rhythmBestByStage={...state.rhythmBestByStage,[stage]:Math.max(state.rhythmBestByStage[stage]||0,result.score)};state.rhythmAccuracyByStage={...state.rhythmAccuracyByStage,[stage]:Math.max(state.rhythmAccuracyByStage[stage]||0,result.stats.accuracy)};await storage.setState("rhythmBestScore",state.rhythmBest);await storage.setState("rhythmBestAccuracy",state.rhythmBestAccuracy);await storage.setState("rhythmMaxCombo",state.rhythmMaxCombo);await storage.setState("rhythmBestByStage",state.rhythmBestByStage);await storage.setState("rhythmAccuracyByStage",state.rhythmAccuracyByStage); }
@@ -464,10 +532,12 @@
       state.actionBest = Math.max(state.actionBest, result.score); await storage.setState("actionBestScore", state.actionBest);
       if (result.clear && (!state.actionBestTime || result.stats.time < state.actionBestTime)) { state.actionBestTime = result.stats.time; await storage.setState("actionBestTime", state.actionBestTime); }
     } else { state.shooterBest = Math.max(state.shooterBest, result.score); await storage.setState("bestScore", state.shooterBest); }
+    if (session !== state.gameSession) return;
     const definitions = gameSounds(state.lastGameId);
     const assetCounts = sound.getAssetPlayStats(); const assetBreakdown = sound.getAssetBreakdown();
     await storage.mergeSoundStats(assetCounts, result.mode || state.lastGameId);
     await library.refresh(state.currentPack, state.lastGameId);
+    if (session !== state.gameSession) return;
     $("#resultLabel").textContent = result.mode === "puzzle" ? "TIME UP" : result.clear ? "STAGE CLEAR" : "GAME OVER";
     $("#resultTitle").textContent = result.clear ? "このステージの音は全部あなたでした。" : "今回も全部オレでした。";
     $("#resultScore").textContent = result.score.toLocaleString();
@@ -537,7 +607,7 @@
       return `<div><strong>${escapeHtml(label)}</strong>${rows}</div>`;
     }).join("");
     $("#resultAssetCounts").innerHTML = assetDetails || "<p>録音素材の再生はありませんでした。</p>";
-    setTimeout(() => showScreen("resultScreen"), 650);
+    state.resultTimer = setTimeout(() => { if (session === state.gameSession) showScreen("resultScreen"); }, 650);
   }
 
   function formatTime(seconds) { const minutes = Math.floor(seconds / 60); return `${String(minutes).padStart(2, "0")}:${String(Math.floor(seconds % 60)).padStart(2, "0")}.${Math.floor(seconds % 1 * 10)}`; }
@@ -596,8 +666,8 @@
       const pad = event.target.closest("[data-pad]"); if (pad) { pad.classList.remove("is-hit"); void pad.offsetWidth; pad.classList.add("is-hit"); if(pad.dataset.pad==="raceEngine"){if(sound.isLoopPlaying("raceEngine"))sound.stopLoop("raceEngine");else sound.startLoop("raceEngine",{gain:.55});}else sound.play(pad.dataset.pad); }
       const pack = event.target.closest("[data-pack]"); if (pack) choosePack(pack.dataset.pack);
     });
-  function stopRhythmTools(){state.rhythmTimers.splice(0).forEach(clearTimeout);if(state.metronomeTimer){clearTimeout(state.metronomeTimer);state.metronomeTimer=null;}$("#rhythmMetronome").classList.remove("is-running");$("#rhythmMetronomeButton").textContent="オレメトロノーム";}
-  async function runRhythmBeatTest(){stopRhythmTools();await sound.unlock();const pattern=[0,2,1,2,0,2,1,3,0,2,1,2,0,3,1,3],step=250;pattern.forEach((lane,index)=>state.rhythmTimers.push(setTimeout(()=>sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]),index*step)));state.rhythmTimers.push(setTimeout(()=>{$("#rhythmBeatTestButton").textContent="▶ もう一度";},pattern.length*step));}
+
+  async function runRhythmBeatTest(){stopRhythmTools();await sound.unlock();if(state.screenId!=="testScreen")return;const pattern=[0,2,1,2,0,2,1,3,0,2,1,2,0,3,1,3],step=250;pattern.forEach((lane,index)=>state.rhythmTimers.push(setTimeout(()=>sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]),index*step)));state.rhythmTimers.push(setTimeout(()=>{$("#rhythmBeatTestButton").textContent="▶ もう一度";},pattern.length*step));}
   function hitDrumPad(lane,button){button?.classList.add("is-hit");setTimeout(()=>button?.classList.remove("is-hit"),90);sound.play(["rhythmKick","rhythmSnare","rhythmHiHat","rhythmClap"][lane]);}
   function toggleMetronome(){if(state.metronomeTimer){stopRhythmTools();return;}const bpm=Number($("#rhythmMetronomeBpm").value)||120,interval=60000/bpm;state.settings.rhythmMetronomeBpm=bpm;storage.setState("settings",state.settings).catch(logError);$("#rhythmMetronome").classList.add("is-running");$("#rhythmMetronomeButton").textContent=`停止 · BPM ${bpm}`;const tick=()=>{sound.play("rhythmHiHat");state.metronomeTimer=setTimeout(tick,interval);};tick();}
   function startCalibration(){stopRhythmTools();const start=performance.now()+1000,expected=Array.from({length:8},(_,i)=>start+i*500);state.calibration={expected,taps:[],suggested:0};$("#calibrationTapButton").disabled=false;$("#calibrationApplyButton").disabled=true;$("#calibrationStatus").textContent="光に合わせてタップ";expected.forEach(time=>{state.rhythmTimers.push(setTimeout(()=>{$("#calibrationLight").classList.add("is-beat");setTimeout(()=>$("#calibrationLight").classList.remove("is-beat"),110);},Math.max(0,time-performance.now())));});}
@@ -607,7 +677,7 @@
     $("#quickStartButton").addEventListener("click", startSelectedGame); $("#studioGameButton").addEventListener("click", startSelectedGame);
     $("#stopRecordingButton").addEventListener("click", () => recorder.stop()); $("#previewRecordingButton").addEventListener("click", previewPending);
     $("#retryRecordingButton").addEventListener("click", () => startRecording(state.recordingId)); $("#acceptRecordingButton").addEventListener("click", acceptRecording);
-    $("#cancelRecordingButton").addEventListener("click", () => { const target=state.recordingMode==="library"?"libraryScreen":"studioScreen";state.recordingMode="slot";recorder.release();showScreen(target); });
+    $("#cancelRecordingButton").addEventListener("click", () => { const target=state.recordingMode==="library"?"libraryScreen":"studioScreen";if(state.recordingPhase==="saving")return;state.recordingMode="slot";showScreen(target); });
     $("#playGameButton").addEventListener("click", startSelectedGame); $("#gameQuitButton").addEventListener("click", () => showScreen("titleScreen"));
     $("#gameDebugButton").addEventListener("click", () => { $("#gameDebugOverlay").hidden = !$("#gameDebugOverlay").hidden; if(["breakout","fight","pinball"].includes(games.currentId))games.current.debugHitboxes=!$("#gameDebugOverlay").hidden; renderLiveDebug();renderFightDebugTools();renderPinballDebugTools(); });
     $("#replayButton").addEventListener("click", async () => { await selectGame(state.lastGameId, false); startSelectedGame(); });
@@ -629,7 +699,13 @@
     $("#breakoutReflectTestButton").addEventListener("click",runBreakoutReflectTest);
     $("#breakoutRushTestButton").addEventListener("click",runBreakoutRushTest);
     $("#confirmCopySoundButton").addEventListener("click", copyRecordedSound);
-    const recoverAudio = async (force = false) => { startupStatus("音声を有効化中", "iPhoneの音声出力を再開しています…", "loading"); try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; startupStatus("起動完了・音声有効", `${gameDef().name}のサウンドを再生できます`, "ready"); return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("音声を有効にできません", error?.message || String(error), "warning"); return false; } };
+    let recoveryPromise = null;
+    const recoverAudio = (force = false) => {
+      if (recoveryPromise) return recoveryPromise;
+      recoveryPromise = performAudioRecovery(force).finally(() => { recoveryPromise = null; });
+      return recoveryPromise;
+    };
+    const performAudioRecovery = async (force = false) => { startupStatus("音声を有効化中", "iPhoneの音声出力を再開しています…", "loading"); try { await (force ? sound.recover() : sound.unlock()); $("#audioResumeNotice").hidden = true; startupStatus("起動完了・音声有効", `${gameDef().name}のサウンドを再生できます`, "ready"); return true; } catch (error) { logError(error); $("#audioResumeNotice").hidden = false; startupStatus("音声を有効にできません", error?.message || String(error), "warning"); return false; } };
     $("#resumeAudioButton").addEventListener("click", async () => { if (await recoverAudio(true)) toast("サウンドを再開しました"); });
     window.addEventListener("resize", () => games.current?.resize());
     const unlockAudioOnGesture = (event) => { if (event.target.closest?.("#resumeAudioButton, #audioResumeNotice, #recordStartButton, [data-record], #retryRecordingButton, #newLibraryRecordingButton")) return; if (!sound.context || sound.context.state !== "running") recoverAudio(); };
@@ -638,6 +714,7 @@
     document.addEventListener("touchend", unlockAudioOnGesture, { capture: true, passive: true });
     document.addEventListener("click", unlockAudioOnGesture, { capture: true });
     document.addEventListener("visibilitychange", () => { if (!document.hidden && sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
+    window.addEventListener("pagehide", () => { ++state.recordingSession; cancelWait("recordWait"); state.recordingPhase = "idle"; recorder.release(); stopRhythmTools(); invalidateGame(); });
     window.addEventListener("pageshow", () => { if (sound.context && sound.context.state !== "running") $("#audioResumeNotice").hidden = false; });
     $("#rhythmStageSelect").addEventListener("change",async(event)=>{state.rhythmStage=event.target.value;await storage.setState("rhythmStage",state.rhythmStage);updateSelectionCopy();});
     $("#rhythmBeatTestButton").addEventListener("click",runRhythmBeatTest);$("#rhythmBeatStopButton").addEventListener("click",stopRhythmTools);$("#rhythmMetronomeButton").addEventListener("click",toggleMetronome);
@@ -666,7 +743,7 @@
     $("#pinballResultSoundsButton").addEventListener("click",async()=>{await selectGame("pinball",false);showScreen("studioScreen");});
     $("#pinballDebugSpeedButton").addEventListener("click",()=>{if(games.currentId!=="pinball")return;games.current.toggleDebugSpeed();renderPinballDebugTools();renderLiveDebug();});
     $("#pinballDebugMultiButton").addEventListener("click",()=>{if(games.currentId!=="pinball")return;games.current.debugMultiball();renderLiveDebug();});
-    $("#audioResumeNotice").addEventListener("click", () => recoverAudio(true));
+    $("#audioResumeNotice").addEventListener("click", event => { if (!event.target.closest("#resumeAudioButton")) recoverAudio(true); });
   }
 
   async function init() {
@@ -683,7 +760,6 @@
       await loadState();
     }
     catch (error) { logError(error); renderAll(); startupStatus("操作できます（保存機能なし）", error?.message || String(error), "warning"); toast("保存機能なしで起動しました"); }
-    showScreen("titleScreen");
   }
 
   init();

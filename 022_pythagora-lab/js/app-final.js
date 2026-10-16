@@ -23,19 +23,84 @@
     let fps = 0;
     let fpsStartedAt = performance.now();
     let tutorialIndex = 0;
+    let startRequest = null;
+    let savedDesign = null;
+    let stoppedWhileHidden = false;
+
+    function syncStartButton() {
+      ui.elements.startButton.disabled = Boolean(startRequest) || game.mode !== "edit";
+      ui.elements.startButton.setAttribute("aria-busy", String(Boolean(startRequest)));
+      ui.elements.startButton.querySelector("b").textContent = startRequest ? "準備中" : "実験";
+    }
+
+    function cancelStart() {
+      startRequest = null;
+      syncStartButton();
+    }
+
+    async function requestExperiment() {
+      if (startRequest || !currentStage || game.mode !== "edit" || document.hidden) return;
+      input.cancelAll();
+      const request = { stage: currentStage };
+      startRequest = request;
+      syncStartButton();
+      ui.setHint("音声を準備しています…", true);
+      let timeout;
+      let soundReady = false;
+      try {
+        soundReady = await Promise.race([
+          audio.unlock().then((ready) => {
+            if (document.hidden) audio.suspend();
+            return ready;
+          }),
+          new Promise((resolve) => { timeout = global.setTimeout(() => resolve(false), 1500); })
+        ]);
+      } catch { /* Continue the experiment without audio. */ }
+      finally { global.clearTimeout(timeout); }
+      if (startRequest !== request || currentStage !== request.stage || document.hidden) return;
+      startRequest = null;
+      try {
+        input.cancelAll();
+        audio.play("ui");
+        game.startExperiment();
+        if (!soundReady && game.settings.sound) ui.toast("音声を利用できないため、音なしで実験します");
+      } catch (error) {
+        runtimeErrors.push(String(error.stack || error));
+        ui.toast("実験を開始できませんでした。停止してからもう一度お試しください");
+      }
+      syncStartButton();
+    }
+
+    function designSignature() {
+      const work = game.exportWork("");
+      return JSON.stringify([work.fieldWidth, work.fieldHeight, work.parts]);
+    }
+
+    function returnHome() {
+      if (currentStage?.free && designSignature() !== savedDesign &&
+          !global.confirm("未保存の変更があります。保存せずタイトルへ戻りますか？")) return;
+      cancelStart();
+      input.cancelAll();
+      if (game.mode !== "edit") game.stopExperiment();
+      ui.showHome();
+      currentStage = null;
+      currentWork = null;
+      savedDesign = null;
+    }
 
     const tutorialSteps = [
       { icon: "▰", title: "部品を選ぶ", text: "下の部品箱から、使いたい部品をタップします。" },
       { icon: "☝", title: "ドラッグして移動", text: "フィールドの部品を指でつかみ、置きたい場所へ動かします。" },
       { icon: "↷", title: "15°ずつ回転", text: "部品を選ぶと出る編集パネルで、角度を少しずつ変えられます。" },
-      { icon: "▶", title: "実験スタート", text: "「実験」を押すとボールが出て、装置がいっせいに動きます。" },
-      { icon: "↻", title: "すぐリセット", text: "失敗しても大丈夫。リセットで実験前の配置へ戻ります。" },
+      { icon: "▶", title: "実験と停止", text: "「実験」で装置が動きます。「停止」で実験前の配置に戻り、編集を続けられます。" },
+      { icon: "↻", title: "リセットの使い方", text: "実験中のリセットは実験前へ。編集中は確認後に最初の配置へ戻ります。Undoで取り消せます。" },
       { icon: "✦", title: "もう少しだけ調整", text: "位置や角度を少し直して再実験。気持ちいい連鎖を完成させよう！" }
     ];
 
     const game = new P.Game({
       onChange(state) {
         ui.update(state);
+        syncStartButton();
         renderer.setOptions({ grid: game.settings.grid, debug: game.settings.debug });
       },
       onModeChange(mode) {
@@ -65,6 +130,8 @@
     const input = new P.InputController(ui.elements.gameCanvas, renderer, game);
 
     function openStage(stageId) {
+      cancelStart();
+      input.cancelAll();
       currentWork = null;
       currentStage = P.getStage(stageId);
       ui.showGame(currentStage);
@@ -72,7 +139,9 @@
       game.loadStage(currentStage);
       renderer.setStage(currentStage);
       scheduleResize();
+      const openedStage = currentStage;
       global.setTimeout(() => {
+        if (currentStage !== openedStage) return;
         const hints = {
           "stage-1": "下の坂道をタップして置いてみよう",
           "stage-2": "残りのドミノをタップして、すき間をつなごう",
@@ -86,12 +155,15 @@
     }
 
     function openFree(work = null) {
+      cancelStart();
+      input.cancelAll();
       currentWork = work ? P.util.deepClone(work) : null;
       currentStage = P.createFreeStage(work);
       ui.showGame(currentStage);
       ui.elements.saveWorkButton.hidden = false;
       game.loadStage(currentStage);
       renderer.setStage(currentStage);
+      savedDesign = designSignature();
       scheduleResize();
       ui.setHint("STARTとGOALを動かし、好きな部品を組み合わせよう", true);
     }
@@ -164,7 +236,7 @@
     ui.elements.stageList.addEventListener("click", (event) => {
       const card = event.target.closest("[data-stage-id]");
       if (!card) return;
-      void audio.unlock().then(() => audio.play("ui"));
+      void audio.unlock().then(() => audio.play("ui")).catch(() => {});
       openStage(card.dataset.stageId);
     });
 
@@ -176,33 +248,40 @@
         if (work) openFree(work);
       }
       if (deleteButton) {
-        storage.deleteWork(deleteButton.dataset.deleteWork);
+        if (!global.confirm("この保存済みの工作を削除しますか？")) return;
+        try {
+          storage.deleteWork(deleteButton.dataset.deleteWork);
+        } catch (error) {
+          ui.toast(error.message);
+          return;
+        }
         ui.renderSavedWorks();
         ui.toast("保存した工作を削除しました");
       }
     });
 
     ui.elements.newFreeButton.addEventListener("click", () => {
-      void audio.unlock().then(() => audio.play("ui"));
+      void audio.unlock().then(() => audio.play("ui")).catch(() => {});
       openFree();
     });
 
     ui.elements.partsPalette.addEventListener("click", (event) => {
       const button = event.target.closest("[data-add-part]");
       if (!button || button.disabled) return;
-      void audio.unlock().then(() => audio.play("ui"));
+      void audio.unlock().then(() => audio.play("ui")).catch(() => {});
       const part = game.addPart(button.dataset.addPart);
       if (part) ui.setHint(`${part.def.name}を追加しました。ドラッグで移動できます`);
     });
 
-    ui.elements.startButton.addEventListener("click", () => {
-      void audio.unlock().then(() => {
-        audio.play("ui");
-        game.startExperiment();
-      });
+    ui.elements.startButton.addEventListener("click", () => { void requestExperiment(); });
+    ui.elements.stopButton.addEventListener("click", () => { cancelStart(); input.cancelAll(); audio.play("ui"); game.stopExperiment(); });
+    ui.elements.resetButton.addEventListener("click", () => {
+      if (game.mode === "edit" && !global.confirm("編集内容を最初の配置に戻しますか？ Undoで取り消せます。")) return;
+      cancelStart();
+      input.cancelAll();
+      audio.play("ui");
+      game.reset();
     });
-    ui.elements.stopButton.addEventListener("click", () => { audio.play("ui"); game.stopExperiment(); });
-    ui.elements.resetButton.addEventListener("click", () => { audio.play("ui"); game.reset(); });
     ui.elements.undoButton.addEventListener("click", () => { audio.play("ui"); game.undo(); });
     ui.elements.redoButton.addEventListener("click", () => { audio.play("ui"); game.redo(); });
     ui.elements.speedSelect.addEventListener("change", () => game.setSpeed(Number(ui.elements.speedSelect.value)));
@@ -219,12 +298,7 @@
       if (action === "delete") game.deleteSelected();
     });
 
-    ui.elements.homeButton.addEventListener("click", () => {
-      if (["running", "replay", "clear-pending"].includes(game.mode)) game.stopExperiment();
-      ui.showHome();
-      currentStage = null;
-      currentWork = null;
-    });
+    ui.elements.homeButton.addEventListener("click", returnHome);
 
     for (const button of [ui.elements.settingsButton, ui.elements.homeSettingsButton]) {
       button.addEventListener("click", () => ui.openOverlay("settingsOverlay"));
@@ -264,15 +338,22 @@
       const next = byId("nextStageButton").dataset.nextStage;
       ui.closeOverlay("clearOverlay");
       if (next === "home") {
-        ui.showHome();
-        currentStage = null;
+        returnHome();
       } else openStage(next);
     });
 
     byId("saveForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const name = byId("workNameInput").value.trim() || "名前のない工作";
-      const saved = storage.saveWork(game.exportWork(name, currentWork?.id || currentStage?.workId || null));
+      input.cancelAll();
+      let saved;
+      try {
+        saved = storage.saveWork(Object.assign({}, currentWork || {}, game.exportWork(name, currentWork?.id || currentStage?.workId || null)));
+      } catch (error) {
+        ui.toast(error.message || "工作を保存できませんでした。もう一度お試しください");
+        return;
+      }
+      savedDesign = designSignature();
       currentWork = saved;
       currentStage.workId = saved.id;
       currentStage.workName = saved.name;
@@ -321,8 +402,15 @@
     global.addEventListener("unhandledrejection", (event) => runtimeErrors.push(String(event.reason?.stack || event.reason)));
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
+        stoppedWhileHidden = Boolean(startRequest) || ["running", "replay", "clear-pending"].includes(game.mode);
+        cancelStart();
+        input.cancelAll();
         if (["running", "replay", "clear-pending"].includes(game.mode)) game.stopExperiment();
         audio.suspend();
+      } else if (stoppedWhileHidden && currentStage) {
+        stoppedWhileHidden = false;
+        ui.setHint("画面を離れたため実験を停止しました。「実験」で再度開始できます", true);
+        ui.toast("実験は停止しています");
       }
       lastFrameAt = performance.now();
     });

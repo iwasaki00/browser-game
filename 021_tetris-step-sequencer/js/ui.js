@@ -268,10 +268,12 @@ export class GameUI {
   setBpm(bpm) {
     writeValue(this.elements.bpm, bpm);
     writeValue(this.elements.bpmInput, bpm);
+    writeValue(this.root.getElementById?.("liveBpm"), bpm);
   }
 
   setHighScore(score) {
     writeValue(this.elements.highScore, numericText(score));
+    writeValue(this.root.getElementById?.("settingsHighScoreValue"), numericText(score));
   }
 
   setNext(pieces) {

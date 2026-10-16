@@ -32,7 +32,10 @@
       return new Promise((resolve, reject) => {
         const tx = this.db.transaction(store, mode);
         const req = operation(tx.objectStore(store));
-        req.onsuccess = () => resolve(req.result);
+        // A successful request can still be followed by a transaction abort.
+        tx.oncomplete = () => resolve(req.result);
+        tx.onabort = () => reject(tx.error || req.error || new Error("保存処理が中断されました"));
+        tx.onerror = () => reject(tx.error || req.error || new Error("保存処理に失敗しました"));
         req.onerror = () => reject(req.error);
       });
     }

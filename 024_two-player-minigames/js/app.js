@@ -28,12 +28,10 @@
   elements.testModeButton.addEventListener("click", () => manager.toggleTestMode());
   elements.menuTestModeButton.addEventListener("click", () => manager.toggleTestMode());
   elements.testSpeedButton.addEventListener("click", () => manager.cycleTestSpeed());
-  document.addEventListener("contextmenu", (event) => { if (!elements.gameScreen.hidden) event.preventDefault(); });
-  document.addEventListener("touchmove", (event) => { if (!elements.gameScreen.hidden) event.preventDefault(); }, { passive: false });
-  let lastTouchEnd = 0;
-  document.addEventListener("touchend", (event) => {
-    const now = Date.now(); if (now - lastTouchEnd <= 320) event.preventDefault(); lastTouchEnd = now;
-  }, { passive: false });
-  document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
-  document.addEventListener("dblclick", (event) => event.preventDefault(), { passive: false });
+  // Keep gesture suppression inside the match; the menu retains scrolling and zoom.
+  for (const type of ["contextmenu", "touchmove", "gesturestart", "dblclick"]) {
+    elements.gameScreen.addEventListener(type, (event) => event.preventDefault(), { passive: false });
+  }
+  window.addEventListener("blur", () => manager.releaseInputs());
+  document.addEventListener("visibilitychange", () => { if (document.hidden) manager.releaseInputs(); });
 })();

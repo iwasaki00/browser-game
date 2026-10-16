@@ -11,6 +11,7 @@
       this.loops = new Map();
       this.loopStats = {};
       this.loadGeneration = 0;
+      this.loopGeneration = 0;
       this.settings = { ...config.defaultSettings };
       this.currentPack = null;
       this.userActivated = false;
@@ -188,7 +189,10 @@
 
     async startLoop(id, options = {}) {
       if (!id) return false; if(this.loops.has(id)){this.setLoopVolume(id,options.gain??.35);this.setLoopPlaybackRate(id,options.playbackRate??1);return true;}
-      await this.unlock(); const entries=this.buffers.get(id); if(!entries?.length)return false;
+      const generation = this.loopGeneration;
+      await this.unlock(); if (generation !== this.loopGeneration) return false;
+      if (this.loops.has(id)) return true;
+      const entries=this.buffers.get(id); if(!entries?.length)return false;
       this.counts[id]=(this.counts[id]||0)+1; const source=this.context.createBufferSource(),gain=this.context.createGain();
       source.buffer=entries[Math.floor(Math.random()*entries.length)];source.loop=true;if(source.playbackRate)source.playbackRate.value=options.playbackRate??1;gain.gain.value=options.gain??.35;source.connect(gain).connect(this.master);
       const loop={source,gain,startedAt:this.context.currentTime};source.onended=()=>{if(this.loops.get(id)===loop)this.loops.delete(id)};this.loops.set(id,loop);source.start();return true;
@@ -209,6 +213,7 @@
     }
 
     stopAllLoops() {
+      ++this.loopGeneration;
       [...this.loops.keys()].forEach((id) => this.stopLoop(id));
     }
 

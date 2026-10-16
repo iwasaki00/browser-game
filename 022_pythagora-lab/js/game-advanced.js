@@ -136,21 +136,6 @@
       }
     }
 
-    reset() {
-      if (this.mode !== "edit") return super.reset();
-      this.runtimeParts = [];
-      this.selectedId = null;
-      this.elapsed = 0;
-      this.chain = 0;
-      this.chainSeen.clear();
-      this.goalState = "idle";
-      this.goalCandidate = null;
-      this.effects = [];
-      this.rebuild("edit");
-      this.emitChange();
-      return true;
-    }
-
     loadDebugSolution() {
       if (!this.stage?.debugSolution) return false;
       this.designParts = P.PartFactory.createMany(this.stage.debugSolution.map((part) => Object.assign({ id: P.util.uid(`solution-${part.type}`) }, part)));
@@ -170,7 +155,7 @@
         name,
         fieldWidth: this.stage.fieldWidth,
         fieldHeight: this.stage.fieldHeight,
-        parts: this.serializeDesign()
+        parts: this.mode === "edit" ? this.serializeDesign() : P.util.deepClone(this.runSnapshot || this.serializeDesign())
       };
     }
   }

@@ -409,6 +409,17 @@ export class AudioEngine {
     gainNode.gain.setTargetAtTime(value, this.context.currentTime, 0.01);
   }
 
+  stopAll() {
+    for (const source of this._activeSources) {
+      try {
+        source.stop();
+      } catch {
+        // The source may already have ended.
+      }
+    }
+    this._activeSources.clear();
+  }
+
   async close() {
     if (this._closed) return;
     this._closed = true;

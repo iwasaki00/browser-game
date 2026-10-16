@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -15,11 +15,12 @@
   <link rel="stylesheet" href="./css/style.css?v=20260905-9"><link rel="stylesheet" href="./css/action.css?v=20260905-9"><link rel="stylesheet" href="./css/puzzle.css?v=20260905-9"><link rel="stylesheet" href="./css/race.css?v=20260905-9"><link rel="stylesheet" href="./css/sound-reset.css?v=20260905-9"><link rel="stylesheet" href="./css/sound-copy.css?v=20260905-9"><link rel="stylesheet" href="./css/interaction-fixes.css?v=20260905-9"><link rel="stylesheet" href="./css/startup-status.css?v=20260905-9">
   <link rel="stylesheet" href="./css/rhythm.css?v=20260905-9"><link rel="stylesheet" href="./css/breakout.css?v=20260905-9"><link rel="stylesheet" href="./css/fight.css?v=20260905-9"><link rel="stylesheet" href="./css/pinball.css?v=20260905-9">
   <link rel="stylesheet" href="./css/sound-library.css?v=20260905-9">
+  <link rel="stylesheet" href="./css/mobile-fixes.css?v=20261017-1">
 </head>
 <body>
   <main id="app" class="app-shell">
     <section id="titleScreen" class="screen title-screen" aria-labelledby="gameTitle">
-      <header class="topbar"><a class="back-button" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a><span class="top-label">ORE SOUND ARCADE</span><button class="icon-button" type="button" data-nav="settingsScreen" aria-label="設定">⚙</button></header>
+      <header class="topbar"><span class="top-label">ORE SOUND ARCADE</span><button class="icon-button" type="button" data-nav="settingsScreen" aria-label="設定">⚙</button></header>
       <div class="hero"><div class="mic-mark" aria-hidden="true"><span>●</span></div><p class="hero-kicker">RECORD IT. PLAY IT. LAUGH.</p><h1 id="gameTitle">効果音<br><strong>全部オレ</strong>ゲーム</h1><p class="tagline">ゲームの音、全部オレ。</p></div>
       <section class="selected-game-panel" aria-live="polite"><span>SELECTED GAME</span><h2 id="selectedGameName">縦スクロールシューティング</h2><p id="selectedGameDescription"></p></section>
       <section id="rhythmStagePanel" class="rhythm-stage-panel" hidden><label>RHYTHM STAGE<select id="rhythmStageSelect"><option value="four">EASY · オレ4つ打ち · BPM 100</option><option value="eight">NORMAL · オレ8ビート · BPM 120</option><option value="rush">HARD · オレラッシュ · BPM 140</option></select></label><p id="rhythmStageCopy" class="rhythm-stage-copy">キック、スネア、ハイハットを刻む王道パターン</p></section>
@@ -47,8 +48,8 @@
     </section>
 
     <section id="recordScreen" class="screen record-screen" hidden aria-labelledby="recordSoundName">
-      <button id="cancelRecordingButton" class="close-record" type="button" aria-label="録音を閉じる">×</button>
-      <div class="record-heading"><p>NOW RECORDING</p><h2 id="recordSoundName">ジャンプ</h2><strong id="recordExample">「よいしょ！」</strong><span id="recordMax">最大 1.5 秒</span></div>
+      <button id="cancelRecordingButton" class="close-record" type="button" aria-label="録音をキャンセルして閉じる">× キャンセル</button>
+      <div class="record-heading"><p>NOW RECORDING</p><p id="recordState" role="status" aria-live="polite">録音準備中</p><h2 id="recordSoundName">ジャンプ</h2><strong id="recordExample">「よいしょ！」</strong><span id="recordMax">最大 1.5 秒</span></div>
       <section id="countdown" class="countdown"><small id="recordPermissionStatus" role="status" aria-live="polite">マイクの許可を確認しています…</small><b id="countdownNumber">3</b></section>
       <section id="recordLive" class="record-live" hidden><div class="rec-orb"><span>● REC</span></div><b id="recordTimer">0.0 / 1.5 秒</b><div class="meter-shell"><i id="recordMeterBar"></i></div><small>マイクの音量</small><button id="stopRecordingButton" class="stop-button" type="button">■ 停止</button></section>
       <section id="recordReview" class="record-review" hidden><div class="success-mark">✓</div><h3>いい音、録れました。</h3><p id="reviewSize">0 KB</p><button id="previewRecordingButton" class="preview-button" type="button">▶ 試聴する</button><div id="libraryRecordMetadata" class="library-record-metadata" hidden><label>録音名<input id="libraryRecordName" maxlength="40" placeholder="オレ音 001"></label><label>タグ<input id="libraryRecordTags" placeholder="声, 動物, かわいい"></label></div><div class="review-actions"><button id="retryRecordingButton" type="button">↻ 録り直し</button><button id="acceptRecordingButton" type="button">✓ この音を使う</button></div></section>

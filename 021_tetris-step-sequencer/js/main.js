@@ -46,6 +46,7 @@ const elements = {
   stepIndicator: byId("stepIndicator"),
   listenButton: byId("listenButton"),
   bpmButtons: byId("bpmButtons"),
+  liveBpm: byId("liveBpm"),
   optionsButton: byId("optionsButton"),
   settingsOverlay: byId("settingsOverlay"),
   closeSettingsButton: byId("closeSettingsButton"),
@@ -247,6 +248,10 @@ let toastTimer = 0;
 let readyTimer = 0;
 let gameOverTimer = 0;
 let backgroundResume = null;
+let resumeGeneration = 0;
+let resumePointerHandler = null;
+let audioSuspendPending = false;
+let sessionGeneration = 0;
 let debugPaused = false;
 let debugStepOverride = null;
 let debugFrameCount = 0;
@@ -390,7 +395,9 @@ function handleGameEvent(type, detail, state) {
       );
       break;
     case "gameOver":
+      cancelAudioResume();
       sequencer.stop();
+      audio.stopAll();
       scheduledStepCells.clear();
       debugPaused = false;
       debugStepOverride = null;
@@ -657,13 +664,25 @@ async function toggleListenMode() {
     return;
   }
   if (latestState?.status === "gameover") return;
+  if (backgroundResume) {
+    listenMode = !listenMode;
+    backgroundResume.gameWasRunning = !listenMode && !debugPaused;
+    updateListenButton();
+    return;
+  }
 
   if (!listenMode && latestState?.status === "running") {
     listenMode = true;
     game.setPaused(true);
     elements.transportStatus.textContent = "PAUSE & LISTEN";
   } else if (listenMode && latestState?.status === "paused") {
-    await audio.unlock().catch(() => false);
+    const generation = resumeGeneration;
+    const unlocked = await audio.unlock().catch(() => false);
+    if (generation !== resumeGeneration || document.hidden) return;
+    if (!unlocked) {
+      showToast("音声を再開できません。もう一度再開ボタンをタップしてください");
+      return;
+    }
     listenMode = false;
     game.setPaused(false);
     elements.transportStatus.textContent = "SEQUENCER PLAYING";
@@ -700,8 +719,16 @@ async function startReplay() {
     showToast("再生できる演奏履歴がありません");
     return;
   }
-  await audio.unlock().catch(() => false);
+  cancelAudioResume();
+  const generation = resumeGeneration;
+  const unlocked = await audio.unlock().catch(() => false);
+  if (generation !== resumeGeneration || document.hidden) return;
+  if (!unlocked) {
+    showToast("音声を再開できません。もう一度PLAYBACKをタップしてください");
+    return;
+  }
   sequencer.stop();
+  audio.stopAll();
   scheduledStepCells.clear();
   replayMode = true;
   listenMode = false;
@@ -733,6 +760,7 @@ function showReplayStep(frame) {
 
 function stopReplay() {
   replay.stop(false);
+  audio.stopAll();
   finishReplay();
 }
 
@@ -760,15 +788,25 @@ function setDebugPaused(paused) {
 
   debugPaused = shouldPause;
   if (shouldPause) {
+    if (backgroundResume) {
+      backgroundResume.gameWasRunning = false;
+      backgroundResume.sequencerWasRunning = false;
+    }
     if (latestState?.status === "running") game.setPaused(true);
     sequencer.stop();
+    audio.stopAll();
     scheduledStepCells.clear();
     debugStepOverride = currentVisualStep >= 0 ? currentVisualStep : 0;
     elements.transportStatus.textContent = "DEBUG PAUSED";
   } else {
     debugStepOverride = null;
-    if (latestState?.status === "paused" && !listenMode) game.setPaused(false);
-    sequencer.start();
+    if (backgroundResume) {
+      backgroundResume.gameWasRunning = !listenMode && !settingsOpen;
+      backgroundResume.sequencerWasRunning = true;
+    } else {
+      if (latestState?.status === "paused" && !listenMode && !settingsOpen) game.setPaused(false);
+      sequencer.start();
+    }
     elements.transportStatus.textContent = listenMode
       ? "PAUSE & LISTEN"
       : "SEQUENCER PLAYING";
@@ -947,8 +985,12 @@ function showReadyMessage() {
 }
 
 function beginGame() {
+  sessionGeneration += 1;
+  cancelAudioResume();
   clearTimeout(gameOverTimer);
+  sequencer.stop();
   replay.stop(false);
+  audio.stopAll();
   ui.hideGameOver();
   effects.reset();
   scheduledStepCells.clear();
@@ -984,6 +1026,7 @@ function beginGame() {
   showReadyMessage();
   if (settings.debugMode) debug.setOpen(true);
   requestAnimationFrame(() => renderer.resize());
+  if (document.hidden) suspendForBackground();
 }
 
 async function startSession() {
@@ -1058,14 +1101,19 @@ async function startSession() {
 }
 
 async function restartGame() {
+  cancelAudioResume();
+  const generation = resumeGeneration;
   await audio.unlock().catch(() => false);
+  if (generation !== resumeGeneration || document.hidden) return;
   beginGame();
 }
 
 async function finishGame(detail) {
+  const generation = sessionGeneration;
   const score = Number(detail.score) || 0;
   const isHighScore = score > highScore;
   highScore = await storage.saveHighScore(score);
+  if (generation !== sessionGeneration) return;
   syncUi(latestState);
   clearTimeout(gameOverTimer);
   gameOverTimer = window.setTimeout(() => {
@@ -1095,6 +1143,7 @@ function openSettings() {
 
 async function closeSettings(save = true) {
   if (!settingsOpen) return;
+  const generation = sessionGeneration;
   const values = ui.readSettings();
   applySettings({
     bpm: values.bpm,
@@ -1114,14 +1163,18 @@ async function closeSettings(save = true) {
   });
   if (save) {
     await storage.saveSettings(settings);
+    if (generation !== sessionGeneration) return;
     showToast("設定を保存しました");
   }
   ui.closeSettings(save ? "save" : "cancel");
   settingsOpen = false;
+  if (backgroundResume && resumeAfterSettings && !listenMode && !debugPaused) {
+    backgroundResume.gameWasRunning = true;
+  }
   if (
     resumeAfterSettings &&
     latestState?.status === "paused" &&
-    !listenMode
+    !listenMode && !debugPaused && !backgroundResume && !document.hidden
   ) {
     game.setPaused(false);
   }
@@ -1176,6 +1229,7 @@ elements.bpmButtons.addEventListener("click", (event) => {
   if (!button) return;
   setBpm(button.dataset.bpm);
 });
+elements.liveBpm.addEventListener("change", () => setBpm(elements.liveBpm.value));
 
 const mixerInputs = [
   [elements.masterVolumeInput, "master", "masterVolume"],
@@ -1240,6 +1294,7 @@ elements.replayRecordToggle.addEventListener("change", () => {
 });
 
 function animationFrame(now) {
+  updateTransportStatus();
   const delta = Math.min(100, Math.max(0, now - lastFrameAt));
   lastFrameAt = now;
   debugFrameCount += 1;
@@ -1304,63 +1359,113 @@ function animationFrame(now) {
 }
 requestAnimationFrame(animationFrame);
 
-document.addEventListener("visibilitychange", () => {
-  if (!gameStarted) return;
-
-  if (document.hidden) {
-    backgroundResume = {
-      gameWasRunning: latestState?.status === "running",
-      sequencerWasRunning: sequencer.isRunning,
-      replayWasRunning: replay.running,
-    };
-    if (backgroundResume.gameWasRunning) game.setPaused(true);
-    sequencer.stop();
-    if (replay.running) {
-      replay.stop(false);
-      replayMode = false;
-      currentVisualStep = -1;
-      elements.stepValue.textContent = "--";
-      elements.transportLamp.classList.remove("is-running");
-      elements.transportStatus.textContent = "PLAYBACK STOPPED";
-      updateListenButton();
-      ui.showGameOver({
-        score: latestState?.score ?? 0,
-        level: latestState?.level ?? 1,
-        lines: latestState?.lines ?? 0,
-        highScore,
-      });
-    }
-    scheduledStepCells.clear();
-    void audio.context?.suspend?.().catch(() => {});
-    return;
+function cancelAudioResume() {
+  resumeGeneration += 1;
+  if (resumePointerHandler) {
+    document.removeEventListener("pointerdown", resumePointerHandler, true);
+    resumePointerHandler = null;
   }
-
-  if (!backgroundResume) return;
-  const resumeState = backgroundResume;
   backgroundResume = null;
+}
+
+function updateTransportStatus() {
+  if (!gameStarted) return;
+  const playing = sequencer.isRunning || replay.running;
+  const waiting = Boolean(backgroundResume) && !document.hidden;
+  const text = waiting ? "音声待ち · タップ"
+    : document.hidden ? "一時停止中"
+    : debugPaused ? "一時停止中 · DEBUG"
+    : replay.running ? "リプレイ再生中"
+    : playing && listenMode ? "試聴中 · 盤面停止"
+    : playing && settingsOpen ? "再生中 · 設定"
+    : playing ? "再生中"
+    : latestState?.status === "gameover" ? "演奏終了"
+    : "一時停止中";
+  if (elements.transportStatus.textContent !== text) elements.transportStatus.textContent = text;
+  elements.transportLamp.classList.toggle("is-running", playing && !waiting && !document.hidden);
+  elements.transportLamp.classList.toggle("is-waiting", waiting);
+}
+
+function waitForAudioGesture() {
+  if (!backgroundResume || document.hidden || resumePointerHandler) return;
+  const generation = resumeGeneration;
+  let resuming = false;
+  resumePointerHandler = () => {
+    if (resuming || document.hidden || generation !== resumeGeneration) return;
+    if (audioSuspendPending) {
+      showToast("音声の停止処理中です。もう一度タップしてください");
+      return;
+    }
+    resuming = true;
+    // Invoke directly in the user gesture; Safari may reject a deferred resume.
+    void audio.unlock().then((unlocked) => {
+      if (generation !== resumeGeneration || document.hidden || !backgroundResume) return;
+      if (!unlocked || audio.context?.state !== "running") {
+        showToast("音声を再開できません。もう一度画面をタップしてください");
+        return;
+      }
+      const state = backgroundResume;
+      cancelAudioResume();
+      if (state.sequencerWasRunning && !debugPaused && latestState?.status !== "gameover") {
+        sequencer.start();
+      }
+      if (state.gameWasRunning && !listenMode && !debugPaused && latestState?.status === "paused") {
+        if (settingsOpen) resumeAfterSettings = true;
+        else game.setPaused(false);
+      }
+      lastFrameAt = performance.now();
+      updateTransportStatus();
+    }).catch(() => {
+      if (generation === resumeGeneration) {
+        showToast("音声を再開できません。もう一度画面をタップしてください");
+      }
+    }).finally(() => { resuming = false; });
+  };
+  document.addEventListener("pointerdown", resumePointerHandler, true);
   showToast("画面をタップして音声を再開");
-  document.addEventListener(
-    "pointerdown",
-    () => {
-      void audio.unlock().then(() => {
-        if (resumeState.sequencerWasRunning && latestState?.status !== "gameover") {
-          sequencer.start();
-        }
-        if (
-          resumeState.gameWasRunning &&
-          !settingsOpen &&
-          latestState?.status === "paused"
-        ) {
-          game.setPaused(false);
-        }
-        lastFrameAt = performance.now();
-      });
-    },
-    { once: true },
-  );
+  updateTransportStatus();
+}
+
+function suspendForBackground() {
+  if (!gameStarted) return;
+  const previous = backgroundResume;
+  cancelAudioResume();
+  backgroundResume = previous ?? {
+    gameWasRunning: latestState?.status === "running",
+    sequencerWasRunning: sequencer.isRunning,
+  };
+  if (backgroundResume.gameWasRunning) game.setPaused(true);
+  sequencer.stop();
+  if (replay.running) {
+    replay.stop(false);
+    replayMode = false;
+    currentVisualStep = -1;
+    elements.stepValue.textContent = "--";
+    elements.transportLamp.classList.remove("is-running");
+    elements.transportStatus.textContent = "PLAYBACK STOPPED";
+    updateListenButton();
+    ui.showGameOver({
+      score: latestState?.score ?? 0,
+      level: latestState?.level ?? 1,
+      lines: latestState?.lines ?? 0,
+      highScore,
+    });
+  }
+  scheduledStepCells.clear();
+  audio.stopAll();
+  if (!audioSuspendPending && audio.context && audio.context.state !== "closed") {
+    audioSuspendPending = true;
+    void audio.context.suspend().catch(() => {}).finally(() => {
+      audioSuspendPending = false;
+    });
+  }
+  updateTransportStatus();
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) suspendForBackground();
+  else waitForAudioGesture();
 });
 
-window.addEventListener("pagehide", () => {
-  sequencer.stop();
-  replay.stop(false);
-});
+window.addEventListener("pagehide", suspendForBackground);
+window.addEventListener("pageshow", waitForAudioGesture);

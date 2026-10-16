@@ -9,7 +9,9 @@
   const keys = new Set(), pointers = new Set(), trail = [], particles = [], sprites = {};
   for (const name of ['body', 'arm', 'leg']) { const image = new Image(); image.src = `assets/${name}.png`; sprites[name] = image; }
 
-  let paused=false,rankMode='easy',feedbackUntil=0,lastFeedbackAt=-1000;
+  let paused=false,inactive=document.hidden,pausedBeforeRanking=false,playStarted=false,resultSaved=false;
+  let rankMode='easy',feedbackUntil=0,lastFeedbackAt=-1000;
+  const inputBlocked=()=>paused||inactive||document.hidden||$('rankingDialog').open;
   const simulation={active:false,held:false,peak:0,lastChange:-1,presses:0};
   let storage=null;try{storage=window.localStorage;}catch(_){}
   const rankings=window.BarRanking.create(storage);
@@ -27,11 +29,20 @@
     }
     $('storageStatus').textContent=rankings.persistent?'記録はこのブラウザに保存されます。':'保存を利用できないため、このセッション内のみの記録です。';
   }
-  $('difficulty').addEventListener('change',()=>{clearInput();reset($('difficulty').value);});
+  $('difficulty').addEventListener('change',()=>{
+    const mode=$('difficulty').value;
+    if(inputBlocked()){$('difficulty').value=state.mode;return;}
+    if(mode===state.mode)return;
+    clearInput();lastTime=0;accumulator=0;
+    if(playStarted&&state.phase!=='result'&&!window.confirm('難易度を変更すると、進行中のプレイが最初からになります。変更しますか？')){
+      $('difficulty').value=state.mode;return;
+    }
+    reset(mode);
+  });
   $('difficulty').addEventListener('focus',clearInput);
-  $('rankingOpen').addEventListener('click',()=>{clearInput();paused=true;accumulator=0;rankMode=state.mode;renderRanking();$('rankingDialog').showModal();});
+  $('rankingOpen').addEventListener('click',()=>{if($('rankingDialog').open)return;pausedBeforeRanking=paused;clearInput();paused=true;lastTime=0;accumulator=0;rankMode=state.mode;renderRanking();$('rankingDialog').showModal();});
   $('rankingClose').addEventListener('click',()=>$('rankingDialog').close());
-  $('rankingDialog').addEventListener('close',()=>{clearInput();paused=false;lastTime=0;accumulator=0;});
+  $('rankingDialog').addEventListener('close',()=>{clearInput();paused=pausedBeforeRanking;lastTime=0;accumulator=0;});
   $('rankEasy').addEventListener('click',()=>{rankMode='easy';renderRanking();});
   $('rankNormal').addEventListener('click',()=>{rankMode='normal';renderRanking();});
   window.addEventListener('storage',()=>{if($('rankingDialog').open)renderRanking();});
@@ -42,7 +53,7 @@
     width = rect.width; height = rect.height; scale = Math.min(width / C.viewWidth, height / viewHeight); cameraX=(C.barX+C.matX+C.matWidth)/2-C.viewCenterOffset-width/scale/2; cameraY=C.groundY+C.viewBottomMargin-viewHeight;
   }
   function updateHeld(interactive=true) {
-    const held=!paused&&state.phase!=='result'&&(simulation.held||keys.size>0||pointers.size>0);
+    const held=!inputBlocked()&&state.phase!=='result'&&(simulation.held||keys.size>0||pointers.size>0);
     if(interactive&&held!==state.held&&C.feedback&&performance.now()-lastFeedbackAt>C.minStrokeInterval*1000){
       const grade=P.timing(state,held);
       if(grade){$('timingFeedback').textContent=grade;feedbackUntil=performance.now()+750;lastFeedbackAt=performance.now();}
@@ -61,9 +72,9 @@
     simulation.active=false;simulation.held=false;simulation.peak=0;simulation.lastChange=-1;
     updateHeld(false);updateSimulationUI(status);
   }
-  function clearInput() { keys.clear(); pointers.clear(); stopSimulation(); }
+  function clearInput(status='待機中') { if(typeof status!=='string')status='待機中'; keys.clear(); pointers.clear(); stopSimulation(status); }
   function startSimulation(){
-    reset(state.mode);simulation.active=true;simulation.held=false;simulation.peak=0;simulation.lastChange=-1;simulation.presses=0;
+    if(inputBlocked())return;reset(state.mode);playStarted=true;simulation.active=true;simulation.held=false;simulation.peak=0;simulation.lastChange=-1;simulation.presses=0;
     updateHeld(false);updateSimulationUI();
   }
   function simulateBestTiming(){
@@ -89,9 +100,9 @@
       osc.connect(gain); gain.connect(audio.destination); osc.start(); osc.stop(audio.currentTime + duration);
     } catch (_) { /* Sound is optional. */ }
   }
-  function release() { if(simulation.active)stopSimulation('離手しました');if (!paused && P.release(state)) { tone(620, 0.15); $('release').disabled = true; trail.length = 0; } }
+  function release() { if(inputBlocked()||state.phase!=='swing')return;if(simulation.active)stopSimulation('離手しました');if (P.release(state)) { playStarted=true;tone(620, 0.15); $('release').disabled = true; trail.length = 0; } }
   function reset(mode=state.mode) {
-    clearInput(); state = P.create(mode); C=state.config; $('difficulty').value=state.mode; $('guideLegend').hidden=!C.guide; $('timingFeedback').textContent='';feedbackUntil=0; shownGiants = 0; badgeUntil = 0; resultTime = 0;
+    clearInput();playStarted=false;resultSaved=false;lastTime=0; state = P.create(mode); C=state.config; $('difficulty').value=state.mode; $('guideLegend').hidden=!C.guide; $('timingFeedback').textContent='';feedbackUntil=0; shownGiants = 0; badgeUntil = 0; resultTime = 0;
     accumulator=0;viewHeight=C.viewInitialHeight;resize(); trail.length = particles.length = 0;
     $('result').hidden = true; $('release').disabled = false; $('badge').textContent = '';
     $('pump').disabled = false; $('score').textContent = '0'; $('retry').blur(); updateHeld();
@@ -99,7 +110,7 @@
   const pump = $('pump');
   pump.addEventListener('pointerdown', e => {
     e.preventDefault(); if (e.button !== 0 && e.pointerType === 'mouse') return;
-    if(paused||state.phase==='result')return;if(simulation.active)stopSimulation('手動操作'); pointers.add(e.pointerId); updateHeld(); tone(220, 0.035);
+    if(inputBlocked()||state.phase==='result')return;playStarted=true;if(simulation.active)stopSimulation('手動操作'); pointers.add(e.pointerId); updateHeld(); tone(220, 0.035);
   });
   for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture']) pump.addEventListener(event, e => {
     pointers.delete(e.pointerId);
@@ -107,32 +118,33 @@
   });
   for (const event of ['pointerup', 'pointercancel']) window.addEventListener(event, e => { pointers.delete(e.pointerId); updateHeld(); });
   for (const event of ['touchend', 'touchcancel']) window.addEventListener(event, e => {
-    if (event === 'touchcancel' || e.touches.length === 0) { pointers.clear(); updateHeld(); }
+    if (e.touches.length === 0) { pointers.clear(); updateHeld(); }
   }, { passive: true });
-  pump.addEventListener('touchend',()=>{pointers.clear();updateHeld();},{passive:true});
   $('release').addEventListener('pointerdown', e => { e.preventDefault(); release(); });
   $('release').addEventListener('click', e => { if (e.detail === 0) release(); });
-  $('retry').addEventListener('click',()=>reset());
-  $('debug').addEventListener('click', () => { debug = !debug;if(!debug)stopSimulation(); $('debug').setAttribute('aria-pressed', String(debug)); $('telemetry').hidden = !debug;updateSimulationUI(); });
-  $('debugSimulation').addEventListener('click',()=>simulation.active?stopSimulation('停止しました'):startSimulation());
+  $('retry').addEventListener('click',()=>{if(!inputBlocked())reset();});
+  $('debug').addEventListener('click', () => { if(inputBlocked())return;debug = !debug;if(!debug)stopSimulation(); $('debug').setAttribute('aria-pressed', String(debug)); $('telemetry').hidden = !debug;updateSimulationUI(); });
+  $('debugSimulation').addEventListener('click',()=>{if(!inputBlocked())simulation.active?stopSimulation('停止しました'):startSimulation();});
   window.addEventListener('keydown', e => {
-    if (e.altKey || e.ctrlKey || e.metaKey || paused || document.activeElement.tagName==='SELECT') return;
+    if (e.altKey || e.ctrlKey || e.metaKey || inputBlocked() || document.activeElement.tagName==='SELECT') return;
     const isPump = e.code === 'Space' || e.code === 'KeyZ';
     if (e.code === 'Enter' && document.activeElement.tagName === 'BUTTON') return;
     if (isPump || ['KeyX', 'Enter', 'KeyR'].includes(e.code)) e.preventDefault();
-    if (isPump) { if(simulation.active)stopSimulation('手動操作');keys.add(e.code); updateHeld(); }
+    if (isPump && state.phase!=='result') { playStarted=true;if(simulation.active)stopSimulation('手動操作');keys.add(e.code); updateHeld(); }
     if (!e.repeat && (e.code === 'KeyX' || e.code === 'Enter')) release();
     if (!e.repeat && e.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', e => { keys.delete(e.code); updateHeld(); });
-  window.addEventListener('blur', clearInput); window.addEventListener('pagehide', clearInput);
-  document.addEventListener('visibilitychange', () => { clearInput(); lastTime = 0; accumulator = 0; });
+  function suspend(){inactive=true;clearInput('中断しました');lastTime=0;accumulator=0;}
+  function foreground(){if(document.hidden)return;inactive=typeof document.hasFocus==='function'&&!document.hasFocus();clearInput();lastTime=0;accumulator=0;}
+  window.addEventListener('blur',suspend);window.addEventListener('pagehide',suspend);
+  window.addEventListener('focus',foreground);window.addEventListener('pageshow',foreground);
+  document.addEventListener('visibilitychange',()=>document.hidden?suspend():foreground());
   window.addEventListener('resize', () => { clearInput(); resize(); });
   for(const area of [canvas,pump,$('release')]){
     area.addEventListener('contextmenu',e=>e.preventDefault());
     area.addEventListener('selectstart',e=>e.preventDefault());
     area.addEventListener('dblclick',e=>e.preventDefault());
-    area.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
   }
   function roundRect(x, y, w, h, r, color) { ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill(); }
   function line(x1, y1, x2, y2, color, lineWidth) {
@@ -214,6 +226,7 @@
       '最高高度: '+state.maxHeight.toFixed(2)+' m','空中回転: '+(state.airRotation/(2*Math.PI)).toFixed(2),
       '大車輪: '+state.giants,'接触: '+(state.impact?state.impact.part:'なし')].join('\n');
   }  function showResult() {
+    if(resultSaved)return;resultSaved=true;
     resultTime=performance.now();clearInput();$('pump').disabled=true;const r=state.result;
     const saved=rankings.add({score:r.score,mode:state.mode,airRotationCount:r.flips,landingRank:r.grade,playedAt:new Date().toISOString()});
     $('scoreBreakdown').textContent='基本スコア '+r.baseScore.toLocaleString('ja-JP')+' · '+state.mode.toUpperCase()+' ×'+r.scoreMultiplier.toFixed(1);
@@ -258,7 +271,7 @@
   }
   function frame(now) {
     const dt=lastTime?Math.min(C.maxFrame,(now-lastTime)/1000):0;lastTime=now;
-    if(!document.hidden&&!paused){accumulator+=dt;while(accumulator>=C.fixedStep){simulateBestTiming();const phase=state.phase;P.step(state,C.fixedStep);accumulator-=C.fixedStep;if(phase!=='result'&&state.phase==='result')showResult();}draw(dt,now);}
+    if(!inputBlocked()){accumulator+=dt;while(accumulator>=C.fixedStep){simulateBestTiming();const phase=state.phase;P.step(state,C.fixedStep);accumulator-=C.fixedStep;if(phase!=='result'&&state.phase==='result')showResult();}draw(dt,now);}
     requestAnimationFrame(frame);
   }
   $('guideLegend').hidden=!C.guide;updateSimulationUI();resize();requestAnimationFrame(frame);

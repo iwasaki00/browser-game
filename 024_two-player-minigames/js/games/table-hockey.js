@@ -29,6 +29,7 @@
       };
     }
     reset() {
+      this.releaseInputs();
       this.active = false; this.roundPaused = true; this.pendingWinner = 0; this.roundEndsAt = 0; this.roundMessage = "";
       this.scores = [0, 0]; this.lastCollision = "none";
       this.players = [this.makePlayer(0), this.makePlayer(1)]; this.resetPuck();
@@ -47,9 +48,10 @@
     }
     stop() {
       this.active = false; cancelAnimationFrame(this.animationId);
-      if (this.players) this.players.forEach((player) => {
-        player.pointerId = null; player.active = false; player.vx = 0; player.vy = 0; player.speed = 0;
-      });
+      this.releaseInputs();
+    }
+    releaseInputs() {
+      if (this.players) this.players.forEach((player) => { if (player.pointerId !== null) this.releasePointer(player.pointerId); });
     }
     destroy() {
       this.stop(); this.resizeObserver.disconnect();
@@ -117,7 +119,9 @@
     releasePointer(pointerId) {
       const player = this.players.find((candidate) => candidate.pointerId === pointerId);
       if (!player) return false;
-      player.pointerId = null; player.active = false; player.vx = 0; player.vy = 0; player.speed = 0; return true;
+      player.pointerId = null; player.active = false; player.vx = 0; player.vy = 0; player.speed = 0;
+      if (this.canvas?.hasPointerCapture?.(pointerId)) this.canvas.releasePointerCapture(pointerId);
+      return true;
     }
     tableBounds() {
       const w = this.width || 1; const h = this.height || 1;

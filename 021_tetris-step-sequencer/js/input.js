@@ -77,6 +77,14 @@ export class InputController {
     this._listen(keyboardTarget, "keydown", (event) =>
       this._handleKeyDown(event),
     );
+    const cancelInput = () => {
+      this._resetGesture();
+      for (const pointerId of this._repeatTimers.keys()) this._stopRepeat(pointerId);
+    };
+    this._listen(keyboardTarget, "blur", cancelInput);
+    this._listen(root, "visibilitychange", () => {
+      if (root.hidden) cancelInput();
+    });
 
     for (const button of root.querySelectorAll?.(buttonSelector) ?? []) {
       this._bindActionButton(button);
@@ -107,13 +115,14 @@ export class InputController {
         (event) => this._cancelGesture(event),
         { passive: false },
       );
+      this._listen(this.surface, "lostpointercapture", (event) => this._cancelGesture(event));
       this._applyTouchAction();
     }
   }
 
   setSwipeEnabled(enabled) {
     this.swipeEnabled = Boolean(enabled);
-    if (!this.swipeEnabled) this._gesture = null;
+    if (!this.swipeEnabled) this._resetGesture();
     this._applyTouchAction();
   }
 
@@ -126,7 +135,7 @@ export class InputController {
     for (const pointerId of this._repeatTimers.keys()) {
       this._stopRepeat(pointerId);
     }
-    this._gesture = null;
+    this._resetGesture();
 
     if (this.surface?.style) {
       this.surface.style.touchAction = this._surfaceTouchAction;
@@ -237,6 +246,7 @@ export class InputController {
   }
 
   _handleGestureStart(event) {
+    if (this._gesture || event.isPrimary === false) return;
     if (
       !this.swipeEnabled ||
       (event.pointerType === "mouse" && event.button !== 0) ||
@@ -317,7 +327,16 @@ export class InputController {
   }
 
   _cancelGesture(event) {
-    if (this._gesture?.pointerId === event.pointerId) this._gesture = null;
+    if (this._gesture?.pointerId === event.pointerId) this._resetGesture();
+  }
+
+  _resetGesture() {
+    const pointerId = this._gesture?.pointerId;
+    this._gesture = null;
+    this._lastTap = null;
+    if (pointerId !== undefined && this.surface?.hasPointerCapture?.(pointerId)) {
+      this.surface.releasePointerCapture(pointerId);
+    }
   }
 
   _applyTouchAction() {

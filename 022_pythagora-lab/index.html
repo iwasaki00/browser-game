@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -32,7 +32,6 @@
       </div>
 
       <header class="home-header">
-        <a class="back-link" href="../index.html" aria-label="ゲーム一覧へ戻る">←</a>
         <div class="brand-lockup">
           <p class="eyebrow">ROLL · LINK · CLICK!</p>
           <h1 id="gameTitle"><span>コロコロ</span>工作所</h1>
@@ -106,8 +105,8 @@
 
       <nav class="transport-bar" aria-label="実験操作">
         <button id="startButton" class="transport-button start-button" type="button"><span>▶</span><b>実験</b></button>
-        <button id="stopButton" class="transport-button" type="button" disabled><span>■</span><b>停止</b></button>
-        <button id="resetButton" class="transport-button" type="button"><span>↻</span><b>リセット</b></button>
+        <button title="実験を停止し、実験前の配置へ戻す" id="stopButton" class="transport-button" type="button" disabled><span>■</span><b>停止</b></button>
+        <button title="編集時は最初の配置へ戻す（確認あり）。実験時は実験前の配置へ戻す" id="resetButton" class="transport-button" type="button"><span>↻</span><b>リセット</b></button>
         <span class="transport-divider" aria-hidden="true"></span>
         <button id="undoButton" class="transport-button" type="button" disabled><span>↶</span><b>Undo</b></button>
         <button id="redoButton" class="transport-button" type="button" disabled><span>↷</span><b>Redo</b></button>

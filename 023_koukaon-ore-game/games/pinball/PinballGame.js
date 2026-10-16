@@ -23,7 +23,7 @@
     stop(){this.running=false;this.finished=true;this.cleanup.splice(0).forEach(remove=>remove());this.flipperInput.left=this.flipperInput.right=false;if(this.resumeButton)this.resumeButton.hidden=true;}
     resize(){
       const rect=this.canvas.getBoundingClientRect(),ratio=Math.min(2,window.devicePixelRatio||1);this.canvas.width=Math.max(1,Math.round(rect.width*ratio));this.canvas.height=Math.max(1,Math.round(rect.height*ratio));this.ctx.setTransform(ratio,0,0,ratio,0,0);
-      this.width=Math.max(300,rect.width);this.height=Math.max(560,rect.height);this.table=window.PinballTable.create(this.width,this.height);
+      this.width=Math.max(300,rect.width);this.height=Math.max(560,rect.height);this.ctx.setTransform(ratio*rect.width/this.width,0,0,ratio*rect.height/this.height,0,0);this.table=window.PinballTable.create(this.width,this.height);
       const previous=this.flippers||{};this.flippers={};for(const side of ["left","right"]){const data=this.table.flippers[side];this.flippers[side]={...data,angle:previous[side]?.angle??data.down,angularVelocity:0,active:false};}
       for(const ball of this.balls){ball.x=clamp(ball.x,25,this.width-25);ball.y=clamp(ball.y,this.table.top+10,this.table.bottom+40);}
     }
@@ -37,7 +37,7 @@
         button.addEventListener("pointerdown",down);button.addEventListener("pointerup",up);button.addEventListener("pointercancel",up);button.addEventListener("lostpointercapture",up);
         this.cleanup.push(()=>{button.removeEventListener("pointerdown",down);button.removeEventListener("pointerup",up);button.removeEventListener("pointercancel",up);button.removeEventListener("lostpointercapture",up);});
       });
-      const local=event=>{const rect=this.canvas.getBoundingClientRect();return{x:event.clientX-rect.left,y:event.clientY-rect.top};};
+      const local=event=>{const rect=this.canvas.getBoundingClientRect();return{x:(event.clientX-rect.left)*this.width/rect.width,y:(event.clientY-rect.top)*this.height/rect.height};};
       const down=event=>{event.preventDefault();const p=local(event);this.canvas.setPointerCapture?.(event.pointerId);
         if(this.state===STATES.PLUNGER&&p.x>this.width-82){this.plungerPointer={id:event.pointerId,startY:p.y};return;}
         if(p.y>this.height*.58){const side=p.x<this.width/2?"left":"right";this.pointerSides.set(event.pointerId,side);press(side,true);}

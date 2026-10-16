@@ -108,6 +108,7 @@
     }
 
     reset() {
+      this.releaseInputs();
       this.active = false;
       this.elapsed = 0;
       this.hitStopUntil = 0;
@@ -187,10 +188,13 @@
     }
 
     bindInput() {
+      this.inputPointers = new Map(); this.inputKeys = new Set();
       this.pointerHandlers = this.jointButtons.map((buttons, playerIndex) => buttons.map((button) => {
         const jointName = button.dataset.joint;
         const down = (event) => {
           if (!this.active || this.players[playerIndex].state === "FALL" || (event.pointerType === "mouse" && event.button !== 0)) return;
+          if (this.inputPointers.has(event.pointerId) || [...this.inputPointers.values()].some((input) => input.button === button)) return;
+          this.inputPointers.set(event.pointerId, { button, playerIndex, jointName });
           event.preventDefault();
           event.stopPropagation();
           this.beginJointInput(this.players[playerIndex], jointName, performance.now());
@@ -198,16 +202,19 @@
           button.classList.add("active");
         };
         const release = (event) => {
+          if (this.inputPointers.get(event.pointerId)?.button !== button) return;
+          this.inputPointers.delete(event.pointerId);
+          if (button.hasPointerCapture?.(event.pointerId)) button.releasePointerCapture(event.pointerId);
           event.preventDefault();
           event.stopPropagation();
           const joint = this.players[playerIndex].joints[jointName];
-          if (!joint.holding) return;
-          joint.holding = false;
-          button.classList.remove("active");
+          joint.holding = joint.holding && this.inputKeys.has(playerIndex + ":" + jointName);
+          button.classList.toggle("active", joint.holding);
         };
         button.addEventListener("pointerdown", down, { passive: false });
         button.addEventListener("pointerup", release, { passive: false });
         button.addEventListener("pointercancel", release, { passive: false });
+        button.addEventListener("lostpointercapture", release);
         button.addEventListener("contextmenu", this.preventMenu);
         return { button, down, release };
       }));
@@ -221,13 +228,15 @@
         const target = keyMap.get(event.code);
         if (!target || event.repeat || !this.active || this.players[target[0]].state === "FALL") return;
         event.preventDefault();
+        this.inputKeys.add(target[0] + ":" + target[1]);
         this.beginJointInput(this.players[target[0]], target[1], performance.now());
       };
       this.keyUpHandler = (event) => {
         const target = keyMap.get(event.code);
         if (!target) return;
         event.preventDefault();
-        this.players[target[0]].joints[target[1]].holding = false;
+        this.inputKeys.delete(target[0] + ":" + target[1]);
+        this.players[target[0]].joints[target[1]].holding = this.players[target[0]].joints[target[1]].holding && [...this.inputPointers.values()].some((input) => input.playerIndex === target[0] && input.jointName === target[1]);
       };
       window.addEventListener("keydown", this.keyDownHandler);
       window.addEventListener("keyup", this.keyUpHandler);
@@ -260,7 +269,17 @@
       this.animationId = requestAnimationFrame((time) => this.frame(time));
     }
 
+    releaseInputs() {
+      if (this.inputPointers) {
+        const pointers = [...this.inputPointers]; this.inputPointers.clear();
+        pointers.forEach(([id, { button }]) => { if (button.hasPointerCapture?.(id)) button.releasePointerCapture(id); });
+      }
+      if (this.inputKeys) this.inputKeys.clear();
+      if (this.players) this.players.forEach((player) => Object.values(player.joints).forEach((joint) => { joint.holding = false; }));
+      this.jointButtons.flat().forEach((button) => button.classList.remove("active"));
+    }
     stop() {
+      this.releaseInputs();
       this.active = false;
       if (this.centerRivet) this.centerRivet.classList.remove("fight-active");
       cancelAnimationFrame(this.animationId);
@@ -273,6 +292,7 @@
         button.removeEventListener("pointerdown", down);
         button.removeEventListener("pointerup", release);
         button.removeEventListener("pointercancel", release);
+        button.removeEventListener("lostpointercapture", release);
         button.removeEventListener("contextmenu", this.preventMenu);
         button.classList.remove("active");
       });
@@ -1036,6 +1056,7 @@
 
     finish(winner, reason) {
       if (!this.active) return;
+      this.releaseInputs();
       this.active = false;
       if (this.centerRivet) this.centerRivet.classList.remove("fight-active");
       cancelAnimationFrame(this.animationId);

@@ -149,6 +149,20 @@ export class LocalRoom {
     this.notify(witnessChanged);
   }
 
+  async transactionRoom(mutator) {
+    this.assertActive();
+    const next=mutator(clone(this.data));
+    if(next===undefined)return {committed:false,snapshot:makeSnapshot(this.data)};
+    this.data=clone(next);this.notify(true);
+    return {committed:true,snapshot:makeSnapshot(this.data)};
+  }
+  async publishWitness(generation,report,startedAt,active=()=>true) {
+    return this.transactionRoom(d=>{
+      if(!active()||d.game?.phase!=="playing"||d.game.startedAt!==startedAt||(d.game.generationId||0)>=generation)return;
+      const {sourcePosition,...publicReport}=report;
+      return {...d,game:{...d.game,generationId:generation},witnessReports:{...d.witnessReports,[`generation_${generation}`]:publicReport}};
+    });
+  }
   async transactionGame(mutator) {
     this.assertActive();
     const nextGame = mutator(clone(this.data.game ?? null));

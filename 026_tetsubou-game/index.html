@@ -10,7 +10,6 @@
 <body>
   <main class="game">
     <header>
-      <a class="back" href="../index.html" aria-label="ゲーム一覧へ">‹</a>
       <h1>鉄棒ゲーム<span>大車輪チャレンジ</span></h1>
       <nav class="game-menu" aria-label="ゲーム設定"><label><span class="sr-only">難易度（変更すると最初から）</span><select id="difficulty" title="変更すると最初から"><option value="easy">EASY ×0.7</option><option value="normal">NORMAL ×1.0</option></select></label><button id="rankingOpen" type="button">ランキング</button></nav><div class="stats"><div><span>SCORE</span><strong id="score">0</strong></div><div><span>空中回転</span><strong id="flips">0<span>回</span></strong></div><div><span>最高高度</span><strong id="height">0.0<span>m</span></strong></div></div>
       <button id="debug" class="debug" aria-pressed="false">DEBUG</button>
@@ -29,8 +28,8 @@
       <div class="rotate">↻ 横向きにすると、大きな画面で遊べます</div>
     </section>
     <footer>
-      <button id="pump" class="control pump" aria-pressed="false"><span class="symbol">↓</span><span>こぐ<small>押して足を前へ・離して戻す</small></span><kbd>SPACE / Z</kbd></button>
-      <div class="instructions"><b>振る → 回る → 着地！</b><span>足を振って勢いをつけよう<br>着地の前に足を戻そう</span></div>
+      <button id="pump" class="control pump" aria-pressed="false"><span class="symbol">↓</span><span>こぐ<small>タイミングよく押す・離して戻す</small></span><kbd>SPACE / Z</kbd></button>
+      <div class="instructions"><b>振る → 回る → 着地！</b><span>押しっぱなしより押し離し<br>空中でも操作・着地前に戻す</span></div>
       <button id="release" class="control release"><span class="symbol">↗</span><span>離す！<small>タイミングを狙ってジャンプ</small></span><kbd>X / ENTER</kbd></button>
     </footer>
   </main>

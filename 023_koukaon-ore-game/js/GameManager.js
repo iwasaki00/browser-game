@@ -8,6 +8,7 @@
       this.registry = new Map();
       this.current = null;
       this.currentId = null;
+      this.session = 0;
     }
 
     registerGame(id, GameClass) {
@@ -24,13 +25,19 @@
       const GameClass = this.registry.get(id);
       if (!GameClass) throw new Error(`Game is not registered: ${id}`);
       this.currentId = id;
-      this.current = new GameClass(canvas, this.soundManager, settings, onEnd, options);
+      const session = this.session;
+      let ended = false;
+      this.current = new GameClass(canvas, this.soundManager, settings, result => {
+        if (session !== this.session || ended) return;
+        ended = true; onEnd(result);
+      }, options);
       return this.current.start();
     }
 
     startShooter(canvas, settings, onEnd, options) { return this.startGame("shooter", canvas, settings, onEnd, options); }
 
     stop() {
+      ++this.session;
       this.current?.stop();
       this.current = null;
       this.currentId = null;
