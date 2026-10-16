@@ -1101,8 +1101,30 @@ button, .board, .cards, .rules summary {
 }
 @media (max-width: 820px) and (max-height: 680px) {
   .battle-compact { --enemy-size: min(100vw - 44px, 100dvh - 280px, 340px); }
-  .battle-compact .enemy-panel { max-height: max(220px, calc(100dvh - 286px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); }
+  .battle-compact .enemy-panel { max-height: max(220px, calc(100dvh - 300px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); }
   .battle-compact .enemy-panel .board-wrap { margin-top: 0; }
   .battle-compact #playerBoard { width: 70px; height: 70px; }
   .battle-compact .log-panel { height: 96px; max-height: 96px; }
+}
+
+@media (max-width: 820px) and (max-height: 680px) {
+  .battle-compact .enemy-panel h2::after { content: " ? ?????"; color: var(--muted); font-size: 0.6rem; }
+}
+
+@media (max-width: 820px) {
+  .fleet-setup .online-panel { padding: 6px; gap: 4px; }
+  .fleet-setup .room-code { grid-template-columns: auto minmax(0, 1fr) auto; padding: 4px; gap: 5px; }
+  .fleet-setup .room-code span { grid-column: auto; }
+  .fleet-setup .online-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; }
+  .fleet-setup .online-stat { padding: 4px; }
+  .fleet-setup .online-stat strong { font-size: 0.7rem; }
+  .fleet-setup .online-actions { display: flex; justify-content: flex-end; }
+  .fleet-setup #readyButton { display: none; }
+  .fleet-setup .mode-message { padding: 4px; font-size: 0.75rem; }
+  .battle-compact .online-panel { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .battle-compact .online-actions { grid-column: 2; grid-row: 1; }
+  .battle-compact #onlineMessage { grid-column: 1; grid-row: 1; }
+}
+@media (max-width: 820px) and (max-height: 680px) {
+  .battle-compact.online-battle .enemy-panel { max-height: max(170px, calc(100dvh - 352px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); }
 }

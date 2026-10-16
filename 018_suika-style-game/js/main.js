@@ -52,12 +52,20 @@
     }
 
     loadBestScore() {
-      const value = Number(localStorage.getItem(this.key));
-      return Number.isFinite(value) ? value : 0;
+      try {
+        const value = Number(localStorage.getItem(this.key));
+        return Number.isFinite(value) ? Math.max(0, value) : 0;
+      } catch {
+        return 0;
+      }
     }
 
     saveBestScore(score) {
-      localStorage.setItem(this.key, String(Math.max(0, Math.floor(score))));
+      try {
+        localStorage.setItem(this.key, String(Math.max(0, Math.floor(score))));
+      } catch {
+        // The in-memory best score remains available when storage is blocked.
+      }
     }
   }
 
@@ -122,9 +130,52 @@
     }
 
     resize(width, height) {
+      if (width === this.width && height === this.height) return;
+      const { Body, Composite, Pairs } = this.Matter;
+      const bodies = Composite.allBodies(this.world).filter((body) => body.fruit);
+      const oldWidth = this.width;
+      const oldHeight = this.height;
       this.width = width;
       this.height = height;
       this.buildBounds(width, height);
+      const contain = (body, position) => {
+        const r = body.circleRadius;
+        return { x: clamp(position.x, r, width - r), y: Math.min(position.y, height - 6 - r) };
+      };
+      for (const body of bodies) {
+        const r = body.circleRadius;
+        Body.setPosition(body, contain(body, {
+          x: r + (body.position.x - r) * (width - 2 * r) / (oldWidth - 2 * r),
+          y: height - 6 - r - (oldHeight - 6 - r - body.position.y) * height / oldHeight
+        }));
+      }
+      // Position projection resolves compression without injecting velocities.
+      // Leave the top open, as in the original world, for a crowded stack.
+      for (let pass = 0; pass < 120; pass++) {
+        let overlap = 0;
+        for (let i = 0; i < bodies.length; i++) {
+          for (let j = i + 1; j < bodies.length; j++) {
+            const a = bodies[i], b = bodies[j];
+            const dx = b.position.x - a.position.x, dy = b.position.y - a.position.y;
+            const distance = Math.hypot(dx, dy);
+            const depth = a.circleRadius + b.circleRadius - distance;
+            if (depth <= 0.04) continue;
+            overlap = Math.max(overlap, depth);
+            const nx = distance > 0 ? dx / distance : 0;
+            const ny = distance > 0 ? dy / distance : 1;
+            const shift = (depth + 0.01) / 2;
+            Body.setPosition(a, contain(a, { x: a.position.x - nx * shift, y: a.position.y - ny * shift }));
+            Body.setPosition(b, contain(b, { x: b.position.x + nx * shift, y: b.position.y + ny * shift }));
+          }
+        }
+        if (overlap <= 0.04) break;
+      }
+      for (const body of bodies) {
+        body.positionImpulse.x = body.positionImpulse.y = 0;
+        body.constraintImpulse.x = body.constraintImpulse.y = body.constraintImpulse.angle = 0;
+        body.force.x = body.force.y = body.torque = 0;
+      }
+      Pairs.clear(this.engine.pairs);
     }
 
     addFruitBody(level, x, y) {
@@ -166,6 +217,7 @@
     clearFruits() {
       const fruits = this.Matter.Composite.allBodies(this.world).filter((body) => body.fruit);
       for (const body of fruits) this.Matter.Composite.remove(this.world, body);
+      this.Matter.Engine.clear(this.engine);
     }
 
     handleCollisions(event) {
@@ -186,9 +238,14 @@
       this.nextLevel = this.randomDropLevel();
       this.canDrop = true;
       this.dropDelay = 430;
+      this.dropTimer = null;
+      this.generation = 0;
     }
 
     reset() {
+      window.clearTimeout(this.dropTimer);
+      this.dropTimer = null;
+      this.generation++;
       this.fruits.clear();
       this.mergeQueue.clear();
       this.nextLevel = this.randomDropLevel();
@@ -208,7 +265,10 @@
       this.fruits.add(fruit);
       this.nextLevel = this.randomDropLevel();
       this.canDrop = false;
-      window.setTimeout(() => {
+      const generation = this.generation;
+      this.dropTimer = window.setTimeout(() => {
+        if (generation !== this.generation) return;
+        this.dropTimer = null;
         this.canDrop = true;
       }, this.dropDelay);
       return fruit;
@@ -292,7 +352,7 @@
       this.height = height;
       this.canvas.width = Math.floor(width * this.ratio);
       this.canvas.height = Math.floor(height * this.ratio);
-      this.ctx.setTransform(this.ratio, 0, 0, this.ratio, 0, 0);
+      this.ctx.setTransform(this.canvas.width / width, 0, 0, this.canvas.height / height, 0, 0);
     }
 
     draw(fruits, nextLevel, gameOverLine, dropX) {
@@ -320,7 +380,7 @@
       const radius = FRUIT_DEFS[level].radius;
       ctx.save();
       ctx.globalAlpha = 0.52;
-      this.drawFruitShape(ctx, FRUIT_DEFS[level], x, radius + 14, radius);
+      this.drawFruitShape(ctx, FRUIT_DEFS[level], x, Math.max(radius + 8, 34), radius);
       ctx.restore();
     }
 
@@ -436,17 +496,18 @@
 
     bind() {
       this.canvas.addEventListener("pointermove", (event) => {
+        if (!event.isPrimary) return;
         event.preventDefault();
         this.onMove(this.eventX(event));
       });
       this.canvas.addEventListener("pointerdown", (event) => {
+        if (!event.isPrimary || event.button !== 0) return;
         event.preventDefault();
         const x = this.eventX(event);
         this.onMove(x);
         this.onDrop(x);
       });
-      document.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
-      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
+      this.canvas.addEventListener("contextmenu", (event) => event.preventDefault());
     }
 
     eventX(event) {
@@ -551,29 +612,58 @@
 
     bindUI() {
       window.addEventListener("resize", () => this.resize());
-      document.getElementById("restartButton").addEventListener("click", () => this.restart());
+      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver.observe(this.playArea);
+      window.addEventListener("blur", () => this.suspend());
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) this.suspend();
+        this.lastTime = 0;
+      });
+      document.getElementById("restartButton").addEventListener("click", () => this.confirmRestart());
       document.getElementById("overlayRestartButton").addEventListener("click", () => this.restart());
       document.getElementById("pauseButton").addEventListener("click", () => this.togglePause());
       document.getElementById("shakeButton").addEventListener("click", () => this.startShake());
     }
 
     resize() {
-      const rect = this.playArea.getBoundingClientRect();
-      const viewportH = window.visualViewport?.height || window.innerHeight;
-      const top = this.playArea.getBoundingClientRect().top;
-      const reserved = 74;
-      const height = Math.max(430, Math.min(720, viewportH - top - reserved));
-      this.playArea.style.height = `${height}px`;
-      const width = Math.max(300, Math.floor(rect.width));
+      // client dimensions exclude the border and match the Canvas CSS content box.
+      const width = this.playArea.clientWidth;
+      const height = this.playArea.clientHeight;
+      if (!width || !height) return;
+      const x = this.dropX * width / (this.renderer.width || width);
       this.canvas.logicalWidth = width;
       this.canvas.logicalHeight = height;
       this.renderer.resize(width, height);
       this.physics.resize(width, height);
       this.gameOverLine = Math.max(84, height * 0.16);
-      this.setDropX(this.dropX);
+      this.playArea.querySelector(".danger-label").style.top = `${this.gameOverLine}px`;
+      this.setDropX(x);
+      this.lastTime = 0;
+    }
+
+    suspend() {
+      this.lastTime = 0;
+      if (!this.gameOver) {
+        this.paused = true;
+        this.ui.setPaused(true);
+      }
+    }
+
+    confirmRestart() {
+      const wasPaused = this.paused;
+      this.paused = true;
+      const active = !this.gameOver && this.fruitManager.fruits.size > 0;
+      const confirmed = !active || window.confirm("プレイ中のゲームをリスタートしますか？");
+      this.lastTime = 0;
+      if (confirmed) this.restart();
+      else {
+        this.paused = wasPaused || document.hidden;
+        this.ui.setPaused(this.paused);
+      }
     }
 
     restart() {
+      this.lastTime = 0;
       this.physics.clearFruits();
       this.fruitManager.reset();
       this.scoreManager.reset();
@@ -598,11 +688,12 @@
     dropFruit(x) {
       if (this.paused || this.gameOver) return;
       this.setDropX(x);
-      this.fruitManager.drop(this.dropX);
+      if (this.fruitManager.drop(this.dropX)) this.setDropX(this.dropX);
     }
 
     togglePause() {
       if (this.gameOver) return;
+      this.lastTime = 0;
       this.paused = !this.paused;
       this.ui.setPaused(this.paused);
     }

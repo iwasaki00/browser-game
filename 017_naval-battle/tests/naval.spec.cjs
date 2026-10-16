@@ -66,8 +66,10 @@ async function cpuStart(page){await page.evaluate(()=>{startCpuMode();randomPlac
 (async()=>{
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   global.base=`http://127.0.0.1:${server.address().port}/`;
-  const options={headless:true};if(process.env.CHROMIUM_PATH)options.executablePath=process.env.CHROMIUM_PATH;
-  const browser=await chromium.launch(options);
+  const options={headless:true,timeout:20000};if(process.env.CHROMIUM_PATH)options.executablePath=process.env.CHROMIUM_PATH;
+  const engine=process.env.BROWSER_ENGINE==='webkit'?webkit:chromium;
+  if(process.env.BROWSER_ENGINE==='webkit')options.executablePath=process.env.WEBKIT_PATH;
+  const browser=await engine.launch(options);
   try {
     const page=await makePage(browser,{width:390,height:844});
     await page.evaluate(()=>{startCpuMode();startGame();});
@@ -96,7 +98,13 @@ async function cpuStart(page){await page.evaluate(()=>{startCpuMode();randomPlac
       assert.ok(metrics.coordinateError<1,`coordinate alignment ${width}`);
       if(width<821){assert.ok(metrics.cards.bottom<=height,`cards visible ${width}`);assert.ok(metrics.app.bottom<=height+2,`one screen ${width}: ${JSON.stringify(metrics)}`);assert.ok(metrics.enemy.w>metrics.own.w,'enemy larger');}
       else assert.notEqual(metrics.columns,'none','desktop keeps grid');
-      await page.screenshot({path:path.join(root,`tests/layout-${width}.png`),fullPage:true});
+      if(process.env.NAVAL_SCREENSHOT_DIR) {
+        fs.mkdirSync(process.env.NAVAL_SCREENSHOT_DIR,{recursive:true});
+        await page.screenshot({path:path.join(process.env.NAVAL_SCREENSHOT_DIR,`layout-${width}.png`),fullPage:true});
+      }
+      if(width===320){await page.locator('#enemyBoard .cell').last().click();assert.equal(await page.evaluate(()=>gameState.cpu.board[9][9].attacked),true,'last row accessible through internal scroll');}
+      await page.evaluate(()=>{restartGame();});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'setup has no horizontal overflow');
       console.log('PASS layout',width,height,JSON.stringify(metrics));
     }
     const host=await makePage(browser,{width:390,height:844});const guest=await makePage(browser,{width:390,height:844});
@@ -105,6 +113,12 @@ async function cpuStart(page){await page.evaluate(()=>{startCpuMode();randomPlac
     await guest.evaluate(id=>joinOnlineRoom(id),roomId);await idle(guest);await idle(host);
     await Promise.all([host.evaluate(()=>setPlayerReady()),guest.evaluate(()=>setPlayerReady())]);await idle(host);await idle(guest);
     assert.equal(rooms[key].status,'playing');assert.equal(rooms[key].currentTurn,'host');
+    for(const [width,height]of [[320,568],[375,667],[390,844],[430,932]]) {
+      await host.setViewportSize({width,height});
+      const fit=await host.evaluate(()=>({w:document.documentElement.scrollWidth,h:document.getElementById('onlinePanel').getBoundingClientRect().bottom}));
+      assert.ok(fit.w<=width && fit.h<=height+2, 'online one screen '+width+': '+JSON.stringify(fit));
+    }
+    console.log('PASS online battle layout at all four sizes');
     delay=80;
     await host.evaluate(()=>{onlinePlayerAttack(0,0);onlinePlayerAttack(1,0);});await idle(host);delay=0;
     assert.equal(rooms[key].players.host.cards.single,98,'online double tap consumes once');assert.equal(rooms[key].players.host.attacks.length,1);
@@ -127,6 +141,14 @@ async function cpuStart(page){await page.evaluate(()=>{startCpuMode();randomPlac
     assert.match(await host.locator('#onlineMessage').innerText(),/退出/);
     await guest.evaluate(id=>joinOnlineRoom(id),roomId);await idle(guest);await host.evaluate(()=>leaveRoom(true));await guest.waitForFunction(()=>gameState.phase==='menu');
     assert.match(await guest.locator('#modeMessage').innerText(),/ホストが退出/);
+    // A pending old-room write must not render into a newly selected CPU game.
+    await host.evaluate(()=>createOnlineRoom());await idle(host);
+    const anotherRoom=await host.evaluate(()=>onlineState.roomId);
+    await guest.evaluate(id=>joinOnlineRoom(id),anotherRoom);await idle(guest);
+    await Promise.all([host.evaluate(()=>setPlayerReady()),guest.evaluate(()=>setPlayerReady())]);await idle(host);await idle(guest);
+    delay=80;await host.evaluate(()=>{onlinePlayerAttack(0,0);leaveRoom(true);startCpuMode();});
+    await host.waitForTimeout(220);delay=0;
+    assert.equal(await host.evaluate(()=>gameState.mode),'cpu');assert.equal(await host.evaluate(()=>gameState.phase),'setup');
     console.log('PASS simulated room creation/join/ready/start, duplicate attack, failure rollback/retry, disconnect, simultaneous rematch, clipboard and departures');
   } finally {await browser.close();server.close();}
 })().catch(error=>{console.error(error);server.close();process.exitCode=1;});

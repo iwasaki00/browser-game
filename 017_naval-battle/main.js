@@ -389,6 +389,7 @@ function render() {
   const compactBattle = ["playerTurn", "cpuTurn", "victory", "defeat"].includes(gameState.phase);
 
   elements.app.classList.toggle("battle-compact", compactBattle);
+  elements.app.classList.toggle("online-battle", compactBattle && online);
   elements.app.classList.toggle("fleet-setup", gameState.phase === "setup" || gameState.phase === "waiting");
   elements.modePanel.hidden = gameState.phase !== "menu";
   [elements.cpuModeButton, elements.createRoomButton, elements.joinRoomButton].forEach(button => button.disabled = onlineState.syncing);
@@ -887,11 +888,12 @@ function roomPlayersSignature(players) {
   });
 }
 
-async function commitRoomUpdate(expected, updates) {
+async function commitRoomUpdate(expected, updates, rematch = false) {
   const roomId = onlineState.roomId;
   const generation = gameGeneration;
   const ref = roomRef(roomId);
   const result = await ref.transaction(room => {
+    if (onlineState.roomId !== roomId || generation !== gameGeneration) return;
     if (!room || room.status !== expected.status || room.currentTurn !== expected.currentTurn ||
         room.turnCount !== expected.turnCount || room.hostId !== expected.hostId || room.guestId !== expected.guestId ||
         roomPlayersSignature(room.players) !== roomPlayersSignature(expected.players)) return;
@@ -906,7 +908,10 @@ async function commitRoomUpdate(expected, updates) {
   }, undefined, false);
   if (onlineState.roomId !== roomId || generation !== gameGeneration) return;
   if (!result.committed) {
-    if (result.snapshot.exists()) applyRemoteState(result.snapshot.val());
+    const latest = result.snapshot.val();
+    if (latest) applyRemoteState(latest);
+    if (rematch && latest && ["setup", "waiting"].includes(latest.status) &&
+        latest.hostId === expected.hostId && latest.guestId === expected.guestId) return;
     throw new Error("部屋の状態が変わりました。最新の状態を確認してください。");
   }
   applyRemoteState(result.snapshot.val());
@@ -1252,7 +1257,9 @@ function restartGame() {
 function prepareOnlineRematch() {
   if (gameState.mode !== "online" || !onlineState.roomId || !onlineState.role || onlineState.syncing || !onlineState.connected) return;
   const roomData = JSON.parse(JSON.stringify(onlineState.roomData || {}));
-  if (!["playing", "finished"].includes(roomData.status)) return;
+  if (!["playing", "finished"].includes(roomData.status) &&
+      !Object.values(roomData.players || {}).some(player => (player.attacks || []).length ||
+        (player.board || []).flat().some(cell => cell.attacked))) return;
   const hostOwner = createPreparedOwner("host", true);
   const guestOwner = roomData.guestId ? createPreparedOwner("guest", true) : emptyRoomPlayer("guest");
   const updates = {
@@ -1270,7 +1277,7 @@ function prepareOnlineRematch() {
   };
 
   withFirebase(async () => {
-    await commitRoomUpdate(roomData, updates);
+    await commitRoomUpdate(roomData, updates, true);
   }, "再戦準備に失敗しました。");
 }
 
