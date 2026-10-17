@@ -62,7 +62,8 @@
       if (!AudioContext) return;
       if (sharedContext) this.context = sharedContext;
       else if (!this.context) this.context = new AudioContext();
-      if (this.context.state === "suspended") await this.context.resume();
+      if (this.context.state !== "running") await this.context.resume();
+      if (this.context.state !== "running") throw new Error("音声を再開できませんでした。");
     }
     tone(frequency, duration, type = "sine", volume = 0.07, delay = 0) {
       if (!this.context) return;
@@ -88,7 +89,7 @@
 
   class UIManager {
     constructor() {
-      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "cellStateDetail", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
+      ["grid", "score", "combo", "beatNumber", "currentStage", "lives", "bpmDisplay", "readyOverlay", "beatProgress", "judgement", "startScreen", "gameOver", "pauseScreen", "pauseMessage", "finalScore", "maxCombo", "perfectTotal", "goodTotal", "missTotal", "resultKicker", "resultTitle", "testPanel", "testBpm", "testCell", "testTaps", "testElapsed", "cellStateDetail", "midiPanel", "midiLibrary", "midiName", "midiTempo", "midiSignature", "midiDuration", "midiTracks", "midiTempoChanges", "midiStatus", "midiAnalysisPanel", "analysisTrack", "analysisBody", "analysisDebug", "analysisCopyStatus", "copyAnalysisButton", "diceChartPanel", "chartTrack", "chartPlayableRate", "chartStatistics", "chartWarning", "chartMeasures", "chartDetail", "chartCopyStatus", "copyChartButton", "gameTrack", "gameTrackActive", "gameTrackPlayable", "gameTrackFallback", "gameTrackWarning", "gameSourceRest", "gameSourceVariety", "gameSourceDistribution", "quantizeControl", "quantizeToggle", "debugButton", "debugDrawer", "debugContent", "closeDebugButton", "midiPlayMeta", "playingSong", "playingTrack", "fallbackTotal", "exportDiagnosticsJson", "exportDiagnosticsCsv", "diagnosticsStatus"].forEach((id) => { this[id] = document.getElementById(id); });
       this.midiProgress = document.createElement("div");
       this.midiProgress.className = "midi-load-progress";
       this.midiProgress.hidden = true;
@@ -518,6 +519,15 @@
       this.totals = { PERFECT: 0, GOOD: 0, MISS: 0, ASSIST: 0 };
       this.taps = [];
       this.wrongInput = false;
+      this.session = 0;
+      this.beatId = 0;
+      this.beatOpen = false;
+      this.starting = false;
+      this.resuming = false;
+      this.paused = false;
+      this.hasStarted = false;
+      this.loadId = 0;
+      this.midiLoading = false;
       this.running = false;
       this.preparing = false;
       this.testMode = false;
@@ -537,7 +547,7 @@
     clockNow() { return this.mode === "midi" && this.midi?.context ? this.midi.context.currentTime * 1000 : performance.now(); }
     bind() {
       document.querySelectorAll('input[name="playMode"]').forEach((input) => input.addEventListener("change", () => this.setPlayMode(input.value)));
-      document.getElementById("midiFile").addEventListener("change", (event) => this.loadMidiFile(event.target.files?.[0]));
+      document.getElementById("midiFile").addEventListener("change", (event) => { const file = event.target.files?.[0]; event.target.value = ""; this.loadMidiFile(file); });
       document.getElementById("midiLibrary").addEventListener("change", (event) => this.loadLibraryMidi(event.target.value));
       this.ui.analysisTrack.addEventListener("change", (event) => this.selectAnalysisTrack(event.target.value));
       this.ui.copyAnalysisButton.addEventListener("click", () => this.copyAnalysis());
@@ -552,12 +562,13 @@
       });
       document.getElementById("testMode").addEventListener("change", (event) => this.setTestModeOption(event.target.checked));
       this.ui.quantizeToggle.addEventListener("change", (event) => this.setQuantizeEnabled(event.target.checked));
-      this.ui.debugButton.addEventListener("click", () => this.ui.debugVisible(true));
+      this.ui.debugButton.addEventListener("click", () => { if (this.testMode && this.mode === "midi" && !this.ui.debugButton.hidden) { this.pause(); this.ui.debugVisible(true); } });
       this.ui.closeDebugButton.addEventListener("click", () => this.ui.debugVisible(false));
       document.getElementById("bpmOptions").addEventListener("pointerdown", (event) => {
         const button = event.target.closest("button[data-bpm]");
         if (!button) return;
         event.preventDefault();
+        this.cancelPendingStart();
         this.bpm = Number(button.dataset.bpm);
         this.currentTempo = this.bpm;
         this.currentBeatDuration = 60000 / this.bpm;
@@ -569,6 +580,7 @@
         const button = event.target.closest("button[data-stage]");
         if (!button) return;
         event.preventDefault();
+        this.cancelPendingStart();
         this.stageIndex = Number(button.dataset.stage);
         document.querySelectorAll("[data-stage]").forEach((item) => {
           const selected = item === button;
@@ -582,11 +594,19 @@
       document.getElementById("stageSelectButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.openStageMenu(); });
       document.getElementById("startButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.start(); });
       document.getElementById("retryButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.ui.gameOver.hidden = true; this.start(); });
+      document.getElementById("pauseButton").addEventListener("click", () => this.pause());
       document.getElementById("resumeButton").addEventListener("pointerdown", (event) => { event.preventDefault(); this.resume(); });
+      const keyboardActions = { startButton: () => this.start(), retryButton: () => this.start(), resumeButton: () => this.resume(), stageMenu: () => this.openStageMenu(), stageSelectButton: () => this.openStageMenu() };
+      Object.entries(keyboardActions).forEach(([id, action]) => document.getElementById(id).addEventListener("click", (event) => { if (event.detail === 0) action(); }));
       this.ui.buttons.forEach((button) => button.addEventListener("pointerdown", (event) => this.onTap(event, Number(button.dataset.value)), { passive: false }));
-      document.addEventListener("contextmenu", (event) => event.preventDefault());
-      document.addEventListener("visibilitychange", () => { if (document.hidden && (this.running || this.preparing)) this.pause(); });
-      window.addEventListener("pagehide", () => { if (this.running || this.preparing) this.pause(); });
+      this.ui.buttons.forEach((button) => {
+        button.addEventListener("pointercancel", () => button.classList.remove("pressed", "guide-hit"));
+        button.addEventListener("click", (event) => { if (event.detail === 0) this.onTap(event, Number(button.dataset.value)); });
+        button.addEventListener("contextmenu", (event) => event.preventDefault());
+      });
+      window.addEventListener("blur", () => { if (this.running || this.preparing || this.starting || this.resuming) this.pause(); });
+      document.addEventListener("visibilitychange", () => { if (document.hidden && (this.running || this.preparing || this.starting || this.resuming)) this.pause(); });
+      window.addEventListener("pagehide", () => { if (this.running || this.preparing || this.starting || this.resuming) this.pause(); });
     }
     setTestModeOption(enabled) {
       this.ui.quantizeControl.hidden = !enabled || this.mode !== "midi";
@@ -597,12 +617,17 @@
       }
     }
     setQuantizeEnabled(enabled) {
+      this.cancelPendingStart();
       this.ui.quantizeToggle.checked = Boolean(enabled);
       this.ui.quantizeToggle.parentElement.querySelector("b").textContent = enabled ? "ON" : "OFF";
       if (!this.midi?.ready || !this.midi.setQuantizeEnabled(enabled)) return;
       this.refreshMidiAnalysis();
     }
+    cancelPendingStart() {
+      if (this.starting || this.preparing || this.resuming) this.openStageMenu();
+    }
     setPlayMode(mode) {
+      this.cancelPendingStart();
       this.mode = mode === "midi" ? "midi" : "normal";
       this.ui.mode(this.mode === "midi");
       this.ui.quantizeControl.hidden = this.mode !== "midi" || !document.getElementById("testMode").checked;
@@ -640,6 +665,7 @@
       this.selectGameSource(this.selectedGameSource);
     }
     selectGameSource(selection) {
+      this.cancelPendingStart();
       this.selectedGameSource = selection;
       this.ui.gameSourceInfo(this.midi?.getGameChart(selection));
     }
@@ -713,10 +739,11 @@
         this.ui.midiMessage("MIDI共通基盤を読み込めませんでした。", "error");
         return;
       }
+      const initialLoad = this.loadId;
       this.ui.midiLibrary.disabled = true;
       this.ui.midiLibrary.replaceChildren(new Option("曲目リストを取得中…", ""));
-      this.ui.libraryProgress(0, 0, "曲目リストを取得中");
-      this.ui.midiMessage("assets/midi/library.json を読み込んでいます…");
+      if (initialLoad === this.loadId) this.ui.libraryProgress(0, 0, "曲目リストを取得中");
+      if (initialLoad === this.loadId) this.ui.midiMessage("assets/midi/library.json を読み込んでいます…");
       try {
         if (window.location.protocol === "file:") {
           const error = new Error("HTMLの直接起動では収録曲を読み込めません。ローカルHTTPサーバーから起動してください。");
@@ -737,12 +764,12 @@
           return option;
         });
         this.ui.midiLibrary.replaceChildren(...options);
-        this.ui.midiMessage(`${entries.length}曲を検出しました。ファイルを確認しています…`);
+        if (initialLoad === this.loadId) this.ui.midiMessage(`${entries.length}曲を検出しました。ファイルを確認しています…`);
 
         const available = [];
         for (let index = 0; index < entries.length; index += 1) {
           const entry = entries[index];
-          this.ui.libraryProgress(index, entries.length, `MIDIファイルを確認中：${entry.title || entry.file}`);
+          if (initialLoad === this.loadId) this.ui.libraryProgress(index, entries.length, `MIDIファイルを確認中：${entry.title || entry.file}`);
           await new Promise((resolve) => requestAnimationFrame(resolve));
           try {
             const check = await this.fetchWithTimeout(`assets/midi/${encodeURIComponent(entry.file)}`, { method: "HEAD", cache: "no-store" }, 6000);
@@ -753,23 +780,25 @@
             options[index].disabled = true;
             options[index].textContent += "（読込不可）";
           }
-          this.ui.libraryProgress(index + 1, entries.length, `MIDIファイルを確認中：${index + 1}/${entries.length}`);
+          if (initialLoad === this.loadId) this.ui.libraryProgress(index + 1, entries.length, `MIDIファイルを確認中：${index + 1}/${entries.length}`);
         }
         if (!available.length) throw new Error(`${entries.length}曲を確認しましたが、読み込めるMIDIファイルがありません。`);
 
         this.ui.midiLibrary.disabled = false;
         const initial = available.find((entry) => entry.file === "sample.mid") || available[0];
+        if (initialLoad !== this.loadId) return;
         this.ui.midiLibrary.value = initial.file;
         await this.loadLibraryMidi(initial.file);
         const failed = entries.length - available.length;
-        this.ui.libraryProgress(available.length, entries.length, failed ? `確認完了：${failed}曲を読み込めません` : `確認完了：${available.length}曲を利用できます`, failed ? "warning" : "complete");
+        if (initialLoad === this.loadId) this.ui.libraryProgress(available.length, entries.length, failed ? `確認完了：${failed}曲を読み込めません` : `確認完了：${available.length}曲を利用できます`, failed ? "warning" : "complete");
       } catch (error) {
+        if (initialLoad !== this.loadId) { this.ui.midiLibrary.disabled = false; return; }
         console.error("MIDI library load failed", error);
         const directOpen = error.code === "FILE_PROTOCOL";
         this.ui.midiLibrary.replaceChildren(new Option(directOpen ? "HTTPサーバーで起動してください" : "曲目を読み込めませんでした", ""));
         this.ui.midiLibrary.disabled = true;
-        this.ui.libraryProgress(0, 0, directOpen ? "直接起動では読込不可" : "曲目リストの読込失敗", "error");
-        this.ui.midiMessage(error.name === "AbortError" ? "曲目リストの読み込みがタイムアウトしました。" : error.message, "error");
+        if (initialLoad === this.loadId) this.ui.libraryProgress(0, 0, directOpen ? "直接起動では読込不可" : "曲目リストの読込失敗", "error");
+        if (initialLoad === this.loadId) this.ui.midiMessage(error.name === "AbortError" ? "曲目リストの読み込みがタイムアウトしました。" : error.message, "error");
       }
     }
     async loadLibraryMidi(fileName) {
@@ -778,38 +807,49 @@
         this.ui.midiMessage("選択されたMIDIファイル名が不正です。", "error");
         return;
       }
-      this.ui.midiLibrary.disabled = true;
+      this.cancelPendingStart();
+      const load = ++this.loadId;
+      this.midiLoading = true;
       this.ui.libraryProgress(0, 1, `MIDIを解析中：${fileName}`);
       this.ui.midiMessage(`${fileName} を読み込んでいます…`);
       try {
         const info = await this.midi.loadUrl(`assets/midi/${encodeURIComponent(fileName)}`, fileName);
+        if (load !== this.loadId || !info) return;
         this.ui.midiInfo(info);
         this.refreshMidiAnalysis();
         this.ui.libraryProgress(1, 1, `${fileName} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
+        if (load !== this.loadId) return;
         console.error("Library MIDI load failed", error);
         this.ui.libraryProgress(0, 1, `${fileName} の読み込み失敗`, "error");
         this.ui.midiMessage(`${fileName} を読み込めませんでした。${error.message ? ` ${error.message}` : ""}`, "error");
       } finally {
-        this.ui.midiLibrary.disabled = false;
+        if (load === this.loadId) this.midiLoading = false;
       }
     }
     async loadMidiFile(file) {
       if (!file || !this.midi) return;
+      this.cancelPendingStart();
+      const load = ++this.loadId;
+      this.midiLoading = true;
       this.ui.midiLibrary.value = "";
       this.ui.libraryProgress(0, 1, `端末のMIDIを解析中：${file.name}`);
       this.ui.midiMessage(`${file.name} を読み込んでいます…`);
       try {
         const info = await this.midi.loadFile(file);
+        if (load !== this.loadId || !info) return;
         this.ui.midiInfo(info);
         this.refreshMidiAnalysis();
         this.ui.libraryProgress(1, 1, `${file.name} の読み込み完了`, "complete");
         if (this.mode === "midi") this.ui.bpmDisplay.textContent = `MIDI ♪ ${Math.round(info.bpm)} BPM`;
       } catch (error) {
+        if (load !== this.loadId) return;
         console.error("MIDI file load failed", error);
         this.ui.libraryProgress(0, 1, `${file.name} の読み込み失敗`, "error");
         this.ui.midiMessage(error.message || "MIDIファイルを読み込めませんでした。", "error");
+      } finally {
+        if (load === this.loadId) this.midiLoading = false;
       }
     }
     makePreviewRows() {
@@ -830,13 +870,26 @@
       this.midiMeasureCursor = 3;
       return [countInRow(), countInRow(), this.gameRowValues(0), this.gameRowValues(1), this.gameRowValues(2)];
     }
-    stopTiming() {
+    clearBeatTiming() {
       clearTimeout(this.beatTimer);
       cancelAnimationFrame(this.frame);
-      if (this.mode === "midi") this.midi?.stop();
+      this.beatTimer = 0;
+      this.frame = 0;
+      this.beatId += 1;
+    }
+    stopTiming() {
+      this.session += 1;
+      this.clearBeatTiming();
+      this.beatOpen = false;
+      this.starting = false;
+      this.resuming = false;
+      this.midi?.stop();
     }
     openStageMenu() {
       this.stopTiming();
+      document.getElementById("startMessage").textContent = "";
+      this.paused = false;
+      this.hasStarted = false;
       this.running = false;
       this.preparing = false;
       this.ui.enableControls(false);
@@ -863,8 +916,9 @@
       this.ui.targetGuide(0, false);
     }
     async start() {
+      if (this.starting || this.preparing || this.running || this.resuming) return;
       this.mode = document.querySelector('input[name="playMode"]:checked')?.value === "midi" ? "midi" : "normal";
-      if (this.mode === "midi" && !this.midi?.ready) {
+      if (this.mode === "midi" && (this.midiLoading || !this.midi?.ready)) {
         this.ui.midiMessage("MIDIファイルを読み込んでからSTARTしてください。", "error");
         return;
       }
@@ -877,14 +931,28 @@
         this.activeGameChart = selectedChart;
       } else this.activeGameChart = null;
       this.stopTiming();
+      const session = this.session;
+      this.starting = true;
+      document.getElementById("startMessage").textContent = "音声を準備しています…";
+      this.paused = false;
+      this.hasStarted = false;
       try {
         const sharedContext = this.mode === "midi" ? await this.midi.ensureAudio() : null;
+        if (session !== this.session) return;
         await this.audio.unlock(sharedContext);
+        if (session !== this.session) return;
       } catch (error) {
+        if (session !== this.session) return;
+        this.starting = false;
+        document.getElementById("startMessage").textContent = "音声を開始できませんでした。もう一度STARTしてください。";
         console.error("AudioContext start failed", error);
         this.ui.midiMessage("音声を開始できませんでした。もう一度STARTしてください。", "error");
         return;
       }
+      this.starting = false;
+      document.getElementById("startMessage").textContent = "";
+      this.ui.gameOver.hidden = true;
+      this.ui.pauseScreen.hidden = true;
       this.testMode = document.getElementById("testMode").checked;
       this.column = 0;
       this.score = 0;
@@ -924,38 +992,45 @@
       document.documentElement.style.setProperty("--row-shift-duration", `${Math.max(100, Math.min(180, this.beatDuration * 0.28))}ms`);
     }
     showReady(resuming) {
+      const session = this.session;
       this.preparing = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
-      this.ui.progress(0);
-      this.ui.beatNumber.textContent = "READY";
-      this.ui.judgement.className = "judgement";
-      this.ui.judgement.textContent = "";
       this.ui.readyOverlay.hidden = false;
+      this.ui.judgement.textContent = "";
+      this.ui.beatNumber.textContent = "READY";
       this.beatTimer = window.setTimeout(async () => {
+        if (session !== this.session || !this.preparing) return;
         try {
+          let timing;
+          if (this.mode === "midi") {
+            timing = resuming && this.hasStarted ? await this.midi.resume() : await this.midi.startWithCountIn(CONFIG.ROW_SIZE);
+            if (session !== this.session) return;
+            if (!timing) throw new Error("音声を再開できませんでした。");
+          }
           this.ui.readyOverlay.hidden = true;
           this.preparing = false;
           this.running = true;
+          const preserve = resuming && this.hasStarted;
+          this.hasStarted = true;
           if (this.mode === "midi") {
-            const timing = resuming ? await this.midi.resume() : await this.midi.startWithCountIn(CONFIG.ROW_SIZE);
+            // Keep an uncommitted beat if the pause arrived just before its timer.
+            if (preserve) timing = this.midi.getBeatTiming(this.midiBeatIndex);
             this.midiBeatIndex = timing.beatIndex;
-            this.beginMidiBeat(timing);
+            this.beginMidiBeat(timing, preserve);
           } else {
             this.currentTempo = this.bpm;
-            this.beginBeat(performance.now(), 60000 / this.bpm);
+            this.beginBeat(performance.now() - (preserve ? this.pausedElapsed : 0), 60000 / this.bpm, preserve);
           }
         } catch (error) {
+          if (session !== this.session) return;
           console.error("Game start failed", error);
-          this.running = false;
-          this.ui.startScreen.hidden = false;
-          this.ui.analysisVisible(false);
-          this.ui.chartVisible(false);
-          this.ui.midiMessage(error.message || "ゲームを開始できませんでした。", "error");
+          this.pause();
+          this.ui.pauseMessage.textContent = "音声を開始できませんでした。RESUMEをもう一度押してください。";
         }
       }, 1000);
     }
-    beginMidiBeat(timing = this.midi.getBeatTiming(this.midiBeatIndex)) {
+    beginMidiBeat(timing = this.midi.getBeatTiming(this.midiBeatIndex), preserve = false) {
       if (!timing) { this.end(true); return; }
       this.currentGameBeat = timing.countIn ? null : window.MidiGameChart.beatAtTick(this.activeGameChart, timing.tick);
       if (this.currentGameBeat) this.column = this.currentGameBeat.slotIndex;
@@ -966,12 +1041,15 @@
         this.ui.analysisRows(this.midiAnalysis, this.analysisTick);
         this.ui.chartPreview(this.midiDiceChart, this.analysisTick, this.midi.getGameChart(this.analysisTrackValue));
       }
-      this.beginBeat(timing.startAudioTime * 1000, timing.duration * 1000);
+      this.beginBeat(timing.startAudioTime * 1000, timing.duration * 1000, preserve);
     }
-    beginBeat(startTime, duration) {
+    beginBeat(startTime, duration, preserve = false) {
       if (!this.running) return;
-      this.taps = [];
-      this.wrongInput = false;
+      this.clearBeatTiming();
+      const session = this.session;
+      const beat = this.beatId;
+      this.beatOpen = true;
+      if (!preserve) { this.taps = []; this.wrongInput = false; }
       this.beatStart = startTime;
       this.currentBeatDuration = duration;
       this.applyBeatCss();
@@ -984,15 +1062,15 @@
       this.ui.targetGuide(value, this.testMode && value !== 0);
       this.ui.beatSourceMarker(this.currentGameBeat, this.testMode);
       this.updateGuide(Math.max(0, this.clockNow() - this.beatStart));
-      this.audio.metronome(this.column === 0);
+      if (!preserve) this.audio.metronome(this.column === 0);
       this.updateFrame();
       const delay = Math.max(0, this.beatStart + this.beatDuration - this.clockNow());
-      this.beatTimer = window.setTimeout(() => this.finishBeat(), delay);
+      this.beatTimer = window.setTimeout(() => this.finishBeat(session, beat), delay);
     }
     onTap(event, value) {
       event.preventDefault();
       const restBeat = this.mode === "midi" && Boolean(this.currentGameBeat?.isRest);
-      if (!this.running || (this.currentValue === 0 && !restBeat)) return;
+      if (!this.running || !this.beatOpen || this.preparing || this.paused || (event.type === "pointerdown" && event.button > 0) || (this.currentValue === 0 && !restBeat)) return;
       const button = event.currentTarget;
       button.classList.remove("pressed");
       void button.offsetWidth;
@@ -1000,7 +1078,8 @@
       this.ui.hitGuide(button);
       window.setTimeout(() => button.classList.remove("pressed"), 72);
       this.audio.tap(value);
-      const elapsed = this.clockNow() - this.beatStart;
+      const inputDelay = event.timeStamp > 0 && event.timeStamp <= performance.now() ? performance.now() - event.timeStamp : 0;
+      const elapsed = this.clockNow() - inputDelay - this.beatStart;
       if (elapsed < 0 || elapsed > this.beatDuration) return;
       if (restBeat) {
         this.taps.push(elapsed);
@@ -1016,8 +1095,9 @@
       else this.taps.push(elapsed);
       this.updateTest(elapsed);
     }
-    finishBeat() {
-      if (!this.running) return;
+    finishBeat(session = this.session, beat = this.beatId) {
+      if (!this.running || !this.beatOpen || session !== this.session || beat !== this.beatId) return;
+      this.beatOpen = false;
       cancelAnimationFrame(this.frame);
       this.ui.progress(1);
       const value = this.currentValue;
@@ -1077,7 +1157,9 @@
       this.ui.progress(elapsed / this.beatDuration);
       this.updateGuide(elapsed);
       this.updateTest(elapsed);
-      this.frame = requestAnimationFrame(() => this.updateFrame());
+      const session = this.session;
+      const beat = this.beatId;
+      this.frame = requestAnimationFrame(() => { if (session === this.session && beat === this.beatId) this.updateFrame(); });
     }
     updateGuide(elapsed) {
       const value = this.currentValue;
@@ -1093,35 +1175,51 @@
       if (this.testMode) this.ui.test({ bpm: this.currentTempo, cell: this.column, taps: this.taps.length, required: this.currentValue, dummy: Boolean(this.currentGameBeat?.isDummy), elapsed: Math.min(Math.max(0, elapsed), this.beatDuration), duration: this.beatDuration });
     }
     pause() {
-      clearTimeout(this.beatTimer);
-      cancelAnimationFrame(this.frame);
+      if (this.starting) { this.openStageMenu(); return; }
+      if (this.paused && !this.resuming && !this.preparing) return;
+      if (!this.running && !this.preparing && !this.starting && !this.resuming) return;
+      if (this.running) this.pausedElapsed = Math.max(0, Math.min(this.beatDuration, this.clockNow() - this.beatStart));
+      this.session += 1;
+      this.clearBeatTiming();
       if (this.mode === "midi") this.midi?.pause();
       this.running = false;
+      this.starting = false;
+      this.resuming = false;
       this.preparing = false;
+      this.paused = true;
       this.ui.readyOverlay.hidden = true;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
+      this.ui.pauseMessage.textContent = "RESUMEを押して再開してください。";
       this.ui.pauseScreen.hidden = false;
     }
     async resume() {
+      if (!this.paused || this.resuming || this.preparing) return;
+      const session = this.session;
+      this.resuming = true;
       try {
         const sharedContext = this.mode === "midi" ? await this.midi.ensureAudio() : null;
+        if (session !== this.session) return;
         await this.audio.unlock(sharedContext);
+        if (session !== this.session) return;
+        this.resuming = false;
+        this.paused = false;
+        this.ui.pauseScreen.hidden = true;
+        this.showReady(true);
       } catch (error) {
-        console.error("Audio resume failed", error);
-        return;
+        if (session !== this.session) return;
+        this.resuming = false;
+        this.ui.pauseMessage.textContent = "音声を再開できませんでした。RESUMEをもう一度押してください。";
       }
-      this.ui.pauseScreen.hidden = true;
-      this.showReady(true);
     }
     onMidiEnded() {
       if (this.mode === "midi" && this.running) this.end(true);
     }
     end(songClear = false) {
       this.running = false;
-      clearTimeout(this.beatTimer);
-      cancelAnimationFrame(this.frame);
-      if (this.mode === "midi") this.midi?.stop();
+      this.stopTiming();
+      this.preparing = false;
+      this.paused = false;
       this.ui.enableControls(false);
       this.ui.targetGuide(0, false);
       this.ui.results(this.score, this.bestCombo, this.totals, songClear);

@@ -13,6 +13,7 @@
       this.playing = false;
       this.timer = 0;
       this.lookAhead = 0.12;
+      this.generation = 0;
     }
 
     setSong(song) {
@@ -23,15 +24,17 @@
 
     async startAt(songStartAudioTime, position = 0) {
       if (!this.song || !this.events.length) throw new Error("再生できるノートがありません。");
-      const context = await this.synth.ensureContext();
       this.stop(false);
+      const generation = this.generation;
+      const context = await this.synth.ensureContext();
+      if (generation !== this.generation) return null;
       this.position = Math.max(0, Math.min(this.song.duration, Number(position) || 0));
       this.songStartAudioTime = songStartAudioTime;
       this.cursor = this.events.findIndex((note) => note.endTime > this.position - 0.001);
       if (this.cursor < 0) this.cursor = this.events.length;
       this.playing = true;
       this.schedule();
-      this.timer = global.setInterval(() => this.schedule(), 25);
+      if (this.playing) this.timer = global.setInterval(() => { if (generation === this.generation) this.schedule(); }, 25);
       return context;
     }
 
@@ -60,6 +63,7 @@
     }
 
     pause() {
+      this.generation += 1;
       if (!this.playing) return this.position;
       this.position = Math.min(this.song.duration, this.currentTime());
       this.playing = false;
@@ -70,6 +74,7 @@
     }
 
     stop(reset = true) {
+      this.generation += 1;
       this.playing = false;
       global.clearInterval(this.timer);
       this.timer = 0;
@@ -94,9 +99,16 @@
       this.diceCharts = new Map();
       this.gameCharts = new Map();
       this.diagnostics = null;
+      this.loadGeneration = 0;
+      this.playGeneration = 0;
     }
 
-    async ensureAudio() { return this.synth.ensureContext(); }
+    async ensureAudio() {
+      const context = await this.synth.ensureContext();
+      if (context.state && context.state !== "running") await context.resume();
+      if (context.state && context.state !== "running") throw new Error("音声を再開できませんでした。");
+      return context;
+    }
     get context() { return this.synth.context; }
     get ready() { return Boolean(this.song && this.song.totalNotes > 0); }
 
@@ -121,19 +133,25 @@
     }
 
     async loadFile(file) {
+      const generation = ++this.loadGeneration;
       if (!file) throw new Error("MIDIファイルを選択してください。");
       if (!/\.(mid|midi)$/i.test(file.name)) throw new Error(".mid または .midi ファイルを選択してください。");
-      return this.parse(await file.arrayBuffer(), file.name);
+      const buffer = await file.arrayBuffer();
+      if (generation !== this.loadGeneration) return null;
+      return this.parse(buffer, file.name);
     }
 
     async loadUrl(url, fileName = "sample.mid") {
+      const generation = ++this.loadGeneration;
       const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) {
         const error = new Error(response.status === 404 ? "サンプルMIDIがありません" : "サンプルMIDIを読み込めませんでした。");
         error.code = response.status === 404 ? "SAMPLE_MISSING" : "LOAD_FAILED";
         throw error;
       }
-      return this.parse(await response.arrayBuffer(), fileName);
+      const buffer = await response.arrayBuffer();
+      if (generation !== this.loadGeneration) return null;
+      return this.parse(buffer, fileName);
     }
 
     getInfo() {
@@ -198,12 +216,15 @@
 
     async startWithCountIn(beats = 4) {
       if (!this.ready) throw new Error("MIDIファイルを読み込んでください。");
+      const generation = ++this.playGeneration;
       const context = await this.ensureAudio();
+      if (generation !== this.playGeneration) return null;
       this.countInBeats = beats;
       const countInStart = context.currentTime + 0.05;
       this.songStartAudioTime = countInStart + beats * this.initialBeatDuration();
       this.pausedTimelineTime = null;
       await this.player.startAt(this.songStartAudioTime, 0);
+      if (generation !== this.playGeneration) return null;
       return this.getBeatTiming(-beats);
     }
 
@@ -248,6 +269,7 @@
     }
 
     pause() {
+      this.playGeneration += 1;
       this.pausedTimelineTime = this.getTimelineTime();
       this.player.pause();
       return this.pausedTimelineTime;
@@ -255,15 +277,19 @@
 
     async resume() {
       if (this.pausedTimelineTime === null) return this.getCurrentState();
+      const generation = ++this.playGeneration;
       const context = await this.ensureAudio();
+      if (generation !== this.playGeneration) return null;
       const timeline = this.pausedTimelineTime;
       this.songStartAudioTime = context.currentTime - timeline;
       this.pausedTimelineTime = null;
       await this.player.startAt(this.songStartAudioTime, Math.max(0, timeline));
+      if (generation !== this.playGeneration) return null;
       return this.getCurrentState();
     }
 
     stop() {
+      this.playGeneration += 1;
       this.player.stop();
       this.pausedTimelineTime = null;
       this.songStartAudioTime = 0;

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#090b12">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -35,7 +35,7 @@
       <div><span>COMBO</span><strong id="combo">0</strong></div>
     </section>
     <section class="playfield" aria-label="2段目を演奏する5段のサイコロ譜面">
-      <div class="field-head"><span id="beatNumber">BEAT 01 / 04</span><span id="bpmDisplay">♪ = 120 BPM</span></div>
+      <div class="field-head"><span id="beatNumber">BEAT 01 / 04</span><button id="pauseButton" type="button" aria-label="一時停止">Ⅱ</button><span id="bpmDisplay">♪ = 120 BPM</span></div>
       <div class="midi-play-meta" id="midiPlayMeta" hidden><span id="playingSong"></span><b id="playingTrack"></b></div>
       <div class="grid-window"><div class="grid" id="grid" role="list" aria-label="スクロールするサイコロ譜面"></div></div>
       <div class="beat-track" aria-hidden="true"><i id="beatProgress"></i></div>
@@ -77,11 +77,12 @@
         <fieldset class="stage-picker"><legend>STAGE SELECT</legend><div id="stageOptions"><button class="selected" type="button" data-stage="0"><b>LEVEL 1</b><span>1だけ</span><small>1 1 1 1</small></button><button type="button" data-stage="1"><b>LEVEL 2</b><span>2だけ</span><small>2 2 2 2</small></button><button type="button" data-stage="2"><b>LEVEL 3</b><span>4だけ</span><small>4 4 4 4</small></button><button type="button" data-stage="3"><b>LEVEL 4</b><span>1と2</span><small>1 1 2 2</small></button><button type="button" data-stage="4"><b>LEVEL 5</b><span>2を練習</span><small>2 2 1 2</small></button><button type="button" data-stage="5"><b>LEVEL 6</b><span>4を練習</span><small>1 2 4 4</small></button><button type="button" data-stage="6"><b>LEVEL 7</b><span>ミックス</span><small>2 4 1 2</small></button><button type="button" data-stage="7"><b>LEVEL 8</b><span>シャッフル</span><small>? ? ? ?</small></button></div><p id="stageHint">1の目だけ。まずは1拍に1回のタップを覚えよう。</p></fieldset><fieldset class="bpm-picker"><legend>BPM SELECT</legend><div id="bpmOptions"><button type="button" data-bpm="60">60</button><button type="button" data-bpm="80">80</button><button type="button" data-bpm="100">100</button><button class="selected" type="button" data-bpm="120">120</button><button type="button" data-bpm="140">140</button><button type="button" data-bpm="160">160</button><button type="button" data-bpm="180">180</button><button type="button" data-bpm="200">200</button></div></fieldset>
         <section class="midi-panel" id="midiPanel" hidden aria-label="MIDIファイル情報"><label class="midi-library-label">収録曲<select id="midiLibrary" aria-label="収録MIDIから曲を選択"><option value="">曲目を読み込み中…</option></select></label><div class="game-track-picker"><label>GAME SOURCE<select id="gameTrack"><option value="">MIDIを読み込み中…</option></select></label><div class="game-source-primary"><span id="gameTrackActive">Active —</span><span id="gameTrackPlayable">Real —</span><span id="gameTrackFallback">Dummy —</span></div><div class="game-source-detail"><span id="gameSourceRest">Max REST —</span><span id="gameSourceVariety">Variety —</span><span id="gameSourceDistribution">Dice —</span></div><p id="gameTrackWarning"></p></div><label class="quantize-toggle" id="quantizeControl" hidden><input id="quantizeToggle" type="checkbox" checked><span>QUANTIZE</span><b>ON</b></label><label class="midi-file-button">端末からMIDIファイルを選択<input id="midiFile" type="file" accept=".mid,.midi,audio/midi,audio/x-midi"></label><div class="midi-summary"><span>曲<b id="midiName">sample.mid</b></span><span>Tempo<b id="midiTempo">—</b></span><span>Time Signature<b id="midiSignature">—</b></span><span>Duration<b id="midiDuration">—</b></span><span>Tracks<b id="midiTracks">—</b></span><span>Tempo Changes<b id="midiTempoChanges">—</b></span></div><p class="midi-status" id="midiStatus" aria-live="polite">MIDIライブラリを確認中…</p></section>
         <label class="test-toggle"><input id="testMode" type="checkbox"><span aria-hidden="true"></span>TEST MODE</label>
+        <p id="startMessage" role="status"></p>
         <button class="start-button" id="startButton" type="button">START <span>▶</span></button>
       </div>
     </section>
     <section class="overlay game-over" id="gameOver" hidden><div class="result-card"><p id="resultKicker">RUN COMPLETE</p><h2 id="resultTitle">GAME OVER</h2><div class="result-stats"><div><span>SCORE</span><strong id="finalScore">0</strong></div><div><span>MAX COMBO</span><strong id="maxCombo">0</strong></div><div><span>PERFECT</span><strong id="perfectTotal">0</strong></div><div><span>GOOD</span><strong id="goodTotal">0</strong></div><div><span>MISS</span><strong id="missTotal">0</strong></div><div><span>ASSIST</span><strong id="fallbackTotal">0</strong></div></div><button id="retryButton" type="button">RETRY <span>↻</span></button><button class="secondary-button" id="stageSelectButton" type="button">TITLE</button></div></section>
-    <section class="overlay pause-screen" id="pauseScreen" hidden><div class="result-card"><p>GAME PAUSED</p><h2>READY?</h2><button id="resumeButton" type="button">RESUME <span>▶</span></button></div></section>
+    <section class="overlay pause-screen" id="pauseScreen" hidden><div class="result-card"><p>GAME PAUSED</p><h2>READY?</h2><p id="pauseMessage" role="status">RESUMEを押して再開してください。</p><button id="resumeButton" type="button">RESUME <span>▶</span></button></div></section>
     <section class="debug-drawer" id="debugDrawer" hidden aria-label="MIDI解析デバッグ">
       <div class="debug-sheet"><header><strong>MIDI DEBUG / ANALYSIS</strong><button id="closeDebugButton" type="button">CLOSE</button></header><div id="debugContent" class="debug-content"></div></div>
     </section>
