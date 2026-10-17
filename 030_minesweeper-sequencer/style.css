@@ -25,6 +25,7 @@ html {
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   overflow-x: hidden;
   color: var(--ink);
@@ -56,7 +57,7 @@ button, a {
 }
 
 .app-shell {
-  width: min(900px, calc(100% - 30px));
+  width: min(900px, calc(100% - 30px - env(safe-area-inset-left) - env(safe-area-inset-right)));
   margin: 0 auto;
   padding: max(18px, env(safe-area-inset-top)) 0 max(30px, env(safe-area-inset-bottom));
 }
@@ -72,10 +73,11 @@ button, a {
   border-bottom: 1px solid var(--line);
 }
 
-.back-link { color: var(--ink); text-decoration: none; }
-.back-link:hover, .back-link:focus-visible { color: var(--cyan); outline: none; }
-.topbar-actions { display: flex; align-items: center; gap: 13px; }
-.settings-button { min-height: 34px; padding: 0 11px; color: var(--cyan); font: 800 0.58rem monospace; letter-spacing: 0.07em; cursor: pointer; background: rgba(67,237,207,0.08); border: 1px solid rgba(67,237,207,0.28); border-radius: 8px; }
+.topbar-actions { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 13px; }
+.version { min-width: 0; line-height: 1.5; }
+.settings-button { flex-shrink: 0; }
+.audio-state { margin: 8px 0 0; color: var(--muted); font: 750 .6rem/1.4 monospace; text-align: center; }
+.settings-button { min-height: 44px; padding: 0 11px; color: var(--cyan); font: 800 0.58rem monospace; letter-spacing: 0.07em; cursor: pointer; background: rgba(67,237,207,0.08); border: 1px solid rgba(67,237,207,0.28); border-radius: 8px; }
 .settings-button:hover, .settings-button:focus-visible { background: var(--cyan); color: var(--bg); outline: none; }
 
 .hero {
@@ -165,7 +167,7 @@ h1 span { color: transparent; -webkit-text-stroke: 1px rgba(238, 247, 244, 0.65)
   overscroll-behavior-x: contain;
   scrollbar-color: rgba(67,237,207,.5) rgba(255,255,255,.04);
   scrollbar-width: thin;
-  touch-action: pan-x pan-y;
+  touch-action: pan-x pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -386,7 +388,7 @@ h1 span { color: transparent; -webkit-text-stroke: 1px rgba(238, 247, 244, 0.65)
 }
 
 @media (max-width: 600px) {
-  .app-shell { width: min(100% - 18px, 520px); padding-top: max(10px, env(safe-area-inset-top)); }
+  .app-shell { width: min(calc(100% - 18px - env(safe-area-inset-left) - env(safe-area-inset-right)), 520px); padding-top: max(10px, env(safe-area-inset-top)); }
   .topbar { padding: 7px 3px 11px; }
   .hero { padding: 18px 3px 16px; }
   .concept { font-size: 0.68rem; }
@@ -425,7 +427,10 @@ h1 span { color: transparent; -webkit-text-stroke: 1px rgba(238, 247, 244, 0.65)
 
 @media (max-width: 600px) {
   .topbar-actions { gap: 7px; }
-  .settings-button { min-height: 32px; padding: 0 8px; font-size: .52rem; }
+  .settings-button { min-height: 44px; padding: 0 8px; font-size: .58rem; }
+  .status-strip { grid-template-columns: 1fr 1fr; }
+  .status-strip strong, #tempoReadout { font-size: .7rem; letter-spacing: 0; }
+  .settings-grid select, .settings-grid input, .touch-controls select { font-size: 16px; }
   .touch-controls { align-items: stretch; flex-wrap: wrap; }
   .touch-controls label { flex: 1 1 auto; }
   .touch-controls > span { width: 100%; margin-left: 0; text-align: left; }

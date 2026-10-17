@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07111f">
   <title>QWOP Runner Ver 1.1.0</title>
   <link rel="stylesheet" href="style.css">
@@ -10,7 +10,6 @@
 <body>
   <main>
     <header>
-      <a href="../index.html" aria-label="アーケードへ戻る">← ARCADE</a>
       <div class="race-hud">
         <span class="hud-stat distance">DISTANCE <b id="distance">0.00 m</b></span>
         <span class="hud-stat">TO GO <b id="toGo">100.0 m</b></span>
@@ -51,6 +50,7 @@
           <strong id="resultComparison"></strong>
           <small id="resultFlags"></small>
         </div>
+        <button id="resumeButton" type="button" hidden>RESUME</button>
         <button id="runAgainButton" type="button" hidden>RUN AGAIN</button>
       </div>
       <div class="race-records"><b id="recordStatus">VALID RUN</b><span>BEST DISTANCE <strong id="bestDistance">0.00 m</strong></span></div>

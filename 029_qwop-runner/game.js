@@ -54,6 +54,8 @@
   });
   const phases = QWOPTraining.PHASES;
   const activePointers = new Map();
+  const keyboardKeys = new Set();
+  const resumeButton = document.querySelector("#resumeButton");
 
   let debug = false;
   let cameraX = 0;
@@ -144,7 +146,8 @@
   }
 
   function beginCountdown() {
-    if (race.state !== QWOPRace.RACE_STATE.READY) return false;
+    if (race.paused || race.state !== QWOPRace.RACE_STATE.READY) return false;
+    stopDemo();
     clearInputs();
     activePointers.clear();
     physics.reset();
@@ -200,7 +203,7 @@
     raceProgress.setAttribute("aria-valuenow", String(Math.round(finished ? 100 : progress)));
     recordStatus.textContent = race.recordValid ? "VALID RUN" : `DEBUG RUN - ${race.invalidReasons.join(" / ")}`;
     recordStatus.classList.toggle("invalid", !race.recordValid);
-    raceMessage.textContent = finished ? "GOAL!" : gameOver ? "GAME OVER" : label;
+    raceMessage.textContent = race.paused ? "PAUSED" : finished ? "GOAL!" : gameOver ? "GAME OVER" : label;
     raceOverlay.classList.toggle("go", label === "GO!");
     raceOverlay.classList.toggle("finished", finished);
     raceOverlay.classList.toggle("game-over", gameOver);
@@ -243,11 +246,13 @@
       resultComparison.textContent = "";
       resultFlags.textContent = "";
     }
-    raceOverlay.hidden = !ended && !label;
+    raceOverlay.hidden = !race.paused && !ended && !label;
+    resumeButton.hidden = !race.paused;
+    stage.classList.toggle("race-paused", race.paused);
     raceResult.hidden = !ended;
     runAgainButton.hidden = !ended;
     runAgainButton.textContent = gameOver ? "RETRY" : "RUN AGAIN";
-    difficultyPanel.hidden = race.state !== QWOPRace.RACE_STATE.READY;
+    difficultyPanel.hidden = race.paused || race.state !== QWOPRace.RACE_STATE.READY;
     if (!raceNotice.hidden && now >= raceNoticeUntil) raceNotice.hidden = true;
   }
 
@@ -338,35 +343,51 @@
   }
 
   function clearInputs() {
+    keyboardKeys.clear();
+    activePointers.clear();
     Object.keys(physics.inputState).forEach(key => setInput(key, false));
+  }
+
+  function syncManualInput(key) {
+    if (inputLocked()) return;
+    setInput(key, keyboardKeys.has(key) || [...activePointers.values()].includes(key));
+  }
+
+  function releasePointer(event) {
+    const key = activePointers.get(event.pointerId);
+    if (!key) return;
+    activePointers.delete(event.pointerId);
+    syncManualInput(key);
   }
 
   function bindPointerControl(button) {
     const key = button.dataset.key;
     button.addEventListener("pointerdown", event => {
       event.preventDefault();
+      if (!(key in physics.inputState) || event.button !== 0 || activePointers.has(event.pointerId)) return;
       if (inputLocked()) {
-        if (race.state === QWOPRace.RACE_STATE.COUNTDOWN) showRaceNotice("WAIT", 550, "falseStart");
+        if (race.state === QWOPRace.RACE_STATE.COUNTDOWN && !race.paused) showRaceNotice("WAIT", 550, "falseStart");
         return;
       }
-      button.setPointerCapture(event.pointerId);
       activePointers.set(event.pointerId, key);
-      setInput(key, true);
+      try { button.setPointerCapture(event.pointerId); } catch { /* Window release is the fallback. */ }
+      syncManualInput(key);
     });
-    const release = event => {
-      const releasedKey = activePointers.get(event.pointerId);
-      if (!releasedKey) return;
-      activePointers.delete(event.pointerId);
-      if (![...activePointers.values()].includes(releasedKey)) setInput(releasedKey, false);
-    };
-    button.addEventListener("pointerup", release);
-    button.addEventListener("pointercancel", release);
-    button.addEventListener("lostpointercapture", release);
+    button.addEventListener("pointerup", releasePointer);
+    button.addEventListener("pointercancel", releasePointer);
+    button.addEventListener("lostpointercapture", releasePointer);
     button.addEventListener("contextmenu", event => event.preventDefault());
   }
+  window.addEventListener("pointerup", releasePointer);
+  window.addEventListener("pointercancel", releasePointer);
 
   document.addEventListener("keydown", event => {
     const key = event.key.toLowerCase();
+    if (race.paused && (key === "enter" || key === " ")) {
+      event.preventDefault();
+      if (!event.repeat) resumeRace();
+      return;
+    }
     if ((key === "enter" || key === " ") && race.state === QWOPRace.RACE_STATE.READY) {
       event.preventDefault();
       beginCountdown();
@@ -383,19 +404,39 @@
       if (race.state === QWOPRace.RACE_STATE.COUNTDOWN) showRaceNotice("WAIT", 550, "falseStart");
       return;
     }
-    setInput(key, true);
+    if (event.repeat && !keyboardKeys.has(key)) return;
+    keyboardKeys.add(key);
+    syncManualInput(key);
   });
   document.addEventListener("keyup", event => {
     const key = event.key.toLowerCase();
     if (!(key in physics.inputState)) return;
     event.preventDefault();
-    if (!inputLocked()) setInput(key, false);
+    keyboardKeys.delete(key);
+    syncManualInput(key);
   });
-  window.addEventListener("blur", () => {
-    if (demo.active) stopDemo();
+  function suspendRace() {
     clearInputs();
-    activePointers.clear();
+    if (race.state !== QWOPRace.RACE_STATE.READY || demo.active || physicsTest.mode || armFormTest.active || armConnectionTest.active || elbowMatrixTest.active) race.pause(performance.now());
+    lastTime = performance.now();
+    updateRaceUI(lastTime);
+  }
+
+  function resumeRace() {
+    if (document.hidden || !race.resume(performance.now())) return;
+    clearInputs();
+    lastTime = performance.now();
+    velocitySamples.length = 0;
+    if (demo.active) applyDemoPhase();
+    updateRaceUI(lastTime);
+  }
+  window.addEventListener("blur", suspendRace);
+  window.addEventListener("pagehide", suspendRace);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) suspendRace();
+    lastTime = performance.now();
   });
+  resumeButton.addEventListener("click", resumeRace);
   document.querySelectorAll(".controls [data-key]").forEach(bindPointerControl);
 
   const diagnosticsEl = document.createElement("pre");
@@ -666,7 +707,7 @@
   }
 
   function startDemo(options = {}) {
-    if (physicsTest.mode) return;
+    if (race.paused || physicsTest.mode || ![QWOPRace.RACE_STATE.READY, QWOPRace.RACE_STATE.RUNNING].includes(race.state)) return;
     invalidateRace(options.source === "training" ? "TRAINING DEMO" : "DEMO FORWARD");
     stopArmFormTest();
     clearInputs();
@@ -1214,15 +1255,27 @@
   function frame(now) {
     const delta = Math.min(now - lastTime, 100);
     lastTime = now;
-    updateDemo(delta);
-    updateTraining(delta);
-    updateArmFormTest(delta);
-    physics.step(delta);
-    updateElbowMatrixTest(delta);
-    updateArmConnectionTest(delta);
-    updatePhysicsTest(delta);
-    updateRace(now);
-    updateGameOver(now, delta);
+    if (!race.paused && !document.hidden) {
+      const debugReady = race.state === QWOPRace.RACE_STATE.READY
+        && (demo.active || physicsTest.mode || armFormTest.active || armConnectionTest.active || elbowMatrixTest.active);
+      if (race.state === QWOPRace.RACE_STATE.RUNNING || debugReady) {
+        updateDemo(delta);
+        updateTraining(delta);
+        updateArmFormTest(delta);
+        const before = physics.engine.timing.timestamp;
+        physics.step(delta);
+        const simulatedDelta = physics.engine.timing.timestamp - before;
+        updateElbowMatrixTest(simulatedDelta);
+        updateArmConnectionTest(simulatedDelta);
+        updatePhysicsTest(simulatedDelta);
+        // Charge only time actually simulated by the unchanged 60 Hz engine.
+        const raceNow = debugReady ? now : race.raceStartTime + race.elapsedMs + simulatedDelta;
+        updateRace(raceNow);
+        updateGameOver(raceNow, simulatedDelta);
+      } else {
+        updateRace(now);
+      }
+    }
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const desiredCamera = physics.bodies.torso.position.x - (width / viewScale) * 0.38;
@@ -1240,12 +1293,12 @@
   }
 
   window.addEventListener("resize", resize, { passive: true });
-  document.addEventListener("visibilitychange", () => { lastTime = performance.now(); });
   resize();
   retry();
   if (raceTestMode) {
     window.__QWOP_RACE_TEST__ = {
       snapshot: () => race.snapshot(),
+      motionSnapshot: () => ({ timestamp: physics.engine.timing.timestamp, x: physics.bodies.torso.position.x, y: physics.bodies.torso.position.y }),
       forceDistance: distance => updateRace(performance.now(), distance),
       placeRunnerAt: distance => {
         const targetX = raceWorldOriginX + raceMetersToPhysicalDelta(distance);

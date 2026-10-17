@@ -98,6 +98,8 @@
     reset(now = 0) {
       this.bestDistanceAtStart = this.bestDistance;
       this.state = RACE_STATE.READY;
+      this.paused = false;
+      this.pausedAt = null;
       this.countdownStartTime = null;
       this.raceStartTime = null;
       this.elapsedMs = 0;
@@ -124,6 +126,25 @@
       return this.snapshot();
     }
 
+    pause(now) {
+      if (this.paused || ![RACE_STATE.READY, RACE_STATE.COUNTDOWN, RACE_STATE.RUNNING].includes(this.state)) return false;
+      this.paused = true;
+      this.pausedAt = now;
+      // Resting during a run can improve performance even with its time excluded.
+      if (this.state === RACE_STATE.RUNNING) this.invalidate("INTERRUPTED");
+      return true;
+    }
+
+    resume(now) {
+      if (!this.paused) return false;
+      if (this.state === RACE_STATE.COUNTDOWN) this.countdownStartTime += now - this.pausedAt;
+      if (this.state === RACE_STATE.RUNNING) this.raceStartTime = now - this.elapsedMs;
+      this.goVisibleUntil += now - this.pausedAt;
+      this.paused = false;
+      this.pausedAt = null;
+      return true;
+    }
+
     invalidate(reason = "DEBUG") {
       if (this.recordValid && this.bestDistance > this.bestDistanceAtStart) {
         this.bestDistance = this.bestDistanceAtStart;
@@ -142,7 +163,7 @@
       if (this.state === RACE_STATE.READY) return "READY";
       if (this.state === RACE_STATE.RUNNING) return now < this.goVisibleUntil ? "GO!" : "";
       if (this.state !== RACE_STATE.COUNTDOWN || this.countdownStartTime === null) return "";
-      const elapsed = Math.max(0, now - this.countdownStartTime);
+      const elapsed = Math.max(0, (this.paused ? this.pausedAt : now) - this.countdownStartTime);
       const c = this.countdown;
       if (elapsed < c.ready) return "READY";
       if (elapsed < c.ready + c.three) return "3";
@@ -167,7 +188,7 @@
     }
 
     finish(now) {
-      if (this.state !== RACE_STATE.RUNNING) return { started: false, finished: false };
+      if (this.paused || this.state !== RACE_STATE.RUNNING) return { started: false, finished: false };
       this.elapsedMs = Math.max(0, now - this.raceStartTime);
       this.finalTimeMs = this.elapsedMs;
       this.state = RACE_STATE.FINISHED;
@@ -184,7 +205,7 @@
     }
 
     gameOver(now, distance = this.currentDistance) {
-      if (this.state !== RACE_STATE.RUNNING) return { gameOver: false, newDistanceBest: false };
+      if (this.paused || this.state !== RACE_STATE.RUNNING) return { gameOver: false, newDistanceBest: false };
       this.currentDistance = finiteNumber(distance) ?? this.currentDistance;
       this.maxDistance = Math.max(this.maxDistance, this.currentDistance);
       this.elapsedMs = Math.max(0, now - this.raceStartTime);
@@ -197,6 +218,7 @@
 
     update(now, distance) {
       const event = { started: false, finished: false, halfway: false, finalTen: false, newBest: false };
+      if (this.paused) return event;
       if (this.state === RACE_STATE.COUNTDOWN && now - this.countdownStartTime >= this.countdownRunAt()) {
         Object.assign(event, this.startRace(now));
         return event;
@@ -219,12 +241,13 @@
     }
 
     get inputEnabled() {
-      return this.state === RACE_STATE.RUNNING;
+      return !this.paused && this.state === RACE_STATE.RUNNING;
     }
 
     snapshot() {
       return {
         state: this.state,
+        paused: this.paused,
         inputEnabled: this.inputEnabled,
         recordCategory: this.recordCategory,
         elapsedMs: this.elapsedMs,

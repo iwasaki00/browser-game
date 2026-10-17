@@ -1,11 +1,12 @@
 :root { color-scheme: dark; --ink:#eff8ff; --muted:#91a6b8; --cyan:#63e6e2; --coral:#ff7068; }
 * { box-sizing: border-box; }
 html, body { width:100%; height:100%; margin:0; overflow:hidden; }
-body { background:#07111f; color:var(--ink); font-family:Inter,system-ui,sans-serif; overscroll-behavior:none; user-select:none; -webkit-user-select:none; touch-action:none; -webkit-tap-highlight-color:transparent; }
+body { background:#07111f; color:var(--ink); font-family:Inter,system-ui,sans-serif; overscroll-behavior:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
 button, a { color:inherit; font:inherit; }
-main { display:grid; grid-template-rows:62px minmax(0,1fr) 108px; height:100%; }
+button { touch-action:manipulation; -webkit-touch-callout:none; user-select:none; -webkit-user-select:none; }
+button[hidden] { display:none; }
+main { display:grid; grid-template-rows:62px minmax(0,1fr) 108px; height:100%; height:100dvh; padding-top:env(safe-area-inset-top); padding-inline:env(safe-area-inset-left) env(safe-area-inset-right); }
 header { position:relative; z-index:4; display:flex; align-items:center; justify-content:center; gap:18px; padding:8px 18px; background:#091827; border-bottom:1px solid #294052; font-size:11px; letter-spacing:.12em; }
-header a { margin-right:auto; color:var(--muted); font-weight:800; text-decoration:none; }
 header div { color:var(--muted); font-weight:800; }
 header b { margin-left:9px; color:#fff; font:700 24px monospace; letter-spacing:0; }
 .race-hud { display:flex; align-items:center; justify-content:center; gap:18px; }
@@ -116,8 +117,6 @@ aside > span { float:right; color:var(--cyan); }
 @media (max-width:760px) {
   main { grid-template-rows:52px minmax(0,1fr) 92px; }
   header { gap:7px; padding-inline:8px; }
-  header a { width:22px; overflow:hidden; font-size:0; }
-  header a::first-letter { font-size:18px; }
   header b { font-size:18px; }
   .race-hud { gap:7px; }
   .hud-stat { flex-direction:column; gap:1px; font-size:7px; }
@@ -136,15 +135,15 @@ aside > span { float:right; color:var(--cyan); }
   .difficulty-panel p { margin:5px 0; font-size:8px; }
 }
 @media (orientation:portrait) and (max-width:760px) {
-  main { grid-template-rows:58px minmax(280px,1fr) minmax(218px,30vh); }
-  header { display:grid; grid-template-columns:24px minmax(0,1fr) auto auto; gap:6px; padding:6px 8px; }
+  main { grid-template-rows:58px minmax(0,1fr) calc(clamp(160px,25dvh,218px) + env(safe-area-inset-bottom)); }
+  header { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:6px; padding:6px 8px; }
   .race-hud { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:3px; width:100%; }
   header .distance { line-height:1.05; text-align:center; }
   header .hud-stat b { display:block; margin:3px 0 0; font-size:12px; }
   header button { min-height:38px; }
   .difficulty-badge { top:auto; right:8px; bottom:-18px; left:auto; min-width:42px; font-size:6px; }
-  .controls { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:10px; padding:10px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }
-  .controls button { width:100%; height:auto; min-height:88px; }
+  .controls { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:8px; padding:8px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); }
+  .controls button { width:100%; height:auto; min-height:60px; }
   .controls button b { font-size:36px; }
   .controls button span { font-size:11px; }
   aside { top:8px; right:8px; width:calc(100% - 16px); max-height:46%; padding:11px; }
@@ -161,4 +160,49 @@ aside > span { float:right; color:var(--cyan); }
   .difficulty-panel button { min-height:48px; }
   .version { bottom:4px; font-size:6px; }
   #parameters { grid-template-columns:1fr; }
+}
+
+.race-paused .race-overlay { z-index:10; background:#07111fd9; pointer-events:auto; }
+.race-paused .training-panel { visibility:hidden; }
+.race-overlay.finished, .race-overlay.game-over { overflow-y:auto; justify-content:flex-start; padding:10px 0; pointer-events:auto; }
+.race-overlay.finished > *, .race-overlay.game-over > * { flex-shrink:0; }
+.race-overlay.finished > b, .race-overlay.game-over > b { font-size:clamp(30px,7vh,64px); }
+@media (orientation:portrait) and (max-width:760px) {
+  .training-panel { top:70px; left:auto; right:8px; width:min(200px,57%); padding:7px; }
+  .training-title { flex-wrap:wrap; gap:3px; font-size:8px; }
+  .training-title span { font-size:10px; }
+  .training-cue { gap:4px; margin-top:5px; }
+  .training-cue span { padding:4px; }
+  .training-cue b { font-size:16px; }
+  .timing-track { margin:5px 0; }
+  .training-history { min-height:22px; }
+  .training-history span { padding:2px 3px; font-size:7px; }
+  .training-actions { gap:4px; margin-top:5px; }
+  .training-actions button { font-size:8px; }
+  .race-result > strong { margin-top:6px; font-size:12px; }
+  .race-result > small { margin-top:4px; font-size:8px; }
+  .result-grid b { font-size:14px; overflow-wrap:anywhere; }
+  .race-overlay button { min-height:44px; padding:10px 16px; }
+}
+@media (orientation:landscape) and (max-height:450px) {
+  main { grid-template-rows:48px minmax(0,1fr) calc(76px + env(safe-area-inset-bottom)); }
+  header { gap:10px; padding:4px 10px; }
+  .race-hud { gap:10px; }
+  .hud-stat { font-size:8px; }
+  .hud-stat b { font-size:17px; }
+  .controls { padding-top:4px; padding-bottom:max(4px,env(safe-area-inset-bottom)); }
+  .controls button { height:64px; }
+  .difficulty-panel { padding:6px; bottom:5px; }
+  .difficulty-panel > div { margin-top:5px; }
+  .difficulty-panel p { margin:4px 0; font-size:9px; }
+  .training-panel { width:260px; padding:6px; top:48px; }
+  .training-history { display:none; }
+  .result-grid { gap:4px; }
+  .result-grid span { padding:5px 3px; font-size:7px; }
+  .result-grid b { font-size:15px; }
+  .race-result { padding:7px; }
+  .race-result > strong { margin-top:4px; font-size:12px; }
+  .race-result > small { margin-top:3px; font-size:8px; }
+  .race-overlay { gap:5px; }
+  .race-overlay button { min-height:44px; padding:8px 16px; }
 }

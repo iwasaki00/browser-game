@@ -6,7 +6,7 @@ const path = require("node:path");
 
 const EDGE = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const DEBUG_PORT = 9230;
-const GAME_URL = "http://127.0.0.1:8030/030_minesweeper-sequencer/index.html";
+const GAME_URL = "http://127.0.0.1:8030/030_minesweeper-sequencer/index.html" + (process.env.FOCUSED === "1" ? "?debug=1" : "");
 const MENU_URL = "http://127.0.0.1:8030/index.html";
 const profileDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "mine-seq-edge-"));
 const screenshots = {
@@ -92,6 +92,12 @@ async function main() {
       const ready = await evaluate("document.readyState === 'complete' && document.querySelectorAll('.cell').length === 64");
       if (!ready) throw new Error("Game UI is not ready");
     });
+
+    if (process.env.FOCUSED === "1") {
+      await require("./playback-input-smoke.cjs")(call, evaluate);
+      socket.close();
+      return;
+    }
 
     const initial = await evaluate(`({
       cells: document.querySelectorAll(".cell").length,

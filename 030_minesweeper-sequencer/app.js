@@ -68,9 +68,13 @@
   let settings = Settings.loadSettings();
   let game = Core.createGame(Settings.toGameOptions(settings));
   let schedulerId = 0;
+  let playbackGeneration = 0;
+  let pendingStart = null;
+  let completionGame = null;
+  let inputGeneration = 0;
   let nextNoteTime = 0;
   let nextStepToSchedule = 0;
-  let visualTimers = [];
+  const visualTimers = new Set();
   let completionStopTimer = 0;
   let glitchVisualTimer = 0;
   let pressTimer = 0;
@@ -81,6 +85,7 @@
   let pendingDoubleCell = null;
   let switchAction = "OPEN";
   let modifierAction = null;
+  let modifierPointer = null;
   let userScrollUntil = 0;
   let followSuspended = false;
   let programmaticScrollUntil = 0;
@@ -223,6 +228,8 @@
     statusElement.dataset.state = game.gameState;
     playButton.classList.toggle("active", game.isPlaying);
     playButton.setAttribute("aria-pressed", String(game.isPlaying));
+    playButton.setAttribute("aria-busy", String(Boolean(pendingStart)));
+    document.querySelector("#audioState").textContent = pendingStart ? "AUDIO STARTING…" : game.isPlaying ? "AUDIO PLAYING" : "AUDIO STOPPED";
     applyBoardPresentation();
     updateTouchControls();
     renderPlayhead();
@@ -281,7 +288,11 @@
   }
 
   async function openSelectedCell(row, column) {
-    await wakeAudio();
+    const board = game;
+    const generation = inputGeneration;
+    const context = await wakeAudio();
+    if (board !== game || generation !== inputGeneration) return;
+    reportAudio(context);
     const target = game.board[row] && game.board[row][column];
     const isChord = target && target.isOpen && !target.isMine && target.adjacentMines > 0;
     const result = isChord
@@ -291,14 +302,14 @@
     render();
     const now = AudioEngine.currentTime();
     if (result.type === "safe" || result.type === "chord") {
-      result.opened.filter((cell) => cell.isNote).forEach((cell, index) => {
+      result.opened.filter((cell) => context && cell.isNote).forEach((cell, index) => {
         AudioEngine.playCellNote(cell, now + index * (isChord ? 0.032 : 0.018), { preview: true });
       });
       if (result.cleared) startCompletionSequence();
     }
     if (result.type === "mine" || result.minesHit > 0) {
       if (result.gameOver) stopSequence();
-      AudioEngine.playMissEffect(AudioEngine.currentTime());
+      if (context) AudioEngine.playMissEffect(AudioEngine.currentTime());
       document.body.classList.add("glitching");
       window.clearTimeout(glitchVisualTimer);
       glitchVisualTimer = window.setTimeout(() => document.body.classList.remove("glitching"), Core.GLITCH_DURATION_MS);
@@ -307,11 +318,15 @@
   }
 
   async function flagSelectedCell(row, column, desiredState) {
-    await wakeAudio();
+    const board = game;
+    const generation = inputGeneration;
+    const context = await wakeAudio();
+    if (board !== game || generation !== inputGeneration) return;
+    reportAudio(context);
     if (typeof desiredState === "boolean") Core.setFlag(game, row, column, desiredState);
     else Core.toggleFlag(game, row, column);
     const cell = game.board[row][column];
-    if (cell.mineAccentEnabled) {
+    if (context && cell.mineAccentEnabled) {
       AudioEngine.playMineAccent(cell.row, AudioEngine.currentTime(), { preview: true });
     }
     render();
@@ -342,6 +357,7 @@
   }
 
   function resetInputState() {
+    inputGeneration += 1;
     clearPress();
     window.clearTimeout(doubleTapTimer);
     doubleTapTimer = 0;
@@ -350,6 +366,7 @@
     pointerContext = null;
     longPressTriggered = false;
     modifierAction = null;
+    modifierPointer = null;
     followSuspended = false;
     userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
     updateTouchControls();
@@ -378,12 +395,14 @@
   }
 
   boardElement.addEventListener("pointerdown", (event) => {
+    if (pointerContext) return;
     const cell = event.target.closest(".cell");
     if (!cell || cell.disabled || (event.pointerType === "mouse" && event.button !== 0)) return;
     clearPress();
     pressedCell = cell;
     followSuspended = true;
     pointerContext = {
+      pointerId: event.pointerId,
       cell,
       row: Number(cell.dataset.row),
       column: Number(cell.dataset.column),
@@ -392,11 +411,14 @@
       pointerType: event.pointerType || "mouse",
       moved: false
     };
+    if (cell.setPointerCapture && event.isTrusted) cell.setPointerCapture(event.pointerId);
     longPressTriggered = false;
     cell.classList.add("pressing");
     if (pointerContext.pointerType !== "mouse" &&
         Input.longPressAction(settings.touchMode) !== Input.ACTIONS.NONE) {
+      const context = pointerContext;
       pressTimer = window.setTimeout(() => {
+        if (pointerContext !== context || context.moved) return;
         longPressTriggered = true;
         performAction(Input.longPressAction(settings.touchMode), pointerContext.row, pointerContext.column);
         clearPress();
@@ -405,7 +427,7 @@
   });
 
   boardElement.addEventListener("pointermove", (event) => {
-    if (!pointerContext) return;
+    if (!pointerContext || pointerContext.pointerId !== event.pointerId) return;
     const distance = Math.hypot(event.clientX - pointerContext.startX, event.clientY - pointerContext.startY);
     if (distance > LONG_PRESS_MOVE_PX) {
       pointerContext.moved = true;
@@ -413,8 +435,9 @@
     }
   });
 
-  boardElement.addEventListener("pointerup", (event) => {
+  window.addEventListener("pointerup", (event) => {
     const context = pointerContext;
+    if (!context || context.pointerId !== event.pointerId) return;
     clearPress();
     pressedCell = null;
     pointerContext = null;
@@ -435,9 +458,17 @@
     else performAction(action, context.row, context.column);
   });
 
-  boardElement.addEventListener("pointercancel", () => {
-    resetInputState();
-  });
+  function cancelBoardPointer(event) {
+    if (!pointerContext || pointerContext.pointerId !== event.pointerId) return;
+    clearPress();
+    pressedCell = null;
+    pointerContext = null;
+    longPressTriggered = false;
+    followSuspended = false;
+    userScrollUntil = performance.now() + FOLLOW_RESUME_MS;
+  }
+  window.addEventListener("pointercancel", cancelBoardPointer);
+  boardElement.addEventListener("lostpointercapture", cancelBoardPointer);
 
   boardElement.addEventListener("contextmenu", (event) => {
     event.preventDefault();
@@ -457,6 +488,8 @@
   }, { passive: true });
 
   function scheduleStep(step, time) {
+    const board = game;
+    const generation = playbackGeneration;
     const glitch = Core.refreshGlitch(game);
     Core.getNotesAtStep(game, step).forEach((cell) => {
       AudioEngine.playCellNote(cell, time, { glitch });
@@ -466,8 +499,9 @@
     });
     if (glitch) AudioEngine.playGlitchTick(time);
     const delay = Math.max(0, (time - AudioEngine.currentTime()) * 1000);
-    visualTimers.push(window.setTimeout(() => {
-      if (!game.isPlaying) return;
+    const visualTimer = window.setTimeout(() => {
+      visualTimers.delete(visualTimer);
+      if (board !== game || generation !== playbackGeneration || !game.isPlaying) return;
       game.currentStep = step;
       stepReadout.textContent = `STEP ${step + 1}`;
       renderPlayhead();
@@ -478,12 +512,14 @@
         if (completed) {
           const tail = ((60 / game.bpm) / 2) * 850;
           completionStopTimer = window.setTimeout(() => {
+            if (board !== game || generation !== playbackGeneration) return;
             stopSequence();
             updateCompletionBanner(true);
           }, tail);
         }
       }
-    }, delay));
+    }, delay);
+    visualTimers.add(visualTimer);
   }
 
   function schedulerTick() {
@@ -496,40 +532,65 @@
   }
 
   async function startSequence(options = {}) {
-    if (game.gameState === "gameover" || game.isPlaying) return;
-    const context = await AudioEngine.resume();
-    if (!context) return;
+    if (document.hidden || game.gameState === "gameover" || game.isPlaying || pendingStart) return;
+    const request = { board: game, generation: playbackGeneration };
+    pendingStart = request;
+    render();
+    const context = await wakeAudio();
+    if (pendingStart !== request || request.board !== game || request.generation !== playbackGeneration) return;
+    pendingStart = null;
+    reportAudio(context);
+    if (!context || document.hidden || game.gameState === "gameover") {
+      game.completionMode = false;
+      updateCompletionBanner(true);
+      render();
+      return;
+    }
+    if (options.completion) AudioEngine.playClearEffect(game.isPerfect, AudioEngine.currentTime());
     game.isPlaying = true;
     game.currentStep = 0;
     nextStepToSchedule = 0;
     nextNoteTime = AudioEngine.currentTime() + (options.delay == null ? 0.06 : options.delay);
     schedulerTick();
-    schedulerId = window.setInterval(schedulerTick, LOOKAHEAD_MS);
+    const generation = playbackGeneration;
+    schedulerId = window.setInterval(() => {
+      if (generation === playbackGeneration && game.isPlaying) schedulerTick();
+    }, LOOKAHEAD_MS);
     render();
   }
 
   function stopSequence() {
+    playbackGeneration += 1;
+    inputGeneration += 1;
+    pendingStart = null;
     window.clearInterval(schedulerId);
     schedulerId = 0;
     window.clearTimeout(completionStopTimer);
     completionStopTimer = 0;
     visualTimers.forEach(window.clearTimeout);
-    visualTimers = [];
+    visualTimers.clear();
     AudioEngine.stopAll();
     game.isPlaying = false;
+    game.completionMode = false;
     game.currentStep = 0;
     render();
+    updateCompletionBanner(true);
   }
 
-  async function startCompletionSequence() {
+  function startCompletionSequence() {
+    if (game.gameState !== "clear" || completionGame === game) return;
+    completionGame = game;
     stopSequence();
     Core.beginCompletion(game);
     updateCompletionBanner();
     render();
-    const context = await wakeAudio();
-    if (!context) return;
-    AudioEngine.playClearEffect(game.isPerfect, AudioEngine.currentTime());
-    await startSequence({ delay: 0.42 });
+    return startSequence({ delay: 0.42, completion: true });
+  }
+
+  function reportAudio(context) {
+    const notice = document.querySelector("#audioNotice");
+    notice.hidden = Boolean(context);
+    if (!context) notice.textContent = "音声を開始できませんでした。ゲームは操作できます。PLAYを押して再試行してください。";
   }
 
   function newGame() {
@@ -634,10 +695,12 @@
   }
 
   async function debugChord() {
+    const board = game;
     if (!game.minesPlaced) Core.placeMines(game, 0, 0);
     const target = game.board.flat().find((item) => !item.isMine && item.adjacentMines > 0);
     if (!target) return;
     await openSelectedCell(target.row, target.column);
+    if (board !== game) return;
     game.board.flat().filter((cell) =>
       cell.isMine && Math.abs(cell.row - target.row) <= 1 &&
       Math.abs(cell.column - target.column) <= 1
@@ -647,6 +710,7 @@
   }
 
   function forceCompletion(perfect) {
+    if (completionGame === game) return;
     stopSequence();
     if (!game.minesPlaced) Core.placeMines(game, 0, 0);
     game.board.flat().forEach((cell) => {
@@ -666,6 +730,7 @@
 
   playButton.addEventListener("click", startSequence);
   stopButton.addEventListener("click", () => {
+    resetInputState();
     game.completionMode = false;
     stopSequence();
     updateCompletionBanner(true);
@@ -695,12 +760,17 @@
 
   twoHandControls.querySelectorAll("[data-modifier]").forEach((button) => {
     button.addEventListener("pointerdown", (event) => {
+      if (settings.touchMode !== "TWO HAND" || modifierPointer || (event.pointerType === "mouse" && event.button !== 0)) return;
       event.preventDefault();
+      modifierPointer = { id: event.pointerId, button };
+      if (button.setPointerCapture && event.isTrusted) button.setPointerCapture(event.pointerId);
       modifierAction = button.dataset.modifier;
       updateTouchControls();
     });
-    ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
-      button.addEventListener(eventName, () => {
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach((eventName) => {
+      window.addEventListener(eventName, (event) => {
+        if (!modifierPointer || modifierPointer.button !== button || modifierPointer.id !== event.pointerId) return;
+        modifierPointer = null;
         modifierAction = null;
         updateTouchControls();
       });
@@ -726,10 +796,13 @@
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden && game.isPlaying) stopSequence();
+    if (document.hidden) stopSequence();
     if (document.hidden) resetInputState();
   });
-  window.addEventListener("blur", resetInputState);
+  window.addEventListener("blur", () => {
+    resetInputState();
+    stopSequence();
+  });
 
   if (debugMode) {
     document.body.classList.add("debug-mode");

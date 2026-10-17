@@ -29,8 +29,8 @@
 
   async function resume() {
     const audioContext = ensureContext();
-    if (audioContext && audioContext.state === "suspended") await audioContext.resume();
-    return audioContext;
+    if (audioContext && audioContext.state !== "running") await audioContext.resume();
+    return audioContext && audioContext.state === "running" ? audioContext : null;
   }
 
   function track(source) {
