@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
+  <meta name="theme-color" content="#050915">
+  <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
+  <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
+  <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app" aria-label="ドット防衛戦線">
+    <header class="site-bar">
+      <a href="../index.html" aria-label="Browser Game Arcadeへ戻る">← ARCADE</a>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.0</b></span>
+      <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
+    </header>
+    <section id="gameShell" class="game-shell">
+      <canvas id="game" width="320" height="180" tabindex="0" aria-label="ゲーム画面。タイトル画面です"></canvas>
+      <div id="screenTitle" class="screen screen--title is-active">
+        <div class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p class="eyebrow">CITY DEFENSE COMMAND / 2089</p>
+        <h1>ドット防衛戦線<small>PIXEL DEFENSE FRONT</small></h1>
+        <button class="menu-button menu-button--primary" data-action="start">MISSION START</button>
+        <button class="menu-button" data-action="continue">CONTINUE</button>
+        <button class="menu-button" data-action="howto">操作方法</button>
+        <p class="blink">PRESS ENTER / TAP START</p>
+      </div>
+      <div id="screenMission" class="screen">
+        <p class="eyebrow">SELECT MISSION</p><h2>ミッション選択</h2>
+        <button class="mission-card" data-action="select-m01"><span>M01</span><strong>市街地防衛線</strong><small>侵攻群を突破し、巣の中心を破壊せよ</small></button>
+        <div class="locked-card"><span>M02</span><strong>LOCKED</strong></div>
+        <button class="menu-button" data-action="back-title">戻る</button>
+      </div>
+      <div id="screenEquip" class="screen">
+        <p class="eyebrow">EQUIPMENT</p><h2>装備選択 <small>2つ選択</small></h2>
+        <div id="weaponGrid" class="weapon-grid"></div><p id="equipMessage" class="equip-message">A-01とS-02を装備中</p>
+        <div class="button-row"><button class="menu-button" data-action="back-mission">戻る</button><button class="menu-button menu-button--primary" data-action="deploy">出撃</button></div>
+      </div>
+      <div id="screenHowto" class="screen screen--panel">
+        <p class="eyebrow">CONTROLS</p><h2>操作方法</h2>
+        <div class="howto-grid"><div><b>移動</b><span>A / D・← / →</span></div><div><b>ジャンプ</b><span>W / ↑ / SPACE</span></div><div><b>照準・射撃</b><span>マウス</span></div><div><b>武器切替</b><span>Q / E / SHIFT</span></div><div><b>ポーズ</b><span>ESC / P</span></div><div><b>スマホ</b><span>画面下の仮想パッド</span></div></div>
+        <button class="menu-button menu-button--primary" data-action="close-howto">了解</button>
+      </div>
+      <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="result-next">装備画面へ</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="orientationHint" class="orientation-hint"><b>横向き推奨</b><span>端末を横向きにすると遊びやすくなります</span></div>
+      <div id="touchControls" class="touch-controls" aria-label="タッチ操作"><div class="touch-left"><button data-touch="left" aria-label="左へ移動">◀</button><button data-touch="right" aria-label="右へ移動">▶</button><button data-touch="jump" aria-label="ジャンプ">JUMP</button></div><div id="aimPad" class="aim-pad" aria-label="照準と射撃"><span>FIRE</span></div><button class="switch-button" data-touch="switch" aria-label="武器切替">SW</button></div>
+    </section>
+    <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
+  </main>
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>

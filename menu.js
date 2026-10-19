@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "031",
+      title: "ドット防衛戦線",
+      genre: "Action / Shooting",
+      description: "8種類の武器を切り替えて機械侵攻群を迎撃する、8bit風横スクロール防衛アクション。市街地を突破し、巨大な巣の中心を破壊せよ。",
+      href: "./031_ファミコン風地球防衛軍/index.html",
+      icon: "./031_ファミコン風地球防衛軍/assets/game-icon.svg",
+      alt: "夜の工業都市で機械生命体へ発砲するピクセル兵士のアイコン",
+      cta: "このゲームを遊ぶ",
+      ariaLabel: "ドット防衛戦線を遊ぶ"
+    },
+    {
       number: "030",
       title: "マインスイーパシーケンサ",
       genre: "Puzzle / Music",
@@ -302,6 +313,7 @@
     detailTitle.textContent = game.title;
     detailDescription.textContent = game.description;
     detailPlay.href = game.href;
+    detailPlay.textContent = `${game.cta || "このゲームを遊ぶ"} ↗`;
 
     if (typeof dialog.showModal === "function") dialog.showModal();
     else dialog.setAttribute("open", "");
@@ -355,7 +367,7 @@
     const card = document.createElement("a");
     card.className = "game-card";
     card.href = game.href;
-    card.setAttribute("aria-label", game.title + "を遊ぶ");
+    card.setAttribute("aria-label", game.ariaLabel || game.title + "を遊ぶ");
 
     const number = document.createElement("span");
     number.className = "game-number";

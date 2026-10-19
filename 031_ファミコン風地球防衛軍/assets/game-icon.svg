@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 384" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">防衛線レンジャー7</title>
+  <desc id="desc">夜の工業都市で機械生命体へ発砲するピクセル兵士</desc>
+  <rect width="384" height="384" fill="#050b13"/>
+  <path fill="#0d2634" d="M0 64h384v224H0z"/>
+  <path fill="#17394a" d="M0 144h32V96h32v48h24V72h40v72h24v-32h48v32h24V88h40v56h24v-24h32v24h64v144H0z"/>
+  <path fill="#07111f" d="M0 208h384v96H0z"/>
+  <path fill="#214b5b" d="M0 304h384v16H0zm0 32h384v48H0z"/>
+  <path fill="#36e4d1" d="M80 224h32v-16h32v16h48v16h-48v16h-32v16H80v-16H64v-16h16zm96 16h80v8h-80z"/>
+  <path fill="#f5d547" d="M96 192h32v32H96zm-16 80h32v32H80zm48 0h32v32h-32z"/>
+  <path fill="#ff5d6c" d="M288 144h48v16h16v48h-16v16h-48v-16h-16v-48h16zm16 32h16v16h-16z"/>
+  <path fill="#ff9b68" d="M256 232h24v8h-24zm-24-16h16v8h-16z"/>
+  <path fill="#d8f3e8" d="M24 24h16v16H24zm24 0h8v8h-8zm288 32h24v8h-24z"/>
+  <rect x="20" y="328" width="344" height="36" fill="#050b13"/>
+  <text x="192" y="351" fill="#f5d547" font-family="monospace" font-size="18" font-weight="700" text-anchor="middle">DEFENSE LINE 07</text>
+</svg>
