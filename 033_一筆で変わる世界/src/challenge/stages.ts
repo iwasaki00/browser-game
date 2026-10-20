@@ -1,4 +1,5 @@
 import { loadStage, type StageDefinition } from './stage';
+import { extendedStages } from './extended-stages';
 
 /** High protected walls enclose visible channels; only the intended gates remain editable. */
 function board(size: number) {
@@ -61,4 +62,4 @@ function third(): StageDefinition {
     strokeMode: 'RAISE', maxStrokeLength: 5, brushRadius: 1, heightDelta: 8, maxSimulationSteps: 160,
     goalDefinition: { type: 'FLOOD_PREVENTION', townIds: ['town-03'], floodObservationEndStep: 160 } });
 }
-export const stages: readonly StageDefinition[] = Object.freeze([first(), second(), third()]);
+export const stages: readonly StageDefinition[] = Object.freeze([first(), second(), third(), ...extendedStages]);

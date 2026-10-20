@@ -1,5 +1,4 @@
 import './style.css';
-import { TrialSession } from './core/trial';
 import { assertConservation } from './core/world';
 import { stages } from './challenge/stages';
 import { type StageDefinition } from './challenge/stage';
@@ -10,6 +9,8 @@ import { drawWorld } from './render';
 import { ComparisonView } from './comparison/view';
 import { type Stroke } from './core/stroke';
 import { MAP_THEME, defaultDisplaySettings, flowAnimationPhase } from './living-map';
+import { ProgressStore } from './game/save';
+import { PlayableGame, type GameMode, type GameScreen } from './game/playable';
 
 for (const [name, value] of Object.entries(MAP_THEME)) document.documentElement.style.setProperty(`--${name}`, value);
 
@@ -28,7 +29,11 @@ const gameMode = element<HTMLSelectElement>('game-mode');
 const stageSelect = element<HTMLSelectElement>('stage-select');
 for (const sample of samples) select.add(new Option(sample.name, sample.id));
 for (const [index, stage] of stages.entries()) stageSelect.add(new Option(`${String(index + 1).padStart(2, '0')} ${stage.title}`, stage.id));
-let session = TrialSession.forStage(stages[0]);
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+const progress = new ProgressStore(stages.map(stage => stage.id), () => window.localStorage, motionPreference.matches);
+const game = new PlayableGame(progress);
+let session = game.session;
+stageSelect.value = session.stage!.id;
 const camera = createCamera();
 function viewport(): Viewport {
   const rect = canvas.getBoundingClientRect();
@@ -38,22 +43,66 @@ const gestures = new GestureController(session, camera, viewport);
 gestures.mode = session.stage!.strokeMode;
 let selected: number | null = null, error = '', dirty = true;
 let comparisonView: ComparisonView | null = null;
-const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const displaySettings = defaultDisplaySettings(motionPreference.matches);
 const flowToggle = element<HTMLInputElement>('flow-visible'), motionToggle = element<HTMLInputElement>('reduce-motion');
-motionToggle.checked = displaySettings.reducedMotion;
+flowToggle.checked = progress.data.settings.showFlow;
+motionToggle.checked = progress.data.settings.reducedMotion;
+view.value = progress.data.settings.view;
+element<HTMLSelectElement>('comparison-view').value = view.value;
 function updateDisplaySettings(): void {
   displaySettings.showFlow = flowToggle.checked;
   motionToggle.checked = motionToggle.checked || motionPreference.matches;
   displaySettings.reducedMotion = motionToggle.checked;
   motionToggle.title = motionPreference.matches ? 'OSのアニメーション軽減設定を反映しています' : '水の流線と結果の演出を静止します';
   document.documentElement.dataset.reducedMotion = String(displaySettings.reducedMotion);
+  progress.setSettings({ ...progress.data.settings, showFlow: flowToggle.checked, reducedMotion: motionToggle.checked,
+    view: view.value as 'combined' | 'height' | 'water' });
+  element<HTMLInputElement>('settings-flow').checked = flowToggle.checked;
+  element<HTMLInputElement>('settings-motion').checked = motionToggle.checked;
+  element<HTMLInputElement>('settings-guide').checked = progress.data.settings.showGuide;
+  element<HTMLSelectElement>('settings-view').value = view.value;
+  element<HTMLSelectElement>('comparison-view').value = view.value;
   comparisonView?.setDisplaySettings(displaySettings); dirty = true;
+  updateShell();
 }
 flowToggle.onchange = updateDisplaySettings; motionToggle.onchange = updateDisplaySettings;
 motionPreference.addEventListener('change', event => { motionToggle.checked = event.matches; updateDisplaySettings(); });
 const format = (n: number) => n.toLocaleString('ja-JP');
 const phaseNames = { READY: '一筆を描けます', DRAWING: '描画中', PREVIEW: '変更予定を確認', SIMULATING: 'シミュレーション', RESULT: '計算完了' };
+function updateShell(): void {
+  for (const [id, screen] of [['stage-menu', 'STAGES'], ['settings-menu', 'SETTINGS'], ['help-menu', 'HELP']] as const) element(id).hidden = game.screen !== screen;
+  element('menu-return').hidden = game.screen === 'GAME';
+  gameMode.value = game.mode;
+  if (session.stage) stageSelect.value = session.stage.id;
+  element('save-warning').textContent = progress.warning; element('save-warning').hidden = !progress.warning;
+  element('progress-message').textContent = game.notice; element('progress-message').hidden = !game.notice;
+  element('mode-note').textContent = game.mode === 'free' ? 'フリー実験 · 正解はありません。1試行1ストロークで地形と水を観察しよう。進捗には影響しません。'
+    : game.mode === 'debug' ? '開発検証モード · 数値と水量収支を確認する場所です。チャレンジ進捗には影響しません。' : '';
+  element('mode-note').hidden = game.mode === 'challenge' || game.screen !== 'GAME';
+  element('conditions-title').textContent = game.mode === 'free' ? '水の観察' : game.mode === 'debug' ? '開発用の実験条件' : '実行・表示';
+  element('metrics-title').textContent = game.mode === 'free' ? '水のようす' : game.mode === 'debug' ? '検証モニター' : '水量モニター';
+  for (const [index, stage] of stages.entries()) {
+    const option = stageSelect.options[index]; option.disabled = !progress.canSelect(stage.id);
+    option.textContent = `${String(index + 1).padStart(2, '0')} ${progress.isCleared(stage.id) ? '✓ ' : progress.canSelect(stage.id) ? '' : '🔒 '}${stage.title}`;
+  }
+  const current = session.stage?.id;
+  element('stage-progress').textContent = progress.data.clearedStageIds.length === stages.length ? '✓ 全6ステージをクリア！ 好きな地図に再挑戦できます。'
+    : `クリア ${progress.data.clearedStageIds.length} / ${stages.length} · 次の挑戦: ${stages.find(s => s.id === progress.data.highestUnlockedStage)!.title}`;
+  if (game.screen === 'STAGES') {
+    const cards = stages.map((stage, index) => {
+      const button = document.createElement('button'); button.className = 'stage-card'; button.disabled = !progress.canSelect(stage.id);
+      button.textContent = `${String(index + 1).padStart(2, '0')} ${stage.title}\n${progress.isCleared(stage.id) ? '✓ クリア済み · 再挑戦' : progress.canSelect(stage.id) ? '○ 挑戦できます' : '🔒 前のステージをクリアすると解放'}${current === stage.id ? ' · 現在' : ''}`;
+      button.onclick = () => safely(() => selectStage(stage)); return button;
+    });
+    element('stage-list').replaceChildren(...cards);
+  }
+  const guide = element('context-guide');
+  guide.hidden = !progress.data.settings.showGuide || session.stage?.id !== 'stage-01' || game.screen !== 'GAME';
+  guide.textContent = comparisonView?.active ? '⑤ BEFORE / AFTERで、一筆が変えた未来を見比べよう。'
+    : ({ READY: '① 地図の細い尾根に一筆を描こう。実線の長さには限りがあります。', DRAWING: '① 残り長さを見ながら一筆。指を離すとプレビューになります。',
+      PREVIEW: '② 半透明の変更予定を確認。「この一筆で実行 →」で水を流そう。', SIMULATING: '③ 水の流れを観察しよう。PAUSEとSTEPで少しずつ確認できます。',
+      RESULT: '④ 取水量と結果を確認。「この一筆で世界A/Bを比較」で変化を見よう。' })[session.phase];
+}
 function updateChallenge(): void {
   const stage = session.stage, result = session.goalResult;
   element('challenge-panel').hidden = !stage;
@@ -96,10 +145,16 @@ function updateChallenge(): void {
   const last = stages.findIndex(s => s.id === stage.id) === stages.length - 1;
   element<HTMLButtonElement>('next-stage').hidden = !finished || result.status !== 'SUCCESS';
   element<HTMLButtonElement>('next-stage').disabled = last;
-  element('next-stage').textContent = last ? '3ステージ目をクリア！' : '次のステージへ';
+  element('next-stage').textContent = last ? '6ステージをクリア！' : '次のステージへ';
+  const summary = game.summary;
+  element('result-comparison').textContent = summary ? `世界A ${summary.worldAResult.goal.status === 'SUCCESS' ? '成功' : '未達成'} → 世界B ${summary.worldBResult.goal.status === 'SUCCESS' ? '成功' : '未達成'} / 取水量の差 ${summary.intakeDifference.total.delta > 0 ? '+' : ''}${format(summary.intakeDifference.total.delta)}単位 / 最大浸水深の差 ${format(summary.floodDifference.maximumDepth.delta)}単位（B−A）`
+    : game.summaryError ? `比較集計を停止しました: ${game.summaryError}` : session.record?.conditions.stroke ? 'Before / Afterの差分を集計しています…' : '一筆なしで観測した結果です。描き直すと世界A/Bを比較できます。';
 }
 function update(): void {
-  element('workspace').hidden = comparisonView?.active ?? false;
+  game.observeCompletion(); updateShell();
+  element('workspace').hidden = game.screen !== 'GAME' || (comparisonView?.active ?? false);
+  element('comparison-panel').hidden = game.screen !== 'GAME' || !comparisonView?.active;
+  if (game.screen !== 'GAME') return;
   if (comparisonView?.active) { element('challenge-panel').hidden = true; return; }
   const runner = session.runner, w = runner.world;
   for (const [id, value] of Object.entries({ 'step-count': w.step, total: assertConservation(w), initial: w.initialWater,
@@ -134,6 +189,7 @@ function update(): void {
   element<HTMLButtonElement>('execute').disabled = !!session.executionReason || !!error;
   element<HTMLButtonElement>('cancel-stroke').disabled = !['DRAWING', 'PREVIEW'].includes(session.phase);
   const canCompare = !!session.stage && !!comparisonStroke() && !error;
+  element('compare-open').hidden = !session.stage;
   element<HTMLButtonElement>('compare-open').disabled = !canCompare;
   element<HTMLButtonElement>('compare-result').disabled = !canCompare;
   element('compare-open').title = canCompare ? '両世界を同じ初期状態・ステップ0から同期実行します' : 'チャレンジで有効な一筆を確定してから比較できます';
@@ -163,15 +219,15 @@ function releasePointers(): void {
   const ids = [...gestures.pointers.keys()]; gestures.cancel();
   for (const id of ids) if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
 }
-function replaceSession(next: TrialSession): void {
+function adoptSession(): void {
   comparisonView?.close();
-  releasePointers(); session.runner.pause(); session = next; gestures.session = session;
+  releasePointers(); session.runner.pause(); session = game.session; gestures.session = session;
   session.runner.setSpeed(Number(speed.value)); gestures.mode = session.stage?.strokeMode ?? 'RAISE'; gestures.tool = 'DRAW';
   Object.assign(camera, createCamera()); error = ''; selected = null;
   element('cell-info').textContent = '盤面の矢印キーでセルの高度と変更予定値を確認';
 }
 function selectStage(stage: StageDefinition): void {
-  stageSelect.value = stage.id; replaceSession(TrialSession.forStage(stage));
+  game.selectStage(stage.id); stageSelect.value = stage.id; adoptSession();
 }
 function comparisonStroke(): Stroke | null {
   if (session.phase === 'PREVIEW' && !session.executionReason) return session.preview!.stroke;
@@ -188,24 +244,47 @@ function openComparison(): void {
 element('compare-open').onclick = () => safely(openComparison);
 element('compare-result').onclick = () => safely(openComparison);
 gameMode.onchange = () => safely(() => {
-  if (gameMode.value === 'challenge') selectStage(stages.find(s => s.id === stageSelect.value) ?? stages[0]);
-  else replaceSession(new TrialSession(samples.find(s => s.id === select.value)!.create()));
+  game.setMode(gameMode.value as GameMode); adoptSession();
 });
 stageSelect.onchange = () => safely(() => {
   if (gameMode.value === 'challenge') selectStage(stages.find(s => s.id === stageSelect.value)!);
 });
 element('baseline-run').onclick = () => safely(() => { if (session.phase === 'READY') session.play(); });
-element('retry').onclick = () => safely(() => { releasePointers(); error = ''; session.reset(); });
+element('retry').onclick = () => safely(() => { releasePointers(); error = ''; game.retry(); });
 element('next-stage').onclick = () => safely(() => {
   const index = stages.findIndex(s => s.id === session.stage?.id);
   if (session.phase === 'RESULT' && session.goalResult?.status === 'SUCCESS' && index >= 0 && index + 1 < stages.length) selectStage(stages[index + 1]);
 });
 select.onchange = () => safely(() => {
   if (session.stage) return;
-  replaceSession(new TrialSession(samples.find(s => s.id === select.value)!.create()));
+  game.selectSample(select.value); adoptSession();
   element('description').textContent = samples.find(s => s.id === select.value)!.description;
 });
 element('description').textContent = samples[0].description;
+function openMenu(screen: GameScreen): void {
+  releasePointers(); comparisonView?.suspend(); game.openScreen(screen);
+}
+for (const [id, mode] of [['menu-challenge', 'challenge'], ['menu-free', 'free']] as const) {
+  element(id).onclick = () => safely(() => { game.setMode(mode); adoptSession(); });
+}
+for (const [id, screen] of [['menu-stages', 'STAGES'], ['menu-settings', 'SETTINGS'], ['menu-help', 'HELP'], ['menu-return', 'GAME']] as const) {
+  element(id).onclick = () => safely(() => openMenu(screen));
+}
+element<HTMLInputElement>('settings-flow').onchange = () => { flowToggle.checked = element<HTMLInputElement>('settings-flow').checked; updateDisplaySettings(); };
+element<HTMLInputElement>('settings-motion').onchange = () => { motionToggle.checked = element<HTMLInputElement>('settings-motion').checked; updateDisplaySettings(); };
+element<HTMLInputElement>('settings-guide').onchange = () => {
+  progress.setSettings({ ...progress.data.settings, showGuide: element<HTMLInputElement>('settings-guide').checked }); updateShell();
+};
+element<HTMLSelectElement>('settings-view').onchange = () => { view.value = element<HTMLSelectElement>('settings-view').value; updateDisplaySettings(); };
+const resetDialog = element<HTMLDialogElement>('reset-save-dialog');
+element('reset-save').onclick = () => { if (!resetDialog.open) resetDialog.showModal(); };
+element('reset-save-cancel').onclick = () => resetDialog.close();
+element('reset-save-confirm').onclick = () => safely(() => {
+  if (!resetDialog.open) return;
+  progress.reset(true); resetDialog.close(); game.selectStage(stages[0].id); adoptSession();
+  flowToggle.checked = progress.data.settings.showFlow; motionToggle.checked = progress.data.settings.reducedMotion; view.value = progress.data.settings.view;
+  game.notice = '進捗と設定を初期化しました。Stage 01から新しく始められます。'; updateDisplaySettings();
+});
 element('lower').onclick = () => safely(() => { if (session.stage?.strokeMode !== 'RAISE') gestures.mode = 'LOWER'; });
 element('raise').onclick = () => safely(() => { if (session.stage?.strokeMode !== 'LOWER') gestures.mode = 'RAISE'; });
 element('draw').onclick = () => safely(() => { releasePointers(); gestures.tool = 'DRAW'; });
@@ -214,10 +293,10 @@ element('cancel-stroke').onclick = () => safely(() => { releasePointers(); sessi
 element('execute').onclick = () => safely(() => { releasePointers(); session.execute(); });
 element('play').onclick = () => safely(() => session.play());
 element('pause').onclick = () => safely(() => session.runner.pause());
-element('step').onclick = () => safely(() => session.step());
-element('reset').onclick = () => safely(() => { releasePointers(); error = ''; session.reset(); });
+element('step').onclick = () => safely(() => game.step());
+element('reset').onclick = () => safely(() => { releasePointers(); error = ''; game.retry(); });
 speed.onchange = () => safely(() => session.runner.setSpeed(Number(speed.value)));
-view.onchange = () => { dirty = true; };
+view.onchange = updateDisplaySettings;
 function zoom(factor: number): void {
   releasePointers(); const v = viewport(); zoomAt(camera, camera.zoom * factor, { x: v.width / 2, y: v.height / 2 }, v);
 }
@@ -275,20 +354,24 @@ new ResizeObserver(() => {
 }).observe(canvas);
 comparisonView = new ComparisonView({
   onBack: () => safely(() => { comparisonView?.close(); dirty = true; }),
-  onRetry: () => safely(() => { comparisonView?.close(); error = ''; session.reset(); }),
+  onRetry: () => safely(() => { comparisonView?.close(); error = ''; game.retry(); }),
   onNext: () => safely(() => {
     const index = stages.findIndex(s => s.id === session.stage?.id);
     if (comparisonView?.canAdvanceStage && index >= 0 && index + 1 < stages.length) selectStage(stages[index + 1]);
   }),
+  onComplete: result => { game.acceptComparison(result); updateShell(); },
+  onViewChange: value => { view.value = value; updateDisplaySettings(); },
 });
 updateDisplaySettings();
 let previous = performance.now(), lastPaint = 0;
 function frame(now: number): void {
   const elapsed = now - previous; previous = now;
+  if (game.screen !== 'GAME') { requestAnimationFrame(frame); return; }
   if (comparisonView?.active) {
     comparisonView.advance(elapsed); comparisonView.draw(now); requestAnimationFrame(frame); return;
   }
-  if (session.runner.playing) safely(() => { session.advance(elapsed); });
+  if (session.runner.playing) safely(() => { game.advance(elapsed); });
+  if (game.advanceSummary()) safely(() => {});
   const animate = displaySettings.showFlow && !displaySettings.reducedMotion && session.runner.playing && view.value !== 'height';
   if (dirty || (animate && now - lastPaint >= 50)) {
     const preview = ['DRAWING', 'PREVIEW'].includes(session.phase) ? session.preview : null;

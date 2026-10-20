@@ -3,7 +3,7 @@ import { type Stroke } from '../core/stroke';
 import { createCamera, constrainCamera, zoomAt, type Viewport } from '../input/camera';
 import { GestureController } from '../input/gestures';
 import { drawWorld } from '../render';
-import { ComparisonController, type Assessment, type ComparisonWorld, type SignedDifference } from './controller';
+import { ComparisonController, type Assessment, type ComparisonWorld, type SignedDifference, type ComparisonResult } from './controller';
 import { defaultDisplaySettings, flowAnimationPhase, metricRelevant, type DisplaySettings } from '../living-map';
 
 function element<T extends HTMLElement>(id: string): T {
@@ -27,11 +27,13 @@ export class ComparisonView {
   #pointerCanvas: HTMLCanvasElement | null = null;
   #displaySettings = defaultDisplaySettings(false);
   #lastPaint = 0;
+  #reportedResult: ComparisonResult | null = null;
   readonly #panel = element('comparison-panel');
   readonly #canvases = [element<HTMLCanvasElement>('comparison-a'), element<HTMLCanvasElement>('comparison-b')];
   readonly #camera = createCamera();
   readonly #gestures = new GestureController({ editable: false, begin: () => false, append: () => {}, finish: () => {}, cancel: () => {} }, this.#camera, () => this.viewport());
-  constructor(private readonly callbacks: { onBack: () => void; onRetry: () => void; onNext: () => void }) {
+  constructor(private readonly callbacks: { onBack: () => void; onRetry: () => void; onNext: () => void;
+    onComplete?: (result: ComparisonResult) => void; onViewChange?: (value: string) => void }) {
     const action = (id: string, fn: () => void) => { element(id).onclick = () => this.safely(fn); };
     action('comparison-play', () => this.#controller?.play());
     action('comparison-pause', () => this.#controller?.pause());
@@ -49,7 +51,7 @@ export class ComparisonView {
     element<HTMLSelectElement>('comparison-layout').onchange = () => this.safely(() => {
       this.cancelNavigation(); this.#panel.dataset.layout = element<HTMLSelectElement>('comparison-layout').value;
     });
-    element<HTMLSelectElement>('comparison-view').onchange = () => { this.#dirty = true; };
+    element<HTMLSelectElement>('comparison-view').onchange = () => { this.#dirty = true; this.callbacks.onViewChange?.(element<HTMLSelectElement>('comparison-view').value); };
     for (const canvas of this.#canvases) this.bindCamera(canvas);
     new ResizeObserver(() => { if (this.active) this.#dirty = true; }).observe(this.#panel);
   }
@@ -69,7 +71,7 @@ export class ComparisonView {
   }
   close(): void {
     this.cancelNavigation(); this.#controller?.pause(); this.#controller = null;
-    this.#panel.hidden = true; this.#uiError = '';
+    this.#panel.hidden = true; this.#uiError = ''; this.#reportedResult = null;
   }
   suspend(): void { this.cancelNavigation(); this.#controller?.pause(); this.refresh(); }
   advance(milliseconds: number): void {
@@ -176,6 +178,7 @@ export class ComparisonView {
     element('comparison-after').setAttribute('aria-pressed', String(this.#displayed === 'B'));
     this.worldMetrics('a', snapshot.worldA, invalid); this.worldMetrics('b', snapshot.worldB, invalid);
     const result = invalid ? null : controller.getFinalResult();
+    if (result && result !== this.#reportedResult) { this.#reportedResult = result; this.callbacks.onComplete?.(result); }
     element('comparison-outcome-summary').textContent = invalid ? '⚠ 比較結果は無効です。両世界を同じステップで停止しました。'
       : `世界A ${outcome(snapshot.worldA.goal.status)} → 世界B ${outcome(snapshot.worldB.goal.status)}${result ? ` · ${assessment(result.goalDifference.assessment)}` : ''}`;
     element('comparison-result').hidden = !result;

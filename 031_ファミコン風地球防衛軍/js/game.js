@@ -1,8 +1,9 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.5";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.6";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js";
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
-import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.5";
+import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.6";
+import {IMPACT,REACTIONS,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.6";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
@@ -115,6 +116,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="lab-open"){openLabPanel();return}
   if(action==="lab-close"){closeLabPanel();return}
   if(action==="lab-spawn"){if(game?.lab)spawnLabEnemies();return}
+  if(action==="lab-blast"){labBlast();return}
   if(action==="lab-clear"){if(game?.lab)clearLabEnemies();return}
   if(action==="lab-reset"){if(game?.lab)startLab();return}
   if(action==="lab-exit"){if(game?.lab){discardMission();show("title")}return}
@@ -135,7 +137,7 @@ function startMission(id=selectedMissionId){
   game={missionId:id,time:0,score:0,kills:0,crates:0,camera:0,shake:0,area:-1,areaText:"",areaTimer:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     density:save.settings.enemyDensity,enemyLimit:DENSITY_MODES[save.settings.enemyDensity].limit,liveEnemies:0,liveMobs:0,
     director:new SpawnDirector(save.settings.enemyDensity),grid:new SpatialGrid(),attacks:new AttackDirector(),
-    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],
+    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),
     player:{x:64,y:WORLD.ground-32,vx:0,vy:0,w:14,h:27,hp:100,maxHp:100,onGround:true,face:1,invuln:0,shotCd:0,switchCd:0,shootPose:0,weaponSlot:0,anim:0,dead:false},
     enemies:[],shots:[],enemyShots:[],effects:[],items:[{x:2050,y:WORLD.ground-25,type:"crate",alive:true}],platforms:[{x:520,y:120,w:80},{x:1220,y:105,w:96},{x:2700,y:116,w:72},{x:3500,y:100,w:90}]};
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
@@ -154,20 +156,21 @@ function spawnEnemy(type,x,y=null){
     speedScale:isMob({type})?1+(v*2-1)*INVASION.speedVariation:1,shotCd:.7+v*1.6,vx:0,vy:0,separateX:0,separateY:0,thinkTime:0,diveCd:v*INVASION.diveCooldown,diveTimer:0,diveOffset:0};
   game.enemies.push(e);game.liveEnemies++;if(isMob(e))game.liveMobs++;if(type==="beetle")game.midbossAlive=true;return e;
 }
-function startBoss(){game.bossStarted=true;game.midbossAlive=false;game.director.stopped=true;game.enemies.length=0;game.liveEnemies=game.liveMobs=0;game.enemyShots.length=0;spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー";game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
+function startBoss(){game.bossStarted=true;game.midbossAlive=false;game.director.stopped=true;game.enemies.length=0;game.impact=createImpactState();game.liveEnemies=game.liveMobs=0;game.enemyShots.length=0;spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー";game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
 function spawnBossMinion(boss,index){const p=game.player,side=boss.x>=p.x?1:-1;const x=clamp(boss.x+side*(30+index*25),24,WORLD.width-24);if(Math.abs(x-p.x)>=90)spawnEnemy("crawler",x)}
 function pushEffect(effect){
-  if(game.effects.length<INVASION.maxEffects){game.effects.push(effect);return}
-  if(effect.kind==="explosion"){for(let i=0;i<game.effects.length;i++)if(game.effects[i].kind==="spark"){game.effects[i]=effect;break}}
+  pushImpactEffect(game,effect);
 }
 
 function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13,target=aimTarget(input,{x:px,y:py},game.camera,view.zoom);let dx=target.x-px,dy=target.y-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
-  const make=(ang=0,offset=0)=>{const ca=Math.cos(ang),sa=Math.sin(ang),vx=(dx*ca-dy*sa)*w.speed,vy=(dx*sa+dy*ca)*w.speed;game.shots.push({x:px,y:py+offset,vx,vy,w:7,h:4,life:w.range/w.speed,type:w.type,damage:w.damage,pierce:w.pierce||0,radius:w.radius||0,rehit:{},weapon:w})};
+  const make=(ang=0,offset=0)=>{const ca=Math.cos(ang),sa=Math.sin(ang),vx=(dx*ca-dy*sa)*w.speed,vy=(dx*sa+dy*ca)*w.speed;game.shots.push({x:px,y:py+offset,originX:px,originY:py,vx,vy,w:7,h:4,life:w.range/w.speed,type:w.type,damage:w.damage,pierce:w.pierce||0,radius:w.radius||0,rehit:{},weapon:w})};
   if(w.type==="spread")[-.34,-.17,0,.17,.34].forEach(a=>make(a));else if(w.type==="homing"){make(-.1,-2);make(.1,3)}else make();
   p.shootPose=.11;pushEffect({x:px,y:py,kind:"muzzle",life:.09,max:.09});tone(w.type==="rocket"||w.type==="grenade"?95:220+w.damage*8,.04,w.type==="laser"?"sawtooth":"square",.018);
 }
 
-function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;g.time+=dt;p.invuln=Math.max(0,p.invuln-dt);p.shotCd=Math.max(0,p.shotCd-dt);p.switchCd=Math.max(0,p.switchCd-dt);p.shootPose=Math.max(0,p.shootPose-dt);g.areaTimer=Math.max(0,g.areaTimer-dt);g.shake=Math.max(0,g.shake-dt*16);
+function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;
+  if(advanceImpact(g,dt)){let write=0;for(const e of g.enemies){if(e.dead)updateDeath(g,e,dt);if(!e.dead||e.death>0)g.enemies[write++]=e}g.enemies.length=write;updateEffects(dt);return}
+  g.time+=dt;p.invuln=Math.max(0,p.invuln-dt);p.shotCd=Math.max(0,p.shotCd-dt);p.switchCd=Math.max(0,p.switchCd-dt);p.shootPose=Math.max(0,p.shootPose-dt);g.areaTimer=Math.max(0,g.areaTimer-dt);g.shake=Math.max(0,g.shake-dt*16);
   if(g.lab?.preset==="FLIGHT")moveFlightPlayer(p,input,g.platforms,dt);else{
   const preset=g.lab?PLAYER_PRESETS[g.lab.preset]:PLAYER_PRESETS.STANDARD;
   const move=(input.right?1:0)-(input.left?1:0);p.vx=move*preset.speed;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-preset.jump;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
@@ -186,13 +189,14 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;g.ti
 }
 
 function hitRect(a,b){return a.x-a.w/2<b.x+b.w/2&&a.x+a.w/2>b.x-b.w/2&&a.y-a.h/2<b.y+b.h/2&&a.y+a.h/2>b.y-b.h/2}
-function damageEnemy(e,dmg){
-  if(e.dead)return;e.hp-=dmg;game.score+=Math.max(1,Math.round(dmg));pushEffect({x:e.x,y:e.y+e.h/2,kind:"spark",life:.12,max:.12});
+function damageEnemy(e,dmg,source={}){
+  if(e.dead)return;e.hp-=dmg;game.score+=Math.max(1,Math.round(dmg));e.hitFlash=.07;hitVisual(game,e,source);
   if(e.hp>0)return;
-  e.dead=true;e.death=.45;game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;
+  e.dead=true;beginDeath(game,e,source,viewBounds(game.camera,view.zoom));game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;
   if(e.type==="beetle")game.midbossAlive=false;
   if(e.type==="boss"&&!game.lab){
     game.score+=Math.max(0,Math.floor(3000-game.time*8));game.enemies.length=0;game.enemies.push(e);game.liveEnemies=game.liveMobs=0;
+    game.impact.corpses=1;
     game.enemyShots.length=0;game.shots.length=0;game.player.invuln=99;scheduleMission(completeMission,900);
   }else if(Math.random()<.06)game.items.push({x:e.x,y:e.y+e.h/2,type:"heal",alive:true});
   else if(Math.random()<.02)game.items.push({x:e.x,y:e.y+e.h/2,type:"crate",alive:true});
@@ -201,18 +205,19 @@ function damageEnemy(e,dmg){
 function explode(s){
   pushEffect({x:s.x,y:s.y,kind:"explosion",life:.45,max:.45,r:s.radius});
   const candidates=game.grid.query(s.x-s.radius-48,s.y-s.radius-32,s.x+s.radius+48,s.y+s.radius+32,game.blastCandidates);
-  for(let i=0;i<candidates.length;i++){const e=candidates[i];if(!e.dead&&Math.hypot(s.x-e.x,s.y-e.y-e.h/2)<s.radius)damageEnemy(e,s.damage)}
-  game.shake=Math.max(game.shake,4);tone(65,.18,"sawtooth",.04);
+  const source={type:s.type??s.weapon?.type??"rocket",radial:true,x:s.x,y:s.y};
+  for(let i=0;i<candidates.length;i++){const e=candidates[i];if(!e.dead&&Math.hypot(s.x-e.x,s.y-e.y-e.h/2)<s.radius)damageEnemy(e,s.damage,source)}
+  impactShake(game);tone(65,.18,"sawtooth",.04);
 }
 function updateShots(dt){for(const s of game.shots){s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
     const candidates=game.grid.query(s.x-s.w/2-48,s.y-s.h/2-32,s.x+s.w/2+48,s.y+s.h/2+32,game.shotCandidates);
-    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75);pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
+    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
       if(s.radius){explode(s);s.dead=true}else if(s.pierce>0){s.pierce--}else s.dead=true}}
   }let write=0;for(const s of game.shots)if(!s.dead&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.shots[write++]=s;game.shots.length=write}
 
 function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);prepareSeparation(game.enemies,game.grid,game.separationCandidates);game.attacks.begin(game.time,game.enemies,game.enemyShots);
-  for(const e of game.enemies){e.anim+=dt*7;e.attackFlash=Math.max(0,e.attackFlash-dt);if(e.dead){e.death-=dt;continue}const t=ENEMY_TYPES[e.type];e.shotCd-=dt;e.face=p.x>=e.x?1:-1;
+  for(const e of game.enemies){e.anim+=dt*7;e.attackFlash=Math.max(0,e.attackFlash-dt);e.hitFlash=Math.max(0,(e.hitFlash||0)-dt);if(e.dead){updateDeath(game,e,dt);continue}const t=ENEMY_TYPES[e.type];e.shotCd-=dt;e.face=p.x>=e.x?1:-1;
     const dx=p.x-e.x,far=Math.abs(dx)>INVASION.farDistance;e.thinkTime+=dt;const think=!far||e.thinkTime>=INVASION.farThinkInterval;if(think)e.thinkTime=0;
     if(e.type==="crawler"){const standOff=(e.uid%INVASION.contactLanes)*INVASION.contactSpacing,approach=clamp((Math.abs(dx)-standOff)/INVASION.approachRange,0,1);e.x+=Math.sign(dx)*t.speed*e.speedScale*approach*dt;e.y=WORLD.ground-e.h}
     if(e.type==="spider"){if(think)e.y=e.baseY+Math.sin(e.anim*.7)*9;e.x+=Math.sign(dx)*t.speed*.28*e.speedScale*dt;if(e.shotCd<=0&&Math.abs(dx)<230){if(game.attacks.ranged(game.time)){enemyFire(e,115);e.shotCd=1.65+variation(e.uid)*.6}else e.shotCd=.1+variation(e.uid)*.18}}
@@ -234,7 +239,7 @@ function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.invincible|
 function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(100,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6}
-function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write}
+function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
 
 function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;const reward=pickReward(save.unlocked);if(reward)save.unlocked.push(reward);save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL COMPLETE</span><strong>全武器取得済み</strong>`;scheduleMission(()=>show("result"),500)}
 
@@ -247,7 +252,7 @@ function draw(){
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
   drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(g.player);drawEffects(g);
-  ctx.restore();drawHud(g);
+  ctx.restore();drawHud(g);drawImpactHud(g);
 }
 function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
@@ -264,10 +269,44 @@ function drawWorld(g){
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
 function drawPlayer(p){if(p.invuln>0&&Math.floor(p.invuln*12)%2)return;const frame=p.dead?7:p.shootPose>0?6:!p.onGround?(p.vy<0?4:5):Math.abs(p.vx)>0?Math.floor(p.anim)%4:0;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.player,frame*24,0,24,32,0,y,24,32)}else ctx.drawImage(images.player,frame*24,0,24,32,x,y,24,32);ctx.restore()}
-function drawEnemies(g){let deaths=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110)continue;const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;if(e.dead){if(Math.floor(e.death*20)%2||deaths>=INVASION.maxDeathSprites)continue;deaths++}if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,x-48,Math.round(e.y),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,x-size/2,Math.round(e.y+e.h-size),size,size)}}}
+function drawEnemies(g){let deaths=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
+    const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;
+    if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
+    const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
+    if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
+    if(e.dead){if(e.deathType==="flame"||e.deathDelay>0){ctx.fillStyle=e.deathType==="flame"?"#ff8b42":"#b88cff";ctx.fillRect(-8,-3,4,2);ctx.fillRect(5,1,4,3)}ctx.restore();ctx.globalAlpha=1}
+    else if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}
+  }}
 function drawShots(g){for(const s of g.shots){if(s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=WEAPONS.findIndex(w=>w.type===s.type),x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,Math.max(0,i)*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){if(s.x<g.camera-8||s.x>g.camera+view.width+8)continue;ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}}
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
-function drawEffects(g){for(const f of g.effects){if(Math.max(f.x,f.x2??f.x)<g.camera-100||Math.min(f.x,f.x2??f.x)>g.camera+view.width+100)continue;const x=f.x,a=f.life/f.max;if(f.kind==="explosion"){const fr=Math.min(7,Math.floor((1-a)*8));const sz=Math.max(24,(f.r||24)*2);ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz)}else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}}}
+function drawEffects(g){for(const f of g.effects){if(Math.max(f.x,f.x2??f.x)<g.camera-100||Math.min(f.x,f.x2??f.x)>g.camera+view.width+100)continue;const x=f.x,a=f.life/f.max;
+    if(f.kind==="explosion"){
+      const fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6),radius=(f.r||24)*(.3+(1-a)*1.3);
+      ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz);
+      ctx.globalAlpha=a;ctx.strokeStyle=a>.65?"#fff7d5":"#ffab56";ctx.lineWidth=2;ctx.beginPath();
+      for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
+      ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8,f.y-7,16,14);
+      for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
+    }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
+    else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}
+    else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}
+  }
+  for(const f of g.impact.particles){if(f.x<g.camera-8||f.x>g.camera+view.width+8)continue;ctx.globalAlpha=Math.min(1,f.life/.1);ctx.fillStyle=f.color;ctx.fillRect(Math.round(f.x),Math.round(f.y),f.size,f.flame?f.size+2:f.size)}ctx.globalAlpha=1;
+}
+function drawHitEffect(f,rays){
+  const a=f.life/f.max,progress=1-a,angle=Math.atan2(f.vy,f.vx),burn=f.type==="flame";
+  ctx.globalAlpha=a;ctx.strokeStyle=f.color;ctx.fillStyle=a>.6?"#fff7d5":f.color;ctx.lineWidth=f.type==="laser"?2:1;
+  for(let i=0;i<rays;i++){const direction=angle+(i-rays/2)*.8+(f.seed%3)*.2,reach=(f.type==="spread"?18:f.type==="laser"?16:10)*progress+3;
+    const x=Math.round(f.x+Math.cos(direction)*reach),y=Math.round(f.y+Math.sin(direction)*reach-(burn?progress*10:0));
+    if(burn)ctx.fillRect(x,y,2,4);else{ctx.beginPath();ctx.moveTo(Math.round(f.x),Math.round(f.y));if(f.type==="thunder")ctx.lineTo(x+3,y-4);ctx.lineTo(x,y);ctx.stroke()}
+  }
+  ctx.fillRect(Math.round(f.x)-2,Math.round(f.y)-2,4,4);ctx.globalAlpha=1;
+}
+function drawImpactHud(g){
+  const a=g.impact;if(a.chainCount<3||a.clock>=a.labelUntil)return;
+  const text=a.chainCount>=10?"MASS KILL":a.chainCount>=4?"MULTI BREAK":"TRIPLE HIT";
+  ctx.save();ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillStyle="#020911df";ctx.fillRect(91,49,138,14);ctx.fillStyle="#ffe05c";ctx.fillText(`${text} ×${Math.min(999,a.chainCount)}`,160,59);ctx.restore();
+}
 function drawHud(g){const p=g.player;ctx.fillStyle="#03101ddd";ctx.fillRect(4,4,125,20);ctx.fillStyle="#3a1f2b";ctx.fillRect(8,9,92,7);ctx.fillStyle=p.hp<25?"#ff4f6d":"#37e8df";ctx.fillRect(8,9,92*p.hp/p.maxHp,7);ctx.fillStyle="#e4fff6";ctx.font="7px monospace";ctx.fillText(`HP ${Math.ceil(p.hp)}`,9,15);const w=weapon(activeEquipment()[p.weaponSlot]);ctx.fillStyle="#071522dd";ctx.fillRect(4,28,99,16);ctx.drawImage(images.weapons,WEAPONS.indexOf(w)*32,0,32,32,6,28,16,16);ctx.fillStyle="#ffe05c";ctx.fillText(`${w.id} ${w.name}`,25,38);ctx.fillStyle="#071522dd";ctx.fillRect(225,4,91,20);ctx.fillStyle="#e4fff6";ctx.fillText(`${g.lab?"LAB":"M01"} ${formatTime(g.time)}`,232,12);ctx.fillText(`SCORE ${String(g.score).padStart(6,"0")}`,232,20);ctx.fillStyle="#071522dd";ctx.fillRect(133,4,86,20);ctx.fillStyle="#7fa6a8";ctx.font="6px monospace";ctx.fillText(g.lab?"TEST ONLY":g.density,138,12);ctx.fillText(`HOSTILES ${g.liveEnemies}/${g.enemyLimit}`,138,20);ctx.font="7px monospace";const boss=g.enemies.find(e=>e.type==="boss"&&!e.dead);if(boss){ctx.fillStyle="#02060dcc";ctx.fillRect(42,158,236,15);ctx.fillStyle="#ff4f6d";ctx.fillRect(47,166,226*boss.hp/boss.maxHp,4);ctx.fillStyle="#ffe05c";ctx.fillText("B-01 MOTHER CRAWLER",94,164)}if(g.areaTimer>0){ctx.fillStyle="#020611dd";ctx.fillRect(55,67,210,28);ctx.fillStyle=g.bossStarted?"#ff4f6d":"#ffe05c";ctx.textAlign="center";ctx.font="bold 9px monospace";ctx.fillText(g.areaText,160,84);ctx.textAlign="left"}}
 
 function loop(ts){
@@ -284,7 +323,8 @@ function fillBenchmarkPopulation(){
   while(game.liveEnemies<game.enemyLimit){const n=game.nextEnemyId,type=n%10<2?"needle":n%10===2?"spider":"crawler";spawnEnemy(type,game.player.x+130+(n%18)*18)}
 }
 function startBenchmark(mode){
-  if(!DEBUG)return;startLab(false);game.density=mode;game.enemyLimit=DENSITY_MODES[mode].limit;game.player.x=3200;
+  const limit=mode==="LAB200"?200:DENSITY_MODES[mode]?.limit;
+  if(!DEBUG||!limit)return;startLab(false);game.density=mode==="LAB200"?"MASSIVE":mode;game.enemyLimit=limit;game.player.x=3200;
   fillBenchmarkPopulation();input.aimMode="touch";input.touchDx=1;input.touchDy=0;input.fire=true;profiler.start(game.enemyLimit);
   delete canvas.dataset.benchmark;document.querySelector("#qaResult").textContent=`MEASURING ${game.enemyLimit}...`;
 }
@@ -297,11 +337,11 @@ window.__PDF_GAME__={version:VERSION,getState:()=>({state,time:game?.time||0,sco
 
 function startLab(openPanel=true){
   if(!DEBUG)return false;startMission("M01");
-  game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=100;game.director.stopped=true;game.items.length=0;
+  game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=200;game.director.stopped=true;game.items.length=0;
   game.player.x=game.lab.anchorX;game.areaText="TEST LAB / NO SAVE";game.areaTimer=1.5;
   document.querySelector("#labSpawnResult").textContent="生成は開始位置へ復帰して行います。ボスは専用アリーナ。";
   document.querySelector("#labPerformance").textContent="FPS: 計測中…";delete document.querySelector("#labPerformance").dataset.metrics;
-  updateBattleCamera(game.battleCamera,game.player,[],game,1);syncCameraView();syncLabUI();
+  updateBattleCamera(game.battleCamera,game.player,[],game,1);syncCameraView();show("play");
   if(openPanel)openLabPanel();return true;
 }
 function syncLabUI(){
@@ -314,6 +354,7 @@ function syncLabUI(){
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
   document.querySelector("#labZoom").disabled=lab.cameraMode!=="FIXED";
   document.querySelector("#labCount").disabled=lab.enemy==="beetle"||lab.enemy==="boss";
+  document.querySelector("#labBlast").disabled=!["rocket","grenade"].includes(weapon(activeEquipment()[game.player.weaponSlot]).type);
   document.querySelector("#labZoomValue").textContent=`${view.zoom.toFixed(2)}× / FIXED ${lab.fixedZoom.toFixed(2)}×`;
 }
 function openLabPanel(){if(!game?.lab||state!=="play")return;resetInput();if(profiler)profiler.running=false;show("lab");document.querySelector('[data-action="lab-close"]').focus()}
@@ -337,11 +378,18 @@ function changeLabSetting(target){
 function clearLabEnemies(){
   if(!game?.lab)return;game.enemies.length=game.shots.length=game.enemyShots.length=game.effects.length=game.items.length=0;
   game.liveEnemies=game.liveMobs=0;game.bossStarted=game.midbossAlive=false;game.attacks=new AttackDirector();game.grid.rebuild(game.enemies);
+  game.impact=createImpactState();game.shake=0;
+}
+function labBlast(){
+  if(!game?.lab||state!=="lab")return;
+  const w=weapon(activeEquipment()[game.player.weaponSlot]);if(!["rocket","grenade"].includes(w.type))return;
+  let target=game.enemies.find(e=>!e.dead);if(!target){spawnLabEnemies();target=game.enemies.find(e=>!e.dead)}if(!target)return;
+  game.grid.rebuild(game.enemies);closeLabPanel();explode({x:target.x,y:target.y+target.h/2,type:w.type,damage:w.damage,radius:w.radius});
 }
 function spawnLabEnemies(){
   if(!game?.lab)return;const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
-  if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=100;
+  if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);
   game.player.x=lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.vx=game.player.vy=0;game.player.hp=100;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
   game.nextEnemyId=1;game.time=game.kills=game.score=game.crates=0;game.player.shotCd=game.player.switchCd=0;resetInput();
   const leader=lab.enemy==="boss"||lab.enemy==="beetle",count=leader?1:lab.count;
@@ -352,8 +400,8 @@ function spawnLabEnemies(){
 }
 function publishLabPerformance(result){
   if(result.interrupted){const output=document.querySelector("#labPerformance");output.textContent=`FPS: 中断区間を除外 (${result.gapMs.toFixed(0)}ms)\n中断除外=${result.excluded} 有効サンプル=${result.samples}\n計測再開待ち / 全体FPSではありません`;output.dataset.metrics=JSON.stringify(result);return}
-  const g=game;const data={...result,enemies:g.liveEnemies,shots:g.shots.length+g.enemyShots.length,effects:g.effects.length,zoom:view.zoom};
-  document.querySelector("#labPerformance").textContent=`FPS ${data.fps.toFixed(1)} | FRAME ${data.frameMs.toFixed(1)}ms MAX ${data.maxFrameMs.toFixed(1)}ms\nCPU UPDATE ${data.updateMs.toFixed(2)}ms / DRAW ${data.drawMs.toFixed(2)}ms\nENEMY ${data.enemies} SHOT ${data.shots} FX ${data.effects} ZOOM ${data.zoom.toFixed(2)}×\nN=${data.samples} 中断除外=${data.excluded}`;
+  const g=game;const data={...result,enemies:g.liveEnemies,shots:g.shots.length+g.enemyShots.length,effects:g.effects.length+g.impact.particles.length,corpses:g.impact.corpses,zoom:view.zoom};
+  document.querySelector("#labPerformance").textContent=`FPS ${data.fps.toFixed(1)} | FRAME ${data.frameMs.toFixed(1)}ms MAX ${data.maxFrameMs.toFixed(1)}ms\nCPU UPDATE ${data.updateMs.toFixed(2)}ms / DRAW ${data.drawMs.toFixed(2)}ms\nENEMY ${data.enemies} SHOT ${data.shots} FX ${data.effects} BODY ${data.corpses} ZOOM ${data.zoom.toFixed(2)}×\nN=${data.samples} 中断除外=${data.excluded}`;
   document.querySelector("#labPerformance").dataset.metrics=JSON.stringify(data);
 }
 if(DEBUG){

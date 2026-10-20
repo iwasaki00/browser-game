@@ -1,0 +1,626 @@
+{
+  "version": "0.6.0",
+  "units": "integer water units; 256 units = terrain height 1",
+  "stages": [
+    {
+      "id": "stage-01",
+      "stroke": [
+        {
+          "x": 7.5,
+          "y": 7
+        },
+        {
+          "x": 7.5,
+          "y": 9
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-01",
+          "step": 120,
+          "maxSteps": 120,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-01",
+              "name": "若葉の町",
+              "currentIntake": 0,
+              "requiredIntake": 4096,
+              "deliveryAtDeadline": 0,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-01",
+              "type": "DELIVERY",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 120
+            }
+          ],
+          "firstFailureStep": 120
+        },
+        "balance": {
+          "initial": 16384,
+          "water": 16384,
+          "intake": 0,
+          "outlet": 0
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-01",
+          "step": 120,
+          "maxSteps": 120,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-01",
+              "name": "若葉の町",
+              "currentIntake": 9868,
+              "requiredIntake": 4096,
+              "deliveryAtDeadline": 9868,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-01",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 16384,
+          "water": 6516,
+          "intake": 9868,
+          "outlet": 0
+        }
+      }
+    },
+    {
+      "id": "stage-02",
+      "stroke": [
+        {
+          "x": 8.5,
+          "y": 6.5
+        },
+        {
+          "x": 11.5,
+          "y": 10.5
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-02",
+          "step": 240,
+          "maxSteps": 240,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-02",
+              "name": "風待ちの町",
+              "currentIntake": 0,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 0,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-02",
+              "type": "DELIVERY",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 240
+            }
+          ],
+          "firstFailureStep": 240
+        },
+        "balance": {
+          "initial": 24576,
+          "water": 24576,
+          "intake": 0,
+          "outlet": 0
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-02",
+          "step": 240,
+          "maxSteps": 240,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-02",
+              "name": "風待ちの町",
+              "currentIntake": 6117,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 6117,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-02",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 24576,
+          "water": 18459,
+          "intake": 6117,
+          "outlet": 0
+        }
+      }
+    },
+    {
+      "id": "stage-03",
+      "stroke": [
+        {
+          "x": 8.5,
+          "y": 7
+        },
+        {
+          "x": 8.5,
+          "y": 9
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-03",
+          "step": 160,
+          "maxSteps": 160,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-03",
+              "name": "川辺の町",
+              "currentIntake": 0,
+              "deliveryAtDeadline": null,
+              "currentDepth": 424,
+              "maximumDepth": 424,
+              "floodThreshold": 128,
+              "firstFloodStep": 19
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-03",
+              "type": "FLOOD",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 19
+            }
+          ],
+          "firstFailureStep": 19
+        },
+        "balance": {
+          "initial": 16384,
+          "water": 16384,
+          "intake": 0,
+          "outlet": 0
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-03",
+          "step": 160,
+          "maxSteps": 160,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-03",
+              "name": "川辺の町",
+              "currentIntake": 0,
+              "deliveryAtDeadline": null,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 128,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-03",
+              "type": "FLOOD",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 16384,
+          "water": 16384,
+          "intake": 0,
+          "outlet": 0
+        }
+      }
+    },
+    {
+      "id": "stage-04",
+      "stroke": [
+        {
+          "x": 9.5,
+          "y": 10
+        },
+        {
+          "x": 9.5,
+          "y": 12
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-04",
+          "step": 240,
+          "maxSteps": 240,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-04",
+              "name": "木立の町",
+              "currentIntake": 0,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 0,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-04",
+              "type": "DELIVERY",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 240
+            }
+          ],
+          "firstFailureStep": 240
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 17833,
+          "intake": 0,
+          "outlet": 14935
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-04",
+          "step": 240,
+          "maxSteps": 240,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-04",
+              "name": "木立の町",
+              "currentIntake": 11757,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 11757,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-04",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 6924,
+          "intake": 11757,
+          "outlet": 14087
+        }
+      }
+    },
+    {
+      "id": "stage-05",
+      "stroke": [
+        {
+          "x": 10.5,
+          "y": 6.5
+        },
+        {
+          "x": 10.5,
+          "y": 13.5
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-05",
+          "step": 300,
+          "maxSteps": 300,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-05-north",
+              "name": "朝日の町",
+              "currentIntake": 0,
+              "requiredIntake": 1024,
+              "deliveryAtDeadline": 0,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            },
+            {
+              "id": "town-05-south",
+              "name": "夕日の町",
+              "currentIntake": 0,
+              "requiredIntake": 1024,
+              "deliveryAtDeadline": 0,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-05-north",
+              "type": "DELIVERY",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 300
+            },
+            {
+              "townId": "town-05-south",
+              "type": "DELIVERY",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 300
+            }
+          ],
+          "firstFailureStep": 300
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 32768,
+          "intake": 0,
+          "outlet": 0
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-05",
+          "step": 300,
+          "maxSteps": 300,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-05-north",
+              "name": "朝日の町",
+              "currentIntake": 11456,
+              "requiredIntake": 1024,
+              "deliveryAtDeadline": 11456,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            },
+            {
+              "id": "town-05-south",
+              "name": "夕日の町",
+              "currentIntake": 9470,
+              "requiredIntake": 1024,
+              "deliveryAtDeadline": 9470,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-05-north",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-05-south",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 11842,
+          "intake": 20926,
+          "outlet": 0
+        }
+      }
+    },
+    {
+      "id": "stage-06",
+      "stroke": [
+        {
+          "x": 12.5,
+          "y": 10
+        },
+        {
+          "x": 12.5,
+          "y": 12
+        }
+      ],
+      "baseline": {
+        "goal": {
+          "stageId": "stage-06",
+          "step": 300,
+          "maxSteps": 300,
+          "status": "FAILURE",
+          "towns": [
+            {
+              "id": "town-06-north",
+              "name": "丘上の町",
+              "currentIntake": 11660,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 11660,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            },
+            {
+              "id": "town-06-east",
+              "name": "川守の町",
+              "currentIntake": 2400,
+              "requiredIntake": 128,
+              "deliveryAtDeadline": 2400,
+              "currentDepth": 316,
+              "maximumDepth": 333,
+              "floodThreshold": 128,
+              "firstFloodStep": 58
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-06-north",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-north",
+              "type": "FLOOD",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-east",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-east",
+              "type": "FLOOD",
+              "achieved": false,
+              "confirmed": true,
+              "failedAtStep": 58
+            }
+          ],
+          "firstFailureStep": 58
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 18708,
+          "intake": 14060,
+          "outlet": 0
+        }
+      },
+      "solution": {
+        "goal": {
+          "stageId": "stage-06",
+          "step": 300,
+          "maxSteps": 300,
+          "status": "SUCCESS",
+          "towns": [
+            {
+              "id": "town-06-north",
+              "name": "丘上の町",
+              "currentIntake": 15432,
+              "requiredIntake": 2048,
+              "deliveryAtDeadline": 15432,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 512,
+              "firstFloodStep": null
+            },
+            {
+              "id": "town-06-east",
+              "name": "川守の町",
+              "currentIntake": 2400,
+              "requiredIntake": 128,
+              "deliveryAtDeadline": 2400,
+              "currentDepth": 0,
+              "maximumDepth": 0,
+              "floodThreshold": 128,
+              "firstFloodStep": null
+            }
+          ],
+          "conditions": [
+            {
+              "townId": "town-06-north",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-north",
+              "type": "FLOOD",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-east",
+              "type": "DELIVERY",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            },
+            {
+              "townId": "town-06-east",
+              "type": "FLOOD",
+              "achieved": true,
+              "confirmed": true,
+              "failedAtStep": null
+            }
+          ],
+          "firstFailureStep": null
+        },
+        "balance": {
+          "initial": 32768,
+          "water": 14936,
+          "intake": 17832,
+          "outlet": 0
+        }
+      }
+    }
+  ]
+}

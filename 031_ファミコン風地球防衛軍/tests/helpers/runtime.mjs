@@ -6,6 +6,7 @@ import * as camera from "../../js/camera.js";
 import * as invasion from "../../js/invasion.js";
 import {FrameProfiler,LiveProfiler} from "../../js/profiler.js";
 import * as playground from "../../js/playground.js";
+import * as impact from "../../js/impact.js";
 
 const source=readFileSync(new URL("../../js/game.js",import.meta.url),"utf8").replace(/^import .*;\r?\n/gm,"");
 export function runtime(seed=null,{recordDraw=true,debug=false}={}){
@@ -25,7 +26,7 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
   const document={documentElement:get("html"),body:get("body"),hidden:false,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
   const storage=new Map();if(seed)storage.set(data.SAVE_KEY,JSON.stringify(seed));
   let randomSeed=12345;const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);
-  const sandbox={...data,...camera,...invasion,...playground,FrameProfiler,LiveProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
+  const sandbox={...data,...camera,...invasion,...playground,...impact,FrameProfiler,LiveProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
   sandbox.window={innerHeight:720,addEventListener:(name,fn)=>{(listeners.get(`window:${name}`)||listeners.set(`window:${name}`,[]).get(`window:${name}`)).push(fn)}};
   const scope=vm.createContext(sandbox);vm.runInContext(source,scope);vm.runInContext("save.settings.sound=false",scope);
   const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));

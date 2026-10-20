@@ -6,7 +6,7 @@ import { applyStroke, type Stroke } from '../core/stroke';
 import { assertConservation, createWorld, expectedWater, type WorldState } from '../core/world';
 import { cloneWorld, snapshotWorld, type DeepReadonly, type WorldSnapshot } from '../core/world-view';
 
-export const SIMULATION_VERSION = '0.5.0';
+export const SIMULATION_VERSION = '0.6.0';
 export type Assessment = 'IMPROVED' | 'WORSENED' | 'UNCHANGED';
 export interface SignedDifference {
   readonly worldA: number; readonly worldB: number; readonly delta: number; readonly assessment: Assessment;

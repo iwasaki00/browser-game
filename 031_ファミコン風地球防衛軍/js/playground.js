@@ -5,7 +5,7 @@ export const PLAYER_PRESETS=Object.freeze({
   HEAVY:{speed:65,jump:176}, FLIGHT:{speed:110,jump:0}
 });
 export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss"});
-export const LAB_COUNTS=Object.freeze([1,10,30,50,100]);
+export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);
 export function createLabState(equipped,settings){return {
   equipped:[...equipped],settings:{...settings},invincible:true,preset:"STANDARD",
   enemy:"crawler",count:30,placement:"dense",cameraMode:"AUTO",fixedZoom:.5,showFps:true,
