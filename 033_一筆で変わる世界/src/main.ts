@@ -165,6 +165,8 @@ function openComparison(): void {
   if (!stroke || !stage || !comparisonView) return;
   releasePointers(); session.runner.pause();
   comparisonView.open(stage, stroke, Number(speed.value), stages.findIndex(s => s.id === stage.id) < stages.length - 1);
+  element('workspace').hidden = true; element('challenge-panel').hidden = true;
+  element('comparison-panel').scrollIntoView({ block: 'start' });
 }
 element('compare-open').onclick = () => safely(openComparison);
 element('compare-result').onclick = () => safely(openComparison);

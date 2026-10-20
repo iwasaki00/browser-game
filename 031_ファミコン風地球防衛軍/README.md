@@ -63,6 +63,7 @@ py -3 -m http.server 8000
 - テスト：`npm test`
 - ロジック処理時間計測：`npm run benchmark`（Canvas描画・音声を除外。表示FPSではありません）
 - ブラウザ計測：`?debug=1` で開き、`BENCH 30 / 50 / 100` を押します。6秒間、指定数を補充しながら射撃し、実際のフレーム間隔・1% low・同期処理時間を表示します。音声は計測中のみ抑制します。
+- Version 0.1.4の関連テスト・処理時間・FPS観測と制約：[検証結果](docs/PERFORMANCE_0.1.4.md)。iPhone実機のFPS・操作感は未確認です。
 - 外部ライブラリ、外部API、ダウンロード素材は使用していません。
 
 仕様資料は `docs/`、生成素材一覧は `docs/ASSET_MANIFEST.md` にあります。
