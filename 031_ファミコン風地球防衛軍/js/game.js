@@ -1,9 +1,9 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.6";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.7";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js";
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
 import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.6";
-import {IMPACT,REACTIONS,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.6";
+import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.7";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
@@ -13,13 +13,13 @@ const gameShell=document.querySelector("#gameShell");
 const images={};
 const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png",shots:"assets/sprites/weapons/projectiles.png",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
-let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play";
+let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
 const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
 const profiler=DEBUG?new FrameProfiler():null;
 const liveProfiler=DEBUG?new LiveProfiler():null;
-const view={mode:"landscape",zoom:BATTLE_CAMERA.idleZoom,width:VIEW.canvasWidth/BATTLE_CAMERA.idleZoom};
+const view={mode:"landscape",zoom:BATTLE_CAMERA.idleZoom,width:VIEW.canvasWidth/BATTLE_CAMERA.idleZoom,renderOffset:0};
 
 function syncCameraView(){
   view.zoom=game?.battleCamera.zoom??BATTLE_CAMERA.idleZoom;
@@ -61,7 +61,7 @@ function discardMission(){for(const timer of missionTimers)clearTimeout(timer);m
 function cancelTitle(){resetInput();show(returnState);for(const entry of deferredMissionCallbacks.splice(0))if(entry.current===game)entry.callback();if(state==="play")canvas.focus()}
 function requestTitle(){
   if(state==="confirm")return;
-  if(game&&!game.clear&&["play","pause","lab"].includes(state)){returnState=state;resetInput();show("confirm");document.querySelector('[data-action="cancel-title"]').focus();return}
+  if(game&&!game.clear&&["play","pause","lab","settings"].includes(state)){returnState=state;resetInput();show("confirm");document.querySelector('[data-action="cancel-title"]').focus();return}
   discardMission();show("title");document.querySelector('[data-action="start"]').focus();
 }
 function renderMissionList(){
@@ -71,6 +71,12 @@ function renderMissionList(){
 function weapon(id){return WEAPONS.find(w=>w.id===id)}
 function activeEquipment(){return game?.lab?.equipped??save.equipped}
 function activeSettings(){return game?.lab?.settings??save.settings}
+function syncSettings(){document.querySelector("#destructionSelect").value=String(save.settings.destructionLevel);document.querySelector("#shakeToggle").checked=save.settings.shake}
+function openSettings(){
+  if(game?.lab){show("play");openLabPanel();return}
+  settingsReturn=state;resetInput();syncSettings();show("settings");document.querySelector('[data-action="settings-close"]').focus();
+}
+function closeSettings(){if(state!=="settings")return;resetInput();acc=0;show(settingsReturn);if(state==="play")canvas.focus()}
 function formatTime(t){const m=Math.floor(t/60),s=Math.floor(t%60),ms=Math.floor(t*100)%100;return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(ms).padStart(2,"0")}`}
 
 function initAudio(){if(audio||!activeSettings().sound)return;const AC=window.AudioContext||window.webkitAudioContext;if(AC)audio=new AC()}
@@ -85,6 +91,7 @@ function renderWeaponGrid(){
 const input={left:false,right:false,jump:false,up:false,down:false,fire:false,switch:false,aimX:260,aimY:90,aimMode:"mouse",touchDx:1,touchDy:0};
 function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.fire=input.switch=false}
 window.addEventListener("keydown",e=>{
+  if(state==="settings"){if(e.key==="Escape")closeSettings();return}
   if(game?.lab&&state==="lab"){if(e.key==="Escape")closeLabPanel();return}
   if(game?.lab&&(e.key==="F2")){e.preventDefault();if(state==="play")openLabPanel();return}
   if(state==="confirm"){if(e.key==="Escape")cancelTitle();return}
@@ -112,6 +119,8 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="title"||action==="quit"||action==="back-title"){requestTitle();return}
   if(action==="confirm-title"){discardMission();show("title");document.querySelector('[data-action="start"]').focus();return}
   if(action==="cancel-title"){cancelTitle();return}
+  if(action==="settings"){openSettings();return}
+  if(action==="settings-close"){closeSettings();return}
   if(action==="test-lab"){if(DEBUG)startLab();return}
   if(action==="lab-open"){openLabPanel();return}
   if(action==="lab-close"){closeLabPanel();return}
@@ -129,15 +138,20 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="resume")resume();if(action==="retry"){if(game?.lab)startLab();else startMission()}
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound)tone(700,.06)});
-document.addEventListener("change",e=>{if(game?.lab){changeLabSetting(e.target);return}if(e.target.id!=="densitySelect"||!Object.hasOwn(DENSITY_MODES,e.target.value))return;save.settings.enemyDensity=e.target.value;storeSave()});
+document.addEventListener("change",e=>{
+  if(game?.lab){changeLabSetting(e.target);return}
+  if(e.target.id==="destructionSelect"&&state==="settings"){save.settings.destructionLevel=normalizeDestructionLevel(e.target.value);storeSave();syncSettings();return}
+  if(e.target.id==="shakeToggle"&&state==="settings"){save.settings.shake=e.target.checked;if(game&&!e.target.checked){game.shake=0;game.impact.shakeUntil=0}storeSave();return}
+  if(e.target.id!=="densitySelect"||!Object.hasOwn(DENSITY_MODES,e.target.value))return;save.settings.enemyDensity=e.target.value;storeSave();
+});
 
 function startMission(id=selectedMissionId){
   if(!canPlayMission(id,save))return false;
-  discardMission();selectedMissionId=id;
+  discardMission();view.renderOffset=0;selectedMissionId=id;
   game={missionId:id,time:0,score:0,kills:0,crates:0,camera:0,shake:0,area:-1,areaText:"",areaTimer:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     density:save.settings.enemyDensity,enemyLimit:DENSITY_MODES[save.settings.enemyDensity].limit,liveEnemies:0,liveMobs:0,
     director:new SpawnDirector(save.settings.enemyDensity),grid:new SpatialGrid(),attacks:new AttackDirector(),
-    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),
+    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),settings:save.settings,
     player:{x:64,y:WORLD.ground-32,vx:0,vy:0,w:14,h:27,hp:100,maxHp:100,onGround:true,face:1,invuln:0,shotCd:0,switchCd:0,shootPose:0,weaponSlot:0,anim:0,dead:false},
     enemies:[],shots:[],enemyShots:[],effects:[],items:[{x:2050,y:WORLD.ground-25,type:"crate",alive:true}],platforms:[{x:520,y:120,w:80},{x:1220,y:105,w:96},{x:2700,y:116,w:72},{x:3500,y:100,w:90}]};
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
@@ -162,7 +176,9 @@ function pushEffect(effect){
   pushImpactEffect(game,effect);
 }
 
-function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13,target=aimTarget(input,{x:px,y:py},game.camera,view.zoom);let dx=target.x-px,dy=target.y-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
+function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13;
+  const offset=activeSettings().shake?view.renderOffset:0,aimInput=input.aimMode==="mouse"&&offset?{...input,aimX:input.aimX-offset,aimY:input.aimY-offset}:input;
+  const target=aimTarget(aimInput,{x:px,y:py},game.camera,view.zoom);let dx=target.x-px,dy=target.y-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
   const make=(ang=0,offset=0)=>{const ca=Math.cos(ang),sa=Math.sin(ang),vx=(dx*ca-dy*sa)*w.speed,vy=(dx*sa+dy*ca)*w.speed;game.shots.push({x:px,y:py+offset,originX:px,originY:py,vx,vy,w:7,h:4,life:w.range/w.speed,type:w.type,damage:w.damage,pierce:w.pierce||0,radius:w.radius||0,rehit:{},weapon:w})};
   if(w.type==="spread")[-.34,-.17,0,.17,.34].forEach(a=>make(a));else if(w.type==="homing"){make(-.1,-2);make(.1,3)}else make();
   p.shootPose=.11;pushEffect({x:px,y:py,kind:"muzzle",life:.09,max:.09});tone(w.type==="rocket"||w.type==="grenade"?95:220+w.damage*8,.04,w.type==="laser"?"sawtooth":"square",.018);
@@ -244,9 +260,11 @@ function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;i
 function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;const reward=pickReward(save.unlocked);if(reward)save.unlocked.push(reward);save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL COMPLETE</span><strong>全武器取得済み</strong>`;scheduleMission(()=>show("result"),500)}
 
 function draw(){
+  view.renderOffset=0;
   if(!assetsReady){ctx.fillStyle="#050915";ctx.fillRect(0,0,320,180);return}
-  if(!game||!["play","pause","confirm","lab"].includes(state)){ctx.drawImage(images.bg,0,0);return}
+  if(!game||!["play","pause","confirm","lab","settings"].includes(state)){ctx.drawImage(images.bg,0,0);return}
   const g=game,shake=g.shake&&activeSettings().shake?(Math.random()-.5)*g.shake:0;
+  view.renderOffset=Math.round(shake);
   ctx.save();
   const origin=worldToScreen({x:0,y:0},g.camera,view.zoom);
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
@@ -269,23 +287,36 @@ function drawWorld(g){
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
 function drawPlayer(p){if(p.invuln>0&&Math.floor(p.invuln*12)%2)return;const frame=p.dead?7:p.shootPose>0?6:!p.onGround?(p.vy<0?4:5):Math.abs(p.vx)>0?Math.floor(p.anim)%4:0;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.player,frame*24,0,24,32,0,y,24,32)}else ctx.drawImage(images.player,frame*24,0,24,32,x,y,24,32);ctx.restore()}
-function drawEnemies(g){let deaths=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
+function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
     const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;
+    if(e.dead&&e.deathTrail){const profile=DESTRUCTION_LEVELS[e.deathLevel];
+      for(let n=0;n<Math.min(e.trailCount,profile.trails)&&trails<IMPACT.maxTrailDraws;n++){
+        const i=((e.trailCursor-1-n+IMPACT.trailSlots)%IMPACT.trailSlots)*4,age=e.deathAge-e.deathTrail[i+3];if(age>IMPACT.trailLife)continue;
+        drawDeathGhost(e,e.deathTrail[i],e.deathTrail[i+1],e.deathTrail[i+2],profile.trailAlpha*(1-age/IMPACT.trailLife)*clamp(e.death/.12,0,1),deaths<INVASION.maxDeathSprites);trails++;
+      }
+    }
     if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
     const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
     if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
     if(e.dead){if(e.deathType==="flame"||e.deathDelay>0){ctx.fillStyle=e.deathType==="flame"?"#ff8b42":"#b88cff";ctx.fillRect(-8,-3,4,2);ctx.fillRect(5,1,4,3)}ctx.restore();ctx.globalAlpha=1}
     else if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}
   }}
+function drawDeathGhost(e,x,y,angle,alpha,full){
+  ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y+e.h/2));ctx.rotate(angle);
+  if(!full){ctx.fillStyle=e.deathColor;ctx.fillRect(-3,0,6,2)}
+  else if(e.type==="boss")ctx.drawImage(images.boss,288,0,96,64,-48,-e.h/2,96,64);
+  else{const size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,144,ENEMY_TYPES[e.type].row*48,48,48,-size/2,e.h/2-size,size,size)}
+  ctx.restore();ctx.globalAlpha=1;
+}
 function drawShots(g){for(const s of g.shots){if(s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=WEAPONS.findIndex(w=>w.type===s.type),x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,Math.max(0,i)*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){if(s.x<g.camera-8||s.x>g.camera+view.width+8)continue;ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}}
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
-function drawEffects(g){for(const f of g.effects){if(Math.max(f.x,f.x2??f.x)<g.camera-100||Math.min(f.x,f.x2??f.x)>g.camera+view.width+100)continue;const x=f.x,a=f.life/f.max;
+function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
     if(f.kind==="explosion"){
-      const fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6),radius=(f.r||24)*(.3+(1-a)*1.3);
+      const scale=f.visualScale||1,fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6)*scale,radius=(f.r||24)*(.3+(1-a)*1.3)*scale;
       ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz);
       ctx.globalAlpha=a;ctx.strokeStyle=a>.65?"#fff7d5":"#ffab56";ctx.lineWidth=2;ctx.beginPath();
       for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
-      ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8,f.y-7,16,14);
+      ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
       for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
     }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
     else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}
@@ -315,7 +346,7 @@ function loop(ts){
   if(profiler?.running&&game&&state==="play")fillBenchmarkPopulation();
   const updateEnd=DEBUG?performance.now():0;draw();const drawEnd=DEBUG?performance.now():0;
   if(game?.lab&&liveProfiler){const result=liveProfiler.record(ts,updateEnd-begin,drawEnd-updateEnd,!document.hidden&&state==="play"&&!game.player.dead);if(result&&game.lab.showFps)publishLabPerformance(result)}
-  if(profiler?.running&&game){profiler.record(ts,performance.now()-begin,game.liveEnemies);if(profiler.result){canvas.dataset.benchmark=JSON.stringify(profiler.result);document.querySelector("#qaResult").textContent=`${profiler.result.limit}: ${profiler.result.averageFps} FPS / p95 ${profiler.result.p95CpuMs}ms`;input.fire=false}}
+  if(profiler?.running&&game){profiler.record(ts,performance.now()-begin,game.liveEnemies);if(profiler.result){const result={...profiler.result,destructionLevel:impactLevel(game).id};canvas.dataset.benchmark=JSON.stringify(result);document.querySelector("#qaResult").textContent=`LEVEL ${result.destructionLevel} / ${result.limit}: ${result.averageFps} FPS / p95 ${result.p95CpuMs}ms`;input.fire=false}}
   requestAnimationFrame(loop);
 }
 
@@ -324,7 +355,8 @@ function fillBenchmarkPopulation(){
 }
 function startBenchmark(mode){
   const limit=mode==="LAB200"?200:DENSITY_MODES[mode]?.limit;
-  if(!DEBUG||!limit)return;startLab(false);game.density=mode==="LAB200"?"MASSIVE":mode;game.enemyLimit=limit;game.player.x=3200;
+  if(!DEBUG||!limit)return;const settings=game?.lab?{...game.lab.settings}:null;startLab(false);if(settings)game.lab.settings=settings;
+  game.density=mode==="LAB200"?"MASSIVE":mode;game.enemyLimit=limit;game.player.x=3200;syncLabUI();
   fillBenchmarkPopulation();input.aimMode="touch";input.touchDx=1;input.touchDy=0;input.fire=true;profiler.start(game.enemyLimit);
   delete canvas.dataset.benchmark;document.querySelector("#qaResult").textContent=`MEASURING ${game.enemyLimit}...`;
 }
@@ -346,12 +378,15 @@ function startLab(openPanel=true){
 }
 function syncLabUI(){
   document.querySelector("#labToggle").hidden=!game?.lab||state!=="play";
+  document.querySelector("#labLevelBadge").hidden=!game?.lab||state!=="play";
   document.querySelector("#labPerformance").hidden=!game?.lab?.showFps||state!=="play";
   if(!game?.lab)return;const lab=game.lab;
   gameShell.dataset.flight=String(lab.preset==="FLIGHT");
   const values={labWeapon1:lab.equipped[0],labWeapon2:lab.equipped[1],labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom)};
   for(const [id,value] of Object.entries(values))document.querySelector(`#${id}`).value=value;
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
+  document.querySelector("#labDestruction").value=String(normalizeDestructionLevel(lab.settings.destructionLevel));document.querySelector("#labShake").checked=lab.settings.shake;
+  document.querySelector("#labLevelBadge").textContent=`LEVEL ${impactLevel(game).id} · ${impactLevel(game).name}`;
   document.querySelector("#labZoom").disabled=lab.cameraMode!=="FIXED";
   document.querySelector("#labCount").disabled=lab.enemy==="beetle"||lab.enemy==="boss";
   document.querySelector("#labBlast").disabled=!["rocket","grenade"].includes(weapon(activeEquipment()[game.player.weaponSlot]).type);
@@ -366,6 +401,8 @@ function changeLabSetting(target){
   if(target.id==="labSlot"&&(value==="0"||value==="1")){game.player.weaponSlot=Number(value);game.player.shotCd=game.player.switchCd=0}
   if(target.id==="labInvincible"){lab.invincible=target.checked;game.player.invuln=0}
   if(target.id==="labFps"){lab.showFps=target.checked;liveProfiler.reset()}
+  if(target.id==="labDestruction")lab.settings.destructionLevel=normalizeDestructionLevel(value);
+  if(target.id==="labShake"){lab.settings.shake=target.checked;if(!target.checked){game.shake=0;game.impact.shakeUntil=0}}
   if(target.id==="labPreset"&&Object.hasOwn(PLAYER_PRESETS,value)){const flying=lab.preset==="FLIGHT";lab.preset=value;if(flying&&value!=="FLIGHT")landLabPlayer(game.player,game.platforms);game.player.vx=game.player.vy=0;resetInput()}
   if(target.id==="labEnemy"&&Object.values(LAB_ENEMIES).includes(value))lab.enemy=value;
   if(target.id==="labCount"&&LAB_COUNTS.includes(Number(value)))lab.count=Number(value);
@@ -400,7 +437,7 @@ function spawnLabEnemies(){
 }
 function publishLabPerformance(result){
   if(result.interrupted){const output=document.querySelector("#labPerformance");output.textContent=`FPS: 中断区間を除外 (${result.gapMs.toFixed(0)}ms)\n中断除外=${result.excluded} 有効サンプル=${result.samples}\n計測再開待ち / 全体FPSではありません`;output.dataset.metrics=JSON.stringify(result);return}
-  const g=game;const data={...result,enemies:g.liveEnemies,shots:g.shots.length+g.enemyShots.length,effects:g.effects.length+g.impact.particles.length,corpses:g.impact.corpses,zoom:view.zoom};
+  const g=game;const data={...result,enemies:g.liveEnemies,shots:g.shots.length+g.enemyShots.length,effects:g.effects.length+g.impact.particles.length,corpses:g.impact.corpses,zoom:view.zoom,destructionLevel:impactLevel(g).id};
   document.querySelector("#labPerformance").textContent=`FPS ${data.fps.toFixed(1)} | FRAME ${data.frameMs.toFixed(1)}ms MAX ${data.maxFrameMs.toFixed(1)}ms\nCPU UPDATE ${data.updateMs.toFixed(2)}ms / DRAW ${data.drawMs.toFixed(2)}ms\nENEMY ${data.enemies} SHOT ${data.shots} FX ${data.effects} BODY ${data.corpses} ZOOM ${data.zoom.toFixed(2)}×\nN=${data.samples} 中断除外=${data.excluded}`;
   document.querySelector("#labPerformance").dataset.metrics=JSON.stringify(data);
 }

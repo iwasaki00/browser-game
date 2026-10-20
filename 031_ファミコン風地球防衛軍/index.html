@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.6">
+  <link rel="stylesheet" href="styles.css?v=0.1.7">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.6</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.7</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -27,6 +27,7 @@
         <button class="menu-button menu-button--primary" data-action="start">MISSION START</button>
         <button class="menu-button" data-action="continue">CONTINUE</button>
         <button class="menu-button" data-action="howto">操作方法</button>
+        <button class="menu-button" data-action="settings">設定</button>
         <button id="testLabButton" class="menu-button lab-entry" data-action="test-lab" hidden>TEST LAB</button>
         <p class="blink">PRESS ENTER / TAP START</p>
       </div>
@@ -46,11 +47,22 @@
         <div class="howto-grid"><div><b>移動</b><span>A / D・← / →</span></div><div><b>ジャンプ</b><span>W / ↑ / SPACE</span></div><div><b>照準・射撃</b><span>マウス</span></div><div><b>武器切替</b><span>Q / E / SHIFT</span></div><div><b>ポーズ</b><span>ESC / P</span></div><div><b>スマホ：横向き推奨</b><span>左：移動・JUMP／右：SW・FIRE<br>FIREを押して射撃、ドラッグで照準。縦向きも操作可能</span></div></div>
         <button class="menu-button menu-button--primary" data-action="close-howto">了解</button>
       </div>
-      <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="settings">設定</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <section id="screenSettings" class="screen screen--lab screen--settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <header class="lab-header"><div><h2 id="settingsTitle">設定</h2><small>通常ゲームの設定 · 自動保存</small></div><button data-action="settings-close">設定を閉じる</button></header>
+        <div class="lab-fields"><fieldset><legend>DESTRUCTION LEVEL</legend>
+          <label>撃破演出<select id="destructionSelect"><option value="1">LEVEL 1：標準 / STANDARD</option><option value="2">LEVEL 2：強烈 / POWERFUL</option><option value="3">LEVEL 3：超強烈 / EXTREME</option></select></label>
+          <small>見た目のみ変更。威力・射程・敵数・報酬は変わりません。</small>
+        </fieldset><fieldset><legend>ACCESSIBILITY</legend>
+          <label><input id="shakeToggle" type="checkbox" checked> 画面揺れON（外すとOFF）</label>
+          <small>演出レベルとは独立。OFFでも撃破・爆発演出は表示します。</small>
+        </fieldset></div>
+      </section>
       <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
       <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
+      <output id="labLevelBadge" class="lab-level" aria-label="現在の撃破演出レベル" hidden>LEVEL 1 · STANDARD</output>
       <output id="labPerformance" class="lab-performance" aria-label="実プレイ計測" hidden>FPS: 計測中…</output>
       <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
         <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
@@ -76,6 +88,9 @@
             <small id="labSpawnResult" role="status">生成は開始位置へ復帰して行います。ボスは専用アリーナ。</small>
           </fieldset>
           <fieldset><legend>CAMERA / PERFORMANCE</legend>
+            <label>DESTRUCTION LEVEL<select id="labDestruction"><option value="1">LEVEL 1：標準</option><option value="2">LEVEL 2：強烈</option><option value="3">LEVEL 3：超強烈</option></select></label>
+            <label><input id="labShake" type="checkbox" checked> LAB画面揺れON（外すとOFF）</label>
+            <small>LAB内のみの一時設定。既に死亡中の敵は生成時のレベルを維持。</small>
             <label>カメラ<select id="labCamera"><option>AUTO</option><option>FIXED</option></select></label>
             <label>固定倍率<input id="labZoom" type="range" min="0.35" max="0.85" step="0.01" value="0.50"></label>
             <output id="labZoomValue">0.50×</output>
@@ -104,6 +119,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.1.6"></script>
+  <script type="module" src="js/game.js?v=0.1.7"></script>
 </body>
 </html>

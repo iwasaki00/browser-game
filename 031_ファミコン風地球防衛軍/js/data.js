@@ -1,4 +1,4 @@
-export const VERSION = "0.1.6";
+export const VERSION = "0.1.7";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -112,9 +112,16 @@ export const MISSION_AREAS = [
   {x:0, name:"侵略開始"},{x:900,name:"包囲網"},{x:1900,name:"装甲敵出現"},{x:2900,name:"最終防衛区画"},{x:3950,name:"巣の中心"}
 ];
 
+export const DESTRUCTION_LEVELS=Object.freeze({
+  1:Object.freeze({id:1,name:"STANDARD",speed:1,spin:1,particles:1,explosion:1,shake:1,life:1,trails:0,trailAlpha:0,fragmentSpeed:1,gravity:1,bounce:false}),
+  2:Object.freeze({id:2,name:"POWERFUL",speed:1.8,spin:1.5,particles:1.5,explosion:1.4,shake:1.3,life:1.2,trails:1,trailAlpha:.13,fragmentSpeed:1,gravity:1.8,bounce:true}),
+  3:Object.freeze({id:3,name:"EXTREME",speed:3,spin:2.5,particles:2.5,explosion:1.8,shake:1.6,life:1.4,trails:3,trailAlpha:.24,fragmentSpeed:1.45,gravity:3,bounce:true})
+});
+export function normalizeDestructionLevel(value){return (typeof value==="number"||typeof value==="string")&&Object.hasOwn(DESTRUCTION_LEVELS,value)?Number(value):1}
+
 export const DEFAULT_SAVE = Object.freeze({
   version:2, clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
-  bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD"}
+  bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
 });
 
 export const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
@@ -133,6 +140,8 @@ export function sanitizeSave(value){
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;
   if(value.settings && typeof value.settings==="object") base.settings={...base.settings,...value.settings};
   if(!Object.hasOwn(DENSITY_MODES,base.settings.enemyDensity))base.settings.enemyDensity="STANDARD";
+  base.settings.destructionLevel=normalizeDestructionLevel(base.settings.destructionLevel);
+  if(typeof base.settings.shake!=="boolean")base.settings.shake=true;
   return base;
 }
 

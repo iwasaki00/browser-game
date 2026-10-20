@@ -22,7 +22,7 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
   }
   const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
   const touchButtons=["left","right","jump","switch","up","down"].map(key=>{const e=get(key);e.dataset.touch=key;return e});
-  const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Confirm","Lab"].map(n=>get(`screen${n}`));
+  const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Confirm","Lab","Settings"].map(n=>get(`screen${n}`));
   const document={documentElement:get("html"),body:get("body"),hidden:false,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
   const storage=new Map();if(seed)storage.set(data.SAVE_KEY,JSON.stringify(seed));
   let randomSeed=12345;const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);

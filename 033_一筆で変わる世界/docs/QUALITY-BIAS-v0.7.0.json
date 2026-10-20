@@ -1,0 +1,470 @@
+{
+  "version": "0.7.0",
+  "definition": "L1 between F(input) and reflected F(reflected input); only final board water is compared, not town goals",
+  "rows": [
+    {
+      "case": "known-5x1",
+      "steps": 1,
+      "axis": "X",
+      "l1": 4,
+      "maximum": 2,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 1,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 1,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 4,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 4,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 20,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-4x4",
+      "steps": 20,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 1,
+      "axis": "X",
+      "l1": 16,
+      "maximum": 2,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 1,
+      "axis": "Y",
+      "l1": 16,
+      "maximum": 2,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 4,
+      "axis": "X",
+      "l1": 16,
+      "maximum": 1,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 4,
+      "axis": "Y",
+      "l1": 16,
+      "maximum": 1,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 20,
+      "axis": "X",
+      "l1": 16,
+      "maximum": 1,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "flat-5x5",
+      "steps": 20,
+      "axis": "Y",
+      "l1": 16,
+      "maximum": 1,
+      "normalizedL1": 0.5
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 1,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 1,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 20,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 20,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 600,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-flat-64x64",
+      "steps": 600,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 1,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 1,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 20,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 20,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 600,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-valley-64x64",
+      "steps": 600,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 1,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 1,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 20,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 20,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 600,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "sample-facilities-64x64",
+      "steps": 600,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-01",
+      "state": "baseline",
+      "steps": 120,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-01",
+      "state": "baseline",
+      "steps": 120,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-01",
+      "state": "solution",
+      "steps": 120,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-01",
+      "state": "solution",
+      "steps": 120,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-02",
+      "state": "baseline",
+      "steps": 240,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-02",
+      "state": "baseline",
+      "steps": 240,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-02",
+      "state": "solution",
+      "steps": 240,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-02",
+      "state": "solution",
+      "steps": 240,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-03",
+      "state": "baseline",
+      "steps": 160,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-03",
+      "state": "baseline",
+      "steps": 160,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-03",
+      "state": "solution",
+      "steps": 160,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-03",
+      "state": "solution",
+      "steps": 160,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-04",
+      "state": "baseline",
+      "steps": 240,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-04",
+      "state": "baseline",
+      "steps": 240,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-04",
+      "state": "solution",
+      "steps": 240,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-04",
+      "state": "solution",
+      "steps": 240,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-05",
+      "state": "baseline",
+      "steps": 300,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-05",
+      "state": "baseline",
+      "steps": 300,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-05",
+      "state": "solution",
+      "steps": 300,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-05",
+      "state": "solution",
+      "steps": 300,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-06",
+      "state": "baseline",
+      "steps": 300,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-06",
+      "state": "baseline",
+      "steps": 300,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-06",
+      "state": "solution",
+      "steps": 300,
+      "axis": "X",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    },
+    {
+      "case": "stage-06",
+      "state": "solution",
+      "steps": 300,
+      "axis": "Y",
+      "l1": 0,
+      "maximum": 0,
+      "normalizedL1": 0
+    }
+  ]
+}

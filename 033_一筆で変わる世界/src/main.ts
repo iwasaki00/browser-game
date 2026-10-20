@@ -11,6 +11,8 @@ import { type Stroke } from './core/stroke';
 import { MAP_THEME, defaultDisplaySettings, flowAnimationPhase } from './living-map';
 import { ProgressStore } from './game/save';
 import { PlayableGame, type GameMode, type GameScreen } from './game/playable';
+import { bindVisibilityPause } from './input/visibility';
+import type { QualityPanel, QualityState } from './quality/panel';
 
 for (const [name, value] of Object.entries(MAP_THEME)) document.documentElement.style.setProperty(`--${name}`, value);
 
@@ -43,6 +45,7 @@ const gestures = new GestureController(session, camera, viewport);
 gestures.mode = session.stage!.strokeMode;
 let selected: number | null = null, error = '', dirty = true;
 let comparisonView: ComparisonView | null = null;
+let quality: QualityPanel | null = null;
 const displaySettings = defaultDisplaySettings(motionPreference.matches);
 const flowToggle = element<HTMLInputElement>('flow-visible'), motionToggle = element<HTMLInputElement>('reduce-motion');
 flowToggle.checked = progress.data.settings.showFlow;
@@ -346,8 +349,8 @@ canvas.addEventListener('keydown', event => {
     + Math.max(0, Math.min(w.width - 1, x + (event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0)));
   safely(() => {});
 });
-const suspend = () => safely(() => { releasePointers(); session.runner.pause(); comparisonView?.suspend(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
+const suspend = () => safely(() => { releasePointers(); session.runner.pause(); comparisonView?.suspend(); quality?.metrics.suspendFrameClock(); });
+bindVisibilityPause(document, suspend);
 window.addEventListener('blur', suspend);
 new ResizeObserver(() => {
   if (!comparisonView?.active) safely(() => { releasePointers(); constrainCamera(camera, viewport()); });
@@ -365,21 +368,51 @@ comparisonView = new ComparisonView({
 updateDisplaySettings();
 let previous = performance.now(), lastPaint = 0;
 function frame(now: number): void {
+  if (!quality?.enabled) { runFrame(now); return; }
+  quality.frame(now);
+  try { quality.metrics.measure('frame', () => runFrame(now)); }
+  finally { quality.update(now); }
+}
+function runFrame(now: number): void {
   const elapsed = now - previous; previous = now;
   if (game.screen !== 'GAME') { requestAnimationFrame(frame); return; }
   if (comparisonView?.active) {
-    comparisonView.advance(elapsed); comparisonView.draw(now); requestAnimationFrame(frame); return;
+    comparisonView.advance(elapsed);
+    if (quality?.enabled) quality.metrics.measure('draw', () => comparisonView!.draw(now), painted => painted);
+    else comparisonView.draw(now);
+    requestAnimationFrame(frame); return;
   }
   if (session.runner.playing) safely(() => { game.advance(elapsed); });
   if (game.advanceSummary()) safely(() => {});
   const animate = displaySettings.showFlow && !displaySettings.reducedMotion && session.runner.playing && view.value !== 'height';
   if (dirty || (animate && now - lastPaint >= 50)) {
     const preview = ['DRAWING', 'PREVIEW'].includes(session.phase) ? session.preview : null;
-    drawWorld(context!, session.runner.world, view.value, selected,
+    const draw = () => drawWorld(context!, session.runner.world, view.value, selected,
       { camera, viewport: viewport(), preview, edits: preview ? session.edits : [],
         towns: session.stage?.towns, townProgress: session.goalResult?.towns, flows: session.runner.lastFlows,
-        showFlow: displaySettings.showFlow, animationPhase: flowAnimationPhase(now, displaySettings.reducedMotion, session.runner.playing) }); dirty = false; lastPaint = now;
+        showFlow: displaySettings.showFlow, animationPhase: flowAnimationPhase(now, displaySettings.reducedMotion, session.runner.playing) });
+    if (quality?.enabled) quality.metrics.measure('draw', draw); else draw();
+    dirty = false; lastPaint = now;
   }
   requestAnimationFrame(frame);
 }
 update(); requestAnimationFrame(frame);
+
+// Vite removes this entire import path from production. Normal development also opts out.
+if (import.meta.env.DEV && new URLSearchParams(location.search).get('quality') === '1') {
+  const readQualityState = (): QualityState => {
+    const comparison = comparisonView?.diagnosticState(), world = session.runner.world;
+    let balanced = comparison?.balanced ?? true, problem = comparison?.problem ?? (error || null);
+    if (!comparison) try { assertConservation(world); } catch (cause) { balanced = false; problem = String(cause); }
+    const canvases = comparison ? ['comparison-a', 'comparison-b'] : ['map'];
+    return { scene: comparison?.stageId ?? session.stage?.id ?? `${game.mode}:${game.sampleId}`, screen: game.screen,
+      step: comparison?.steps[0] ?? world.step,
+      operation: comparison ? '比較 / PAN' : `${game.mode} / ${gestures.tool} / ${gestures.mode} / ${session.phase}`,
+      pointers: comparison?.pointers ?? gestures.pointers.size, zoom: comparison?.zoom ?? camera.zoom,
+      dpr: window.devicePixelRatio, viewport: { width: window.innerWidth, height: window.innerHeight },
+      canvases: canvases.map(id => { const canvas = element<HTMLCanvasElement>(id), rect = canvas.getBoundingClientRect();
+        return { name: id, width: canvas.width, height: canvas.height, cssWidth: rect.width, cssHeight: rect.height }; }),
+      steps: comparison?.steps ?? null, balanced, problem };
+  };
+  void import('./quality/panel').then(({ QualityPanel }) => { quality = new QualityPanel(readQualityState, () => comparisonView?.active ?? false); });
+}

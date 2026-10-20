@@ -56,6 +56,15 @@ export class ComparisonView {
     new ResizeObserver(() => { if (this.active) this.#dirty = true; }).observe(this.#panel);
   }
   get active(): boolean { return this.#controller !== null; }
+  /** Read-only QA metadata. No stepping, camera mutation, or live-world references escape. */
+  diagnosticState(): { readonly stageId: string; readonly steps: readonly [number, number]; readonly balanced: boolean; readonly problem: string | null;
+    readonly zoom: number; readonly pointers: number } | null {
+    if (!this.#controller) return null;
+    const snapshot = this.#controller.getStateAt();
+    return Object.freeze({ stageId: snapshot.stageId, steps: Object.freeze([snapshot.worldA.state.step, snapshot.worldB.state.step] as const),
+      balanced: snapshot.worldA.balance.conserved && snapshot.worldB.balance.conserved,
+      problem: this.#controller.error?.message ?? (this.#uiError || null), zoom: this.#camera.zoom, pointers: this.#gestures.pointers.size });
+  }
   setDisplaySettings(settings: DisplaySettings): void { this.#displaySettings = { ...settings }; this.#dirty = true; }
   get canAdvanceStage(): boolean { return this.#hasNext && this.#controller?.getFinalResult()?.worldBResult.goal.status === 'SUCCESS'; }
   open(stage: StageDefinition, stroke: Stroke, speed: number, hasNext: boolean): void {
@@ -207,20 +216,22 @@ export class ComparisonView {
     }
     this.#dirty = true;
   }
-  draw(now = 0): void {
+  draw(now = 0): boolean {
     const animate = this.#controller?.playing && this.#displaySettings.showFlow && !this.#displaySettings.reducedMotion
       && element<HTMLSelectElement>('comparison-view').value !== 'height';
-    if (!this.#controller || (!this.#dirty && !(animate && now - this.#lastPaint >= 50))) return;
+    if (!this.#controller || (!this.#dirty && !(animate && now - this.#lastPaint >= 50))) return false;
     this.resizeCamera();
     const snapshot = this.#controller.getStateAt(), viewport = this.viewport();
     // Equal heights use the same palette in both worlds, even if editing changed their maxima.
     let heightScale = 1;
     for (const world of [snapshot.worldA.state, snapshot.worldB.state]) for (const height of world.heights) heightScale = Math.max(heightScale, height);
+    let painted = false;
     for (const [index, world] of [snapshot.worldA, snapshot.worldB].entries()) {
       const canvas = this.#canvases[index];
       if (!canvas.getBoundingClientRect().width) continue;
       const context = canvas.getContext('2d');
       if (!context) continue;
+      painted = true;
       drawWorld(context, world.state, element<HTMLSelectElement>('comparison-view').value, null,
         { camera: this.#camera, viewport, preview: null, edits: [], towns: this.#controller.stage.towns, townProgress: world.goal.towns, heightScale,
           flows: world.flows, showFlow: this.#displaySettings.showFlow,
@@ -231,5 +242,6 @@ export class ComparisonView {
     element<HTMLButtonElement>('comparison-zoom-out').disabled = this.#camera.zoom <= 1;
     this.#dirty = false;
     this.#lastPaint = now;
+    return painted;
   }
 }
