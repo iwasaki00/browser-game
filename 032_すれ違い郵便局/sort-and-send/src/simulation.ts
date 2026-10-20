@@ -1,4 +1,5 @@
 import type { Direction, ParcelColor, Stage } from './stage';
+import { validateStage } from './validation';
 
 export interface DeliveryEvent {
   tick: number;
@@ -27,6 +28,8 @@ export interface SimulationResult {
 
 /** One iteration reads tick-start positions; each active parcel moves exactly once. */
 export function simulate(stage: Stage, patterns: Record<string, readonly Direction[]>): SimulationResult {
+  const errors = validateStage(stage);
+  if (errors.length) throw new Error(errors.join('\n'));
   const source = stage.nodes.find(n => n.kind === 'source');
   if (!source) throw new Error('Source is missing');
   const counters: Record<string, number> = {};
@@ -37,19 +40,17 @@ export function simulate(stage: Stage, patterns: Record<string, readonly Directi
     }
     counters[node.id] = 0;
   }
-  const parcels: ParcelResult[] = stage.parcels.map((color, id) => ({
+  const parcels: ParcelResult[] = [...stage.parcels].sort((a, b) => a.id - b.id).map(({ color, id }) => ({
     id, color, path: [source.id], destination: '', correct: false,
   }));
   const events: DeliveryEvent[] = [];
   let tick = 0;
   while (parcels.some(p => !p.destination)) {
-    // A guard for malformed future data, not an extra gameplay rule.
-    if (tick > 1000) throw new Error('Stage did not terminate');
-    for (const parcel of parcels) {
-      if (parcel.id > tick || parcel.destination) continue;
+    for (const [departureTick, parcel] of parcels.entries()) {
+      if (departureTick > tick || parcel.destination) continue;
       const from = parcel.path[parcel.path.length - 1];
       const node = stage.nodes.find(n => n.id === from)!;
-      if (parcel.id === tick) events.push({ tick, parcel: parcel.id, type: 'depart', to: source.id });
+      if (departureTick === tick) events.push({ tick, parcel: parcel.id, type: 'depart', to: source.id });
       const patternIndex = node.kind === 'switch' ? counters[node.id] : undefined;
       const direction = patternIndex !== undefined ? patterns[node.id][patternIndex] : undefined;
       const edge = stage.edges.find(e => e.from === from && e.direction === direction);

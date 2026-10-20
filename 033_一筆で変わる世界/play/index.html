@@ -4,24 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#111d28" />
-  <meta name="description" content="一筆で変わる世界 — 地形と水の流れを検証するシミュレーション基盤 v0.1.0" />
+  <meta name="description" content="一筆で変わる世界 — 一筆で地形を削る・盛る、水流シミュレーション v0.2.0" />
   <title>一筆で変わる世界 | ONE STROKE WORLDS</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-  <script type="module" crossorigin src="./assets/index-ByfQ3NvI.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CtAjgKg6.css">
+  <script type="module" crossorigin src="./assets/index-XeVL_KJQ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-n3vW17aY.css">
 </head>
 <body>
   <main class="shell">
-    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.1.0 / Simulation Foundation</span></header>
-    <section class="intro"><p class="eyebrow">ONE STROKE WORLDS</p><h1>一筆で変わる世界</h1><p>地形を読み、水の行方を観察する。<span>水流シミュレーション・デバッグ画面</span></p></section>
+    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.2.0 / One Stroke</span></header>
+    <section class="intro"><p class="eyebrow">ONE STROKE WORLDS</p><h1>一筆で変わる世界</h1><p>一筆で地形を変え、水の行方を観察する。<span>削る・盛る → プレビュー → 地形変更を実行</span></p></section>
     <div class="workspace">
       <section class="map-panel" aria-labelledby="map-title">
         <div class="panel-heading"><h2 id="map-title">地形と水の観測</h2><span>64 × 64 CELLS</span></div>
-        <canvas id="map" width="640" height="640" aria-label="64×64セルの地形と水量。タップまたは矢印キーでセルの値を確認できます。" tabindex="0"></canvas>
-        <div class="legend"><span><i class="land"></i>地形（明るいほど高い）</span><span><i class="water"></i>水（濃いほど多い）</span><span class="source">● 水源</span><span class="intake">◆ 取水</span><span class="outlet">■ 排出口</span></div>
-        <p id="cell-info" class="cell-info">セルをタップ、または盤面上で矢印キーを押して詳細を確認</p>
+        <div class="map-toolbar"><span id="phase">READY · 一筆を描けます</span><div><button id="zoom-out" aria-label="ズームアウト">−</button><output id="zoom">1.00×</output><button id="zoom-in" aria-label="ズームイン">＋</button><button id="camera-reset" aria-label="表示位置を戻す">全体</button></div></div>
+        <canvas id="map" width="640" height="640" aria-label="64×64セルの地形。一筆をドラッグして描画。矢印キーでセルの詳細を確認。Escでキャンセル。" tabindex="0"></canvas>
+        <div class="legend"><span><i class="land"></i>地形（明るいほど高い）</span><span><i class="water"></i>水（濃いほど多い）</span><span class="source">● 水源</span><span class="intake">◆ 取水</span><span class="outlet">■ 排出口</span><span>斜線: 保護セル</span><span class="edit-key">半透明: 変更予定 / 破線: 長さ超過</span></div>
+        <p id="cell-info" class="cell-info">盤面の矢印キーでセルの高度と変更予定値を確認</p>
       </section>
       <aside>
+        <section class="panel editor-panel"><h2>一筆で地形を変える</h2>
+          <div class="button-pair" role="group" aria-label="地形の操作"><button id="lower" aria-pressed="false">削る −12</button><button id="raise" aria-pressed="true">盛る ＋12</button></div>
+          <div class="button-pair" role="group" aria-label="入力モード"><button id="draw" aria-pressed="true">描画</button><button id="pan" aria-pressed="false">移動</button></div>
+          <p id="brush-info" class="brush-info">盛る / 半径2セル / 高度＋12</p>
+          <div class="length-row"><label for="length">一筆の残り長さ</label><output id="length-left">12.00 / 12セル</output></div><progress id="length" value="12" max="12" aria-label="一筆の残り長さ"></progress>
+          <p id="edit-summary" role="status">盤面をドラッグしてください。1試行につき1本だけ描けます。</p>
+          <div class="button-pair"><button id="cancel-stroke" disabled>一筆キャンセル / 再描画</button><button id="execute" class="primary" disabled>地形変更を実行</button></div>
+          <p id="execution-reason" class="description">盤面に一筆を描いてから実行してください。</p>
+          <p class="gesture-note">ドラッグで一筆。移動モードでパン。ホイール・2本指ピンチで拡大。描画中の2本目の指・Escでキャンセル。</p>
+        </section>
         <section class="panel"><h2>実験条件</h2><label for="sample">サンプル地形</label><select id="sample"></select><p id="description" class="description"></p>
           <label for="view">盤面の表示</label><select id="view"><option value="combined">地形 ＋ 水量</option><option value="height">地形の高さ</option><option value="water">水量・水の存在範囲</option></select>
           <div class="controls"><button id="play" class="primary">▶ PLAY</button><button id="pause">Ⅱ PAUSE</button><button id="step">＋ STEP</button><button id="reset">↺ RESET</button></div>
@@ -32,7 +43,7 @@
           <dl><div><dt>総水量</dt><dd id="total">0</dd></div><div><dt>初期水量</dt><dd id="initial">0</dd></div><div><dt>累積供給量</dt><dd id="supply">0</dd></div><div><dt>累積取水量</dt><dd id="intake">0</dd></div><div><dt>累積排出量</dt><dd id="outlet">0</dd></div></dl>
           <p id="balance" class="balance">水量保存: OK</p><p class="formula">総水量 ＝ 初期 ＋ 供給 − 取水 − 排出</p>
         </section>
-        <p class="note">内部水量 256 ＝ 地形高度 1。施設記号は位置を示します。外周は排出口の定義がなければ閉鎖境界です。<br>このバージョンでは地形の編集はできません。タブを離れると自動停止します。</p>
+        <p class="note">内部水量 256 ＝ 地形高度 1。施設と保護セルは編集できません。外周は定義がなければ閉鎖境界です。<br>PLAY・STEPは一筆なしの実験にも使えます。実行後はRESETで初期状態へ戻して再挑戦。タブを離れると自動停止します。</p>
       </aside>
     </div>
     <footer>ONE STROKE WORLDS <span>整数演算 / 隣接ペア平衡化 / 最大600ステップ</span></footer>

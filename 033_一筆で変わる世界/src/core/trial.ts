@@ -44,7 +44,7 @@ export class TrialSession {
     const before = this.rawPoints.at(-2);
     if (before && Math.abs((last.x - before.x) * (point.y - last.y) - (last.y - before.y) * (point.x - last.x)) < 1e-10
       && (last.x - before.x) * (point.x - last.x) + (last.y - before.y) * (point.y - last.y) >= 0) this.rawPoints.pop();
-    if (this.rawPoints.length >= 8192) return;
+    if (this.rawPoints.length >= 8192) throw new Error('一筆の入力点数が上限に達しました。短い軌跡で描き直してください。');
     this.rawPoints.push({ ...point });
     this.preview = buildStroke(this.rawPoints, this.runner.world.width, this.runner.world.height, this.preview.stroke);
     this.edits = strokeEdits(this.runner.world, this.preview.stroke);

@@ -62,7 +62,7 @@ function update(): void {
   element<HTMLButtonElement>('raise').disabled = session.phase !== 'READY';
   if (selected !== null) {
     const i = selected, edit = session.editable ? session.edits.find(item => item.index === i) : undefined;
-    element('cell-info').textContent = `(${i % w.width}, ${Math.floor(i / w.width)}) 高さ ${w.heights[i]}${edit ? ` → ${edit.after}（予定）` : ''} / 水量 ${format(w.water[i])} / ${['通常', '水源', '取水', '排出口'][w.terrainType[i]]}${w.protected[i] ? ' / 地形保護' : ''}`;
+    element('cell-info').textContent = `(${i % w.width}, ${Math.floor(i / w.width)}) 高さ ${w.heights[i]}${edit ? ` → ${edit.after}（予定）` : ''} / 水量 ${format(w.water[i])} / 水面 ${format(w.heights[i] * 256 + w.water[i])} / ${['通常', '水源', '取水', '排出口'][w.terrainType[i]]}${w.protected[i] ? ' / 地形保護' : ''}`;
   }
   canvas.dataset.tool = gestures.tool;
   dirty = true;
