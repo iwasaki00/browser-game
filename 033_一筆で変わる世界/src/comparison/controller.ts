@@ -1,12 +1,12 @@
 import { GoalTracker, type GoalResult } from '../challenge/goals';
 import { freezeData, loadStage, stageWorld, type StageDefinition } from '../challenge/stage';
 import { SPEEDS } from '../core/runner';
-import { stepWorld } from '../core/simulation';
+import { stepWorld, type FlowTransfer } from '../core/simulation';
 import { applyStroke, type Stroke } from '../core/stroke';
 import { assertConservation, createWorld, expectedWater, type WorldState } from '../core/world';
 import { cloneWorld, snapshotWorld, type DeepReadonly, type WorldSnapshot } from '../core/world-view';
 
-export const SIMULATION_VERSION = '0.4.0';
+export const SIMULATION_VERSION = '0.5.0';
 export type Assessment = 'IMPROVED' | 'WORSENED' | 'UNCHANGED';
 export interface SignedDifference {
   readonly worldA: number; readonly worldB: number; readonly delta: number; readonly assessment: Assessment;
@@ -20,6 +20,7 @@ export interface WaterBalance {
 }
 export interface ComparisonWorld {
   readonly state: WorldSnapshot; readonly goal: DeepReadonly<GoalResult>; readonly balance: WaterBalance;
+  readonly flows: readonly FlowTransfer[];
 }
 export interface ComparisonSnapshot {
   readonly stageId: string; readonly simulationVersion: string; readonly step: number; readonly maxSteps: number;
@@ -76,6 +77,8 @@ export class ComparisonController {
   #error: ComparisonError | null = null;
   #snapshot: ComparisonSnapshot | null = null;
   #result: ComparisonResult | null = null;
+  #flowsA: readonly FlowTransfer[] = Object.freeze([]);
+  #flowsB: readonly FlowTransfer[] = Object.freeze([]);
   constructor(stage: StageDefinition, stroke: Stroke | null) {
     this.stage = loadStage(stage);
     if (stroke) validateStroke(this.stage, stroke);
@@ -101,6 +104,7 @@ export class ComparisonController {
     this.#a = a; this.#b = b;
     this.#trackerA = new GoalTracker(this.stage, a); this.#trackerB = new GoalTracker(this.stage, b);
     this.#error = null; this.#snapshot = null; this.#result = null;
+    this.#flowsA = Object.freeze([]); this.#flowsB = Object.freeze([]);
   }
   step(): boolean { this.pause(); return this.commitStep(); }
   private commitStep(): boolean {
@@ -109,13 +113,15 @@ export class ComparisonController {
     try {
       if (this.#a.step !== this.#b.step) throw new Error('世界A/Bのステップが一致しません');
       const a = cloneWorld(this.#a), trackerA = this.#trackerA.fork();
-      if (!stepWorld(a, accounting => trackerA.observe(a, accounting))) throw new Error('世界Aが進みませんでした');
+      let flowsA: readonly FlowTransfer[] = [], flowsB: readonly FlowTransfer[] = [];
+      if (!stepWorld(a, accounting => { trackerA.observe(a, accounting); flowsA = accounting.flows ?? []; })) throw new Error('世界Aが進みませんでした');
       world = 'B';
       const b = cloneWorld(this.#b), trackerB = this.#trackerB.fork();
-      if (!stepWorld(b, accounting => trackerB.observe(b, accounting))) throw new Error('世界Bが進みませんでした');
+      if (!stepWorld(b, accounting => { trackerB.observe(b, accounting); flowsB = accounting.flows ?? []; })) throw new Error('世界Bが進みませんでした');
       if (a.step !== b.step || a.step !== this.stepNumber + 1) throw new Error('比較の論理ステップが不整合です');
       // Publish only after both simulation and goal observers have succeeded.
       this.#a = a; this.#b = b; this.#trackerA = trackerA; this.#trackerB = trackerB;
+      this.#flowsA = flowsA; this.#flowsB = flowsB;
       this.#snapshot = null;
       if (this.stepNumber === this.maxSteps) this.pause();
       return true;
@@ -144,15 +150,15 @@ export class ComparisonController {
   getStateAt(step = this.stepNumber): ComparisonSnapshot {
     if (step !== this.stepNumber) throw new Error('履歴は保存していません。現在の同期ステップだけ取得できます');
     if (!this.#snapshot) {
-      const capture = (state: WorldState, tracker: GoalTracker): ComparisonWorld => {
+      const capture = (state: WorldState, tracker: GoalTracker, flows: readonly FlowTransfer[]): ComparisonWorld => {
         const total = assertConservation(state), expected = expectedWater(state);
-        return { state: snapshotWorld(state), goal: tracker.result(), balance: {
+        return { state: snapshotWorld(state), goal: tracker.result(), flows, balance: {
           initialWater: state.initialWater, finalWater: total, supply: state.cumulativeSupply,
           intake: state.cumulativeIntake, outlet: state.cumulativeOutlet, expectedWater: expected,
           difference: total - expected, conserved: total === expected } };
       };
       this.#snapshot = freezeData({ stageId: this.stage.id, simulationVersion: SIMULATION_VERSION,
-        step: this.stepNumber, maxSteps: this.maxSteps, worldA: capture(this.#a, this.#trackerA), worldB: capture(this.#b, this.#trackerB), error: this.#error });
+        step: this.stepNumber, maxSteps: this.maxSteps, worldA: capture(this.#a, this.#trackerA, this.#flowsA), worldB: capture(this.#b, this.#trackerB, this.#flowsB), error: this.#error });
     }
     return this.#snapshot;
   }

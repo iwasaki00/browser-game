@@ -1,5 +1,13 @@
 export type Direction = 'L' | 'R';
 export type ParcelColor = 'RED' | 'BLUE' | 'YELLOW';
+export interface Point { x: number; y: number }
+export interface StageEdge {
+  from: string;
+  to: string;
+  direction?: Direction;
+  /** Drawing-only bends; simulation and fingerprint ignore these coordinates. */
+  via?: Point[];
+}
 export interface StageNode {
   id: string;
   kind: 'source' | 'switch' | 'exit';
@@ -13,7 +21,7 @@ export interface Stage {
   name: string;
   board?: { width: number; height: number };
   nodes: StageNode[];
-  edges: { from: string; to: string; direction?: Direction }[];
+  edges: StageEdge[];
   parcels: { id: number; color: ParcelColor }[];
 }
 
@@ -68,34 +76,58 @@ export const stages: Stage[] = [
     ],
     parcels: (['RED', 'BLUE', 'YELLOW', 'RED', 'BLUE', 'YELLOW'] as ParcelColor[]).map((color, id) => ({ id, color })),
   },
-  chapterTwoStage('06', '2つ目の分岐', ['RED', 'BLUE', 'RED', 'BLUE'],
+  branchedStage('06', '2つ目の分岐', ['RED', 'BLUE', 'RED', 'BLUE'],
     [['a', 4, 260, 180], ['b', 2, 440, 340]],
     [['a', 'red', 'b'], ['b', 'red', 'blue']],
     [['red', 'RED', 120, 540], ['blue', 'BLUE', 520, 540]], 640),
-  chapterTwoStage('07', '通らない荷物', ['RED', 'BLUE', 'YELLOW', 'RED', 'BLUE', 'YELLOW'],
+  branchedStage('07', '通らない荷物', ['RED', 'BLUE', 'YELLOW', 'RED', 'BLUE', 'YELLOW'],
     [['a', 3, 320, 170], ['b', 2, 160, 340], ['c', 2, 480, 340]],
     [['a', 'b', 'c'], ['b', 'red', 'blue'], ['c', 'blue', 'yellow']],
     [['red', 'RED', 90, 550], ['blue', 'BLUE', 320, 550], ['yellow', 'YELLOW', 550, 550]], 650),
-  chapterTwoStage('08', '使わない分岐', ['RED', 'BLUE', 'BLUE', 'RED', 'BLUE'],
+  branchedStage('08', '使わない分岐', ['RED', 'BLUE', 'BLUE', 'RED', 'BLUE'],
     [['a', 3, 220, 160], ['b', 2, 370, 330], ['c', 2, 370, 500]],
     [['a', 'red', 'b'], ['b', 'blue', 'c'], ['c', 'red', 'blue']],
     [['red', 'RED', 100, 680], ['blue', 'BLUE', 530, 680]], 780),
-  chapterTwoStage('09', '違う周期', ['RED', 'BLUE', 'RED', 'YELLOW', 'BLUE'],
+  branchedStage('09', '違う周期', ['RED', 'BLUE', 'RED', 'YELLOW', 'BLUE'],
     [['a', 4, 320, 170], ['b', 2, 160, 340], ['c', 2, 480, 340]],
     [['a', 'b', 'c'], ['b', 'red', 'blue'], ['c', 'blue', 'yellow']],
     [['red', 'RED', 90, 550], ['blue', 'BLUE', 320, 550], ['yellow', 'YELLOW', 550, 550]], 650),
-  chapterTwoStage('10', '連鎖する仕分け', ['BLUE', 'RED', 'RED', 'RED', 'YELLOW'],
+  branchedStage('10', '連鎖する仕分け', ['BLUE', 'RED', 'RED', 'RED', 'YELLOW'],
     [['a', 4, 220, 160], ['b', 3, 370, 330], ['c', 2, 370, 500]],
     [['a', 'red', 'b'], ['b', 'c', 'yellow'], ['c', 'red', 'blue']],
     [['red', 'RED', 100, 680], ['blue', 'BLUE', 350, 680], ['yellow', 'YELLOW', 550, 680]], 780),
+  branchedStage('11', '先の先を読む', ['RED', 'BLUE', 'RED', 'RED', 'RED', 'YELLOW', 'RED'],
+    [['a', 4, 220, 160], ['b', 3, 370, 330], ['c', 2, 370, 500]],
+    [['a', 'red', 'b'], ['b', 'red', 'c'], ['c', 'blue', 'yellow']],
+    [['red', 'RED', 100, 680], ['blue', 'BLUE', 350, 680], ['yellow', 'YELLOW', 550, 680]], 780),
+  branchedStage('12', '一見同じ道', ['BLUE', 'RED', 'BLUE', 'YELLOW', 'RED', 'BLUE', 'BLUE'],
+    [['a', 3, 320, 160], ['b', 2, 150, 340], ['c', 3, 480, 340], ['d', 2, 230, 550]],
+    [['a', 'b', 'c'], ['b', 'red', 'd'], ['c', 'blue', 'yellow'], ['d', 'blue', 'yellow']],
+    [['red', 'RED', 90, 800], ['blue', 'BLUE', 320, 800], ['yellow', 'YELLOW', 550, 950]], 1050,
+    { 'd.R': [{ x: 150, y: 900 }] }),
+  branchedStage('13', '周期の連鎖', ['RED', 'YELLOW', 'BLUE', 'RED', 'YELLOW', 'YELLOW', 'RED'],
+    [['a', 3, 160, 160], ['b', 3, 320, 330], ['c', 2, 320, 500], ['d', 2, 470, 670]],
+    [['a', 'red', 'b'], ['b', 'c', 'yellow'], ['c', 'red', 'd'], ['d', 'blue', 'yellow']],
+    [['red', 'RED', 90, 880], ['blue', 'BLUE', 350, 880], ['yellow', 'YELLOW', 550, 880]], 980,
+    { 'b.R': [{ x: 580, y: 430 }, { x: 580, y: 760 }] }),
+  branchedStage('14', '思わぬ近道', ['BLUE', 'RED', 'RED', 'YELLOW', 'BLUE', 'RED', 'RED'],
+    [['a', 4, 320, 160], ['b', 3, 150, 340], ['c', 2, 480, 340], ['d', 2, 520, 550]],
+    [['a', 'b', 'c'], ['b', 'red', 'blue'], ['c', 'blue', 'd'], ['d', 'red', 'yellow']],
+    [['red', 'RED', 100, 950], ['blue', 'BLUE', 320, 800], ['yellow', 'YELLOW', 550, 800]], 1050,
+    { 'd.L': [{ x: 440, y: 900 }] }),
+  branchedStage('15', '配送マスター', ['BLUE', 'RED', 'YELLOW', 'RED', 'YELLOW', 'YELLOW', 'RED'],
+    [['a', 3, 320, 160], ['b', 3, 150, 330], ['c', 2, 480, 330], ['d', 2, 320, 510], ['e', 2, 430, 690]],
+    [['a', 'b', 'c'], ['b', 'red', 'd'], ['c', 'd', 'yellow'], ['d', 'red', 'e'], ['e', 'blue', 'yellow']],
+    [['red', 'RED', 100, 880], ['blue', 'BLUE', 350, 880], ['yellow', 'YELLOW', 550, 880]], 980),
 ];
 
-/** Small data builder for Chapter 02; no additional routing rules. */
-function chapterTwoStage(
+/** Compact branched-stage data; no additional routing rules. */
+function branchedStage(
   id: string, title: string, sequence: ParcelColor[],
   switches: [string, number, number, number][],
   routes: [string, string, string][],
   exits: [string, ParcelColor, number, number][], height: number,
+  bends: Record<string, Point[]> = {},
 ): Stage {
   return {
     id, name: `STAGE ${id}「${title}」`, board: { width: 640, height },
@@ -107,7 +139,8 @@ function chapterTwoStage(
     edges: [
       { from: 'source', to: 'a' },
       ...routes.flatMap(([from, left, right]) => [
-        { from, to: left, direction: 'L' as const }, { from, to: right, direction: 'R' as const },
+        { from, to: left, direction: 'L' as const, via: bends[`${from}.L`] },
+        { from, to: right, direction: 'R' as const, via: bends[`${from}.R`] },
       ]),
     ],
     parcels: sequence.map((color, id) => ({ id, color })),

@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.4">
+  <link rel="stylesheet" href="styles.css?v=0.1.5">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.4</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.5</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -27,6 +27,7 @@
         <button class="menu-button menu-button--primary" data-action="start">MISSION START</button>
         <button class="menu-button" data-action="continue">CONTINUE</button>
         <button class="menu-button" data-action="howto">操作方法</button>
+        <button id="testLabButton" class="menu-button lab-entry" data-action="test-lab" hidden>TEST LAB</button>
         <p class="blink">PRESS ENTER / TAP START</p>
       </div>
       <div id="screenMission" class="screen">
@@ -49,12 +50,48 @@
       <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
+      <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
+      <output id="labPerformance" class="lab-performance" aria-label="実プレイ計測" hidden>FPS: 計測中…</output>
+      <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
+        <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
+        <div class="lab-fields">
+          <fieldset><legend>ARSENAL / 全8武器</legend>
+            <label>スロット1<select id="labWeapon1"></select></label>
+            <label>スロット2<select id="labWeapon2"></select></label>
+            <label>使用スロット<select id="labSlot"><option value="0">1</option><option value="1">2</option></select></label>
+            <small>性能は通常と共通。Q / E / SWで切替。</small>
+          </fieldset>
+          <fieldset><legend>PLAYER</legend>
+            <label><input id="labInvincible" type="checkbox" checked> 無敵（HP減少・ノックバックなし）</label>
+            <label>性能<select id="labPreset"><option>STANDARD</option><option>SPEED</option><option>HEAVY</option><option>FLIGHT</option></select></label>
+            <small>STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110 px/s<br>飛行：W/S・↑/↓またはUP/DOWN。無入力でホバー。</small>
+          </fieldset>
+          <fieldset><legend>ENCOUNTER</legend>
+            <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option></select></label>
+            <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option></select></label>
+            <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
+            <div class="lab-buttons"><button data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-clear">敵・弾・演出を全消去</button></div>
+            <small id="labSpawnResult" role="status">生成は開始位置へ復帰して行います。ボスは専用アリーナ。</small>
+          </fieldset>
+          <fieldset><legend>CAMERA / PERFORMANCE</legend>
+            <label>カメラ<select id="labCamera"><option>AUTO</option><option>FIXED</option></select></label>
+            <label>固定倍率<input id="labZoom" type="range" min="0.35" max="0.85" step="0.01" value="0.50"></label>
+            <output id="labZoomValue">0.50×</output>
+            <label><input id="labFps" type="checkbox" checked> FPS・CPU計測表示</label>
+            <small>RAF間隔とCPU処理時間を別計測。非表示・停止・250ms超の中断を除外。表示更新0.5秒。</small>
+            <div class="lab-buttons"><button data-benchmark="LIGHT">BENCH 30</button><button data-benchmark="STANDARD">BENCH 50</button><button data-benchmark="MASSIVE">BENCH 100</button></div>
+            <small id="qaResult" role="status">BENCHは6秒・自動射撃・敵数補充（音声OFF）。通常プレイ計測とは別。</small>
+          </fieldset>
+        </div>
+        <footer class="lab-buttons"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></footer>
+      </section>
       </div>
       <div id="touchControls" class="touch-controls" aria-label="タッチ操作">
         <div class="touch-group touch-group--move">
           <span class="touch-label">MOVE</span>
           <div class="touch-left"><button data-touch="left" aria-label="左へ移動">◀</button><button data-touch="right" aria-label="右へ移動">▶</button></div>
           <button class="jump-button" data-touch="jump" aria-label="ジャンプ">JUMP</button>
+          <div class="flight-controls"><button data-touch="up" aria-label="飛行上昇">UP</button><button data-touch="down" aria-label="飛行下降">DOWN</button></div>
         </div>
         <div class="touch-group touch-group--action">
           <span class="touch-label">ACTION</span>
@@ -65,6 +102,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.1.4"></script>
+  <script type="module" src="js/game.js?v=0.1.5"></script>
 </body>
 </html>

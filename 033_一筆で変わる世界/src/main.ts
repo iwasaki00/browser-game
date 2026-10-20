@@ -9,6 +9,9 @@ import { samples } from './samples';
 import { drawWorld } from './render';
 import { ComparisonView } from './comparison/view';
 import { type Stroke } from './core/stroke';
+import { MAP_THEME, defaultDisplaySettings, flowAnimationPhase } from './living-map';
+
+for (const [name, value] of Object.entries(MAP_THEME)) document.documentElement.style.setProperty(`--${name}`, value);
 
 function element<T extends HTMLElement>(id: string): T {
   const value = document.getElementById(id);
@@ -35,6 +38,20 @@ const gestures = new GestureController(session, camera, viewport);
 gestures.mode = session.stage!.strokeMode;
 let selected: number | null = null, error = '', dirty = true;
 let comparisonView: ComparisonView | null = null;
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+const displaySettings = defaultDisplaySettings(motionPreference.matches);
+const flowToggle = element<HTMLInputElement>('flow-visible'), motionToggle = element<HTMLInputElement>('reduce-motion');
+motionToggle.checked = displaySettings.reducedMotion;
+function updateDisplaySettings(): void {
+  displaySettings.showFlow = flowToggle.checked;
+  motionToggle.checked = motionToggle.checked || motionPreference.matches;
+  displaySettings.reducedMotion = motionToggle.checked;
+  motionToggle.title = motionPreference.matches ? 'OSのアニメーション軽減設定を反映しています' : '水の流線と結果の演出を静止します';
+  document.documentElement.dataset.reducedMotion = String(displaySettings.reducedMotion);
+  comparisonView?.setDisplaySettings(displaySettings); dirty = true;
+}
+flowToggle.onchange = updateDisplaySettings; motionToggle.onchange = updateDisplaySettings;
+motionPreference.addEventListener('change', event => { motionToggle.checked = event.matches; updateDisplaySettings(); });
 const format = (n: number) => n.toLocaleString('ja-JP');
 const phaseNames = { READY: '一筆を描けます', DRAWING: '描画中', PREVIEW: '変更予定を確認', SIMULATING: 'シミュレーション', RESULT: '計算完了' };
 function updateChallenge(): void {
@@ -264,18 +281,21 @@ comparisonView = new ComparisonView({
     if (comparisonView?.canAdvanceStage && index >= 0 && index + 1 < stages.length) selectStage(stages[index + 1]);
   }),
 });
-let previous = performance.now();
+updateDisplaySettings();
+let previous = performance.now(), lastPaint = 0;
 function frame(now: number): void {
   const elapsed = now - previous; previous = now;
   if (comparisonView?.active) {
-    comparisonView.advance(elapsed); comparisonView.draw(); requestAnimationFrame(frame); return;
+    comparisonView.advance(elapsed); comparisonView.draw(now); requestAnimationFrame(frame); return;
   }
   if (session.runner.playing) safely(() => { session.advance(elapsed); });
-  if (dirty) {
+  const animate = displaySettings.showFlow && !displaySettings.reducedMotion && session.runner.playing && view.value !== 'height';
+  if (dirty || (animate && now - lastPaint >= 50)) {
     const preview = ['DRAWING', 'PREVIEW'].includes(session.phase) ? session.preview : null;
     drawWorld(context!, session.runner.world, view.value, selected,
       { camera, viewport: viewport(), preview, edits: preview ? session.edits : [],
-        towns: session.stage?.towns, townProgress: session.goalResult?.towns }); dirty = false;
+        towns: session.stage?.towns, townProgress: session.goalResult?.towns, flows: session.runner.lastFlows,
+        showFlow: displaySettings.showFlow, animationPhase: flowAnimationPhase(now, displaySettings.reducedMotion, session.runner.playing) }); dirty = false; lastPaint = now;
   }
   requestAnimationFrame(frame);
 }

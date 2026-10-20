@@ -5,6 +5,9 @@ import { validateStage } from './validation';
 import { deliveryCost } from './cost';
 import { isSolverSummary, rateDelivery, verifiedMinimum } from './scoring';
 import stageRatings from './generated/stage-ratings.json';
+import { parcelHistory } from './history';
+import { routePosition } from './route';
+import type { StageEdge } from './stage';
 
 type Mode = 'DESIGN' | 'RUN' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -22,6 +25,7 @@ let patterns: Record<string, Direction[]> = {};
 let stageErrors: string[] = [];
 let cards: HTMLButtonElement[] = [];
 let result: SimulationResult | undefined;
+let selectedParcelId: number | undefined;
 let startedAt = 0;
 let elapsed = 0;
 const tickMs = 700;
@@ -29,6 +33,7 @@ const ink = '#243D4A';
 const teal = '#247E72';
 const colors = { RED: '#E27A69', BLUE: '#558CC7', YELLOW: '#E4B754' };
 const marks = { RED: '●', BLUE: '▲', YELLOW: '◆' };
+const chapterNames = ['はじめての配送', '分岐の連鎖', '未来を読む'];
 const node = (id: string) => {
   const n = stage.nodes.find(n => n.id === id)!;
   return { ...n, ...n.layout };
@@ -73,7 +78,7 @@ function updateControls() {
 
 function design(initial = false) {
   if (initial) patterns = Object.fromEntries(stage.nodes.filter(n => n.kind === 'switch').map(n => [n.id, [...(n.initialPattern ?? [])]]));
-  mode = 'DESIGN'; result = undefined; elapsed = 0;
+  mode = 'DESIGN'; result = undefined; selectedParcelId = undefined; elapsed = 0;
   stageErrors = validateStage(stage);
   get('tick').textContent = 'READY';
   get('report').innerHTML = '<h3 id="result-title">配送の準備中</h3><p>荷物と同じ印の出口へ。<br>矢印のループを組んで配送しよう。</p>';
@@ -102,7 +107,8 @@ function selectStage(index: number) {
   for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
     if (i === index) button.setAttribute('aria-current', 'step'); else button.removeAttribute('aria-current');
   }
-  get('chapter-name').textContent = index < 5 ? 'Chapter 01 / はじめての配送' : 'Chapter 02 / 分岐の連鎖';
+  const chapterIndex = Math.floor(index / 5);
+  get('chapter-name').textContent = `Chapter 0${chapterIndex + 1} / ${chapterNames[chapterIndex]}`;
   const board = stage.board ?? { width: 640, height: 540 };
   canvas.style.aspectRatio = `${board.width} / ${board.height}`;
   // Validate before resolving edge labels or drawing malformed graph data.
@@ -114,9 +120,9 @@ function selectStage(index: number) {
 }
 
 const chapterLists: HTMLElement[] = [];
-for (const [i, name] of ['Chapter 01：はじめての配送', 'Chapter 02：分岐の連鎖'].entries()) {
+for (const [i, name] of chapterNames.entries()) {
   const group = document.createElement('div'); group.className = 'chapter-group';
-  const label = document.createElement('p'); label.textContent = name; label.id = `chapter-${i + 1}`;
+  const label = document.createElement('p'); label.textContent = `Chapter 0${i + 1}：${name}`; label.id = `chapter-${i + 1}`;
   const list = document.createElement('div'); list.className = 'stage-buttons';
   list.setAttribute('role', 'group'); list.setAttribute('aria-labelledby', label.id);
   group.append(label, list); get('stage-selector').append(group); chapterLists.push(list);
@@ -145,6 +151,18 @@ function highlightDispatch() {
   cards.forEach((card, i) => card.classList.toggle('active', mode === 'RUN' && dispatches.some(e => e.from === selectedSwitch && e.patternIndex === i)));
 }
 
+get('report').addEventListener('click', event => {
+  const button = (event.target as Element).closest<HTMLButtonElement>('button[data-parcel-id]');
+  if (!button || mode !== 'RESULT' || !result) return;
+  selectedParcelId = Number(button.dataset.parcelId);
+  const history = parcelHistory(stage, result, selectedParcelId);
+  for (const item of get('report').querySelectorAll<HTMLButtonElement>('button[data-parcel-id]')) {
+    item.setAttribute('aria-pressed', String(Number(item.dataset.parcelId) === selectedParcelId));
+  }
+  get('parcel-history').innerHTML = `<h4>荷物 ${String(history.id + 1).padStart(2, '0')} — ${marks[history.color]} ${history.color}</h4><dl><div><dt>期待する出口</dt><dd>${history.expectedExits.map(id => node(id).label).join(' / ')}</dd></div><div><dt>実際の出口</dt><dd>${node(history.destination).label}</dd></div><div><dt>配送判定</dt><dd>${history.correct ? '✓ 正解' : '× 誤配送'}</dd></div></dl><p>経由した分岐と使用方向</p><ol>${history.switches.map(s => `<li>分岐 ${s.id.toUpperCase()} → ${s.direction} / ${s.direction === 'L' ? '左' : '右'} <small>（枠${s.patternIndex + 1}・tick ${s.tick}）</small></li>`).join('')}</ol><p class="history-path">${history.path.map(id => node(id).label).join(' → ')}</p>`;
+  draw();
+});
+
 function animate(now: number) {
   if (mode !== 'RUN' || !result) return;
   elapsed = Math.min((now - startedAt) / tickMs, result.ticks);
@@ -158,7 +176,7 @@ function animate(now: number) {
     const cost = deliveryCost(patterns, result);
     const minimum = verifiedMinimum(stage, report);
     const rating = rateDelivery({ stage, result, cost, rescueUsed: false, report });
-    get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><ul class="result-list">${result.parcels.map(p => `<li><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></li>`).join('')}</ul><details class="path-details"><summary>荷物ごとの経路を見る</summary><ul>${result.parcels.map(p => `<li>${String(p.id + 1).padStart(2, '0')} ${p.path.map(id => node(id).label).join(' → ')}</li>`).join('')}</ul></details>`;
+    get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><p class="history-help">荷物を選んで配送履歴を確認</p><ul class="result-list">${result.parcels.map(p => `<li><button type="button" class="parcel-history-button" data-parcel-id="${p.id}" aria-controls="parcel-history" aria-pressed="false"><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></button></li>`).join('')}</ul><section id="parcel-history" class="parcel-history" aria-label="選択した荷物の配送履歴" aria-live="polite"><p>配送結果の荷物番号を選ぶと、経路と分岐の使用方向を表示します。</p></section>`;
   }
 }
 
@@ -176,6 +194,14 @@ function symbol(color: ParcelColor, x: number, y: number, size: number) {
   else { ctx.moveTo(x, y - size); ctx.lineTo(x + size, y); ctx.lineTo(x, y + size); ctx.lineTo(x - size, y); ctx.closePath(); }
   ctx.fill();
 }
+function edgePoints(edge: StageEdge) {
+  return [node(edge.from), ...(edge.via ?? []), node(edge.to)];
+}
+function traceEdge(edge: StageEdge, offset = 0) {
+  const points = edgePoints(edge);
+  ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y + offset);
+  for (const p of points.slice(1)) ctx.lineTo(p.x, p.y + offset);
+}
 function draw() {
   const { width, height } = stage.board ?? { width: 640, height: 540 };
   ctx.clearRect(0, 0, width, height);
@@ -183,15 +209,19 @@ function draw() {
   ctx.fillStyle = '#d8e0d3';
   for (let x = 20; x < width; x += 24) for (let y = 16; y < height; y += 24) { ctx.beginPath(); ctx.arc(x, y, 1, 0, 7); ctx.fill(); }
   for (const edge of stage.edges) {
-    const a = node(edge.from), b = node(edge.to);
     ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(a.x, a.y + 5); ctx.lineTo(b.x, b.y + 5); ctx.strokeStyle = '#c6d0c5'; ctx.lineWidth = 42; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.strokeStyle = '#fffdf6'; ctx.lineWidth = 32; ctx.stroke();
+    ctx.lineJoin = 'round';
+    traceEdge(edge, 5); ctx.strokeStyle = '#c6d0c5'; ctx.lineWidth = 42; ctx.stroke();
+    traceEdge(edge); ctx.strokeStyle = '#fffdf6'; ctx.lineWidth = 32; ctx.stroke();
     ctx.setLineDash([3, 12]); ctx.strokeStyle = '#c8d8ce'; ctx.lineWidth = 2; ctx.stroke(); ctx.setLineDash([]);
-    const angle = Math.atan2(b.y - a.y, b.x - a.x);
-    ctx.save(); ctx.translate(a.x + (b.x - a.x) * .53, a.y + (b.y - a.y) * .53); ctx.rotate(angle);
+    if (mode === 'RESULT' && selectedParcelId !== undefined && result?.events.some(e =>
+      e.type === 'move' && e.parcel === selectedParcelId && e.from === edge.from && e.to === edge.to && e.direction === edge.direction)) {
+      traceEdge(edge); ctx.strokeStyle = '#247E7299'; ctx.lineWidth = 7; ctx.stroke();
+    }
+    const middle = routePosition(edgePoints(edge), .53);
+    ctx.save(); ctx.translate(middle.x, middle.y); ctx.rotate(middle.angle);
     ctx.beginPath(); ctx.moveTo(-6, -6); ctx.lineTo(1, 0); ctx.lineTo(-6, 6); ctx.strokeStyle = '#8ca99c'; ctx.lineWidth = 3; ctx.stroke(); ctx.restore();
-    if (edge.direction) text(edge.direction, a.x + (b.x - a.x) * .52 + (edge.direction === 'L' ? -24 : 24), a.y + (b.y - a.y) * .52 - 7, 14, teal);
+    if (edge.direction) text(edge.direction, middle.x + (edge.direction === 'L' ? -24 : 24), middle.y - 7, 16, teal);
   }
   for (const original of stage.nodes) {
     const n = { ...original, ...original.layout };
@@ -226,9 +256,9 @@ function draw() {
     const moves = result.events.filter(e => e.parcel === p.id && e.type === 'move');
     const move = moves.find(e => elapsed >= e.tick && elapsed < e.tick + 1);
     if (move) {
-      const a = node(move.from!), b = node(move.to);
       let t = elapsed - move.tick; t = t * t * (3 - 2 * t);
-      const x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+      const edge = stage.edges.find(e => e.from === move.from && e.to === move.to && e.direction === move.direction)!;
+      const { x, y } = routePosition(edgePoints(edge), t);
       roundRect(x - 18, y - 16, 36, 36, 9, '#243d4a25');
       roundRect(x - 18, y - 20, 36, 36, 9, colors[p.color], '#fffdf6'); symbol(p.color, x, y - 3, 8);
       text(String(p.id + 1), x + 21, y - 17, 10);

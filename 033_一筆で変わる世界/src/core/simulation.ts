@@ -1,7 +1,8 @@
 import { assertConservation, integer, MAX_STEPS, MAX_WATER, totalWater, type WorldState } from './world';
 
 export interface IntakeTransfer { index: number; amount: number }
-export interface StepAccounting { step: number; intakes: readonly IntakeTransfer[] }
+export interface FlowTransfer { readonly from: number; readonly to: number; readonly amount: number }
+export interface StepAccounting { step: number; intakes: readonly IntakeTransfer[]; flows?: readonly FlowTransfer[] }
 
 /** One adjacent pair, updated atomically with exactly the same transfer amount. */
 export function equalizePair(world: WorldState, a: number, b: number): number {
@@ -19,14 +20,18 @@ export function equalizePair(world: WorldState, a: number, b: number): number {
   water[from] = nextFrom; water[to] = nextTo;
   return amount;
 }
-export function updateGroup(world: WorldState, group: number): void {
+export function updateGroup(world: WorldState, group: number, flows?: FlowTransfer[]): void {
   integer(group, '更新グループ', 3);
   const horizontal = group < 2, parity = group % 2;
   for (let y = horizontal ? 0 : parity; y < world.height; y += horizontal ? 1 : 2) {
     for (let x = horizontal ? parity : 0; x < world.width; x += horizontal ? 2 : 1) {
       if (horizontal ? x + 1 < world.width : y + 1 < world.height) {
         const a = y * world.width + x;
-        equalizePair(world, a, a + (horizontal ? 1 : world.width));
+        const b = a + (horizontal ? 1 : world.width), before = world.water[a];
+        const amount = equalizePair(world, a, b);
+        // Observe the actual committed pair transfer, without changing its calculation.
+        if (flows && amount > 0) flows.push(Object.freeze({ from: world.water[a] < before ? a : b,
+          to: world.water[a] < before ? b : a, amount }));
       }
     }
   }
@@ -38,7 +43,8 @@ export function stepWorld(world: WorldState, observe?: (accounting: StepAccounti
   if (world.step === MAX_STEPS) return false;
   const next = { ...world, water: world.water.slice() };
   const intakes: IntakeTransfer[] = [];
-  for (let i = 0; i < 4; i++) updateGroup(next, (world.step + i) % 4);
+  const flows: FlowTransfer[] | undefined = observe ? [] : undefined;
+  for (let i = 0; i < 4; i++) updateGroup(next, (world.step + i) % 4, flows);
   for (const { index, rate } of next.sources) {
     next.water[index] = integer(next.water[index] + rate, '供給後水量', MAX_WATER);
     next.cumulativeSupply = integer(next.cumulativeSupply + rate, '累積供給量');
@@ -60,6 +66,6 @@ export function stepWorld(world: WorldState, observe?: (accounting: StepAccounti
   world.cumulativeOutlet = next.cumulativeOutlet;
   world.step++;
   // Report actual, already-committed removals. Observers never remove water themselves.
-  observe?.({ step: world.step, intakes });
+  observe?.({ step: world.step, intakes, flows: Object.freeze(flows ?? []) });
   return true;
 }

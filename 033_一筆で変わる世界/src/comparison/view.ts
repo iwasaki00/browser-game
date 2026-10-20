@@ -4,6 +4,7 @@ import { createCamera, constrainCamera, zoomAt, type Viewport } from '../input/c
 import { GestureController } from '../input/gestures';
 import { drawWorld } from '../render';
 import { ComparisonController, type Assessment, type ComparisonWorld, type SignedDifference } from './controller';
+import { defaultDisplaySettings, flowAnimationPhase, metricRelevant, type DisplaySettings } from '../living-map';
 
 function element<T extends HTMLElement>(id: string): T {
   const found = document.getElementById(id);
@@ -24,6 +25,8 @@ export class ComparisonView {
   #viewSize = 0;
   #hasNext = false;
   #pointerCanvas: HTMLCanvasElement | null = null;
+  #displaySettings = defaultDisplaySettings(false);
+  #lastPaint = 0;
   readonly #panel = element('comparison-panel');
   readonly #canvases = [element<HTMLCanvasElement>('comparison-a'), element<HTMLCanvasElement>('comparison-b')];
   readonly #camera = createCamera();
@@ -51,6 +54,7 @@ export class ComparisonView {
     new ResizeObserver(() => { if (this.active) this.#dirty = true; }).observe(this.#panel);
   }
   get active(): boolean { return this.#controller !== null; }
+  setDisplaySettings(settings: DisplaySettings): void { this.#displaySettings = { ...settings }; this.#dirty = true; }
   get canAdvanceStage(): boolean { return this.#hasNext && this.#controller?.getFinalResult()?.worldBResult.goal.status === 'SUCCESS'; }
   open(stage: StageDefinition, stroke: Stroke, speed: number, hasNext: boolean): void {
     this.close();
@@ -180,26 +184,30 @@ export class ComparisonView {
       element('comparison-result-title').textContent = `世界A ${outcome(result.worldAResult.goal.status)} → 世界B ${outcome(result.worldBResult.goal.status)} · ${assessment(result.goalDifference.assessment)}`;
       element('comparison-result-step').textContent = `比較対象: 同期 Step ${result.completedSteps} / シミュレーション ${result.simulationVersion}`;
       const lines: HTMLLIElement[] = [];
-      const line = (label: string, metric: SignedDifference, better: string) => {
+      const line = (label: string, metric: SignedDifference, better: string, relevant: boolean) => {
         const item = document.createElement('li'); item.className = metric.assessment.toLowerCase();
-        item.textContent = `${assessment(metric.assessment)} ${label}: A ${format(metric.worldA)} → B ${format(metric.worldB)} 単位 / B−A ${signed(metric.delta)}（${better}と改善）`;
+        if (!relevant) item.className = 'unchanged';
+        item.textContent = `${relevant ? assessment(metric.assessment) : '参考（目標対象外）'} ${label}: A ${format(metric.worldA)} → B ${format(metric.worldB)} 単位 / B−A ${signed(metric.delta)}${relevant ? `（${better}と改善）` : ''}`;
         lines.push(item);
       };
-      line('総取水量', result.intakeDifference.total, '増える');
-      line('町の最大浸水深（全町の最大値）', result.floodDifference.maximumDepth, '減る');
+      const goalType = controller.stage.goalDefinition.type;
+      line('総取水量', result.intakeDifference.total, '増える', metricRelevant(goalType, 'intake'));
+      line('町の最大浸水深（全町の最大値）', result.floodDifference.maximumDepth, '減る', metricRelevant(goalType, 'flood'));
       for (const town of result.floodDifference.towns) {
         const name = controller.stage.towns.find(t => t.id === town.townId)!.name;
         const item = document.createElement('li');
         const step = (value: number | null) => value === null ? 'なし' : `Step ${value}`;
-        item.textContent = `${assessment(town.occurrenceAssessment)} ${name}の初回浸水: A ${step(town.firstFloodStepA)} → B ${step(town.firstFloodStepB)} / ステップ差 ${town.firstFloodStepDifference === null ? '比較不可（浸水なしを0とは扱いません）' : signed(town.firstFloodStepDifference)}`;
+        item.textContent = `${metricRelevant(goalType, 'flood') ? assessment(town.occurrenceAssessment) : '参考（目標対象外）'} ${name}の初回浸水: A ${step(town.firstFloodStepA)} → B ${step(town.firstFloodStepB)} / ステップ差 ${town.firstFloodStepDifference === null ? '比較不可' : signed(town.firstFloodStepDifference)}`;
         lines.push(item);
       }
       element('comparison-differences').replaceChildren(...lines);
     }
     this.#dirty = true;
   }
-  draw(): void {
-    if (!this.#controller || !this.#dirty) return;
+  draw(now = 0): void {
+    const animate = this.#controller?.playing && this.#displaySettings.showFlow && !this.#displaySettings.reducedMotion
+      && element<HTMLSelectElement>('comparison-view').value !== 'height';
+    if (!this.#controller || (!this.#dirty && !(animate && now - this.#lastPaint >= 50))) return;
     this.resizeCamera();
     const snapshot = this.#controller.getStateAt(), viewport = this.viewport();
     // Equal heights use the same palette in both worlds, even if editing changed their maxima.
@@ -211,11 +219,14 @@ export class ComparisonView {
       const context = canvas.getContext('2d');
       if (!context) continue;
       drawWorld(context, world.state, element<HTMLSelectElement>('comparison-view').value, null,
-        { camera: this.#camera, viewport, preview: null, edits: [], towns: this.#controller.stage.towns, townProgress: world.goal.towns, heightScale });
+        { camera: this.#camera, viewport, preview: null, edits: [], towns: this.#controller.stage.towns, townProgress: world.goal.towns, heightScale,
+          flows: world.flows, showFlow: this.#displaySettings.showFlow,
+          animationPhase: flowAnimationPhase(now, this.#displaySettings.reducedMotion, this.#controller.playing) });
     }
     element('comparison-zoom').textContent = `${this.#camera.zoom.toFixed(2)}×`;
     element<HTMLButtonElement>('comparison-zoom-in').disabled = this.#camera.zoom >= 4;
     element<HTMLButtonElement>('comparison-zoom-out').disabled = this.#camera.zoom <= 1;
     this.#dirty = false;
+    this.#lastPaint = now;
   }
 }

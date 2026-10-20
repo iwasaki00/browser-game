@@ -33,3 +33,15 @@
 .stage-buttons{display:flex;gap:8px;flex-wrap:wrap}
 .switch-selector button{padding:8px 6px}
 @media(max-width:620px){.stage-selector{flex-direction:column}.chapter-group{min-width:0}.stage-buttons{gap:9px}.chapter-group p{font-size:11px}}
+.switch-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+.parcel-history-button{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid transparent;background:transparent;border-radius:7px;padding:7px;color:#243D4A;font-size:11px;text-align:left}
+.parcel-history-button[aria-pressed="true"]{background:#CDE8DF;border-color:#247E72}
+.result-list li{padding:0}
+.parcel-history{margin-top:14px;padding:12px;background:#f2f3e9;border-radius:10px;font-size:12px;overflow-wrap:anywhere}
+.parcel-history h4{margin:0 0 10px;font-size:14px}
+.parcel-history dl{margin:0}.parcel-history dl div{margin:8px 0}
+.parcel-history dt{color:#617475;font-size:10px}.parcel-history dd{margin:0;font-weight:700}
+.parcel-history ol{padding-left:20px}.parcel-history li{margin:8px 0}
+.parcel-history small{display:block;color:#617475}
+.parcel-history .history-path{font-size:10px!important}
+.history-help{font-size:11px!important}

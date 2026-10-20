@@ -3,28 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#111d28" />
-  <meta name="description" content="一筆を加えなかった世界と加えた世界を、同じ時間で見比べる水流パズル。v0.4.0 Parallel Worlds" />
+  <meta name="theme-color" content="#F6F3E9" />
+  <meta name="description" content="絵本のような地図に、一筆だけ。水を導き、町の未来を見比べる水流パズル。v0.5.0 Living Map" />
   <title>一筆で変わる世界 | ONE STROKE WORLDS</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
 </head>
 <body>
   <main class="shell">
-    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.4.0 / Parallel Worlds</span></header>
-    <section class="intro"><p class="eyebrow">ONE STROKE WORLDS</p><h1>一筆で変わる世界</h1><p>一筆で水の行方を変え、町の未来を変える。<span>削る・盛る → プレビュー → 実行して目標に挑戦</span></p></section>
-    <div class="mode-bar"><label for="game-mode">モード</label><select id="game-mode"><option value="challenge">チャレンジ</option><option value="debug">デバッグ</option></select></div>
-    <section id="challenge-panel" class="challenge-panel" aria-labelledby="stage-title">
-      <div class="challenge-heading"><div><p class="eyebrow">FIRST CHALLENGE</p><h2 id="stage-title"></h2></div><div><label for="stage-select">ステージ選択（すべて選択可能）</label><select id="stage-select"></select></div></div>
-      <p id="stage-description"></p><p id="goal-description" class="goal-description"></p><p id="challenge-brush" class="brush-info"></p>
-      <div id="town-progress" class="town-progress"></div>
-      <div class="challenge-actions"><button id="baseline-run">一筆なしで実行</button><button id="retry">やり直す / 初期状態へ</button></div>
-      <section id="challenge-result" class="challenge-result" aria-labelledby="result-title" hidden><h2 id="result-title"></h2><ul id="goal-conditions"></ul><p id="result-details"></p><div class="challenge-actions"><button id="compare-result">この一筆で世界A/Bを比較</button><button id="next-stage" class="primary">次のステージへ</button></div></section>
-    </section>
+    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.5.0 / Living Map</span></header>
+    <section class="intro"><p class="eyebrow">ONE STROKE WORLDS <span>生きている地図</span></p><h1>一筆で、<br class="mobile-break">町の未来を。</h1><p>山を削る。堤をつくる。<span>あなたの一筆が、水の行方を変える。</span></p></section>
+    <div class="mode-bar"><label for="game-mode">遊び方</label><select id="game-mode"><option value="challenge">チャレンジ</option><option value="debug">デバッグ</option></select><div class="display-preferences"><label><input id="flow-visible" type="checkbox">流向を表示</label><label><input id="reduce-motion" type="checkbox">動きを抑える</label></div></div>
     <section id="comparison-panel" class="comparison-panel" aria-labelledby="comparison-title" data-layout="auto" data-world="B" hidden>
       <div class="comparison-heading"><div><p class="eyebrow">PARALLEL WORLDS</p><h2 id="comparison-title"></h2></div><button id="comparison-back">編集画面へ戻る</button></div>
       <p class="comparison-help">世界Aは変更なし、世界Bだけに一筆を適用。同じ初期水量・施設・目標で、同じ論理ステップを観測します。</p>
       <div class="comparison-controls" role="group" aria-label="両世界の同期操作"><button id="comparison-play" class="primary">▶ PLAY</button><button id="comparison-pause">Ⅱ PAUSE</button><button id="comparison-step">＋ STEP</button><button id="comparison-reset">↺ RESET（同じ一筆）</button></div>
-      <div class="comparison-settings"><label>SPEED<select id="comparison-speed"><option value="5">5 ステップ/秒</option><option value="20" selected>20 ステップ/秒</option><option value="60">60 ステップ/秒</option></select></label><label>表示方式<select id="comparison-layout"><option value="auto">自動（広い画面は並列）</option><option value="switch">BEFORE / AFTER 切替</option></select></label><label>地形表示<select id="comparison-view"><option value="combined">地形 ＋ 水量</option><option value="height">地形の高さ</option><option value="water">水量・水の存在範囲</option></select></label></div>
+      <div class="comparison-settings"><label>SPEED<select id="comparison-speed"><option value="5">5 ステップ/秒</option><option value="20" selected>20 ステップ/秒</option><option value="60">60 ステップ/秒</option></select></label><label>表示方式<select id="comparison-layout"><option value="auto">自動（広い画面は並列）</option><option value="switch">BEFORE / AFTER 切替</option></select></label><label>地形表示<select id="comparison-view"><option value="combined">生きている地図</option><option value="height">高度と境界線</option><option value="water">水量・水の存在範囲</option></select></label></div>
       <div class="comparison-toolbar"><p id="comparison-status" role="status"></p><div><button id="comparison-zoom-out" aria-label="両世界をズームアウト">−</button><output id="comparison-zoom">1.00×</output><button id="comparison-zoom-in" aria-label="両世界をズームイン">＋</button><button id="comparison-camera-reset">全体</button></div></div>
       <progress id="comparison-progress" value="0" max="600" aria-label="両世界の同期ステップ"></progress>
       <p id="comparison-error" class="comparison-error" role="alert" hidden></p>
@@ -40,26 +33,34 @@
     </section>
     <div class="workspace" id="workspace">
       <section class="map-panel" aria-labelledby="map-title">
-        <div class="panel-heading"><h2 id="map-title">地形と水の観測</h2><span id="grid-size">16 × 16 CELLS</span></div>
+        <div class="panel-heading"><h2 id="map-title">LIVING MAP <span>生きている地図</span></h2><span id="grid-size">16 × 16 CELLS</span></div>
         <div class="map-toolbar"><span id="phase">READY · 一筆を描けます</span><div><button id="zoom-out" aria-label="ズームアウト">−</button><output id="zoom">1.00×</output><button id="zoom-in" aria-label="ズームイン">＋</button><button id="camera-reset" aria-label="表示位置を戻す">全体</button></div></div>
         <canvas id="map" width="640" height="640" aria-label="地形と町。一筆をドラッグして描画。矢印キーでセルの詳細を確認。Escでキャンセル。" tabindex="0"></canvas>
-        <div class="legend"><span><i class="land"></i>地形（明るいほど高い）</span><span><i class="water"></i>水（濃いほど多い）</span><span class="source">● 水源</span><span class="intake">◆ 取水</span><span class="outlet">■ 排出口</span><span>⌂ 町（取水とは別のセル）</span><span>斜線: 保護セル</span><span class="edit-key">半透明: 変更予定 / 破線: 長さ超過</span></div>
+        <div class="legend"><span><i class="land"></i>草原 → 濃い緑の高地</span><span><i class="water"></i>水（濃いほど深い）</span><span class="source">● 水滴: 水源</span><span class="intake">◆ 取水</span><span class="outlet">▣↓ 排出口</span><span>⌂ 町（取水とは別のセル）</span><span>斜線: 保護セル</span><span class="edit-key">半透明: 変更予定 / 破線: 長さ超過</span></div>
         <p id="cell-info" class="cell-info">盤面の矢印キーでセルの高度と変更予定値を確認</p>
       </section>
       <aside>
+    <section id="challenge-panel" class="challenge-panel" aria-labelledby="stage-title">
+      <div class="challenge-heading"><div><p class="eyebrow">YOUR CHALLENGE</p><h2 id="stage-title"></h2></div><div><label for="stage-select">ステージ選択（すべて選択可能）</label><select id="stage-select"></select></div></div>
+      <p id="goal-description" class="goal-description"></p><p id="challenge-brush" class="brush-info"></p>
+      <details class="stage-details"><summary>地図のヒント・町の状況</summary><p id="stage-description"></p><div id="town-progress" class="town-progress"></div></details>
+      <div class="challenge-actions"><button id="baseline-run">一筆なしで実行</button><button id="retry">やり直す / 初期状態へ</button></div>
+      <section id="challenge-result" class="challenge-result" aria-labelledby="result-title" hidden><h2 id="result-title"></h2><ul id="goal-conditions"></ul><p id="result-details"></p><div class="challenge-actions"><button id="compare-result">この一筆で世界A/Bを比較</button><button id="next-stage" class="primary">次のステージへ</button></div></section>
+    </section>
+
         <section class="panel editor-panel"><h2>一筆で地形を変える</h2>
           <div class="button-pair" role="group" aria-label="地形の操作"><button id="lower" aria-pressed="true">削る −8</button><button id="raise" aria-pressed="false">盛る ＋8</button></div>
           <div class="button-pair" role="group" aria-label="入力モード"><button id="draw" aria-pressed="true">描画</button><button id="pan" aria-pressed="false">移動</button></div>
           <p id="brush-info" class="brush-info"></p>
           <div class="length-row"><label for="length">一筆の残り長さ</label><output id="length-left">12.00 / 12セル</output></div><progress id="length" value="12" max="12" aria-label="一筆の残り長さ"></progress>
           <p id="edit-summary" role="status">盤面をドラッグしてください。1試行につき1本だけ描けます。</p>
-          <div class="button-pair"><button id="cancel-stroke" disabled>一筆キャンセル / 再描画</button><button id="execute" class="primary" disabled>地形変更を実行</button></div>
+          <div class="button-pair stroke-actions"><button id="cancel-stroke" disabled>一筆キャンセル / 再描画</button><button id="execute" class="primary" disabled>この一筆で実行 →</button></div>
           <button id="compare-open" class="compare-open" disabled>確定した一筆で世界A/Bを比較</button>
           <p id="execution-reason" class="description">盤面に一筆を描いてから実行してください。</p>
           <p class="gesture-note">ドラッグで一筆。移動モードでパン。ホイール・2本指ピンチで拡大。描画中の2本目の指・Escでキャンセル。</p>
         </section>
         <section class="panel"><h2>実験条件</h2><div id="debug-samples"><label for="sample">サンプル地形</label><select id="sample"></select><p id="description" class="description"></p></div>
-          <label for="view">盤面の表示</label><select id="view"><option value="combined">地形 ＋ 水量</option><option value="height">地形の高さ</option><option value="water">水量・水の存在範囲</option></select>
+          <label for="view">盤面の表示</label><select id="view"><option value="combined">生きている地図</option><option value="height">高度と境界線</option><option value="water">水量・水の存在範囲</option></select>
           <div class="controls"><button id="play" class="primary">▶ PLAY</button><button id="pause">Ⅱ PAUSE</button><button id="step">＋ STEP</button><button id="reset">↺ RESET</button></div>
           <label for="speed">SPEED / 実行速度</label><select id="speed"><option value="5">ゆっくり · 5 ステップ/秒</option><option value="20" selected>標準 · 20 ステップ/秒</option><option value="60">高速 · 60 ステップ/秒</option></select>
           <p id="status" role="status">一時停止中</p>

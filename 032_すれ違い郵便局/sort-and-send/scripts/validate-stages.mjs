@@ -22,15 +22,19 @@ try {
     ['09', '256', 2, 1, 4, 6, { 4: 1, 6: 1 }],
     ['10', '512', 7, 2, 4, 8, { 4: 2, 6: 4, 8: 1 }],
   ];
-  if (reports.length !== 10) throw new Error('Stage 01〜10の10ステージが必要です。');
+  const chapterThreeExpected = [
+    ['11', '512', 6, 1, 4, 8], ['12', '1024', 7, 4, 4, 8],
+    ['13', '1024', 7, 1, 4, 8], ['14', '2048', 6, 2, 4, 8], ['15', '4096', 7, 1, 6, 10],
+  ];
+  if (reports.length !== 15) throw new Error('Stage 01〜15の15ステージが必要です。');
   for (const report of reports) {
     const spec = expected.find(e => e[0] === report.stageId);
-    const chapterTwo = chapterTwoExpected.find(e => e[0] === report.stageId);
+    const chapterTwo = [...chapterTwoExpected, ...chapterThreeExpected].find(e => e[0] === report.stageId);
     const matches = chapterTwo
       ? report.status === 'VALID' && report.totalConfigurations === chapterTwo[1] &&
         String(report.checkedConfigurations) === chapterTwo[1] && report.solutionCount === chapterTwo[2] &&
         report.optimalSolutionCount === chapterTwo[3] && report.minCost === chapterTwo[4] &&
-        report.maxCost === chapterTwo[5] && JSON.stringify(report.costDistribution) === JSON.stringify(chapterTwo[6])
+        report.maxCost === chapterTwo[5] && (!chapterTwo[6] || JSON.stringify(report.costDistribution) === JSON.stringify(chapterTwo[6]))
       : !!spec && !(report.status !== 'VALID' || report.totalConfigurations !== spec[1] ||
         String(report.checkedConfigurations) !== spec[1] || report.solutionCount !== 1 ||
         report.minCost !== spec[2] || report.maxCost !== spec[2] || report.optimalSolutionCount !== 1 ||

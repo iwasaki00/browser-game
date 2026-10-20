@@ -16,7 +16,7 @@ const specs = [
 ];
 const reports = new Map<string, SolverReport>();
 beforeAll(async () => {
-  for (const stage of stages.slice(5)) reports.set(stage.id, await solveStage(stage));
+  for (const stage of stages.slice(5, 10)) reports.set(stage.id, await solveStage(stage));
 });
 
 describe('Chapter 02 puzzles', () => {

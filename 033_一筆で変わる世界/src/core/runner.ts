@@ -1,4 +1,4 @@
-import { stepWorld, type StepAccounting } from './simulation';
+import { stepWorld, type StepAccounting, type FlowTransfer } from './simulation';
 import { createWorld, integer, MAX_STEPS, type WorldDefinition, type WorldState } from './world';
 
 export interface RunnerOptions {
@@ -12,6 +12,8 @@ export class SimulationRunner {
   playing = false;
   speed: number = 20;
   private elapsed = 0;
+  private flows: readonly FlowTransfer[] = Object.freeze([]);
+  get lastFlows(): readonly FlowTransfer[] { return this.flows; }
   private readonly initial: WorldDefinition;
   readonly maxSteps: number;
   constructor(definition: WorldDefinition, private readonly options: RunnerOptions = {}) {
@@ -28,11 +30,14 @@ export class SimulationRunner {
   step(): boolean {
     integer(this.world.step, 'ステップ', this.maxSteps);
     if (this.world.step >= this.maxSteps) { this.pause(); return false; }
-    const advanced = stepWorld(this.world, this.options.onStep ? accounting => this.options.onStep!(this.world, accounting) : undefined);
+    const advanced = stepWorld(this.world, accounting => {
+      this.options.onStep?.(this.world, accounting);
+      this.flows = accounting.flows ?? Object.freeze([]);
+    });
     if (this.world.step === this.maxSteps) this.pause();
     return advanced;
   }
-  reset(): void { this.pause(); this.world = createWorld(this.initial); }
+  reset(): void { this.pause(); this.world = createWorld(this.initial); this.flows = Object.freeze([]); }
   setSpeed(speed: number): void {
     if (!SPEEDS.some(value => value === speed)) throw new Error('未対応の実行速度です');
     this.speed = speed; this.elapsed = 0;

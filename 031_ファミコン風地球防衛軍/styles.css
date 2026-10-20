@@ -379,6 +379,39 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 .debug-panel { position: fixed; z-index: 100; right: 8px; bottom: 8px; display: flex; flex-wrap: wrap; max-width: calc(100vw - 16px); gap: 4px; padding: 5px; background: #000d; border: 1px solid var(--red); }
 .debug-panel b { color: var(--red); }
 .debug-panel button { border: 1px solid #735; color: #fff; background: #24101a; font-size: 10px; }
+
+/* TEST LAB is session-local; closed controls never cover the combat pad. */
+[hidden] { display: none !important; }
+.lab-entry { color: var(--cyan); border-color: var(--cyan); }
+.lab-toggle { position: absolute; z-index: 25; top: 50px; left: 8px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--cyan); background: #041320ed; color: var(--cyan); font-size: 11px; }
+.lab-performance { position: absolute; z-index: 24; right: 8px; top: 50px; max-width: calc(100% - 110px); padding: 5px; white-space: pre-line; color: #d9ffee; background: #020911d9; font-size: 10px; line-height: 1.35; pointer-events: none; }
+.screen.screen--lab { position: fixed; z-index: 50; inset: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); width: auto; max-width: 800px; max-height: none; margin: 0 auto; padding: 0 12px 12px; justify-content: flex-start; align-items: stretch; text-align: left; background: #061321fa; border: 1px solid var(--cyan); overflow: auto; overscroll-behavior: contain; touch-action: pan-y; }
+.screen--lab::before, .screen--lab::after { display: none; }
+.lab-header { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 0; background: #061321; }
+.lab-header h2 { margin: 0; font-size: 23px; }
+.screen--lab small { display: block; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.lab-fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-bottom: 10px; }
+.lab-fields fieldset { min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--line); }
+.lab-fields legend { font-size: 12px; color: var(--yellow); }
+.lab-fields label { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; font-size: 12px; }
+.lab-fields select, .lab-fields input[type="range"] { min-width: 0; width: 100%; min-height: 36px; font: inherit; font-size: 16px; color: var(--ink); background: #0b2230; border: 1px solid var(--line); padding: 3px; touch-action: auto; }
+.lab-fields input[type="checkbox"] { width: 22px; height: 22px; margin: 0; }
+.screen--lab button { min-height: 40px; padding: 6px 10px; color: var(--cyan); background: #0a2531; border: 1px solid var(--line); font-size: 12px; cursor: pointer; }
+.lab-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.lab-buttons button { flex: 1; }
+.flight-controls { display: none; }
+[data-flight="true"] .jump-button { display: none; }
+[data-flight="true"] .flight-controls { display: flex; gap: 6px; }
+.flight-controls button { min-width: 48px; min-height: 48px; border-radius: 8px; font-size: 12px; }
+@media (max-width: 560px) {
+  .lab-fields { grid-template-columns: minmax(0,1fr); }
+  .lab-header h2 { font-size: 20px; }
+  .lab-header small { font-size: 9px; }
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  .lab-performance { top: 90px; font-size: 9px; max-width: calc(100% - 16px); }
+  [data-flight="true"] .flight-controls { flex-basis: 100%; justify-content: center; }
+}
 .density-setting { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 5px 10px; margin: 3px 0 6px; color: var(--cyan); font-size: 11px; }
 .density-setting select { max-width: 100%; padding: 5px 8px; border: 1px solid var(--line); background: var(--panel); color: var(--yellow); font: inherit; touch-action: manipulation; }
 .density-setting small { color: var(--muted); font-size: 9px; }

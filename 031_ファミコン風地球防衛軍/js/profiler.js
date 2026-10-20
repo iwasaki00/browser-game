@@ -16,3 +16,22 @@ export class FrameProfiler {
       minEnemies:this.minEnemies,maxEnemies:this.maxEnemies};
   }
 }
+
+// Bounded rolling measurements. RAF intervals and synchronous CPU work stay separate.
+export class LiveProfiler {
+  constructor(){this.frames=new Float64Array(240);this.updates=new Float64Array(240);this.draws=new Float64Array(240);this.reset()}
+  reset(){this.count=0;this.cursor=0;this.last=null;this.lastPublish=0;this.result=null;this.excluded=0}
+  record(ts,updateMs,drawMs,active=true){
+    const delta=this.last===null?0:ts-this.last;this.last=active?ts:null;
+    // Inactive periods and >250ms interruptions are not ordinary gameplay samples.
+    if(!active||delta<=0)return null;
+    if(delta>250){this.excluded++;this.result=null;return {interrupted:true,gapMs:delta,excluded:this.excluded,samples:this.count}}
+    const i=this.cursor;this.frames[i]=delta;this.updates[i]=updateMs;this.draws[i]=drawMs;
+    this.cursor=(i+1)%240;this.count=Math.min(240,this.count+1);
+    if(ts-this.lastPublish<500)return null;this.lastPublish=ts;
+    let frame=0,update=0,draw=0,max=0;
+    for(let j=0;j<this.count;j++){frame+=this.frames[j];update+=this.updates[j];draw+=this.draws[j];max=Math.max(max,this.frames[j])}
+    this.result={fps:1000/(frame/this.count),frameMs:frame/this.count,maxFrameMs:max,updateMs:update/this.count,drawMs:draw/this.count,samples:this.count,excluded:this.excluded};
+    return this.result;
+  }
+}
