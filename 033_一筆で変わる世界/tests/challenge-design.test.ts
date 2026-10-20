@@ -3,6 +3,10 @@ import { TrialSession } from '../src/core/trial';
 import { stages } from '../src/challenge/stages';
 import { challengeSolutions } from './fixtures/challenge-solutions';
 import { assertConservation } from '../src/core/world';
+import { createWorld } from '../src/core/world';
+import { stageWorld } from '../src/challenge/stage';
+import { applyStroke, buildStroke } from '../src/core/stroke';
+import { diagnoseMirroring } from '../src/core/diagnostics';
 
 export function runChallenge(stageIndex: number, edited: boolean) {
   const stage = stages[stageIndex], session = TrialSession.forStage(stage);
@@ -34,4 +38,21 @@ it('Stage 02はどちらか片方の尾根だけ削っても給水目標を達�
     s.runner.setSpeed(60); while (s.runner.playing) s.advance(200);
     expect(s.goalResult?.status).toBe('FAILURE');
   }
+});
+it('今回の偶数幅ステージは基準・成功地形の最終水量が左右・上下反転で一致する', () => {
+  const diagnostics = [];
+  for (const stage of stages) {
+    const initial = stageWorld(stage), edited = createWorld(initial);
+    const stroke = buildStroke(challengeSolutions[stage.id], edited.width, edited.height,
+      { mode: stage.strokeMode, maxLength: stage.maxStrokeLength, radius: stage.brushRadius, heightDelta: stage.heightDelta }).stroke;
+    applyStroke(edited, stroke);
+    for (const [caseName, definition] of [['baseline', initial], ['solution', { ...initial, heights: edited.heights }]] as const) {
+      for (const axis of ['X', 'Y'] as const) {
+        const metric = diagnoseMirroring(definition, stage.maxSimulationSteps, axis);
+        diagnostics.push({ stage: stage.id, case: caseName, axis, ...metric });
+        expect(metric.l1).toBe(0);
+      }
+    }
+  }
+  console.info('CHALLENGE MIRROR DIAGNOSTICS', JSON.stringify(diagnostics));
 });

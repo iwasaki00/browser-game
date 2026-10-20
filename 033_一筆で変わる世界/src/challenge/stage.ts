@@ -55,9 +55,11 @@ export function loadStage(input: StageDefinition): StageDefinition {
   }
   if (!Array.isArray(input.protectedCells) || new Set(input.protectedCells).size !== input.protectedCells.length) throw new Error('保護セル配列が不正です');
   input.protectedCells.forEach(i => integer(i, '保護セル', size - 1));
-  createWorld(stageWorld(input)); // Reuse existing height/water/rate and overlapping-facility validation.
+  const validatedWorld = createWorld(stageWorld(input)); // Reuse existing numeric and overlapping-facility validation.
   integer(input.maxSimulationSteps, 'ステップ上限', MAX_STEPS);
   if (!input.maxSimulationSteps) throw new Error('ステップ上限は1以上が必要です');
+  const supplyBudget = input.sources.reduce((sum, source) => sum + BigInt(source.rate), 0n) * BigInt(input.maxSimulationSteps);
+  if (BigInt(validatedWorld.initialWater) + supplyBudget > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error('指定ステップまでの供給量が安全な整数範囲を超えます');
   buildStroke([], input.terrain.width, input.terrain.height, {
     mode: input.strokeMode, maxLength: input.maxStrokeLength, radius: input.brushRadius, heightDelta: input.heightDelta,
   });

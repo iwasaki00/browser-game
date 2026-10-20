@@ -1,6 +1,11 @@
 import { type Point, type StrokeMode } from '../core/stroke';
-import { type TrialSession } from '../core/trial';
 import { constrainCamera, screenToWorld, zoomAt, type Camera, type Viewport } from './camera';
+
+export interface GestureTarget {
+  readonly editable: boolean;
+  begin(point: Point, mode: StrokeMode): boolean;
+  append(point: Point): void; finish(): void; cancel(): void;
+}
 
 /** DOM-free gesture state, also exercised for multi-pointer cancellation. */
 export class GestureController {
@@ -9,7 +14,7 @@ export class GestureController {
   mode: StrokeMode = 'RAISE';
   private drawingPointer: number | null = null;
   private navigation = false;
-  constructor(public session: TrialSession, readonly camera: Camera, private readonly viewport: () => Viewport) {}
+  constructor(public session: GestureTarget, readonly camera: Camera, private readonly viewport: () => Viewport) {}
   down(id: number, point: Point): void {
     if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return;
     this.pointers.set(id, { ...point });

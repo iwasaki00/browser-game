@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#111d28" />
-  <meta name="description" content="一筆で地形を変え、町へ水を届け、水害から守る。3つのチャレンジを遊ぶ水流パズル v0.3.0" />
+  <meta name="description" content="一筆を加えなかった世界と加えた世界を、同じ時間で見比べる水流パズル。v0.4.0 Parallel Worlds" />
   <title>一筆で変わる世界 | ONE STROKE WORLDS</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-  <script type="module" crossorigin src="./assets/index-BhrpTzbI.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DE5pvSQH.css">
+  <script type="module" crossorigin src="./assets/index-C03f8NYD.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BzdEjunu.css">
 </head>
 <body>
   <main class="shell">
-    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.3.0 / First Challenge</span></header>
+    <header><a class="back" href="../../index.html">← ゲーム一覧</a><span class="version">v0.4.0 / Parallel Worlds</span></header>
     <section class="intro"><p class="eyebrow">ONE STROKE WORLDS</p><h1>一筆で変わる世界</h1><p>一筆で水の行方を変え、町の未来を変える。<span>削る・盛る → プレビュー → 実行して目標に挑戦</span></p></section>
     <div class="mode-bar"><label for="game-mode">モード</label><select id="game-mode"><option value="challenge">チャレンジ</option><option value="debug">デバッグ</option></select></div>
     <section id="challenge-panel" class="challenge-panel" aria-labelledby="stage-title">
@@ -20,9 +20,27 @@
       <p id="stage-description"></p><p id="goal-description" class="goal-description"></p><p id="challenge-brush" class="brush-info"></p>
       <div id="town-progress" class="town-progress"></div>
       <div class="challenge-actions"><button id="baseline-run">一筆なしで実行</button><button id="retry">やり直す / 初期状態へ</button></div>
-      <section id="challenge-result" class="challenge-result" aria-labelledby="result-title" hidden><h2 id="result-title"></h2><ul id="goal-conditions"></ul><p id="result-details"></p><button id="next-stage" class="primary">次のステージへ</button></section>
+      <section id="challenge-result" class="challenge-result" aria-labelledby="result-title" hidden><h2 id="result-title"></h2><ul id="goal-conditions"></ul><p id="result-details"></p><div class="challenge-actions"><button id="compare-result">この一筆で世界A/Bを比較</button><button id="next-stage" class="primary">次のステージへ</button></div></section>
     </section>
-    <div class="workspace">
+    <section id="comparison-panel" class="comparison-panel" aria-labelledby="comparison-title" data-layout="auto" data-world="B" hidden>
+      <div class="comparison-heading"><div><p class="eyebrow">PARALLEL WORLDS</p><h2 id="comparison-title"></h2></div><button id="comparison-back">編集画面へ戻る</button></div>
+      <p class="comparison-help">世界Aは変更なし、世界Bだけに一筆を適用。同じ初期水量・施設・目標で、同じ論理ステップを観測します。</p>
+      <div class="comparison-controls" role="group" aria-label="両世界の同期操作"><button id="comparison-play" class="primary">▶ PLAY</button><button id="comparison-pause">Ⅱ PAUSE</button><button id="comparison-step">＋ STEP</button><button id="comparison-reset">↺ RESET（同じ一筆）</button></div>
+      <div class="comparison-settings"><label>SPEED<select id="comparison-speed"><option value="5">5 ステップ/秒</option><option value="20" selected>20 ステップ/秒</option><option value="60">60 ステップ/秒</option></select></label><label>表示方式<select id="comparison-layout"><option value="auto">自動（広い画面は並列）</option><option value="switch">BEFORE / AFTER 切替</option></select></label><label>地形表示<select id="comparison-view"><option value="combined">地形 ＋ 水量</option><option value="height">地形の高さ</option><option value="water">水量・水の存在範囲</option></select></label></div>
+      <div class="comparison-toolbar"><p id="comparison-status" role="status"></p><div><button id="comparison-zoom-out" aria-label="両世界をズームアウト">−</button><output id="comparison-zoom">1.00×</output><button id="comparison-zoom-in" aria-label="両世界をズームイン">＋</button><button id="comparison-camera-reset">全体</button></div></div>
+      <progress id="comparison-progress" value="0" max="600" aria-label="両世界の同期ステップ"></progress>
+      <p id="comparison-error" class="comparison-error" role="alert" hidden></p>
+      <p id="comparison-outcome-summary" class="comparison-outcome-summary" role="status"></p>
+      <div class="comparison-toggle" role="group" aria-label="表示する世界"><button id="comparison-before" aria-pressed="false">BEFORE · 世界A</button><button id="comparison-after" aria-pressed="true">AFTER · 世界B</button></div>
+      <div class="comparison-panels">
+        <article class="comparison-world comparison-world-a" aria-labelledby="comparison-a-title"><div class="panel-heading"><h3 id="comparison-a-title">世界A · 変更なし</h3><span id="comparison-a-step"></span></div><p id="comparison-a-outcome" class="comparison-outcome"></p><canvas id="comparison-a" width="640" height="640" aria-label="世界Aの地形と水。ドラッグで両世界を移動、ホイール・ピンチで同期ズーム" tabindex="0"></canvas><div id="comparison-a-metrics" class="comparison-metrics"></div></article>
+        <article class="comparison-world comparison-world-b" aria-labelledby="comparison-b-title"><div class="panel-heading"><h3 id="comparison-b-title">世界B · 一筆変更</h3><span id="comparison-b-step"></span></div><p id="comparison-b-outcome" class="comparison-outcome"></p><canvas id="comparison-b" width="640" height="640" aria-label="世界Bの地形と水。ドラッグで両世界を移動、ホイール・ピンチで同期ズーム" tabindex="0"></canvas><div id="comparison-b-metrics" class="comparison-metrics"></div></article>
+      </div>
+      <section id="comparison-result" class="comparison-result" aria-labelledby="comparison-result-title" hidden><h3 id="comparison-result-title"></h3><p id="comparison-result-step"></p><ul id="comparison-differences"></ul><p class="formula">すべての差分は 世界B − 世界A。取水量は増加、水深は減少すると改善です。</p></section>
+      <p class="comparison-help">カメラは両世界で共通です。切替は表示だけを変更し、再計算しません。取水量・水深は整数水量単位（256単位＝地形高度1）。</p>
+      <div class="challenge-actions"><button id="comparison-retry">一筆を描き直す</button><button id="comparison-next" class="primary" hidden>次のステージへ</button></div>
+    </section>
+    <div class="workspace" id="workspace">
       <section class="map-panel" aria-labelledby="map-title">
         <div class="panel-heading"><h2 id="map-title">地形と水の観測</h2><span id="grid-size">16 × 16 CELLS</span></div>
         <div class="map-toolbar"><span id="phase">READY · 一筆を描けます</span><div><button id="zoom-out" aria-label="ズームアウト">−</button><output id="zoom">1.00×</output><button id="zoom-in" aria-label="ズームイン">＋</button><button id="camera-reset" aria-label="表示位置を戻す">全体</button></div></div>
@@ -38,6 +56,7 @@
           <div class="length-row"><label for="length">一筆の残り長さ</label><output id="length-left">12.00 / 12セル</output></div><progress id="length" value="12" max="12" aria-label="一筆の残り長さ"></progress>
           <p id="edit-summary" role="status">盤面をドラッグしてください。1試行につき1本だけ描けます。</p>
           <div class="button-pair"><button id="cancel-stroke" disabled>一筆キャンセル / 再描画</button><button id="execute" class="primary" disabled>地形変更を実行</button></div>
+          <button id="compare-open" class="compare-open" disabled>確定した一筆で世界A/Bを比較</button>
           <p id="execution-reason" class="description">盤面に一筆を描いてから実行してください。</p>
           <p class="gesture-note">ドラッグで一筆。移動モードでパン。ホイール・2本指ピンチで拡大。描画中の2本目の指・Escでキャンセル。</p>
         </section>

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadStage, stageWorld, type StageDefinition } from '../src/challenge/stage';
 import { stages } from '../src/challenge/stages';
 import { TrialSession } from '../src/core/trial';
-import { assertConservation, createWorld } from '../src/core/world';
+import { assertConservation, createWorld, MAX_WATER } from '../src/core/world';
 import { stepWorld } from '../src/core/simulation';
 import { GoalTracker } from '../src/challenge/goals';
 import { challengeSolutions } from './fixtures/challenge-solutions';
@@ -35,6 +35,7 @@ describe('ステージの読み込み・独立性', () => {
     { intakes: [{ id: 'water', index: 3, rate: 1 }] },
     { sources: [{ id: 'source', index: 0, rate: 1 }] },
     { sources: [{ id: 'water', index: 1, rate: 1 }] },
+    { sources: [{ id: 'source', index: 1, rate: MAX_WATER }] },
     { protectedCells: [-1] }, { protectedCells: [0, 0] },
     { towns: [{ id: 'town', name: '町', centerCell: 3, floodThreshold: 1 }] },
     { towns: [{ id: 'town', name: '町', centerCell: 0, floodThreshold: 1 }] },

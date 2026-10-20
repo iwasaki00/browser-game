@@ -4,7 +4,7 @@ import { validateStage } from './validation';
 import { simulate } from './simulation';
 
 describe('stage structure validation', () => {
-  it('accepts all five built-in stages', () => stages.forEach(s => expect(validateStage(s)).toEqual([])));
+  it('accepts all built-in stages', () => stages.forEach(s => expect(validateStage(s)).toEqual([])));
   const cases: [string, (s: Stage) => void, string][] = [
     ['duplicate nodes', s => { s.nodes.push(structuredClone(s.nodes[0])); }, 'ノードIDが重複'],
     ['missing target', s => { s.edges[0].to = 'missing'; }, '存在しないノード'],

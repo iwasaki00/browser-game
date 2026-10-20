@@ -26,6 +26,7 @@ export class SimulationRunner {
   play(): void { if (this.world.step < this.maxSteps) this.playing = true; }
   pause(): void { this.playing = false; this.elapsed = 0; }
   step(): boolean {
+    integer(this.world.step, 'ステップ', this.maxSteps);
     if (this.world.step >= this.maxSteps) { this.pause(); return false; }
     const advanced = stepWorld(this.world, this.options.onStep ? accounting => this.options.onStep!(this.world, accounting) : undefined);
     if (this.world.step === this.maxSteps) this.pause();

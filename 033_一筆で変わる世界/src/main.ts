@@ -7,6 +7,8 @@ import { createCamera, constrainCamera, screenToWorld, zoomAt, type Viewport } f
 import { GestureController } from './input/gestures';
 import { samples } from './samples';
 import { drawWorld } from './render';
+import { ComparisonView } from './comparison/view';
+import { type Stroke } from './core/stroke';
 
 function element<T extends HTMLElement>(id: string): T {
   const value = document.getElementById(id);
@@ -32,6 +34,7 @@ function viewport(): Viewport {
 const gestures = new GestureController(session, camera, viewport);
 gestures.mode = session.stage!.strokeMode;
 let selected: number | null = null, error = '', dirty = true;
+let comparisonView: ComparisonView | null = null;
 const format = (n: number) => n.toLocaleString('ja-JP');
 const phaseNames = { READY: '一筆を描けます', DRAWING: '描画中', PREVIEW: '変更予定を確認', SIMULATING: 'シミュレーション', RESULT: '計算完了' };
 function updateChallenge(): void {
@@ -79,6 +82,8 @@ function updateChallenge(): void {
   element('next-stage').textContent = last ? '3ステージ目をクリア！' : '次のステージへ';
 }
 function update(): void {
+  element('workspace').hidden = comparisonView?.active ?? false;
+  if (comparisonView?.active) { element('challenge-panel').hidden = true; return; }
   const runner = session.runner, w = runner.world;
   for (const [id, value] of Object.entries({ 'step-count': w.step, total: assertConservation(w), initial: w.initialWater,
     supply: w.cumulativeSupply, intake: w.cumulativeIntake, outlet: w.cumulativeOutlet })) element(id).textContent = format(value);
@@ -111,6 +116,10 @@ function update(): void {
   element('execution-reason').textContent = session.editable ? session.executionReason || '初期水量を保持し、編集後の地形でステップ0から実行します。' : '地形を描き直すにはRESETで再挑戦してください。';
   element<HTMLButtonElement>('execute').disabled = !!session.executionReason || !!error;
   element<HTMLButtonElement>('cancel-stroke').disabled = !['DRAWING', 'PREVIEW'].includes(session.phase);
+  const canCompare = !!session.stage && !!comparisonStroke() && !error;
+  element<HTMLButtonElement>('compare-open').disabled = !canCompare;
+  element<HTMLButtonElement>('compare-result').disabled = !canCompare;
+  element('compare-open').title = canCompare ? '両世界を同じ初期状態・ステップ0から同期実行します' : 'チャレンジで有効な一筆を確定してから比較できます';
   for (const [id, active] of [['lower', gestures.mode === 'LOWER'], ['raise', gestures.mode === 'RAISE'],
     ['draw', gestures.tool === 'DRAW'], ['pan', gestures.tool === 'PAN']] as const) element(id).setAttribute('aria-pressed', String(active));
   element<HTMLButtonElement>('lower').disabled = session.phase !== 'READY' || session.stage?.strokeMode === 'RAISE';
@@ -126,7 +135,7 @@ function update(): void {
 function safely(action: () => void): void {
   try { action(); update(); }
   catch (cause) {
-    gestures.cancel(); session.runner.pause(); error = cause instanceof Error ? cause.message : String(cause);
+    gestures.cancel(); session.runner.pause(); comparisonView?.suspend(); error = cause instanceof Error ? cause.message : String(cause);
     element('balance').textContent = `検査エラー: ${error}`; element('balance').classList.add('error');
     element('status').textContent = '異常を検出したため停止しました。RESETで再挑戦してください。';
     for (const id of ['play', 'step', 'pause', 'execute']) element<HTMLButtonElement>(id).disabled = true;
@@ -138,6 +147,7 @@ function releasePointers(): void {
   for (const id of ids) if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
 }
 function replaceSession(next: TrialSession): void {
+  comparisonView?.close();
   releasePointers(); session.runner.pause(); session = next; gestures.session = session;
   session.runner.setSpeed(Number(speed.value)); gestures.mode = session.stage?.strokeMode ?? 'RAISE'; gestures.tool = 'DRAW';
   Object.assign(camera, createCamera()); error = ''; selected = null;
@@ -146,6 +156,18 @@ function replaceSession(next: TrialSession): void {
 function selectStage(stage: StageDefinition): void {
   stageSelect.value = stage.id; replaceSession(TrialSession.forStage(stage));
 }
+function comparisonStroke(): Stroke | null {
+  if (session.phase === 'PREVIEW' && !session.executionReason) return session.preview!.stroke;
+  return session.phase === 'RESULT' ? session.record?.conditions.stroke ?? null : null;
+}
+function openComparison(): void {
+  const stroke = comparisonStroke(), stage = session.stage;
+  if (!stroke || !stage || !comparisonView) return;
+  releasePointers(); session.runner.pause();
+  comparisonView.open(stage, stroke, Number(speed.value), stages.findIndex(s => s.id === stage.id) < stages.length - 1);
+}
+element('compare-open').onclick = () => safely(openComparison);
+element('compare-result').onclick = () => safely(openComparison);
 gameMode.onchange = () => safely(() => {
   if (gameMode.value === 'challenge') selectStage(stages.find(s => s.id === stageSelect.value) ?? stages[0]);
   else replaceSession(new TrialSession(samples.find(s => s.id === select.value)!.create()));
@@ -226,13 +248,26 @@ canvas.addEventListener('keydown', event => {
     + Math.max(0, Math.min(w.width - 1, x + (event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0)));
   safely(() => {});
 });
-const suspend = () => safely(() => { releasePointers(); session.runner.pause(); });
+const suspend = () => safely(() => { releasePointers(); session.runner.pause(); comparisonView?.suspend(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
 window.addEventListener('blur', suspend);
-new ResizeObserver(() => safely(() => { releasePointers(); constrainCamera(camera, viewport()); })).observe(canvas);
+new ResizeObserver(() => {
+  if (!comparisonView?.active) safely(() => { releasePointers(); constrainCamera(camera, viewport()); });
+}).observe(canvas);
+comparisonView = new ComparisonView({
+  onBack: () => safely(() => { comparisonView?.close(); dirty = true; }),
+  onRetry: () => safely(() => { comparisonView?.close(); error = ''; session.reset(); }),
+  onNext: () => safely(() => {
+    const index = stages.findIndex(s => s.id === session.stage?.id);
+    if (comparisonView?.canAdvanceStage && index >= 0 && index + 1 < stages.length) selectStage(stages[index + 1]);
+  }),
+});
 let previous = performance.now();
 function frame(now: number): void {
   const elapsed = now - previous; previous = now;
+  if (comparisonView?.active) {
+    comparisonView.advance(elapsed); comparisonView.draw(); requestAnimationFrame(frame); return;
+  }
   if (session.runner.playing) safely(() => { session.advance(elapsed); });
   if (dirty) {
     const preview = ['DRAWING', 'PREVIEW'].includes(session.phase) ? session.preview : null;

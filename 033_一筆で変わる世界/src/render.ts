@@ -1,4 +1,5 @@
-import { TerrainType, type WorldState } from './core/world';
+import { TerrainType } from './core/world';
+import { type DeepReadonly, type WorldView } from './core/world-view';
 import { type CellEdit, type Segment, type StrokePreview } from './core/stroke';
 import { worldToScreen, type Camera, type Viewport } from './input/camera';
 import { type TownDefinition } from './challenge/stage';
@@ -6,14 +7,16 @@ import { type TownProgress } from './challenge/goals';
 
 interface RenderOptions {
   camera: Camera; viewport: Viewport; preview: StrokePreview | null; edits: readonly CellEdit[];
-  towns?: readonly TownDefinition[]; townProgress?: readonly TownProgress[];
+  towns?: readonly TownDefinition[]; townProgress?: readonly DeepReadonly<TownProgress>[];
+  heightScale?: number;
 }
-export function drawWorld(context: CanvasRenderingContext2D, world: WorldState, view: string,
+export function drawWorld(context: CanvasRenderingContext2D, world: WorldView, view: string,
   selected: number | null, options: RenderOptions): void {
   const { camera, viewport, preview, edits } = options;
   const heights = new Map(edits.map(edit => [edit.index, edit.after]));
   let maxHeight = 1;
   for (let i = 0; i < world.heights.length; i++) maxHeight = Math.max(maxHeight, heights.get(i) ?? world.heights[i]);
+  if (options.heightScale !== undefined) maxHeight = options.heightScale;
   const unit = worldToScreen({ x: 1, y: 0 }, camera, viewport).x - camera.offsetX;
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);

@@ -2,6 +2,9 @@ import './style.css';
 import { stages, type Direction, type ParcelColor } from './stage';
 import { simulate, type SimulationResult } from './simulation';
 import { validateStage } from './validation';
+import { deliveryCost } from './cost';
+import { isSolverSummary, rateDelivery, verifiedMinimum } from './scoring';
+import stageRatings from './generated/stage-ratings.json';
 
 type Mode = 'DESIGN' | 'RUN' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -89,7 +92,7 @@ function selectStage(index: number) {
   selectedSwitch = stage.nodes.find(n => n.kind === 'switch')?.id ?? '';
   get('stage-name').textContent = stage.name;
   const branches = stage.nodes.filter(n => n.kind === 'switch');
-  get('route-label').textContent = `ROUTE 0${index + 1} / 分岐 ${branches.map(n => n.id.toUpperCase()).join('・')}`;
+  get('route-label').textContent = `ROUTE ${stage.id} / 分岐 ${branches.map(n => n.id.toUpperCase()).join('・')}`;
   get('switch-selector').replaceChildren();
   for (const branch of branches) {
     const button = document.createElement('button'); button.type = 'button'; button.dataset.switch = branch.id;
@@ -99,18 +102,29 @@ function selectStage(index: number) {
   for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
     if (i === index) button.setAttribute('aria-current', 'step'); else button.removeAttribute('aria-current');
   }
+  get('chapter-name').textContent = index < 5 ? 'Chapter 01 / はじめての配送' : 'Chapter 02 / 分岐の連鎖';
+  const board = stage.board ?? { width: 640, height: 540 };
+  canvas.style.aspectRatio = `${board.width} / ${board.height}`;
   // Validate before resolving edge labels or drawing malformed graph data.
   stageErrors = validateStage(stage);
   get('queue').innerHTML = stageErrors.length ? '' : [...stage.parcels].sort((a, b) => a.id - b.id).map(p => `<li><span class="parcel ${p.color.toLowerCase()}">${marks[p.color]}</span><small>${String(p.id + 1).padStart(2, '0')}</small><span class="sr-only">${p.color}</span></li>`).join('');
   get('legend').textContent = stageErrors.length ? '' : stage.nodes.filter(n => n.kind === 'exit').map(n => `${marks[n.accepts!]} ${n.accepts}`).join(' · ');
   canvas.setAttribute('aria-label', stageErrors.length ? 'ステージの構造にエラーがあります。配送レポートを確認してください。' : stage.edges.map(e => `${node(e.from).label}${e.direction ? ` の${e.direction === 'L' ? '左' : '右'}` : ''}から${node(e.to).label}へ`).join('。'));
-  design(true);
+  design(true); resize();
 }
 
+const chapterLists: HTMLElement[] = [];
+for (const [i, name] of ['Chapter 01：はじめての配送', 'Chapter 02：分岐の連鎖'].entries()) {
+  const group = document.createElement('div'); group.className = 'chapter-group';
+  const label = document.createElement('p'); label.textContent = name; label.id = `chapter-${i + 1}`;
+  const list = document.createElement('div'); list.className = 'stage-buttons';
+  list.setAttribute('role', 'group'); list.setAttribute('aria-labelledby', label.id);
+  group.append(label, list); get('stage-selector').append(group); chapterLists.push(list);
+}
 stages.forEach((s, i) => {
   const button = document.createElement('button'); button.type = 'button';
-  button.textContent = `0${i + 1}`; button.setAttribute('aria-label', s.name);
-  button.addEventListener('click', () => selectStage(i)); get('stage-selector').append(button);
+  button.textContent = s.id; button.setAttribute('aria-label', s.name);
+  button.addEventListener('click', () => selectStage(i)); chapterLists[Math.floor(i / 5)].append(button);
 });
 retry.addEventListener('click', () => { if (mode !== 'RUN') { design(); start.focus(); } });
 reset.addEventListener('click', () => { if (mode !== 'RUN') design(true); });
@@ -139,7 +153,12 @@ function animate(now: number) {
   if (elapsed < result.ticks) requestAnimationFrame(animate);
   else {
     mode = 'RESULT'; updateControls();
-    get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><ul class="result-list">${result.parcels.map(p => `<li><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></li>`).join('')}</ul><p>${result.clear ? '矢印のループが、ぴったりつながった！' : '矢印を見直して、もう一度届けてみよう。'}</p>`;
+    const reports: unknown[] = stageRatings;
+    const report = reports.filter(isSolverSummary).find(r => r.stageId === stage.id);
+    const cost = deliveryCost(patterns, result);
+    const minimum = verifiedMinimum(stage, report);
+    const rating = rateDelivery({ stage, result, cost, rescueUsed: false, report });
+    get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><ul class="result-list">${result.parcels.map(p => `<li><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></li>`).join('')}</ul><details class="path-details"><summary>荷物ごとの経路を見る</summary><ul>${result.parcels.map(p => `<li>${String(p.id + 1).padStart(2, '0')} ${p.path.map(id => node(id).label).join(' → ')}</li>`).join('')}</ul></details>`;
   }
 }
 
@@ -158,10 +177,11 @@ function symbol(color: ParcelColor, x: number, y: number, size: number) {
   ctx.fill();
 }
 function draw() {
-  ctx.clearRect(0, 0, 640, 540);
+  const { width, height } = stage.board ?? { width: 640, height: 540 };
+  ctx.clearRect(0, 0, width, height);
   if (stageErrors.length) return;
   ctx.fillStyle = '#d8e0d3';
-  for (let x = 20; x < 640; x += 24) for (let y = 16; y < 540; y += 24) { ctx.beginPath(); ctx.arc(x, y, 1, 0, 7); ctx.fill(); }
+  for (let x = 20; x < width; x += 24) for (let y = 16; y < height; y += 24) { ctx.beginPath(); ctx.arc(x, y, 1, 0, 7); ctx.fill(); }
   for (const edge of stage.edges) {
     const a = node(edge.from), b = node(edge.to);
     ctx.lineCap = 'round';
@@ -178,7 +198,7 @@ function draw() {
     if (n.kind === 'source') {
       roundRect(n.x - 61, n.y - 40, 122, 72, 17, '#c5d5c8');
       roundRect(n.x - 61, n.y - 46, 122, 72, 17, '#CDE8DF', '#afcabe');
-      text('SOURCE', n.x, n.y - 17, 12, teal); roundRect(n.x - 32, n.y - 5, 64, 10, 5, teal);
+      text('SOURCE', n.x, n.y - 17, stage.board ? 18 : 12, teal); roundRect(n.x - 32, n.y - 5, 64, 10, 5, teal);
       text('発送口', n.x, n.y + 47, 10, '#6b807e');
     } else if (n.kind === 'switch') {
       if (n.id === selectedSwitch) roundRect(n.x - 54, n.y - 48, 108, 98, 27, '#CDE8DF', teal);
@@ -190,16 +210,16 @@ function draw() {
       roundRect(n.x - 47, n.y - 35, 94, 83, 22, '#c6ae66');
       roundRect(n.x - 47, n.y - 41, 94, 83, 22, '#E4B754', '#d3aa49');
       text(n.id.toUpperCase(), n.x, n.y + 4, 26);
-      text(dispatch ? `${dispatch.patternIndex! + 1}: ${dispatch.direction}` : (patterns[n.id] ?? []).join(' '), n.x, n.y + 23, 11);
+      text(dispatch ? `${dispatch.patternIndex! + 1}: ${dispatch.direction}` : (patterns[n.id] ?? []).join(' '), n.x, n.y + 23, stage.board ? 17 : 11);
       for (const dx of [-32, 32]) for (const dy of [-26, 26]) { ctx.beginPath(); ctx.arc(n.x + dx, n.y + dy, 3, 0, 7); ctx.fillStyle = '#ad8b3f'; ctx.fill(); }
-      text(n.label, n.x, n.y + 65, 10, '#6b807e');
+      text(n.label, n.x, n.y + 65, stage.board ? 16 : 10, '#6b807e');
     } else {
       const color = n.accepts!;
       roundRect(n.x - 61, n.y - 47, 122, 82, 18, color === 'RED' ? '#c5685a' : color === 'BLUE' ? '#4473a2' : '#bc963f');
       roundRect(n.x - 61, n.y - 53, 122, 82, 18, colors[color]);
       symbol(color, n.x, n.y - 26, 12);
       roundRect(n.x - 40, n.y - 2, 80, 9, 4, '#243d4a66');
-      text(n.label, n.x, n.y + 64, 12, color === 'RED' ? '#b15c4f' : color === 'BLUE' ? '#4473a2' : '#806320');
+      text(n.label, n.x, n.y + 64, stage.board ? 17 : 12, color === 'RED' ? '#b15c4f' : color === 'BLUE' ? '#4473a2' : '#806320');
     }
   }
   if (result) for (const p of result.parcels) {
@@ -226,9 +246,10 @@ function draw() {
 function resize() {
   const ratio = window.devicePixelRatio || 1;
   const width = canvas.getBoundingClientRect().width;
+  const board = stage.board ?? { width: 640, height: 540 };
   canvas.width = Math.round(width * ratio);
-  canvas.height = Math.round(width * 540 / 640 * ratio);
-  ctx.setTransform(canvas.width / 640, 0, 0, canvas.height / 540, 0, 0);
+  canvas.height = Math.round(width * board.height / board.width * ratio);
+  ctx.setTransform(canvas.width / board.width, 0, 0, canvas.height / board.height, 0, 0);
   draw();
 }
 new ResizeObserver(resize).observe(canvas);

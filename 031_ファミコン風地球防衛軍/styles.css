@@ -376,6 +376,15 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
   .aim-pad { width: 104px; height: 104px; }
 }
 
-.debug-panel { position: fixed; z-index: 100; right: 8px; bottom: 8px; display: flex; gap: 4px; padding: 5px; background: #000d; border: 1px solid var(--red); }
+.debug-panel { position: fixed; z-index: 100; right: 8px; bottom: 8px; display: flex; flex-wrap: wrap; max-width: calc(100vw - 16px); gap: 4px; padding: 5px; background: #000d; border: 1px solid var(--red); }
 .debug-panel b { color: var(--red); }
 .debug-panel button { border: 1px solid #735; color: #fff; background: #24101a; font-size: 10px; }
+.density-setting { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 5px 10px; margin: 3px 0 6px; color: var(--cyan); font-size: 11px; }
+.density-setting select { max-width: 100%; padding: 5px 8px; border: 1px solid var(--line); background: var(--panel); color: var(--yellow); font: inherit; touch-action: manipulation; }
+.density-setting small { color: var(--muted); font-size: 9px; }
+@media (orientation: landscape) and (max-height: 420px) {
+  #screenEquip { padding-top: 8px; padding-bottom: 8px; justify-content: flex-start; }
+  #screenEquip h2 { font-size: 25px; margin-bottom: 5px; }
+  #screenEquip .eyebrow { margin-bottom: 3px; }
+  #screenEquip .weapon-grid { margin: 2px auto; }
+}

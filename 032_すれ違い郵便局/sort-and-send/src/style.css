@@ -19,3 +19,17 @@
 .error-message{white-space:pre-line}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 @media(max-width:800px) and (min-width:621px){.workspace{grid-template-columns:minmax(0,1fr) 285px}}
+.rating{color:#806320;font-size:30px;letter-spacing:4px;margin:8px 0}
+.cost-summary{margin:12px 0;font-size:11px}
+.cost-summary div{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e5e8de;padding:6px 0}
+.cost-summary dd{margin:0;font-size:19px;font-weight:800}
+.rating-note{margin:12px 0 18px!important}
+.path-details{margin-top:14px;font-size:10px;overflow-wrap:anywhere}
+.path-details summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:#247E72}
+.path-details ul{padding-left:15px;margin:0}
+.path-details li{margin:7px 0}
+.stage-selector{gap:16px 28px}
+.chapter-group p{font-size:11px;font-weight:800;color:#247E72;margin:0 0 8px}
+.stage-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.switch-selector button{padding:8px 6px}
+@media(max-width:620px){.stage-selector{flex-direction:column}.chapter-group{min-width:0}.stage-buttons{gap:9px}.chapter-group p{font-size:11px}}

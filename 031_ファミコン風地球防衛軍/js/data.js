@@ -1,4 +1,4 @@
-export const VERSION = "0.1.3";
+export const VERSION = "0.1.4";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -23,6 +23,43 @@ export const BATTLE_CAMERA = Object.freeze({
 });
 
 export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;
+
+export const DENSITY_MODES = Object.freeze({
+  LIGHT:{limit:30,scale:.6}, STANDARD:{limit:50,scale:1}, MASSIVE:{limit:100,scale:2}
+});
+export const INVASION = Object.freeze({
+  gridSize:64, minSpawnDistance:180, outsideMargin:36, columnSpacing:23, columns:12,
+  speedVariation:.10, separationRadius:26, separationSpeed:18, separationVerticalSpeed:12,
+  contactLanes:9, contactSpacing:7, approachRange:32,
+  farDistance:900, farThinkInterval:.12, maxEffects:80, maxDeathSprites:16,
+  normalShotGap:.24, normalAttackWindow:.5, normalStartsPerWindow:2, maxNormalProjectiles:28,
+  diveGap:.35, diveDuration:.8, diveCooldown:2.4, simultaneousDives:2,
+  midbossEscorts:{LIGHT:6,STANDARD:8,MASSIVE:12}, bossMinions:{LIGHT:8,STANDARD:12,MASSIVE:18}
+});
+
+// Templates are available to future missions; only entries in M01_ENCOUNTERS are scheduled.
+export const SPAWN_PATTERNS = Object.freeze({
+  WAVE:{batch:3,interval:.35}, SWARM:{batch:8,interval:.06},
+  PINCER:{batch:4,interval:.25,sides:"both"}, AIR_RAID:{batch:5,interval:.18,enemy:"needle"},
+  REINFORCEMENT:{batch:3,interval:1.2,below:.35}
+});
+export const M01_ENCOUNTERS = Object.freeze([
+  {id:"a1-intro",x:260,until:850,pattern:"WAVE",enemy:"crawler",count:8,batch:2,interval:.65},
+  {id:"a1-rise",x:550,until:900,pattern:"WAVE",enemy:"crawler",fraction:.32,batch:3,interval:.35},
+  {id:"a1-air",x:720,until:1100,pattern:"WAVE",enemy:"needle",count:6,batch:2,interval:.45},
+  {id:"a2-swarm",x:1000,until:1750,pattern:"SWARM",enemy:"crawler",fraction:.90},
+  {id:"a2-ceiling",x:1300,until:1750,pattern:"WAVE",enemy:"spider",count:6,batch:2,interval:.8},
+  {id:"a2-air",x:1580,until:1850,pattern:"WAVE",enemy:"needle",count:10,batch:3,interval:.4},
+  {id:"a3-midboss",x:1980,pattern:"WAVE",enemy:"beetle",count:1,unscaled:true,fixedX:2180},
+  {id:"a3-escort",x:2020,until:2160,pattern:"WAVE",enemy:"crawler",count:4,batch:1,interval:1.1,midbossOnly:true},
+  {id:"a3-recovery",x:2290,until:2800,pattern:"WAVE",enemy:"crawler",fraction:.25,afterMidboss:true},
+  {id:"a3-air",x:2600,until:2880,pattern:"WAVE",enemy:"needle",count:8,afterMidboss:true},
+  {id:"a4-wave",x:2940,until:3820,pattern:"WAVE",enemy:"crawler",fraction:.70,batch:5,interval:.15},
+  {id:"a4-swarm",x:3090,until:3880,pattern:"SWARM",enemy:"crawler",fraction:1.25,batch:10,interval:.06},
+  {id:"a4-air",x:3330,until:3890,pattern:"WAVE",enemy:"needle",fraction:.30,batch:4,interval:.3},
+  {id:"a4-ceiling",x:3500,until:3890,pattern:"SWARM",enemy:"spider",fraction:.20,batch:3,interval:.3},
+  {id:"a4-final",x:3720,until:3950,pattern:"SWARM",enemy:"crawler",fraction:.70,batch:8,interval:.1}
+]);
 
 // Availability is separate from saved progression. M02 has no playable content yet.
 export const MISSIONS = Object.freeze([
@@ -75,15 +112,9 @@ export const MISSION_AREAS = [
   {x:0, name:"侵略開始"},{x:900,name:"包囲網"},{x:1900,name:"装甲敵出現"},{x:2900,name:"最終防衛区画"},{x:3950,name:"巣の中心"}
 ];
 
-export const SPAWNS = [
-  [360,"crawler",4,60],[720,"needle",3,75],[1050,"crawler",7,42],[1300,"spider",3,100],
-  [1600,"needle",6,48],[1980,"beetle",1,0],[2180,"crawler",7,40],[2500,"spider",5,60],
-  [2850,"needle",7,42],[3200,"crawler",10,34],[3450,"spider",5,55],[3720,"needle",8,38]
-];
-
 export const DEFAULT_SAVE = Object.freeze({
   version:2, clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
-  bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative"}
+  bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD"}
 });
 
 export const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
@@ -101,6 +132,7 @@ export function sanitizeSave(value){
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;
   if(value.settings && typeof value.settings==="object") base.settings={...base.settings,...value.settings};
+  if(!Object.hasOwn(DENSITY_MODES,base.settings.enemyDensity))base.settings.enemyDensity="STANDARD";
   return base;
 }
 

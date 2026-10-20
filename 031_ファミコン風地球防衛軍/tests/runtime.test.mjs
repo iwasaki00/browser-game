@@ -1,34 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import vm from "node:vm";
-import {readFileSync} from "node:fs";
 import * as data from "../js/data.js";
-import * as camera from "../js/camera.js";
-
-// Run the actual game module against a small DOM/clock adapter; no production test stages.
-const source=readFileSync(new URL("../js/game.js",import.meta.url),"utf8").replace(/^import .*;\r?\n/gm,"");
-function runtime(seed=null){
-  const elements=new Map(),timers=new Map(),listeners=new Map(),drawCalls=[];
-  let nextTimer=0,rafCount=0;
-  const context=new Proxy({},{get:(target,name)=>name in target?target[name]:(...args)=>drawCalls.push([name,...args]),set:(target,name,value)=>{target[name]=value;return true}});
-  class Element {
-    constructor(id=""){this.id=id;this.dataset={};this.style={setProperty(){}};this.children=[];this.listeners={};this.classes=new Set();this.classList={toggle:(name,on)=>on?this.classes.add(name):this.classes.delete(name)};}
-    addEventListener(name,fn){(this.listeners[name]??=[]).push(fn)}
-    setAttribute(){} focus(){} setPointerCapture(){} append(e){this.children.push(e)} replaceChildren(){this.children=[]}
-    getContext(){return context}
-    getBoundingClientRect(){return {left:0,top:0,width:320,height:180}}
-  }
-  const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
-  const touchButtons=["left","right","jump","switch"].map(key=>{const e=get(key);e.dataset.touch=key;return e});
-  const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Confirm"].map(n=>get(`screen${n}`));
-  const document={documentElement:get("html"),body:get("body"),hidden:false,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
-  const storage=new Map();if(seed)storage.set(data.SAVE_KEY,JSON.stringify(seed));
-  const sandbox={...data,...camera,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
-  sandbox.window={innerHeight:720,addEventListener:(name,fn)=>{(listeners.get(`window:${name}`)||listeners.set(`window:${name}`,[]).get(`window:${name}`)).push(fn)}};
-  const scope=vm.createContext(sandbox);vm.runInContext(source,scope);vm.runInContext("save.settings.sound=false",scope);
-  const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
-  return {run,json,storage,timers,drawCalls,get,rafCount:()=>rafCount,click(action,mission){const target={dataset:{action,mission},closest(){return this}};for(const fn of listeners.get("click")||[])fn({target})},pointer(id,event,values={}){for(const fn of get(id).listeners[event]||[])fn({preventDefault(){},pointerId:1,clientX:160,clientY:90,buttons:1,...values})},flush(){const pending=[...timers.values()];timers.clear();pending.forEach(fn=>fn())}};
-}
+import {runtime} from "./helpers/runtime.mjs";
 
 test("TITLE confirms, cancellation continues, acceptance discards only session and timers",()=>{
   const r=runtime({version:1,cleared:["M01"],unlocked:["A-01","S-02","L-03"]});
@@ -94,7 +67,7 @@ test("render fills background and ground past both camera edges; HUD is outside 
 });
 
 test("moving dynamic camera uses its current zoom for shots and retains world collision",()=>{
-  const r=runtime();r.run("startMission();game.player.x=1500;game.spawnIndex=SPAWNS.length;spawnEnemy('crawler',1900)");
+  const r=runtime();r.run("startMission();game.player.x=1500;game.director.stopped=true;spawnEnemy('crawler',1900)");
   const zooms=[];
   for(let i=0;i<240;i++){
     r.run("game.player.invuln=999;update(1/60)");
@@ -109,7 +82,7 @@ test("moving dynamic camera uses its current zoom for shots and retains world co
 });
 
 test("virtual movement, jump, switching and FIRE work while zoom changes",()=>{
-  const r=runtime();r.run("startMission();game.player.x=1000;game.spawnIndex=SPAWNS.length;spawnEnemy('crawler',1400)");
+  const r=runtime();r.run("startMission();game.player.x=1000;game.director.stopped=true;spawnEnemy('crawler',1400)");
   r.pointer("right","pointerdown");r.run("update(1/60)");assert.ok(r.run("game.player.x")>1000);
   r.pointer("right","pointerup");r.pointer("jump","pointerdown");r.run("update(1/60)");assert.ok(r.run("game.player.vy")<0);r.pointer("jump","pointerup");
   r.pointer("switch","pointerdown");assert.equal(r.run("game.player.weaponSlot"),1);
@@ -118,12 +91,11 @@ test("virtual movement, jump, switching and FIRE work while zoom changes",()=>{
   r.pointer("aimPad","pointerup");assert.equal(r.run("input.fire"),false);
 });
 
-test("boss attack loop progresses and camera releases after defeat; normal enemy cap stays 24",()=>{
-  const r=runtime();r.run("startMission();game.player.x=4200;game.spawnIndex=SPAWNS.length;startBoss();game.player.invuln=999;const b=game.enemies[0];b.timer=2.19;b.shotCd=0");
+test("boss attack loop progresses and camera releases after defeat",()=>{
+  const r=runtime();r.run("startMission();game.player.x=4200;startBoss();game.player.invuln=999;const b=game.enemies[0];b.timer=2.19;b.shotCd=0");
   for(let i=0;i<240;i++)r.run("update(1/60)");
   assert.equal(r.run("game.battleCamera.mode"),"boss");assert.ok(r.run("game.battleCamera.zoom")>=.35);assert.ok(r.run("game.battleCamera.zoom")<=.85);
   assert.ok(r.run("game.enemies[0].anim")>0);assert.ok(r.run("game.enemies[0].timer")!==2.19);
   r.run("damageEnemy(game.enemies[0],9999)");for(let i=0;i<180;i++)r.run("update(1/60)");
   assert.equal(r.run("game.battleCamera.mode"),"idle");assert.ok(Math.abs(r.run("view.zoom")-.5)<.002);
-  r.run("startMission();for(let i=0;i<100;i++)spawnEnemy('crawler',1000+i)");assert.equal(r.run("game.enemies.length"),24);
 });

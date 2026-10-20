@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=0.1.4">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.3</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.4</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -37,6 +37,7 @@
       <div id="screenEquip" class="screen">
         <p class="eyebrow">EQUIPMENT</p><h2>装備選択 <small>2つ選択</small></h2>
         <div id="weaponGrid" class="weapon-grid"></div><p id="equipMessage" class="equip-message">A-01とS-02を装備中</p>
+        <label class="density-setting" for="densitySelect">敵密度 <select id="densitySelect"><option value="LIGHT">LIGHT — 30体</option><option value="STANDARD" selected>STANDARD — 50体</option><option value="MASSIVE">MASSIVE — 100体</option></select><small>次のミッション開始時から適用</small></label>
         <div class="button-row"><button class="menu-button" data-action="back-mission">戻る</button><button class="menu-button menu-button--primary" data-action="deploy">出撃</button></div>
       </div>
       <div id="screenHowto" class="screen screen--panel">
@@ -64,6 +65,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js"></script>
+  <script type="module" src="js/game.js?v=0.1.4"></script>
 </body>
 </html>

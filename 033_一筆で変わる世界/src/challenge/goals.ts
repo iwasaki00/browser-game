@@ -1,6 +1,6 @@
-import { integer, type WorldState } from '../core/world';
+import { createWorld, integer, type WorldState } from '../core/world';
 import { type StepAccounting } from '../core/simulation';
-import { type StageDefinition } from './stage';
+import { stageWorld, type StageDefinition } from './stage';
 
 export interface TownProgress {
   id: string; name: string; currentIntake: number; requiredIntake?: number;
@@ -47,6 +47,14 @@ export class GoalTracker {
         if (p.currentDepth >= p.floodThreshold && p.firstFloodStep === null) p.firstFloodStep = world.step;
       }
     }
+  }
+  /** Independent working copy for a synchronized two-world transaction; no replay or shared history. */
+  fork(): GoalTracker {
+    const copy = new GoalTracker(this.stage, createWorld(stageWorld(this.stage)));
+    copy.step = this.step;
+    for (const [index, amount] of this.intakeTotals) copy.intakeTotals.set(index, amount);
+    copy.progress.splice(0, copy.progress.length, ...this.progress.map(town => ({ ...town })));
+    return copy;
   }
   result(): GoalResult {
     const goal = this.stage.goalDefinition;

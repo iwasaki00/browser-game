@@ -42,7 +42,7 @@ const solutions: Record<string, Direction[]>[] = [
   { a: ['L', 'R', 'R', 'L'] }, { a: ['L', 'R', 'R'], b: ['L', 'R'] },
 ];
 describe('five stage foundation', () => {
-  stages.forEach((stage, index) => {
+  stages.slice(0, 5).forEach((stage, index) => {
     it(`Stage ${index + 1} clears with its expected solution`, () => {
       const result = simulate(stage, solutions[index]);
       expect(result.clear).toBe(true);
