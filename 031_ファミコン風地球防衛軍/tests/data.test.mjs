@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {VERSION,VIEW,MISSIONS,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth,recordMissionClear,canPlayMission,missionStatus} from "../js/data.js";
+import {VERSION,BATTLE_CAMERA,MISSIONS,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth,recordMissionClear,canPlayMission,missionStatus} from "../js/data.js";
 
-test("all layouts use 0.70 world zoom with a wider view",()=>{
-  assert.equal(VERSION,"0.1.2");
-  for(const zoom of [VIEW.portraitZoom,VIEW.landscapeZoom,VIEW.pcZoom]){
-    assert.equal(zoom,.70);assert.ok(Math.abs(visibleWorldWidth(zoom)-457.142857)<.00001);
-  }
+test("dynamic camera has bounded zoom and a 0.50 idle view",()=>{
+  assert.equal(VERSION,"0.1.3");
+  assert.equal(BATTLE_CAMERA.minZoom,.35);assert.equal(BATTLE_CAMERA.maxZoom,.85);assert.equal(BATTLE_CAMERA.idleZoom,.50);
+  assert.ok(Math.abs(visibleWorldWidth(BATTLE_CAMERA.minZoom)-914.285714)<.00001);
+  assert.equal(visibleWorldWidth(BATTLE_CAMERA.idleZoom),640);
 });
 
 test("v1 save migration retains weapons, scores, settings and M01 clear",()=>{

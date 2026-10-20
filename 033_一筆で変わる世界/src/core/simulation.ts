@@ -1,5 +1,8 @@
 import { assertConservation, integer, MAX_STEPS, MAX_WATER, totalWater, type WorldState } from './world';
 
+export interface IntakeTransfer { index: number; amount: number }
+export interface StepAccounting { step: number; intakes: readonly IntakeTransfer[] }
+
 /** One adjacent pair, updated atomically with exactly the same transfer amount. */
 export function equalizePair(world: WorldState, a: number, b: number): number {
   const { width, water, heights } = world;
@@ -29,11 +32,12 @@ export function updateGroup(world: WorldState, group: number): void {
   }
 }
 /** Failed steps never commit a partially updated world. */
-export function stepWorld(world: WorldState): boolean {
+export function stepWorld(world: WorldState, observe?: (accounting: StepAccounting) => void): boolean {
   integer(world.step, 'ステップ', MAX_STEPS);
   assertConservation(world);
   if (world.step === MAX_STEPS) return false;
   const next = { ...world, water: world.water.slice() };
+  const intakes: IntakeTransfer[] = [];
   for (let i = 0; i < 4; i++) updateGroup(next, (world.step + i) % 4);
   for (const { index, rate } of next.sources) {
     next.water[index] = integer(next.water[index] + rate, '供給後水量', MAX_WATER);
@@ -46,6 +50,7 @@ export function stepWorld(world: WorldState): boolean {
       const amount = Math.min(next.water[index], rate);
       next.water[index] = integer(next.water[index] - amount, '除去後水量', MAX_WATER);
       next[key] = integer(next[key] + amount, key);
+      if (observe && key === 'cumulativeIntake') intakes.push({ index, amount });
     }
   }
   assertConservation(next);
@@ -54,5 +59,7 @@ export function stepWorld(world: WorldState): boolean {
   world.cumulativeIntake = next.cumulativeIntake;
   world.cumulativeOutlet = next.cumulativeOutlet;
   world.step++;
+  // Report actual, already-committed removals. Observers never remove water themselves.
+  observe?.({ step: world.step, intakes });
   return true;
 }

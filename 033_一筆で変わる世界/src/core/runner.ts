@@ -1,5 +1,10 @@
-import { stepWorld } from './simulation';
-import { createWorld, MAX_STEPS, type WorldDefinition, type WorldState } from './world';
+import { stepWorld, type StepAccounting } from './simulation';
+import { createWorld, integer, MAX_STEPS, type WorldDefinition, type WorldState } from './world';
+
+export interface RunnerOptions {
+  maxSteps?: number;
+  onStep?: (world: WorldState, accounting: StepAccounting) => void;
+}
 
 export const SPEEDS = [5, 20, 60] as const;
 export class SimulationRunner {
@@ -8,18 +13,22 @@ export class SimulationRunner {
   speed: number = 20;
   private elapsed = 0;
   private readonly initial: WorldDefinition;
-  constructor(definition: WorldDefinition) {
+  readonly maxSteps: number;
+  constructor(definition: WorldDefinition, private readonly options: RunnerOptions = {}) {
+    this.maxSteps = integer(options.maxSteps ?? MAX_STEPS, '最大ステップ', MAX_STEPS);
+    if (!this.maxSteps) throw new Error('最大ステップは1以上が必要です');
     const world = createWorld(definition);
     this.initial = { ...definition, heights: world.heights.slice(), water: world.water.slice(),
       protected: world.protected.slice(), sources: world.sources.map(e => ({ ...e })),
       intakes: world.intakes.map(e => ({ ...e })), outlets: world.outlets.map(e => ({ ...e })) };
     this.world = world;
   }
-  play(): void { if (this.world.step < MAX_STEPS) this.playing = true; }
+  play(): void { if (this.world.step < this.maxSteps) this.playing = true; }
   pause(): void { this.playing = false; this.elapsed = 0; }
   step(): boolean {
-    const advanced = stepWorld(this.world);
-    if (this.world.step === MAX_STEPS) this.pause();
+    if (this.world.step >= this.maxSteps) { this.pause(); return false; }
+    const advanced = stepWorld(this.world, this.options.onStep ? accounting => this.options.onStep!(this.world, accounting) : undefined);
+    if (this.world.step === this.maxSteps) this.pause();
     return advanced;
   }
   reset(): void { this.pause(); this.world = createWorld(this.initial); }

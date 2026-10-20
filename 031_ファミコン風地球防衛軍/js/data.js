@@ -1,12 +1,24 @@
-export const VERSION = "0.1.2";
+export const VERSION = "0.1.3";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
-  portraitZoom: 0.70,
-  landscapeZoom: 0.70,
-  pcZoom: 0.70,
   canvasWidth: 320,
   canvasHeight: 180
+});
+
+export const BATTLE_CAMERA = Object.freeze({
+  minZoom: .35, maxZoom: .85, idleZoom: .50,
+  evaluationDistance: 600, bandWidth: 100, evaluationInterval: .15,
+  distanceFalloff: 215, farZoom: .38,
+  crowdPenalty: .006, maxCrowdPenalty: .08,
+  rearWeight: .65, isolatedFarWeight: .18,
+  groupPadding: 48, groupScreenFraction: .80,
+  zoomDeadband: .015, candidateTolerance: .04,
+  engageHold: .30, idleHold: .45,
+  zoomInRate: 2.2, zoomOutRate: 2.6, positionRate: 5, directionRate: 4,
+  lookAhead: 32, playerMargin: 56,
+  bossMinZoom: .35, bossMaxZoom: .65, bossPadding: 100,
+  midbossMaxZoom: .70, midbossPadding: 80
 });
 
 export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;

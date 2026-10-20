@@ -80,9 +80,9 @@ test("actual shot direction follows the camera transform; world collision dimens
 
 test("render fills background and ground past both camera edges; HUD is outside world scale",()=>{
   const r=runtime();r.run("startMission();assetsReady=true;Object.keys(imageFiles).forEach(k=>images[k]=k)");
-  for(const x of [8,4775]){
-    r.drawCalls.length=0;r.run(`game.player.x=${x};game.camera=followCamera(${x},view.zoom);draw()`);
-    const calls=r.drawCalls,scaleIndex=calls.findIndex(c=>c[0]==="scale"&&c[1]===.7),lastRestore=calls.findLastIndex(c=>c[0]==="restore");
+  for(const zoom of [.35,.5,.85])for(const x of [8,4775]){
+    r.drawCalls.length=0;r.run(`game.player.x=${x};game.battleCamera.zoom=${zoom};game.battleCamera.x=followCamera(${x},${zoom});syncCameraView();draw()`);
+    const calls=r.drawCalls,scaleIndex=calls.findIndex(c=>c[0]==="scale"&&c[1]===zoom),lastRestore=calls.findLastIndex(c=>c[0]==="restore");
     assert.ok(scaleIndex>=0);assert.ok(calls.some((c,i)=>c[0]==="drawImage"&&c[1]==="bg"&&i>scaleIndex&&i<lastRestore));
     assert.ok(calls.some((c,i)=>c[0]==="fillText"&&String(c[1]).startsWith("HP")&&i>lastRestore));
     const bounds=r.json("viewBounds(game.camera,view.zoom)"),fill=calls.find(c=>c[0]==="fillRect"&&c[2]===data.WORLD.ground);

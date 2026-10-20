@@ -1,5 +1,5 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,SPAWNS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js";
-import {worldToScreen,clientToScreen,followCamera,viewBounds,aimTarget} from "./camera.js";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,SPAWNS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js";
+import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
@@ -12,7 +12,18 @@ let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play";
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
-const view={mode:"landscape",zoom:VIEW.landscapeZoom,width:VIEW.canvasWidth};
+const view={mode:"landscape",zoom:BATTLE_CAMERA.idleZoom,width:VIEW.canvasWidth/BATTLE_CAMERA.idleZoom};
+
+function syncCameraView(){
+  view.zoom=game?.battleCamera.zoom??BATTLE_CAMERA.idleZoom;
+  view.width=VIEW.canvasWidth/view.zoom;
+  if(game)game.camera=game.battleCamera.x;
+  canvas.dataset.viewZoom=view.zoom.toFixed(3);
+  canvas.dataset.visibleWorldWidth=view.width.toFixed(2);
+  canvas.dataset.targetZoom=(game?.battleCamera.targetZoom??BATTLE_CAMERA.idleZoom).toFixed(3);
+  canvas.dataset.cameraX=(game?.camera??0).toFixed(2);
+  canvas.dataset.cameraMode=game?.battleCamera.mode??"idle";
+}
 
 function updateViewport(){
   const viewport=window.visualViewport;
@@ -21,13 +32,9 @@ function updateViewport(){
   view.mode=matchMedia("(orientation: portrait)").matches?"portrait":"landscape";
   const touchDevice=matchMedia("(any-pointer: coarse)").matches||navigator.maxTouchPoints>0;
   document.documentElement.dataset.touchDevice=String(touchDevice);
-  view.zoom=touchDevice?(view.mode==="portrait"?VIEW.portraitZoom:VIEW.landscapeZoom):VIEW.pcZoom;
-  view.width=VIEW.canvasWidth/view.zoom;
   document.documentElement.dataset.layout=view.mode;
   gameShell.dataset.layout=view.mode;
-  canvas.dataset.viewZoom=view.zoom.toFixed(2);
-  canvas.dataset.visibleWorldWidth=view.width.toFixed(2);
-  if(game)game.camera=followCamera(game.player.x,view.zoom);
+  syncCameraView();
 }
 updateViewport();
 window.addEventListener("resize",updateViewport,{passive:true});
@@ -43,7 +50,7 @@ function loadAssets(){return Promise.all(Object.entries(imageFiles).map(([key,sr
 function show(name){if(name==="mission")renderMissionList();screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play");touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?`ゲーム画面。${game.missionId} 市街地防衛線を進行中`:`${name}画面`)}
 function scheduleMission(callback,delay){const current=game;const timer=setTimeout(()=>{missionTimers.delete(timer);if(game!==current)return;if(state==="confirm")deferredMissionCallbacks.push({current,callback});else callback()},delay);missionTimers.add(timer)}
 function missionScreen(name){if(state==="confirm")returnState=name;else show(name)}
-function discardMission(){for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;game=null;acc=0;resetInput();delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss}
+function discardMission(){for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;game=null;acc=0;resetInput();syncCameraView();delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss}
 function cancelTitle(){resetInput();show(returnState);for(const entry of deferredMissionCallbacks.splice(0))if(entry.current===game)entry.callback();if(state==="play")canvas.focus()}
 function requestTitle(){
   if(state==="confirm")return;
@@ -106,6 +113,7 @@ function startMission(id=selectedMissionId){
   game={missionId:id,time:0,score:0,kills:0,crates:0,camera:0,shake:0,area:-1,areaText:"",areaTimer:0,spawnIndex:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     player:{x:64,y:WORLD.ground-32,vx:0,vy:0,w:14,h:27,hp:100,maxHp:100,onGround:true,face:1,invuln:0,shotCd:0,switchCd:0,shootPose:0,weaponSlot:0,anim:0,dead:false},
     enemies:[],shots:[],enemyShots:[],effects:[],items:[{x:2050,y:WORLD.ground-25,type:"crate",alive:true}],platforms:[{x:520,y:120,w:80},{x:1220,y:105,w:96},{x:2700,y:116,w:72},{x:3500,y:100,w:90}]};
+  game.battleCamera=createBattleCamera(game.player);syncCameraView();
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
 }
 function pause(){if(state!=="play")return;show("pause");resetInput()}
@@ -127,7 +135,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;g.ti
   const move=(input.right?1:0)-(input.left?1:0);p.vx=move*95;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-220;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
   let floor=WORLD.ground-32;for(const pl of g.platforms){if(p.x+7>pl.x&&p.x-7<pl.x+pl.w&&p.y+32<=pl.y+8&&p.y+32+p.vy*dt>=pl.y)floor=Math.min(floor,pl.y-32)}if(p.y>=floor){p.y=floor;p.vy=0;p.onGround=true}else p.onGround=false;
   if(g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=clamp(p.x,4100,4760);
-  g.camera=followCamera(p.x,view.zoom);p.anim+=dt*(Math.abs(p.vx)>0?10:4);
+  updateBattleCamera(g.battleCamera,p,g.enemies,g,dt);syncCameraView();p.anim+=dt*(Math.abs(p.vx)>0?10:4);
   if(input.fire)shoot();
   while(g.spawnIndex<SPAWNS.length&&p.x>SPAWNS[g.spawnIndex][0])spawnGroup(SPAWNS[g.spawnIndex++]);
   for(let i=g.area+1;i<MISSION_AREAS.length;i++)if(p.x>=MISSION_AREAS[i].x)announceArea(i);
