@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F7F4E8" />
+    <meta name="description" content="分岐の循環パターンを設定して、荷物を正しい出口へ届ける小さな配送パズル。" />
+    <title>すれ違い郵便局 — SORT &amp; SEND</title>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <a class="back" href="../../../index.html">← ゲーム一覧</a>
+        <span class="version">0.1.0 — CORE PLAYABLE</span>
+      </header>
+      <div class="title-row"><div><p class="eyebrow">すれ違い郵便局</p><h1>SORT <span>&amp;</span> SEND<span class="title-dot">●</span></h1></div><p class="intro">小さな分岐で、届け先が変わる。<br>矢印を組んで、配送をはじめよう。</p></div>
+      <section class="stage-heading"><div><span class="eyebrow">TODAY'S DELIVERY</span><h2>STAGE 01「はじめての分岐」</h2></div><span id="mode" class="mode">DESIGN</span></section>
+      <div class="workspace">
+        <section class="board-panel" aria-label="配送盤面">
+          <div class="board-top"><span>配送順序</span><ol class="queue"><li><span class="parcel red">●</span><small>01 RED</small></li><li><span class="parcel blue">▲</span><small>02 BLUE</small></li><li><span class="parcel red">●</span><small>03 RED</small></li></ol><span class="tick" id="tick">READY</span></div>
+          <canvas id="board" role="img" aria-label="Sourceから分岐Aへ進み、左は丸印のRED出口、右は三角印のBLUE出口へつながる配送路。"></canvas>
+          <div class="board-footer"><span><i></i> ROUTE 01 / 分岐 A</span><span>● RED は左へ · ▲ BLUE は右へ</span></div>
+        </section>
+        <aside class="controls">
+          <section class="switch-panel"><p class="eyebrow">PATTERN CONTROL</p><div class="panel-title"><h3>分岐 A</h3><span>2 STEP LOOP</span></div><p class="help">荷物が通るたび、次の矢印へ。<br>2枚目の次は、1枚目に戻ります。</p><div class="pattern"><button class="arrow-card" id="step-0" type="button"></button><span class="loop-link" aria-hidden="true">→</span><button class="arrow-card" id="step-1" type="button"></button></div><p class="tap-note">↻ タップで L / R を切り替え</p><button class="primary" id="start" type="button">配送開始 <span aria-hidden="true">↗</span></button><div class="secondary-actions"><button id="retry" type="button">再挑戦</button><button id="reset" type="button">初期設定に戻す</button></div></section>
+          <section class="result-panel" aria-labelledby="result-title"><p class="eyebrow">DELIVERY REPORT</p><div id="report" role="status" aria-live="polite"><h3 id="result-title">配送の準備中</h3><p>丸印は左、三角印は右。<br>2枚の矢印で、3個を届けよう。</p></div></section>
+        </aside>
+      </div>
+      <footer class="page-footer"><span>SET THE LOOP. SEND WITH CARE.</span><span>すれ違い郵便局 / SORT &amp; SEND</span></footer>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
