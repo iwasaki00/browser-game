@@ -1,9 +1,12 @@
 import { TerrainType, type WorldState } from './core/world';
 import { type CellEdit, type Segment, type StrokePreview } from './core/stroke';
 import { worldToScreen, type Camera, type Viewport } from './input/camera';
+import { type TownDefinition } from './challenge/stage';
+import { type TownProgress } from './challenge/goals';
 
 interface RenderOptions {
   camera: Camera; viewport: Viewport; preview: StrokePreview | null; edits: readonly CellEdit[];
+  towns?: readonly TownDefinition[]; townProgress?: readonly TownProgress[];
 }
 export function drawWorld(context: CanvasRenderingContext2D, world: WorldState, view: string,
   selected: number | null, options: RenderOptions): void {
@@ -62,6 +65,23 @@ export function drawWorld(context: CanvasRenderingContext2D, world: WorldState, 
     else if (type === TerrainType.Intake) { context.moveTo(x, y - .7); context.lineTo(x + .7, y); context.lineTo(x, y + .7); context.lineTo(x - .7, y); context.closePath(); }
     else context.rect(x - .6, y - .6, 1.2, 1.2);
     context.fill(); context.stroke();
+  }
+  for (const town of options.towns ?? []) {
+    const x = town.centerCell % world.width + .5, y = Math.floor(town.centerCell / world.width) + .5;
+    const progress = options.townProgress?.find(p => p.id === town.id);
+    const flooding = world.water[town.centerCell] >= town.floodThreshold;
+    context.fillStyle = flooding ? '#fa8d8d' : '#f0f4e4'; context.strokeStyle = '#13252c'; context.lineWidth = .08;
+    context.beginPath(); context.moveTo(x - .55, y - .1); context.lineTo(x, y - .65); context.lineTo(x + .55, y - .1);
+    context.lineTo(x + .45, y - .1); context.lineTo(x + .45, y + .5); context.lineTo(x - .45, y + .5);
+    context.lineTo(x - .45, y - .1); context.closePath(); context.fill(); context.stroke();
+    context.fillStyle = '#2d5263'; context.fillRect(x - .12, y + .08, .24, .42);
+    if (progress?.firstFloodStep !== null && progress?.firstFloodStep !== undefined) {
+      context.strokeStyle = '#ff9c68'; context.lineWidth = .1; context.strokeRect(x - .7, y - .8, 1.4, 1.5);
+    }
+    context.font = '.36px system-ui'; context.textAlign = 'center'; context.textBaseline = 'bottom';
+    const labelWidth = context.measureText(town.name).width + .3;
+    context.fillStyle = '#13252cdd'; context.fillRect(x - labelWidth / 2, y - 1.26, labelWidth, .5);
+    context.fillStyle = '#f0f4e4'; context.fillText(town.name, x, y - .8);
   }
   if (selected !== null) {
     context.strokeStyle = '#fff'; context.lineWidth = .16;

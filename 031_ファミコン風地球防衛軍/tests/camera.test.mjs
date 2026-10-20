@@ -66,6 +66,7 @@ test("hysteresis ignores transient enemies and death smoothly returns to idle",(
   settle(c,p,near);assert.ok(c.zoom>.78);
   const before=c.zoom;near[0].dead=true;updateBattleCamera(c,p,near,{},1/60);
   assert.ok(Math.abs(c.zoom-before)<.02);settle(c,p,near);assert.ok(Math.abs(c.zoom-.5)<.001);
+  c.targetZoom=.51;c.zoom=.51;settle(c,p,[]);close(c.targetZoom,.5);assert.ok(Math.abs(c.zoom-.5)<.001);
 });
 
 test("mixed groups and boundary jitter do not cause zoom oscillation",()=>{

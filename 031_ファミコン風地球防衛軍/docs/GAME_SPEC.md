@@ -1,13 +1,14 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.1.2 — WIDE VIEW & STAGE PROGRESSION
+- Version: 0.1.3 — DYNAMIC BATTLE CAMERA
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
 - ステージ: M01 市街地防衛線、幅4,800px、5エリア
 - プレイヤー: HP100、移動95px/s、ジャンプ-220px/s、重力620px/s²、無敵1秒
 - 進行: タイトル → ミッション選択 → 装備選択 → 本編 → リザルト → 武器解放
 - 対応入力: PCキーボード＋マウス、タッチ仮想パッド
 - モバイル表示: landscape推奨、左右にタッチ操作。portraitはCanvas上段・仮想パッド下段の2段構成を継続
-- カメラ倍率: PC・landscape・portraitとも0.70、横可視範囲約457.14ワールドpx。HUDは独立した画面座標
+- カメラ倍率: PC・landscape・portrait共通で戦況に応じて0.35〜0.85。敵なしは0.50、横可視範囲約376〜914ワールドpx。HUDは独立した画面座標
+- カメラ評価: 600ワールドpx以内のアクティブ敵を前後100px距離帯で0.15秒ごとに集計。距離・敵数・広がり・進行方向・ボス状態を使用し、時間ベースで滑らかに追従
 - 保存: localStorage形式v2（clearedMissions、unlockedMissions、解放武器、装備、最高スコア、最短時間、設定）。旧形式v1から移行
 - ミッション: 実装済みはM01のみ。M01クリアでM02解放を記録するが、M02はCOMING SOONとして無効化
 - タイトル復帰: ゲーム内確認→ミッションと演出予約を破棄、進行記録を保持。単一のゲームループを継続

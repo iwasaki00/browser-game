@@ -1,6 +1,6 @@
 # モバイルレイアウト仕様
 
-対象: Version 0.1.2 — WIDE VIEW & STAGE PROGRESSION
+対象: Version 0.1.3 — DYNAMIC BATTLE CAMERA
 
 ## レイアウトモード
 
@@ -15,15 +15,47 @@ portraitのヘッダーに小さく「横向き推奨」を表示し、向きを
 
 ## ワールドの描画倍率
 
-- 定数: `VIEW.portraitZoom = 0.70`、`VIEW.landscapeZoom = 0.70`、`VIEW.pcZoom = 0.70`
+- 定数: `BATTLE_CAMERA.minZoom = 0.35`、`maxZoom = 0.85`、`idleZoom = 0.50`。PC・landscape・portraitで共通の自動ズーム
 - 320×180 Canvasは維持し、ワールド描画時のカメラ変換へ倍率を適用する。
-- 横方向の可視範囲は `320 / zoom` で算出し、全モード約457.14ワールドピクセルとなる。
+- 横方向の可視範囲は `320 / 現在倍率` で算出し、約376.47〜914.29ワールドpx（敵なしは640px）となる。
 - 地面の画面位置は148pxへ固定し、背景、プレイヤー、敵、弾、地形、アイテム、エフェクトを同倍率で描画する。HUD（HP・武器・ボスHP）は等倍の画面座標を使う。
-- `js/camera.js` の `worldToScreen` / `screenToWorld` / `clientToScreen` / `followCamera` / `viewBounds` で座標系を統一する。カメラ追従位置は `playerX - 105 / zoom`、端はワールド幅から可視幅を引いて制限する。
+- `js/camera.js` の `worldToScreen` / `screenToWorld` / `clientToScreen` / `viewBounds` で座標系を統一する。位置と倍率は `createBattleCamera` / `evaluateBattleCamera` / `updateBattleCamera` で管理し、端はワールド幅から現在の可視幅を引いて制限する。
 - マウス照準は逆変換、タッチ照準は発射位置からパッド方向ベクトルへ変換する。中央タップはプレイヤーの向いている方向へ水平射撃する。
 - 背景を横に繰り返し、拡大した上下範囲を空・地面で埋める。地形タイルを可視範囲の両端より外まで敷き、カメラ端や画面揺れでも空白を出さない。
 - 弾の画面外判定は `viewBounds` から算出する。敵カリングと画面外再配置も可視幅を使用する。出現トリガーはプレイヤーのワールド位置を維持する。
 - Canvasの `imageSmoothingEnabled=false` とCSSの `image-rendering` でnearest-neighborを維持する。
+
+## 自動ズームの評価と追従
+
+調整値は `js/data.js` の `BATTLE_CAMERA` に集約する。ミッション単位でカメラ状態と集計バッファを作り、リトライ時は初期化する。セーブには追加項目を持たせない。
+
+| パラメータ | 初期値 | 用途 |
+| --- | --- | --- |
+| minZoom / maxZoom / idleZoom | 0.35 / 0.85 / 0.50 | 全体の倍率制限と敵なし基準 |
+| evaluationDistance / bandWidth | 600 / 100ワールドpx | 評価半径と前後各6帯の集計 |
+| evaluationInterval | 0.15秒 | 評価間隔 |
+| farZoom / distanceFalloff | 0.38 / 215px | 距離に対する連続曲線 |
+| crowdPenalty / maxCrowdPenalty | 0.006 / 0.08 | 3体を超える有効敵数の倍率補正 |
+| crowdFreeCount / isolationDistance / isolatedGroupLimit | 3体 / 200px / 2体 | 集団補正と単独外れ値判定の閾値 |
+| rearWeight / isolatedFarWeight | 0.65 / 0.18 | 後方と遠方単独外れ値の重み |
+| groupPadding / groupScreenFraction | 48ワールドpx / 0.80 | 集団全体を収める余裕 |
+| zoomDeadband / candidateTolerance | 0.015 / 0.04 | 小振動の抑止と候補倍率の安定判定 |
+| engageHold / idleHold | 0.30 / 0.45秒 | 目標採用までの安定待ち |
+| zoomInRate / zoomOutRate / positionRate | 2.2 / 2.6 / 5（毎秒） | 指数補間の追従速度 |
+| lookAhead / playerMargin | 32 / 56画面px | 前方余白とプレイヤーの安全域 |
+| bossMinZoom / bossMaxZoom / bossPadding | 0.35 / 0.65 / 100ワールドpx | ボス戦の制限と攻撃視認用の余裕 |
+| midbossMaxZoom / midbossPadding | 0.70 / 80ワールドpx | 中ボスの構図 |
+
+1. `game.enemies` の実在する敵を1回走査する。死亡、HP0以下、`active=false`、`spawned=false`、評価距離外を除外する。描画カリングや将来の出現予定は参照しない。
+2. 前後100px帯ごとに敵数・距離合計・左右端を集計する。重みは敵数の平方根、後方係数、単独外れ値係数を組み合わせる。200px超の単独帯で隣接帯にも敵がいない場合、距離分布への寄与を弱め、集団の左右端から除外する（総数2体以下は除外しない）。
+3. 基本目標は `farZoom + (maxZoom - farZoom) × exp(-重み付き距離 / distanceFalloff)`。敵数補正を引き、集団の左右端とプレイヤーを80%の画面幅へ収める倍率との小さい方を採用する。距離帯は集計用であり、倍率を段階切替しない。
+4. 目標は0.30秒安定してから採用し、差0.015以下は維持する。敵なしへ戻るときは0.45秒待つ。現在倍率と位置は `目標 + (現在 - 目標) × exp(-追従速度 × dt)` で更新し、倍率を常に0.35〜0.85へ制限する。
+5. 移動速度の符号を進行方向とし、照準による向き変更では前方余白を反転しない。前方32画面pxの余裕を滑らかに切り替え、可能なら評価した集団の両端も画面に収める。ワールド端の制限を優先しつつ、それ以外ではプレイヤーを左右56画面pxの安全域に保つ。
+6. ボス戦では生存ボスとプレイヤーの左右端＋余白から目標を計算する。通常敵の召喚数はボス構図の倍率に使用しない。中ボスにも専用構図を使い、死亡後は通常評価へ自然に戻す。
+
+距離帯バッファ4本はTypedArrayで再利用する。評価は `O(敵数 + 12帯)`、フレームごとの追従は `O(1)`。カメラ処理は配列のソートや敵ごとの一時オブジェクトを生成しない。現在の敵数上限24体は変更しない。
+
+照準・弾・爆発・背景・敵は補間中の**現在倍率と現在位置**を使用する。HUDと仮想パッドはワールド変換の外で表示する。画面サイズの変更時もカメラ倍率を基準値にリセットしない。
 
 ## iPhone Safari対応
 

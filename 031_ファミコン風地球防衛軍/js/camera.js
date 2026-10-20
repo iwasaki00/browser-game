@@ -70,7 +70,9 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   for(let i=0;i<camera.counts.length;i++){
     const n=camera.counts[i];if(!n)continue;
     const average=camera.distances[i]/n;
-    const isolated=n===1&&average>200&&count>2;
+    const localBand=i%half;
+    const neighbors=(localBand>0?camera.counts[i-1]:0)+(localBand<half-1?camera.counts[i+1]:0);
+    const isolated=n===1&&average>c.isolationDistance&&count>c.isolatedGroupLimit&&neighbors===0;
     const ahead=(i<half)===(camera.direction>0);
     const relevance=(isolated?c.isolatedFarWeight:1)*(ahead?1:c.rearWeight);
     const weight=Math.sqrt(n)*relevance;
@@ -81,7 +83,7 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   if(count){
     const distance=distanceSum/weightSum;
     raw=c.farZoom+(c.maxZoom-c.farZoom)*Math.exp(-distance/c.distanceFalloff);
-    raw-=Math.min(c.maxCrowdPenalty,Math.max(0,weightedCount-3)*c.crowdPenalty);
+    raw-=Math.min(c.maxCrowdPenalty,Math.max(0,weightedCount-c.crowdFreeCount)*c.crowdPenalty);
     raw=Math.min(raw,VIEW.canvasWidth*c.groupScreenFraction/(right-left+2*c.groupPadding));
     focusX=(left+right)/2;
     mode="battle";
@@ -101,7 +103,7 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
     camera.candidateMode=mode;camera.candidateZoom=raw;camera.stableTime=0;
   }else{camera.candidateZoom=raw;camera.stableTime+=elapsed}
   const hold=mode==="idle"?c.idleHold:c.engageHold;
-  if(camera.stableTime+1e-9>=hold&&Math.abs(raw-camera.targetZoom)>c.zoomDeadband)camera.targetZoom=raw;
+  if(camera.stableTime+1e-9>=hold&&(mode==="idle"||Math.abs(raw-camera.targetZoom)>c.zoomDeadband))camera.targetZoom=raw;
   return camera;
 }
 

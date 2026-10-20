@@ -188,7 +188,7 @@ function draw(){
 function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
   // The zoom reveals sky above the original artwork. Fill it and repeat the city horizontally.
-  ctx.fillStyle="#07101c";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
+  ctx.fillStyle="#040a16";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
   for(let x=start-320;x<bounds.right+320;x+=320)ctx.drawImage(images.bg,x,0);
 }
 function drawWorld(g){

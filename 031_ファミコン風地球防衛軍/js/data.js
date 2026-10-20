@@ -11,6 +11,7 @@ export const BATTLE_CAMERA = Object.freeze({
   evaluationDistance: 600, bandWidth: 100, evaluationInterval: .15,
   distanceFalloff: 215, farZoom: .38,
   crowdPenalty: .006, maxCrowdPenalty: .08,
+  crowdFreeCount: 3, isolationDistance: 200, isolatedGroupLimit: 2,
   rearWeight: .65, isolatedFarWeight: .18,
   groupPadding: 48, groupScreenFraction: .80,
   zoomDeadband: .015, candidateTolerance: .04,

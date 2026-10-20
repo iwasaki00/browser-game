@@ -81,6 +81,8 @@ export function loadStage(input: StageDefinition): StageDefinition {
     || !Array.isArray(goal.townIds) || !goal.townIds.length || new Set(goal.townIds).size !== goal.townIds.length
     || goal.townIds.some(id => !townIds.has(id))) throw new Error('目標の種類・町参照が不正です');
   const checkpoint = (value: number | undefined, label: string) => integer(value!, label, input.maxSimulationSteps);
+  if (goal.deliveryDeadlineStep !== undefined) checkpoint(goal.deliveryDeadlineStep, '給水期限');
+  if (goal.floodObservationEndStep !== undefined) checkpoint(goal.floodObservationEndStep, '浸水観測終了');
   if (goal.type !== 'FLOOD_PREVENTION') {
     checkpoint(goal.deliveryDeadlineStep, '給水期限');
     if (input.towns.some(t => goal.townIds.includes(t.id) && !t.linkedIntakeId)) throw new Error('給水目標には町の取水施設が必要です');
