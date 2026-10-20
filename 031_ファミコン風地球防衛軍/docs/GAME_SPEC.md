@@ -1,11 +1,12 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.1.0 — First Mission
+- Version: 0.1.1 — PORTRAIT LAYOUT TUNE
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
 - ステージ: M01 市街地防衛線、幅4,800px、5エリア
 - プレイヤー: HP100、移動95px/s、ジャンプ-220px/s、重力620px/s²、無敵1秒
 - 進行: タイトル → ミッション選択 → 装備選択 → 本編 → リザルト → 武器解放
 - 対応入力: PCキーボード＋マウス、タッチ仮想パッド
+- モバイル表示: portraitを主表示とし、Canvas上段・仮想パッド下段の2段構成。portraitカメラ倍率0.80
 - 保存: localStorage（クリア、解放武器、装備、最高スコア、最短時間、設定）
 
 原典はユーザー提供のVersion 0.1.0詳細設計。実装値は `js/data.js` を正とする。

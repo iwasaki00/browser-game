@@ -1,6 +1,14 @@
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
+export const VIEW = Object.freeze({
+  portraitZoom: 0.80,
+  landscapeZoom: 1.00,
+  canvasWidth: 320,
+  canvasHeight: 180
+});
+
+export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;
 
 export const WEAPONS = [
   { id:"A-01", name:"アサルト", type:"bullet", damage:8, interval:.12, speed:310, range:340, color:"#37e8df", detail:"高速直進弾" },

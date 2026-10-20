@@ -1,18 +1,37 @@
-import {VERSION,SAVE_KEY,WORLD,WEAPONS,ENEMY_TYPES,MISSION_AREAS,SPAWNS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward} from "./data.js";
+import {VERSION,SAVE_KEY,WORLD,VIEW,WEAPONS,ENEMY_TYPES,MISSION_AREAS,SPAWNS,DEFAULT_SAVE,clamp,distance,sanitizeSave,pickReward} from "./data.js";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
 const screens=[...document.querySelectorAll(".screen")],weaponGrid=document.querySelector("#weaponGrid");
 const equipMessage=document.querySelector("#equipMessage"),touchControls=document.querySelector("#touchControls");
+const gameShell=document.querySelector("#gameShell");
 const images={};
 const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png",shots:"assets/sprites/weapons/projectiles.png",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped];
+const view={mode:"landscape",zoom:VIEW.landscapeZoom,width:VIEW.canvasWidth};
+
+function updateViewport(){
+  const viewport=window.visualViewport;
+  const viewportHeight=Math.round(viewport?.height||window.innerHeight);
+  document.documentElement.style.setProperty("--app-height",`${viewportHeight}px`);
+  view.mode=matchMedia("(orientation: portrait)").matches?"portrait":"landscape";
+  view.zoom=view.mode==="portrait"?VIEW.portraitZoom:VIEW.landscapeZoom;
+  view.width=VIEW.canvasWidth/view.zoom;
+  document.documentElement.dataset.layout=view.mode;
+  gameShell.dataset.layout=view.mode;
+  canvas.dataset.viewZoom=view.zoom.toFixed(2);
+}
+updateViewport();
+window.addEventListener("resize",updateViewport,{passive:true});
+window.addEventListener("orientationchange",()=>requestAnimationFrame(updateViewport),{passive:true});
+window.visualViewport?.addEventListener("resize",updateViewport,{passive:true});
+window.visualViewport?.addEventListener("scroll",updateViewport,{passive:true});
 
 function loadSave(){try{return sanitizeSave(JSON.parse(localStorage.getItem(SAVE_KEY)))}catch{return sanitizeSave(DEFAULT_SAVE)}}
 function storeSave(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch{}}
 function loadAssets(){return Promise.all(Object.entries(imageFiles).map(([key,src])=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{images[key]=im;resolve()};im.onerror=reject;im.src=src}))).then(()=>assetsReady=true)}
-function show(name){screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.setAttribute("aria-label",name==="play"?"ゲーム画面。M01 市街地防衛線を進行中":`${name}画面`)}
+function show(name){screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play");touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.setAttribute("aria-label",name==="play"?"ゲーム画面。M01 市街地防衛線を進行中":`${name}画面`)}
 function weapon(id){return WEAPONS.find(w=>w.id===id)}
 function formatTime(t){const m=Math.floor(t/60),s=Math.floor(t%60),ms=Math.floor(t*100)%100;return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(ms).padStart(2,"0")}`}
 
@@ -69,7 +88,7 @@ function spawnEnemy(type,x,y=null){if(type!=="boss"&&game.enemies.filter(e=>!e.d
 function spawnGroup(entry){const [x,type,count,gap]=entry;for(let i=0;i<count;i++)spawnEnemy(type,x+200+i*gap)}
 function startBoss(){game.bossStarted=true;game.enemies.length=0;game.enemyShots.length=0;spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー";game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
 
-function shoot(){const p=game.player,w=weapon(save.equipped[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13,worldAimX=input.aimX+game.camera,worldAimY=input.aimY;let dx=worldAimX-px,dy=worldAimY-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
+function shoot(){const p=game.player,w=weapon(save.equipped[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13,worldAimX=input.aimX/view.zoom+game.camera,worldAimY=WORLD.ground-(WORLD.ground-input.aimY)/view.zoom;let dx=worldAimX-px,dy=worldAimY-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
   const make=(ang=0,offset=0)=>{const ca=Math.cos(ang),sa=Math.sin(ang),vx=(dx*ca-dy*sa)*w.speed,vy=(dx*sa+dy*ca)*w.speed;game.shots.push({x:px,y:py+offset,vx,vy,w:7,h:4,life:w.range/w.speed,type:w.type,damage:w.damage,pierce:w.pierce||0,radius:w.radius||0,rehit:{},weapon:w})};
   if(w.type==="spread")[-.34,-.17,0,.17,.34].forEach(a=>make(a));else if(w.type==="homing"){make(-.1,-2);make(.1,3)}else make();
   p.shootPose=.11;game.effects.push({x:px,y:py,kind:"muzzle",life:.09,max:.09});tone(w.type==="rocket"||w.type==="grenade"?95:220+w.damage*8,.04,w.type==="laser"?"sawtooth":"square",.018);
@@ -79,7 +98,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;g.ti
   const move=(input.right?1:0)-(input.left?1:0);p.vx=move*95;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-220;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
   let floor=WORLD.ground-32;for(const pl of g.platforms){if(p.x+7>pl.x&&p.x-7<pl.x+pl.w&&p.y+32<=pl.y+8&&p.y+32+p.vy*dt>=pl.y)floor=Math.min(floor,pl.y-32)}if(p.y>=floor){p.y=floor;p.vy=0;p.onGround=true}else p.onGround=false;
   if(g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=clamp(p.x,4100,4760);
-  g.camera=clamp(p.x-105,0,WORLD.width-320);p.anim+=dt*(Math.abs(p.vx)>0?10:4);
+  g.camera=clamp(p.x-105/view.zoom,0,WORLD.width-view.width);p.anim+=dt*(Math.abs(p.vx)>0?10:4);
   if(input.fire)shoot();
   while(g.spawnIndex<SPAWNS.length&&p.x>SPAWNS[g.spawnIndex][0])spawnGroup(SPAWNS[g.spawnIndex++]);
   for(let i=g.area+1;i<MISSION_AREAS.length;i++)if(p.x>=MISSION_AREAS[i].x)announceArea(i);
@@ -96,7 +115,7 @@ function updateShots(dt){for(const s of game.shots){s.life-=dt;if(s.type==="gren
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
     for(const e of game.enemies){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const next=game.enemies.filter(n=>!n.dead&&!seen.has(n)&&distance(from,n)<85).sort((a,b)=>distance(from,a)-distance(from,b))[0];if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75);game.effects.push({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
       if(s.radius){explode(s);s.dead=true}else if(s.pierce>0){s.pierce--}else s.dead=true}}
-  }game.shots=game.shots.filter(s=>!s.dead&&s.x>game.camera-30&&s.x<game.camera+380&&s.y>-30&&s.y<200)}
+  }game.shots=game.shots.filter(s=>!s.dead&&s.x>game.camera-30&&s.x<game.camera+view.width+60&&s.y>-45&&s.y<225)}
 
 function updateEnemies(dt){const p=game.player;for(const e of game.enemies){e.anim+=dt*7;e.attackFlash=Math.max(0,e.attackFlash-dt);if(e.dead){e.death-=dt;continue}const t=ENEMY_TYPES[e.type];e.shotCd-=dt;e.face=p.x>=e.x?1:-1;
     if(e.type==="crawler"){e.x+=Math.sign(p.x-e.x)*t.speed*dt}
@@ -104,24 +123,25 @@ function updateEnemies(dt){const p=game.player;for(const e of game.enemies){e.an
     if(e.type==="needle"){e.x+=Math.sign(p.x-e.x)*t.speed*.75*dt;e.y=e.baseY+Math.sin(e.anim*.9)*19;if(Math.abs(e.x-p.x)<85)e.y+=clamp((p.y-e.y)*dt*2.2,-3,3)}
     if(e.type==="beetle"){if(Math.abs(e.x-p.x)>150)e.x+=Math.sign(p.x-e.x)*t.speed*dt;if(e.shotCd<=0){enemyBurst(e,3,155);e.shotCd=1.8}}
     if(e.type==="boss")updateBoss(e,dt);
-    if(e.x<game.camera-80&&e.type!=="boss")e.x=game.camera+360;
+    if(e.x<game.camera-80&&e.type!=="boss")e.x=game.camera+view.width+40;
     const pb={x:p.x,y:p.y+16,w:p.w,h:p.h},eb={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect(pb,eb))hurtPlayer(t.damage,e.x)
   }game.enemies=game.enemies.filter(e=>!e.dead||e.death>0)}
 function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0:e.hp>400?1:2;if(e.phase==="charge"){e.x+=e.vx*dt;if(e.x<4130||e.x>4720){e.x=clamp(e.x,4130,4720);e.vx*=-1;e.phase="move";e.timer=0}}else{e.x+=Math.sign((phase===2?p.x:4540)-e.x)*ENEMY_TYPES.boss.speed*(phase===2?.45:.18)*dt;if(e.timer>2.2-phase*.3){e.timer=0;const action=Math.floor(Math.random()*3);if(action===0)enemyBurst(e,5,130);else if(action===1){for(let i=0;i<2+phase;i++)spawnEnemy("crawler",e.x+30+i*25)}else{e.phase="charge";e.vx=Math.sign(p.x-e.x)*(100+phase*25)}}}}
 function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:ENEMY_TYPES[e.type].damage*.6})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
 function hurtPlayer(amount,sourceX){const p=game.player;if(p.invuln>0||p.dead||game.clear)return;p.hp=Math.max(0,p.hp-amount);p.invuln=1;p.vx=sourceX<p.x?60:-60;p.vy=-90;game.shake=4;tone(55,.15,"sawtooth",.04)}
-function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}game.enemyShots=game.enemyShots.filter(s=>!s.dead&&s.life>0&&s.x>game.camera-20&&s.x<game.camera+340&&s.y>-20&&s.y<200)}
+function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}game.enemyShots=game.enemyShots.filter(s=>!s.dead&&s.life>0&&s.x>game.camera-20&&s.x<game.camera+view.width+20&&s.y>-35&&s.y<225)}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(100,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6}
 function updateEffects(dt){for(const f of game.effects)f.life-=dt;game.effects=game.effects.filter(f=>f.life>0)}
 
 function completeMission(){if(!game||game.clear)return;game.clear=true;const reward=pickReward(save.unlocked);if(reward)save.unlocked.push(reward);if(!save.cleared.includes("M01"))save.cleared.push("M01");save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL COMPLETE</span><strong>全武器取得済み</strong>`;setTimeout(()=>show("result"),500)}
 
-function draw(){if(!assetsReady){ctx.fillStyle="#050915";ctx.fillRect(0,0,320,180);return}if(!game||state!=="play"&&state!=="pause"){ctx.drawImage(images.bg,0,0);return}const g=game,p=g.player,shake=g.shake&&save.settings.shake?(Math.random()-.5)*g.shake:0;ctx.save();ctx.translate(Math.round(shake),Math.round(shake));drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(p,g.camera);drawEffects(g);ctx.restore();drawHud(g)}
-function drawWorld(g){ctx.drawImage(images.bg,0,0);const par=-Math.floor(g.camera*.18)%320;ctx.globalAlpha=.45;ctx.drawImage(images.bg,par,0);ctx.drawImage(images.bg,par+320,0);ctx.globalAlpha=1;ctx.fillStyle="#0b1825";ctx.fillRect(0,WORLD.ground,320,32);for(let x=-g.camera%16;x<320;x+=16)ctx.drawImage(images.tiles,((Math.floor((x+g.camera)/16)%8+8)%8)*16,0,16,16,Math.floor(x),WORLD.ground,16,16);ctx.fillStyle="#d4b944";for(let x=-g.camera%40;x<320;x+=40)ctx.fillRect(x,168,19,2);for(const pl of g.platforms){const sx=pl.x-g.camera;if(sx>-pl.w&&sx<320){ctx.fillStyle="#203e4a";ctx.fillRect(sx,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(sx,pl.y,pl.w,2)}}for(const a of MISSION_AREAS){const sx=a.x-g.camera;if(sx>0&&sx<320){ctx.fillStyle="#37e8df44";ctx.fillRect(sx,30,1,118)}}}
+function draw(){if(!assetsReady){ctx.fillStyle="#050915";ctx.fillRect(0,0,320,180);return}if(!game||state!=="play"&&state!=="pause"){ctx.drawImage(images.bg,0,0);return}const g=game,p=g.player,shake=g.shake&&save.settings.shake?(Math.random()-.5)*g.shake:0;drawBackdrop(g);ctx.save();ctx.translate(Math.round(shake),Math.round(shake));ctx.translate(0,WORLD.ground*(1-view.zoom));ctx.scale(view.zoom,view.zoom);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(p,g.camera);drawEffects(g);ctx.restore();drawHud(g)}
+function drawBackdrop(g){ctx.drawImage(images.bg,0,0);const par=-Math.floor(g.camera*view.zoom*.18)%320;ctx.globalAlpha=.45;ctx.drawImage(images.bg,par,0);ctx.drawImage(images.bg,par+320,0);ctx.globalAlpha=1}
+function drawWorld(g){ctx.fillStyle="#0b1825";ctx.fillRect(0,WORLD.ground,view.width,40/view.zoom);for(let x=-g.camera%16;x<view.width;x+=16)ctx.drawImage(images.tiles,((Math.floor((x+g.camera)/16)%8+8)%8)*16,0,16,16,Math.floor(x),WORLD.ground,16,16);ctx.fillStyle="#d4b944";for(let x=-g.camera%40;x<view.width;x+=40)ctx.fillRect(x,168,19,2);for(const pl of g.platforms){const sx=pl.x-g.camera;if(sx>-pl.w&&sx<view.width){ctx.fillStyle="#203e4a";ctx.fillRect(sx,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(sx,pl.y,pl.w,2)}}for(const a of MISSION_AREAS){const sx=a.x-g.camera;if(sx>0&&sx<view.width){ctx.fillStyle="#37e8df44";ctx.fillRect(sx,30,1,118)}}}
 function drawPlayer(p,cam){if(p.invuln>0&&Math.floor(p.invuln*12)%2)return;const frame=p.dead?7:p.shootPose>0?6:!p.onGround?(p.vy<0?4:5):Math.abs(p.vx)>0?Math.floor(p.anim)%4:0;const x=Math.round(p.x-cam-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.player,frame*24,0,24,32,0,y,24,32)}else ctx.drawImage(images.player,frame*24,0,24,32,x,y,24,32);ctx.restore()}
-function drawEnemies(g){for(const e of g.enemies){const x=Math.round(e.x-g.camera);if(x<-110||x>350)continue;const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;if(e.dead&&Math.floor(e.death*20)%2)continue;if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,x-48,Math.round(e.y),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,x-size/2,Math.round(e.y+e.h-size),size,size)}}}
+function drawEnemies(g){for(const e of g.enemies){const x=Math.round(e.x-g.camera);if(x<-110||x>view.width+30)continue;const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;if(e.dead&&Math.floor(e.death*20)%2)continue;if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,x-48,Math.round(e.y),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,x-size/2,Math.round(e.y+e.h-size),size,size)}}}
 function drawShots(g){for(const s of g.shots){const i=WEAPONS.findIndex(w=>w.type===s.type),x=Math.round(s.x-g.camera),y=Math.round(s.y);ctx.drawImage(images.shots,Math.max(0,i)*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x-g.camera)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x-g.camera)-1,Math.round(s.y)-1,2,2)}}
 function drawItems(g){for(const it of g.items){if(!it.alive)continue;const x=Math.round(it.x-g.camera);ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,x-12,it.y-16,24,24)}}
 function drawEffects(g){for(const f of g.effects){const x=f.x-g.camera,a=f.life/f.max;if(f.kind==="explosion"){const fr=Math.min(7,Math.floor((1-a)*8));const sz=Math.max(24,(f.r||24)*2);ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz)}else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2-g.camera,f.y2);ctx.stroke()}else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}}}

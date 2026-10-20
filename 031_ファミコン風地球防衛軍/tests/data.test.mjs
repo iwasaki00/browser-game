@@ -1,6 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE} from "../js/data.js";
+import {VERSION,VIEW,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth} from "../js/data.js";
+
+test("portrait view uses the v0.1.1 camera zoom range",()=>{
+  assert.equal(VERSION,"0.1.1");
+  assert.ok(VIEW.portraitZoom>=.75&&VIEW.portraitZoom<=.85);
+  assert.ok(VIEW.portraitZoom<VIEW.landscapeZoom);
+  assert.equal(visibleWorldWidth(VIEW.portraitZoom),400);
+  assert.equal(visibleWorldWidth(VIEW.landscapeZoom),320);
+});
 
 test("8 weapons have unique ids and positive tuning values",()=>{
   assert.equal(WEAPONS.length,8);assert.equal(new Set(WEAPONS.map(w=>w.id)).size,8);
