@@ -1,14 +1,43 @@
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
-  portraitZoom: 0.80,
-  landscapeZoom: 1.00,
+  portraitZoom: 0.70,
+  landscapeZoom: 0.70,
+  pcZoom: 0.70,
   canvasWidth: 320,
   canvasHeight: 180
 });
 
 export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;
+
+// Availability is separate from saved progression. M02 has no playable content yet.
+export const MISSIONS = Object.freeze([
+  {id:"M01",name:"市街地防衛線",description:"侵攻群を突破し、巣の中心を破壊せよ",implemented:true},
+  {id:"M02",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
+]);
+
+const validMissionId = id => typeof id==="string" && /^M\d{2,}$/.test(id) && Number(id.slice(1))>0 && Number.isSafeInteger(Number(id.slice(1)));
+const missionIds = value => Array.isArray(value)?value.filter(validMissionId):[];
+export function missionProgress(value={}){
+  const clearedMissions=[...new Set([...missionIds(value.cleared),...missionIds(value.clearedMissions)])];
+  const next=clearedMissions.map(id=>`M${String(Number(id.slice(1))+1).padStart(2,"0")}`);
+  const unlockedMissions=[...new Set(["M01",...missionIds(value.unlockedMissions),...clearedMissions,...next])];
+  return {clearedMissions,unlockedMissions};
+}
+export function missionStatus(mission,progress){
+  if(!mission.implemented)return "COMING SOON";
+  if(progress.clearedMissions.includes(mission.id))return "CLEAR";
+  return progress.unlockedMissions.includes(mission.id)?"OPEN":"LOCKED";
+}
+export function canPlayMission(id,progress,missions=MISSIONS){
+  const mission=missions.find(m=>m.id===id);
+  return !!mission?.implemented && progress.unlockedMissions.includes(id);
+}
+export function recordMissionClear(value,id){
+  if(!validMissionId(id))return sanitizeSave(value);
+  return sanitizeSave({...value,clearedMissions:[...(value.clearedMissions||[]),id]});
+}
 
 export const WEAPONS = [
   { id:"A-01", name:"アサルト", type:"bullet", damage:8, interval:.12, speed:310, range:340, color:"#37e8df", detail:"高速直進弾" },
@@ -40,7 +69,7 @@ export const SPAWNS = [
 ];
 
 export const DEFAULT_SAVE = Object.freeze({
-  version:1, cleared:[], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
+  version:2, clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
   bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative"}
 });
 
@@ -49,13 +78,13 @@ export const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
 
 export function sanitizeSave(value){
   const base=JSON.parse(JSON.stringify(DEFAULT_SAVE));
-  if(!value || typeof value!=="object" || value.version!==1) return base;
+  if(!value || typeof value!=="object" || ![1,2].includes(value.version)) return base;
   const validIds=new Set(WEAPONS.map(w=>w.id));
   const unlocked=Array.isArray(value.unlocked)?value.unlocked.filter(x=>validIds.has(x)):base.unlocked;
   base.unlocked=[...new Set(["A-01","S-02",...unlocked])];
   const equipped=Array.isArray(value.equipped)?value.equipped.filter(x=>base.unlocked.includes(x)).slice(0,2):base.equipped;
   base.equipped=equipped.length===2?equipped:base.equipped;
-  base.cleared=Array.isArray(value.cleared)?value.cleared.filter(x=>x==="M01"):[];
+  Object.assign(base,missionProgress(value));
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;
   if(value.settings && typeof value.settings==="object") base.settings={...base.settings,...value.settings};

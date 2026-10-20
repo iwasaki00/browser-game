@@ -1,13 +1,34 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {VERSION,VIEW,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth} from "../js/data.js";
+import {VERSION,VIEW,MISSIONS,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth,recordMissionClear,canPlayMission,missionStatus} from "../js/data.js";
 
-test("portrait view uses the v0.1.1 camera zoom range",()=>{
-  assert.equal(VERSION,"0.1.1");
-  assert.ok(VIEW.portraitZoom>=.75&&VIEW.portraitZoom<=.85);
-  assert.ok(VIEW.portraitZoom<VIEW.landscapeZoom);
-  assert.equal(visibleWorldWidth(VIEW.portraitZoom),400);
-  assert.equal(visibleWorldWidth(VIEW.landscapeZoom),320);
+test("all layouts use 0.70 world zoom with a wider view",()=>{
+  assert.equal(VERSION,"0.1.2");
+  for(const zoom of [VIEW.portraitZoom,VIEW.landscapeZoom,VIEW.pcZoom]){
+    assert.equal(zoom,.70);assert.ok(Math.abs(visibleWorldWidth(zoom)-457.142857)<.00001);
+  }
+});
+
+test("v1 save migration retains weapons, scores, settings and M01 clear",()=>{
+  const s=sanitizeSave({version:1,cleared:["M01"],unlocked:["A-01","S-02","L-03","R-04"],equipped:["L-03","R-04"],highScore:12345,bestTime:95,settings:{sound:false}});
+  assert.equal(s.version,2);assert.deepEqual(s.clearedMissions,["M01"]);assert.deepEqual(s.unlockedMissions,["M01","M02"]);
+  assert.deepEqual(s.equipped,["L-03","R-04"]);assert.ok(s.unlocked.includes("L-03"));assert.equal(s.highScore,12345);assert.equal(s.bestTime,95);assert.equal(s.settings.sound,false);
+  assert.equal(missionStatus(MISSIONS[0],s),"CLEAR");assert.equal(canPlayMission("M01",s),true);
+  assert.equal(missionStatus(MISSIONS[1],s),"COMING SOON");assert.equal(canPlayMission("M02",s),false);
+  assert.equal(canPlayMission("M99",s),false);
+});
+
+test("progress is monotonic across serialization and future implemented stages",()=>{
+  const initial=sanitizeSave(null);
+  assert.deepEqual(initial.unlockedMissions,["M01"]);assert.equal(missionStatus(MISSIONS[0],initial),"OPEN");
+  const fixtures=[{id:"M01",implemented:true},{id:"M02",implemented:true},{id:"M03",implemented:true}];
+  assert.equal(missionStatus(fixtures[1],initial),"LOCKED");
+  const first=recordMissionClear(initial,"M01");
+  assert.equal(canPlayMission("M02",first,fixtures),true);assert.equal(missionStatus(fixtures[1],first),"OPEN");
+  const second=recordMissionClear(first,"M02");
+  assert.deepEqual(second.clearedMissions,["M01","M02"]);assert.deepEqual(second.unlockedMissions,["M01","M02","M03"]);
+  assert.deepEqual(sanitizeSave(JSON.parse(JSON.stringify(second))),second);
+  assert.deepEqual(recordMissionClear(second,"M01"),second);
 });
 
 test("8 weapons have unique ids and positive tuning values",()=>{

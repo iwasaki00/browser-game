@@ -1,4 +1,4 @@
-import { assertConservation, integer, MAX_STEPS, MAX_WATER, type WorldState } from './world';
+import { assertConservation, integer, MAX_STEPS, MAX_WATER, totalWater, type WorldState } from './world';
 
 /** One adjacent pair, updated atomically with exactly the same transfer amount. */
 export function equalizePair(world: WorldState, a: number, b: number): number {
@@ -39,6 +39,8 @@ export function stepWorld(world: WorldState): boolean {
     next.water[index] = integer(next.water[index] + rate, '供給後水量', MAX_WATER);
     next.cumulativeSupply = integer(next.cumulativeSupply + rate, '累積供給量');
   }
+  // Validate the intermediate total before sinks can conceal a supply overflow.
+  totalWater(next.water);
   for (const [items, key] of [[next.intakes, 'cumulativeIntake'], [next.outlets, 'cumulativeOutlet']] as const) {
     for (const { index, rate } of items) {
       const amount = Math.min(next.water[index], rate);

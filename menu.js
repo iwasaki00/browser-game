@@ -3,6 +3,26 @@
 
   const games = [
     {
+      number: "033",
+      title: "一筆で変わる世界",
+      genre: "Simulation / Debug",
+      description: "地形と水の流れを観察するシミュレーション実験室。3種類の地形で水源・取水・排出口の収支を確認できる、v0.1.0の基盤検証版です。",
+      href: "./033_一筆で変わる世界/play/index.html",
+      icon: "./033_一筆で変わる世界/public/icon.svg",
+      alt: "段状の地形を青い水が流れる実験盤面",
+      cta: "シミュレーションを開く",
+      ariaLabel: "一筆で変わる世界の水流シミュレーションを開く"
+    },
+    {
+      number: "032",
+      title: "すれ違い郵便局 — SORT & SEND",
+      genre: "Strategy / Puzzle",
+      description: "分岐の2枚の矢印を組み、丸と三角の荷物を正しい出口へ。設定、配送、再挑戦を繰り返す小さな配送パズル。",
+      href: "./032_すれ違い郵便局/sort-and-send/dist/index.html",
+      icon: "./032_すれ違い郵便局/sort-and-send/game-icon.svg",
+      alt: "分岐Aから丸印の赤い出口と三角印の青い出口へつながる配送路"
+    },
+    {
       number: "031",
       title: "ドット防衛戦線",
       genre: "Action / Shooting",

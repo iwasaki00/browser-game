@@ -12,8 +12,9 @@
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
-      <a href="../index.html" aria-label="Browser Game Arcadeへ戻る">← ARCADE</a>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.1</b></span>
+      <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.2</b></span>
+      <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
     <section id="gameShell" class="game-shell" data-layout="landscape">
@@ -30,8 +31,7 @@
       </div>
       <div id="screenMission" class="screen">
         <p class="eyebrow">SELECT MISSION</p><h2>ミッション選択</h2>
-        <button class="mission-card" data-action="select-m01"><span>M01</span><strong>市街地防衛線</strong><small>侵攻群を突破し、巣の中心を破壊せよ</small></button>
-        <div class="locked-card"><span>M02</span><strong>LOCKED</strong></div>
+        <div id="missionList" class="mission-list" aria-label="ミッション一覧"></div>
         <button class="menu-button" data-action="back-title">戻る</button>
       </div>
       <div id="screenEquip" class="screen">
@@ -41,12 +41,13 @@
       </div>
       <div id="screenHowto" class="screen screen--panel">
         <p class="eyebrow">CONTROLS</p><h2>操作方法</h2>
-        <div class="howto-grid"><div><b>移動</b><span>A / D・← / →</span></div><div><b>ジャンプ</b><span>W / ↑ / SPACE</span></div><div><b>照準・射撃</b><span>マウス</span></div><div><b>武器切替</b><span>Q / E / SHIFT</span></div><div><b>ポーズ</b><span>ESC / P</span></div><div><b>スマホ</b><span>画面下の仮想パッド</span></div></div>
+        <div class="howto-grid"><div><b>移動</b><span>A / D・← / →</span></div><div><b>ジャンプ</b><span>W / ↑ / SPACE</span></div><div><b>照準・射撃</b><span>マウス</span></div><div><b>武器切替</b><span>Q / E / SHIFT</span></div><div><b>ポーズ</b><span>ESC / P</span></div><div><b>スマホ：横向き推奨</b><span>左：移動・JUMP／右：SW・FIRE<br>FIREを押して射撃、ドラッグで照準。縦向きも操作可能</span></div></div>
         <button class="menu-button menu-button--primary" data-action="close-howto">了解</button>
       </div>
       <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
-      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
-      <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="result-next">装備画面へ</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
       </div>
       <div id="touchControls" class="touch-controls" aria-label="タッチ操作">
         <div class="touch-group touch-group--move">
