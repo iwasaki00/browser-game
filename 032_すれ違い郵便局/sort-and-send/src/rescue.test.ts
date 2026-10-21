@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DeliveryRun, simulate, type RescuePreview } from './simulation';
+import { DeliveryRun, simulate } from './simulation';
 import { stage01, stages, type Stage } from './stage';
 import { rateDelivery, isSolverSummary } from './scoring';
 import ratings from './generated/stage-ratings.json';
@@ -114,7 +114,8 @@ describe('RESCUE state and delivery', () => {
   });
 });
 describe('RESCUE scoring and saved progress', () => {
-  const report = ratings.filter(isSolverSummary).find(r => r.stageId === '01');
+  const summaries: unknown[] = ratings;
+  const report = summaries.filter(isSolverSummary).find(r => r.stageId === '01');
   it('awards star one below the ordinary optimum and unlocks the successor', () => {
     const result = blueRescue().finish(); const cost = deliveryCost(initial, result); expect(cost).toBe(0);
     const rating = rateDelivery({ stage: stage01, result, cost, rescueUsed: !!result.rescueUsed, report });

@@ -62,10 +62,10 @@ export class QualityPanel {
     this.#freshness.refresh(this.enabled);
   }
   report() {
-    const state = this.read();
+    const state = this.read(), capturedAtPerformanceMs = performance.now();
     return { version: '0.7.1', generatedAt: new Date().toISOString(), environment: { os: this.#os.value || null,
-      browserVersion: this.#browser.value || null, userAgent: navigator.userAgent, label: this.#label.value || null },
-      state: { ...state, ...readRafContext(document), stepAgreement: stepAgreement(state.steps) }, metrics: this.metrics.snapshot(performance.now()),
+      browserVersion: this.#browser.value || null, userAgent: navigator.userAgent, label: this.#label.value || null, performanceTimeOriginMs: performance.timeOrigin },
+      state: { ...state, ...readRafContext(document), capturedAtPerformanceMs, stepAgreement: stepAgreement(state.steps) }, metrics: this.metrics.snapshot(capturedAtPerformanceMs),
       definitions: { fps: 'requestAnimationFrame cadence; not GPU completed frames', draw: 'Canvas submission CPU wall time; not GPU time',
         singleStep: 'SimulationRunner.step, includes goal/flow receipts', comparison: 'A+B atomic pair; PLAY time divided by committed pair count (batch mean)',
         maximumComparison: 'maximum batch mean, not worst individual step', recentWindow: 'last 240 observations per condition; mean/median/p95/max/count share the same window',

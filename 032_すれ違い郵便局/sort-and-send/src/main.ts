@@ -1,6 +1,6 @@
 import './style.css';
 import { stages, type Direction, type ParcelColor } from './stage';
-import { simulate, type SimulationResult } from './simulation';
+import { DeliveryRun, type RescuePreview, type SimulationResult } from './simulation';
 import { validateStage } from './validation';
 import { deliveryCost } from './cost';
 import { isSolverSummary, rateDelivery, verifiedMinimum } from './scoring';
@@ -12,7 +12,7 @@ import { createProgressStore, memoryStorage, productionProgressKey, type Progres
 import { GameAudio } from './audio';
 import { movementProgress, recentArrivals, reducedMotion } from './presentation';
 
-type Mode = 'DESIGN' | 'RUN' | 'RESULT';
+type Mode = 'DESIGN' | 'RUN' | 'PAUSED' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const canvas = get<HTMLCanvasElement>('board');
 const ctx = canvas.getContext('2d')!;
@@ -43,6 +43,12 @@ let result: SimulationResult | undefined;
 let selectedParcelId: number | undefined;
 let startedAt = 0;
 let elapsed = 0;
+let liveRun: DeliveryRun | undefined;
+let preview: RescuePreview | undefined;
+let pauseAt: number | undefined;
+let animationId: number | undefined;
+const rescueDialog = get<HTMLDialogElement>('rescue-dialog');
+const activeRun = () => mode === 'RUN' || mode === 'PAUSED';
 const tickMs = 700;
 const ink = '#243D4A';
 const teal = '#247E72';
@@ -65,7 +71,7 @@ function updateControls() {
       const card = document.createElement('button');
       card.className = 'arrow-card'; card.type = 'button'; card.id = `step-${i}`;
       card.addEventListener('click', () => {
-        if (mode === 'RUN') return;
+        if (activeRun()) return;
         patterns[selectedSwitch][i] = patterns[selectedSwitch][i] === 'L' ? 'R' : 'L';
         gestureSound();
         design();
@@ -77,32 +83,37 @@ function updateControls() {
     const left = pattern[i] === 'L';
     card.innerHTML = `<span class="step">STEP 0${i + 1}</span><span class="arrow" aria-hidden="true">${left ? '↙' : '↘'}</span><span class="direction">${pattern[i]} / ${left ? '左' : '右'}</span>`;
     card.setAttribute('aria-label', `分岐${selectedSwitch.toUpperCase()} ステップ${i + 1}：${left ? 'L 左' : 'R 右'}。押すと切り替え`);
-    card.disabled = mode === 'RUN' || stageErrors.length > 0;
+    card.disabled = activeRun() || stageErrors.length > 0;
     card.classList.remove('active');
   });
   for (const button of get('switch-selector').querySelectorAll('button')) {
     const id = button.dataset.switch!;
     button.textContent = `分岐 ${id.toUpperCase()} · ${patterns[id].join('')}`;
     button.setAttribute('aria-pressed', String(id === selectedSwitch));
+    button.disabled = mode === 'PAUSED';
   }
   for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
     const id = stages[i].id;
     const locked = !unlocked(id);
     const stars = progress.data.bestStars[id] ?? 0;
-    button.disabled = mode === 'RUN' || locked;
+    button.disabled = activeRun() || locked;
     button.innerHTML = `<span>${locked ? '🔒 ' : ''}${id}</span><small>${stars ? '★'.repeat(stars) : progress.data.clearedStageIds.includes(id) ? 'CLEAR' : '···'}</small>`;
     button.setAttribute('aria-label', `${stages[i].name}。${locked ? `Stage ${stages[i - 1].id}のCLEARで解放` : stars ? `最高星${stars}` : 'プレイ可能'}`);
     button.title = locked ? `Stage ${stages[i - 1].id}をCLEARすると解放` : stages[i].name;
   }
   start.disabled = mode !== 'DESIGN' || stageErrors.length > 0;
-  retry.disabled = mode === 'RUN'; reset.disabled = mode === 'RUN';
+  retry.disabled = activeRun(); reset.disabled = activeRun();
   next.hidden = !(mode === 'RESULT' && result?.clear && stageIndex < stages.length - 1);
-  get<HTMLButtonElement>('reset-progress').disabled = mode === 'RUN';
+  get<HTMLButtonElement>('reset-progress').disabled = activeRun();
+  updateRescueControl();
   updateStorageStatus();
   highlightDispatch();
 }
 
 function design(initial = false) {
+  if (animationId !== undefined) cancelAnimationFrame(animationId);
+  animationId = undefined; liveRun = undefined; preview = undefined; pauseAt = undefined;
+  if (rescueDialog.open) rescueDialog.close();
   if (initial) patterns = Object.fromEntries(stage.nodes.filter(n => n.kind === 'switch').map(n => [n.id, [...(n.initialPattern ?? [])]]));
   mode = 'DESIGN'; result = undefined; selectedParcelId = undefined; elapsed = 0;
   stageErrors = validateStage(stage);
@@ -118,7 +129,7 @@ function showError(message: string) {
 }
 
 function selectStage(index: number) {
-  if (mode === 'RUN' || !stages[index] || !unlocked(stages[index].id)) return;
+  if (activeRun() || !stages[index] || !unlocked(stages[index].id)) return;
   stageIndex = index; stage = stages[index];
   selectedSwitch = stage.nodes.find(n => n.kind === 'switch')?.id ?? '';
   get('stage-name').textContent = stage.name;
@@ -127,7 +138,7 @@ function selectStage(index: number) {
   get('switch-selector').replaceChildren();
   for (const branch of branches) {
     const button = document.createElement('button'); button.type = 'button'; button.dataset.switch = branch.id;
-    button.addEventListener('click', () => { void audio.activate(); selectedSwitch = branch.id; updateControls(); draw(); });
+    button.addEventListener('click', () => { if (mode === 'PAUSED') return; void audio.activate(); selectedSwitch = branch.id; updateControls(); draw(); });
     get('switch-selector').append(button);
   }
   for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
@@ -158,19 +169,76 @@ stages.forEach((s, i) => {
   button.textContent = s.id; button.setAttribute('aria-label', s.name);
   button.addEventListener('click', () => selectStage(i)); chapterLists[Math.floor(i / 5)].append(button);
 });
-retry.addEventListener('click', () => { if (mode !== 'RUN') { design(); start.focus(); } });
-reset.addEventListener('click', () => { if (mode !== 'RUN') design(true); });
+retry.addEventListener('click', () => { if (!activeRun()) { design(); start.focus(); } });
+reset.addEventListener('click', () => { if (!activeRun()) design(true); });
 next.addEventListener('click', () => { selectStage(stageIndex + 1); get('stage-name').scrollIntoView({ block: 'nearest' }); });
 start.addEventListener('click', () => {
   if (mode !== 'DESIGN') return;
   void audio.activate();
   stageErrors = validateStage(stage);
   if (stageErrors.length) { showError(stageErrors.join('\n')); updateControls(); return; }
-  try { result = simulate(stage, patterns); }
+  try { liveRun = new DeliveryRun(stage, patterns); result = liveRun.clone().finish(); }
   catch (error) { showError(error instanceof Error ? error.message : '配送データを確認してください。'); return; }
-  mode = 'RUN'; startedAt = performance.now(); playedArrivals = new Set();
+  mode = 'RUN'; startedAt = performance.now(); playedArrivals = new Set(); elapsed = 0; pauseAt = undefined; preview = undefined;
   get('report').innerHTML = '<h3 id="result-title">配送中…</h3><p>設定した循環パターンで<br>荷物を順番に送り出しています。</p>';
-  updateControls(); requestAnimationFrame(animate);
+  updateControls(); scheduleFrame();
+});
+
+function updateRescueControl() {
+  const button = get<HTMLButtonElement>('rescue');
+  const available = !!result?.events.some(e => e.direction && e.tick >= Math.ceil(elapsed));
+  button.hidden = !activeRun();
+  button.disabled = mode !== 'RUN' || !!liveRun?.rescueUsed || pauseAt !== undefined || !available;
+  button.textContent = liveRun?.rescueUsed ? 'RESCUE / 使用済み' : pauseAt !== undefined ? 'tick境界で停止しています…' : 'RESCUE / 次の分岐を変更';
+  const message = mode === 'PAUSED' ? '一時停止中。確定またはキャンセルで再開します。' : liveRun?.rescueUsed ? 'この配送実行のRESCUEは使用済みです。' :
+    mode === 'RUN' && !available ? 'この先に変更できる分岐イベントはありません。' : pauseAt !== undefined ? '現在の移動が終わるtick境界で停止します。' : '配送中に次の分岐を1回だけ変更できます。';
+  if (get('rescue-status').textContent !== message) get('rescue-status').textContent = message;
+}
+function scheduleFrame() {
+  if (animationId !== undefined) cancelAnimationFrame(animationId);
+  animationId = requestAnimationFrame(animate);
+}
+get('rescue').addEventListener('click', () => {
+  if (mode !== 'RUN' || !liveRun || liveRun.rescueUsed || pauseAt !== undefined || !result) return;
+  const boundary = Math.ceil(Math.max(elapsed, Math.min((performance.now() - startedAt) / tickMs, result.ticks)));
+  if (!result.events.some(e => e.direction && e.tick >= boundary)) { updateRescueControl(); return; }
+  pauseAt = boundary; void audio.activate(); updateRescueControl();
+});
+function openRescue() {
+  if (!liveRun || mode !== 'RUN') return;
+  mode = 'PAUSED'; preview = liveRun.previewRescue();
+  const parcel = preview ? stage.parcels.find(p => p.id === preview!.parcelId) : undefined;
+  get('rescue-target').textContent = preview && parcel ?
+    `荷物 ${String(parcel.id + 1).padStart(2, '0')} ${marks[parcel.color]} ${parcel.color} / 分岐 ${preview.switchId.toUpperCase()} / tick ${preview.tick} / 枠 ${preview.patternIndex + 1} / 通常 ${preview.direction}（${preview.direction === 'L' ? '左' : '右'}）` : '対象なし：この先に分岐イベントはありません。キャンセルして配送を再開してください。';
+  get('rescue-error').textContent = '';
+  get<HTMLFieldSetElement>('rescue-directions').disabled = !preview;
+  get<HTMLButtonElement>('rescue-confirm').disabled = !preview;
+  for (const radio of document.querySelectorAll<HTMLInputElement>('input[name="rescue-direction"]')) radio.checked = radio.value === preview?.direction;
+  get('tick').textContent = `TICK ${liveRun.tick} 完了 / PAUSED`;
+  updateControls(); draw(); rescueDialog.showModal();
+}
+function resumeDelivery() {
+  if (mode !== 'PAUSED') return;
+  preview = undefined; pauseAt = undefined; rescueDialog.close();
+  mode = 'RUN'; startedAt = performance.now() - elapsed * tickMs;
+  updateControls(); scheduleFrame();
+}
+function cancelRescue() {
+  if (mode !== 'PAUSED') return;
+  if (preview) liveRun?.cancelRescue(preview);
+  resumeDelivery();
+}
+get('rescue-cancel').addEventListener('click', cancelRescue);
+rescueDialog.addEventListener('cancel', event => { event.preventDefault(); cancelRescue(); });
+get('rescue-confirm').addEventListener('click', () => {
+  if (mode !== 'PAUSED' || !preview || !liveRun) return;
+  const direction = document.querySelector<HTMLInputElement>('input[name="rescue-direction"]:checked')?.value;
+  if ((direction !== 'L' && direction !== 'R') || !liveRun.confirmRescue(preview, direction)) {
+    get('rescue-error').textContent = '対象が変更されたため確定できません。キャンセルして再開してください。';
+    get<HTMLButtonElement>('rescue-confirm').disabled = true; return;
+  }
+  result = liveRun.clone().finish();
+  resumeDelivery();
 });
 
 function highlightDispatch() {
@@ -187,12 +255,23 @@ get('report').addEventListener('click', event => {
     item.setAttribute('aria-pressed', String(Number(item.dataset.parcelId) === selectedParcelId));
   }
   get('parcel-history').innerHTML = `<h4>荷物 ${String(history.id + 1).padStart(2, '0')} — ${marks[history.color]} ${history.color}</h4><dl><div><dt>期待する出口</dt><dd>${history.expectedExits.map(id => node(id).label).join(' / ')}</dd></div><div><dt>実際の出口</dt><dd>${node(history.destination).label}</dd></div><div><dt>配送判定</dt><dd>${history.correct ? '✓ 正解' : '× 誤配送'}</dd></div></dl><p>経由した分岐と使用方向</p><ol>${history.switches.map(s => `<li>分岐 ${s.id.toUpperCase()} → ${s.direction} / ${s.direction === 'L' ? '左' : '右'} <small>（枠${s.patternIndex + 1}・tick ${s.tick}）</small></li>`).join('')}</ol><p class="history-path">${history.path.map(id => node(id).label).join(' → ')}</p>`;
+  get('parcel-history').querySelectorAll('ol li').forEach((item, i) => {
+    const event = history.switches[i];
+    if (event.rescue) {
+      const badge = document.createElement('strong'); badge.className = 'rescue-badge';
+      badge.textContent = `RESCUE / 通常 ${event.originalDirection} → 実際 ${event.direction}`;
+      item.append(badge);
+    }
+  });
   draw();
 });
 
 function animate(now: number) {
-  if (mode !== 'RUN' || !result) return;
-  elapsed = Math.min((now - startedAt) / tickMs, result.ticks);
+  animationId = undefined;
+  if (mode !== 'RUN' || !result || !liveRun) return;
+  elapsed = Math.min((now - startedAt) / tickMs, result.ticks, pauseAt ?? Infinity);
+  // Commit only complete logical ticks. Interpolation and future drawings remain copy-only.
+  while (liveRun.tick < Math.floor(elapsed) && !liveRun.done) liveRun.step();
   for (const event of result.events) {
     if (event.type !== 'deliver' || elapsed < event.tick + 1) continue;
     const key = `${event.parcel}:${event.tick}`;
@@ -203,18 +282,25 @@ function animate(now: number) {
   }
   get('tick').textContent = `TICK ${Math.min(Math.floor(elapsed) + 1, result.ticks)} / ${result.ticks}`;
   highlightDispatch(); draw();
-  if (elapsed < result.ticks) requestAnimationFrame(animate);
+  updateRescueControl();
+  if (pauseAt !== undefined && elapsed >= pauseAt) { openRescue(); return; }
+  if (elapsed < result.ticks) scheduleFrame();
   else {
+    result = liveRun.finish();
     mode = 'RESULT'; updateControls();
     const reports: unknown[] = stageRatings;
     const report = reports.filter(isSolverSummary).find(r => r.stageId === stage.id);
     const cost = deliveryCost(patterns, result);
     const minimum = verifiedMinimum(stage, report);
-    const rating = rateDelivery({ stage, result, cost, rescueUsed: false, report });
+    const rating = rateDelivery({ stage, result, cost, rescueUsed: result.rescueUsed === true, report });
     const newRecord = progress.recordResult(stage.id, result.clear, rating.stars);
     if (result.clear) audio.play(newRecord ? 'record' : 'clear');
     updateControls();
     get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><p class="history-help">荷物を選んで配送履歴を確認</p><ul class="result-list">${result.parcels.map(p => `<li><button type="button" class="parcel-history-button" data-parcel-id="${p.id}" aria-controls="parcel-history" aria-pressed="false"><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></button></li>`).join('')}</ul><section id="parcel-history" class="parcel-history" aria-label="選択した荷物の配送履歴" aria-live="polite"><p>配送結果の荷物番号を選ぶと、経路と分岐の使用方向を表示します。</p></section>`;
+    const rescueNote = document.createElement('p'); rescueNote.className = 'rescue-result';
+    const rescued = result.events.find(e => e.rescue);
+    rescueNote.textContent = result.rescueUsed ? rescued ? `RESCUE：使用済み / 荷物 ${String(rescued.parcel + 1).padStart(2, '0')}・分岐 ${rescued.from!.toUpperCase()}・tick ${rescued.tick} / 通常 ${rescued.originalDirection} → 実際 ${rescued.direction}` : 'RESCUE：確定済み（対象への予約は失効）' : 'RESCUE：未使用';
+    get('report').querySelector('.rating')?.after(rescueNote);
     if (result.clear) {
       get('report').querySelector('.rating')?.classList.add('earned-stars');
       const notice = document.createElement('p'); notice.className = newRecord ? 'new-record' : 'clear-notice';
@@ -261,7 +347,8 @@ function draw() {
     ctx.setLineDash([3, 12]); ctx.strokeStyle = '#c8d8ce'; ctx.lineWidth = 2; ctx.stroke(); ctx.setLineDash([]);
     if (mode === 'RESULT' && selectedParcelId !== undefined && result?.events.some(e =>
       e.type === 'move' && e.parcel === selectedParcelId && e.from === edge.from && e.to === edge.to && e.direction === edge.direction)) {
-      traceEdge(edge); ctx.strokeStyle = '#247E7299'; ctx.lineWidth = 7; ctx.stroke();
+      const rescued = result.events.some(e => e.rescue && e.parcel === selectedParcelId && e.from === edge.from && e.to === edge.to && e.direction === edge.direction);
+      traceEdge(edge); ctx.strokeStyle = rescued ? '#b68625' : '#247E7299'; ctx.lineWidth = 7; ctx.stroke();
     }
     const middle = routePosition(edgePoints(edge), .53);
     ctx.save(); ctx.translate(middle.x, middle.y); ctx.rotate(middle.angle);
@@ -360,9 +447,9 @@ get<HTMLInputElement>('reduced-motion').checked = settings.reducedMotion;
 for (const id of ['sfx', 'bgm', 'volume', 'reduced-motion']) get(id).addEventListener('change', () => { progress.setSettings(readSettings()); applySettings(); void audio.activate(); updateStorageStatus(); });
 get('volume').addEventListener('input', applySettings);
 const resetDialog = get<HTMLDialogElement>('reset-confirm');
-get('reset-progress').addEventListener('click', () => { if (mode !== 'RUN') resetDialog.showModal(); });
+get('reset-progress').addEventListener('click', () => { if (!activeRun()) resetDialog.showModal(); });
 get('cancel-reset').addEventListener('click', () => { progress.reset(false); resetDialog.close(); });
-get('confirm-reset').addEventListener('click', () => { if (mode === 'RUN') return; progress.reset(true); resetDialog.close(); selectStage(0); });
+get('confirm-reset').addEventListener('click', () => { if (activeRun()) return; progress.reset(true); resetDialog.close(); selectStage(0); });
 applySettings();
 osMotion.addEventListener('change', applySettings);
 // The menu is two levels above the Vite source and three above its static build.

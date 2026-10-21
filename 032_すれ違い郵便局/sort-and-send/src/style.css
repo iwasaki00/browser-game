@@ -66,3 +66,14 @@ dialog::backdrop{background:#243d4a88}dialog p{font-size:14px;line-height:1.8}.c
 @keyframes new-record{from{background:#e4b75466}to{background:transparent}}
 html[data-reduced-motion=true] *,html[data-reduced-motion=true] *::before,html[data-reduced-motion=true] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.rescue-panel{padding:14px 18px;border:1px solid #d3be80;border-radius:14px;background:#f4edcf}
+.rescue-panel button{width:100%;min-height:48px;border:1px solid #ba963b;border-bottom:3px solid #ba963b;border-radius:9px;background:#E4B754;color:#243D4A;font-size:13px;font-weight:800;padding:8px}
+.rescue-panel p{font-size:11px;line-height:1.7;margin:8px 0 0}.rescue-panel button[hidden]+p{margin-top:0}
+.rescue-dialog{width:420px;overflow-wrap:anywhere}.rescue-dialog h3{font-size:18px;margin:0 0 12px}
+.rescue-dialog fieldset{margin:16px 0;padding:12px;border:1px solid #afcabe;border-radius:10px;min-width:0}
+.rescue-dialog legend{font-size:12px}.rescue-options{display:flex;flex-wrap:wrap;gap:10px}
+.rescue-options label{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;flex:1;min-width:96px;border:1px solid #afcabe;border-radius:8px;background:#CDE8DF;font-weight:800;font-size:14px}
+.rescue-options input{width:20px;height:20px;accent-color:#247E72}.rescue-dialog .confirmation-actions button{flex:1;min-width:120px}
+.rescue-dialog #rescue-confirm{background:#247E72;color:white}.rescue-dialog #rescue-error{color:#b34f42;font-size:12px}
+.rescue-badge{display:block;font-size:11px;color:#806320;border-left:3px solid #E4B754;margin-top:5px;padding-left:7px}
+.mode:has(+.paused){background:#f4edcf}.rescue-result{font-size:12px!important;color:#806320!important;overflow-wrap:anywhere}
