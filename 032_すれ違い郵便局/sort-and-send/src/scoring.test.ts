@@ -23,14 +23,14 @@ it('nonoptimal success earns two', async () => {
 });
 it('optimal success earns three', () => expect(rate(2)).toMatchObject({ status: 'RATED', stars: 3 }));
 it('missing report remains pending', () => expect(rate(2, { report: undefined })).toMatchObject({ status: 'PENDING', stars: null }));
-it('unknown optimum also leaves RESCUE success pending', () => expect(rate(2, { report: undefined, rescueUsed: true })).toMatchObject({ status: 'PENDING', stars: null }));
+it('RESCUE success earns one without depending on an ordinary optimum', () => expect(rate(2, { report: undefined, rescueUsed: true })).toMatchObject({ status: 'RATED', stars: 1 }));
 it('stale fingerprint remains pending', () => expect(rate(2, { report: { ...report, stageFingerprint: 'old' } })).toMatchObject({ status: 'PENDING', stars: null }));
 it.each(['INVALID', 'INCOMPLETE'])('%s reports cannot award optimal stars', status => {
   expect(rate(2, { report: { ...report, status } })).toMatchObject({ status: 'PENDING', stars: null });
 });
 it('cost below verified minimum is inconsistent', () => expect(rate(0)).toMatchObject({ status: 'INCONSISTENT', stars: null }));
 it('successful cost absent from the complete distribution is inconsistent', () => expect(rate(4)).toMatchObject({ status: 'INCONSISTENT', stars: null }));
-it('cost contradiction takes precedence over RESCUE', () => expect(rate(0, { rescueUsed: true })).toMatchObject({ status: 'INCONSISTENT', stars: null }));
+it('RESCUE success can have a cost below the ordinary minimum', () => expect(rate(0, { rescueUsed: true })).toMatchObject({ status: 'RATED', stars: 1 }));
 it('invalid numeric cost is inconsistent', () => expect(rate(NaN)).toMatchObject({ status: 'INCONSISTENT', stars: null }));
 it('unchecked, malformed or wrong-stage reports are not trusted', () => {
   for (const invalid of [

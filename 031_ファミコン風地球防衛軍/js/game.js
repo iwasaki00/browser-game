@@ -1,8 +1,9 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.7";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.8";
+import {applyPlayerClass,moveClassPlayer,classPlayerFrame} from "./player.js?v=0.1.8";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js";
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
-import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.6";
+import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.8";
 import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.7";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
@@ -11,7 +12,7 @@ const screens=[...document.querySelectorAll(".screen")],weaponGrid=document.quer
 const equipMessage=document.querySelector("#equipMessage"),touchControls=document.querySelector("#touchControls");
 const gameShell=document.querySelector("#gameShell");
 const images={};
-const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png",shots:"assets/sprites/weapons/projectiles.png",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
+const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",classes:"assets/sprites/player/classes.png?v=0.1.8",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png",shots:"assets/sprites/weapons/projectiles.png",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
 const missionTimers=new Set();
@@ -71,6 +72,21 @@ function renderMissionList(){
 function weapon(id){return WEAPONS.find(w=>w.id===id)}
 function activeEquipment(){return game?.lab?.equipped??save.equipped}
 function activeSettings(){return game?.lab?.settings??save.settings}
+function formalClass(){return !game?.lab||Object.hasOwn(PLAYER_CLASSES,game.lab.preset)}
+function syncClassControls(){
+  const id=game?.player.classId??"RANGER";
+  gameShell.dataset.playerClass=id;
+  gameShell.dataset.flight=String(game?.lab?.preset==="FLIGHT");
+  gameShell.dataset.wing=String(!!game&&formalClass()&&id==="WING");
+  gameShell.dataset.scout=String(!!game&&formalClass()&&id==="SCOUT");
+}
+function renderClassGrid(){
+  const grid=document.querySelector("#classGrid");grid.replaceChildren();
+  for(const c of Object.values(PLAYER_CLASSES)){
+    const button=document.createElement("button");button.className=`class-card ${save.selectedClass===c.id?"selected":""}`;button.dataset.action="select-class";button.dataset.playerClass=c.id;button.setAttribute("aria-pressed",String(save.selectedClass===c.id));
+    button.innerHTML=`<span class="class-pic" style="background-position:0 ${-64*c.row}px" aria-hidden="true"></span><span><strong>${c.id}</strong><small>HP ${c.hp} / ${c.speed}px/s</small><small>${c.ability}</small></span>`;grid.append(button);
+  }
+}
 function syncSettings(){document.querySelector("#destructionSelect").value=String(save.settings.destructionLevel);document.querySelector("#shakeToggle").checked=save.settings.shake}
 function openSettings(){
   if(game?.lab){show("play");openLabPanel();return}
@@ -83,28 +99,30 @@ function initAudio(){if(audio||!activeSettings().sound)return;const AC=window.Au
 function tone(freq=.05,duration=.04,type="square",volume=.025){if(!activeSettings().sound||profiler?.running)return;initAudio();if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;o.connect(g);g.connect(audio.destination);g.gain.setValueAtTime(volume*activeSettings().volume,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+duration);o.start();o.stop(audio.currentTime+duration)}
 
 function renderWeaponGrid(){
+  renderClassGrid();
   const densitySelect=document.querySelector("#densitySelect");if(densitySelect)densitySelect.value=save.settings.enemyDensity;
   weaponGrid.replaceChildren();
   WEAPONS.forEach((w,i)=>{const b=document.createElement("button");b.className=`weapon-card ${selected.includes(w.id)?"selected":""} ${save.unlocked.includes(w.id)?"":"locked"}`;b.disabled=!save.unlocked.includes(w.id);b.innerHTML=`<span class="weapon-pic" style="background-position:${i*-32}px 0"></span><span><strong>${w.id} ${w.name}</strong><small>DMG ${w.damage} / ${w.detail}</small></span>`;b.addEventListener("click",()=>{if(selected.includes(w.id)){if(selected.length>1)selected=selected.filter(x=>x!==w.id)}else{if(selected.length>=2)selected.shift();selected.push(w.id)}renderWeaponGrid();equipMessage.textContent=selected.length===2?`${selected.join(" / ")} を装備`:"武器を2つ選んでください"});weaponGrid.append(b)});
 }
 
-const input={left:false,right:false,jump:false,up:false,down:false,fire:false,switch:false,aimX:260,aimY:90,aimMode:"mouse",touchDx:1,touchDy:0};
-function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.fire=input.switch=false}
+const input={left:false,right:false,jump:false,up:false,down:false,hover:false,special:false,fire:false,switch:false,aimX:260,aimY:90,aimMode:"mouse",touchDx:1,touchDy:0};
+function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.hover=input.special=input.fire=input.switch=false}
 window.addEventListener("keydown",e=>{
   if(state==="settings"){if(e.key==="Escape")closeSettings();return}
   if(game?.lab&&state==="lab"){if(e.key==="Escape")closeLabPanel();return}
   if(game?.lab&&(e.key==="F2")){e.preventDefault();if(state==="play")openLabPanel();return}
   if(state==="confirm"){if(e.key==="Escape")cancelTitle();return}
   if(e.target?.matches?.("input,select,button,textarea")&&state!=="play")return;
-  if(["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key)||(game?.lab&&e.key==="ArrowDown"))e.preventDefault();
+  if(["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key)||((game?.lab||game?.player.classId==="WING")&&e.key==="ArrowDown"))e.preventDefault();
   if((state==="title")&&(e.key==="Enter"||e.key===" ")){show("mission");tone(660,.06)}
   if(e.key==="a"||e.key==="ArrowLeft")input.left=true;if(e.key==="d"||e.key==="ArrowRight")input.right=true;
   if(e.key==="w"||e.key==="ArrowUp"||e.key===" ")input.jump=true;
   if(e.key==="w"||e.key==="ArrowUp")input.up=true;if(e.key==="s"||e.key==="ArrowDown")input.down=true;
+  if(e.key===" ")input.hover=true;if(e.key.toLowerCase()==="c")input.special=true;
   if((e.key==="q"||e.key==="e"||e.key==="Shift")&&!e.repeat)switchWeapon();
   if((e.key==="Escape"||e.key==="p")&&state==="play")pause();else if((e.key==="Escape"||e.key==="p")&&state==="pause")resume();
 });
-window.addEventListener("keyup",e=>{if(e.key==="a"||e.key==="ArrowLeft")input.left=false;if(e.key==="d"||e.key==="ArrowRight")input.right=false;if(e.key==="w"||e.key==="ArrowUp"||e.key===" ")input.jump=false;if(e.key==="w"||e.key==="ArrowUp")input.up=false;if(e.key==="s"||e.key==="ArrowDown")input.down=false});
+window.addEventListener("keyup",e=>{if(e.key==="a"||e.key==="ArrowLeft")input.left=false;if(e.key==="d"||e.key==="ArrowRight")input.right=false;if(e.key==="w"||e.key==="ArrowUp"||e.key===" ")input.jump=false;if(e.key==="w"||e.key==="ArrowUp")input.up=false;if(e.key==="s"||e.key==="ArrowDown")input.down=false;if(e.key===" ")input.hover=false;if(e.key.toLowerCase()==="c")input.special=false});
 function mouseAim(e){const p=clientToScreen({x:e.clientX,y:e.clientY},canvas.getBoundingClientRect());input.aimX=p.x;input.aimY=p.y;input.aimMode="mouse"}
 canvas.addEventListener("pointermove",e=>{if(e.pointerType!=="touch")mouseAim(e)});
 canvas.addEventListener("pointerdown",e=>{if(state==="play"&&e.pointerType!=="touch"){mouseAim(e);input.fire=true;initAudio()}});window.addEventListener("pointerup",e=>{if(e.pointerType!=="touch")input.fire=false});
@@ -132,6 +150,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="start"||action==="continue")show("mission");
   if(action==="howto")show("howto");if(action==="close-howto"){resetInput();show("title")}
   if(action==="select-mission"){if(!canPlayMission(a.dataset.mission,save))return;selectedMissionId=a.dataset.mission;selected=[...save.equipped];renderWeaponGrid();show("equip")}
+  if(action==="select-class"&&state==="equip"&&!game?.lab&&Object.hasOwn(PLAYER_CLASSES,a.dataset.playerClass)){save.selectedClass=a.dataset.playerClass;storeSave();renderClassGrid()}
   if(action==="mission-select"){discardMission();show("mission")}
   if(action==="back-mission")show("mission");
   if(action==="deploy"){if(selected.length!==2){equipMessage.textContent="武器を2つ選んでください";return}save.equipped=[...selected];storeSave();startMission()}
@@ -154,6 +173,7 @@ function startMission(id=selectedMissionId){
     shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),settings:save.settings,
     player:{x:64,y:WORLD.ground-32,vx:0,vy:0,w:14,h:27,hp:100,maxHp:100,onGround:true,face:1,invuln:0,shotCd:0,switchCd:0,shootPose:0,weaponSlot:0,anim:0,dead:false},
     enemies:[],shots:[],enemyShots:[],effects:[],items:[{x:2050,y:WORLD.ground-25,type:"crate",alive:true}],platforms:[{x:520,y:120,w:80},{x:1220,y:105,w:96},{x:2700,y:116,w:72},{x:3500,y:100,w:90}]};
+  applyPlayerClass(game.player,save.selectedClass);syncClassControls();
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
 }
@@ -187,7 +207,9 @@ function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);i
 function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;
   if(advanceImpact(g,dt)){let write=0;for(const e of g.enemies){if(e.dead)updateDeath(g,e,dt);if(!e.dead||e.death>0)g.enemies[write++]=e}g.enemies.length=write;updateEffects(dt);return}
   g.time+=dt;p.invuln=Math.max(0,p.invuln-dt);p.shotCd=Math.max(0,p.shotCd-dt);p.switchCd=Math.max(0,p.switchCd-dt);p.shootPose=Math.max(0,p.shootPose-dt);g.areaTimer=Math.max(0,g.areaTimer-dt);g.shake=Math.max(0,g.shake-dt*16);
-  if(g.lab?.preset==="FLIGHT")moveFlightPlayer(p,input,g.platforms,dt);else{
+  if(!formalClass())p.hitPose=Math.max(0,p.hitPose-dt);
+  if(formalClass()){const grounded=p.onGround;moveClassPlayer(p,input,g.platforms,dt);if(grounded&&!p.onGround&&p.vy<0&&p.classId!=="WING")tone(330,.06)}
+  else if(g.lab?.preset==="FLIGHT")moveFlightPlayer(p,input,g.platforms,dt);else{
   const preset=g.lab?PLAYER_PRESETS[g.lab.preset]:PLAYER_PRESETS.STANDARD;
   const move=(input.right?1:0)-(input.left?1:0);p.vx=move*preset.speed;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-preset.jump;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
   let floor=WORLD.ground-32;for(const pl of g.platforms){if(p.x+7>pl.x&&p.x-7<pl.x+pl.w&&p.y+32<=pl.y+8&&p.y+32+p.vy*dt>=pl.y)floor=Math.min(floor,pl.y-32)}if(p.y>=floor){p.y=floor;p.vy=0;p.onGround=true}else p.onGround=false;
@@ -201,6 +223,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;
   }
   g.grid.rebuild(g.enemies);updateShots(dt);updateEnemies(dt);updateEnemyShots(dt);updateItems(dt);updateEffects(dt);
   canvas.dataset.gameState=state;canvas.dataset.playerX=Math.round(p.x);canvas.dataset.playerHp=Math.ceil(p.hp);canvas.dataset.enemies=g.liveEnemies;canvas.dataset.boss=g.bossStarted?"1":"0";canvas.dataset.density=g.density;canvas.dataset.enemyLimit=g.enemyLimit;
+  canvas.dataset.playerClass=p.classId;canvas.dataset.flightEnergy=p.energy.toFixed(1);
   if(p.hp<=0&&!p.dead){p.dead=true;scheduleMission(()=>{document.querySelector("#gameoverStats").textContent=`SCORE ${g.score} / TIME ${formatTime(g.time)}`;missionScreen("gameover")},650)}
 }
 
@@ -251,9 +274,9 @@ function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);p
 function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0:e.hp>400?1:2;if(e.phase==="charge"){e.x+=e.vx*dt;if(e.x<4130||e.x>4720){e.x=clamp(e.x,4130,4720);e.vx*=-1;e.phase="move";e.timer=0}}else{e.x+=Math.sign((phase===2?p.x:4540)-e.x)*ENEMY_TYPES.boss.speed*(phase===2?.45:.18)*dt;if(e.timer>2.2-phase*.3){e.timer=0;const action=Math.floor(Math.random()*3);if(action===0)enemyBurst(e,5,130);else if(action===1){for(let i=0;i<2+phase;i++)spawnBossMinion(e,i)}else{e.phase="charge";e.vx=Math.sign(p.x-e.x)*(100+phase*25)}}}}
 function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
-function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;p.hp=Math.max(0,p.hp-amount);p.invuln=1;p.vx=sourceX<p.x?60:-60;p.vy=-90;game.shake=4;tone(55,.15,"sawtooth",.04)}
+function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;p.hp=Math.max(0,p.hp-amount*scale);p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
 function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
-function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(100,p.hp+25);else gCrate();tone(880,.12)}}}
+function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6}
 function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
 
@@ -270,7 +293,7 @@ function draw(){
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
   drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(g.player);drawEffects(g);
-  ctx.restore();drawHud(g);drawImpactHud(g);
+  ctx.restore();drawHud(g);drawClassHud(g);drawImpactHud(g);
 }
 function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
@@ -286,7 +309,13 @@ function drawWorld(g){
   for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2)}
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
-function drawPlayer(p){if(p.invuln>0&&Math.floor(p.invuln*12)%2)return;const frame=p.dead?7:p.shootPose>0?6:!p.onGround?(p.vy<0?4:5):Math.abs(p.vx)>0?Math.floor(p.anim)%4:0;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.player,frame*24,0,24,32,0,y,24,32)}else ctx.drawImage(images.player,frame*24,0,24,32,x,y,24,32);ctx.restore()}
+function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);ctx.restore()}
+function drawClassHud(g){
+  const p=g.player,c=PLAYER_CLASSES[p.classId];ctx.font="6px monospace";ctx.fillStyle="#071522dd";ctx.fillRect(4,46,80,16);ctx.fillStyle="#e4fff6";
+  ctx.fillText(g.lab&&!formalClass()?`${g.lab.preset} / TEST`:c.id,8,53);
+  if(c.id==="WING"&&formalClass()){ctx.fillStyle=p.energy<20?"#ff4f6d":"#37e8df";ctx.fillRect(8,56,50*p.energy/c.energyMax,3);ctx.fillText(`${Math.ceil(p.energy)}`,61,60)}
+  else if(c.id==="SCOUT"&&formalClass())ctx.fillText(p.dashCd>0?`DASH ${p.dashCd.toFixed(1)}s`:"DASH READY",8,60);
+}
 function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
     const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;
     if(e.dead&&e.deathTrail){const profile=DESTRUCTION_LEVELS[e.deathLevel];
@@ -370,6 +399,7 @@ window.__PDF_GAME__={version:VERSION,getState:()=>({state,time:game?.time||0,sco
 function startLab(openPanel=true){
   if(!DEBUG)return false;startMission("M01");
   game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=200;game.director.stopped=true;game.items.length=0;
+  configureLabPlayer();
   game.player.x=game.lab.anchorX;game.areaText="TEST LAB / NO SAVE";game.areaTimer=1.5;
   document.querySelector("#labSpawnResult").textContent="生成は開始位置へ復帰して行います。ボスは専用アリーナ。";
   document.querySelector("#labPerformance").textContent="FPS: 計測中…";delete document.querySelector("#labPerformance").dataset.metrics;
@@ -377,11 +407,11 @@ function startLab(openPanel=true){
   if(openPanel)openLabPanel();return true;
 }
 function syncLabUI(){
+  syncClassControls();
   document.querySelector("#labToggle").hidden=!game?.lab||state!=="play";
   document.querySelector("#labLevelBadge").hidden=!game?.lab||state!=="play";
   document.querySelector("#labPerformance").hidden=!game?.lab?.showFps||state!=="play";
   if(!game?.lab)return;const lab=game.lab;
-  gameShell.dataset.flight=String(lab.preset==="FLIGHT");
   const values={labWeapon1:lab.equipped[0],labWeapon2:lab.equipped[1],labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom)};
   for(const [id,value] of Object.entries(values))document.querySelector(`#${id}`).value=value;
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
@@ -403,7 +433,7 @@ function changeLabSetting(target){
   if(target.id==="labFps"){lab.showFps=target.checked;liveProfiler.reset()}
   if(target.id==="labDestruction")lab.settings.destructionLevel=normalizeDestructionLevel(value);
   if(target.id==="labShake"){lab.settings.shake=target.checked;if(!target.checked){game.shake=0;game.impact.shakeUntil=0}}
-  if(target.id==="labPreset"&&Object.hasOwn(PLAYER_PRESETS,value)){const flying=lab.preset==="FLIGHT";lab.preset=value;if(flying&&value!=="FLIGHT")landLabPlayer(game.player,game.platforms);game.player.vx=game.player.vy=0;resetInput()}
+  if(target.id==="labPreset"&&(Object.hasOwn(PLAYER_PRESETS,value)||Object.hasOwn(PLAYER_CLASSES,value))){const flying=lab.preset==="FLIGHT"||lab.preset==="WING";lab.preset=value;if(flying&&value!=="FLIGHT"&&value!=="WING")landLabPlayer(game.player,game.platforms);configureLabPlayer();resetInput()}
   if(target.id==="labEnemy"&&Object.values(LAB_ENEMIES).includes(value))lab.enemy=value;
   if(target.id==="labCount"&&LAB_COUNTS.includes(Number(value)))lab.count=Number(value);
   if(target.id==="labPlacement"&&["dense","spread"].includes(value))lab.placement=value;
@@ -417,6 +447,10 @@ function clearLabEnemies(){
   game.liveEnemies=game.liveMobs=0;game.bossStarted=game.midbossAlive=false;game.attacks=new AttackDirector();game.grid.rebuild(game.enemies);
   game.impact=createImpactState();game.shake=0;
 }
+function configureLabPlayer(){
+  const preset=game.lab.preset;applyPlayerClass(game.player,Object.hasOwn(PLAYER_CLASSES,preset)?preset:"RANGER");
+  game.player.spriteClass=PLAYER_PRESETS[preset]?.id||game.player.classId;
+}
 function labBlast(){
   if(!game?.lab||state!=="lab")return;
   const w=weapon(activeEquipment()[game.player.weaponSlot]);if(!["rocket","grenade"].includes(w.type))return;
@@ -427,7 +461,7 @@ function spawnLabEnemies(){
   if(!game?.lab)return;const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
   if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);
-  game.player.x=lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.vx=game.player.vy=0;game.player.hp=100;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
+  configureLabPlayer();game.player.x=lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
   game.nextEnemyId=1;game.time=game.kills=game.score=game.crates=0;game.player.shotCd=game.player.switchCd=0;resetInput();
   const leader=lab.enemy==="boss"||lab.enemy==="beetle",count=leader?1:lab.count;
   for(let i=0;i<count;i++){const pos=lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}

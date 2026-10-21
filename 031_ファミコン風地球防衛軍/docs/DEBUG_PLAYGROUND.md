@@ -1,4 +1,12 @@
-# Version 0.1.7 — DEBUG PLAYGROUND / DESTRUCTION LEVELS
+# Version 0.1.8 — DEBUG PLAYGROUND / FOUR CLASSES
+
+## 正式兵科と旧実験用プリセット
+
+- 「兵科 / 実験性能」の正式兵科RANGER / SCOUT / GUARDIAN / WINGは通常ミッションと同じHP・移動・固有能力を使用する。SCOUTはC / DASH、WINGはW / FLYで上昇、Space / HOLDでホバー。ENの枯渇・地上回復も検証できる。
+- 切替・再配置時はHP/EN/CDを初期化。飛行から地上兵科へ切替時は安全に着地する。
+- 旧STANDARD / SPEED / HEAVY / FLIGHTは「旧実験用」として維持。全HP100・固有能力なし、SPEEDのジャンプは220、FLIGHTは無制限飛行・無入力ホバー。正式兵科の性能を検証する際は正式兵科側を選ぶ。
+- LABは `lab.preset` の一時値のみ変更し、通常の `selectedClass`・武器・進行・設定を書き換えない。初期値は従来どおりSTANDARD。
+- 全8武器、無敵、200体、撃破3レベル、カメラAUTO/FIXED、FPS表示は継続使用できる。詳細は [PLAYER_CLASSES.md](PLAYER_CLASSES.md)。
 
 ## 起動・終了
 

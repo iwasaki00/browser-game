@@ -349,7 +349,7 @@ canvas.addEventListener('keydown', event => {
     + Math.max(0, Math.min(w.width - 1, x + (event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0)));
   safely(() => {});
 });
-const suspend = () => safely(() => { releasePointers(); session.runner.pause(); comparisonView?.suspend(); quality?.metrics.suspendFrameClock(); });
+const suspend = () => safely(() => { releasePointers(); session.runner.pause(); comparisonView?.suspend(); });
 bindVisibilityPause(document, suspend);
 window.addEventListener('blur', suspend);
 new ResizeObserver(() => {

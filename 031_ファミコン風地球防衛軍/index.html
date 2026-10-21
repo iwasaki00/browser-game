@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.7">
+  <link rel="stylesheet" href="styles.css?v=0.1.8">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.7</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.1.8</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -37,7 +37,8 @@
         <button class="menu-button" data-action="back-title">戻る</button>
       </div>
       <div id="screenEquip" class="screen">
-        <p class="eyebrow">EQUIPMENT</p><h2>装備選択 <small>2つ選択</small></h2>
+        <p class="eyebrow">EQUIPMENT / FOUR CLASSES</p><h2>兵科・装備選択 <small>武器を2つ選択</small></h2>
+        <div id="classGrid" class="class-grid" role="group" aria-label="兵科選択・4兵科すべて使用可能"></div>
         <div id="weaponGrid" class="weapon-grid"></div><p id="equipMessage" class="equip-message">A-01とS-02を装備中</p>
         <label class="density-setting" for="densitySelect">敵密度 <select id="densitySelect"><option value="LIGHT">LIGHT — 30体</option><option value="STANDARD" selected>STANDARD — 50体</option><option value="MASSIVE">MASSIVE — 100体</option></select><small>次のミッション開始時から適用</small></label>
         <div class="button-row"><button class="menu-button" data-action="back-mission">戻る</button><button class="menu-button menu-button--primary" data-action="deploy">出撃</button></div>
@@ -46,6 +47,7 @@
         <p class="eyebrow">CONTROLS</p><h2>操作方法</h2>
         <div class="howto-grid"><div><b>移動</b><span>A / D・← / →</span></div><div><b>ジャンプ</b><span>W / ↑ / SPACE</span></div><div><b>照準・射撃</b><span>マウス</span></div><div><b>武器切替</b><span>Q / E / SHIFT</span></div><div><b>ポーズ</b><span>ESC / P</span></div><div><b>スマホ：横向き推奨</b><span>左：移動・JUMP／右：SW・FIRE<br>FIREを押して射撃、ドラッグで照準。縦向きも操作可能</span></div></div>
         <button class="menu-button menu-button--primary" data-action="close-howto">了解</button>
+        <p class="class-help">SCOUT：C / DASHで短距離ダッシュ（無敵なし）<br>WING：W / ↑ / FLY長押しで上昇、離すと緩やかに下降<br>Space / HOLDでホバー、S / ↓で下降。着地で飛行EN回復</p>
       </div>
       <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="settings">設定</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <section id="screenSettings" class="screen screen--lab screen--settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
@@ -77,8 +79,8 @@
           </fieldset>
           <fieldset><legend>PLAYER</legend>
             <label><input id="labInvincible" type="checkbox" checked> 無敵（HP減少・ノックバックなし）</label>
-            <label>性能<select id="labPreset"><option>STANDARD</option><option>SPEED</option><option>HEAVY</option><option>FLIGHT</option></select></label>
-            <small>STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110 px/s<br>飛行：W/S・↑/↓またはUP/DOWN。無入力でホバー。</small>
+            <label>兵科 / 実験性能<select id="labPreset"><optgroup label="正式兵科（通常ミッションと同じ）"><option>RANGER</option><option>SCOUT</option><option>GUARDIAN</option><option>WING</option></optgroup><optgroup label="旧LAB実験用（全HP100・固有能力なし）"><option selected>STANDARD</option><option>SPEED</option><option>HEAVY</option><option>FLIGHT</option></optgroup></select></label>
+            <small>正式4兵科は通常と同じHP・特殊能力・エネルギー。切替時にHP/ENを補充。<br>旧実験用：STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110 px/s。FLIGHTのみ無制限飛行・無入力ホバー（W/S・UP/DOWN）。通常の選択兵科は変更しません。</small>
           </fieldset>
           <fieldset><legend>ENCOUNTER</legend>
             <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option></select></label>
@@ -108,6 +110,8 @@
           <span class="touch-label">MOVE</span>
           <div class="touch-left"><button data-touch="left" aria-label="左へ移動">◀</button><button data-touch="right" aria-label="右へ移動">▶</button></div>
           <button class="jump-button" data-touch="jump" aria-label="ジャンプ">JUMP</button>
+          <button class="dash-button" data-touch="special" aria-label="SCOUT 短距離ダッシュ">DASH</button>
+          <div class="wing-controls"><button data-touch="up" aria-label="WING 長押しで飛行上昇">FLY</button><button data-touch="hover" aria-label="WING 長押しでホバリング">HOLD</button></div>
           <div class="flight-controls"><button data-touch="up" aria-label="飛行上昇">UP</button><button data-touch="down" aria-label="飛行下降">DOWN</button></div>
         </div>
         <div class="touch-group touch-group--action">
@@ -119,6 +123,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.1.7"></script>
+  <script type="module" src="js/game.js?v=0.1.8"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@ native resolution without antialiasing. Run with: py -3 tools/generate_assets.py
 from pathlib import Path
 from PIL import Image, ImageDraw
 import random
+import argparse
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
@@ -69,6 +70,80 @@ def player_sheet():
     img = Image.new("RGBA", (24*8, 32), P["clear"]); d = ImageDraw.Draw(img)
     for f in range(8): draw_player(d, f*24, 0, f)
     out("sprites/player/player.png", img)
+
+
+def class_sheet():
+    """24x32 cells, 12 poses x 4 silhouettes, using the established palette.
+
+    Columns: idle/run1/run2/run3/jump/fall/shoot/hit/death/dash/fly/hover.
+    Rows: RANGER/SCOUT/GUARDIAN/WING. No random calls: other assets are unchanged.
+    """
+    sheet = Image.new("RGBA", (24*12, 32*4), P["clear"])
+    for row in range(4):
+        for frame in range(12):
+            cell = Image.new("RGBA", (24, 32), P["clear"])
+            d = ImageDraw.Draw(cell)
+            base = frame if frame < 7 else (7 if frame == 8 else 0)
+            if frame == 9: base = 1
+            draw_player(d, 0, 0, base)
+            bob = 1 if base in (1, 3) else 0
+            if row == 1:  # SCOUT: low helmet, scarf, slim torso and swept antenna.
+                rect(d, (2, 3, 18, 23), "clear")
+                poly(d, [(5, 8), (9, 3), (17, 5), (20, 10), (9, 13)], "outline")
+                rect(d, (9, 5, 16, 7), "green")
+                rect(d, (12, 8, 19, 10), "yellow")
+                poly(d, [(8, 12), (15, 13), (14, 23), (8, 23)], "steel")
+                poly(d, [(8, 12), (3, 13), (0, 19), (7, 16), (16, 14)], "green")
+                d.line([(7, 7), (4, 3), (1, 2)], fill=P["light"], width=1)
+                rect(d, (14, 15, 23, 17), "outline")
+                rect(d, (17, 15, 23, 16), "cyan")
+            elif row == 2:  # GUARDIAN: broad helmet, pauldrons, slab shield, heavy boots.
+                rect(d, (3, 4+bob, 18, 14+bob), "outline")
+                rect(d, (5, 4+bob, 16, 7+bob), "gray")
+                rect(d, (6, 8+bob, 18, 10+bob), "orange")
+                rect(d, (1, 13+bob, 20, 22+bob), "outline")
+                rect(d, (2, 14+bob, 7, 19+bob), "light")
+                rect(d, (8, 15+bob, 18, 24+bob), "steel")
+                rect(d, (11, 16+bob, 14, 21+bob), "orange")
+                rect(d, (0, 18, 6, 29), "outline")
+                rect(d, (1, 19, 4, 27), "gray")
+                rect(d, (8, 27, 12, 30), "gray")
+                rect(d, (14, 27, 20, 30), "gray")
+                rect(d, (18, 14+bob, 23, 18+bob), "navy")
+            elif row == 3:  # WING: twin fins and visible thruster pack, split crest.
+                rect(d, (2, 3, 8, 22), "clear")
+                poly(d, [(6, 13), (0, 4), (1, 21), (6, 25)], "outline")
+                poly(d, [(5, 14), (1, 7), (2, 20), (5, 22)], "purple")
+                poly(d, [(8, 14), (8, 1), (13, 8), (12, 21)], "outline")
+                poly(d, [(9, 5), (12, 9), (11, 15), (9, 13)], "light")
+                rect(d, (12, 5, 17, 6), "purple")
+                rect(d, (13, 8, 19, 10), "cyan")
+                rect(d, (4, 15, 8, 25), "navy")
+                rect(d, (5, 16, 7, 22), "purple")
+                rect(d, (9, 15, 12, 20), "purple")
+                if frame in (4, 5, 10, 11):
+                    rect(d, (7, 25, 21, 31), "clear")
+                    rect(d, (9, 23, 12, 28), "steel")
+                    rect(d, (16, 22, 19, 27), "gray")
+                    poly(d, [(4, 25), (9, 25), (7, 31 if frame == 10 else 29)], "cyan")
+                    rect(d, (5, 25, 7, 27), "light")
+            if frame == 6:
+                rect(d, (20, 12, 23, 16), "yellow")
+            if frame == 7:
+                rect(d, (10, 8, 18, 10), "red")
+                rect(d, (8, 16, 10, 19), "light")
+            if frame == 8:
+                # Distinct fallen silhouette, not just a red visor on an upright body.
+                cell = cell.rotate(90, resample=Image.Resampling.NEAREST, expand=True)
+                fallen = Image.new("RGBA", (24, 32), P["clear"])
+                fallen.alpha_composite(cell, (-4, 8))
+                cell = fallen
+            elif frame == 9 and row == 1:
+                # Short scarf wake contained inside the original cell dimensions.
+                d.line([(0, 20), (4, 18), (7, 18)], fill=P["green"], width=2)
+                rect(d, (0, 24, 4, 24), "cyan")
+            sheet.alpha_composite(cell, (frame*24, row*32))
+    out("sprites/player/classes.png", sheet)
 
 def crawler(d, ox, oy, f):
     y=oy+18+(f%2)
@@ -206,7 +281,12 @@ def city_background():
     out("backgrounds/city.png",img)
 
 def main():
-    player_sheet(); enemies_sheet(); boss_sheet(); weapon_assets(); effects_items_tiles(); city_background()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--classes-only", action="store_true", help="Generate only the formal-class atlas")
+    if parser.parse_args().classes_only:
+        class_sheet()
+        return
+    player_sheet(); class_sheet(); enemies_sheet(); boss_sheet(); weapon_assets(); effects_items_tiles(); city_background()
     print("Generated all original assets with seed 7319.")
 
 if __name__ == "__main__": main()

@@ -1,4 +1,4 @@
-export const VERSION = "0.1.7";
+export const VERSION = "0.1.8";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -23,6 +23,15 @@ export const BATTLE_CAMERA = Object.freeze({
 });
 
 export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;
+
+// World units; shared by missions and the formal-class LAB tests.
+export const PLAYER_CLASSES = Object.freeze({
+  RANGER:Object.freeze({id:"RANGER",hp:100,speed:95,jump:220,damageScale:1,knockback:1,row:0,ability:"標準装備・安定した機動力"}),
+  SCOUT:Object.freeze({id:"SCOUT",hp:75,speed:180,jump:253,damageScale:1,knockback:1,row:1,ability:"C：短距離ダッシュ（無敵なし）",dashSpeed:360,dashDuration:.16,dashCooldown:1.2}),
+  GUARDIAN:Object.freeze({id:"GUARDIAN",hp:200,speed:65,jump:176,damageScale:.75,knockback:.55,row:2,ability:"被ダメージ25%・ノックバック45%軽減"}),
+  WING:Object.freeze({id:"WING",hp:65,speed:110,jump:0,damageScale:1,knockback:1,row:3,ability:"W：上昇 / Space：ホバー / S：下降",energyMax:100,energyDrain:20,energyRecovery:35,ascentSpeed:110,descentSpeed:28,downSpeed:80})
+});
+export const normalizeClass = id => Object.hasOwn(PLAYER_CLASSES,id)?id:"RANGER";
 
 export const DENSITY_MODES = Object.freeze({
   LIGHT:{limit:30,scale:.6}, STANDARD:{limit:50,scale:1}, MASSIVE:{limit:100,scale:2}
@@ -120,7 +129,7 @@ export const DESTRUCTION_LEVELS=Object.freeze({
 export function normalizeDestructionLevel(value){return (typeof value==="number"||typeof value==="string")&&Object.hasOwn(DESTRUCTION_LEVELS,value)?Number(value):1}
 
 export const DEFAULT_SAVE = Object.freeze({
-  version:2, clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
+  version:2, selectedClass:"RANGER", clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
   bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
 });
 
@@ -135,6 +144,7 @@ export function sanitizeSave(value){
   base.unlocked=[...new Set(["A-01","S-02",...unlocked])];
   const equipped=Array.isArray(value.equipped)?value.equipped.filter(x=>base.unlocked.includes(x)).slice(0,2):base.equipped;
   base.equipped=equipped.length===2?equipped:base.equipped;
+  base.selectedClass=normalizeClass(value.selectedClass);
   Object.assign(base,missionProgress(value));
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;

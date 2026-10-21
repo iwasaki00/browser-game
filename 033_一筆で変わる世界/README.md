@@ -1,9 +1,26 @@
 # 一筆で変わる世界 / ONE STROKE WORLDS
 
-**Version 0.6.0 — Playable Game**
+**Version 0.7.0 — Quality Gate**
 
 一筆で地形を削る・盛る、水流パズルです。6つのチャレンジで町へ水を届け、水害を防ぎます。
-既存の水流式・A〜Dの巡回・一筆判定・Stage 01〜03・同期比較・Living Map描画を維持し、ステージ解放、進捗保存、フリー実験、メニューとガイドを追加しました。
+0.6.0の6ステージ・水流式・A〜Dの巡回・一筆判定・同期比較・Living Map・保存形式を維持し、開発用の品質診断と受入試験用の文書を追加しました。
+
+## 品質診断と受入試験
+
+開発サーバーのURLに `?quality=1` を付けると診断が表示されます。通常URLと本番ビルドでは非表示です。FPS（RAF）、描画CPU時間、論理ステップ時間、Canvasサイズ・DPR、操作状態、A/Bステップ一致、水量収支を確認できます。「診断を停止」で計測を止め、「計測をリセット」で統計だけを初期化します。詳細欄は折りたため、結果JSONは表示・コピーできます。
+
+- [品質評価報告書](docs/QUALITY-REPORT-v0.7.0.md): 実測と自動テスト、未確認事項を区別。
+- [Windows Chrome性能計測手順](docs/PERFORMANCE-PROCEDURE-v0.7.0.md)
+- [iPhone / Android実機受入試験書](docs/MOBILE-ACCEPTANCE-v0.7.0.md): 実機30項目は未実施。
+- [人によるプレイ品質評価](docs/PLAY-QUALITY-v0.7.0.md): 10項目は未実施。
+- [方向偏りの数値記録](docs/QUALITY-BIAS-v0.7.0.json)
+
+本版の関連テストは次のコマンドで実行します。過去版の確認結果は、この版の実機合格を意味しません。
+
+```sh
+npm test -- tests/quality.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts tests/bias.test.ts tests/living-map.test.ts tests/stroke.test.ts
+npm run build
+```
 
 ## 続けて遊ぶ
 
@@ -31,7 +48,7 @@ PCは地図を主領域とし、ステージ・目標・操作を右側に配置
 
 広い画面は左右並列、900px未満はBEFORE（A）／AFTER（B）切替です。切替は再計算せず、両世界のパン・ズーム・表示範囲を共有します。差分は世界B−世界Aで表示し、取水量増加・最大浸水深減少を改善とします。任意ステップへのシークと全履歴保存はありません。
 
-関連8ファイル・234テスト成功、0失敗。TypeScript型チェック・Viteビルド成功。Chromeで進捗復元、メニュー停止、390px幅のステージ選択・設定・フリー実験を確認済みです。スマートフォン実機は未確認です。詳細は[0.6.0実装報告](docs/IMPLEMENTATION-v0.6.0.md)を参照してください。
+0.6.0時点では関連8ファイル・234テストが成功しました。Chromeの進捗復元、メニュー停止、390px幅等の過去の確認は[0.6.0実装報告](docs/IMPLEMENTATION-v0.6.0.md)に保存しています。0.7.0の実施結果は[品質評価報告書](docs/QUALITY-REPORT-v0.7.0.md)を参照してください。
 
 ## チャレンジ
 
@@ -63,7 +80,7 @@ Node.js 20.19以降、または22.12以降の対応バージョンを使用し�
 ```sh
 npm ci
 npm run dev
-npm test -- tests/playable.test.ts tests/living-map.test.ts tests/comparison.test.ts tests/challenge.test.ts tests/challenge-design.test.ts tests/stroke.test.ts tests/simulation.test.ts tests/bias.test.ts
+npm test -- tests/quality.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts tests/bias.test.ts tests/living-map.test.ts tests/stroke.test.ts
 npm run build
 ```
 
@@ -111,14 +128,14 @@ PREVIEW中は専用の実行ボタンを使います。デバッグは600、チ�
 
 ## 検証結果と制約
 
-**関連234テスト成功、0件失敗。TypeScript型チェック・Viteビルド成功。**
+**0.7.0: 関連138テスト成功、0件失敗。TypeScript型チェック・Viteビルド成功。**
 
 6ステージとも、保存した座標列による一筆を既存エンジンで実行し、基準失敗→成功を自動テストで確認済みです。
-今回ChromeでStage 01のクリア保存・次ステージ解放と復元、メニュー停止、フリー実験の一筆・停止・STEPを確認しました。
-390px幅で文書・主要ボタンの横はみ出しなし。実機タッチ・Safari・Androidは未確認です。
+0.6.0ではChromeでStage 01のクリア保存・次ステージ解放と復元、メニュー停止、フリー実験の一筆・停止・STEPを確認しました。
+0.6.0の390px幅確認では文書・主要ボタンの横はみ出しはありませんでした。本版の実機タッチ・Safari・Androidは未確認です。
 奇数幅の方向偏りは残存し、水流式は変更していません。
 
-今回のファイル一覧、PG-01〜22と未確認項目は[0.6.0実装結果](docs/IMPLEMENTATION-v0.6.0.md)、全6ステージの数値は[結果データ](docs/STAGE-RESULTS-v0.6.0.json)を参照してください。
+過去のファイル一覧、PG-01〜22と未確認項目は[0.6.0実装結果](docs/IMPLEMENTATION-v0.6.0.md)、全6ステージの数値は[結果データ](docs/STAGE-RESULTS-v0.6.0.json)を参照してください。
 過去の記録：[0.5.0](docs/IMPLEMENTATION-v0.5.0.md)、[0.4.0](docs/IMPLEMENTATION-v0.4.0.md)、[0.3.0](docs/IMPLEMENTATION-v0.3.0.md)。
 [0.2.0の記録](docs/IMPLEMENTATION-v0.2.0.md)と
 [0.1.0の記録](docs/IMPLEMENTATION-v0.1.0.md)も保存しています。

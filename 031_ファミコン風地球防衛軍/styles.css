@@ -423,3 +423,33 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
   #screenEquip .eyebrow { margin-bottom: 3px; }
   #screenEquip .weapon-grid { margin: 2px auto; }
 }
+
+/* Formal classes: scrolling equipment panel, native-resolution atlas previews. */
+#screenEquip { justify-content: flex-start; }
+#screenEquip > * { flex-shrink: 0; }
+#screenEquip::before, #screenEquip::after { display: none; }
+#screenEquip h2 { font-size: clamp(22px, 3.5vw, 38px); }
+.class-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); width: 100%; max-width: 740px; gap: 6px; margin: 4px 0 10px; }
+.class-card { display: flex; align-items: center; gap: 4px; min-width: 0; padding: 6px 3px; border: 2px solid var(--line); background: #071524; color: var(--ink); text-align: left; cursor: pointer; }
+.class-card.selected { border-color: var(--cyan); background: #10313b; }
+.class-card:focus-visible { outline: 2px solid var(--yellow); }
+.class-card strong { display: block; color: var(--yellow); font-size: 12px; }
+.class-card small { display: block; font-size: 9px; line-height: 1.5; overflow-wrap: anywhere; }
+.class-pic { display: block; flex: 0 0 48px; width: 48px; height: 64px; background: url("assets/sprites/player/classes.png?v=0.1.8") no-repeat; background-size: 576px 256px; image-rendering: pixelated; }
+.class-help { flex-shrink: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.dash-button, .wing-controls { display: none; }
+[data-scout="true"] .dash-button { display: block; min-width: 52px; min-height: 44px; border-radius: 8px; color: var(--cyan); }
+[data-wing="true"] .jump-button { display: none; }
+[data-wing="true"] .wing-controls { display: flex; gap: 6px; }
+.wing-controls button { min-width: 48px; min-height: 48px; border-radius: 8px; font-size: 12px; }
+@media (max-width: 600px) {
+  .class-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .class-card { padding: 6px; }
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  [data-wing="true"] .wing-controls { flex-basis: 100%; justify-content: center; }
+  [data-scout="true"] .jump-button { flex-basis: 60px; width: 60px; }
+  [data-scout="true"] .dash-button { width: 60px; }
+  #screenEquip .button-row { width: 100%; }
+  #screenEquip .button-row .menu-button { min-width: 0; flex: 1; }
+}

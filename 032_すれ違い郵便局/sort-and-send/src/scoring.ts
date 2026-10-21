@@ -48,13 +48,14 @@ export function rateDelivery(input: {
   report?: SolverSummary;
 }): Rating {
   if (!input.result.clear) return { status: 'RATED', stars: 0, reason: '誤配送があります。設定を見直して再挑戦しよう。' };
+  // A rescued route is not a member of the ordinary Solver's successful cost distribution.
+  if (input.rescueUsed) return { status: 'RATED', stars: 1, reason: 'RESCUEを使って配送成功。通常の最適解とは別の星1評価です。' };
   const minimum = verifiedMinimum(input.stage, input.report);
   if (!Number.isSafeInteger(input.cost) || input.cost < 0 || (minimum !== null &&
       (input.cost < minimum || !input.report!.costDistribution[input.cost]))) {
     return { status: 'INCONSISTENT', stars: null, reason: 'コストと検証データが一致しないため、評価を確定できません。' };
   }
   if (minimum === null) return { status: 'PENDING', stars: null, reason: '配送成功。最適コストの検証データを確認できないため、評価は未確定です。' };
-  if (input.rescueUsed) return { status: 'RATED', stars: 1, reason: 'RESCUEを使って配送成功。' };
   return input.cost === minimum
     ? { status: 'RATED', stars: 3, reason: '最適達成！ 最小の方向転換コストで届けました。' }
     : { status: 'RATED', stars: 2, reason: '配送成功！ 方向転換を減らす余地があります。' };

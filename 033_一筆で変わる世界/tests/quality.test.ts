@@ -67,8 +67,9 @@ describe('Quality Gate observational instrumentation', () => {
     const m = meter(); m.setEnabled(true); m.frame(0, false); m.frame(16, false); m.frame(96, false);
     expect(m.snapshot().longFrames).toBe(1); expect(m.snapshot().frameIntervals.maximumMs).toBe(80);
     m.frame(10000, true); m.frame(20000, false); m.frame(20016, false);
-    expect(m.snapshot().frameIntervals.count).toBe(3);
-    m.suspendFrameClock(); m.frame(30000, false); expect(m.snapshot().frameIntervals.count).toBe(3);
+    expect(m.snapshot().frameIntervals.count).toBe(2);
+    expect(m.snapshot().raf.conditions.RESUMING.count).toBe(1);
+    m.suspendFrameClock(); m.frame(30000, false); expect(m.snapshot().frameIntervals.count).toBe(2);
     m.setEnabled(false); m.frame(30000, false); m.setEnabled(true); m.frame(40000, false); m.frame(40016, false);
     expect(m.snapshot().longFrames).toBe(1);
   });

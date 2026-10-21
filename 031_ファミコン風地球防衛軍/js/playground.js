@@ -1,8 +1,9 @@
-import {WORLD,BATTLE_CAMERA,clamp} from "./data.js";
+import {WORLD,BATTLE_CAMERA,PLAYER_CLASSES,clamp} from "./data.js?v=0.1.8";
+import {movePlayerBody} from "./player.js?v=0.1.8";
 
 export const PLAYER_PRESETS=Object.freeze({
-  STANDARD:{speed:95,jump:220}, SPEED:{speed:180,jump:220},
-  HEAVY:{speed:65,jump:176}, FLIGHT:{speed:110,jump:0}
+  STANDARD:{...PLAYER_CLASSES.RANGER}, SPEED:{...PLAYER_CLASSES.SCOUT,jump:220},
+  HEAVY:{...PLAYER_CLASSES.GUARDIAN}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
 });
 export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss"});
 export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);
@@ -23,18 +24,7 @@ export function moveFlightPlayer(p,input,platforms,dt){
   p.vx=((input.right?1:0)-(input.left?1:0))*speed;
   p.vy=((input.down?1:0)-(input.up?1:0))*speed;
   if(p.vx)p.face=Math.sign(p.vx);
-  let x=clamp(p.x+p.vx*dt,8,WORLD.width-25);
-  for(const pl of platforms)if(p.y+32>pl.y&&p.y<pl.y+8){
-    if(p.vx>0&&p.x+7<=pl.x&&x+7>pl.x)x=Math.min(x,pl.x-7);
-    if(p.vx<0&&p.x-7>=pl.x+pl.w&&x-7<pl.x+pl.w)x=Math.max(x,pl.x+pl.w+7);
-  }
-  p.x=x;
-  let y=clamp(p.y+p.vy*dt,0,WORLD.ground-32);
-  for(const pl of platforms)if(p.x+7>pl.x&&p.x-7<pl.x+pl.w){
-    if(p.vy>0&&p.y+32<=pl.y&&y+32>pl.y)y=Math.min(y,pl.y-32);
-    if(p.vy<0&&p.y>=pl.y+8&&y<pl.y+8)y=Math.max(y,pl.y+8);
-  }
-  p.y=y;p.onGround=p.y===WORLD.ground-32||platforms.some(pl=>p.y+32===pl.y&&p.x+7>pl.x&&p.x-7<pl.x+pl.w);
+  movePlayerBody(p,platforms,dt,true);
 }
 
 export function fixedLabCamera(camera,p,zoom){

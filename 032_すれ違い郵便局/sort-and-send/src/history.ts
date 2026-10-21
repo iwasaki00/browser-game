@@ -9,6 +9,8 @@ export function parcelHistory(stage: Stage, result: SimulationResult, parcelId: 
     ...parcel,
     expectedExits: stage.nodes.filter(n => n.kind === 'exit' && n.accepts === parcel.color).map(n => n.id),
     switches: result.events.filter(e => e.parcel === parcelId && e.type === 'move' && e.direction !== undefined)
-      .map(e => ({ id: e.from!, direction: e.direction!, patternIndex: e.patternIndex!, tick: e.tick })),
+      .map(e => ({ id: e.from!, direction: e.direction!, patternIndex: e.patternIndex!, tick: e.tick,
+        ...(e.rescue ? { rescue: true as const, originalDirection: e.originalDirection } : {}) })),
+    rescueUsed: result.rescueUsed === true,
   };
 }
