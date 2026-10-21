@@ -224,5 +224,80 @@
     },
     "status": "VALID",
     "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"e\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"}]}"
+  },
+  {
+    "stageId": "16",
+    "totalConfigurations": "256",
+    "checkedConfigurations": 256,
+    "solutionCount": 3,
+    "minCost": 4,
+    "maxCost": 6,
+    "optimalSolutionCount": 2,
+    "costDistribution": {
+      "4": 2,
+      "6": 1
+    },
+    "status": "VALID",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"},{\"id\":7,\"color\":\"RED\"}]}"
+  },
+  {
+    "stageId": "17",
+    "totalConfigurations": "1024",
+    "checkedConfigurations": 1024,
+    "solutionCount": 3,
+    "minCost": 4,
+    "maxCost": 6,
+    "optimalSolutionCount": 1,
+    "costDistribution": {
+      "4": 1,
+      "6": 2
+    },
+    "status": "VALID",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"YELLOW\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"RED\"},{\"id\":6,\"color\":\"RED\"},{\"id\":7,\"color\":\"YELLOW\"},{\"id\":8,\"color\":\"BLUE\"}]}"
+  },
+  {
+    "stageId": "18",
+    "totalConfigurations": "1024",
+    "checkedConfigurations": 1024,
+    "solutionCount": 4,
+    "minCost": 6,
+    "maxCost": 8,
+    "optimalSolutionCount": 1,
+    "costDistribution": {
+      "6": 1,
+      "8": 3
+    },
+    "status": "VALID",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"YELLOW\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"RED\"},{\"id\":6,\"color\":\"BLUE\"},{\"id\":7,\"color\":\"YELLOW\"},{\"id\":8,\"color\":\"BLUE\"},{\"id\":9,\"color\":\"BLUE\"},{\"id\":10,\"color\":\"YELLOW\"}]}"
+  },
+  {
+    "stageId": "19",
+    "totalConfigurations": "8192",
+    "checkedConfigurations": 8192,
+    "solutionCount": 2,
+    "minCost": 6,
+    "maxCost": 8,
+    "optimalSolutionCount": 1,
+    "costDistribution": {
+      "6": 1,
+      "8": 1
+    },
+    "status": "VALID",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"e\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"YELLOW\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"BLUE\"},{\"id\":6,\"color\":\"YELLOW\"},{\"id\":7,\"color\":\"RED\"},{\"id\":8,\"color\":\"YELLOW\"}]}"
+  },
+  {
+    "stageId": "20",
+    "totalConfigurations": "8192",
+    "checkedConfigurations": 8192,
+    "solutionCount": 2,
+    "minCost": 6,
+    "maxCost": 8,
+    "optimalSolutionCount": 1,
+    "costDistribution": {
+      "6": 1,
+      "8": 1
+    },
+    "status": "VALID",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"e\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"e\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"YELLOW\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"BLUE\"},{\"id\":7,\"color\":\"BLUE\"},{\"id\":8,\"color\":\"RED\"},{\"id\":9,\"color\":\"BLUE\"},{\"id\":10,\"color\":\"YELLOW\"}]}"
   }
 ]

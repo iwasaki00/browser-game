@@ -8,6 +8,9 @@ import stageRatings from './generated/stage-ratings.json';
 import { parcelHistory } from './history';
 import { routePosition } from './route';
 import type { StageEdge } from './stage';
+import { createProgressStore, memoryStorage, productionProgressKey, type ProgressStorage, type Settings } from './progress';
+import { GameAudio } from './audio';
+import { movementProgress, recentArrivals, reducedMotion } from './presentation';
 
 type Mode = 'DESIGN' | 'RUN' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -17,6 +20,18 @@ const start = get<HTMLButtonElement>('start');
 const retry = get<HTMLButtonElement>('retry');
 const reset = get<HTMLButtonElement>('reset');
 const next = get<HTMLButtonElement>('next');
+const developerAccess = import.meta.env.DEV && new URLSearchParams(location.search).get('testMode') === '1';
+let storage: ProgressStorage | undefined;
+try { storage = developerAccess ? memoryStorage() : window.localStorage; } catch { /* Play in memory. */ }
+const progress = createProgressStore(stages.map(s => s.id), storage, import.meta.env.DEV ? 'sort-and-send.dev.progress.v1' : productionProgressKey);
+const unlocked = (id: string) => developerAccess || progress.isUnlocked(id);
+const audio = new GameAudio(progress.data.settings);
+const osMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let reduceMotion = reducedMotion(progress.data.settings.reducedMotion, osMotion.matches);
+let playedArrivals = new Set<string>();
+function gestureSound() { void audio.activate().then(() => audio.play('switch')); }
+document.addEventListener('visibilitychange', () => audio.setHidden(document.hidden));
+audio.setHidden(document.hidden);
 let mode: Mode = 'DESIGN';
 let stageIndex = 0;
 let stage = stages[0];
@@ -33,7 +48,7 @@ const ink = '#243D4A';
 const teal = '#247E72';
 const colors = { RED: '#E27A69', BLUE: '#558CC7', YELLOW: '#E4B754' };
 const marks = { RED: '●', BLUE: '▲', YELLOW: '◆' };
-const chapterNames = ['はじめての配送', '分岐の連鎖', '未来を読む'];
+const chapterNames = ['はじめての配送', '分岐の連鎖', '未来を読む', '完璧な配送計画'];
 const node = (id: string) => {
   const n = stage.nodes.find(n => n.id === id)!;
   return { ...n, ...n.layout };
@@ -52,6 +67,7 @@ function updateControls() {
       card.addEventListener('click', () => {
         if (mode === 'RUN') return;
         patterns[selectedSwitch][i] = patterns[selectedSwitch][i] === 'L' ? 'R' : 'L';
+        gestureSound();
         design();
       });
       get('pattern').append(card); return card;
@@ -69,10 +85,20 @@ function updateControls() {
     button.textContent = `分岐 ${id.toUpperCase()} · ${patterns[id].join('')}`;
     button.setAttribute('aria-pressed', String(id === selectedSwitch));
   }
-  for (const button of get('stage-selector').querySelectorAll('button')) button.disabled = mode === 'RUN';
+  for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
+    const id = stages[i].id;
+    const locked = !unlocked(id);
+    const stars = progress.data.bestStars[id] ?? 0;
+    button.disabled = mode === 'RUN' || locked;
+    button.innerHTML = `<span>${locked ? '🔒 ' : ''}${id}</span><small>${stars ? '★'.repeat(stars) : progress.data.clearedStageIds.includes(id) ? 'CLEAR' : '···'}</small>`;
+    button.setAttribute('aria-label', `${stages[i].name}。${locked ? `Stage ${stages[i - 1].id}のCLEARで解放` : stars ? `最高星${stars}` : 'プレイ可能'}`);
+    button.title = locked ? `Stage ${stages[i - 1].id}をCLEARすると解放` : stages[i].name;
+  }
   start.disabled = mode !== 'DESIGN' || stageErrors.length > 0;
   retry.disabled = mode === 'RUN'; reset.disabled = mode === 'RUN';
   next.hidden = !(mode === 'RESULT' && result?.clear && stageIndex < stages.length - 1);
+  get<HTMLButtonElement>('reset-progress').disabled = mode === 'RUN';
+  updateStorageStatus();
   highlightDispatch();
 }
 
@@ -92,7 +118,7 @@ function showError(message: string) {
 }
 
 function selectStage(index: number) {
-  if (mode === 'RUN') return;
+  if (mode === 'RUN' || !stages[index] || !unlocked(stages[index].id)) return;
   stageIndex = index; stage = stages[index];
   selectedSwitch = stage.nodes.find(n => n.kind === 'switch')?.id ?? '';
   get('stage-name').textContent = stage.name;
@@ -101,7 +127,7 @@ function selectStage(index: number) {
   get('switch-selector').replaceChildren();
   for (const branch of branches) {
     const button = document.createElement('button'); button.type = 'button'; button.dataset.switch = branch.id;
-    button.addEventListener('click', () => { selectedSwitch = branch.id; updateControls(); draw(); });
+    button.addEventListener('click', () => { void audio.activate(); selectedSwitch = branch.id; updateControls(); draw(); });
     get('switch-selector').append(button);
   }
   for (const [i, button] of [...get('stage-selector').querySelectorAll('button')].entries()) {
@@ -137,11 +163,12 @@ reset.addEventListener('click', () => { if (mode !== 'RUN') design(true); });
 next.addEventListener('click', () => { selectStage(stageIndex + 1); get('stage-name').scrollIntoView({ block: 'nearest' }); });
 start.addEventListener('click', () => {
   if (mode !== 'DESIGN') return;
+  void audio.activate();
   stageErrors = validateStage(stage);
   if (stageErrors.length) { showError(stageErrors.join('\n')); updateControls(); return; }
   try { result = simulate(stage, patterns); }
   catch (error) { showError(error instanceof Error ? error.message : '配送データを確認してください。'); return; }
-  mode = 'RUN'; startedAt = performance.now();
+  mode = 'RUN'; startedAt = performance.now(); playedArrivals = new Set();
   get('report').innerHTML = '<h3 id="result-title">配送中…</h3><p>設定した循環パターンで<br>荷物を順番に送り出しています。</p>';
   updateControls(); requestAnimationFrame(animate);
 });
@@ -166,6 +193,14 @@ get('report').addEventListener('click', event => {
 function animate(now: number) {
   if (mode !== 'RUN' || !result) return;
   elapsed = Math.min((now - startedAt) / tickMs, result.ticks);
+  for (const event of result.events) {
+    if (event.type !== 'deliver' || elapsed < event.tick + 1) continue;
+    const key = `${event.parcel}:${event.tick}`;
+    if (!playedArrivals.has(key)) {
+      playedArrivals.add(key);
+      if (elapsed - event.tick - 1 < .3) audio.play(event.correct ? 'correct' : 'wrong');
+    }
+  }
   get('tick').textContent = `TICK ${Math.min(Math.floor(elapsed) + 1, result.ticks)} / ${result.ticks}`;
   highlightDispatch(); draw();
   if (elapsed < result.ticks) requestAnimationFrame(animate);
@@ -176,7 +211,17 @@ function animate(now: number) {
     const cost = deliveryCost(patterns, result);
     const minimum = verifiedMinimum(stage, report);
     const rating = rateDelivery({ stage, result, cost, rescueUsed: false, report });
+    const newRecord = progress.recordResult(stage.id, result.clear, rating.stars);
+    if (result.clear) audio.play(newRecord ? 'record' : 'clear');
+    updateControls();
     get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><p class="history-help">荷物を選んで配送履歴を確認</p><ul class="result-list">${result.parcels.map(p => `<li><button type="button" class="parcel-history-button" data-parcel-id="${p.id}" aria-controls="parcel-history" aria-pressed="false"><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></button></li>`).join('')}</ul><section id="parcel-history" class="parcel-history" aria-label="選択した荷物の配送履歴" aria-live="polite"><p>配送結果の荷物番号を選ぶと、経路と分岐の使用方向を表示します。</p></section>`;
+    if (result.clear) {
+      get('report').querySelector('.rating')?.classList.add('earned-stars');
+      const notice = document.createElement('p'); notice.className = newRecord ? 'new-record' : 'clear-notice';
+      notice.textContent = newRecord ? 'NEW BEST! 最高星評価を更新しました。' : stageIndex === stages.length - 1 ? '全20ステージ、グランドオープン！' : `Stage ${stages[stageIndex + 1].id}がプレイできます。`;
+      get('report').querySelector('.rating')?.after(notice);
+      if (stageIndex === stages.length - 1 && newRecord) { const final = document.createElement('p'); final.textContent = '全20ステージ、グランドオープン！'; get('report').append(final); }
+    }
   }
 }
 
@@ -233,7 +278,7 @@ function draw() {
     } else if (n.kind === 'switch') {
       if (n.id === selectedSwitch) roundRect(n.x - 54, n.y - 48, 108, 98, 27, '#CDE8DF', teal);
       const dispatch = mode === 'RUN' ? result?.events.find(e => e.from === n.id && e.direction && e.tick === Math.floor(elapsed)) : undefined;
-      if (dispatch) {
+      if (dispatch && !reduceMotion) {
         ctx.beginPath(); ctx.arc(n.x, n.y, 62 + Math.sin(elapsed * Math.PI * 2) * 3, 0, Math.PI * 2);
         ctx.strokeStyle = '#247E7266'; ctx.lineWidth = 4; ctx.stroke();
       }
@@ -250,13 +295,20 @@ function draw() {
       symbol(color, n.x, n.y - 26, 12);
       roundRect(n.x - 40, n.y - 2, 80, 9, 4, '#243d4a66');
       text(n.label, n.x, n.y + 64, stage.board ? 17 : 12, color === 'RED' ? '#b15c4f' : color === 'BLUE' ? '#4473a2' : '#806320');
+      const arrivals = result ? recentArrivals(result, elapsed).filter(e => e.to === n.id) : [];
+      if (arrivals.length) {
+        const correct = arrivals.every(e => e.correct);
+        ctx.beginPath(); ctx.roundRect(n.x - 66, n.y - 58, 132, 92, 22);
+        ctx.strokeStyle = correct ? '#247E72' : '#b54c3d'; ctx.lineWidth = reduceMotion ? 3 : 5; ctx.stroke();
+        text(correct ? '✓' : '× 誤配送', n.x, n.y - 70, 19, correct ? teal : '#b54c3d');
+      }
     }
   }
   if (result) for (const p of result.parcels) {
     const moves = result.events.filter(e => e.parcel === p.id && e.type === 'move');
     const move = moves.find(e => elapsed >= e.tick && elapsed < e.tick + 1);
     if (move) {
-      let t = elapsed - move.tick; t = t * t * (3 - 2 * t);
+      const t = movementProgress(elapsed - move.tick, reduceMotion);
       const edge = stage.edges.find(e => e.from === move.from && e.to === move.to && e.direction === move.direction)!;
       const { x, y } = routePosition(edgePoints(edge), t);
       roundRect(x - 18, y - 16, 36, 36, 9, '#243d4a25');
@@ -283,6 +335,36 @@ function resize() {
   draw();
 }
 new ResizeObserver(resize).observe(canvas);
+function updateStorageStatus() {
+  get('storage-status').textContent = developerAccess ? '開発用の全ステージ確認モード：記録はこのページ内のみ。本番の保存データは読み書きしません。' :
+    progress.status === 'unavailable' ? 'この環境では保存できません。このページ内で引き続き遊べます。' :
+    progress.status === 'unknown-version' ? '未対応の保存形式です。元のデータを保護して一時的にプレイします。保存を再開する場合は進行を初期化してください。' :
+    progress.status === 'recovered' ? '保存データを読み取れなかったため、初期状態から再開しました。' : '解放状況・CLEAR履歴・最高星評価・設定はこのブラウザに保存されます。';
+}
+function readSettings(): Settings {
+  return { sfx: get<HTMLInputElement>('sfx').checked, bgm: get<HTMLInputElement>('bgm').checked,
+    volume: get<HTMLInputElement>('volume').valueAsNumber / 100, reducedMotion: get<HTMLInputElement>('reduced-motion').checked };
+}
+function applySettings() {
+  get('volume-value').textContent = `${Math.round(readSettings().volume * 100)}%`;
+  audio.update(readSettings());
+  reduceMotion = reducedMotion(readSettings().reducedMotion, osMotion.matches);
+  document.documentElement.dataset.reducedMotion = String(reduceMotion);
+  draw();
+}
+const settings = progress.data.settings;
+get<HTMLInputElement>('sfx').checked = settings.sfx;
+get<HTMLInputElement>('bgm').checked = settings.bgm;
+get<HTMLInputElement>('volume').value = String(Math.round(settings.volume * 100));
+get<HTMLInputElement>('reduced-motion').checked = settings.reducedMotion;
+for (const id of ['sfx', 'bgm', 'volume', 'reduced-motion']) get(id).addEventListener('change', () => { progress.setSettings(readSettings()); applySettings(); void audio.activate(); updateStorageStatus(); });
+get('volume').addEventListener('input', applySettings);
+const resetDialog = get<HTMLDialogElement>('reset-confirm');
+get('reset-progress').addEventListener('click', () => { if (mode !== 'RUN') resetDialog.showModal(); });
+get('cancel-reset').addEventListener('click', () => { progress.reset(false); resetDialog.close(); });
+get('confirm-reset').addEventListener('click', () => { if (mode === 'RUN') return; progress.reset(true); resetDialog.close(); selectStage(0); });
+applySettings();
+osMotion.addEventListener('change', applySettings);
 // The menu is two levels above the Vite source and three above its static build.
 document.querySelector<HTMLAnchorElement>('.back')!.href = import.meta.env.DEV ? '../../index.html' : '../../../index.html';
 selectStage(0);

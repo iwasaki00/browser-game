@@ -1,0 +1,26 @@
+[
+  {
+    "parcels": 7,
+    "status": "VALID",
+    "checked": 1024,
+    "solutions": 19
+  },
+  {
+    "parcels": 8,
+    "status": "VALID",
+    "checked": 1024,
+    "solutions": 19
+  },
+  {
+    "parcels": 9,
+    "status": "VALID",
+    "checked": 1024,
+    "solutions": 4
+  },
+  {
+    "parcels": 11,
+    "status": "VALID",
+    "checked": 1024,
+    "solutions": 4
+  }
+]

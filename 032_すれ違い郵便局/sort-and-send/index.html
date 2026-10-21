@@ -11,11 +11,29 @@
     <main class="shell">
       <header class="masthead">
         <a class="back" href="../../../index.html">← ゲーム一覧</a>
-        <span class="version">0.4.0-B — CHAPTER 03</span>
+        <span class="version">0.4.0-C — CHAPTER 04</span>
       </header>
       <div class="title-row"><div><p class="eyebrow">すれ違い郵便局</p><h1>SORT <span>&amp;</span> SEND<span class="title-dot">●</span></h1></div><p class="intro">小さな分岐で、届け先が変わる。<br>矢印を組んで、配送をはじめよう。</p></div>
       <section class="stage-heading"><div><span class="eyebrow" id="chapter-name">Chapter 01 / はじめての配送</span><h2 id="stage-name">STAGE 01「はじめての分岐」</h2></div><span id="mode" class="mode">DESIGN</span></section>
       <nav id="stage-selector" class="stage-selector" aria-label="ステージ選択"></nav>
+      <p class="progress-help">前のステージをCLEARすると次が解放されます。各番号の下に最高星評価を表示します。</p>
+      <details class="settings-panel">
+        <summary>音声・演出・進行設定</summary>
+        <div class="settings-grid">
+          <label><input id="sfx" type="checkbox"> 効果音</label>
+          <label><input id="bgm" type="checkbox"> BGM</label>
+          <label class="volume-control">全体音量 <input id="volume" type="range" min="0" max="100" step="1"><output id="volume-value" for="volume"></output></label>
+          <label><input id="reduced-motion" type="checkbox"> 演出を軽減</label>
+          <button id="reset-progress" type="button">進行状況を初期化…</button>
+        </div>
+        <p>音は操作後に有効になります。OSの演出軽減設定も反映します。</p>
+        <p id="storage-status" role="status"></p>
+      </details>
+      <dialog id="reset-confirm" aria-labelledby="reset-title" aria-describedby="reset-description">
+        <h3 id="reset-title">進行状況を初期化しますか？</h3>
+        <p id="reset-description">ステージ解放・CLEAR履歴・最高星評価を消してStage 01に戻します。音声・演出設定は保持します。</p>
+        <div class="confirmation-actions"><button id="cancel-reset" type="button" autofocus>キャンセル</button><button id="confirm-reset" type="button">初期化する</button></div>
+      </dialog>
       <div class="workspace">
         <section class="board-panel" aria-label="配送盤面">
           <div class="board-top"><span>配送順序</span><ol class="queue" id="queue"></ol><span class="tick" id="tick">READY</span></div>

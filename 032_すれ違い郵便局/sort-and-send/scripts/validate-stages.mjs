@@ -26,10 +26,17 @@ try {
     ['11', '512', 6, 1, 4, 8], ['12', '1024', 7, 4, 4, 8],
     ['13', '1024', 7, 1, 4, 8], ['14', '2048', 6, 2, 4, 8], ['15', '4096', 7, 1, 6, 10],
   ];
-  if (reports.length !== 15) throw new Error('Stage 01〜15の15ステージが必要です。');
+  const chapterFourExpected = [
+    ['16', '256', 3, 2, 4, 6, { 4: 2, 6: 1 }],
+    ['17', '1024', 3, 1, 4, 6, { 4: 1, 6: 2 }],
+    ['18', '1024', 4, 1, 6, 8, { 6: 1, 8: 3 }],
+    ['19', '8192', 2, 1, 6, 8, { 6: 1, 8: 1 }],
+    ['20', '8192', 2, 1, 6, 8, { 6: 1, 8: 1 }],
+  ];
+  if (reports.length !== 20) throw new Error('Stage 01〜20の20ステージが必要です。');
   for (const report of reports) {
     const spec = expected.find(e => e[0] === report.stageId);
-    const chapterTwo = [...chapterTwoExpected, ...chapterThreeExpected].find(e => e[0] === report.stageId);
+    const chapterTwo = [...chapterTwoExpected, ...chapterThreeExpected, ...chapterFourExpected].find(e => e[0] === report.stageId);
     const matches = chapterTwo
       ? report.status === 'VALID' && report.totalConfigurations === chapterTwo[1] &&
         String(report.checkedConfigurations) === chapterTwo[1] && report.solutionCount === chapterTwo[2] &&
@@ -43,10 +50,19 @@ try {
       report.validationErrors.push('設計上の探索期待値と一致しません。配送ルール・ステージ・探索を確認してください。');
     }
   }
+  const prefixReports = [];
+  const stage18 = stages.find(s => s.id === '18');
+  for (const [length, count] of [[7, 19], [8, 19], [9, 4], [11, 4]]) {
+    const r = await solveStage({ ...stage18, parcels: stage18.parcels.slice(0, length) });
+    if (r.status !== 'VALID' || r.checkedConfigurations !== 1024 || r.solutionCount !== count) throw new Error(`Stage 18 先頭${length}個の期待値が不一致です。`);
+    prefixReports.push({ parcels: length, status: r.status, checked: r.checkedConfigurations, solutions: r.solutionCount });
+  }
+  console.table(prefixReports);
   const summaries = reports.map(({ solutions, validationErrors, ...summary }) => summary);
   const files = [
     [new URL('../reports/stage-validation.json', import.meta.url), reports],
     [new URL('../src/generated/stage-ratings.json', import.meta.url), summaries],
+    [new URL('../reports/stage18-prefix-validation.json', import.meta.url), prefixReports],
   ];
   console.table(reports.map(r => ({ Stage: r.stageId, status: r.status, total: r.totalConfigurations,
     checked: r.checkedConfigurations, solutions: r.solutionCount, optimal: r.optimalSolutionCount,

@@ -39,7 +39,10 @@ export class QualityPanel {
       this.#lastPaint = -Infinity; this.paint();
     };
     reset.onclick = () => { this.metrics.reset(); this.#lastPaint = -Infinity; this.paint(); };
-    exportButton.onclick = () => { this.#report.value = JSON.stringify(this.report(), null, 2); this.#report.hidden = false; };
+    exportButton.onclick = () => {
+      if (this.#report.hidden) { this.#report.value = JSON.stringify(this.report(), null, 2); this.#report.hidden = false; exportButton.textContent = '結果テキストを閉じる'; }
+      else { this.#report.hidden = true; exportButton.textContent = '結果をテキスト表示'; }
+    };
     this.#root.append(title, toggle, reset, exportButton, environment, values, this.#report); document.body.append(this.#root);
     this.metrics.setEnabled(true); this.paint();
   }
