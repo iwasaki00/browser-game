@@ -6,14 +6,14 @@
     <meta name="theme-color" content="#F7F4E8" />
     <meta name="description" content="分岐の循環パターンを設定して、荷物を正しい出口へ届ける小さな配送パズル。" />
     <title>すれ違い郵便局 — SORT &amp; SEND</title>
-    <script type="module" crossorigin src="./assets/index-B-WXHMCO.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D_Q-v812.css">
+    <script type="module" crossorigin src="./assets/index-ZPq72lxp.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CWTUHUxL.css">
   </head>
   <body>
     <main class="shell">
       <header class="masthead">
         <a class="back" href="../../../index.html">← ゲーム一覧</a>
-        <span class="version">0.5.0-A — RESCUE</span>
+        <span class="version">0.5.0-B — HINT</span>
       </header>
       <div class="title-row"><div><p class="eyebrow">すれ違い郵便局</p><h1>SORT <span>&amp;</span> SEND<span class="title-dot">●</span></h1></div><p class="intro">小さな分岐で、届け先が変わる。<br>矢印を組んで、配送をはじめよう。</p></div>
       <section class="stage-heading"><div><span class="eyebrow" id="chapter-name">Chapter 01 / はじめての配送</span><h2 id="stage-name">STAGE 01「はじめての分岐」</h2></div><span id="mode" class="mode">DESIGN</span></section>
@@ -51,12 +51,20 @@
           <div class="board-footer"><span id="route-label"><i></i> ROUTE 01 / 分岐 A</span><span id="legend">● RED は左へ · ▲ BLUE は右へ</span></div>
         </section>
         <aside class="controls">
+          <section class="hint-panel" aria-label="ステージヒント"><button id="hint" type="button">ヒント</button><p id="hint-status">発想 → 注目点 → 手掛かり。星評価への減点はありません。</p></section>
           <section class="switch-panel"><p class="eyebrow">PATTERN CONTROL</p><div id="switch-selector" class="switch-selector" role="group" aria-label="分岐選択"></div><div class="panel-title"><h3 id="switch-name">分岐 A</h3><span id="loop-length">2 STEP LOOP</span></div><p class="help">荷物を送り出すたび、次の矢印へ。<br>最後の次は、先頭に戻ります。</p><div class="pattern" id="pattern"></div><p class="tap-note">↻ タップで L / R を切り替え</p><button class="primary" id="start" type="button">配送開始 <span aria-hidden="true">↗</span></button><div class="secondary-actions"><button id="retry" type="button">再挑戦</button><button id="reset" type="button">初期設定に戻す</button></div></section>
           <section class="rescue-panel" aria-label="配送レスキュー"><button id="rescue" type="button" hidden>RESCUE / 次の分岐を変更</button><p id="rescue-status" role="status">配送中に次の分岐を1回だけ変更できます。</p></section>
           <section class="result-panel" aria-labelledby="result-title"><p class="eyebrow">DELIVERY REPORT</p><div id="report" role="status" aria-live="polite"><h3 id="result-title">配送の準備中</h3></div><button id="next" class="primary next" type="button" hidden>次のステージ →</button></section>
         </aside>
       </div>
       <footer class="page-footer"><span>SET THE LOOP. SEND WITH CARE.</span><span>すれ違い郵便局 / SORT &amp; SEND</span></footer>
+      <dialog id="hint-dialog" class="hint-dialog" aria-labelledby="hint-title" aria-describedby="hint-policy">
+        <h3 id="hint-title">少しずつ考えるヒント</h3><p id="hint-stage"></p>
+        <p id="hint-policy">星評価とRESCUEの使用回数には影響しません。ステージを選び直すと、ヒントは最初に戻ります。</p>
+        <div class="hint-levels" role="group" aria-label="開放したヒントを選択"><button id="hint-level-1" type="button">1 発想</button><button id="hint-level-2" type="button" disabled>2 注目点</button><button id="hint-level-3" type="button" disabled>3 手掛かり</button></div>
+        <section class="hint-copy" aria-live="polite" aria-atomic="true"><h4 id="hint-heading"></h4><p id="hint-body"></p></section>
+        <div class="hint-actions"><button id="hint-next" type="button">ヒント2を開放する</button><button id="hint-close" type="button">閉じる</button></div>
+      </dialog>
     </main>
   </body>
 </html>

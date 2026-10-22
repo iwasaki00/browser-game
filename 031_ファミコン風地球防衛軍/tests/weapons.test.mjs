@@ -119,6 +119,16 @@ test("locked normal weapons stay disabled, category filtering and explicit slots
   r.run("selected=['M-20','D-19']");r.click("deploy");assert.equal(r.run("state"),"equip");assert.equal(r.run("game"),null);
 });
 
+test("explicit slot buttons assign unlocked weapons and a locked card handler cannot bypass the guard",()=>{
+  const r=runtime({...DEFAULT_SAVE,unlocked:["A-01","S-02","M-20"]});r.click("select-mission","M01");
+  r.click("equip-slot",undefined,undefined,"1");assert.equal(r.run("activeEquipSlot"),1);
+  const meteor=r.get("weaponGrid").children.find(b=>b.dataset.weapon==="M-20");meteor.listeners.click[0]();
+  assert.deepEqual(r.json("selected"),["A-01","M-20"]);
+  const locked=r.get("weaponGrid").children.find(b=>b.dataset.weapon==="D-19");locked.listeners.click[0]();
+  assert.deepEqual(r.json("selected"),["A-01","M-20"]);r.click("deploy");assert.equal(r.run("state"),"play");
+  assert.deepEqual(r.json("activeEquipment()"),["A-01","M-20"]);
+});
+
 test("legacy saves preserve all old weapons; boxes choose unowned weapons, first clear gives L-03, full set is safe",()=>{
   const old=WEAPONS.slice(0,8).map(w=>w.id),s=sanitizeSave({...DEFAULT_SAVE,version:1,unlocked:old,equipped:["G-07","H-08"]});
   assert.deepEqual(s.unlocked,old);assert.deepEqual(s.equipped,["G-07","H-08"]);assert.ok(WEAPON_BY_ID.get(pickReward(old,()=>0)).expanded);

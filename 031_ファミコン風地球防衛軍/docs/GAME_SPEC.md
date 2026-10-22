@@ -1,6 +1,6 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.1.9 — CLASS MOVEMENT FIX
+- Version: 0.2.0 — WEAPON EXPANSION
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
 - ステージ: M01 市街地防衛線、幅4,800px、5エリア
 - プレイヤー: RANGER / SCOUT / GUARDIAN / WING（全兵科使用可能）。性能は `js/data.js` の `PLAYER_CLASSES`、挙動は `js/player.js`。重力620px/s²、無敵1秒を継続
@@ -14,6 +14,9 @@
 - 保存: localStorage形式v2（clearedMissions、unlockedMissions、解放武器、装備、最高スコア、最短時間、設定）。旧形式v1から移行
 - ミッション: 実装済みはM01のみ。M01クリアでM02解放を記録するが、M02はCOMING SOONとして無効化
 - タイトル復帰: ゲーム内確認→ミッションと演出予約を破棄、進行記録を保持。単一のゲームループを継続
+- 武器: 20種類、6カテゴリ、全4兵科共通。初期A-01/S-02、初回M01でL-03。箱は未所持から抽選して即時保存。全取得後は箱スコア+500のみ
+- 装備: 2枠を明示選択、カテゴリ絞り込み、武器一覧を内部スクロール。未解放武器は選択不可。LABのみ未解放を含む20武器を使用可能
+- 新武器処理: `js/weapons.js`。寿命・貫通・反射・分裂世代・連鎖キュー・設置数を制限し、既存のダメージ・撃破演出と連携。詳細は [WEAPON_EXPANSION.md](WEAPON_EXPANSION.md)
 
 原典はユーザー提供のVersion 0.1.0詳細設計。実装値は `js/data.js` を正とする。
 
@@ -26,7 +29,7 @@
 | GUARDIAN | 200 | 65 | -209 | 最終ダメージ×0.75、ノックバック×0.55 |
 | WING | 65 | 110 | 飛行 | EN100、上昇20/s・ホバー8/s・自然下降0/s・地上回復25/s |
 
-武器性能・敵AI・M01構造は変更しない。回復上限は各兵科の最大HP。保存形式v2へ `selectedClass` を追加し、v1/v2の欠損・不正値はRANGERを補完する。既存進行・武器・設定を保持する。詳細は [PLAYER_CLASSES.md](PLAYER_CLASSES.md)。
+既存8武器の性能・敵AI・M01構造・0.1.9の兵科性能は維持する。回復上限は各兵科の最大HP。保存形式v2の `selectedClass` は欠損・不正値をRANGERで補完し、既存進行・武器・設定を保持する。詳細は [PLAYER_CLASSES.md](PLAYER_CLASSES.md)。
 
 ## 実装上の補足
 

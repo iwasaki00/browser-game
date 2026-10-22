@@ -8,15 +8,25 @@
 | sprites/player/classes.png | 48（12列×4行） | 24×32 | 正式4兵科、全体288×128 |
 | sprites/enemies/enemies.png | 16 | 48×48 | 通常敵3種＋中ボス、各4コマ |
 | sprites/bosses/mother_crawler.png | 4 | 96×64 | B-01移動・攻撃 |
-| sprites/weapons/weapon_icons.png | 8 | 32×32 | 武器選択・HUD |
-| sprites/weapons/projectiles.png | 8 | 16×16 | 8武器の弾・火炎・雷 |
+| sprites/weapons/weapon_icons.png | 20 | 32×32 | 武器選択・HUD・設置物、全体640×32 |
+| sprites/weapons/projectiles.png | 20 | 16×16 | 弾体、全体320×16 |
+| sprites/weapons/equipped.png | 20 | 16×16 | 装備表示用（新武器で使用）、全体320×16 |
+| effects/weapon_fx.png | 96（8列×12行） | 32×32 | 新12武器の命中・爆発・特殊効果、全体256×384 |
 | effects/explosion.png | 8 | 32×32 | 爆発・着弾 |
 | sprites/ui/items.png | 2 | 32×32 | HP+25、武器箱 |
 | tiles/city_tiles.png | 16 | 16×16 | 道路、足場、工業タイル |
 | ui/bars.png | 1 | 128×16 | HP系UI素材 |
 | backgrounds/city.png | 1 | 320×180 | 多層スクロール市街地 |
 
-合計11 PNG、114フレーム相当。旧player.pngは互換素材として保持。現行のプレイヤーと兵科プレビューはclasses.pngを使用する。
+合計13 PNG、254フレーム相当。旧player.pngは互換素材として保持。現行のプレイヤーと兵科プレビューはclasses.pngを使用する。
+
+## 新12武器（0.2.0）
+
+- 新武器分はアイコン12＋弾体12＋装備表示12＋固有エフェクト96＝132コマ。互換・共用のため旧8武器の装備表示8コマも生成する。PNGは2ファイル拡張・2ファイル追加。
+- 既存武器の先頭8列は描画処理・パレットを維持する。以降はB-09 / R-10 / X-11 / P-12 / P-13 / G-14 / F-15 / T-16 / S-17 / M-18 / D-19 / M-20の順。
+- アイコンは反射光路、三連ミサイルポッド、連結爆弾、ドリル、プラズマリング、子爆弾ラック、拡幅ノズル、雷撃アンテナ、双銃身、マイン円盤、三脚砲台、流星ポッドで形状を区別する。
+- 固有FXの行は新12武器順、列0〜3は命中、列4〜7は爆発・特殊効果。雷雲はT-16の特殊効果を使用。軌跡・落雷線・爆風リングはCanvasのドット状描画と併用する。
+- `py -3 tools/generate_assets.py --weapons-only` で再生成。全生成にも含む。外部素材なし、透過RGBA、nearest-neighbor、固定シード7319。新武器描画は乱数を消費しない。
 
 ## 兵科アトラス（0.1.8）
 
