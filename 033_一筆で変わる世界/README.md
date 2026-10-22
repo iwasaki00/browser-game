@@ -1,15 +1,19 @@
 # 一筆で変わる世界 / ONE STROKE WORLDS
 
-**Version 0.7.1 — Performance & Device Verification**
+**Version 0.7.2 — RAF Investigation**
 
 一筆で地形を削る・盛る、水流パズルです。6つのチャレンジで町へ水を届け、水害を防ぎます。
-6ステージ・水流式・A〜Dの巡回・一筆判定・同期比較・Living Map・保存形式を維持しています。0.7.1ではRAFを前面/非表示/フォーカス喪失/復帰直後で分離し、計測の信頼性と連続操作の検証を追加しました。
+6ステージ・水流式・A〜Dの巡回・一筆判定・同期比較・Living Map・保存形式を維持しています。0.7.2ではRAFのライフサイクルを調査し、再生/停止後の計測区間分離、ゲームRAFの識別、p99・長い間隔の頻度を追加しました。既存のゲームRAFループは変更していません。
 
 ## 品質診断と受入試験
 
+0.7.2の正式な再生/停止別の数値は、結果JSONの`metrics.raf.segments`を使用します。条件A〜Dの総合欄は参考値です。`lifecycle`にはゲーム関数のRAF ID・世代・待機・例外・長い間隔とコールバックCPUを記録し、別の匿名RAFをゲームの多重起動へ数えません。
+
 開発サーバーのURLに `?quality=1` を付けると診断が表示されます。通常URLと本番ビルドでは非表示です。実際のvisibilityState/hasFocus、状態別RAFの平均・中央値・p95・最大・100ms超回数、描画CPU時間、論理ステップ時間、Canvasサイズ・DPR、操作状態、A/Bステップ一致、水量収支を確認できます。復帰後1秒と条件境界を通常FPSから除き、古い値は現在FPSとして表示しません。「診断を停止」で計測を止め、「計測をリセット」で統計だけを初期化します。詳細欄は折りたため、結果JSONは表示・コピーできます。
 
-- [0.7.1品質・検証報告書](docs/QUALITY-REPORT-v0.7.1.md): 実測と自動テスト、未確認事項を区別。
+- [0.7.2品質・検証報告書](docs/QUALITY-REPORT-v0.7.2.md): 約1秒は終了後に再現。今回の再生2試行は500ms超0件。内部原因は未特定。
+- [RAFライフサイクル調査](docs/RAF-INVESTIGATION-v0.7.2.md) / [新規測定結果](docs/RAF-MEASUREMENTS-v0.7.2.json)
+- [DevTools Performanceの日本語手動手順](docs/PERFORMANCE-MANUAL-v0.7.2.md): Mainタイムライン解析は未実施。
 - [Windows Chrome状態別計測手順](docs/PERFORMANCE-PROCEDURE-v0.7.1.md)
 - [スマートフォンから開く方法](docs/DEVICE-ACCESS-v0.7.1.md): 既存静的配信を優先。必要時のLAN起動・IP確認・一時的なファイアウォール確認も記載。
 - [iPhone / Android実機受入試験書](docs/MOBILE-ACCEPTANCE-v0.7.0.md): 実機30項目は未実施。
@@ -19,7 +23,7 @@
 本版の関連テストは次のコマンドで実行します。過去版の確認結果は、この版の実機合格を意味しません。
 
 ```sh
-npm test -- tests/quality.test.ts tests/quality-raf.test.ts tests/quality-continuity.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts tests/stroke.test.ts
+npm test -- tests/quality-investigation.test.ts tests/quality-raf.test.ts tests/quality.test.ts tests/quality-continuity.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts
 npm run build
 ```
 
@@ -81,7 +85,7 @@ Node.js 20.19以降、または22.12以降の対応バージョンを使用し�
 ```sh
 npm ci
 npm run dev
-npm test -- tests/quality.test.ts tests/quality-raf.test.ts tests/quality-continuity.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts tests/stroke.test.ts
+npm test -- tests/quality-investigation.test.ts tests/quality-raf.test.ts tests/quality.test.ts tests/quality-continuity.test.ts tests/playable.test.ts tests/comparison.test.ts tests/challenge-design.test.ts
 npm run build
 ```
 
@@ -129,14 +133,14 @@ PREVIEW中は専用の実行ボタンを使います。デバッグは600、チ�
 
 ## 検証結果と制約
 
-**0.7.1: 関連137テスト成功、0件失敗。TypeScript型チェック・Viteビルド成功。**
+**0.7.2: 関連118テスト成功、0件失敗。TypeScript型チェック・Viteビルド成功。**
 
 6ステージとも、保存した座標列による一筆を既存エンジンで実行し、基準失敗→成功を自動テストで確認済みです。
 0.7.1ではDOMなしの反復試験を追加し、6面の実解法2周、50回リトライ、30回モード往復、30回A/B操作、50回パン・ピンチ・非表示復帰を検証しています。実機やブラウザーの長時間操作の代わりにはしません。
 0.6.0の390px幅確認では文書・主要ボタンの横はみ出しはありませんでした。本版の実機タッチ・Safari・Androidは未確認です。
 奇数幅の方向偏りは残存し、水流式は変更していません。
 
-本版の計測結果は[0.7.1品質報告](docs/QUALITY-REPORT-v0.7.1.md)、過去の診断結果は[0.7.0品質報告](docs/QUALITY-REPORT-v0.7.0.md)、PG-01〜22は[0.6.0実装結果](docs/IMPLEMENTATION-v0.6.0.md)、全6ステージの数値は[結果データ](docs/STAGE-RESULTS-v0.6.0.json)を参照してください。
+本版の計測結果は[0.7.2品質報告](docs/QUALITY-REPORT-v0.7.2.md)、過去の診断結果は[0.7.1品質報告](docs/QUALITY-REPORT-v0.7.1.md)・[0.7.0品質報告](docs/QUALITY-REPORT-v0.7.0.md)、PG-01〜22は[0.6.0実装結果](docs/IMPLEMENTATION-v0.6.0.md)、全6ステージの数値は[結果データ](docs/STAGE-RESULTS-v0.6.0.json)を参照してください。
 過去の記録：[0.5.0](docs/IMPLEMENTATION-v0.5.0.md)、[0.4.0](docs/IMPLEMENTATION-v0.4.0.md)、[0.3.0](docs/IMPLEMENTATION-v0.3.0.md)。
 [0.2.0の記録](docs/IMPLEMENTATION-v0.2.0.md)と
 [0.1.0の記録](docs/IMPLEMENTATION-v0.1.0.md)も保存しています。

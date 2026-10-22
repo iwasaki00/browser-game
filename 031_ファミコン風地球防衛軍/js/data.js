@@ -1,4 +1,4 @@
-export const VERSION = "0.1.9";
+export const VERSION = "0.2.0";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -98,6 +98,8 @@ export function recordMissionClear(value,id){
   return sanitizeSave({...value,clearedMissions:[...(value.clearedMissions||[]),id]});
 }
 
+export const WEAPON_CATEGORIES=Object.freeze({rapid:"連射・貫通",blast:"爆発",energy:"エネルギー",flame:"火炎",special:"特殊",support:"設置・支援"});
+const LEGACY_CATEGORIES=["rapid","rapid","energy","blast","flame","special","blast","special"];
 export const WEAPONS = [
   { id:"A-01", name:"アサルト", type:"bullet", damage:8, interval:.12, speed:310, range:340, color:"#37e8df", detail:"高速直進弾" },
   { id:"S-02", name:"ショットガン", type:"spread", damage:5, pellets:5, interval:.65, speed:260, range:150, spread:.34, color:"#ffe05c", detail:"5発拡散" },
@@ -106,8 +108,22 @@ export const WEAPONS = [
   { id:"F-05", name:"フレイム", type:"flame", damage:3, interval:.07, speed:105, range:92, rehit:.14, color:"#ff4f6d", detail:"近距離火炎" },
   { id:"T-06", name:"サンダー", type:"thunder", damage:16, interval:.5, speed:400, range:180, chains:3, color:"#b88cff", detail:"3体連鎖" },
   { id:"G-07", name:"グレネード", type:"grenade", damage:55, interval:.9, speed:145, range:280, gravity:330, radius:42, color:"#72df8f", detail:"放物線爆発" },
-  { id:"H-08", name:"ホーミング", type:"homing", damage:20, pellets:2, interval:.8, speed:135, range:400, turn:3.8, color:"#fff08b", detail:"2発誘導" }
-];
+  { id:"H-08", name:"ホーミング", type:"homing", damage:20, pellets:2, interval:.8, speed:135, range:400, turn:3.8, color:"#fff08b", detail:"2発誘導" },
+  {id:"B-09",name:"バウンドレーザー",type:"bounce",category:"energy",damage:13,interval:.35,speed:300,range:900,bounces:3,color:"#6ffcff",effectType:"laser",detail:"地面・足場・世界端で3回反射"},
+  {id:"R-10",name:"スプリットロケット",type:"split",category:"blast",damage:18,interval:1.6,speed:140,range:360,radius:20,children:5,maxGeneration:1,splitAfter:.38,proximity:56,color:"#ff8b42",effectType:"rocket",detail:"1世代のみ5発へ分裂・個別爆発"},
+  {id:"X-11",name:"チェインボム",type:"chain",category:"blast",damage:32,interval:2,speed:145,range:340,radius:38,chainLimit:6,chainDelay:.10,color:"#ff4f6d",effectType:"grenade",detail:"撃破起点で最大6爆発・キュー処理"},
+  {id:"P-12",name:"ドリルショット",type:"drill",category:"rapid",damage:22,interval:.45,speed:360,range:400,pierce:8,color:"#ffe05c",effectType:"laser",detail:"最大8体貫通・同じ敵には1回"},
+  {id:"P-13",name:"プラズマキャノン",type:"plasma",category:"energy",damage:65,interval:1.4,speed:95,range:340,radius:36,size:20,color:"#37e8df",effectType:"rocket",detail:"低速大型弾・範囲内へ1回65ダメージ"},
+  {id:"G-14",name:"クラスターグレネード",type:"cluster",category:"blast",damage:12,interval:1.8,speed:145,range:240,radius:26,gravity:330,children:8,maxGeneration:1,fuse:.8,color:"#72df8f",effectType:"grenade",detail:"親弾から8子爆弾・再分裂なし"},
+  {id:"F-15",name:"ワイドフレイム",type:"wideflame",category:"flame",damage:4,interval:.12,speed:125,range:110,pellets:5,spread:.32,rehit:.18,color:"#ff4f6d",effectType:"flame",detail:"扇状5粒子・粒子ごと0.18秒間隔"},
+  {id:"T-16",name:"ライトニングストーム",type:"storm",category:"special",damage:18,interval:2.2,speed:1,range:380,life:2.2,strikes:8,strikeInterval:.24,targetRadius:120,targetLimit:2,color:"#b88cff",effectType:"thunder",detail:"雷雲から8落雷・同一対象は2回まで"},
+  {id:"S-17",name:"スパイラルショット",type:"spiral",category:"rapid",damage:9,interval:.18,speed:235,range:350,pellets:2,amplitude:10,frequency:14,color:"#fff08b",effectType:"laser",detail:"逆位相の2発螺旋・実座標で命中"},
+  {id:"M-18",name:"リモートマイン",type:"mine",category:"support",damage:70,interval:.8,speed:1,range:180,life:20,radius:48,installLimit:3,color:"#ff4f6d",effectType:"grenade",detail:"最大3個・V / SW長押しで一斉起爆"},
+  {id:"D-19",name:"オートタレット",type:"turret",category:"support",damage:7,interval:3,speed:260,range:240,life:15,installLimit:2,shotInterval:.32,color:"#37e8df",effectType:"bullet",detail:"最大2基・15秒稼働・近傍を自動射撃"},
+  {id:"M-20",name:"メテオランチャー",type:"meteor",category:"special",damage:35,interval:2.8,speed:220,range:420,life:2,strikes:6,strikeInterval:.18,radius:34,color:"#ff8b42",effectType:"rocket",detail:"照準付近へ6発を時間差降下"}
+].map((w,index)=>Object.freeze({category:LEGACY_CATEGORIES[index],life:w.range/w.speed,pierce:0,bounces:0,radius:0,effectType:w.type,specialEffect:w.type,assetId:w.id,assetIndex:index,expanded:index>=8,...w}));
+export const WEAPON_BY_ID=new Map(WEAPONS.map(w=>[w.id,w]));
+if(WEAPON_BY_ID.size!==WEAPONS.length)throw new Error("Duplicate weapon ID");
 
 export const ENEMY_TYPES = {
   crawler:{ id:"E-01", name:"グランドクロウラー", hp:24, speed:45, damage:10, score:100, w:28, h:20, row:0 },
@@ -155,9 +171,9 @@ export function sanitizeSave(value){
   return base;
 }
 
-export function pickReward(unlocked, random=Math.random){
+export function pickReward(unlocked, random=Math.random,firstClear=true){
   const remaining=WEAPONS.map(w=>w.id).filter(id=>!unlocked.includes(id));
-  if(!unlocked.includes("L-03")) return "L-03";
+  if(firstClear&&!unlocked.includes("L-03")) return "L-03";
   if(!remaining.length) return null;
   return remaining[Math.floor(random()*remaining.length)];
 }

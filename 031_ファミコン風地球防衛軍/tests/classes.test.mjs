@@ -77,7 +77,7 @@ test("WING swept collisions on all platform faces and world bounds; switching to
 test("all eight weapons use unchanged records across all classes",()=>{
   for(const id of Object.keys(PLAYER_CLASSES)){
     const r=runtime({...DEFAULT_SAVE,selectedClass:id,unlocked:WEAPONS.map(w=>w.id)},{debug:true});r.run("startMission()");
-    for(const w of WEAPONS){
+    for(const w of WEAPONS.filter(w=>!w.expanded)){
       r.run(`save.equipped[0]='${w.id}';game.player.weaponSlot=0;game.player.shotCd=game.player.switchCd=0;input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot()`);
       assert.equal(r.run("game.shots.at(-1).weapon===WEAPONS.find(w=>w.id===activeEquipment()[0])"),true);
       assert.equal(r.run("game.shots.at(-1).damage"),w.damage);assert.equal(r.run("game.player.shotCd"),w.interval);

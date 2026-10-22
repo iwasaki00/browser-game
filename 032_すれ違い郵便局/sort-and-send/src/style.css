@@ -77,3 +77,14 @@ html[data-reduced-motion=true] *,html[data-reduced-motion=true] *::before,html[d
 .rescue-dialog #rescue-confirm{background:#247E72;color:white}.rescue-dialog #rescue-error{color:#b34f42;font-size:12px}
 .rescue-badge{display:block;font-size:11px;color:#806320;border-left:3px solid #E4B754;margin-top:5px;padding-left:7px}
 .rescue-result{font-size:12px!important;color:#806320!important;overflow-wrap:anywhere}
+.hint-panel{padding:14px 18px;border:1px solid #afcabe;border-radius:14px;background:#e6f0e7}
+.hint-panel button{width:100%;min-height:44px;border:1px solid #9ccbbd;border-radius:9px;background:#CDE8DF;color:#247E72;font-weight:800}
+.hint-panel p{font-size:11px;line-height:1.7;margin:8px 0 0}
+.hint-dialog{width:460px;max-height:calc(100dvh - 32px);overflow-y:auto;overflow-wrap:anywhere}
+.hint-dialog h3{font-size:19px;margin:0 0 10px}.hint-dialog #hint-stage{font-size:12px;font-weight:800;color:#247E72}
+.hint-dialog #hint-policy{font-size:12px;color:#617475}.hint-levels{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.hint-levels button{flex:1;min-width:75px;min-height:44px;padding:7px 4px;font-size:12px;border:1px solid #afcabe;border-radius:8px;background:#fffdf6;color:#247E72;font-weight:800}
+.hint-levels button[aria-pressed=true]{background:#247E72;color:#fffdf6}.hint-copy{padding:16px;border-radius:12px;background:#e6f0e7}
+.hint-copy h4{font-size:13px;margin:0 0 10px;color:#247E72}.hint-copy p{font-size:15px;line-height:1.9;margin:0;white-space:pre-line}
+.hint-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hint-actions button{flex:1;min-width:120px;min-height:44px;border:1px solid #afcabe;border-radius:8px;padding:8px 10px;background:#fffdf6;color:#243D4A;font-size:13px}
+.hint-actions #hint-next{background:#247E72;color:#fffdf6}

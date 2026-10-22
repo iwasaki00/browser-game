@@ -7,6 +7,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 import random
 import argparse
+import math
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
@@ -218,9 +219,75 @@ def boss_sheet():
     out("sprites/bosses/mother_crawler.png",img)
 
 WEAPON_COLORS=("cyan","yellow","cyan","orange","red","purple","green","yellow")
+NEW_WEAPON_IDS=("B-09","R-10","X-11","P-12","P-13","G-14","F-15","T-16","S-17","M-18","D-19","M-20")
+NEW_WEAPON_COLORS=("cyan","orange","red","yellow","cyan","green","red","purple","yellow","red","cyan","orange")
+
+def expanded_weapon_art(index, color):
+    """Distinct silhouettes, not palette swaps; all geometry on the native grid."""
+    icon=Image.new("RGBA",(32,32),P["clear"]);d=ImageDraw.Draw(icon)
+    rect(d,(5,15,24,21),"outline");rect(d,(7,16,22,19),"steel")
+    rect(d,(10,20,15,27),"outline");rect(d,(11,20,13,25),"gray")
+    if index==0:
+        poly(d,[(5,15),(14,7),(24,11),(29,17),(21,22)],"outline")
+        d.line([(8,16),(15,10),(22,14),(16,18),(27,18)],fill=P[color],width=2)
+    elif index==1:
+        for y in (7,13,19):
+            rect(d,(3,y,26,y+5),"outline");rect(d,(6,y+1,23,y+3),color);poly(d,[(25,y),(30,y+2),(25,y+5)],"light")
+    elif index==2:
+        d.line([(6,13),(16,8),(25,16)],fill=P[color],width=2)
+        for x,y in [(6,13),(16,8),(25,16)]:
+            rect(d,(x-4,y-4,x+4,y+4),"outline");rect(d,(x-2,y-2,x+2,y+2),color)
+    elif index==3:
+        poly(d,[(12,10),(20,10),(30,16),(20,22),(12,22)],"outline")
+        for x in (15,20,25):poly(d,[(x,12),(x+4,16),(x,20)],color)
+    elif index==4:
+        d.ellipse((9,5,28,24),fill=P["outline"]);d.ellipse((12,8,25,21),outline=P[color],width=3)
+        rect(d,(17,12,22,17),"light");rect(d,(3,11,11,20),"gray")
+    elif index==5:
+        rect(d,(4,6,26,23),"outline")
+        for y in (9,16):
+            for x in (8,15,22):rect(d,(x-2,y-2,x+2,y+2),color)
+    elif index==6:
+        poly(d,[(8,12),(27,5),(27,25),(8,20)],"outline")
+        for y in (9,15,21):d.line([(12,16),(26,y)],fill=P[color],width=2)
+    elif index==7:
+        rect(d,(8,5,22,19),"outline");rect(d,(10,7,20,17),"purple")
+        d.line([(14,2),(19,7),(13,11),(20,16),(26,11)],fill=P["light"],width=2)
+    elif index==8:
+        for y in (9,19):
+            rect(d,(4,y,28,y+4),"outline");rect(d,(7,y+1,27,y+2),color)
+        d.line([(10,9),(18,20),(26,10)],fill=P["cyan"],width=2)
+    elif index==9:
+        d.ellipse((5,9,26,26),fill=P["outline"]);d.ellipse((8,12,23,23),fill=P["steel"])
+        rect(d,(13,13,18,18),color)
+        for x in (7,22):rect(d,(x,5,x+2,11),"gray")
+    elif index==10:
+        rect(d,(13,10,18,24),"gray");rect(d,(5,8,28,14),"outline");rect(d,(8,9,28,11),color)
+        poly(d,[(15,20),(4,28),(9,29),(17,23),(25,29),(29,28),(18,20)],"outline")
+    else:
+        for x,y in ((5,6),(13,10),(21,14)):
+            rect(d,(x,y,x+7,y+11),"outline");rect(d,(x+2,y+2,x+5,y+8),color)
+        poly(d,[(20,4),(27,7),(23,12)],"yellow")
+    shot=Image.new("RGBA",(16,16),P["clear"]);s=ImageDraw.Draw(shot)
+    if index in (0,3,8):
+        for k in range(3):
+            y=3+k*4;poly(s,[(1,y),(7,y-2),(14,y+1),(7,y+2)],color if k%2==0 else "light")
+    elif index in (1,11):
+        poly(s,[(2,4),(10,4),(15,8),(10,12),(2,12)],"outline");poly(s,[(4,5),(11,5),(14,8),(11,10),(4,10)],color);rect(s,(0,6,3,9),"yellow")
+    elif index in (2,5,9):
+        s.ellipse((3,3,13,13),fill=P["outline"]);rect(s,(5,5,11,11),color);rect(s,(7,1,9,4),"light")
+        if index==2:s.line([(1,3),(5,7),(2,12)],fill=P["yellow"],width=1)
+    elif index==4:
+        s.ellipse((1,1,14,14),fill=P["cyan2"],outline=P["cyan"],width=2);rect(s,(5,5,10,10),"light")
+    elif index==6:
+        poly(s,[(1,13),(4,2),(8,7),(13,1),(15,12),(8,15)],color);rect(s,(6,9,10,13),"yellow")
+    elif index==7:s.line([(3,0),(10,5),(5,8),(12,15)],fill=P["purple"],width=3)
+    else:rect(s,(1,6,14,9),color);rect(s,(12,5,15,10),"light")
+    return icon,shot
 def weapon_assets():
-    icons=Image.new("RGBA",(32*8,32),P["clear"]); di=ImageDraw.Draw(icons)
-    pro=Image.new("RGBA",(16*8,16),P["clear"]); dp=ImageDraw.Draw(pro)
+    count=8+len(NEW_WEAPON_IDS)
+    icons=Image.new("RGBA",(32*count,32),P["clear"]); di=ImageDraw.Draw(icons)
+    pro=Image.new("RGBA",(16*count,16),P["clear"]); dp=ImageDraw.Draw(pro)
     for i,c in enumerate(WEAPON_COLORS):
         x=i*32; rect(di,(x+4,13,x+25,18),"outline"); rect(di,(x+6,14,x+24,16),c)
         rect(di,(x+9,18,x+14,25),"steel"); rect(di,(x+22,11,x+28,19),c)
@@ -236,7 +303,26 @@ def weapon_assets():
         elif i==5: dpts=[(px+2,3),(px+6,7),(px+4,9),(px+12,13)]; dp.line(dpts,fill=P[c],width=2)
         elif i==6: rect(dp,(px+4,4,px+12,12),"outline"); rect(dp,(px+6,5,px+10,9),c); rect(dp,(px+7,2,px+9,4),"gray")
         else: poly(dp,[(px+2,8),(px+7,4),(px+13,7),(px+13,10),(px+7,12)],c); rect(dp,(px+10,6,px+14,10),"light")
-    out("sprites/weapons/weapon_icons.png",icons); out("sprites/weapons/projectiles.png",pro)
+    fx=Image.new("RGBA",(32*8,32*len(NEW_WEAPON_IDS)),P["clear"])
+    for index,color in enumerate(NEW_WEAPON_COLORS):
+        icon,shot=expanded_weapon_art(index,color);icons.alpha_composite(icon,((index+8)*32,0));pro.alpha_composite(shot,((index+8)*16,0))
+        for frame in range(8):
+            cell=Image.new("RGBA",(32,32),P["clear"]);d=ImageDraw.Draw(cell)
+            radius=3+(frame%4)*3
+            if index==7 and frame>=4:
+                for x,y in ((4,12),(11,7),(19,9),(23,15)):
+                    rect(d,(x,y,x+7,y+7),"purple");rect(d,(x+2,y,x+5,y+2),"light")
+            else:
+                for k in range(4+index%5):
+                    angle=k*math.tau/(4+index%5)+index*.18
+                    x=16+int(math.cos(angle)*radius);y=16+int(math.sin(angle)*radius)
+                    d.line((16,16,x,y),fill=P[color],width=1 if frame<4 else 2);rect(d,(x-1,y-1,x+1,y+1),"light")
+                if frame>=4:d.rectangle((16-radius,16-radius,16+radius,16+radius),outline=P[color],width=2)
+            fx.alpha_composite(cell,(frame*32,index*32))
+    held=Image.new("RGBA",(16*count,16),P["clear"])
+    for i in range(count):held.alpha_composite(icons.crop((i*32,0,i*32+32,32)).resize((16,16),Image.Resampling.NEAREST),(i*16,0))
+    out("sprites/weapons/weapon_icons.png",icons);out("sprites/weapons/projectiles.png",pro)
+    out("sprites/weapons/equipped.png",held);out("effects/weapon_fx.png",fx)
 
 def effects_items_tiles():
     fx=Image.new("RGBA",(32*8,32),P["clear"]); d=ImageDraw.Draw(fx)
@@ -283,8 +369,13 @@ def city_background():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--classes-only", action="store_true", help="Generate only the formal-class atlas")
-    if parser.parse_args().classes_only:
+    parser.add_argument("--weapons-only", action="store_true", help="Generate only weapon atlases")
+    args=parser.parse_args()
+    if args.classes_only:
         class_sheet()
+        return
+    if args.weapons_only:
+        weapon_assets()
         return
     player_sheet(); class_sheet(); enemies_sheet(); boss_sheet(); weapon_assets(); effects_items_tiles(); city_background()
     print("Generated all original assets with seed 7319.")

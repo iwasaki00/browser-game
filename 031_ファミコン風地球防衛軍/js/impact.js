@@ -26,20 +26,21 @@ export const reducedImpact=g=>!!g.lab&&g.enemyLimit>100;
 export const impactLevel=g=>DESTRUCTION_LEVELS[normalizeDestructionLevel((g.lab?.settings??g.settings)?.destructionLevel)];
 export function pushImpactEffect(g,f){
   const max=reducedImpact(g)?IMPACT.reducedExplosions:IMPACT.maxExplosions;
-  if(f.kind==="explosion"){
+  const explosion=f.kind==="explosion"||f.kind==="weaponBurst";
+  if(explosion){
     f.destructionLevel=impactLevel(g).id;f.visualScale=impactLevel(g).explosion;
     let count=0,oldest=-1;
-    for(let i=0;i<g.effects.length;i++)if(g.effects[i].kind==="explosion"){count++;if(oldest<0||g.effects[i].life<g.effects[oldest].life)oldest=i}
+    for(let i=0;i<g.effects.length;i++)if(g.effects[i].kind==="explosion"||g.effects[i].kind==="weaponBurst"){count++;if(oldest<0||g.effects[i].life<g.effects[oldest].life)oldest=i}
     if(count>=max){g.effects[oldest]=f;return true}
   }
   if(g.effects.length<INVASION.maxEffects){g.effects.push(f);return true}
-  if(f.kind==="explosion")for(let i=0;i<g.effects.length;i++)if(g.effects[i].kind!=="explosion"){g.effects[i]=f;return true}
+  if(explosion)for(let i=0;i<g.effects.length;i++)if(g.effects[i].kind!=="explosion"&&g.effects[i].kind!=="weaponBurst"){g.effects[i]=f;return true}
   return false;
 }
 export function hitVisual(g,e,source={}){
-  const type=REACTIONS[source.type]?source.type:"bullet",r=REACTIONS[type],length=Math.hypot(source.vx||0,source.vy||0)||1;
+  const type=REACTIONS[source.effectType]?source.effectType:REACTIONS[source.type]?source.type:"bullet",r=REACTIONS[type],length=Math.hypot(source.vx||0,source.vy||0)||1;
   pushImpactEffect(g,{kind:"hit",type,x:e.x,y:e.y+e.h/2,vx:(source.vx||1)/length,vy:(source.vy||0)/length,
-    color:r.color,seed:e.uid,life:type==="flame"?.18:.12,max:type==="flame"?.18:.12});
+    color:r.color,assetIndex:source.assetIndex,seed:e.uid,life:type==="flame"?.18:.12,max:type==="flame"?.18:.12});
 }
 export function requestHitStop(g,strong=false){
   const a=g.impact;if(a.clock-a.budgetStart>=IMPACT.stopWindow){a.budgetStart=a.clock;a.spent=0}
@@ -58,7 +59,7 @@ export function advanceImpact(g,dt){
   return stopped;
 }
 export function beginDeath(g,e,source={},bounds){
-  const a=g.impact,type=REACTIONS[source.type]?source.type:"bullet",r=REACTIONS[type],level=impactLevel(g);
+  const a=g.impact,type=REACTIONS[source.effectType]?source.effectType:REACTIONS[source.type]?source.type:"bullet",r=REACTIONS[type],level=impactLevel(g);
   if(a.corpses>=IMPACT.maxCorpses)for(const old of g.enemies)if(old.dead&&old.deathTracked&&old!==e){old.death=0;old.deathTracked=false;a.corpses--;break}
   const radial=source.radial,dx=radial?e.x-source.x:source.vx??(e.x-g.player.x),dy=radial?e.y+e.h/2-source.y:source.vy??0;
   const length=Math.hypot(dx,dy)||1,sign=Math.sign(dx)||(e.uid%2?1:-1);

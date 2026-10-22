@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {VERSION,BATTLE_CAMERA,MISSIONS,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth,recordMissionClear,canPlayMission,missionStatus} from "../js/data.js";
 
 test("dynamic camera has bounded zoom and a 0.50 idle view",()=>{
-  assert.equal(VERSION,"0.1.9");
+  assert.equal(VERSION,"0.2.0");
   assert.equal(BATTLE_CAMERA.minZoom,.35);assert.equal(BATTLE_CAMERA.maxZoom,.85);assert.equal(BATTLE_CAMERA.idleZoom,.50);
   assert.ok(Math.abs(visibleWorldWidth(BATTLE_CAMERA.minZoom)-914.285714)<.00001);
   assert.equal(visibleWorldWidth(BATTLE_CAMERA.idleZoom),640);
@@ -31,8 +31,8 @@ test("progress is monotonic across serialization and future implemented stages",
   assert.deepEqual(recordMissionClear(second,"M01"),second);
 });
 
-test("8 weapons have unique ids and positive tuning values",()=>{
-  assert.equal(WEAPONS.length,8);assert.equal(new Set(WEAPONS.map(w=>w.id)).size,8);
+test("20 weapons have unique ids and positive tuning values",()=>{
+  assert.equal(WEAPONS.length,20);assert.equal(new Set(WEAPONS.map(w=>w.id)).size,20);
   for(const w of WEAPONS){assert.ok(w.damage>0);assert.ok(w.interval>0);assert.ok(w.speed>0);assert.ok(w.range>0)}
 });
 

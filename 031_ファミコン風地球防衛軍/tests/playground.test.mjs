@@ -10,7 +10,7 @@ const lab=()=>{const r=runtime(null,{debug:true});r.click("test-lab");return r};
 
 test("TEST LAB requires debug=1, starts isolated with paused panel and eight weapon options",()=>{
   const plain=runtime();plain.click("test-lab");assert.equal(plain.run("game"),null);
-  const r=lab();assert.equal(r.get("testLabButton").hidden,false);assert.equal(r.get("labWeapon1").children.length,8);
+  const r=lab();assert.equal(r.get("testLabButton").hidden,false);assert.equal(r.get("labWeapon1").children.length,20);
   assert.equal(r.run("state"),"lab");assert.equal(r.run("game.lab.invincible"),true);
   r.run("update(1)");assert.equal(r.run("game.time"),0);assert.equal(r.run("game.director.stopped"),true);
   r.click("lab-close");r.run("game.player.x=4400;update(1/60)");assert.equal(r.run("game.bossStarted"),false);
@@ -19,7 +19,7 @@ test("TEST LAB requires debug=1, starts isolated with paused panel and eight wea
 
 test("all eight weapons fire original weapon records and both lab slots are independent of save",()=>{
   const r=lab(),equipped=r.json("save.equipped");
-  for(const w of WEAPONS){
+  for(const w of WEAPONS.filter(w=>!w.expanded)){
     r.change("labWeapon1",w.id);r.change("labSlot","0");r.click("lab-close");
     r.run("game.shots.length=0;input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot()");
     assert.equal(r.run("game.shots[0].weapon===WEAPONS.find(w=>w.id===activeEquipment()[0])"),true);

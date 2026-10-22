@@ -1,0 +1,104 @@
+{
+    "version":  "0.7.2",
+    "baselineVersion":  "0.7.1",
+    "baselineCommit":  "d5c52e4187b7cf4448d366ff3a2ec218753a841d",
+    "mainRafBlockIdentical":  true,
+    "files":  [
+                  {
+                      "file":  "src/core/simulation.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "d6e63bd74d61cc9fcb6542c8e67818193a888c19",
+                      "currentBlob":  "d6e63bd74d61cc9fcb6542c8e67818193a888c19"
+                  },
+                  {
+                      "file":  "src/core/world.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "862b1ff543a77e57344ca9d4e62c48395b7eb9bd",
+                      "currentBlob":  "862b1ff543a77e57344ca9d4e62c48395b7eb9bd"
+                  },
+                  {
+                      "file":  "src/core/runner.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "082bb1d5e879b404292c33c2cf769d5ce3a24d59",
+                      "currentBlob":  "082bb1d5e879b404292c33c2cf769d5ce3a24d59"
+                  },
+                  {
+                      "file":  "src/core/trial.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "2655018b414a0fbf17bf3a12dfa18f54260f8aa9",
+                      "currentBlob":  "2655018b414a0fbf17bf3a12dfa18f54260f8aa9"
+                  },
+                  {
+                      "file":  "src/core/stroke.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "c62d459b1f100d49cf5241b6dd8624d8e42ef5be",
+                      "currentBlob":  "c62d459b1f100d49cf5241b6dd8624d8e42ef5be"
+                  },
+                  {
+                      "file":  "src/challenge/stages.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "f14321fd9b1eab7adcc679ef8dfcbf6d61abc614",
+                      "currentBlob":  "f14321fd9b1eab7adcc679ef8dfcbf6d61abc614"
+                  },
+                  {
+                      "file":  "src/challenge/extended-stages.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "7736af4f9aec1179dae130739781adf3efcf041e",
+                      "currentBlob":  "7736af4f9aec1179dae130739781adf3efcf041e"
+                  },
+                  {
+                      "file":  "src/challenge/stage.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "14304642a53383e8c1b1b7241b831d982e7fd10e",
+                      "currentBlob":  "14304642a53383e8c1b1b7241b831d982e7fd10e"
+                  },
+                  {
+                      "file":  "src/challenge/goals.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "20d36385483df28f963c5cb0ea2942fbf6a21424",
+                      "currentBlob":  "20d36385483df28f963c5cb0ea2942fbf6a21424"
+                  },
+                  {
+                      "file":  "src/comparison/controller.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "409a232fdc4e1f5628b8b965b53bf78dd2e73358",
+                      "currentBlob":  "409a232fdc4e1f5628b8b965b53bf78dd2e73358"
+                  },
+                  {
+                      "file":  "src/game/save.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "c2bc8419b92b0310b520bed174f89838f310ce9a",
+                      "currentBlob":  "c2bc8419b92b0310b520bed174f89838f310ce9a"
+                  },
+                  {
+                      "file":  "src/living-map.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "9e0fb4ed3d774a4bd35f14b733a8cb7d78e8d7a6",
+                      "currentBlob":  "9e0fb4ed3d774a4bd35f14b733a8cb7d78e8d7a6"
+                  },
+                  {
+                      "file":  "src/render.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "7ef34f648c44c3947ca8b85bc2427417190f08db",
+                      "currentBlob":  "7ef34f648c44c3947ca8b85bc2427417190f08db"
+                  },
+                  {
+                      "file":  "src/input/camera.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "cb45b9402569b6ecff88e476b734749bee532eba",
+                      "currentBlob":  "cb45b9402569b6ecff88e476b734749bee532eba"
+                  },
+                  {
+                      "file":  "src/input/gestures.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "dfad9688b8efe780058bf797e953e0f82ded9050",
+                      "currentBlob":  "dfad9688b8efe780058bf797e953e0f82ded9050"
+                  },
+                  {
+                      "file":  "tests/fixtures/challenge-solutions.ts",
+                      "unchanged":  true,
+                      "baselineBlob":  "063258e6cfefe5a14857604038046384ddb1d5d2",
+                      "currentBlob":  "063258e6cfefe5a14857604038046384ddb1d5d2"
+                  }
+              ]
+}

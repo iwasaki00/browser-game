@@ -1,0 +1,273 @@
+{
+  "version": "0.7.2",
+  "date": "2026-10-22",
+  "source": "New 0.7.2 development panel exports; no 0.7.1 values reused",
+  "environment": {
+    "os": "Windows",
+    "osFullVersion": null,
+    "screenResolution": null,
+    "viewportCssPx": {
+      "width": 1333,
+      "height": 872
+    },
+    "dpr": 1,
+    "canvas": {
+      "width": 872,
+      "height": 872
+    },
+    "zoom": 1,
+    "browserUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "browserFullVersion": null,
+    "browserFullVersionReason": "chrome://version navigation blocked by browser URL policy; no alternate retrieval attempted",
+    "performanceTimeOriginMs": 1792674179096.6,
+    "devToolsRecorded": false,
+    "automationConnected": true,
+    "physicalForegroundIndependentlyVerified": false
+  },
+  "definitions": {
+    "distribution": "Every reported segment has <=240 intervals, so window quantiles/count/frequencies use all its eligible intervals",
+    "boundary": "Cross-environment/activity intervals excluded",
+    "duration": "end minus start performance timestamps; includes boundary time excluded from samples",
+    "longest": "Sum of consecutive intervals strictly >100ms, reset at segment boundary; not CPU Long Task",
+    "formalControlLimit": "Browser API-visible/focused only. Physical foreground, occlusion, energy settings not independently controlled"
+  },
+  "measurements": [
+    {
+      "id": "trial1-playing",
+      "startPerformanceMs": 139055.19999992847,
+      "endPerformanceMs": 145029,
+      "segmentDurationMs": 5973.800000071526,
+      "condition": "A",
+      "visibilityState": "visible",
+      "hasFocus": true,
+      "stage": "stage-01",
+      "playback": "PLAYING",
+      "phase": "SIMULATING",
+      "speed": 20,
+      "view": "combined",
+      "flow": false,
+      "statistics": {
+        "count": 156,
+        "medianMs": 33.39999999999418,
+        "p95Ms": 50.29999999998836,
+        "p99Ms": 116.70000000001164,
+        "maximumMs": 133.30000000001746,
+        "over100": {
+          "count": 2,
+          "ratio": 0.01282051282051282
+        },
+        "over500": {
+          "count": 0,
+          "ratio": 0
+        },
+        "over900": {
+          "count": 0,
+          "ratio": 0
+        },
+        "longestConsecutiveOver100Ms": 133.30000000001746,
+        "sampledIntervalTotalMs": 5938.299999999988
+      }
+    },
+    {
+      "id": "trial1-after-result",
+      "startPerformanceMs": 145029,
+      "endPerformanceMs": 172402.5,
+      "segmentDurationMs": 27373.5,
+      "condition": "A",
+      "visibilityState": "visible",
+      "hasFocus": true,
+      "stage": "stage-01",
+      "playback": "PAUSED",
+      "phase": "RESULT",
+      "speed": 20,
+      "view": "combined",
+      "flow": false,
+      "statistics": {
+        "count": 36,
+        "medianMs": 1000.7999999999884,
+        "p95Ms": 1001,
+        "p99Ms": 1001.1000000000058,
+        "maximumMs": 1001.1000000000058,
+        "over100": {
+          "count": 27,
+          "ratio": 0.75
+        },
+        "over500": {
+          "count": 27,
+          "ratio": 0.75
+        },
+        "over900": {
+          "count": 27,
+          "ratio": 0.75
+        },
+        "longestConsecutiveOver100Ms": 22018.300000000017,
+        "sampledIntervalTotalMs": 27339.400000000023
+      }
+    },
+    {
+      "id": "trial2-playing",
+      "startPerformanceMs": 194405.10000002384,
+      "endPerformanceMs": 200436.10000002384,
+      "segmentDurationMs": 6031,
+      "condition": "A",
+      "visibilityState": "visible",
+      "hasFocus": true,
+      "stage": "stage-01",
+      "playback": "PLAYING",
+      "phase": "SIMULATING",
+      "speed": 20,
+      "view": "combined",
+      "flow": false,
+      "statistics": {
+        "count": 133,
+        "medianMs": 49.89999999999418,
+        "p95Ms": 66.79999999998836,
+        "p99Ms": 66.90000000002328,
+        "maximumMs": 150.09999999997672,
+        "over100": {
+          "count": 1,
+          "ratio": 0.007518796992481203
+        },
+        "over500": {
+          "count": 0,
+          "ratio": 0
+        },
+        "over900": {
+          "count": 0,
+          "ratio": 0
+        },
+        "longestConsecutiveOver100Ms": 150.09999999997672,
+        "sampledIntervalTotalMs": 6004.899999999994
+      }
+    },
+    {
+      "id": "trial2-after-result",
+      "startPerformanceMs": 200436.10000002384,
+      "endPerformanceMs": 327934.89999997616,
+      "segmentDurationMs": 127498.79999995232,
+      "condition": "A",
+      "visibilityState": "visible",
+      "hasFocus": true,
+      "stage": "stage-01",
+      "playback": "PAUSED",
+      "phase": "RESULT",
+      "speed": 20,
+      "view": "combined",
+      "flow": false,
+      "statistics": {
+        "count": 134,
+        "medianMs": 1000.8000000000176,
+        "p95Ms": 1001,
+        "p99Ms": 1001.1000000000348,
+        "maximumMs": 1017.5,
+        "over100": {
+          "count": 127,
+          "ratio": 0.9477611940298507
+        },
+        "over500": {
+          "count": 127,
+          "ratio": 0.9477611940298507
+        },
+        "over900": {
+          "count": 127,
+          "ratio": 0.9477611940298507
+        },
+        "longestConsecutiveOver100Ms": 127121.8,
+        "sampledIntervalTotalMs": 127455.59999999998
+      }
+    }
+  ],
+  "captures": [
+    {
+      "trial": 1,
+      "generatedAt": "2026-10-22T13:05:51.499Z",
+      "step": 120,
+      "balanced": true,
+      "drawAggregate": {
+        "count": 157,
+        "meanMs": 2.924203822567205,
+        "maximumMs": 10
+      },
+      "singleStep": {
+        "count": 120,
+        "meanMs": 0.3175000011920929,
+        "maximumMs": 3.1999999284744263
+      }
+    },
+    {
+      "trial": 2,
+      "generatedAt": "2026-10-22T13:08:27.031Z",
+      "step": 120,
+      "balanced": true,
+      "drawAggregate": {
+        "count": 134,
+        "meanMs": 2.4895522416527593,
+        "maximumMs": 4.700000047683716
+      },
+      "singleStep": {
+        "count": 120,
+        "meanMs": 0.1808333287636439,
+        "maximumMs": 1.899999976158142
+      },
+      "aggregateNote": "CPU aggregates since reset can include dirty initial/final drawing; not used as activity-isolated RAF distributions"
+    }
+  ],
+  "lifecycle": {
+    "generation": 1,
+    "peakGamePendingObserved": 1,
+    "peakAllPendingObserved": 2,
+    "gameExceptionsObserved": 0,
+    "observerErrors": 0,
+    "overlapEvidence": {
+      "atPerformanceMs": 136943.39999997616,
+      "pending": [
+        {
+          "rafId": 92,
+          "callbackName": "GAME_FRAME"
+        },
+        {
+          "rafId": 93,
+          "callbackName": "OTHER_ANONYMOUS"
+        }
+      ],
+      "sourceOfOtherCallback": "unknown"
+    },
+    "gapEvidence": [
+      {
+        "atPerformanceMs": 172391.60000002384,
+        "rafId": 294,
+        "phase": "RESULT",
+        "playback": "PAUSED",
+        "intervalMs": 1000.9000000000232,
+        "previousCallbackCpuMs": 1.2999999523162842,
+        "callbackCpuMs": 1.100000023841858
+      },
+      {
+        "atPerformanceMs": 327920.39999997616,
+        "rafId": 1739,
+        "phase": "RESULT",
+        "playback": "PAUSED",
+        "intervalMs": 1000.7000000000116,
+        "previousCallbackCpuMs": 2.200000047683716,
+        "callbackCpuMs": 1.1999999284744265
+      }
+    ],
+    "note": "Lifecycle counts cover the enabled generation, not one isolated trial. Events bounded to120; callbacks identified by function reference. Other callback's origin not proven."
+  },
+  "unperformed": {
+    "B": "Controlled hidden-tab trial not established with available browser controls",
+    "C": "No native application focus control surface",
+    "D": "No controlled return from a verified B/C trial",
+    "devToolsPerformance": "No trace/Main-thread recording interface; Japanese manual provided",
+    "mobile": "0/30 performed; unchanged",
+    "humanPlayQuality": "0/10 performed; unchanged"
+  },
+  "conclusion": {
+    "oneSecondReproduced": true,
+    "duringPlayingReproducedInTheseTrials": false,
+    "rootCauseIdentified": false,
+    "measurementDefectsFixed": true,
+    "gameLogicFixed": false,
+    "details": "~1s reproduced in PAUSED/RESULT. Both new PLAYING trials had zero >500ms intervals. Mixed activity statistics and unidentified other RAFs can confound prior interpretation; do not reinterpret every old observation as proven measurement error."
+  }
+}

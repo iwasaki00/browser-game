@@ -1,10 +1,11 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.9";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.0";
+import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded} from "./weapons.js?v=0.2.0";
 import {applyPlayerClass,moveClassPlayer,classPlayerFrame} from "./player.js?v=0.1.9";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js";
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
 import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.9";
-import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.7";
+import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.2.0";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
@@ -12,9 +13,11 @@ const screens=[...document.querySelectorAll(".screen")],weaponGrid=document.quer
 const equipMessage=document.querySelector("#equipMessage"),touchControls=document.querySelector("#touchControls");
 const gameShell=document.querySelector("#gameShell");
 const images={};
-const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",classes:"assets/sprites/player/classes.png?v=0.1.8",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png",shots:"assets/sprites/weapons/projectiles.png",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
+const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",classes:"assets/sprites/player/classes.png?v=0.1.8",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png?v=0.2.0",shots:"assets/sprites/weapons/projectiles.png?v=0.2.0",heldWeapons:"assets/sprites/weapons/equipped.png?v=0.2.0",weaponFx:"assets/effects/weapon_fx.png?v=0.2.0",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
+let weaponFilter="ALL",activeEquipSlot=0,remoteTimer=null,remoteHeld=false;
+const weaponAPI={damage:damageEnemy,blast:explode,effect:pushEffect};
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
 const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
@@ -69,7 +72,7 @@ function renderMissionList(){
   const list=document.querySelector("#missionList");list.replaceChildren();
   for(const mission of MISSIONS){const status=missionStatus(mission,save),button=document.createElement("button");button.className="mission-card";button.dataset.action="select-mission";button.dataset.mission=mission.id;button.dataset.status=status;button.disabled=!canPlayMission(mission.id,save);button.innerHTML=`<span>${mission.id}</span><strong>${mission.name}</strong><b class="mission-status">${status}</b><small>${mission.description}</small>`;list.append(button)}
 }
-function weapon(id){return WEAPONS.find(w=>w.id===id)}
+function weapon(id){return WEAPON_BY_ID.get(id)}
 function activeEquipment(){return game?.lab?.equipped??save.equipped}
 function activeSettings(){return game?.lab?.settings??save.settings}
 function formalClass(){return !game?.lab||Object.hasOwn(PLAYER_CLASSES,game.lab.preset)}
@@ -84,7 +87,7 @@ function renderClassGrid(){
   const grid=document.querySelector("#classGrid");grid.replaceChildren();
   for(const c of Object.values(PLAYER_CLASSES)){
     const button=document.createElement("button");button.className=`class-card ${save.selectedClass===c.id?"selected":""}`;button.dataset.action="select-class";button.dataset.playerClass=c.id;button.setAttribute("aria-pressed",String(save.selectedClass===c.id));
-    button.innerHTML=`<span class="class-pic" style="background-position:0 ${-64*c.row}px" aria-hidden="true"></span><span><strong>${c.id}</strong><small>HP ${c.hp} / ${c.speed}px/s</small><small>${c.ability}</small></span>`;grid.append(button);
+    button.innerHTML=`<span class="class-pic" style="--class-row:${c.row};background-position:0 ${-64*c.row}px" aria-hidden="true"></span><span><strong>${c.id}</strong><small>HP ${c.hp} / ${c.speed}px/s</small><small>${c.ability}</small></span>`;grid.append(button);
   }
 }
 function syncSettings(){document.querySelector("#destructionSelect").value=String(save.settings.destructionLevel);document.querySelector("#shakeToggle").checked=save.settings.shake}
@@ -102,11 +105,18 @@ function renderWeaponGrid(){
   renderClassGrid();
   const densitySelect=document.querySelector("#densitySelect");if(densitySelect)densitySelect.value=save.settings.enemyDensity;
   weaponGrid.replaceChildren();
-  WEAPONS.forEach((w,i)=>{const b=document.createElement("button");b.className=`weapon-card ${selected.includes(w.id)?"selected":""} ${save.unlocked.includes(w.id)?"":"locked"}`;b.disabled=!save.unlocked.includes(w.id);b.innerHTML=`<span class="weapon-pic" style="background-position:${i*-32}px 0"></span><span><strong>${w.id} ${w.name}</strong><small>DMG ${w.damage} / ${w.detail}</small></span>`;b.addEventListener("click",()=>{if(selected.includes(w.id)){if(selected.length>1)selected=selected.filter(x=>x!==w.id)}else{if(selected.length>=2)selected.shift();selected.push(w.id)}renderWeaponGrid();equipMessage.textContent=selected.length===2?`${selected.join(" / ")} を装備`:"武器を2つ選んでください"});weaponGrid.append(b)});
+  document.querySelector("#weaponFilter").value=weaponFilter;
+  for(let slot=0;slot<2;slot++){const button=document.querySelector(`#equipSlot${slot+1}`);button.textContent=`${slot+1}: ${selected[slot]||"未装備"}`;button.setAttribute("aria-pressed",String(activeEquipSlot===slot))}
+  for(const w of WEAPONS){if(weaponFilter!=="ALL"&&w.category!==weaponFilter)continue;
+    const unlocked=save.unlocked.includes(w.id),b=document.createElement("button");b.className=`weapon-card ${selected.includes(w.id)?"selected":""} ${unlocked?"":"locked"}`;b.disabled=!unlocked;b.dataset.weapon=w.id;
+    b.innerHTML=`<span class="weapon-pic" style="background-position:${w.assetIndex*-32}px 0"></span><span><strong>${w.id} ${w.name}</strong><small>DMG ${w.damage} / ${w.interval}s · ${WEAPON_CATEGORIES[w.category]}</small><small>${w.detail}</small><small>${unlocked?selected.includes(w.id)?`SLOT ${selected.indexOf(w.id)+1}`:"OPEN":"LOCKED"}</small></span>`;
+    b.addEventListener("click",()=>{if(!save.unlocked.includes(w.id))return;const other=selected.indexOf(w.id);if(other>=0)activeEquipSlot=other;else selected[activeEquipSlot]=w.id;renderWeaponGrid()});weaponGrid.append(b);
+  }
+  equipMessage.textContent=`${save.unlocked.length}/${WEAPONS.length} 解放 · 枠を選んで武器を指定`;
 }
 
 const input={left:false,right:false,jump:false,up:false,down:false,hover:false,special:false,fire:false,switch:false,aimX:260,aimY:90,aimMode:"mouse",touchDx:1,touchDy:0};
-function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.hover=input.special=input.fire=input.switch=false}
+function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.hover=input.special=input.fire=input.switch=false;if(remoteTimer!==null)clearTimeout(remoteTimer);remoteTimer=null;remoteHeld=false}
 window.addEventListener("keydown",e=>{
   if(state==="settings"){if(e.key==="Escape")closeSettings();return}
   if(game?.lab&&state==="lab"){if(e.key==="Escape")closeLabPanel();return}
@@ -119,6 +129,7 @@ window.addEventListener("keydown",e=>{
   if(e.key==="w"||e.key==="ArrowUp"||e.key===" ")input.jump=true;
   if(e.key==="w"||e.key==="ArrowUp")input.up=true;if(e.key==="s"||e.key==="ArrowDown")input.down=true;
   if(e.key===" ")input.hover=true;if(e.key.toLowerCase()==="c")input.special=true;
+  if(e.key.toLowerCase()==="v"&&!e.repeat&&state==="play"&&game){detonateMines(game,weaponAPI);syncRemoteControl()}
   if((e.key==="q"||e.key==="e"||e.key==="Shift")&&!e.repeat)switchWeapon();
   if((e.key==="Escape"||e.key==="p")&&state==="play")pause();else if((e.key==="Escape"||e.key==="p")&&state==="pause")resume();
 });
@@ -129,7 +140,12 @@ canvas.addEventListener("pointerdown",e=>{if(state==="play"&&e.pointerType!=="to
 window.addEventListener("blur",()=>{resetInput();liveProfiler?.reset();if(state==="play")pause()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&state==="play")pause()});
 
-document.querySelectorAll("#touchControls [data-touch]").forEach(b=>{const key=b.dataset.touch;if(key==="switch"){b.addEventListener("pointerdown",e=>{e.preventDefault();switchWeapon()});return}b.addEventListener("pointerdown",e=>{e.preventDefault();if(state!=="play")return;b.setPointerCapture(e.pointerId);input[key]=true});for(const ev of ["pointerup","pointercancel","pointerleave"])b.addEventListener(ev,e=>{e.preventDefault();input[key]=false})});
+document.querySelectorAll("#touchControls [data-touch]").forEach(b=>{const key=b.dataset.touch;if(key==="switch"){
+  b.addEventListener("pointerdown",e=>{e.preventDefault();if(state!=="play")return;b.setPointerCapture(e.pointerId);if(!mineCount(game)){switchWeapon();return}remoteHeld=false;const current=game;remoteTimer=setTimeout(()=>{remoteTimer=null;if(game===current&&state==="play"){remoteHeld=true;detonateMines(game,weaponAPI);syncRemoteControl()}},WEAPON_LIMITS.remoteHoldMs)});
+  b.addEventListener("pointerup",e=>{e.preventDefault();if(remoteTimer!==null){clearTimeout(remoteTimer);remoteTimer=null;if(!remoteHeld)switchWeapon()}remoteHeld=false});
+  for(const ev of ["pointercancel","lostpointercapture"])b.addEventListener(ev,()=>{if(remoteTimer!==null)clearTimeout(remoteTimer);remoteTimer=null;remoteHeld=false});return;
+}b.addEventListener("pointerdown",e=>{e.preventDefault();if(state!=="play")return;b.setPointerCapture(e.pointerId);input[key]=true});for(const ev of ["pointerup","pointercancel","pointerleave"])b.addEventListener(ev,e=>{e.preventDefault();input[key]=false})});
+function syncRemoteControl(){const count=mineCount(game);if(game?.arsenal.lastMineCount===count)return;if(game)game.arsenal.lastMineCount=count;gameShell.dataset.mines=String(count);document.querySelector(".switch-button small").textContent=count?`HOLD ${count}`:"WEAPON";document.querySelector(".switch-button").setAttribute("aria-label",count?`武器切替。長押しでマイン${count}個を起爆`:"武器切替")}
 const aimPad=document.querySelector("#aimPad");function touchAim(e){if(state!=="play"||!game)return;const r=aimPad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),len=Math.hypot(x,y);input.aimMode="touch";if(len>8){input.touchDx=x/len;input.touchDy=y/len}else{input.touchDx=game.player.face;input.touchDy=0}input.fire=true}
 aimPad.addEventListener("pointerdown",e=>{e.preventDefault();aimPad.setPointerCapture(e.pointerId);touchAim(e);initAudio()});aimPad.addEventListener("pointermove",e=>{if(e.buttons)touchAim(e)});for(const ev of ["pointerup","pointercancel"])aimPad.addEventListener(ev,()=>input.fire=false);
 
@@ -144,6 +160,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="lab-close"){closeLabPanel();return}
   if(action==="lab-spawn"){if(game?.lab)spawnLabEnemies();return}
   if(action==="lab-blast"){labBlast();return}
+  if(action==="lab-test"){labTestShot();return}
   if(action==="lab-clear"){if(game?.lab)clearLabEnemies();return}
   if(action==="lab-reset"){if(game?.lab)startLab();return}
   if(action==="lab-exit"){if(game?.lab){discardMission();show("title")}return}
@@ -151,14 +168,16 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="howto")show("howto");if(action==="close-howto"){resetInput();show("title")}
   if(action==="select-mission"){if(!canPlayMission(a.dataset.mission,save))return;selectedMissionId=a.dataset.mission;selected=[...save.equipped];renderWeaponGrid();show("equip")}
   if(action==="select-class"&&state==="equip"&&!game?.lab&&Object.hasOwn(PLAYER_CLASSES,a.dataset.playerClass)){save.selectedClass=a.dataset.playerClass;storeSave();renderClassGrid()}
+  if(action==="equip-slot"&&state==="equip"){activeEquipSlot=Number(a.dataset.slot)===1?1:0;renderWeaponGrid()}
   if(action==="mission-select"){discardMission();show("mission")}
   if(action==="back-mission")show("mission");
-  if(action==="deploy"){if(selected.length!==2){equipMessage.textContent="武器を2つ選んでください";return}save.equipped=[...selected];storeSave();startMission()}
+  if(action==="deploy"){if(selected.length!==2||selected.some(id=>!save.unlocked.includes(id))){equipMessage.textContent="解放済みの武器を2つ選んでください";return}save.equipped=[...selected];storeSave();startMission()}
   if(action==="resume")resume();if(action==="retry"){if(game?.lab)startLab();else startMission()}
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound)tone(700,.06)});
 document.addEventListener("change",e=>{
   if(game?.lab){changeLabSetting(e.target);return}
+  if(e.target.id==="weaponFilter"&&(e.target.value==="ALL"||Object.hasOwn(WEAPON_CATEGORIES,e.target.value))){weaponFilter=e.target.value;renderWeaponGrid();return}
   if(e.target.id==="destructionSelect"&&state==="settings"){save.settings.destructionLevel=normalizeDestructionLevel(e.target.value);storeSave();syncSettings();return}
   if(e.target.id==="shakeToggle"&&state==="settings"){save.settings.shake=e.target.checked;if(game&&!e.target.checked){game.shake=0;game.impact.shakeUntil=0}storeSave();return}
   if(e.target.id!=="densitySelect"||!Object.hasOwn(DENSITY_MODES,e.target.value))return;save.settings.enemyDensity=e.target.value;storeSave();
@@ -170,10 +189,10 @@ function startMission(id=selectedMissionId){
   game={missionId:id,time:0,score:0,kills:0,crates:0,camera:0,shake:0,area:-1,areaText:"",areaTimer:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     density:save.settings.enemyDensity,enemyLimit:DENSITY_MODES[save.settings.enemyDensity].limit,liveEnemies:0,liveMobs:0,
     director:new SpawnDirector(save.settings.enemyDensity),grid:new SpatialGrid(),attacks:new AttackDirector(),
-    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),settings:save.settings,
+    shotCandidates:[],blastCandidates:[],chainCandidates:[],separationCandidates:[],impact:createImpactState(),arsenal:createArsenal(),settings:save.settings,
     player:{x:64,y:WORLD.ground-32,vx:0,vy:0,w:14,h:27,hp:100,maxHp:100,onGround:true,face:1,invuln:0,shotCd:0,switchCd:0,shootPose:0,weaponSlot:0,anim:0,dead:false},
     enemies:[],shots:[],enemyShots:[],effects:[],items:[{x:2050,y:WORLD.ground-25,type:"crate",alive:true}],platforms:[{x:520,y:120,w:80},{x:1220,y:105,w:96},{x:2700,y:116,w:72},{x:3500,y:100,w:90}]};
-  applyPlayerClass(game.player,save.selectedClass);syncClassControls();
+  applyPlayerClass(game.player,save.selectedClass);syncClassControls();syncRemoteControl();
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
 }
@@ -196,9 +215,10 @@ function pushEffect(effect){
   pushImpactEffect(game,effect);
 }
 
-function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0)return;const px=p.x+(p.face>0?18:-3),py=p.y+13;
+function shoot(){const p=game.player,w=weapon(activeEquipment()[p.weaponSlot]);if(p.shotCd>0||p.switchCd>0||p.dead)return;let px=p.x+(p.face>0?18:-3);const py=p.y+13;
   const offset=activeSettings().shake?view.renderOffset:0,aimInput=input.aimMode==="mouse"&&offset?{...input,aimX:input.aimX-offset,aimY:input.aimY-offset}:input;
   const target=aimTarget(aimInput,{x:px,y:py},game.camera,view.zoom);let dx=target.x-px,dy=target.y-py,len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;p.face=dx>=0?1:-1;p.shotCd=w.interval;
+  if(w.expanded){px=p.x+(p.face>0?18:-18);if(!fireExpanded(game,w,{x:px,y:py},target,weaponAPI)){p.shotCd=.12;return}p.shootPose=.11;pushEffect({x:px,y:py,kind:"muzzle",life:.09,max:.09});syncRemoteControl();tone(110+w.damage*3,.05);return}
   const make=(ang=0,offset=0)=>{const ca=Math.cos(ang),sa=Math.sin(ang),vx=(dx*ca-dy*sa)*w.speed,vy=(dx*sa+dy*ca)*w.speed;game.shots.push({x:px,y:py+offset,originX:px,originY:py,vx,vy,w:7,h:4,life:w.range/w.speed,type:w.type,damage:w.damage,pierce:w.pierce||0,radius:w.radius||0,rehit:{},weapon:w})};
   if(w.type==="spread")[-.34,-.17,0,.17,.34].forEach(a=>make(a));else if(w.type==="homing"){make(-.1,-2);make(.1,3)}else make();
   p.shootPose=.11;pushEffect({x:px,y:py,kind:"muzzle",life:.09,max:.09});tone(w.type==="rocket"||w.type==="grenade"?95:220+w.damage*8,.04,w.type==="laser"?"sawtooth":"square",.018);
@@ -221,7 +241,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;
   for(let i=g.area+1;i<MISSION_AREAS.length;i++)if(p.x>=MISSION_AREAS[i].x)announceArea(i);
   if(p.x>4100&&!g.bossStarted)startBoss();
   }
-  g.grid.rebuild(g.enemies);updateShots(dt);updateEnemies(dt);updateEnemyShots(dt);updateItems(dt);updateEffects(dt);
+  g.grid.rebuild(g.enemies);updateShots(dt);updateExpanded(g,dt,weaponAPI);syncRemoteControl();updateEnemies(dt);updateEnemyShots(dt);updateItems(dt);updateEffects(dt);
   canvas.dataset.gameState=state;canvas.dataset.playerX=Math.round(p.x);canvas.dataset.playerHp=Math.ceil(p.hp);canvas.dataset.enemies=g.liveEnemies;canvas.dataset.boss=g.bossStarted?"1":"0";canvas.dataset.density=g.density;canvas.dataset.enemyLimit=g.enemyLimit;
   canvas.dataset.playerClass=p.classId;canvas.dataset.flightEnergy=p.energy.toFixed(1);
   if(p.hp<=0&&!p.dead){p.dead=true;scheduleMission(()=>{document.querySelector("#gameoverStats").textContent=`SCORE ${g.score} / TIME ${formatTime(g.time)}`;missionScreen("gameover")},650)}
@@ -244,11 +264,12 @@ function damageEnemy(e,dmg,source={}){
 function explode(s){
   pushEffect({x:s.x,y:s.y,kind:"explosion",life:.45,max:.45,r:s.radius});
   const candidates=game.grid.query(s.x-s.radius-48,s.y-s.radius-32,s.x+s.radius+48,s.y+s.radius+32,game.blastCandidates);
-  const source={type:s.type??s.weapon?.type??"rocket",radial:true,x:s.x,y:s.y};
-  for(let i=0;i<candidates.length;i++){const e=candidates[i];if(!e.dead&&Math.hypot(s.x-e.x,s.y-e.y-e.h/2)<s.radius)damageEnemy(e,s.damage,source)}
+  const source={type:s.type??s.weapon?.type??"rocket",effectType:s.effectType,assetIndex:s.assetIndex,radial:true,x:s.x,y:s.y};
+  for(let i=0;i<candidates.length;i++){const e=candidates[i];if(!e.dead&&Math.hypot(s.x-e.x,s.y-e.y-e.h/2)<s.radius){damageEnemy(e,s.damage,source);if(e.dead)s.onKill?.(e)}}
+  if(s.assetIndex>=8)pushEffect({x:s.x,y:s.y,kind:"weaponBurst",assetIndex:s.assetIndex,life:.35,max:.35,r:s.radius});
   impactShake(game);tone(65,.18,"sawtooth",.04);
 }
-function updateShots(dt){for(const s of game.shots){s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
+function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
     const candidates=game.grid.query(s.x-s.w/2-48,s.y-s.h/2-32,s.x+s.w/2+48,s.y+s.h/2+32,game.shotCandidates);
     for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
@@ -277,10 +298,15 @@ function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-
 function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;p.hp=Math.max(0,p.hp-amount*scale);p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
 function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
-function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6}
+function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";storeSave()}
 function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
 
-function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;const reward=pickReward(save.unlocked);if(reward)save.unlocked.push(reward);save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL COMPLETE</span><strong>全武器取得済み</strong>`;scheduleMission(()=>show("result"),500)}
+function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;
+  const reward=game.missionId==="M01"&&!save.clearedMissions.includes("M01")&&!save.unlocked.includes("L-03")?"L-03":null;
+  if(reward)save.unlocked.push(reward);save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();clearArsenal(game);
+  const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;
+  document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
+}
 
 function draw(){
   view.renderOffset=0;
@@ -309,7 +335,7 @@ function drawWorld(g){
   for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2)}
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
-function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);ctx.restore()}
+function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawClassHud(g){
   const p=g.player,c=PLAYER_CLASSES[p.classId];ctx.font="6px monospace";ctx.fillStyle="#071522dd";ctx.fillRect(4,46,80,16);ctx.fillStyle="#e4fff6";
   ctx.fillText(g.lab&&!formalClass()?`${g.lab.preset} / TEST`:c.id,8,53);
@@ -337,7 +363,7 @@ function drawDeathGhost(e,x,y,angle,alpha,full){
   else{const size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,144,ENEMY_TYPES[e.type].row*48,48,48,-size/2,e.h/2-size,size,size)}
   ctx.restore();ctx.globalAlpha=1;
 }
-function drawShots(g){for(const s of g.shots){if(s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=WEAPONS.findIndex(w=>w.type===s.type),x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,Math.max(0,i)*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){if(s.x<g.camera-8||s.x>g.camera+view.width+8)continue;ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}}
+function drawShots(g){drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom));for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){if(s.x<g.camera-8||s.x>g.camera+view.width+8)continue;ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}}
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
 function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
     if(f.kind==="explosion"){
@@ -347,6 +373,8 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
       for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
       ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
       for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
+    }else if(f.kind==="weaponBurst"){
+      const size=Math.max(32,(f.r||24)*2)*(f.visualScale||1);ctx.drawImage(images.weaponFx,(4+Math.min(3,Math.floor((1-a)*4)))*32,(f.assetIndex-8)*32,32,32,x-size/2,f.y-size/2,size,size);
     }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
     else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}
     else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}
@@ -355,6 +383,7 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
 }
 function drawHitEffect(f,rays){
   const a=f.life/f.max,progress=1-a,angle=Math.atan2(f.vy,f.vx),burn=f.type==="flame";
+  if(f.assetIndex>=8)ctx.drawImage(images.weaponFx,Math.min(3,Math.floor(progress*4))*32,(f.assetIndex-8)*32,32,32,f.x-16,f.y-16,32,32);
   ctx.globalAlpha=a;ctx.strokeStyle=f.color;ctx.fillStyle=a>.6?"#fff7d5":f.color;ctx.lineWidth=f.type==="laser"?2:1;
   for(let i=0;i<rays;i++){const direction=angle+(i-rays/2)*.8+(f.seed%3)*.2,reach=(f.type==="spread"?18:f.type==="laser"?16:10)*progress+3;
     const x=Math.round(f.x+Math.cos(direction)*reach),y=Math.round(f.y+Math.sin(direction)*reach-(burn?progress*10:0));
@@ -445,7 +474,13 @@ function changeLabSetting(target){
 function clearLabEnemies(){
   if(!game?.lab)return;game.enemies.length=game.shots.length=game.enemyShots.length=game.effects.length=game.items.length=0;
   game.liveEnemies=game.liveMobs=0;game.bossStarted=game.midbossAlive=false;game.attacks=new AttackDirector();game.grid.rebuild(game.enemies);
-  game.impact=createImpactState();game.shake=0;
+  game.impact=createImpactState();game.shake=0;clearArsenal(game);syncRemoteControl();
+}
+function labTestShot(){
+  if(!game?.lab||state!=="lab")return;
+  if(!game.liveEnemies)spawnLabEnemies();const enemy=game.enemies.find(e=>!e.dead);if(!enemy)return;
+  const p=game.player,dx=enemy.x-p.x,dy=enemy.y+enemy.h/2-p.y-13,len=Math.hypot(dx,dy)||1;
+  closeLabPanel();input.aimMode="touch";input.touchDx=dx/len;input.touchDy=dy/len;p.shotCd=p.switchCd=0;shoot();
 }
 function configureLabPlayer(){
   const preset=game.lab.preset;applyPlayerClass(game.player,Object.hasOwn(PLAYER_CLASSES,preset)?preset:"RANGER");

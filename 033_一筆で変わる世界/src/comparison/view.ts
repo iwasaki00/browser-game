@@ -67,6 +67,7 @@ export class ComparisonView {
   }
   setDisplaySettings(settings: DisplaySettings): void { this.#displaySettings = { ...settings }; this.#dirty = true; }
   get canAdvanceStage(): boolean { return this.#hasNext && this.#controller?.getFinalResult()?.worldBResult.goal.status === 'SUCCESS'; }
+  get playing(): boolean { return this.#controller?.playing ?? false; }
   open(stage: StageDefinition, stroke: Stroke, speed: number, hasNext: boolean): void {
     this.close();
     this.#controller = new ComparisonController(stage, stroke);

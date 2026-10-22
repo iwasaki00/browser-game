@@ -11,6 +11,7 @@ import type { StageEdge } from './stage';
 import { createProgressStore, memoryStorage, productionProgressKey, type ProgressStorage, type Settings } from './progress';
 import { GameAudio } from './audio';
 import { movementProgress, recentArrivals, reducedMotion } from './presentation';
+import { HintPanel } from './hints-ui';
 
 type Mode = 'DESIGN' | 'RUN' | 'PAUSED' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -49,6 +50,7 @@ let pauseAt: number | undefined;
 let animationId: number | undefined;
 const rescueDialog = get<HTMLDialogElement>('rescue-dialog');
 const activeRun = () => mode === 'RUN' || mode === 'PAUSED';
+const hintPanel = new HintPanel(document, () => mode);
 const tickMs = 700;
 const ink = '#243D4A';
 const teal = '#247E72';
@@ -105,6 +107,7 @@ function updateControls() {
   retry.disabled = activeRun(); reset.disabled = activeRun();
   next.hidden = !(mode === 'RESULT' && result?.clear && stageIndex < stages.length - 1);
   get<HTMLButtonElement>('reset-progress').disabled = activeRun();
+  hintPanel.sync();
   updateRescueControl();
   updateStorageStatus();
   highlightDispatch();
@@ -131,6 +134,7 @@ function showError(message: string) {
 function selectStage(index: number) {
   if (activeRun() || !stages[index] || !unlocked(stages[index].id)) return;
   stageIndex = index; stage = stages[index];
+  hintPanel.setStage(stage);
   selectedSwitch = stage.nodes.find(n => n.kind === 'switch')?.id ?? '';
   get('stage-name').textContent = stage.name;
   const branches = stage.nodes.filter(n => n.kind === 'switch');

@@ -1,6 +1,6 @@
 import { SimulationRunner } from '../core/runner';
 import { ComparisonController } from '../comparison/controller';
-import { RafMonitor, type RafContext } from './raf';
+import { RafMonitor, type RafContext, type RafActivity } from './raf';
 
 class Samples {
   count = 0; total = 0; maximum: number | null = null;
@@ -32,7 +32,7 @@ export class QualityMetrics {
   constructor(private readonly clock: () => number = () => performance.now(), private readonly comparisonVisible: () => boolean = () => true) {}
   get enabled(): boolean { return this.#enabled; }
   suspendFrameClock(): void { this.#raf.interrupt(); }
-  observeContext(now: number, context: RafContext, reason?: string): void { if (this.#enabled) this.#raf.observe(now, context, reason); }
+  observeContext(now: number, context: RafContext, reason?: string, activity?: RafActivity): void { if (this.#enabled) this.#raf.observe(now, context, reason, activity); }
   setEnabled(enabled: boolean, now?: number): void {
     if (this.#enabled === enabled) return;
     this.#enabled = enabled;
@@ -63,9 +63,9 @@ export class QualityMetrics {
     this.#raf = new RafMonitor(); this.#draw = new Samples(); this.#frame = new Samples();
     this.#steps = { single: new Samples(), comparison: new Samples(), summary: new Samples() };
   }
-  frame(timestamp: number, context: boolean | RafContext): void {
+  frame(timestamp: number, context: boolean | RafContext, activity?: RafActivity): void {
     if (!this.#enabled) return;
-    this.#raf.frame(timestamp, typeof context === 'boolean' ? { visibilityState: context ? 'hidden' : 'visible', hasFocus: true } : context);
+    this.#raf.frame(timestamp, typeof context === 'boolean' ? { visibilityState: context ? 'hidden' : 'visible', hasFocus: true } : context, activity);
   }
   measure<T>(kind: 'draw' | 'frame', action: () => T, record: (result: T) => boolean = () => true): T {
     if (!this.#enabled) return action();

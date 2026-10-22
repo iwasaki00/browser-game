@@ -17,7 +17,7 @@ test("LEVEL 1 retains 0.1.6 reaction constants and exact death velocity, spin, l
 
 for(const level of [2,3])test(`LEVEL ${level} multiplies horizontal/vertical velocity, rotation and life of all eight weapons`,()=>{
   const p=DESTRUCTION_LEVELS[level];
-  for(const w of WEAPONS){const base=lab(1,1),strong=lab(level,1),source=`{type:'${w.type}',vx:100,vy:-25,originX:1200}`;
+  for(const w of WEAPONS.filter(w=>!w.expanded)){const base=lab(1,1),strong=lab(level,1),source=`{type:'${w.type}',vx:100,vy:-25,originX:1200}`;
     base.run(`damageEnemy(game.enemies[0],999,${source})`);strong.run(`damageEnemy(game.enemies[0],999,${source})`);
     for(const [field,mult] of [["deathVx",p.speed],["deathVy",p.speed],["deathSpin",p.spin],["death",p.life]])near(strong.run(`game.enemies[0].${field}`),base.run(`game.enemies[0].${field}`)*mult);
     assert.equal(strong.run("game.enemies[0].deathType"),w.type);near(strong.run("game.enemies[0].deathDelay"),REACTIONS[w.type].delay||0);

@@ -1,0 +1,807 @@
+[
+  {
+    "stageId": "01",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"}]}",
+    "hint1": "荷物が通るたび、分岐Aの矢印は次の枠へ進みます。",
+    "hint2": "赤はL、青はRで届けられます。荷物の順番を見てみましょう。",
+    "hint3": "Aの最初の枠はLです。2番目に届く青荷物のために、次の枠を考えましょう。",
+    "focusSwitchIds": [
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [
+        2
+      ],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "blue"
+        }
+      ],
+      "slots": [
+        {
+          "switchId": "a",
+          "slot": 1,
+          "direction": "L"
+        }
+      ],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "02",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"BLUE\"}]}",
+    "hint1": "同じ色が続くときは、同じ方向が連続することもあります。",
+    "hint2": "Aには3枠あります。最初の赤・赤・青に注目しましょう。",
+    "hint3": "最初の2枠はLにできます。3枠目を通る荷物の色が手掛かりです。",
+    "focusSwitchIds": [
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "blue"
+        }
+      ],
+      "slots": [
+        {
+          "switchId": "a",
+          "slot": 1,
+          "direction": "L"
+        },
+        {
+          "switchId": "a",
+          "slot": 2,
+          "direction": "L"
+        }
+      ],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "03",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"BLUE\"},{\"id\":6,\"color\":\"RED\"},{\"id\":7,\"color\":\"BLUE\"},{\"id\":8,\"color\":\"BLUE\"}]}",
+    "hint1": "荷物の並びに、繰り返されるまとまりがないか探しましょう。",
+    "hint2": "赤・青・青の3個が繰り返されています。Aの枠数も3です。",
+    "hint3": "最初の赤をLへ送った後、続く2個の青をどちらへ送るか考えましょう。",
+    "focusSwitchIds": [
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [
+        3,
+        2
+      ],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "blue"
+        }
+      ],
+      "slots": [
+        {
+          "switchId": "a",
+          "slot": 1,
+          "direction": "L"
+        }
+      ],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "04",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"BLUE\"},{\"id\":6,\"color\":\"BLUE\"},{\"id\":7,\"color\":\"RED\"}]}",
+    "hint1": "4枠の設定は、4個の荷物を処理すると最初の枠に戻ります。",
+    "hint2": "最初の赤・青・青・赤が、後半でも同じ順番で現れます。",
+    "hint3": "最初と4番目の荷物は赤です。Aの1枠目と4枠目の方向を考えましょう。",
+    "focusSwitchIds": [
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [
+        4
+      ],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "blue"
+        }
+      ],
+      "slots": [
+        {
+          "switchId": "a",
+          "slot": 1,
+          "direction": "L"
+        },
+        {
+          "switchId": "a",
+          "slot": 4,
+          "direction": "L"
+        }
+      ],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "05",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"YELLOW\"}]}",
+    "hint1": "AとBは、それぞれ独立した周期で動いています。",
+    "hint2": "Bに届くのは、AがRへ送った荷物だけです。",
+    "hint3": "Aでは赤を直接届ける方法を考えましょう。その後、Bには青と黄が交互に届きます。",
+    "focusSwitchIds": [
+      "a",
+      "b"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "b"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "06",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"}]}",
+    "hint1": "同じ赤荷物を、異なる経路から赤出口へ届けられます。",
+    "hint2": "Aで赤を直接届ける方法と、Bを経由する方法を比較しましょう。",
+    "hint3": "Aで毎回Bへ送る設定も試す価値があります。Bの2枠だけで赤と青を仕分けられるか考えましょう。",
+    "focusSwitchIds": [
+      "a",
+      "b"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "b"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "blue"
+        }
+      ],
+      "slots": [
+        {
+          "switchId": "a",
+          "slot": 1,
+          "direction": "R"
+        },
+        {
+          "switchId": "a",
+          "slot": 2,
+          "direction": "R"
+        },
+        {
+          "switchId": "a",
+          "slot": 3,
+          "direction": "R"
+        },
+        {
+          "switchId": "a",
+          "slot": 4,
+          "direction": "R"
+        }
+      ],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "07",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"YELLOW\"}]}",
+    "hint1": "各分岐は、自分を通った荷物の数だけ進みます。",
+    "hint2": "Bへ届く荷物とCへ届く荷物を、別々の列として考えてみましょう。",
+    "hint3": "Aの設定から先に決め、その結果できるBとCの荷物列を調べましょう。",
+    "focusSwitchIds": [
+      "b",
+      "c",
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "b"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "c"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "08",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"BLUE\"}]}",
+    "hint1": "すべての分岐を使わなくても、配送できる場合があります。",
+    "hint2": "Aから赤へ直接送り、Bから青へ届ける経路に注目しましょう。",
+    "hint3": "Cを通らない設定を作れないか考えてみましょう。使わなかった分岐は方向転換コストに含まれません。",
+    "focusSwitchIds": [
+      "a",
+      "b",
+      "c"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "c"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "09",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"YELLOW\"},{\"id\":4,\"color\":\"BLUE\"}]}",
+    "hint1": "Aの4枠と、B・Cの2枠では繰り返し方が異なります。",
+    "hint2": "Aの左右で分かれた荷物が、それぞれB・Cを何回通るか調べましょう。",
+    "hint3": "最初の赤・青・赤・黄の4個について、AからBとCのどちらへ送るべきか考えましょう。",
+    "focusSwitchIds": [
+      "a",
+      "b",
+      "c"
+    ],
+    "checks": {
+      "parcelNumbers": [
+        4
+      ],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "b"
+        },
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "c"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "10",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"YELLOW\"}]}",
+    "hint1": "荷物はAからB、さらにCへ進むことがあります。",
+    "hint2": "赤にはAからの直接経路と、C経由の経路があります。",
+    "hint3": "最初の青を届けるには、A・B・Cを順番に利用する必要があります。その後の赤荷物への影響も考えましょう。",
+    "focusSwitchIds": [
+      "a",
+      "b",
+      "c"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "R",
+          "to": "b"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "direction": "R",
+          "to": "blue"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "red"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 1,
+          "switchId": "a"
+        },
+        {
+          "parcelNumber": 1,
+          "switchId": "b"
+        },
+        {
+          "parcelNumber": 1,
+          "switchId": "c"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "11",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"}]}",
+    "hint1": "前半の配送だけでなく、後半に届く荷物も考えましょう。",
+    "hint2": "AとBの両方から赤出口へ届く経路があります。",
+    "hint3": "青と黄を届けるにはCを通る必要があります。Cへ送る荷物の順番を先に考えましょう。",
+    "focusSwitchIds": [
+      "a",
+      "b",
+      "c"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "c",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 2,
+          "switchId": "c"
+        },
+        {
+          "parcelNumber": 6,
+          "switchId": "c"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "12",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"YELLOW\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"BLUE\"},{\"id\":6,\"color\":\"BLUE\"}]}",
+    "hint1": "同じ色の荷物でも、通る経路によって後続の状態が変わります。",
+    "hint2": "青はCからもDからも届けられます。",
+    "hint3": "Dへ入るのはBがRへ送った荷物だけです。CとDへの振り分けを比較しましょう。",
+    "focusSwitchIds": [
+      "c",
+      "d",
+      "b"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "d"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "d",
+          "direction": "L",
+          "to": "blue"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "13",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"YELLOW\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"}]}",
+    "hint1": "分岐が深くなるほど、そこを通る荷物は少なくなることがあります。",
+    "hint2": "Bを通った荷物の一部だけがCへ進み、さらにDへ進みます。",
+    "hint3": "青を届けるにはDへ進める必要があります。Dの通過順を先に確認しましょう。",
+    "focusSwitchIds": [
+      "b",
+      "c",
+      "d"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "direction": "R",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "direction": "L",
+          "to": "blue"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 3,
+          "switchId": "d"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "14",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"YELLOW\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"RED\"},{\"id\":6,\"color\":\"RED\"}]}",
+    "hint1": "遠回りしなくても同じ出口へ届けられる経路があります。",
+    "hint2": "青をBから届ける方法と、Cから届ける方法を比べましょう。",
+    "hint3": "黄を届けるにはDを通る必要があります。ほかの荷物までDに送る必要があるか考えましょう。",
+    "focusSwitchIds": [
+      "b",
+      "c",
+      "d"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "blue"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "c",
+          "direction": "R",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 5,
+          "switchId": "d"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "15",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"e\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"}]}",
+    "hint1": "5つの分岐は同じ回数だけ動くわけではありません。",
+    "hint2": "BとCからDへ合流するため、Dの通過順が重要です。",
+    "hint3": "最初の青荷物はEへ進める必要があります。AからEまでの経路を逆向きにたどって考えましょう。",
+    "focusSwitchIds": [
+      "b",
+      "c",
+      "d",
+      "e",
+      "a"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "d"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "direction": "R",
+          "to": "e"
+        },
+        {
+          "from": "e",
+          "direction": "L",
+          "to": "blue"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 1,
+          "switchId": "e"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "16",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"R\"},{\"from\":\"a\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"RED\"},{\"id\":2,\"color\":\"BLUE\"},{\"id\":3,\"color\":\"RED\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"RED\"},{\"id\":7,\"color\":\"RED\"}]}",
+    "hint1": "すべて正しく届ける設定と、方向転換コストが最小の設定は異なる場合があります。",
+    "hint2": "赤をAから直接届ける場合と、Bを経由する場合を比較しましょう。",
+    "hint3": "青と黄はCを通る必要があります。AとBで不要な方向転換を減らせないか調べましょう。",
+    "focusSwitchIds": [
+      "a",
+      "b",
+      "c"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "a",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "c",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": [
+        {
+          "parcelNumber": 3,
+          "switchId": "c"
+        },
+        {
+          "parcelNumber": 6,
+          "switchId": "c"
+        }
+      ]
+    }
+  },
+  {
+    "stageId": "17",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"YELLOW\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"RED\"},{\"id\":6,\"color\":\"RED\"},{\"id\":7,\"color\":\"YELLOW\"},{\"id\":8,\"color\":\"BLUE\"}]}",
+    "hint1": "複数の正しい配送経路から、効率のよいものを選びましょう。",
+    "hint2": "赤はBからもDからも届けられます。",
+    "hint3": "荷物をBから直接届ける場合とD経由で届ける場合を比べ、BとDの方向転換コストを確認しましょう。",
+    "focusSwitchIds": [
+      "b",
+      "d"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "b",
+          "direction": "R",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "direction": "L",
+          "to": "red"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "18",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"BLUE\"},{\"id\":1,\"color\":\"YELLOW\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"YELLOW\"},{\"id\":5,\"color\":\"RED\"},{\"id\":6,\"color\":\"BLUE\"},{\"id\":7,\"color\":\"YELLOW\"},{\"id\":8,\"color\":\"BLUE\"},{\"id\":9,\"color\":\"BLUE\"},{\"id\":10,\"color\":\"YELLOW\"}]}",
+    "hint1": "前半を成功させた設定が、後半でも成功するとは限りません。",
+    "hint2": "9個目の青荷物に注目してください。ここで成功候補が大きく絞られます。",
+    "hint3": "先頭8個が正しく届いても完成ではありません。9個目を処理する各分岐の枠位置を調べましょう。",
+    "focusSwitchIds": [],
+    "checks": {
+      "parcelNumbers": [
+        9,
+        8
+      ],
+      "routes": [],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "19",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"R\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"e\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"RED\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"YELLOW\"},{\"id\":3,\"color\":\"YELLOW\"},{\"id\":4,\"color\":\"RED\"},{\"id\":5,\"color\":\"BLUE\"},{\"id\":6,\"color\":\"YELLOW\"},{\"id\":7,\"color\":\"RED\"},{\"id\":8,\"color\":\"YELLOW\"}]}",
+    "hint1": "5分岐のすべてを同じように最適化する必要はありません。",
+    "hint2": "BとCからDへ合流した後、Dが青を届けるかEへ送るかが重要です。",
+    "hint3": "DからEへ進んだ荷物には赤と黄の出口があります。Eへ届く荷物列を整理してから設定しましょう。",
+    "focusSwitchIds": [
+      "b",
+      "c",
+      "d",
+      "e"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "d"
+        },
+        {
+          "from": "c",
+          "direction": "L",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "direction": "L",
+          "to": "e"
+        },
+        {
+          "from": "d",
+          "direction": "R",
+          "to": "blue"
+        },
+        {
+          "from": "e",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "e",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  },
+  {
+    "stageId": "20",
+    "stageFingerprint": "delivery-v1/cost-v1:{\"nodes\":[{\"id\":\"a\",\"kind\":\"switch\",\"accepts\":null,\"length\":4},{\"id\":\"b\",\"kind\":\"switch\",\"accepts\":null,\"length\":3},{\"id\":\"blue\",\"kind\":\"exit\",\"accepts\":\"BLUE\",\"length\":null},{\"id\":\"c\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"d\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"e\",\"kind\":\"switch\",\"accepts\":null,\"length\":2},{\"id\":\"red\",\"kind\":\"exit\",\"accepts\":\"RED\",\"length\":null},{\"id\":\"source\",\"kind\":\"source\",\"accepts\":null,\"length\":null},{\"id\":\"yellow\",\"kind\":\"exit\",\"accepts\":\"YELLOW\",\"length\":null}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"direction\":\"L\"},{\"from\":\"a\",\"to\":\"c\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"d\",\"direction\":\"R\"},{\"from\":\"b\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"d\",\"direction\":\"L\"},{\"from\":\"c\",\"to\":\"e\",\"direction\":\"R\"},{\"from\":\"d\",\"to\":\"blue\",\"direction\":\"L\"},{\"from\":\"d\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"e\",\"to\":\"red\",\"direction\":\"L\"},{\"from\":\"e\",\"to\":\"yellow\",\"direction\":\"R\"},{\"from\":\"source\",\"to\":\"a\",\"direction\":null}],\"parcels\":[{\"id\":0,\"color\":\"YELLOW\"},{\"id\":1,\"color\":\"BLUE\"},{\"id\":2,\"color\":\"RED\"},{\"id\":3,\"color\":\"BLUE\"},{\"id\":4,\"color\":\"BLUE\"},{\"id\":5,\"color\":\"YELLOW\"},{\"id\":6,\"color\":\"BLUE\"},{\"id\":7,\"color\":\"BLUE\"},{\"id\":8,\"color\":\"RED\"},{\"id\":9,\"color\":\"BLUE\"},{\"id\":10,\"color\":\"YELLOW\"}]}",
+    "hint1": "これまで学んだ経路選択・周期・最適化を組み合わせましょう。",
+    "hint2": "青はDへ、赤はBまたはEへ、黄はDまたはEへ届ける経路があります。",
+    "hint3": "最初の黄荷物をどの経路で届けるかが、その後の分岐カウンターに影響します。経路を決めたら、後続の青荷物まで追いかけましょう。",
+    "focusSwitchIds": [
+      "d",
+      "b",
+      "e"
+    ],
+    "checks": {
+      "parcelNumbers": [],
+      "routes": [
+        {
+          "from": "b",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "e",
+          "direction": "L",
+          "to": "red"
+        },
+        {
+          "from": "d",
+          "direction": "L",
+          "to": "blue"
+        },
+        {
+          "from": "d",
+          "direction": "R",
+          "to": "yellow"
+        },
+        {
+          "from": "e",
+          "direction": "R",
+          "to": "yellow"
+        }
+      ],
+      "slots": [],
+      "requiredVisits": []
+    }
+  }
+]

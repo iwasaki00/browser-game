@@ -19,7 +19,7 @@ test("death retains a moving rotating body with gravity, ground fade and no furt
 
 test("eight weapon profiles differ; close shotgun is stronger, homing follows arrival, thunder delays",()=>{
   const speeds={};
-  for(const w of WEAPONS){const r=lab(1);r.run(`damageEnemy(game.enemies[0],999,{type:'${w.type}',vx:100,vy:0,originX:1200})`);
+  for(const w of WEAPONS.filter(w=>!w.expanded)){const r=lab(1);r.run(`damageEnemy(game.enemies[0],999,{type:'${w.type}',vx:100,vy:0,originX:1200})`);
     speeds[w.type]=r.run("game.enemies[0].deathVx");assert.equal(r.run("game.effects[0].kind"),"hit");assert.equal(r.run("game.effects[0].type"),w.type);
   }
   assert.ok(speeds.rocket>speeds.bullet*2);assert.ok(speeds.grenade>speeds.rocket);assert.ok(speeds.flame<speeds.bullet);

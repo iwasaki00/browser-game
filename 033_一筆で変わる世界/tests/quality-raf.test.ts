@@ -50,7 +50,7 @@ it('PV-05: 前面かつフォーカスありの1秒間隔も捨てずに記録�
 it('PV-06: 同じ母集団の平均・中央値・p95・最大・件数を最大240件で返す', () => {
   const r = new RafMonitor(); for (let i = 0; i <= 500; i++) r.frame(i * 10, front);
   const s = r.snapshot().conditions.FOREGROUND;
-  expect(s.count).toBe(500); expect(s.window).toEqual({ count: 240, meanMs: 10, medianMs: 10, p95Ms: 10, maximumMs: 10, over100Ms: 0 });
+  expect(s.count).toBe(500); expect(s.window).toMatchObject({ count: 240, meanMs: 10, medianMs: 10, p95Ms: 10, p99Ms: 10, maximumMs: 10, over100Ms: 0 });
 });
 it('PV-07: 古いFPS・復帰待ち・診断OFFは現在値をnullにする', () => {
   const r = new RafMonitor(); r.frame(0, front); r.frame(16, front);

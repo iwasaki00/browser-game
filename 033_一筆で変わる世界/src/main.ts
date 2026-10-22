@@ -13,6 +13,7 @@ import { ProgressStore } from './game/save';
 import { PlayableGame, type GameMode, type GameScreen } from './game/playable';
 import { bindVisibilityPause } from './input/visibility';
 import type { QualityPanel, QualityState } from './quality/panel';
+import type { RafActivity } from './quality/raf';
 
 for (const [name, value] of Object.entries(MAP_THEME)) document.documentElement.style.setProperty(`--${name}`, value);
 
@@ -414,5 +415,10 @@ if (import.meta.env.DEV && new URLSearchParams(location.search).get('quality') =
         return { name: id, width: canvas.width, height: canvas.height, cssWidth: rect.width, cssHeight: rect.height }; }),
       steps: comparison?.steps ?? null, balanced, problem };
   };
-  void import('./quality/panel').then(({ QualityPanel }) => { quality = new QualityPanel(readQualityState, () => comparisonView?.active ?? false); });
+  const readRafActivity = (): RafActivity => ({ scene: session.stage?.id ?? `${game.mode}:${game.sampleId}`, screen: game.screen,
+    playback: game.screen === 'GAME' && (comparisonView?.active ? comparisonView.playing : session.runner.playing) ? 'PLAYING' : 'PAUSED',
+    phase: comparisonView?.active ? 'COMPARISON' : session.phase, comparison: comparisonView?.active ?? false,
+    view: comparisonView?.active ? element<HTMLSelectElement>('comparison-view').value : view.value,
+    flow: displaySettings.showFlow, speed: comparisonView?.active ? Number(element<HTMLSelectElement>('comparison-speed').value) : session.runner.speed });
+  void import('./quality/panel').then(({ QualityPanel }) => { quality = new QualityPanel(readQualityState, () => comparisonView?.active ?? false, readRafActivity, frame); });
 }

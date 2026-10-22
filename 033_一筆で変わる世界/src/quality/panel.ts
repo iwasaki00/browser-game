@@ -2,6 +2,8 @@ import './style.css';
 import { QualityMetrics, stepAgreement } from './metrics';
 import { bindRafEnvironment, readRafContext } from './environment';
 import { RafDisplayDeadline } from './deadline';
+import type { RafActivity } from './raf';
+import { RafLifecycleProbe } from './lifecycle';
 
 export interface QualityState {
   scene: string; screen: string; step: number; operation: string; pointers: number; zoom: number;
@@ -14,6 +16,7 @@ const value = (number: number | null, unit = '') => number === null ? '未取得
 /** Mounted only by the DEV + quality query branch; no extra RAF, storage or console logs. */
 export class QualityPanel {
   readonly metrics: QualityMetrics;
+  readonly #lifecycle: RafLifecycleProbe;
   #lastPaint = -Infinity;
   readonly #freshness = new RafDisplayDeadline(() => this.paint());
   readonly #root = document.createElement('aside');
@@ -22,8 +25,9 @@ export class QualityPanel {
   readonly #os = document.createElement('input');
   readonly #browser = document.createElement('input');
   readonly #label = document.createElement('input');
-  constructor(private readonly read: () => QualityState, comparisonVisible: () => boolean) {
+  constructor(private readonly read: () => QualityState, comparisonVisible: () => boolean, private readonly activity: () => RafActivity, gameFrame: FrameRequestCallback) {
     this.metrics = new QualityMetrics(undefined, comparisonVisible);
+    this.#lifecycle = new RafLifecycleProbe(window, () => ({ context: readRafContext(document), activity: this.activity() }), undefined, callback => callback === gameFrame);
     this.#root.id = 'quality-panel'; this.#root.setAttribute('aria-label', '開発用品質診断');
     const title = document.createElement('strong'); title.textContent = 'QUALITY GATE · 開発用診断';
     const toggle = document.createElement('button'); toggle.id = 'quality-toggle'; toggle.textContent = '診断を停止';
@@ -39,23 +43,31 @@ export class QualityPanel {
     this.#report.setAttribute('aria-label', '品質診断結果JSON');
     toggle.onclick = () => {
       this.metrics.setEnabled(!this.enabled, performance.now()); toggle.textContent = this.enabled ? '診断を停止' : '診断を再開';
-      if (this.enabled) this.metrics.observeContext(performance.now(), readRafContext(document), 'diagnostic-on');
+      if (this.enabled) { this.#lifecycle.start(); this.observe('diagnostic-on'); } else this.#lifecycle.stop();
       this.#lastPaint = -Infinity; this.refresh();
     };
-    reset.onclick = () => { this.metrics.reset(); this.metrics.observeContext(performance.now(), readRafContext(document), 'measurement-reset'); this.#lastPaint = -Infinity; this.refresh(); };
+    reset.onclick = () => { this.metrics.reset(); this.observe('measurement-reset'); this.#lifecycle.note('MEASUREMENT_RESET'); this.#lastPaint = -Infinity; this.refresh(); };
     exportButton.onclick = () => {
       if (this.#report.hidden) { this.#report.value = JSON.stringify(this.report(), null, 2); this.#report.hidden = false; exportButton.textContent = '結果テキストを閉じる'; }
       else { this.#report.hidden = true; exportButton.textContent = '結果をテキスト表示'; }
     };
     this.#root.append(title, toggle, reset, exportButton, environment, values, this.#report); document.body.append(this.#root);
     bindRafEnvironment(document, window, () => this.enabled, (now, context, reason) => {
-      this.metrics.observeContext(now, context, reason); this.refresh();
+      this.metrics.observeContext(now, context, reason, this.activity()); this.#lifecycle.note(reason); this.refresh();
     });
-    this.metrics.setEnabled(true); this.metrics.observeContext(performance.now(), readRafContext(document), 'diagnostic-on'); this.refresh();
+    for (const event of ['click', 'change', 'pointerup', 'pointercancel']) document.addEventListener(event, e => {
+      if (this.enabled) { this.observe(`ui-${event}`); this.#lifecycle.note(`UI_${event}:${(e.target as HTMLElement)?.id || 'canvas/document'}`); }
+    });
+    this.metrics.setEnabled(true); this.#lifecycle.start(); this.observe('diagnostic-on'); this.refresh();
   }
   get enabled(): boolean { return this.metrics.enabled; }
-  frame(now: number): void { this.metrics.frame(now, readRafContext(document)); }
-  update(now: number): void { if (this.enabled && now - this.#lastPaint >= 500) { this.#lastPaint = now; this.refresh(); } }
+  private observe(reason: string): void { this.metrics.observeContext(performance.now(), readRafContext(document), reason, this.activity()); }
+  frame(now: number): void { this.metrics.frame(now, readRafContext(document), this.activity()); }
+  update(now: number): void {
+    if (!this.enabled) return;
+    this.observe('frame-completed');
+    if (now - this.#lastPaint >= 500) { this.#lastPaint = now; this.refresh(); }
+  }
   private refresh(): void {
     this.paint();
     // One UI-only watchdog invalidates old FPS even if RAF stops. Never advances a world or loops by itself.
@@ -63,15 +75,18 @@ export class QualityPanel {
   }
   report() {
     const state = this.read(), capturedAtPerformanceMs = performance.now();
-    return { version: '0.7.1', generatedAt: new Date().toISOString(), environment: { os: this.#os.value || null,
+    return { version: '0.7.2', generatedAt: new Date().toISOString(), environment: { os: this.#os.value || null,
       browserVersion: this.#browser.value || null, userAgent: navigator.userAgent, label: this.#label.value || null, performanceTimeOriginMs: performance.timeOrigin },
-      state: { ...state, ...readRafContext(document), capturedAtPerformanceMs, stepAgreement: stepAgreement(state.steps) }, metrics: this.metrics.snapshot(capturedAtPerformanceMs),
+      state: { ...state, ...readRafContext(document), activity: this.activity(), capturedAtPerformanceMs, stepAgreement: stepAgreement(state.steps) },
+      metrics: this.metrics.snapshot(capturedAtPerformanceMs), lifecycle: this.#lifecycle.snapshot(),
       definitions: { fps: 'requestAnimationFrame cadence; not GPU completed frames', draw: 'Canvas submission CPU wall time; not GPU time',
         singleStep: 'SimulationRunner.step, includes goal/flow receipts', comparison: 'A+B atomic pair; PLAY time divided by committed pair count (batch mean)',
         maximumComparison: 'maximum batch mean, not worst individual step', recentWindow: 'last 240 observations per condition; mean/median/p95/max/count share the same window',
         raf: 'A=visible+focused; B=not visible; C=visible+unfocused; D=first 1000ms after B/C. Cross-condition intervals and first resume gaps are separate, never A.',
         freshness: 'Current FPS only for current foreground segment with RAF age <1000ms; one UI-only watchdog invalidates stale display',
-        longFrame: 'lifetime intervals >50ms and >100ms per condition; includes external/automation stalls' } };
+        longFrame: 'thresholds strictly >100/>500/>900ms; longest abnormal run = sum of consecutive >100ms intervals, not a CPU Long Task',
+        activity: 'Formal trial statistics are per segment/activity, never the mixed condition aggregates. Segment window is last up to 240 intervals; p99 nearest rank.',
+        lifecycle: 'DEV forwarding wrappers observe requests/cancels/errors without creating, deduplicating or restarting a RAF loop' } };
   }
   private paint(): void {
     const s = this.read(), m = this.metrics.snapshot(performance.now()), matched = stepAgreement(s.steps);
@@ -80,11 +95,14 @@ export class QualityPanel {
       `visibility=${m.raf.context?.visibilityState ?? '未取得'} / hasFocus=${m.raf.context?.hasFocus ?? '未取得'} / ${m.raf.condition ?? '停止'}`,
       `前面FPS ${m.recentRafFps === null ? '未取得・停止/復帰中/更新待ち' : value(m.recentRafFps)} / 最終RAFから ${value(m.raf.ageMs, 'ms')}`,
       'FPSは最終観測時の値です。更新停止中の現在FPSを保証しません。',
+      '以下の条件集計は参考値（再生/停止混在）。正式値はJSONの区間別segments。',
       ...Object.entries(m.raf.conditions).map(([key, stats]) => {
         const w = stats.window;
         return `${labels[key as keyof typeof labels]}: 直近${w.count}件 平均${value(w.meanMs)} / 中央${value(w.medianMs)} / p95 ${value(w.p95Ms)} / 最大${value(w.maximumMs)}ms / >100ms ${w.over100Ms}回\n  全${stats.count}件 / >100ms ${stats.over100Ms}回`;
       }),
       `条件境界 ${m.raf.boundaryIntervals.count}件 / 復帰最初の間隔 ${m.raf.firstResumeGaps.count}件（非表示等を含み通常値から除外）`,
+      `計測区間 ${this.activity().playback} / ${this.activity().phase}（再生・停止の数値はJSONのsegmentsで分離）`,
+      `ゲームRAF: 世代${this.#lifecycle.snapshot().generation} / 最大待機${this.#lifecycle.snapshot().peakGamePendingObserved} / 例外${this.#lifecycle.snapshot().exceptionsObserved}（全RAF待機最大${this.#lifecycle.snapshot().peakPendingObserved}）`,
       `描画CPU 平均 ${value(m.drawCpu.meanMs, 'ms')} / 最大 ${value(m.drawCpu.maximumMs, 'ms')}（${m.drawCpu.count}回）`,
       `フレーム処理CPU 平均 ${value(m.frameCpu.meanMs, 'ms')}`,
       `単独1ステップ ${value(m.logicalStepCpu.single.meanMs, 'ms')}（${m.logicalStepCpu.single.count}）`,

@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.8">
+  <link rel="stylesheet" href="styles.css?v=0.2.0">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.1.9</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.0</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -39,7 +39,12 @@
       <div id="screenEquip" class="screen">
         <p class="eyebrow">EQUIPMENT / FOUR CLASSES</p><h2>兵科・装備選択 <small>武器を2つ選択</small></h2>
         <div id="classGrid" class="class-grid" role="group" aria-label="兵科選択・4兵科すべて使用可能"></div>
-        <div id="weaponGrid" class="weapon-grid"></div><p id="equipMessage" class="equip-message">A-01とS-02を装備中</p>
+        <div class="weapon-browser">
+          <div class="equip-toolbar"><label>カテゴリ<select id="weaponFilter"><option value="ALL">すべて</option><option value="rapid">連射・貫通</option><option value="blast">爆発</option><option value="energy">エネルギー</option><option value="flame">火炎</option><option value="special">特殊</option><option value="support">設置・支援</option></select></label>
+            <div class="equip-slots" role="group" aria-label="変更する装備枠"><button id="equipSlot1" data-action="equip-slot" data-slot="0" aria-pressed="true">1: A-01</button><button id="equipSlot2" data-action="equip-slot" data-slot="1" aria-pressed="false">2: S-02</button></div>
+          </div>
+          <div id="weaponGrid" class="weapon-grid" role="group" aria-label="武器一覧・スクロール可能"></div>
+        </div><p id="equipMessage" class="equip-message">A-01とS-02を装備中</p>
         <label class="density-setting" for="densitySelect">敵密度 <select id="densitySelect"><option value="LIGHT">LIGHT — 30体</option><option value="STANDARD" selected>STANDARD — 50体</option><option value="MASSIVE">MASSIVE — 100体</option></select><small>次のミッション開始時から適用</small></label>
         <div class="button-row"><button class="menu-button" data-action="back-mission">戻る</button><button class="menu-button menu-button--primary" data-action="deploy">出撃</button></div>
       </div>
@@ -69,11 +74,13 @@
       <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
         <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
         <div class="lab-fields">
-          <fieldset><legend>ARSENAL / 全8武器</legend>
+          <fieldset><legend>ARSENAL / 全20武器</legend>
             <label>スロット1<select id="labWeapon1"></select></label>
             <label>スロット2<select id="labWeapon2"></select></label>
             <label>使用スロット<select id="labSlot"><option value="0">1</option><option value="1">2</option></select></label>
             <small>性能は通常と共通。Q / E / SWで切替。</small>
+            <button data-action="lab-test">選択武器を1回試射（照準を敵群へ）</button>
+            <small>マイン：V / SWを0.45秒長押しで起爆。短押しは武器切替。再配置で設置物・連鎖・雷雲も消去します。</small>
             <button id="labBlast" data-action="lab-blast" disabled>敵群で爆発テスト（R-04 / G-07）</button>
             <small>選択スロットの爆発を敵群先頭で再現。通常の射撃とは別の演出検証です。</small>
           </fieldset>
@@ -123,6 +130,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.1.9"></script>
+  <script type="module" src="js/game.js?v=0.2.0"></script>
 </body>
 </html>

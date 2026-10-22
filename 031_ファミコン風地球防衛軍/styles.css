@@ -227,7 +227,7 @@ h2 small { color: var(--muted); font-size: .35em; }
 .switch-button small { display: none; }
 .help-line { height: 34px; max-width: 900px; margin: auto; display: flex; justify-content: center; align-items: center; gap: 25px; color: var(--muted); font-size: 10px; }
 .help-line b { color: var(--yellow); }
-.weapon-pic { width: 32px; height: 32px; display: block; background-image: url("assets/sprites/weapons/weapon_icons.png"); background-size: 256px 32px; image-rendering: pixelated; }
+.weapon-pic { width: 32px; height: 32px; display: block; background-image: url("assets/sprites/weapons/weapon_icons.png?v=0.2.0"); image-rendering: pixelated; }
 
 @supports (height: 100dvh) { :root { --app-height: 100dvh; } }
 
@@ -445,6 +445,42 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 @media (max-width: 600px) {
   .class-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .class-card { padding: 6px; }
+}
+
+/* The catalogue scrolls independently: classes, slots and deploy stay reachable. */
+#screenEquip { gap: 5px; padding: 10px 3%; }
+#screenEquip h2 { margin: 0; }
+#screenEquip .eyebrow { margin: 0; }
+#screenEquip .class-grid { margin: 0; }
+#screenEquip .weapon-browser { flex: 1 1 120px; min-height: 100px; width: 100%; max-width: 900px; display: flex; flex-direction: column; overflow: hidden; }
+.equip-toolbar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; padding-bottom: 5px; }
+.equip-toolbar label { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+.equip-toolbar select, .equip-slots button { min-height: 36px; padding: 4px 8px; border: 1px solid var(--line); color: var(--ink); background: #071524; font: inherit; font-size: 12px; touch-action: manipulation; }
+.equip-slots { display: flex; gap: 5px; }
+.equip-slots button[aria-pressed="true"] { border-color: var(--yellow); color: var(--yellow); }
+#screenEquip .weapon-grid { flex: 1 1 auto; min-height: 0; max-width: none; margin: 0; overflow: auto; overscroll-behavior: contain; touch-action: pan-y; grid-template-columns: repeat(4,minmax(0,1fr)); grid-auto-rows: minmax(74px,auto); align-content: start; }
+#screenEquip .weapon-card { min-width: 0; min-height: 74px; padding: 6px; }
+#screenEquip .weapon-card small { display: block; overflow-wrap: anywhere; }
+#screenEquip .weapon-card strong { font-size: 11px; }
+#screenEquip .weapon-card.locked::after { display: none; }
+[data-mines]:not([data-mines="0"]) .switch-button small { display: block; font-size: 6px; color: var(--yellow); }
+@media (max-width: 600px) {
+  #screenEquip .weapon-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .equip-toolbar { justify-content: center; }
+}
+@media (orientation: landscape) and (max-height: 450px) {
+  #screenEquip { gap: 3px; padding: 5px 12px; }
+  #screenEquip h2 { font-size: 18px; }
+  #screenEquip .eyebrow { display: none; }
+  #screenEquip .class-grid { gap: 4px; }
+  #screenEquip .class-card { padding: 3px; min-height: 45px; }
+  #screenEquip .class-pic { flex-basis: 24px; width: 24px; height: 32px; background-size: 288px 128px; background-position: 0 calc(var(--class-row) * -32px) !important; }
+  #screenEquip .class-card strong { font-size: 10px; }
+  #screenEquip .class-card small { font-size: 8px; }
+  #screenEquip .weapon-browser { min-height: 105px; }
+  #screenEquip .equip-message { min-height: 10px; font-size: 9px; margin: 0; }
+  #screenEquip .density-setting { margin: 0; }
+  #screenEquip .menu-button { min-height: 36px; margin: 0 3px; padding: 4px 12px; }
 }
 @media (orientation: portrait) and (max-width: 900px) {
   [data-wing="true"] .wing-controls { flex-basis: 100%; justify-content: center; }
