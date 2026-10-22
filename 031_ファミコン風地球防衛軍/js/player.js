@@ -1,4 +1,4 @@
-import {WORLD,PLAYER_CLASSES,normalizeClass,clamp} from "./data.js?v=0.1.8";
+import {WORLD,PLAYER_CLASSES,normalizeClass,clamp} from "./data.js?v=0.1.9";
 
 export function applyPlayerClass(p,id){
   const c=PLAYER_CLASSES[normalizeClass(id)];
@@ -32,15 +32,30 @@ export function moveClassPlayer(p,input,platforms,dt){
   if(direction)p.face=direction;
   p.vx=direction*c.speed;
   if(c.id==="WING"){
-    if(p.onGround){p.energy=Math.min(c.energyMax,p.energy+c.energyRecovery*dt);if(p.energy>=20)p.flightLocked=false}
-    const ascend=input.up,hover=input.hover;
-    const powered=p.energy>0&&!p.flightLocked&&(!p.onGround||ascend);
+    const ascend=!!input.up,hover=!!input.hover;
+    // Do not recharge during the takeoff step. HOLD while grounded costs nothing.
+    if(p.onGround&&(!ascend||p.flightLocked||p.energy===0)){
+      p.energy=Math.min(c.energyMax,p.energy+c.energyRecovery*dt);
+      if(p.energy>=c.flightRestartEnergy)p.flightLocked=false;
+      p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);movePlayerBody(p,platforms,dt,true);return;
+    }
+    const powered=p.energy>0&&!p.flightLocked&&(ascend||hover);
+    let fallingTime=dt;
     if(powered){
-      p.vy=ascend?-c.ascentSpeed:input.down?c.downSpeed:hover?0:c.descentSpeed;
-      p.energy=Math.max(0,p.energy-c.energyDrain*dt);
+      // FLY wins over HOLD (and down); exactly one drain rate is charged.
+      const drain=ascend?c.ascentDrain:c.hoverDrain,activeTime=Math.min(dt,p.energy/drain);
+      p.vy=ascend?-c.ascentSpeed:0;
+      p.energy=Math.max(0,p.energy-drain*activeTime);
       if(p.energy<1e-8){p.energy=0;p.flightLocked=true}
-    }else p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);
-    movePlayerBody(p,platforms,dt,true);return;
+      movePlayerBody(p,platforms,activeTime,true);fallingTime=Math.max(0,dt-activeTime);
+    }
+    if(fallingTime>1e-10){
+      if(input.down)p.vy=Math.max(c.downSpeed,p.vy);
+      p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*fallingTime);
+      p.energy=Math.max(0,p.energy-c.descentDrain*fallingTime);
+      movePlayerBody(p,platforms,fallingTime,true);
+    }
+    return;
   }
   if(c.id==="SCOUT"&&input.special&&!p.dashHeld&&p.dashCd===0){p.dashTime=c.dashDuration;p.dashCd=c.dashCooldown;p.dashDirection=direction||p.face}
   p.dashHeld=!!input.special;

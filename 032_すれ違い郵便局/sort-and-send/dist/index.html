@@ -6,14 +6,14 @@
     <meta name="theme-color" content="#F7F4E8" />
     <meta name="description" content="分岐の循環パターンを設定して、荷物を正しい出口へ届ける小さな配送パズル。" />
     <title>すれ違い郵便局 — SORT &amp; SEND</title>
-    <script type="module" crossorigin src="./assets/index-DD-bZC50.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DXPSRrjP.css">
+    <script type="module" crossorigin src="./assets/index-B-WXHMCO.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D_Q-v812.css">
   </head>
   <body>
     <main class="shell">
       <header class="masthead">
         <a class="back" href="../../../index.html">← ゲーム一覧</a>
-        <span class="version">0.4.0-C — CHAPTER 04</span>
+        <span class="version">0.5.0-A — RESCUE</span>
       </header>
       <div class="title-row"><div><p class="eyebrow">すれ違い郵便局</p><h1>SORT <span>&amp;</span> SEND<span class="title-dot">●</span></h1></div><p class="intro">小さな分岐で、届け先が変わる。<br>矢印を組んで、配送をはじめよう。</p></div>
       <section class="stage-heading"><div><span class="eyebrow" id="chapter-name">Chapter 01 / はじめての配送</span><h2 id="stage-name">STAGE 01「はじめての分岐」</h2></div><span id="mode" class="mode">DESIGN</span></section>
@@ -36,6 +36,14 @@
         <p id="reset-description">ステージ解放・CLEAR履歴・最高星評価を消してStage 01に戻します。音声・演出設定は保持します。</p>
         <div class="confirmation-actions"><button id="cancel-reset" type="button" autofocus>キャンセル</button><button id="confirm-reset" type="button">初期化する</button></div>
       </dialog>
+      <dialog id="rescue-dialog" class="rescue-dialog" aria-labelledby="rescue-title" aria-describedby="rescue-explanation rescue-target">
+        <h3 id="rescue-title">RESCUE / 配送を一時停止中</h3>
+        <p id="rescue-explanation">この配送実行ではRESCUEを1回だけ使用できます。次の分岐1回だけを変更し、循環パターンは保持します。</p>
+        <p id="rescue-target"></p>
+        <fieldset id="rescue-directions"><legend>このイベントで送り出す方向</legend><div class="rescue-options"><label><input type="radio" name="rescue-direction" value="L"> ↙ L / 左</label><label><input type="radio" name="rescue-direction" value="R"> ↘ R / 右</label></div></fieldset>
+        <p id="rescue-error" role="status"></p>
+        <div class="confirmation-actions"><button id="rescue-cancel" type="button">キャンセルして再開</button><button id="rescue-confirm" type="button">確定して再開</button></div>
+      </dialog>
       <div class="workspace">
         <section class="board-panel" aria-label="配送盤面">
           <div class="board-top"><span>配送順序</span><ol class="queue" id="queue"></ol><span class="tick" id="tick">READY</span></div>
@@ -44,6 +52,7 @@
         </section>
         <aside class="controls">
           <section class="switch-panel"><p class="eyebrow">PATTERN CONTROL</p><div id="switch-selector" class="switch-selector" role="group" aria-label="分岐選択"></div><div class="panel-title"><h3 id="switch-name">分岐 A</h3><span id="loop-length">2 STEP LOOP</span></div><p class="help">荷物を送り出すたび、次の矢印へ。<br>最後の次は、先頭に戻ります。</p><div class="pattern" id="pattern"></div><p class="tap-note">↻ タップで L / R を切り替え</p><button class="primary" id="start" type="button">配送開始 <span aria-hidden="true">↗</span></button><div class="secondary-actions"><button id="retry" type="button">再挑戦</button><button id="reset" type="button">初期設定に戻す</button></div></section>
+          <section class="rescue-panel" aria-label="配送レスキュー"><button id="rescue" type="button" hidden>RESCUE / 次の分岐を変更</button><p id="rescue-status" role="status">配送中に次の分岐を1回だけ変更できます。</p></section>
           <section class="result-panel" aria-labelledby="result-title"><p class="eyebrow">DELIVERY REPORT</p><div id="report" role="status" aria-live="polite"><h3 id="result-title">配送の準備中</h3></div><button id="next" class="primary next" type="button" hidden>次のステージ →</button></section>
         </aside>
       </div>

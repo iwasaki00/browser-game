@@ -1,9 +1,9 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.8";
-import {applyPlayerClass,moveClassPlayer,classPlayerFrame} from "./player.js?v=0.1.8";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.1.9";
+import {applyPlayerClass,moveClassPlayer,classPlayerFrame} from "./player.js?v=0.1.9";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js";
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
-import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.8";
+import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.1.9";
 import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.1.7";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});

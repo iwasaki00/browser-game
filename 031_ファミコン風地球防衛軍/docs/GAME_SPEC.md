@@ -1,6 +1,6 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.1.8 — FOUR CLASSES
+- Version: 0.1.9 — CLASS MOVEMENT FIX
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
 - ステージ: M01 市街地防衛線、幅4,800px、5エリア
 - プレイヤー: RANGER / SCOUT / GUARDIAN / WING（全兵科使用可能）。性能は `js/data.js` の `PLAYER_CLASSES`、挙動は `js/player.js`。重力620px/s²、無敵1秒を継続
@@ -17,14 +17,14 @@
 
 原典はユーザー提供のVersion 0.1.0詳細設計。実装値は `js/data.js` を正とする。
 
-## 正式兵科（0.1.8）
+## 正式兵科（0.1.8導入・0.1.9調整）
 
 | 兵科 | HP | 速度px/s | ジャンプ初速px/s | 固有能力 |
 | --- | ---: | ---: | ---: | --- |
 | RANGER | 100 | 95 | -220 | 標準 |
 | SCOUT | 75 | 180 | -253 | 360px/s・0.16秒ダッシュ、開始から1.2秒CD、無敵なし |
-| GUARDIAN | 200 | 65 | -176 | 最終ダメージ×0.75、ノックバック×0.55 |
-| WING | 65 | 110 | 飛行 | EN100、20/s消費、地上35/s回復 |
+| GUARDIAN | 200 | 65 | -209 | 最終ダメージ×0.75、ノックバック×0.55 |
+| WING | 65 | 110 | 飛行 | EN100、上昇20/s・ホバー8/s・自然下降0/s・地上回復25/s |
 
 武器性能・敵AI・M01構造は変更しない。回復上限は各兵科の最大HP。保存形式v2へ `selectedClass` を追加し、v1/v2の欠損・不正値はRANGERを補完する。既存進行・武器・設定を保持する。詳細は [PLAYER_CLASSES.md](PLAYER_CLASSES.md)。
 

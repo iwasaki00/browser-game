@@ -6,6 +6,7 @@ import ratings from './generated/stage-ratings.json';
 import { deliveryCost } from './cost';
 import { createProgressStore, memoryStorage } from './progress';
 import { parcelHistory } from './history';
+import { solveStage } from './solver';
 
 const initial = { a: ['L', 'L'] as const };
 function blueRescue(direction: 'L' | 'R' = 'R') {
@@ -131,5 +132,13 @@ describe('RESCUE scoring and saved progress', () => {
   });
   it('awards zero after a failed RESCUE run', () => {
     const result = blueRescue('L').finish(); expect(rateDelivery({ stage: stage01, result, cost: 0, rescueUsed: true, report }).stars).toBe(0);
+  });
+  it('does not include a rescued success in the ordinary Solver solutions', async () => {
+    const ordinary = await solveStage(stage01);
+    expect(ordinary.solutionCount).toBe(1);
+    expect(ordinary.solutions).toEqual([{ patterns: { a: ['L', 'R'] }, cost: 2 }]);
+    expect(ordinary.costDistribution).toEqual({ 2: 1 });
+    expect(blueRescue().finish().clear).toBe(true);
+    expect(ordinary.solutions.some(s => JSON.stringify(s.patterns) === JSON.stringify(initial))).toBe(false);
   });
 });

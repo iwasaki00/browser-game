@@ -1,4 +1,4 @@
-export const VERSION = "0.1.8";
+export const VERSION = "0.1.9";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -28,8 +28,8 @@ export const visibleWorldWidth = zoom => VIEW.canvasWidth / zoom;
 export const PLAYER_CLASSES = Object.freeze({
   RANGER:Object.freeze({id:"RANGER",hp:100,speed:95,jump:220,damageScale:1,knockback:1,row:0,ability:"標準装備・安定した機動力"}),
   SCOUT:Object.freeze({id:"SCOUT",hp:75,speed:180,jump:253,damageScale:1,knockback:1,row:1,ability:"C：短距離ダッシュ（無敵なし）",dashSpeed:360,dashDuration:.16,dashCooldown:1.2}),
-  GUARDIAN:Object.freeze({id:"GUARDIAN",hp:200,speed:65,jump:176,damageScale:.75,knockback:.55,row:2,ability:"被ダメージ25%・ノックバック45%軽減"}),
-  WING:Object.freeze({id:"WING",hp:65,speed:110,jump:0,damageScale:1,knockback:1,row:3,ability:"W：上昇 / Space：ホバー / S：下降",energyMax:100,energyDrain:20,energyRecovery:35,ascentSpeed:110,descentSpeed:28,downSpeed:80})
+  GUARDIAN:Object.freeze({id:"GUARDIAN",hp:200,speed:65,jump:209,damageScale:.75,knockback:.55,row:2,ability:"被ダメージ25%・ノックバック45%軽減"}),
+  WING:Object.freeze({id:"WING",hp:65,speed:110,jump:0,damageScale:1,knockback:1,row:3,ability:"W：上昇 / Space：ホバー / S：下降",energyMax:100,ascentDrain:20,hoverDrain:8,descentDrain:0,energyRecovery:25,flightRestartEnergy:20,ascentSpeed:110,downSpeed:80})
 });
 export const normalizeClass = id => Object.hasOwn(PLAYER_CLASSES,id)?id:"RANGER";
 

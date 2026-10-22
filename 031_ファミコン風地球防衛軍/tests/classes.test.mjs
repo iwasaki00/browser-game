@@ -9,7 +9,7 @@ import {worldToScreen} from "../js/camera.js";
 const start=id=>{const r=runtime({...DEFAULT_SAVE,selectedClass:id},{debug:true});r.run("startMission()");return r};
 const body=id=>{const p={x:300,y:116,face:1,onGround:true,anim:0};applyPlayerClass(p,id);return p};
 
-for(const [id,hp,speed,jump] of [["RANGER",100,95,220],["SCOUT",75,180,253],["GUARDIAN",200,65,176],["WING",65,110,0]]){
+for(const [id,hp,speed,jump] of [["RANGER",100,95,220],["SCOUT",75,180,253],["GUARDIAN",200,65,209],["WING",65,110,0]]){
   test(`${id}: mission HP/speed and class-specific sprite row`,()=>{
     const r=start(id);assert.equal(r.run("game.player.hp"),hp);assert.equal(r.run("game.player.maxHp"),hp);
     r.run("input.right=true;update(1/60)");assert.equal(r.run("game.player.vx"),speed);
@@ -53,13 +53,13 @@ test("GUARDIAN final damage and knockback are reduced, original one-second invul
 
 test("WING: ascent, release descent, hover, five-second budget, exhaustion fall and ground-only recharge",()=>{
   const p=body("WING");moveClassPlayer(p,{up:true},[],.1);assert.equal(p.y,105);assert.equal(p.energy,98);
-  moveClassPlayer(p,{},[],.1);assert.ok(p.y>105&&p.vy===28);
+  p.vy=0;moveClassPlayer(p,{},[],.1);assert.ok(p.y>105&&p.vy>0);assert.equal(p.energy,98);
   const y=p.y;moveClassPlayer(p,{hover:true},[],.1);assert.equal(p.y,y);assert.equal(p.vy,0);
-  for(let i=0;i<282;i++)moveClassPlayer(p,{up:true},[],1/60);
+  for(let i=0;i<292;i++)moveClassPlayer(p,{up:true},[],1/60);
   assert.ok(p.energy<1e-8);moveClassPlayer(p,{up:true},[],1/60);assert.ok(p.vy>0);assert.equal(p.flightLocked,true);
   for(let i=0;i<120;i++)moveClassPlayer(p,{},[],1/60);assert.equal(p.onGround,true);assert.ok(p.energy>0);
   const old=p.energy;moveClassPlayer(p,{},[],1/60);assert.ok(p.energy>old);
-  p.y=50;p.onGround=false;p.energy=30;moveClassPlayer(p,{hover:true},[],.1);assert.equal(p.energy,28);
+  p.y=50;p.onGround=false;p.energy=30;moveClassPlayer(p,{hover:true},[],.1);assert.equal(p.energy,29.2);
 });
 
 test("WING swept collisions on all platform faces and world bounds; switching to ground lands safely",()=>{

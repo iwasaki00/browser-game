@@ -76,4 +76,4 @@ html[data-reduced-motion=true] *,html[data-reduced-motion=true] *::before,html[d
 .rescue-options input{width:20px;height:20px;accent-color:#247E72}.rescue-dialog .confirmation-actions button{flex:1;min-width:120px}
 .rescue-dialog #rescue-confirm{background:#247E72;color:white}.rescue-dialog #rescue-error{color:#b34f42;font-size:12px}
 .rescue-badge{display:block;font-size:11px;color:#806320;border-left:3px solid #E4B754;margin-top:5px;padding-left:7px}
-.mode:has(+.paused){background:#f4edcf}.rescue-result{font-size:12px!important;color:#806320!important;overflow-wrap:anywhere}
+.rescue-result{font-size:12px!important;color:#806320!important;overflow-wrap:anywhere}

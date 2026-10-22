@@ -1,9 +1,9 @@
-import {WORLD,BATTLE_CAMERA,PLAYER_CLASSES,clamp} from "./data.js?v=0.1.8";
-import {movePlayerBody} from "./player.js?v=0.1.8";
+import {WORLD,BATTLE_CAMERA,PLAYER_CLASSES,clamp} from "./data.js?v=0.1.9";
+import {movePlayerBody} from "./player.js?v=0.1.9";
 
 export const PLAYER_PRESETS=Object.freeze({
   STANDARD:{...PLAYER_CLASSES.RANGER}, SPEED:{...PLAYER_CLASSES.SCOUT,jump:220},
-  HEAVY:{...PLAYER_CLASSES.GUARDIAN}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
+  HEAVY:{...PLAYER_CLASSES.GUARDIAN,jump:176}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
 });
 export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss"});
 export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);

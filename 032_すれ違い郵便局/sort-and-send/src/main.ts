@@ -189,7 +189,7 @@ function updateRescueControl() {
   const available = !!result?.events.some(e => e.direction && e.tick >= Math.ceil(elapsed));
   button.hidden = !activeRun();
   button.disabled = mode !== 'RUN' || !!liveRun?.rescueUsed || pauseAt !== undefined || !available;
-  button.textContent = liveRun?.rescueUsed ? 'RESCUE / 使用済み' : pauseAt !== undefined ? 'tick境界で停止しています…' : 'RESCUE / 次の分岐を変更';
+  button.textContent = liveRun?.rescueUsed ? 'RESCUE / 使用済み' : pauseAt !== undefined ? 'tick境界で停止待ち…' : 'RESCUE / 次の分岐を変更';
   const message = mode === 'PAUSED' ? '一時停止中。確定またはキャンセルで再開します。' : liveRun?.rescueUsed ? 'この配送実行のRESCUEは使用済みです。' :
     mode === 'RUN' && !available ? 'この先に変更できる分岐イベントはありません。' : pauseAt !== undefined ? '現在の移動が終わるtick境界で停止します。' : '配送中に次の分岐を1回だけ変更できます。';
   if (get('rescue-status').textContent !== message) get('rescue-status').textContent = message;
