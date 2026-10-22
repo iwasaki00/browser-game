@@ -99,6 +99,9 @@ export function createLabStore(stages: readonly Stage[], reports: readonly Solve
       return true;
     } catch { status = 'unavailable'; return false; }
   }
+  function saveFailure(): CollectionOutcome {
+    return { status: status === 'unknown-schema' ? 'UNKNOWN_SCHEMA' : 'SAVE_FAILED', message: '研究室の保存に失敗しました。CLEARと星評価は保持します。' };
+  }
   refresh();
   return {
     view() {
@@ -121,7 +124,7 @@ export function createLabStore(stages: readonly Stage[], reports: readonly Solve
       const { records } = scan();
       if (records.some(r => r.discoveryKey === record.discoveryKey)) return { status: 'ALREADY_COLLECTED', message: 'この設定は発見登録済みです。' };
       if (records.filter(r => r.stageId === stage.id).length >= catalog(stage).limit) return { status: 'LIMIT', message: 'このステージの収集上限に達しています。' };
-      if (!write([...entries, record])) return { status: status === 'unknown-schema' ? 'UNKNOWN_SCHEMA' : 'SAVE_FAILED', message: '研究室の保存に失敗しました。CLEARと星評価は保持します。' };
+      if (!write([...entries, record])) return saveFailure();
       return { status: 'NEW', message: 'NEW DISCOVERY! 新しい成功設定を研究室に保存しました。' };
     },
     resolve(discoveryId: string): Discovery | undefined {

@@ -88,3 +88,15 @@ html[data-reduced-motion=true] *,html[data-reduced-motion=true] *::before,html[d
 .hint-copy h4{font-size:13px;margin:0 0 10px;color:#247E72}.hint-copy p{font-size:15px;line-height:1.9;margin:0;white-space:pre-line}
 .hint-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hint-actions button{flex:1;min-width:120px;min-height:44px;border:1px solid #afcabe;border-radius:8px;padding:8px 10px;background:#fffdf6;color:#243D4A;font-size:13px}
 .hint-actions #hint-next{background:#247E72;color:#fffdf6}
+.lab-entry{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 18px;padding:12px 16px;border:1px solid #d3be80;border-radius:14px;background:#f4edcf}
+.lab-entry button{min-height:44px;padding:8px 16px;border:1px solid #ba963b;border-radius:9px;background:#E4B754;font-weight:800;color:#243D4A}
+.lab-entry p{font-size:12px;flex:1;min-width:180px;margin:0}
+.lab-dialog{width:720px;max-width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overflow-wrap:anywhere}
+.lab-dialog h3{font-size:21px;margin:0 0 12px}.lab-dialog p{font-size:12px}.lab-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.lab-stage{min-width:0;min-height:76px;text-align:left;border:1px solid #afcabe;border-radius:10px;background:#e6f0e7;padding:12px;color:#243D4A}
+.lab-stage strong,.lab-stage span{display:block}.lab-stage strong{font-size:13px}.lab-stage span{font-size:11px;margin-top:6px;line-height:1.7}
+.lab-dialog button{min-height:44px}.lab-close,#lab-back,.discovery-card button{border:1px solid #afcabe;border-radius:8px;background:#fffdf6;color:#247E72;padding:8px 14px;font-weight:700}
+.lab-close{display:block;margin:20px 0 0 auto}.discovery-card{border:1px solid #d3be80;border-radius:12px;background:#fffdf6;padding:14px;margin:12px 0}
+.discovery-card h5{font-size:14px;margin:0 0 12px}.discovery-patterns{margin:10px 0;font-size:13px}.discovery-patterns div{display:flex;gap:16px;border-bottom:1px solid #e5e8de;padding:6px 0}
+.discovery-patterns dd{margin:0;font-weight:800;letter-spacing:2px;overflow-wrap:anywhere}.discovery-card button{width:100%;background:#247E72;color:#fffdf6}
+.lab-notice{font-size:12px!important;color:#806320!important}#reset-error,#lab-message{color:#b34f42}

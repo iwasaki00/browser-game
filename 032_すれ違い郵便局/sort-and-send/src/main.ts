@@ -12,6 +12,10 @@ import { createProgressStore, memoryStorage, productionProgressKey, type Progres
 import { GameAudio } from './audio';
 import { movementProgress, recentArrivals, reducedMotion } from './presentation';
 import { HintPanel } from './hints-ui';
+import { stageFingerprint } from './fingerprint';
+import { createLabStore, productionLabKey } from './lab';
+import { recordRunOutcome, prepareLabRetry, resetProgressAndLab } from './lab-integration';
+import { LabPanel } from './lab-ui';
 
 type Mode = 'DESIGN' | 'RUN' | 'PAUSED' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -25,6 +29,11 @@ const developerAccess = import.meta.env.DEV && new URLSearchParams(location.sear
 let storage: ProgressStorage | undefined;
 try { storage = developerAccess ? memoryStorage() : window.localStorage; } catch { /* Play in memory. */ }
 const progress = createProgressStore(stages.map(s => s.id), storage, import.meta.env.DEV ? 'sort-and-send.dev.progress.v1' : productionProgressKey);
+const labSummaries: unknown[] = stageRatings;
+const lab = createLabStore(stages, labSummaries.filter(isSolverSummary), storage, import.meta.env.DEV ? 'sort-and-send.dev.lab.v1' : productionLabKey);
+// Explicit development-only fixture: ephemeral stars, zero discoveries, never production data.
+const labFixture = import.meta.env.DEV && developerAccess && new URLSearchParams(location.search).get('labTest') === '1';
+if (labFixture) for (const entry of stages) progress.recordResult(entry.id, true, 1);
 const unlocked = (id: string) => developerAccess || progress.isUnlocked(id);
 const audio = new GameAudio(progress.data.settings);
 const osMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -48,9 +57,18 @@ let liveRun: DeliveryRun | undefined;
 let preview: RescuePreview | undefined;
 let pauseAt: number | undefined;
 let animationId: number | undefined;
+let runFingerprint = '';
 const rescueDialog = get<HTMLDialogElement>('rescue-dialog');
 const activeRun = () => mode === 'RUN' || mode === 'PAUSED';
 const hintPanel = new HintPanel(document, () => mode);
+const labPanel = new LabPanel(document, stages, lab, () => progress.data, activeRun, key => {
+  if (activeRun()) return false;
+  const target = prepareLabRetry(lab, progress, stages, key);
+  if (!target) return false;
+  const index = stages.findIndex(s => s.id === target.stage.id);
+  if (index < 0 || !unlocked(target.stage.id)) return false;
+  selectStage(index); patterns = target.configuration; design(); start.focus(); return true;
+});
 const tickMs = 700;
 const ink = '#243D4A';
 const teal = '#247E72';
@@ -108,6 +126,7 @@ function updateControls() {
   next.hidden = !(mode === 'RESULT' && result?.clear && stageIndex < stages.length - 1);
   get<HTMLButtonElement>('reset-progress').disabled = activeRun();
   hintPanel.sync();
+  labPanel.sync();
   updateRescueControl();
   updateStorageStatus();
   highlightDispatch();
@@ -115,7 +134,7 @@ function updateControls() {
 
 function design(initial = false) {
   if (animationId !== undefined) cancelAnimationFrame(animationId);
-  animationId = undefined; liveRun = undefined; preview = undefined; pauseAt = undefined;
+  animationId = undefined; liveRun = undefined; preview = undefined; pauseAt = undefined; runFingerprint = '';
   if (rescueDialog.open) rescueDialog.close();
   if (initial) patterns = Object.fromEntries(stage.nodes.filter(n => n.kind === 'switch').map(n => [n.id, [...(n.initialPattern ?? [])]]));
   mode = 'DESIGN'; result = undefined; selectedParcelId = undefined; elapsed = 0;
@@ -181,7 +200,7 @@ start.addEventListener('click', () => {
   void audio.activate();
   stageErrors = validateStage(stage);
   if (stageErrors.length) { showError(stageErrors.join('\n')); updateControls(); return; }
-  try { liveRun = new DeliveryRun(stage, patterns); result = liveRun.clone().finish(); }
+  try { liveRun = new DeliveryRun(stage, patterns); result = liveRun.clone().finish(); runFingerprint = stageFingerprint(stage); }
   catch (error) { showError(error instanceof Error ? error.message : '配送データを確認してください。'); return; }
   mode = 'RUN'; startedAt = performance.now(); playedArrivals = new Set(); elapsed = 0; pauseAt = undefined; preview = undefined;
   get('report').innerHTML = '<h3 id="result-title">配送中…</h3><p>設定した循環パターンで<br>荷物を順番に送り出しています。</p>';
@@ -297,7 +316,8 @@ function animate(now: number) {
     const cost = deliveryCost(patterns, result);
     const minimum = verifiedMinimum(stage, report);
     const rating = rateDelivery({ stage, result, cost, rescueUsed: result.rescueUsed === true, report });
-    const newRecord = progress.recordResult(stage.id, result.clear, rating.stars);
+    const outcome = recordRunOutcome(progress, lab, stage, runFingerprint, patterns, result, rating.stars);
+    const newRecord = outcome.newBest;
     if (result.clear) audio.play(newRecord ? 'record' : 'clear');
     updateControls();
     get('report').innerHTML = `<h3 id="result-title" class="${result.clear ? 'success' : 'failed'}">${result.clear ? 'CLEAR! 全便、到着。' : 'FAILED / 誤配送あり'}</h3><div class="rating" aria-label="${rating.stars === null ? '評価未確定' : `星${rating.stars} / 3`}">${rating.stars === null ? '評価未確定' : '★'.repeat(rating.stars) + '☆'.repeat(3 - rating.stars)}</div><dl class="cost-summary"><div><dt>今回の方向転換コスト</dt><dd>${cost}</dd></div><div><dt>最適方向転換コスト</dt><dd>${minimum ?? '未確認'}</dd></div></dl><p class="rating-note">${rating.reason}</p><div class="count">${result.correctCount} <small>/ ${result.parcels.length} 個 正しく配送</small></div><p class="history-help">荷物を選んで配送履歴を確認</p><ul class="result-list">${result.parcels.map(p => `<li><button type="button" class="parcel-history-button" data-parcel-id="${p.id}" aria-controls="parcel-history" aria-pressed="false"><span>${String(p.id + 1).padStart(2, '0')} ${marks[p.color]} ${p.color}</span><span>→ ${node(p.destination).label} ${p.correct ? '✓' : '×'}</span></button></li>`).join('')}</ul><section id="parcel-history" class="parcel-history" aria-label="選択した荷物の配送履歴" aria-live="polite"><p>配送結果の荷物番号を選ぶと、経路と分岐の使用方向を表示します。</p></section>`;
@@ -305,6 +325,8 @@ function animate(now: number) {
     const rescued = result.events.find(e => e.rescue);
     rescueNote.textContent = result.rescueUsed ? rescued ? `RESCUE：使用済み / 荷物 ${String(rescued.parcel + 1).padStart(2, '0')}・分岐 ${rescued.from!.toUpperCase()}・tick ${rescued.tick} / 通常 ${rescued.originalDirection} → 実際 ${rescued.direction}` : 'RESCUE：確定済み（対象への予約は失効）' : 'RESCUE：未使用';
     get('report').querySelector('.rating')?.after(rescueNote);
+    const discoveryNote = document.createElement('p'); discoveryNote.className = 'lab-notice';
+    discoveryNote.textContent = outcome.discovery.message; get('report').append(discoveryNote);
     if (result.clear) {
       get('report').querySelector('.rating')?.classList.add('earned-stars');
       const notice = document.createElement('p'); notice.className = newRecord ? 'new-record' : 'clear-notice';
@@ -427,7 +449,7 @@ function resize() {
 }
 new ResizeObserver(resize).observe(canvas);
 function updateStorageStatus() {
-  get('storage-status').textContent = developerAccess ? '開発用の全ステージ確認モード：記録はこのページ内のみ。本番の保存データは読み書きしません。' :
+  get('storage-status').textContent = developerAccess ? `${labFixture ? '研究室GUIテスト用：全20面に一時的な星1、発見0件から開始。' : '開発用の全ステージ確認モード。'}記録はこのページ内のみ。本番の保存データは読み書きしません。` :
     progress.status === 'unavailable' ? 'この環境では保存できません。このページ内で引き続き遊べます。' :
     progress.status === 'unknown-version' ? '未対応の保存形式です。元のデータを保護して一時的にプレイします。保存を再開する場合は進行を初期化してください。' :
     progress.status === 'recovered' ? '保存データを読み取れなかったため、初期状態から再開しました。' : '解放状況・CLEAR履歴・最高星評価・設定はこのブラウザに保存されます。';
@@ -451,9 +473,15 @@ get<HTMLInputElement>('reduced-motion').checked = settings.reducedMotion;
 for (const id of ['sfx', 'bgm', 'volume', 'reduced-motion']) get(id).addEventListener('change', () => { progress.setSettings(readSettings()); applySettings(); void audio.activate(); updateStorageStatus(); });
 get('volume').addEventListener('input', applySettings);
 const resetDialog = get<HTMLDialogElement>('reset-confirm');
-get('reset-progress').addEventListener('click', () => { if (!activeRun()) resetDialog.showModal(); });
-get('cancel-reset').addEventListener('click', () => { progress.reset(false); resetDialog.close(); });
-get('confirm-reset').addEventListener('click', () => { if (activeRun()) return; progress.reset(true); resetDialog.close(); selectStage(0); });
+get('reset-progress').addEventListener('click', () => { if (!activeRun()) { get('reset-error').textContent = ''; resetDialog.showModal(); } });
+get('cancel-reset').addEventListener('click', () => { resetProgressAndLab(progress, lab, false); resetDialog.close(); });
+get('confirm-reset').addEventListener('click', () => {
+  if (activeRun()) return;
+  const reset = resetProgressAndLab(progress, lab, true);
+  if (!reset.ok) { get('reset-error').textContent = reset.message; return; }
+  resetDialog.close(); labPanel.close(); selectStage(0); get('storage-status').textContent = reset.message;
+});
+window.addEventListener('storage', event => { if (event.key === (import.meta.env.DEV ? 'sort-and-send.dev.lab.v1' : productionLabKey)) labPanel.sync(); });
 applySettings();
 osMotion.addEventListener('change', applySettings);
 // The menu is two levels above the Vite source and three above its static build.

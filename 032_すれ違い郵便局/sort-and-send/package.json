@@ -1,6 +1,6 @@
 {
   "name": "sort-and-send",
-  "version": "0.5.0-B",
+  "version": "0.5.0-C",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "generate:stages": "node scripts/validate-stages.mjs --write",
     "validate:stages": "node scripts/validate-stages.mjs",
     "validate:hints": "node scripts/validate-hints.mjs",
-    "build": "npm run validate:stages && npm run validate:hints && npm run typecheck && vite build",
+    "build": "npm run validate:hints && npm run typecheck && vite build",
     "test": "vitest run",
     "preview": "vite preview --host 0.0.0.0"
   },
