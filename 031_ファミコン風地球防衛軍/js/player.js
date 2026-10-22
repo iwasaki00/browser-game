@@ -1,4 +1,4 @@
-import {WORLD,PLAYER_CLASSES,normalizeClass,clamp} from "./data.js?v=0.1.9";
+import {WORLD,PLAYER_CLASSES,normalizeClass,clamp} from "./data.js?v=0.2.2";
 
 export function applyPlayerClass(p,id){
   const c=PLAYER_CLASSES[normalizeClass(id)];
@@ -8,19 +8,20 @@ export function applyPlayerClass(p,id){
 // Swept movement against the same 8px platforms used by the LAB and renderer.
 // Ground classes keep one-way platform landing; flight collides on all faces.
 export function movePlayerBody(p,platforms,dt,solid=false){
-  let x=clamp(p.x+p.vx*dt,8,WORLD.width-25);
-  for(const pl of platforms)if(p.y+32>pl.y&&p.y<pl.y+8){
+  const world=p.world??WORLD;
+  let x=clamp(p.x+p.vx*dt,8,world.width-25);
+  for(const pl of platforms)if(pl.active!==false&&p.y+32>pl.y&&p.y<pl.y+(pl.h??8)){
     if(p.vx>0&&p.x+7<=pl.x&&x+7>pl.x)x=Math.min(x,pl.x-7);
     if(p.vx<0&&p.x-7>=pl.x+pl.w&&x-7<pl.x+pl.w)x=Math.max(x,pl.x+pl.w+7);
   }
   p.x=x;
-  let y=clamp(p.y+p.vy*dt,0,WORLD.ground-32);
-  for(const pl of platforms)if(p.x+7>pl.x&&p.x-7<pl.x+pl.w){
+  let y=clamp(p.y+p.vy*dt,0,world.ground-32);
+  for(const pl of platforms)if(pl.active!==false&&p.x+7>pl.x&&p.x-7<pl.x+pl.w){
     if(p.vy>=0&&p.y+32<=pl.y&&y+32>=pl.y)y=Math.min(y,pl.y-32);
-    if(solid&&p.vy<0&&p.y>=pl.y+8&&y<pl.y+8)y=Math.max(y,pl.y+8);
+    if((solid||pl.solid)&&p.vy<0&&p.y>=pl.y+(pl.h??8)&&y<pl.y+(pl.h??8))y=Math.max(y,pl.y+(pl.h??8));
   }
   if(y!==p.y+p.vy*dt)p.vy=0;
-  p.y=y;p.onGround=p.y===WORLD.ground-32||platforms.some(pl=>p.y+32===pl.y&&p.x+7>pl.x&&p.x-7<pl.x+pl.w);
+  p.y=y;p.onGround=p.y===world.ground-32||platforms.some(pl=>pl.active!==false&&p.y+32===pl.y&&p.x+7>pl.x&&p.x-7<pl.x+pl.w);
   if(p.onGround)p.vy=0;
 }
 

@@ -6,19 +6,20 @@
     <meta name="theme-color" content="#F7F4E8" />
     <meta name="description" content="分岐の循環パターンを設定して、荷物を正しい出口へ届ける小さな配送パズル。" />
     <title>すれ違い郵便局 — SORT &amp; SEND</title>
-    <script type="module" crossorigin src="./assets/index-ZPq72lxp.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CWTUHUxL.css">
+    <script type="module" crossorigin src="./assets/index-DotczPDz.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BkOFnqyO.css">
   </head>
   <body>
     <main class="shell">
       <header class="masthead">
         <a class="back" href="../../../index.html">← ゲーム一覧</a>
-        <span class="version">0.5.0-B — HINT</span>
+        <span class="version">0.5.0-C — LAB</span>
       </header>
       <div class="title-row"><div><p class="eyebrow">すれ違い郵便局</p><h1>SORT <span>&amp;</span> SEND<span class="title-dot">●</span></h1></div><p class="intro">小さな分岐で、届け先が変わる。<br>矢印を組んで、配送をはじめよう。</p></div>
       <section class="stage-heading"><div><span class="eyebrow" id="chapter-name">Chapter 01 / はじめての配送</span><h2 id="stage-name">STAGE 01「はじめての分岐」</h2></div><span id="mode" class="mode">DESIGN</span></section>
       <nav id="stage-selector" class="stage-selector" aria-label="ステージ選択"></nav>
       <p class="progress-help">前のステージをCLEARすると次が解放されます。各番号の下に最高星評価を表示します。</p>
+      <section class="lab-entry" aria-label="配送パターン研究室"><button id="lab" type="button">配送パターン研究室</button><p id="lab-unlock"></p></section>
       <details class="settings-panel">
         <summary>音声・演出・進行設定</summary>
         <div class="settings-grid">
@@ -33,7 +34,8 @@
       </details>
       <dialog id="reset-confirm" aria-labelledby="reset-title" aria-describedby="reset-description">
         <h3 id="reset-title">進行状況を初期化しますか？</h3>
-        <p id="reset-description">ステージ解放・CLEAR履歴・最高星評価を消してStage 01に戻します。音声・演出設定は保持します。</p>
+        <p id="reset-description">ステージ解放・CLEAR履歴・最高星評価を消してStage 01に戻します。研究室の発見記録も削除されます。音声・演出設定は保持します。</p>
+        <p id="reset-error" role="status"></p>
         <div class="confirmation-actions"><button id="cancel-reset" type="button" autofocus>キャンセル</button><button id="confirm-reset" type="button">初期化する</button></div>
       </dialog>
       <dialog id="rescue-dialog" class="rescue-dialog" aria-labelledby="rescue-title" aria-describedby="rescue-explanation rescue-target">
@@ -64,6 +66,12 @@
         <div class="hint-levels" role="group" aria-label="開放したヒントを選択"><button id="hint-level-1" type="button">1 発想</button><button id="hint-level-2" type="button" disabled>2 注目点</button><button id="hint-level-3" type="button" disabled>3 手掛かり</button></div>
         <section class="hint-copy" aria-live="polite" aria-atomic="true"><h4 id="hint-heading"></h4><p id="hint-body"></p></section>
         <div class="hint-actions"><button id="hint-next" type="button">ヒント2を開放する</button><button id="hint-close" type="button">閉じる</button></div>
+      </dialog>
+      <dialog id="lab-dialog" class="lab-dialog" aria-labelledby="lab-title" aria-describedby="lab-description">
+        <h3 id="lab-title">配送パターン研究室</h3><p id="lab-description"></p><p id="lab-storage"></p><p id="lab-message" role="status"></p>
+        <div id="lab-list" class="lab-list"></div>
+        <section id="lab-detail" hidden><button id="lab-back" type="button">ステージ一覧へ</button><h4 id="lab-stage-title"></h4><div id="lab-records"></div></section>
+        <button id="lab-close" class="lab-close" type="button">閉じる</button>
       </dialog>
     </main>
   </body>

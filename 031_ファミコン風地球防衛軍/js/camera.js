@@ -55,7 +55,7 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
     const dx=enemy.x-player.x,dy=enemy.y+(enemy.h||0)/2-playerY;
     const distance=Math.hypot(dx,dy);
     if(distance>c.evaluationDistance)continue;
-    if(enemy.type==="boss"){
+    if(enemy.type==="boss"||enemy.type==="queen"){
       if(battle.bossStarted)boss=enemy;
       continue;
     }
@@ -127,6 +127,6 @@ export function updateBattleCamera(camera,player,enemies,battle,dt){
   const safeLeft=player.x-(VIEW.canvasWidth-c.playerMargin)/camera.zoom,safeRight=player.x-c.playerMargin/camera.zoom;
   const target=clamp(center-width/2,safeLeft,safeRight);
   camera.x=damp(camera.x,target,c.positionRate,dt);
-  camera.x=clamp(clamp(camera.x,safeLeft,safeRight),0,Math.max(0,WORLD.width-width));
+  camera.x=clamp(clamp(camera.x,safeLeft,safeRight),0,Math.max(0,(battle.world??WORLD).width-width));
   return camera;
 }

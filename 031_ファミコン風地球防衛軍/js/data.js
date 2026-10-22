@@ -1,4 +1,4 @@
-export const VERSION = "0.2.1";
+export const VERSION = "0.2.2";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -70,10 +70,11 @@ export const M01_ENCOUNTERS = Object.freeze([
   {id:"a4-final",x:3720,until:3950,pattern:"SWARM",enemy:"crawler",fraction:.70,batch:8,interval:.1}
 ]);
 
-// Availability is separate from saved progression. M02 has no playable content yet.
+// Availability remains separate from saved progression.
 export const MISSIONS = Object.freeze([
   {id:"M01",name:"市街地防衛線",description:"侵攻群を突破し、巣の中心を破壊せよ",implemented:true},
-  {id:"M02",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
+  {id:"M02",name:"地下侵攻作戦",description:"配管と上下分岐を突破し、アビス・クイーンを撃破せよ",implemented:true},
+  {id:"M03",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
 ]);
 
 const validMissionId = id => typeof id==="string" && /^M\d{2,}$/.test(id) && Number(id.slice(1))>0 && Number.isSafeInteger(Number(id.slice(1)));
@@ -130,7 +131,12 @@ export const ENEMY_TYPES = {
   spider:{ id:"E-02", name:"ウォールスパイダー", hp:35, speed:35, damage:12, score:180, w:25, h:22, row:1 },
   needle:{ id:"E-03", name:"スカイニードル", hp:18, speed:70, damage:8, score:150, w:26, h:16, row:2 },
   beetle:{ id:"E-04", name:"アイアンビートル", hp:180, speed:18, damage:20, score:1200, w:42, h:40, row:3 },
-  boss:{ id:"B-01", name:"マザークロウラー", hp:1200, speed:42, damage:25, score:10000, w:88, h:58, row:0 }
+  boss:{ id:"B-01", name:"マザークロウラー", hp:1200, speed:42, damage:25, score:10000, w:88, h:58, row:0 },
+  worm:{id:"E-05",name:"トンネルワーム",hp:32,speed:72,damage:9,score:140,w:32,h:20},
+  spitter:{id:"E-06",name:"シーリングスピッター",hp:55,speed:0,damage:12,score:240,w:28,h:24},
+  nest:{id:"H-01",name:"スポーンネスト",hp:250,speed:0,damage:0,score:1500,w:48,h:48},
+  queen:{id:"B-02",name:"アビス・クイーン",hp:2400,speed:120,damage:25,score:18000,w:120,h:96},
+  barrier:{id:"O-01",name:"破壊障害物",hp:48,speed:0,damage:0,score:50,w:24,h:32}
 };
 
 export const MISSION_AREAS = [
@@ -146,7 +152,7 @@ export function normalizeDestructionLevel(value){return (typeof value==="number"
 
 export const DEFAULT_SAVE = Object.freeze({
   version:2, selectedClass:"RANGER", clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
-  bestTime:null, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
+  bestTime:null, missionStats:{}, settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
 });
 
 export const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
@@ -164,6 +170,11 @@ export function sanitizeSave(value){
   Object.assign(base,missionProgress(value));
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;
+  if(value.missionStats&&typeof value.missionStats==='object')for(const [id,stats] of Object.entries(value.missionStats)){
+    if(!validMissionId(id)||!stats||typeof stats!=='object')continue;
+    base.missionStats[id]={highScore:Number.isFinite(stats.highScore)?Math.max(0,stats.highScore):0,bestTime:Number.isFinite(stats.bestTime)&&stats.bestTime>0?stats.bestTime:null};
+  }
+  if(base.clearedMissions.includes('M01')&&!base.missionStats.M01)base.missionStats.M01={highScore:base.highScore,bestTime:base.bestTime};
   if(value.settings && typeof value.settings==="object") base.settings={...base.settings,...value.settings};
   if(!Object.hasOwn(DENSITY_MODES,base.settings.enemyDensity))base.settings.enemyDensity="STANDARD";
   base.settings.destructionLevel=normalizeDestructionLevel(base.settings.destructionLevel);

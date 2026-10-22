@@ -84,13 +84,16 @@ function earliestContact(start, end, planets, goal, rocketRadius) {
 export function createSimulation(stage, launch = {}) {
   const speed = launch.speed ?? stage.launch.speed;
   const angle = (launch.angleDeg ?? stage.launch.angleDeg) * Math.PI / 180;
+  const velocity = launch.velocity
+    ? cloneVector(launch.velocity)
+    : { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed };
   return {
     status: "flying",
     elapsed: 0,
     rocket: {
       radius: stage.rocketRadius,
       position: cloneVector(stage.launch.position),
-      velocity: { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed },
+      velocity,
     },
     planets: stage.planets.map((planet) => ({ ...planet })),
     goal: { ...stage.goal },

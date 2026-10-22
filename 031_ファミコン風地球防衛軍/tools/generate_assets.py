@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw
 import random
 import argparse
 import math
+import json
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
@@ -366,10 +367,210 @@ def city_background():
     for x in range(0,320,32): d.rectangle((x,169,x+14,171),fill=(214,184,70))
     out("backgrounds/city.png",img)
 
+def underground_assets():
+    """M02 only: isolated RNG and new paths keep every M01 pixel unchanged."""
+    rng = random.Random(2207319)
+    records = {}
+
+    def emit(path, image, width, height, frames=1, **extra):
+        out(path, image)
+        records[path] = {"frameWidth": width, "frameHeight": height,
+                         "frames": frames, "columns": image.width // width, **extra}
+
+    # Repeatable underground station: sealed arches, broken train and pipe banks.
+    bg = Image.new("RGB", (320, 180), (5, 12, 19)); d = ImageDraw.Draw(bg)
+    for x in range(0, 320, 64):
+        d.rectangle((x, 0, x+63, 179), fill=(10, 23, 31))
+        d.rectangle((x+3, 25, x+60, 141), fill=(14, 34, 41))
+        d.rectangle((x+9, 35, x+54, 137), fill=(5, 15, 22))
+        poly(d, [(x+9,35),(x+23,18),(x+41,18),(x+54,35)], (5,15,22))
+        rect(d,(x,21,x+4,151),(24,48,53)); rect(d,(x+59,21,x+63,151),(24,48,53))
+        rect(d,(x+17,11,x+45,13),(32,66,65)); rect(d,(x+24,12,x+37,13),(51,112,98))
+    for y in (4, 9, 151):
+        rect(d,(0,y,319,y+2),(25,45,50));rect(d,(0,y,319,y),(39,65,65))
+        for x in range(12,320,32):rect(d,(x,y-1,x+2,y+3),(49,69,70))
+    # A recognizably derelict subway carriage, not another city skyline.
+    poly(d,[(73,104),(83,91),(194,91),(205,108),(202,142),(74,142)],(18,38,43))
+    rect(d,(78,108,201,113),(45,64,58))
+    for x in range(83,195,22):
+        rect(d,(x,96,x+14,106),(3,11,18));d.line((x+2,97,x+11,104),fill=(41,71,68))
+    rect(d,(135,94,154,139),(5,17,22));d.line((144,94,144,139),fill=(35,61,56))
+    for x in (89,177):d.ellipse((x,135,x+14,148),fill=(4,11,17),outline=(30,49,50))
+    d.line((0,165,319,165),fill=(48,63,59),width=2)
+    d.line((0,173,319,173),fill=(26,44,44),width=2)
+    for x in range(0,320,16):rect(d,(x,162,x+3,177),(17,32,34))
+    for _ in range(70):
+        x=rng.randrange(320);y=rng.randrange(180)
+        d.point((x,y),fill=(21,43,41) if y<150 else (35,45,41))
+    for x,y in ((18,87),(244,117),(289,54)):
+        d.line([(x,y-7),(x+3,y+1),(x+2,y+12)],fill=(44,75,51),width=2)
+        rect(d,(x+1,y+10,x+3,y+13),(78,116,49))
+    emit("backgrounds/underground.png",bg,320,180)
+
+    names = ["metal_floor","metal_ceiling","metal_wall","pipe_horizontal",
+             "pipe_vertical","pipe_cross","subway_rail","subway_panel",
+             "cave_wall","cave_floor","cave_ceiling","nest_wall",
+             "barrier_intact","barrier_cracked","barrier_broken","warning_panel"]
+    tiles=Image.new("RGBA",(128,32),P["clear"])
+    for i,name in enumerate(names):
+        cell=Image.new("RGBA",(16,16),P["clear"]);t=ImageDraw.Draw(cell)
+        if i<8 or i==15:
+            rect(t,(0,0,15,15),"dark");rect(t,(1,1,14,14),"steel")
+            if i in (0,1):
+                y=0 if i==0 else 13;rect(t,(0,y,15,y+2),"gray")
+                for x in (3,11):rect(t,(x,6,x+1,9),"outline")
+            elif i==2:
+                rect(t,(0,0,2,15),"gray");rect(t,(13,0,15,15),"navy")
+                for y in (3,11):rect(t,(6,y,9,y+1),"outline")
+            elif i in (3,4,5):
+                rect(t,(0,0,15,15),"navy")
+                if i in (3,5):
+                    rect(t,(0,5,15,11),"outline");rect(t,(0,6,15,9),"gray");rect(t,(0,6,15,6),"light")
+                if i in (4,5):
+                    rect(t,(5,0,11,15),"outline");rect(t,(6,0,9,15),"steel");rect(t,(6,0,6,15),"gray")
+            elif i==6:
+                rect(t,(0,0,15,15),"navy");rect(t,(3,0,6,15),"steel");rect(t,(0,4,15,6),"gray");rect(t,(0,12,15,14),"gray")
+            elif i==7:
+                rect(t,(2,2,13,9),"outline");rect(t,(3,3,12,8),"cyan2");rect(t,(3,3,12,3),"cyan")
+            else:
+                for x in range(-12,20,8):poly(t,[(x,0),(x+4,0),(x+20,15),(x+16,15)],"yellow")
+        elif i<12:
+            rect(t,(0,0,15,15),"navy")
+            for k in range(5):
+                x=(k*7+i*3)%16;y=(k*5+i)%16
+                poly(t,[(x-5,y-3),(x+2,y-4),(x+6,y+1),(x+1,y+5),(x-4,y+3)],"dark" if k%2 else "steel")
+            if i==9:rect(t,(0,0,15,2),"gray")
+            if i==10:rect(t,(0,13,15,15),"gray")
+            if i==11:
+                t.line([(1,14),(4,7),(9,9),(14,1)],fill=P["purple"],width=2)
+                rect(t,(8,7,10,9),"acid")
+        else:
+            if i!=14:rect(t,(0,0,15,15),"outline")
+            for y in (0,8):
+                for x in (0,8):
+                    if i==14 and x==8:continue
+                    poly(t,[(x+1,y+1),(x+6,y+1),(x+7,y+6),(x+1,y+7)],"gray" if i==12 else "steel")
+            if i==12:rect(t,(6,2,9,13),"orange")
+            if i==13:t.line([(8,0),(5,6),(11,9),(6,15)],fill=P["outline"],width=2)
+        tiles.alpha_composite(cell,((i%8)*16,(i//8)*16))
+    emit("tiles/underground_tiles.png",tiles,16,16,16,tileNames=names)
+
+    def animated(path,width,height,frames,draw):
+        sheet=Image.new("RGBA",(width*frames,height),P["clear"])
+        for f in range(frames):
+            cell=Image.new("RGBA",(width,height),P["clear"]);draw(ImageDraw.Draw(cell),f)
+            sheet.alpha_composite(cell,(width*f,0))
+        emit(path,sheet,width,height,frames)
+
+    def worm(d,f):
+        for k in range(5):
+            x=8+k*4;y=9+int(math.sin(k*1.1+f*math.pi/2)*2)
+            d.ellipse((x-5,y-5,x+5,y+5),fill=P["outline"])
+            d.ellipse((x-3,y-3,x+3,y+3),fill=P["purple"] if k%2 else P["steel"])
+            rect(d,(x,y-3,x+1,y-2),"gray")
+            d.line([(x,y+3),(x-2+(f+k)%2,y+7)],fill=P["acid"],width=1)
+        poly(d,[(0,7),(8,3),(13,7),(10,14),(2,15)],"outline")
+        poly(d,[(2,7),(8,5),(11,8),(8,12),(3,12)],"purple")
+        rect(d,(2,8,4,10),"acid");rect(d,(2,12,6,13),"light")
+    animated("sprites/enemies/tunnel_worm.png",32,20,4,worm)
+
+    def spitter(d,f):
+        for side in (-1,1):
+            for k in range(3):
+                d.line([(14+side*6,9+k*2),(14+side*(9+k),3+k),(14+side*(11+k),0)],fill=P["gray"],width=2)
+        poly(d,[(7,5),(20,5),(23,13),(18,20),(10,20),(5,13)],"outline")
+        poly(d,[(9,6),(18,6),(21,12),(17,17),(10,17),(7,12)],"green")
+        rect(d,(9,8,12,10),"acid");rect(d,(16,8,19,10),"acid")
+        d.ellipse((10,13,18,22),fill=P["outline"])
+        rect(d,(12,15,16,19+f%2),"acid" if f==2 else "cyan2")
+        if f==2:rect(d,(13,21,15,23),"light")
+    animated("sprites/enemies/ceiling_spitter.png",28,24,4,spitter)
+
+    def nest(d,f):
+        for x in (3,12,28,39):
+            poly(d,[(x,47),(x+2,28),(x+7,21),(x+5,46)],"outline")
+            d.line([(x+2,45),(x+4,30)],fill=P["purple"],width=2)
+        poly(d,[(4,39),(10,17),(21,6),(35,12),(44,34),(39,46),(9,46)],"outline")
+        poly(d,[(8,37),(13,20),(23,10),(33,15),(40,34),(36,42),(12,42)],"purple")
+        for x,y in ((14,23),(30,20),(19,36),(33,35)):
+            d.ellipse((x-4,y-4,x+4,y+4),fill=P["navy"],outline=P["gray"])
+        d.ellipse((17,19-f%2,31,36+f%2),fill=P["outline"])
+        d.ellipse((20,22-f%2,28,33+f%2),fill=P["acid"] if f==2 else P["green"])
+        rect(d,(22,24,25,27),"light")
+        if f==3:
+            d.line([(10,23),(25,17),(34,39)],fill=P["yellow"],width=2)
+    animated("sprites/enemies/spawn_nest.png",48,48,4,nest)
+
+    def queen(d,f):
+        # Crown fins + six grounded legs + exposed abdominal core. Faces left.
+        bob=f%2
+        for k,x in enumerate((24,43,66,88,103)):
+            side=1 if k%2 else -1;step=2 if (k+f)%2 else -1
+            d.line([(x,58+bob),(x+side*8,77+step),(x+side*13,92)],fill=P["outline"],width=7)
+            d.line([(x,58+bob),(x+side*8,77+step),(x+side*13,92)],fill=P["steel"],width=3)
+        poly(d,[(13,48+bob),(28,22),(51,13),(87,17),(110,35),(117,60),(101,79),(49,83),(22,70)],"outline")
+        poly(d,[(20,47+bob),(33,28),(55,20),(85,24),(104,40),(110,58),(98,71),(52,75),(28,64)],"purple")
+        for x,y in ((35,26),(54,18),(74,18),(94,26)):
+            poly(d,[(x-6,y+17),(x-5,y-4),(x+2,y-15),(x+8,y+16)],"outline")
+            poly(d,[(x-3,y+12),(x-2,y-3),(x+2,y-10),(x+5,y+12)],"steel")
+            rect(d,(x,y-3,x+1,y+7),"cyan2")
+        poly(d,[(3,43),(14,33),(32,39),(37,53),(25,64),(7,61)],"outline")
+        poly(d,[(7,43),(16,38),(28,42),(29,53),(21,58),(9,56)],"steel")
+        rect(d,(8,44,18,47),"acid");rect(d,(8,44,11,45),"light")
+        for y in (51,57):poly(d,[(2,y),(15,y-1),(10,y+3)],"light")
+        d.ellipse((44,42,83,76),fill=P["outline"],outline=P["gray"],width=2)
+        d.ellipse((49,46,78,71),fill=P["cyan2"] if f!=2 else P["red"])
+        d.ellipse((54,49,73,67),fill=P["acid"] if f!=3 else P["yellow"])
+        rect(d,(59,51,66,60),"light")
+        for x in (87,96,105):
+            d.line([(x,38),(x+4,51),(x,62)],fill=P["gray"],width=2)
+        if f==1:poly(d,[(0,51),(8,47),(10,58),(2,61)],"acid")
+        if f==3:
+            d.line([(32,32),(44,39),(39,48)],fill=P["yellow"],width=2)
+            d.line([(83,27),(91,38),(84,48)],fill=P["yellow"],width=2)
+    animated("sprites/bosses/abyss_queen.png",120,96,4,queen)
+
+    def acid(d,f):
+        r=3+f%2
+        d.ellipse((8-r,8-r,8+r,8+r),fill=P["outline"])
+        poly(d,[(2,3+f),(10,5),(13,9),(9,12),(5,9)],"acid")
+        rect(d,(8,6,10,8),"light");rect(d,(1,2+f,3,3+f),"green")
+    animated("effects/acid.png",16,16,4,acid)
+
+    def wave(d,f):
+        poly(d,[(1,23),(7,12),(13,17),(20,3+f),(26,14),(31,23)],"outline")
+        d.line([(2,22),(8,14),(13,19),(20,7+f),(26,16),(30,22)],fill=P["acid"],width=2)
+        d.line([(6,23),(12,20),(19,12+f),(24,21)],fill=P["light"],width=1)
+    animated("effects/ground_wave.png",32,24,4,wave)
+
+    def burst(d,f,width,height,color):
+        cx=width//2;cy=height//2;r=5+f*(min(width,height)//19)
+        for k in range(12):
+            a=k*math.tau/12+f*.12
+            x=cx+int(math.cos(a)*r);y=cy+int(math.sin(a)*r*.8)
+            s=2 if f<5 else 1
+            rect(d,(x-s,y-s,x+s,y+s),color if k%2 else "yellow")
+            if f>1:d.line((x,y,x-int(math.cos(a)*4),y-int(math.sin(a)*4)),fill=P["purple"],width=2)
+        if f<5:
+            d.ellipse((cx-r,cy-r,cx+r,cy+r),outline=P["orange"],width=3)
+            inner=max(1,12-f*2)
+            poly(d,[(cx,cy-inner),(cx+inner,cy),(cx,cy+inner),(cx-inner,cy)],"light" if f<2 else "yellow")
+    animated("effects/nest_break.png",64,64,8,lambda d,f:burst(d,f,64,64,"acid"))
+    animated("effects/boss_break.png",128,96,8,lambda d,f:burst(d,f,128,96,"cyan"))
+
+    metadata={"version":"0.2.2","seed":2207319,"sampling":"nearest",
+              "animationOrder":["idle","move_or_pulse","attack","hit"],
+              "assets":records}
+    target=ASSETS/"underground.json"
+    target.write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    print("underground.json: M02 frame metadata")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--classes-only", action="store_true", help="Generate only the formal-class atlas")
     parser.add_argument("--weapons-only", action="store_true", help="Generate only weapon atlases")
+    parser.add_argument("--underground-only", action="store_true", help="Generate only M02 assets and metadata")
     args=parser.parse_args()
     if args.classes_only:
         class_sheet()
@@ -377,7 +578,11 @@ def main():
     if args.weapons_only:
         weapon_assets()
         return
+    if args.underground_only:
+        underground_assets()
+        return
     player_sheet(); class_sheet(); enemies_sheet(); boss_sheet(); weapon_assets(); effects_items_tiles(); city_background()
-    print("Generated all original assets with seed 7319.")
+    underground_assets()
+    print("Generated all original assets with seed 7319; M02 isolated seed 2207319.")
 
 if __name__ == "__main__": main()

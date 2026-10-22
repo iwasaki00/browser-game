@@ -103,10 +103,10 @@ describe('LAB collection and storage', () => {
     f.storage.setItem(productionLabKey, '{"schemaVersion":1,"discoveries":[]}'); expect(prepareLabRetry(f.lab, progress, stages, record.discoveryKey)).toBeUndefined();
   });
   it('handles storage access and quota failures without changing CLEAR or progress', () => {
-    const progress = unlockedProgress(); const before = progress.data; const result = simulate(stages[0], normal);
+    const progress = unlockedProgress(); const result = simulate(stages[0], normal);
     const lab = createLabStore(stages, reports, { getItem: () => null, setItem: () => { throw Error('quota'); } });
-    const outcome = recordRunOutcome(progress, lab, stages[0], stageFingerprint(stages[0]), normal, result, 1);
-    expect(outcome.discovery.status).toBe('SAVE_FAILED'); expect(result.clear).toBe(true); expect(progress.data).toEqual(before);
+    const outcome = recordRunOutcome(progress, lab, stages[0], stageFingerprint(stages[0]), normal, result, 3);
+    expect(outcome.discovery.status).toBe('SAVE_FAILED'); expect(result.clear).toBe(true); expect(progress.data.bestStars['01']).toBe(3);
     const denied = createLabStore(stages, reports, { getItem() { throw Error('denied'); }, setItem() { throw Error('denied'); } });
     expect(denied.view().status).toBe('unavailable');
   });
@@ -138,6 +138,17 @@ describe('LAB integration and cap', () => {
     const f = fixture(); f.collect(); const key = f.lab.view().records[0].discoveryKey; const progress = unlockedProgress();
     expect(prepareLabRetry(f.lab, progress, stages, key)?.configuration).toEqual(normal); expect(f.lab.view().records).toHaveLength(1);
     progress.reset(true); expect(prepareLabRetry(f.lab, progress, stages, key)).toBeUndefined();
+  });
+  it('keeps progress unchanged if LAB reset cannot be saved', () => {
+    const progress = unlockedProgress(); const before = progress.data;
+    const lab = createLabStore(stages, reports, { getItem: () => null, setItem() { throw Error('quota'); } });
+    expect(resetProgressAndLab(progress, lab, true).ok).toBe(false); expect(progress.data).toEqual(before);
+  });
+  it('protects an unknown progress schema instead of deleting either key', () => {
+    const f = fixture(); f.collect(); const labRaw = f.storage.getItem(productionLabKey);
+    f.storage.setItem(productionProgressKey, '{"schemaVersion":8}'); const progress = createProgressStore(ids, f.storage);
+    expect(resetProgressAndLab(progress, f.lab, true).ok).toBe(false); expect(f.storage.getItem(productionLabKey)).toBe(labRaw);
+    expect(f.storage.getItem(productionProgressKey)).toBe('{"schemaVersion":8}');
   });
   it('distinguishes all successful solutions from a maximum 100 collected settings', async () => {
     const future: Stage = { id: 'future', name: 'Cap fixture', nodes: [

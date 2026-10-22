@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Gravity Core</title>
+  <title>ORBIT MAKER — Slingshot Launch</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.1.0</div>
+      <div class="version">v0.1.1</div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -34,18 +34,31 @@
         <strong id="resultReason">惑星に衝突</strong>
         <button id="retryButton" type="button">再試行</button>
       </div>
-      <div class="edit-hint" id="editHint"><span></span> 惑星をドラッグ</div>
+      <div class="edit-hint" id="editHint"><span></span><b id="editHintText">惑星をドラッグ</b></div>
     </section>
 
     <section class="controls" aria-label="発射設定">
-      <div class="tuner">
-        <label for="angleInput"><span>ANGLE</span><output id="angleOutput">−55°</output></label>
-        <input id="angleInput" type="range" min="-72" max="-35" value="-55" step="1">
+      <div class="launch-mode" role="group" aria-label="発射方式">
+        <button type="button" data-launch-mode="precision" aria-pressed="true"><span>A</span> 精密発射</button>
+        <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
       </div>
-      <div class="tuner">
-        <label for="speedInput"><span>THRUST</span><output id="speedOutput">170</output></label>
-        <input id="speedInput" type="range" min="120" max="220" value="170" step="2">
+
+      <div class="precision-settings" id="precisionSettings">
+        <div class="tuner">
+          <label for="angleInput"><span>ANGLE</span><output id="angleOutput">−55°</output></label>
+          <input id="angleInput" type="range" min="-72" max="-35" value="-55" step="1">
+        </div>
+        <div class="tuner">
+          <label for="speedInput"><span>THRUST</span><output id="speedOutput">170</output></label>
+          <input id="speedInput" type="range" min="120" max="220" value="170" step="2">
+        </div>
       </div>
+
+      <div class="slingshot-guide" id="slingshotGuide" hidden>
+        <span aria-hidden="true">◀ · · 🚀</span>
+        <p><strong>ロケットを引いて離す</strong><small>元の位置へ戻すとキャンセル</small></p>
+      </div>
+
       <div class="actions">
         <button class="reset" id="resetButton" type="button">RESET</button>
         <button class="launch" id="launchButton" type="button"><span>▶</span> LAUNCH</button>

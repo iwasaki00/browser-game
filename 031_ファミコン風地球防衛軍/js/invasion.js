@@ -1,11 +1,11 @@
 import {WORLD,ENEMY_TYPES,DENSITY_MODES,INVASION,SPAWN_PATTERNS,M01_ENCOUNTERS,clamp} from "./data.js";
 
-export const isMob = e => e.type!=="boss"&&e.type!=="beetle";
+export const isMob = e => !["boss","beetle","queen","nest","barrier"].includes(e.type);
 export const variation = uid => ((uid*2654435761)>>>0)/4294967296;
 
 export class SpatialGrid {
-  constructor(size=INVASION.gridSize){
-    this.size=size;this.cols=Math.ceil(WORLD.width/size)+2;this.rows=12;this.top=-256;
+  constructor(size=INVASION.gridSize,world=WORLD){
+    this.size=size;this.cols=Math.ceil(world.width/size)+2;this.rows=12;this.top=-256;
     this.buckets=Array.from({length:this.cols*this.rows},()=>[]);this.used=[];
   }
   rebuild(enemies){
@@ -69,7 +69,7 @@ export class SpawnDirector {
     const edge=direction>0?bounds.right:bounds.left;
     const offset=INVASION.outsideMargin+column*INVASION.columnSpacing+row*9;
     const desired=direction>0?Math.max(edge+offset,p.x+INVASION.minSpawnDistance+offset):Math.min(edge-offset,p.x-INVASION.minSpawnDistance-offset);
-    const x=clamp(desired,24,WORLD.width-24);
+    const x=clamp(desired,24,(game.world??WORLD).width-24);
     if(Math.abs(x-p.x)<INVASION.minSpawnDistance)return null;
     const type=d.enemy??pattern.enemy;
     const y=type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;

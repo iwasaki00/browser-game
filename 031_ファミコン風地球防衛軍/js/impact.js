@@ -18,7 +18,7 @@ export const REACTIONS=Object.freeze({
   grenade:{speed:235,lift:185,spin:11,life:.48,color:"#ffe05c"},
   homing:{speed:145,lift:120,spin:6,life:.42,color:"#fff08b"}
 });
-const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1"};
+const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1"};
 const noise=n=>((n*2654435761)>>>0)/4294967296;
 export function createImpactState(){return {clock:0,stop:0,nextStop:0,budgetStart:0,spent:0,shakeUntil:0,nextShake:0,
   corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0}}
@@ -64,7 +64,7 @@ export function beginDeath(g,e,source={},bounds){
   const radial=source.radial,dx=radial?e.x-source.x:source.vx??(e.x-g.player.x),dy=radial?e.y+e.h/2-source.y:source.vy??0;
   const length=Math.hypot(dx,dy)||1,sign=Math.sign(dx)||(e.uid%2?1:-1);
   const close=type==="spread"?1.15-.55*clamp(Math.abs(e.x-(source.originX??g.player.x))/150,0,1):1;
-  const leader=e.type==="boss"||e.type==="beetle",weight=leader?.25:1;
+  const leader=e.type==="boss"||e.type==="beetle"||e.type==="queen"||e.type==="nest",weight=leader?.25:1;
   e.deathType=type;e.deathColor=ENEMY_COLORS[e.type];e.deathMax=e.death=(leader?.48:r.life)*level.life;
   e.deathVx=(radial?(Math.abs(dx)<.01?sign*.7:dx/length):sign)*r.speed*close*weight*level.speed;
   e.deathVy=(-r.lift+clamp(dy/length,-1,1)*r.speed*.3)*weight*level.speed;
@@ -92,7 +92,7 @@ export function updateDeath(g,e,dt){
   else if(e.deathVx!==undefined){
     if(e.deathTrail){e.trailElapsed+=dt;if(e.trailElapsed>=IMPACT.trailInterval){e.trailElapsed%=IMPACT.trailInterval;const i=e.trailCursor*4;e.deathTrail[i]=e.x;e.deathTrail[i+1]=e.y;e.deathTrail[i+2]=e.deathAngle;e.deathTrail[i+3]=e.deathAge;e.trailCursor=(e.trailCursor+1)%IMPACT.trailSlots;e.trailCount=Math.min(IMPACT.trailSlots,e.trailCount+1)}}
     e.deathVy+=IMPACT.gravity*DESTRUCTION_LEVELS[e.deathLevel||1].gravity*dt;e.x+=e.deathVx*dt;e.y+=e.deathVy*dt;e.deathAngle+=e.deathSpin*dt;
-    if(e.x<0||e.x>WORLD.width||!Number.isFinite(e.x+e.y)||e.y< -WORLD.height*4){e.death=0;releaseDeath(g,e);return}
+    if(e.x<0||e.x>(g.world??WORLD).width||!Number.isFinite(e.x+e.y)||e.y< -WORLD.height*4){e.death=0;releaseDeath(g,e);return}
     if(e.y+e.h>=WORLD.ground&&e.deathVy>0){e.y=WORLD.ground-e.h;
       if(DESTRUCTION_LEVELS[e.deathLevel||1].bounce&&e.deathBounces===0&&e.deathVy>=IMPACT.minBounceSpeed){e.deathVy*=-IMPACT.bounceRestitution;e.deathVx*=IMPACT.bounceFriction;e.deathBounces=1}
       else{e.deathVy=e.deathVx=0;e.death=Math.min(e.death,IMPACT.groundFade);e.deathGround=true}
