@@ -401,6 +401,49 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 .screen--lab button { min-height: 40px; padding: 6px 10px; color: var(--cyan); background: #0a2531; border: 1px solid var(--line); font-size: 12px; cursor: pointer; }
 .lab-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
 .lab-buttons button { flex: 1; }
+.lab-weapon-openers { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin-bottom: 8px; }
+.lab-weapon-openers button { min-width: 0; min-height: 44px; overflow-wrap: anywhere; }
+.lab-header button { min-height: 44px; }
+#screenLab { max-height: calc(var(--app-height,100dvh) - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))); }
+/* A separate fixed picker avoids a scrolling list inside the scrolling LAB form. */
+.lab-weapon-picker {
+  position: fixed; z-index: 70; inset: 0; height: var(--app-height,100dvh);
+  display: grid; place-items: center;
+  padding: max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  background: #010710e8; overflow: hidden; overscroll-behavior: contain;
+}
+.lab-weapon-panel {
+  width: min(640px,100%); min-width: 0;
+  height: min(620px,calc(var(--app-height,100dvh) - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))));
+  display: grid; grid-template-rows: auto auto auto auto minmax(0,1fr); gap: 6px;
+  padding: 10px; border: 1px solid var(--cyan); background: #061321;
+  overflow: hidden;
+}
+.lab-weapon-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-width: 0; }
+.lab-weapon-header h2 { font-size: clamp(18px,4vw,24px); margin: 0; }
+.lab-weapon-picker button, .lab-weapon-search input {
+  min-height: 44px; min-width: 0; padding: 7px 9px; border: 1px solid var(--line); border-radius: 0;
+  color: var(--ink); background: #0a2531; font: inherit; font-size: 14px;
+}
+.lab-weapon-picker button { cursor: pointer; touch-action: pan-y; }
+.lab-weapon-picker button:focus-visible, .lab-weapon-search input:focus-visible { outline: 2px solid var(--yellow); outline-offset: -3px; }
+.lab-weapon-slots { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+.lab-weapon-slots button { font-size: 12px; overflow-wrap: anywhere; }
+.lab-weapon-picker button[aria-pressed="true"] { border-color: var(--yellow); color: var(--yellow); background: #23312b; }
+.lab-weapon-search { display: flex; align-items: center; gap: 8px; min-width: 0; margin: 0; font-size: 13px; }
+.lab-weapon-search input { flex: 1; width: 100%; font-size: 16px; touch-action: auto; -webkit-user-select: text; user-select: text; }
+.lab-weapon-count { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+.lab-weapon-list { min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; }
+.lab-weapon-option { display: grid; grid-template-columns: 54px minmax(0,1fr) 44px; align-items: center; gap: 6px; width: 100%; margin: 0 0 4px; text-align: left; }
+.lab-weapon-option span { overflow-wrap: anywhere; }
+.lab-weapon-option strong, .lab-weapon-option small { font-size: 12px; }
+.lab-weapon-option small { text-align: right; }
+.lab-weapon-empty { margin: 12px 4px; color: var(--muted); font-size: 14px; }
+@media (max-height: 420px) {
+  .lab-weapon-panel { padding: 6px; gap: 4px; }
+  .lab-weapon-header h2 { font-size: 18px; }
+  .lab-weapon-slots button { padding: 5px 7px; font-size: 11px; }
+}
 .flight-controls { display: none; }
 [data-flight="true"] .jump-button { display: none; }
 [data-flight="true"] .flight-controls { display: flex; gap: 6px; }

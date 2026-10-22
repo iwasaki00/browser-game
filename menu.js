@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "034",
+      title: "ORBIT MAKER",
+      genre: "Physics / Puzzle",
+      description: "惑星をドラッグして重力場を組み立て、ロケットをゴールへ導く2D軌道パズル。角度と初速を調整し、自分だけのスイングバイ航路を見つけます。",
+      href: "./034_惑星重力ゲーム/index.html",
+      icon: "./034_惑星重力ゲーム/icon.svg",
+      alt: "青い惑星の周囲をロケットが旋回するORBIT MAKERのアイコン",
+      cta: "軌道を設計する",
+      ariaLabel: "ORBIT MAKERを遊ぶ"
+    },
+    {
       number: "033",
       title: "一筆で変わる世界",
       genre: "Simulation / Debug",

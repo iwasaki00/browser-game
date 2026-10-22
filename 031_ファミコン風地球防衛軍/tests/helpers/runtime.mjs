@@ -18,14 +18,14 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
   class Element {
     constructor(id=""){this.id=id;this.dataset={};this.style={setProperty(){}};this.children=[];this.listeners={};this.classes=new Set();this.classList={toggle:(name,on)=>on?this.classes.add(name):this.classes.delete(name)};}
     addEventListener(name,fn){(this.listeners[name]??=[]).push(fn)}
-    setAttribute(){} focus(){} setPointerCapture(){} append(e){this.children.push(e)} replaceChildren(){this.children=[]}
+    setAttribute(name,value){(this.attributes??={})[name]=value} removeAttribute(name){delete (this.attributes??={})[name]} focus(){document.activeElement=this} setPointerCapture(){} append(e){this.children.push(e)} replaceChildren(){this.children=[]}
     getContext(){return context}
     getBoundingClientRect(){return {left:0,top:0,width:320,height:180}}
   }
   const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
   const touchButtons=["left","right","jump","switch","up","down","special","hover"].map(key=>{const e=get(key);e.dataset.touch=key;return e});
   const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Confirm","Lab","Settings"].map(n=>get(`screen${n}`));
-  const document={documentElement:get("html"),body:get("body"),hidden:false,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
+  const document={documentElement:get("html"),body:get("body"),hidden:false,activeElement:null,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:selector==="#labWeaponPicker button, #labWeaponPicker input"?[get("labWeaponPickerClose"),get("labPickerSlot1"),get("labPickerSlot2"),get("labWeaponSearch"),...get("labWeaponList").children.filter(e=>e.type==="button")]:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
   const storage=new Map();if(seed)storage.set(data.SAVE_KEY,JSON.stringify(seed));
   let randomSeed=12345;const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);
   const sandbox={...data,...camera,...invasion,...playground,...impact,...player,...weapons,FrameProfiler,LiveProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
@@ -36,6 +36,7 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
     click(action,mission,playerClass,slot){const target={dataset:{action,mission,playerClass,slot},closest(){return this}};for(const fn of listeners.get("click")||[])fn({target})},
     density(value){for(const fn of listeners.get("change")||[])fn({target:{id:"densitySelect",value}})},
     change(id,value,checked){for(const fn of listeners.get("change")||[])fn({target:{id,value,checked}})},
+    input(id,value){get(id).value=value;for(const fn of get(id).listeners.input||[])fn({target:get(id)})},
     key(event,key){for(const fn of listeners.get(`window:${event}`)||[])fn({key,preventDefault(){}})},
     pointer(id,event,values={}){for(const fn of get(id).listeners[event]||[])fn({preventDefault(){},pointerId:1,clientX:160,clientY:90,buttons:1,...values})},
     flush(){const pending=[...timers.values()];timers.clear();pending.forEach(fn=>fn())}};

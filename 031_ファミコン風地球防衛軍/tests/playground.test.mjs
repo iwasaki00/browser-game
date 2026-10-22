@@ -8,9 +8,9 @@ import {moveFlightPlayer,landLabPlayer} from "../js/playground.js";
 
 const lab=()=>{const r=runtime(null,{debug:true});r.click("test-lab");return r};
 
-test("TEST LAB requires debug=1, starts isolated with paused panel and eight weapon options",()=>{
+test("TEST LAB requires debug=1, starts isolated with paused panel and 20 weapon options",()=>{
   const plain=runtime();plain.click("test-lab");assert.equal(plain.run("game"),null);
-  const r=lab();assert.equal(r.get("testLabButton").hidden,false);assert.equal(r.get("labWeapon1").children.length,20);
+  const r=lab();assert.equal(r.get("testLabButton").hidden,false);r.click("lab-weapons",undefined,undefined,"0");assert.equal(r.get("labWeaponList").children.length,20);r.key("keydown","Escape");
   assert.equal(r.run("state"),"lab");assert.equal(r.run("game.lab.invincible"),true);
   r.run("update(1)");assert.equal(r.run("game.time"),0);assert.equal(r.run("game.director.stopped"),true);
   r.click("lab-close");r.run("game.player.x=4400;update(1/60)");assert.equal(r.run("game.bossStarted"),false);

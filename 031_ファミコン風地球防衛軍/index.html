@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.0">
+  <link rel="stylesheet" href="styles.css?v=0.2.1">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.0</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.1</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -75,8 +75,11 @@
         <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
         <div class="lab-fields">
           <fieldset><legend>ARSENAL / 全20武器</legend>
-            <label>スロット1<select id="labWeapon1"></select></label>
-            <label>スロット2<select id="labWeapon2"></select></label>
+            <div class="lab-weapon-openers" role="group" aria-label="武器を変更するスロット">
+              <button id="labWeaponSlot1" data-action="lab-weapons" data-slot="0" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 1</button>
+              <button id="labWeaponSlot2" data-action="lab-weapons" data-slot="1" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 2</button>
+            </div>
+            <small>枠を押すと、検索・スクロールできる全20武器の一覧を開きます。</small>
             <label>使用スロット<select id="labSlot"><option value="0">1</option><option value="1">2</option></select></label>
             <small>性能は通常と共通。Q / E / SWで切替。</small>
             <button data-action="lab-test">選択武器を1回試射（照準を敵群へ）</button>
@@ -111,6 +114,18 @@
         </div>
         <footer class="lab-buttons"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></footer>
       </section>
+      <section id="labWeaponPicker" class="lab-weapon-picker" role="dialog" aria-modal="true" aria-labelledby="labWeaponPickerTitle" hidden>
+        <div class="lab-weapon-panel">
+          <header class="lab-weapon-header"><h2 id="labWeaponPickerTitle">武器選択</h2><button id="labWeaponPickerClose" type="button">LABへ戻る / Esc</button></header>
+          <div class="lab-weapon-slots" role="group" aria-label="武器を設定するスロット">
+            <button id="labPickerSlot1" type="button" aria-pressed="true">SLOT 1</button>
+            <button id="labPickerSlot2" type="button" aria-pressed="false">SLOT 2</button>
+          </div>
+          <label class="lab-weapon-search" for="labWeaponSearch">検索<input id="labWeaponSearch" type="search" maxlength="80" autocomplete="off" placeholder="ID / 武器名" aria-controls="labWeaponList"></label>
+          <p id="labWeaponCount" class="lab-weapon-count" role="status" aria-live="polite"></p>
+          <div id="labWeaponList" class="lab-weapon-list" role="group" aria-label="全武器一覧・上下にスクロールできます"></div>
+        </div>
+      </section>
       </div>
       <div id="touchControls" class="touch-controls" aria-label="タッチ操作">
         <div class="touch-group touch-group--move">
@@ -130,6 +145,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.0"></script>
+  <script type="module" src="js/game.js?v=0.2.1"></script>
 </body>
 </html>
