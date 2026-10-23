@@ -12,8 +12,8 @@ export function clientToScreen(point,rect){
   return {x:(point.x-rect.left)*VIEW.canvasWidth/rect.width,y:(point.y-rect.top)*VIEW.canvasHeight/rect.height};
 }
 
-export function followCamera(playerX,zoom,direction=1){
-  return clamp(playerX-(VIEW.canvasWidth/2-direction*BATTLE_CAMERA.lookAhead)/zoom,0,Math.max(0,WORLD.width-visibleWorldWidth(zoom)));
+export function followCamera(playerX,zoom,direction=1,world=WORLD){
+  return clamp(playerX-(VIEW.canvasWidth/2-direction*BATTLE_CAMERA.lookAhead)/zoom,0,Math.max(0,world.width-visibleWorldWidth(zoom)));
 }
 
 export function viewBounds(camera,zoom){
@@ -32,7 +32,7 @@ export const damp = (current,target,rate,dt) => target+(current-target)*Math.exp
 export function createBattleCamera(player){
   const bands=Math.ceil(BATTLE_CAMERA.evaluationDistance/BATTLE_CAMERA.bandWidth)*2;
   return {
-    x:followCamera(player.x,BATTLE_CAMERA.idleZoom,player.face||1),zoom:BATTLE_CAMERA.idleZoom,
+    x:followCamera(player.x,BATTLE_CAMERA.idleZoom,player.face||1,player.world??WORLD),zoom:BATTLE_CAMERA.idleZoom,
     targetZoom:BATTLE_CAMERA.idleZoom,candidateZoom:BATTLE_CAMERA.idleZoom,
     rawZoom:BATTLE_CAMERA.idleZoom,mode:"idle",candidateMode:"idle",focusX:player.x,
     direction:player.face||1,lookAhead:(player.face||1)*BATTLE_CAMERA.lookAhead,frameLeft:player.x-12,frameRight:player.x+12,

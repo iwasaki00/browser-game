@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.3.0</div>
+      <div class="version">v0.4.0</div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -38,6 +38,7 @@
     </section>
 
     <section class="controls" aria-label="発射設定">
+      <div class="game-mode"><label>MODE <select id="gameMode" aria-label="ゲームモード"><option value="design">軌道設計</option><option value="live">重力操作</option></select></label><small id="gameModeHelp"></small></div>
       <div class="preview-options"><button id="previewToggle" type="button" aria-pressed="true">予測 ON</button><button id="gravityToggle" type="button" aria-pressed="false">重力目安 OFF</button><small>青：弱 ／ 黄：中 ／ 赤：強</small></div>
       <div class="planet-editor">
         <div class="planet-toolbar"><output id="planetSelection" aria-live="polite"></output><button id="addPlanet" type="button">＋ 追加</button><button id="deletePlanet" type="button">削除</button></div>

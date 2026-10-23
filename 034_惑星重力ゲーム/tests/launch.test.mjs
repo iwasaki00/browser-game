@@ -74,7 +74,9 @@ test('入力イベント: 精密発射、リセット、キャンセル、マル
   launch.emit('click');assert.equal(launch.disabled,true);
   assert.equal(el('#addPlanet').disabled,true);
   el('#resetButton').emit('click');assert.equal(launch.disabled,false);
-  assert.match(el('#planetSelection').textContent,/1 \/ 1/);
+  assert.match(el('#planetSelection').textContent,/1 \/ 2/);
+  el('#gameMode').value='live';el('#gameMode').emit('change');
+  assert.match(el('#gameModeHelp').textContent,/重力操作/);
   buttons[1].emit('click');assert.equal(launch.hidden,true);
   const down=(x,y,id=1)=>{const e={clientX:x,clientY:y,pointerId:id};window.emit('pointerdown',e);canvas.emit('pointerdown',e);};
   const up=(x,y,id=1)=>{const e={clientX:x,clientY:y,pointerId:id};canvas.emit('pointerup',e);window.emit('pointerup',e);};
@@ -83,5 +85,7 @@ test('入力イベント: 精密発射、リセット、キャンセル、マル
   down(48,430);down(60,440,2);up(0,490);up(60,440,2);assert.equal(launch.disabled,false);
   down(196,282);up(200,280);assert.equal(launch.disabled,false);
   down(48,430);up(0,490);assert.equal(launch.disabled,true);
+  assert.equal(el('#gameMode').disabled,true);
+  assert.equal(el('#planetType').disabled,true);
   el('#resetButton').emit('click');down(48,430);up(0,490);assert.equal(launch.disabled,true);
 });

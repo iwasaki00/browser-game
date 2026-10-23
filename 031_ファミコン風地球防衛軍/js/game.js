@@ -168,7 +168,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="lab-blast"){labBlast();return}
   if(action==="lab-test"){labTestShot();return}
   if(action==="lab-clear"){if(game?.lab)clearLabEnemies();return}
-  if(action==="lab-reset"){if(game?.lab)startLab();return}
+  if(action==="lab-reset"){if(game?.lab)startLab(true,game.lab.terrain);return}
   if(action==="lab-exit"){if(game?.lab){discardMission();show("title")}return}
   if(action==="start"||action==="continue")show("mission");
   if(action==="howto")show("howto");if(action==="close-howto"){resetInput();show("title")}
@@ -178,7 +178,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="mission-select"){discardMission();show("mission")}
   if(action==="back-mission")show("mission");
   if(action==="deploy"){if(selected.length!==2||selected.some(id=>!save.unlocked.includes(id))){equipMessage.textContent="解放済みの武器を2つ選んでください";return}save.equipped=[...selected];storeSave();startMission()}
-  if(action==="resume")resume();if(action==="retry"){if(game?.lab)startLab();else startMission()}
+  if(action==="resume")resume();if(action==="retry"){if(game?.lab)startLab(true,game.lab.terrain);else startMission()}
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound)tone(700,.06)});
 document.addEventListener("change",e=>{
@@ -222,7 +222,7 @@ function spawnEnemy(type,x,y=null){
   if(game.liveEnemies>=game.enemyLimit)return null;
   if(game.bossStarted&&!['boss','queen'].includes(type)&&game.liveMobs>=INVASION.bossMinions[game.density])return null;
   if(game.missionId==='M02'){const pos=validEnemyPosition(game,type,x,y);x=pos.x;y=pos.y}
-  const t=ENEMY_TYPES[type],uid=game.nextEnemyId++,v=variation(uid),baseY=y??(type==="needle"?45+v*40:type==="spider"?34:WORLD.ground-t.h);
+  const t=ENEMY_TYPES[type],uid=game.nextEnemyId++,v=variation(uid),baseY=y??(type==="needle"?45+v*40:type==="spider"||type==='spitter'?34:WORLD.ground-t.h);
   if(game.missionId==='M02'&&['worm','crawler'].includes(type))for(const pl of game.platforms)if(pl.active!==false&&x+t.w/2>pl.x&&x-t.w/2<pl.x+pl.w&&baseY+t.h>pl.y&&baseY<pl.y+(pl.h??8))x=clamp(pl.x+pl.w+t.w/2+1,24,game.world.width-24);
   const e={uid,type,x,y:baseY,baseY,w:t.w,h:t.h,hp:t.hp,maxHp:t.hp,dead:false,death:0,phase:"move",timer:v,anim:v*8,attackFlash:0,face:-1,
     speedScale:isMob({type})?1+(v*2-1)*INVASION.speedVariation:1,shotCd:.7+v*1.6,vx:0,vy:0,separateX:0,separateY:0,thinkTime:0,diveCd:v*INVASION.diveCooldown,diveTimer:0,diveOffset:0,active:true};
@@ -251,8 +251,11 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player;
   if(formalClass()){const grounded=p.onGround;moveClassPlayer(p,input,g.platforms,dt);if(grounded&&!p.onGround&&p.vy<0&&p.classId!=="WING")tone(330,.06)}
   else if(g.lab?.preset==="FLIGHT")moveFlightPlayer(p,input,g.platforms,dt);else{
   const preset=g.lab?PLAYER_PRESETS[g.lab.preset]:PLAYER_PRESETS.STANDARD;
-  const move=(input.right?1:0)-(input.left?1:0);p.vx=move*preset.speed;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-preset.jump;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
+  const move=(input.right?1:0)-(input.left?1:0);p.vx=move*preset.speed;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-preset.jump;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);
+  if(g.missionId==='M02')movePlayerBody(p,g.platforms,dt,true);else{
+  p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
   let floor=WORLD.ground-32;for(const pl of g.platforms){if(p.x+7>pl.x&&p.x-7<pl.x+pl.w&&p.y+32<=pl.y+8&&p.y+32+p.vy*dt>=pl.y)floor=Math.min(floor,pl.y-32)}if(p.y>=floor){p.y=floor;p.vy=0;p.onGround=true}else p.onGround=false;
+  }
   }
   if(!g.lab){if(g.missionId==='M01'&&g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=g.missionId==='M02'?clamp(p.x,M02.bossX,5560):clamp(p.x,4100,4760)}
   if(g.lab?.cameraMode==="FIXED")fixedLabCamera(g.battleCamera,p,g.lab.fixedZoom);else updateBattleCamera(g.battleCamera,p,g.enemies,g,dt);syncCameraView();p.anim+=dt*(Math.abs(p.vx)>0?10:4);
@@ -289,7 +292,10 @@ function explode(s){
   pushEffect({x:s.x,y:s.y,kind:"explosion",life:.45,max:.45,r:s.radius});
   const candidates=game.grid.query(s.x-s.radius-48,s.y-s.radius-32,s.x+s.radius+48,s.y+s.radius+32,game.blastCandidates);
   const source={type:s.type??s.weapon?.type??"rocket",effectType:s.effectType,assetIndex:s.assetIndex,radial:true,x:s.x,y:s.y,radius:s.radius};
-  for(let i=0;i<candidates.length;i++){const e=candidates[i];if(!e.dead&&Math.hypot(s.x-e.x,s.y-e.y-e.h/2)<s.radius){damageEnemy(e,s.damage,source);if(e.dead)s.onKill?.(e)}}
+  for(let i=0;i<candidates.length;i++){const e=candidates[i];
+    const distance=game.missionId==='M02'?Math.hypot(s.x-clamp(s.x,e.x-e.w/2,e.x+e.w/2),s.y-clamp(s.y,e.y,e.y+e.h)):Math.hypot(s.x-e.x,s.y-e.y-e.h/2);
+    if(!e.dead&&distance<s.radius){damageEnemy(e,s.damage,source);if(e.dead)s.onKill?.(e)}
+  }
   if(s.assetIndex>=8)pushEffect({x:s.x,y:s.y,kind:"weaponBurst",assetIndex:s.assetIndex,life:.35,max:.35,r:s.radius});
   impactShake(game);tone(65,.18,"sawtooth",.04);
 }
@@ -611,7 +617,7 @@ function labBlast(){
 }
 function spawnLabEnemies(){
   if(!game?.lab)return;
-  if(game.lab.enemy==='queen'&&game.lab.terrain!=='M02')changeLabSetting({id:'labTerrain',value:'M02'});
+  if(['nest','queen'].includes(game.lab.enemy)&&game.lab.terrain!=='M02')changeLabSetting({id:'labTerrain',value:'M02'});
   const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
   if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);

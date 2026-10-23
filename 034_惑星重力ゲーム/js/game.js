@@ -1,6 +1,7 @@
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation, gravitationalAcceleration } from "./physics.js";
 import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './preview.js';
 import { getStage } from "./stages.js";
+import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
 import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS } from './planets.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
@@ -39,6 +40,10 @@ const pointers = new Set();
 let storage;
 try { storage = window.localStorage; } catch { /* Storage is optional. */ }
 let launchMode = loadLaunchMode(storage);
+let gameMode = loadGameMode(storage);
+let launchSnapshot = null;
+let moveTargets = {};
+const gameModeInput = document.querySelector('#gameMode');
 const preview = new PreviewController(loadPreviewEnabled(storage));
 const previewButton = document.querySelector('#previewToggle');
 const gravityButton = document.querySelector('#gravityToggle');
@@ -123,7 +128,7 @@ function drawGoal(time) {
 }
 
 function drawPlanet(planet) {
-  if (planet.id === selectedPlanetId && mode === 'editing') {
+  if (planet.id === selectedPlanetId && (mode === 'editing' || gameMode === 'live')) {
     ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius+7, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
@@ -213,6 +218,12 @@ function draw(time) {
   drawGoal(time);
   drawTrail();
   for (const planet of stage.planets) drawPlanet(planet);
+  if (mode === 'flying' && gameMode === 'live') for(const planet of stage.planets) {
+    const target=moveTargets[planet.id];if(!target)continue;
+    ctx.strokeStyle='#ffdb80';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(planet.x,planet.y);ctx.lineTo(target.x,target.y);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(target.x,target.y,6,0,Math.PI*2);ctx.stroke();
+  }
   const rocket = simulation?.rocket ?? {
     position: stage.launch.position,
     velocity: { x: 0, y: 0 },
@@ -281,11 +292,16 @@ function setEditingControls(enabled) {
   editHint.hidden = !enabled;
   modeButtons.forEach(button => { button.disabled = !enabled; });
   updatePlanetEditor();
+  gameModeInput.disabled = !enabled;
+  previewButton.disabled = !enabled;
+  updateGameMode();
 }
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
   if (mode !== "editing") return;
   cancelGesture();
+  launchSnapshot = structuredClone(stage);
+  moveTargets = {};
   simulation = createSimulation(stage, { velocity });
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
@@ -312,6 +328,8 @@ function showResult(status) {
 }
 
 function retry() {
+  if (gameMode === 'live' && launchSnapshot) stage = structuredClone(launchSnapshot);
+  moveTargets = {};
   preview.clear();
   cancelGesture();
   simulation = null;
@@ -323,7 +341,7 @@ function retry() {
 }
 
 function reset() {
-  stage = getStage(initialStage.id);
+  stage = launchSnapshot ? structuredClone(launchSnapshot) : getStage(initialStage.id);
   selectedPlanetId = stage.planets[0]?.id;
   angleInput.value = String(stage.launch.angleDeg);
   speedInput.value = String(stage.launch.speed);
@@ -343,7 +361,8 @@ function tick(time) {
     accumulator += frameSeconds;
     const dt = DEFAULT_PHYSICS.fixedTimeStep;
     while (accumulator >= dt && simulation.status === "flying") {
-      simulation = stepSimulation(simulation, dt, DEFAULT_PHYSICS);
+      simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
       accumulator -= dt;
       physicsStepCount += 1;
       if (physicsStepCount % 3 === 0) trail.push({ ...simulation.rocket.position });
@@ -360,6 +379,7 @@ function tick(time) {
 
 function cancelGesture() {
   const previous = gesture;
+  if(previous?.type === 'planet') delete moveTargets[previous.id];
   gesture = null;
   aim = null;
   if (previous && canvas.hasPointerCapture(previous.pointerId)) canvas.releasePointerCapture(previous.pointerId);
@@ -381,9 +401,9 @@ window.addEventListener('pointerdown', event => {
   if (pointers.size > 1) cancelGesture();
 }, true);
 canvas.addEventListener("pointerdown", (event) => {
-  if (mode !== "editing" || pointers.size !== 1 || event.button !== 0) return;
+  if ((mode !== 'editing' && !(mode === 'flying' && gameMode === 'live')) || pointers.size !== 1 || event.button !== 0) return;
   const point = worldPoint(event);
-  const target = classifyDragTarget(point, stage.launch.position, stage.planets, launchMode);
+  const target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode);
   if (!target) return;
   if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
   gesture = { ...target, pointerId: event.pointerId, point };
@@ -393,13 +413,14 @@ canvas.addEventListener("pointerdown", (event) => {
 });
 
 canvas.addEventListener("pointermove", (event) => {
-  if (!gesture || gesture.pointerId !== event.pointerId || mode !== "editing") return;
+  if (!gesture || gesture.pointerId !== event.pointerId || (mode !== 'editing' && !(mode === 'flying' && gameMode === 'live'))) return;
   const point = worldPoint(event);
   gesture.point = point;
   if (gesture.type === 'rocket') {
     aim = slingshotLaunch(stage.launch.position, point);
   } else {
     const planet = stage.planets.find(item => item.id === gesture.id);
+    if(mode === 'flying') { moveTargets[planet.id] = point; event.preventDefault(); return; }
     const candidate = { ...planet, x: Math.max(planet.radius, Math.min(stage.world.width-planet.radius,point.x)), y: Math.max(planet.radius, Math.min(stage.world.height-planet.radius,point.y)) };
     if (placementAllowed(candidate, stage)) Object.assign(planet, candidate);
   }
@@ -483,6 +504,15 @@ gravityButton.addEventListener('click',()=>{
   gravityButton.setAttribute('aria-pressed',String(showGravity));
 });
 updatePreviewButton();
+function updateGameMode() {
+  gameModeInput.value=gameMode;
+  document.querySelector('#gameModeHelp').textContent=gameMode==='live'?'重力操作：発射後も惑星をドラッグして誘導':'軌道設計：発射後は惑星固定';
+}
+gameModeInput.addEventListener('change',()=>{
+  if(mode!=='editing')return;
+  cancelGesture();gameMode=saveGameMode(storage,gameModeInput.value);updateGameMode();
+});
+updateGameMode();
 updatePlanetEditor();
 updateOutputs();
 updateMode();

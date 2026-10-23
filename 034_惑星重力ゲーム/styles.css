@@ -74,6 +74,10 @@ canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%
 .result.success p { color: #73f5b4; }
 
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 12px; padding: 1px 2px 0; }
+.game-mode { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 10px; }
+.game-mode label { white-space: nowrap; color: #8adfff; }
+.game-mode select { min-height: 30px; background: #123044; color: #dbf6ff; border: 1px solid #39556a; border-radius: 6px; }
+.game-mode small { color: #9bb8cc; font-size: 9px; }
 .preview-options { grid-column: 1 / -1; display: flex; gap: 5px; align-items: center; }
 .preview-options button { min-height: 30px; border: 1px solid #31506a; border-radius: 6px; background: #0c2032; color: #bfefff; font-size: 10px; }
 .preview-options small { margin-left: auto; color: #849db4; font-size: 8px; }

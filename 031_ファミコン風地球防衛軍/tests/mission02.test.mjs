@@ -91,6 +91,20 @@ test('B02 all four attack patterns, low HP charge, weak core and boss camera are
   assert.equal(queenDamage(q,10,{x:core.x,y:core.y}),15);assert.equal(queenDamage(q,10,{x:100,y:55}),10);q.timer=3;assert.equal(queenDamage(q,10,{x:core.x,y:core.y}),10);
 });
 
+test('plasma blast on the large boss shell deals damage once; projectile rays can hit the visible weak core',()=>{
+  const r=mission({unlocked:['A-01','S-02','P-13','L-03'],equipped:['P-13','L-03']});
+  r.run("game.player.x=5100;startBoss();const q=game.enemies[0];q.timer=0;input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot();for(let n=0;n<100&&!game.arsenal.stats.blasts;n++){game.time+=1/60;game.grid.rebuild(game.enemies);updateExpanded(game,1/60,weaponAPI)}");
+  assert.equal(r.run('game.arsenal.stats.blasts'),1);assert.equal(r.run('q.hp'),2335);
+  r.run('game.player.weaponSlot=1;game.player.shotCd=0;shoot();for(let n=0;n<30;n++){game.grid.rebuild(game.enemies);updateShots(1/60)}');
+  assert.equal(r.run('q.hp'),2327.5);
+});
+
+test('M02 LAB legacy presets use 5600px bounds and solid ceiling, not M01 movement limits',()=>{
+  const r=runtime(seed(),{debug:true});r.click('test-lab');r.change('labTerrain','M02');r.change('labEnemy','queen');r.click('lab-spawn');r.click('lab-close');
+  r.run('input.right=true;update(.1)');assert.ok(r.run('game.player.x')>4780);
+  r.click('lab-open');r.change('labPreset','FLIGHT');r.click('lab-close');r.run('game.player.x=1100;game.player.y=60;input.right=false;input.up=true;update(.5)');assert.equal(r.run('game.player.y'),44);
+});
+
 test('boss death produces staged effects then one saved M02 reward, stats and COMING SOON M03',()=>{
   const r=mission();r.run("game.time=360;game.player.x=4800;startBoss();const initial=save.unlocked.length;damageEnemy(game.enemies[0],99999,{type:'rocket',vx:1,vy:0})");
   r.flush();r.flush();assert.equal(r.run('state'),'result');assert.equal(r.run('save.unlocked.length'),r.run('initial+1'));
@@ -127,4 +141,23 @@ test('new assets and frame metadata match runtime dimensions',()=>{
   const metadata=JSON.parse(readFileSync(new URL('../assets/underground.json',import.meta.url),'utf8'));
   assert.equal(metadata.version,'0.2.2');assert.ok(Object.keys(metadata.assets).length>=10);
   for(const name of ['backgrounds/underground.png','sprites/enemies/tunnel_worm.png','sprites/bosses/abyss_queen.png'])assert.ok(readFileSync(new URL('../assets/'+name,import.meta.url)).length>64);
+});
+
+test('complete M02 engine run from x64 through all five areas to boss death and saved result, without warps',t=>{
+  const r=mission({unlocked:['A-01','S-02','L-03'],equipped:['L-03','S-02']});
+  // Damage immunity is the sole QA aid; physics, director, HP of enemies, weapon
+  // tuning, terrain collisions, boss phases and reward/save code remain real.
+  r.run("game.player.invuln=999;const visited=new Set();input.fire=true;input.jump=true");
+  for(let batch=0;batch<36&&r.run('state')!=='result';batch++){
+    r.run(`for(let n=0;n<600&&state==='play';n++){
+      visited.add(game.area);const p=game.player,q=game.enemies.find(e=>e.type==='queen'&&!e.dead);
+      input.right=q?q.x-p.x>175:true;input.left=q?p.x-q.x>175:false;
+      const target=q??game.enemies.filter(e=>!e.dead&&e.active!==false&&Math.abs(e.x-p.x)<300).reduce((best,e)=>!best||Math.abs(e.x-p.x)<Math.abs(best.x-p.x)?e:best,null);
+      const point=target?(target.type==='queen'?weakCore(target):{x:target.x,y:target.y+target.h/2}):{x:p.x+200,y:p.y+13};
+      const dx=point.x-p.x,dy=point.y-p.y-13,length=Math.hypot(dx,dy)||1;input.aimMode='touch';input.touchDx=dx/length;input.touchDy=dy/length;update(1/60);
+    }`);r.flush();
+  }
+  r.flush();assert.equal(r.run('state'),'result',JSON.stringify(r.json('({x:game.player.x,time:game.time,boss:game.bossStarted,hp:game.enemies.find(e=>e.type===\'queen\')?.hp})')));
+  assert.deepEqual(r.json('[...visited]'),[0,1,2,3,4]);assert.ok(r.run("save.clearedMissions.includes('M02')"));
+  t.diagnostic(`simulated clear ${r.run('game.time').toFixed(2)}s / ${r.run('game.kills')} kills / saved result`);
 });
