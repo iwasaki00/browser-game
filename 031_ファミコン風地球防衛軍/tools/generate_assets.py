@@ -572,12 +572,19 @@ def main():
     parser.add_argument("--weapons-only", action="store_true", help="Generate only weapon atlases")
     parser.add_argument("--underground-only", action="store_true", help="Generate only M02 assets and metadata")
     parser.add_argument("--art-study-only", action="store_true", help="Generate isolated art-direction samples; never overwrite production PNGs")
+    parser.add_argument("--art-in-game-only", action="store_true", help="Generate only the two gun-free Study 01 companion sprites")
     args=parser.parse_args()
     if args.art_study_only:
-        if args.classes_only or args.weapons_only or args.underground_only:
+        if args.classes_only or args.weapons_only or args.underground_only or args.art_in_game_only:
             parser.error("--art-study-only cannot be combined with production generation flags")
         from art_direction_samples import generate
         generate(ROOT)
+        return
+    if args.art_in_game_only:
+        if args.classes_only or args.weapons_only or args.underground_only:
+            parser.error("--art-in-game-only cannot be combined with production generation flags")
+        from art_direction_samples import generate_in_game
+        generate_in_game(ROOT)
         return
     if args.classes_only:
         class_sheet()

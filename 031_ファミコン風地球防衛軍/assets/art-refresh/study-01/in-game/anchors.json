@@ -1,0 +1,61 @@
+{
+  "study": "0.2.3-A",
+  "purpose": "gun-free body companions; no original PNG overwritten",
+  "seed": 24032023,
+  "assets": {
+    "ranger_body.png": {
+      "size": [
+        96,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "frames": 2,
+      "sha256": "c071d95830afdfb05f921a9fc70f0772e8e1271a5a5884a555161f2fb7953f7f"
+    },
+    "wing_body.png": {
+      "size": [
+        96,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "frames": 2,
+      "sha256": "82d4f477781981dfb9b62fd05ea46c616831c82255e30eb22c1206e06356f360"
+    }
+  },
+  "muzzleSource": {
+    "A-01": [
+      30,
+      14
+    ],
+    "R-04": [
+      28,
+      15
+    ],
+    "H-08": [
+      27,
+      14
+    ],
+    "T-06": [
+      29,
+      16
+    ],
+    "D-19": [
+      30,
+      11
+    ]
+  }
+}

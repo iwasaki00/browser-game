@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.3">
+  <link rel="stylesheet" href="styles.css?v=0.2.3-A">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.3</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.3-A</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -54,7 +54,13 @@
         <button class="menu-button menu-button--primary" data-action="close-howto">了解</button>
         <p class="class-help">SCOUT：C / DASHで短距離ダッシュ（無敵なし）<br>WING：W / ↑ / FLY長押しで上昇、離すと緩やかに下降<br>Space / HOLDでホバー、S / ↓で下降。着地で飛行EN回復</p>
       </div>
-      <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="settings">設定</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="settings">設定</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button>
+        <fieldset id="pauseArtControls" class="art-controls" hidden><legend>ART PREVIEW / 一時停止中・NO SAVE</legend>
+          <label>ART STYLE<select id="pauseArtStyle"><option value="ORIGINAL">ORIGINAL</option><option value="STUDY_01">STUDY 01</option></select></label>
+          <label>RENDER RESOLUTION<select id="pauseRenderScale"><option value="1">320×180</option><option value="2">640×360 / EXPERIMENTAL</option></select></label>
+          <output id="pauseArtStatus" role="status"></output><button data-action="art-compare">同じ場面で比較</button><button data-action="art-lab">LABへ戻る</button>
+        </fieldset>
+      </div>
       <section id="screenSettings" class="screen screen--lab screen--settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
         <header class="lab-header"><div><h2 id="settingsTitle">設定</h2><small>通常ゲームの設定 · 自動保存</small></div><button data-action="settings-close">設定を閉じる</button></header>
         <div class="lab-fields"><fieldset><legend>DESTRUCTION LEVEL</legend>
@@ -74,6 +80,13 @@
       <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
         <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
         <div class="lab-fields">
+          <fieldset class="art-controls"><legend>ART PREVIEW IN-GAME / 仮適用</legend>
+            <label>ART STYLE<select id="labArtStyle"><option value="ORIGINAL">ORIGINAL</option><option value="STUDY_01">STUDY 01</option></select></label>
+            <label>RENDER RESOLUTION<select id="labRenderScale"><option value="1">ORIGINAL 320×180</option><option value="2">EXPERIMENTAL 640×360</option></select></label>
+            <output id="labArtStatus" role="status">ORIGINAL / 320×180 / NO SAVE</output>
+            <button data-action="art-compare">同じ場面で比較（一時停止）</button>
+            <small>Study 01のゲーム内試用版。未制作の兵科・敵・武器・アニメーションは旧表示。HP・位置・戦闘・通常セーブを変えません。640描画はLAB限定の実験です。</small>
+          </fieldset>
           <fieldset class="lab-stage-select"><legend>STAGE SELECT / NO SAVE</legend>
             <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option></select></label>
             <label>エリア<select id="labStageArea"></select></label>
@@ -162,6 +175,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.3"></script>
+  <script type="module" src="js/game.js?v=0.2.3-A"></script>
 </body>
 </html>

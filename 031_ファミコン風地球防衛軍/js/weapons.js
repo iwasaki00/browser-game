@@ -185,13 +185,13 @@ export function updateExpanded(g,dt,api){
   let write=0;for(const s of g.shots)if(!s.dead)g.shots[write++]=s;g.shots.length=write;flushShots(g);
 }
 
-export function drawExpanded(ctx,g,images,bounds){
+export function drawExpanded(ctx,g,images,bounds,art=null){
   let trails=0;
   for(const s of g.shots){if(!s.expanded||s.x<bounds.left-32||s.x>bounds.right+32)continue;
     if(trails++<WEAPON_LIMITS.trailDraws){ctx.strokeStyle=s.weapon.color;ctx.lineWidth=s.weapon.type==="plasma"?4:1;ctx.beginPath();ctx.moveTo(s.oldX,s.oldY);ctx.lineTo(s.x,s.y);ctx.stroke()}
     const size=s.weapon.type==="plasma"?24:s.weapon.type==="wideflame"?14:16;
-    ctx.save();ctx.translate(Math.round(s.x),Math.round(s.y));ctx.rotate(Math.atan2(s.vy,s.vx));ctx.drawImage(images.shots,s.assetIndex*16,0,16,16,-size/2,-size/2,size,size);ctx.restore();
+    ctx.save();ctx.translate(Math.round(s.x),Math.round(s.y));ctx.rotate(Math.atan2(s.vy,s.vx));if(!art?.projectile(ctx,s,-size/2,-size/2,size))ctx.drawImage(images.shots,s.assetIndex*16,0,16,16,-size/2,-size/2,size,size);ctx.restore();
   }
-  for(const i of g.arsenal.installations){if(i.x<bounds.left-32||i.x>bounds.right+32)continue;ctx.drawImage(images.weapons,i.weapon.assetIndex*32,0,32,32,Math.round(i.x)-12,i.y-24,24,24)}
+  for(const i of g.arsenal.installations){if(i.x<bounds.left-32||i.x>bounds.right+32)continue;if(!art?.installation(ctx,i))ctx.drawImage(images.weapons,i.weapon.assetIndex*32,0,32,32,Math.round(i.x)-12,i.y-24,24,24)}
   for(const j of g.arsenal.jobs)if(j.kind==="storm"&&j.x>=bounds.left-100&&j.x<=bounds.right+100){ctx.drawImage(images.weaponFx,4*32,(j.weapon.assetIndex-8)*32,32,32,j.x-32,j.y-64,64,32)}
 }

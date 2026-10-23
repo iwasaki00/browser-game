@@ -41,7 +41,7 @@ def oval(d, bounds, color):
     d.ellipse(tuple(int(v) for v in bounds), fill=P.get(color, color))
 
 
-def ranger(pose=0):
+def ranger(pose=0, draw_weapon=True):
     im = rgba((48, 64)); d = ImageDraw.Draw(im)
     # Field pack and antenna: deliberately separate from the helmet silhouette.
     poly(d, [(8, 25), (14, 22), (20, 27), (19, 45), (8, 44), (6, 37)], "ink")
@@ -82,14 +82,15 @@ def ranger(pose=0):
     box(d, (29, 15, 34, 16), "teal1"); box(d, (17, 17, 20, 21), "deep")
     box(d, (20, 22, 30, 23), "mid"); box(d, (14, 17, 17, 21), "steel")
     # Rifle remains inside the original 24x32 logical envelope.
-    poly(d, [(29, 28), (44, 28), (44, 30), (46, 30), (46, 33), (36, 34), (34, 38), (30, 37), (31, 33), (26, 33)], "ink")
-    box(d, (30, 29, 42, 31), "mid"); box(d, (37, 29, 45, 30), "edge")
-    box(d, (34, 27, 39, 28), "deep"); box(d, (35, 27, 38, 27), "teal")
-    box(d, (33, 33, 35, 36), "olive"); box(d, (44, 31, 45, 31), "deep")
+    if draw_weapon:
+        poly(d, [(29, 28), (44, 28), (44, 30), (46, 30), (46, 33), (36, 34), (34, 38), (30, 37), (31, 33), (26, 33)], "ink")
+        box(d, (30, 29, 42, 31), "mid"); box(d, (37, 29, 45, 30), "edge")
+        box(d, (34, 27, 39, 28), "deep"); box(d, (35, 27, 38, 27), "teal")
+        box(d, (33, 33, 35, 36), "olive"); box(d, (44, 31, 45, 31), "deep")
     return im
 
 
-def wing(pose=0):
+def wing(pose=0, draw_weapon=True):
     im = rgba((48, 64)); d = ImageDraw.Draw(im)
     # Broad swept propulsion fins, not a recolored Ranger backpack.
     poly(d, [(17, 26), (3, 4), (1, 6), (3, 34), (14, 46), (22, 38)], "ink")
@@ -117,8 +118,9 @@ def wing(pose=0):
     box(d, (35, 16, 38, 17), "teal1"); box(d, (26, 24, 33, 24), "mid")
     poly(d, [(30, 29), (35, 30), (38, 34), (43, 34), (43, 38), (35, 39), (31, 35)], "ink")
     line(d, [(32, 30), (36, 35), (41, 35)], "edge", 3)
-    box(d, (35, 29, 46, 33), "ink"); box(d, (36, 30, 45, 31), "mid")
-    box(d, (43, 30, 45, 30), "light")
+    if draw_weapon:
+        box(d, (35, 29, 46, 33), "ink"); box(d, (36, 30, 45, 31), "mid")
+        box(d, (43, 30, 45, 30), "light")
     # Compact, hard-edged exhaust; this is not a large translucent glow.
     box(d, (12, 38, 18, 45), "ink"); box(d, (13, 39, 16, 43), "mid")
     poly(d, [(13, 45), (17, 45), (16, 57 if pose else 52), (13, 49)], "teal0")
@@ -604,6 +606,19 @@ def generate(root):
     metadata={"study":"ART DIRECTION REFRESH / STUDY 01","status":"PROPOSAL_NOT_INTEGRATED","gameVersion":"0.2.3","seed":SEED,"sampling":"nearest","worldSourceScale":2,"palette":P,"weaponOrder":WEAPONS,"assets":records,"notes":["Production PNGs are read-only comparison inputs.","World sizes and hitboxes are not changed.","640 canvas is preview-only, not a game change.","Two poses are look studies, not completed animation sets."]}
     (output/"manifest.json").write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(f"Study complete: {len(records)} PNG. Production assets untouched.")
+
+
+def generate_in_game(root):
+    """Minimal companions only: retain hands but remove the baked sample gun."""
+    output=Path(root)/"assets/art-refresh/study-01/in-game"
+    output.mkdir(parents=True,exist_ok=True)
+    records={}
+    for name,fn in (("ranger",ranger),("wing",wing)):
+        im=atlas([fn(0,draw_weapon=False),fn(1,draw_weapon=False)])
+        target=output/f"{name}_body.png";im.save(target,optimize=True)
+        records[target.name]={"size":list(im.size),"cell":[48,64],"logicalCell":[24,32],"frames":2,"sha256":hashlib.sha256(target.read_bytes()).hexdigest()}
+    (output/"anchors.json").write_text(json.dumps({"study":"0.2.3-A","purpose":"gun-free body companions; no original PNG overwritten","seed":SEED,"assets":records,"muzzleSource":{"A-01":[30,14],"R-04":[28,15],"H-08":[27,14],"T-06":[29,16],"D-19":[30,11]}},indent=2)+"\n",encoding="utf-8")
+    print("Study in-game companions: 2 PNG + anchors.json; original Study 01 untouched.")
 
 
 if __name__=="__main__":

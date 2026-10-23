@@ -1,5 +1,6 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3";
-import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.2";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-A";
+import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-A";
+import {ArtPreview,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning} from "./art-preview.js?v=0.2.3-A";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=0.2.2";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.2.2";
@@ -26,6 +27,8 @@ const weaponAPI={damage:damageEnemy,blast:explode,effect:pushEffect};
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
 const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
+const artPreview=DEBUG?new ArtPreview():null;
+let previewRenderScale=1,artComparison=false;
 const profiler=DEBUG?new FrameProfiler():null;
 const liveProfiler=DEBUG?new LiveProfiler():null;
 const view={mode:"landscape",zoom:BATTLE_CAMERA.idleZoom,width:VIEW.canvasWidth/BATTLE_CAMERA.idleZoom,renderOffset:0};
@@ -63,7 +66,7 @@ function storeSave(){if(game?.lab)return;try{localStorage.setItem(SAVE_KEY,JSON.
 // Keep the original storage key so v1 records migrate in place.
 storeSave();
 function loadAssets(){return Promise.all(Object.entries(imageFiles).map(([key,src])=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{images[key]=im;resolve()};im.onerror=reject;im.src=src}))).then(()=>assetsReady=true)}
-function show(name){if(name!=="lab")closeLabWeaponPicker(false);if(name==="mission")renderMissionList();screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play"||name==="lab");touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?game?.lab?"TEST LABを進行中":`ゲーム画面。${game.missionId} 市街地防衛線を進行中`:`${name}画面`);syncLabUI()}
+function show(name){if(name!=='pause')artComparison=false;document.querySelector('#screenPause').classList.toggle('is-art-comparison',artComparison);if(name!=="lab")closeLabWeaponPicker(false);if(name==="mission")renderMissionList();screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play"||name==="lab"||artComparison);touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?game?.lab?"TEST LABを進行中":`ゲーム画面。${game.missionId} 市街地防衛線を進行中`:`${name}画面`);syncLabUI()}
 function scheduleMission(callback,delay){const current=game;const timer=setTimeout(()=>{missionTimers.delete(timer);if(game!==current)return;if(state==="confirm")deferredMissionCallbacks.push({current,callback});else callback()},delay);missionTimers.add(timer)}
 function missionScreen(name){if(state==="confirm")returnState=name;else show(name)}
 function discardMission(){archiveLabRun();for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;if(profiler)profiler.running=false;liveProfiler?.reset();game=null;acc=0;resetInput();syncCameraView();gameShell.dataset.flight="false";document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss;delete canvas.dataset.density;delete canvas.dataset.enemyLimit;delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode}
@@ -124,6 +127,7 @@ const input={left:false,right:false,jump:false,up:false,down:false,hover:false,s
 function resetInput(){input.left=input.right=input.jump=input.up=input.down=input.hover=input.special=input.fire=input.switch=false;if(remoteTimer!==null)clearTimeout(remoteTimer);remoteTimer=null;remoteHeld=false}
 window.addEventListener("keydown",e=>{
   if(labWeaponPickerOpen){handleLabWeaponKey(e);return}
+  if(artComparison&&state==='pause'){if(e.key==='Escape'||e.key==='F2'){e.preventDefault();show('play');openLabPanel()}return}
   if(state==="settings"){if(e.key==="Escape")closeSettings();return}
   if(game?.lab&&state==="lab"){if(e.key==="Escape")closeLabPanel();return}
   if(game?.lab&&(e.key==="F2")){e.preventDefault();if(state==="play"||state==="gameover")openLabPanel();return}
@@ -174,6 +178,8 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==='lab-boss-1'){startLabCheckpoint('M01');return}
   if(action==='lab-boss-2'){startLabCheckpoint('M02');return}
   if(action==='lab-copy'){copyLabReport();return}
+  if(action==='art-compare'){beginArtComparison();return}
+  if(action==='art-lab'){if(game?.lab){show('play');openLabPanel()}return}
   if(action==="lab-reset"){if(game?.lab?.run)startLabCheckpoint(null,game.lab.run.checkpoint.id);else if(game?.lab)startLab(true,game.lab.terrain);return}
   if(action==="lab-exit"){if(game?.lab){discardMission();show("title")}return}
   if(action==="start"||action==="continue")show("mission");
@@ -188,6 +194,8 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound)tone(700,.06)});
 document.addEventListener("change",e=>{
+  if(['labArtStyle','pauseArtStyle'].includes(e.target.id)){setArtStyle(e.target.value);return}
+  if(['labRenderScale','pauseRenderScale'].includes(e.target.id)){setPreviewResolution(e.target.value);return}
   if(game?.lab){changeLabSetting(e.target);return}
   if(e.target.id==="weaponFilter"&&(e.target.value==="ALL"||Object.hasOwn(WEAPON_CATEGORIES,e.target.value))){weaponFilter=e.target.value;renderWeaponGrid();return}
   if(e.target.id==="destructionSelect"&&state==="settings"){save.settings.destructionLevel=normalizeDestructionLevel(e.target.value);storeSave();syncSettings();return}
@@ -299,7 +307,7 @@ function damageEnemy(e,dmg,source={}){
   if(game.time>=(game.nextDeathSound||0)){tone(80,.12,"sawtooth",.025);game.nextDeathSound=game.time+.05}
 }
 function explode(s){
-  pushEffect({x:s.x,y:s.y,kind:"explosion",life:.45,max:.45,r:s.radius});
+  pushEffect({x:s.x,y:s.y,kind:"explosion",life:.45,max:.45,r:s.radius,artWeaponId:s.weapon?.id??WEAPONS[s.assetIndex]?.id??(s.type==='rocket'?'R-04':null)});
   const candidates=game.grid.query(s.x-s.radius-48,s.y-s.radius-32,s.x+s.radius+48,s.y+s.radius+32,game.blastCandidates);
   const source={type:s.type??s.weapon?.type??"rocket",effectType:s.effectType,assetIndex:s.assetIndex,radial:true,x:s.x,y:s.y,radius:s.radius};
   for(let i=0;i<candidates.length;i++){const e=candidates[i];
@@ -360,11 +368,24 @@ function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true
   document.querySelector("#rewardBox").innerHTML=w?`<span>${game.missionId==='M02'?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?game.missionId==='M02'?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
 }
 
+function activeStudy(){return DEBUG&&game?.lab&&artPreview.style==='STUDY_01'?artPreview.pack:null}
+function applyPreviewResolution(){
+  const scale=DEBUG&&game?.lab?previewRenderScale:1,width=VIEW.canvasWidth*scale,height=VIEW.canvasHeight*scale;
+  if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;ctx.imageSmoothingEnabled=false}
+  canvas.dataset.artStyle=activeStudy()?'STUDY_01':'ORIGINAL';canvas.dataset.renderResolution=`${width}x${height}`;return scale;
+}
+async function setArtStyle(value){
+  if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state))return false;
+  const promise=artPreview.select(value);syncLabUI();const result=await promise;syncLabUI();return result;
+}
+function setPreviewResolution(value){if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state)||!['1','2'].includes(String(value)))return false;previewRenderScale=Number(value);applyPreviewResolution();syncLabUI();return true}
+function beginArtComparison(){if(!DEBUG||!game?.lab||game.player.dead)return;artComparison=true;pauseLabMeasurement();resetInput();show('pause')}
 function draw(){
+  const renderScale=applyPreviewResolution();ctx.setTransform(renderScale,0,0,renderScale,0,0);ctx.imageSmoothingEnabled=false;
   view.renderOffset=0;
   if(!assetsReady){ctx.fillStyle="#050915";ctx.fillRect(0,0,320,180);return}
   if(!game||!["play","pause","confirm","lab","settings"].includes(state)){ctx.drawImage(images.bg,0,0);return}
-  const g=game,shake=g.shake&&activeSettings().shake?(Math.random()-.5)*g.shake:0;
+  const g=game,shake=!artComparison&&g.shake&&activeSettings().shake?(Math.random()-.5)*g.shake:0;
   view.renderOffset=Math.round(shake);
   ctx.save();
   const origin=worldToScreen({x:0,y:0},g.camera,view.zoom);
@@ -379,39 +400,39 @@ function drawUndergroundHud(g){
   ctx.fillStyle='#02060dcc';ctx.fillRect(42,158,236,15);ctx.fillStyle='#ff4f6d';ctx.fillRect(47,166,226*boss.hp/boss.maxHp,4);ctx.fillStyle='#ffe05c';ctx.fillText('B-02 ABYSS QUEEN',94,164);
 }
 function drawBackdrop(g){
-  const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
+  const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320),study=activeStudy();
   // The zoom reveals sky above the original artwork. Fill it and repeat the city horizontally.
   ctx.fillStyle="#040a16";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
-  for(let x=start-320;x<bounds.right+320;x+=320)ctx.drawImage(g.missionId==='M02'?images.underground:images.bg,x,0);
+  for(let x=start-320;x<bounds.right+320;x+=320)if(study)ctx.drawImage(g.missionId==='M02'?study.underground:study.city,0,0,640,360,x,0,320,180);else ctx.drawImage(g.missionId==='M02'?images.underground:images.bg,x,0);
   if(g.missionId==='M02'){ctx.fillStyle='#081321';ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,Math.max(0,-bounds.top));for(let x=Math.floor(bounds.left/96)*96;x<bounds.right+96;x+=96){ctx.fillStyle='#17353d';ctx.fillRect(x,bounds.top,5,Math.max(0,-bounds.top+8));ctx.fillStyle='#3c665e';ctx.fillRect(x+2,0,2,6)}}
 }
 function drawWorld(g){
-  const bounds=viewBounds(g.camera,view.zoom);
+  const bounds=viewBounds(g.camera,view.zoom),study=activeStudy();
   if(g.missionId==='M02'){drawUnderground(g,bounds);return}
   ctx.fillStyle="#0b1825";ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
-  for(let x=Math.floor(bounds.left/16)*16-16;x<bounds.right+16;x+=16)ctx.drawImage(images.tiles,((Math.floor(x/16)%8+8)%8)*16,0,16,16,x,WORLD.ground,16,16);
+  for(let x=Math.floor(bounds.left/16)*16-16;x<bounds.right+16;x+=16)if(study)drawStudyTile(ctx,study,'M01',studyTileVariant(x),x,WORLD.ground);else ctx.drawImage(images.tiles,((Math.floor(x/16)%8+8)%8)*16,0,16,16,x,WORLD.ground,16,16);
   ctx.fillStyle="#d4b944";for(let x=Math.floor(bounds.left/40)*40;x<bounds.right;x+=40)ctx.fillRect(x,168,19,2);
-  for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2)}
+  for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2);if(study)for(let x=Math.max(pl.x,Math.floor(bounds.left/16)*16);x<pl.x+pl.w&&x<bounds.right;x+=16)drawStudyTile(ctx,study,'M01',x===pl.x?4:x+16>=pl.x+pl.w?6:5,x,pl.y,Math.min(16,pl.x+pl.w-x),8)}
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
 function drawUnderground(g,bounds){
-  const tile=(index,x,y,height=16,width=16)=>ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height);
+  const study=activeStudy(),tile=(index,x,y,height=16,width=16,studyIndex=null)=>{if(study&&studyIndex!==null)return drawStudyTile(ctx,study,'M02',studyIndex,x,y,width,height);ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height)};
   // The final chamber is organic rather than another copy of the subway hall.
   if(bounds.right>4500){
     ctx.fillStyle='#160e28';ctx.fillRect(Math.max(4500,bounds.left),0,bounds.right-Math.max(4500,bounds.left)+16,WORLD.ground);
     for(let x=Math.max(4500,Math.floor(bounds.left/80)*80);x<bounds.right+80;x+=80){ctx.strokeStyle='#50325e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+20,38);ctx.lineTo(x+6,66);ctx.lineTo(x+28,116);ctx.lineTo(x+18,148);ctx.stroke();tile(11,x+26,12);tile(8,x+48,124)}
   }
   ctx.fillStyle='#0d202a';ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
-  for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(x>=3300?9:0,x,WORLD.ground);
+  for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(x>=3300?9:0,x,WORLD.ground,16,16,x<3300?studyTileVariant(x):null);
   for(const p of g.platforms){if(p.active===false||p.kind==='barrier'||p.x+p.w<bounds.left||p.x>bounds.right)continue;
     ctx.fillStyle=p.kind==='pipe'?'#315d61':p.kind==='metal'?'#263e4e':'#152a38';ctx.fillRect(p.x,p.y,p.w,p.h??8);
     ctx.fillStyle=p.kind==='metal'?'#a0c6ab':'#517985';ctx.fillRect(p.x,p.y,p.w,2);
-    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?10:p.kind==='wall'?2:p.kind==='ceiling'?1:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x));
+    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?10:p.kind==='wall'?2:p.kind==='ceiling'?1:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x),p.kind==='metal'?0:p.kind==='pipe'&&p.w>=16&&(p.h??8)<=16?4:null);
   }
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
 }
-function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
+function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;if(drawStudyPlayer(ctx,activeStudy(),p,weapon(activeEquipment()[p.weaponSlot]),images.heldWeapons))return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawClassHud(g){
   const p=g.player,c=PLAYER_CLASSES[p.classId];ctx.font="6px monospace";ctx.fillStyle="#071522dd";ctx.fillRect(4,46,80,16);ctx.fillStyle="#e4fff6";
   ctx.fillText(g.lab&&!formalClass()?`${g.lab.preset} / TEST`:c.id,8,53);
@@ -428,7 +449,8 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
     }
     if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
     const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
-    if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,frame,localX,localY);
+    if(drawStudyEnemy(ctx,activeStudy(),e,localX,localY)){}
+    else if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,frame,localX,localY);
     else if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
     if(e.dead){if(e.deathType==="flame"||e.deathDelay>0){ctx.fillStyle=e.deathType==="flame"?"#ff8b42":"#b88cff";ctx.fillRect(-8,-3,4,2);ctx.fillRect(5,1,4,3)}ctx.restore();ctx.globalAlpha=1}
     else{if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}if(e.type==='nest'){ctx.fillStyle='#09121e';ctx.fillRect(x-24,e.y-8,48,5);ctx.fillStyle='#aef046';ctx.fillRect(x-24,e.y-8,48*e.hp/e.maxHp,5)}if(e.type==='queen'&&weakCore(e).open){const core=weakCore(e);ctx.strokeStyle='#fff08b';ctx.lineWidth=2;ctx.strokeRect(core.x-12,core.y-10,24,20)}}
@@ -446,8 +468,9 @@ function drawDeathGhost(e,x,y,angle,alpha,full){
   ctx.restore();ctx.globalAlpha=1;
 }
 function drawShots(g){
-  drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom));
-  for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
+  const study=activeStudy();
+  drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom),study?{projectile:(c,s,x,y,size)=>drawStudyProjectile(c,study,s.weapon.id,x,y,size,size),installation:(c,i)=>i.weapon.id==='D-19'&&drawStudyIcon(c,study,i.weapon.id,Math.round(i.x)-12,i.y-22.5,24,24)}:null);
+  for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);if(study){ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(s.vy,s.vx));const drawn=drawStudyProjectile(ctx,study,s.weapon.id,-8,-8);ctx.restore();if(drawn)continue}ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
   for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;
     if(s.kind==='acid')ctx.drawImage(images.acid,Math.floor(g.time*8)%4*16,0,16,16,s.x-8,s.y-8,16,16);
     else if(s.kind==='wave')ctx.drawImage(images.wave,Math.floor(g.time*8)%4*32,0,32,24,s.x-16,s.y-18,32,24);
@@ -458,7 +481,7 @@ function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||i
 function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
     if(f.kind==="explosion"){
       const scale=f.visualScale||1,fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6)*scale,radius=(f.r||24)*(.3+(1-a)*1.3)*scale;
-      ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz);
+      if(!drawStudyEffect(ctx,activeStudy(),f.artWeaponId,1-a,x,f.y,sz))ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz);
       ctx.globalAlpha=a;ctx.strokeStyle=a>.65?"#fff7d5":"#ffab56";ctx.lineWidth=2;ctx.beginPath();
       for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
       ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
@@ -468,13 +491,14 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
     }else if(f.kind==="weaponBurst"){
       const size=Math.max(32,(f.r||24)*2)*(f.visualScale||1);ctx.drawImage(images.weaponFx,(4+Math.min(3,Math.floor((1-a)*4)))*32,(f.assetIndex-8)*32,32,32,x-size/2,f.y-size/2,size,size);
     }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
-    else if(f.kind==="lightning"){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}
+    else if(f.kind==="lightning"){if(!drawStudyLightning(ctx,activeStudy(),f)){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}}
     else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}
   }
   for(const f of g.impact.particles){if(f.x<g.camera-8||f.x>g.camera+view.width+8)continue;ctx.globalAlpha=Math.min(1,f.life/.1);ctx.fillStyle=f.color;ctx.fillRect(Math.round(f.x),Math.round(f.y),f.size,f.flame?f.size+2:f.size)}ctx.globalAlpha=1;
 }
 function drawHitEffect(f,rays){
   const a=f.life/f.max,progress=1-a,angle=Math.atan2(f.vy,f.vx),burn=f.type==="flame";
+  if(drawStudyEffect(ctx,activeStudy(),studyEffectWeapon(f),progress,f.x,f.y))return;
   if(f.assetIndex>=8)ctx.drawImage(images.weaponFx,Math.min(3,Math.floor(progress*4))*32,(f.assetIndex-8)*32,32,32,f.x-16,f.y-16,32,32);
   ctx.globalAlpha=a;ctx.strokeStyle=f.color;ctx.fillStyle=a>.6?"#fff7d5":f.color;ctx.lineWidth=f.type==="laser"?2:1;
   for(let i=0;i<rays;i++){const direction=angle+(i-rays/2)*.8+(f.seed%3)*.2,reach=(f.type==="spread"?18:f.type==="laser"?16:10)*progress+3;
@@ -488,7 +512,7 @@ function drawImpactHud(g){
   const text=a.chainCount>=10?"MASS KILL":a.chainCount>=4?"MULTI BREAK":"TRIPLE HIT";
   ctx.save();ctx.font="bold 8px monospace";ctx.textAlign="center";ctx.fillStyle="#020911df";ctx.fillRect(91,49,138,14);ctx.fillStyle="#ffe05c";ctx.fillText(`${text} ×${Math.min(999,a.chainCount)}`,160,59);ctx.restore();
 }
-function drawHud(g){const p=g.player;ctx.fillStyle="#03101ddd";ctx.fillRect(4,4,125,20);ctx.fillStyle="#3a1f2b";ctx.fillRect(8,9,92,7);ctx.fillStyle=p.hp<25?"#ff4f6d":"#37e8df";ctx.fillRect(8,9,92*p.hp/p.maxHp,7);ctx.fillStyle="#e4fff6";ctx.font="7px monospace";ctx.fillText(`HP ${Math.ceil(p.hp)}`,9,15);const w=weapon(activeEquipment()[p.weaponSlot]);ctx.fillStyle="#071522dd";ctx.fillRect(4,28,99,16);ctx.drawImage(images.weapons,WEAPONS.indexOf(w)*32,0,32,32,6,28,16,16);ctx.fillStyle="#ffe05c";ctx.fillText(`${w.id} ${w.name}`,25,38);ctx.fillStyle="#071522dd";ctx.fillRect(225,4,91,20);ctx.fillStyle="#e4fff6";ctx.fillText(`${g.lab?"LAB":"M01"} ${formatTime(g.time)}`,232,12);ctx.fillText(`SCORE ${String(g.score).padStart(6,"0")}`,232,20);ctx.fillStyle="#071522dd";ctx.fillRect(133,4,86,20);ctx.fillStyle="#7fa6a8";ctx.font="6px monospace";ctx.fillText(g.lab?"TEST ONLY":g.density,138,12);ctx.fillText(`HOSTILES ${g.liveEnemies}/${g.enemyLimit}`,138,20);ctx.font="7px monospace";const boss=g.enemies.find(e=>e.type==="boss"&&!e.dead);if(boss){ctx.fillStyle="#02060dcc";ctx.fillRect(42,158,236,15);ctx.fillStyle="#ff4f6d";ctx.fillRect(47,166,226*boss.hp/boss.maxHp,4);ctx.fillStyle="#ffe05c";ctx.fillText("B-01 MOTHER CRAWLER",94,164)}if(g.areaTimer>0){ctx.fillStyle="#020611dd";ctx.fillRect(55,67,210,28);ctx.fillStyle=g.bossStarted?"#ff4f6d":"#ffe05c";ctx.textAlign="center";ctx.font="bold 9px monospace";ctx.fillText(g.areaText,160,84);ctx.textAlign="left"}}
+function drawHud(g){const p=g.player;ctx.fillStyle="#03101ddd";ctx.fillRect(4,4,125,20);ctx.fillStyle="#3a1f2b";ctx.fillRect(8,9,92,7);ctx.fillStyle=p.hp<25?"#ff4f6d":"#37e8df";ctx.fillRect(8,9,92*p.hp/p.maxHp,7);ctx.fillStyle="#e4fff6";ctx.font="7px monospace";ctx.fillText(`HP ${Math.ceil(p.hp)}`,9,15);const w=weapon(activeEquipment()[p.weaponSlot]);ctx.fillStyle="#071522dd";ctx.fillRect(4,28,99,16);if(!drawStudyIcon(ctx,activeStudy(),w.id,6,28,16,16))ctx.drawImage(images.weapons,WEAPONS.indexOf(w)*32,0,32,32,6,28,16,16);ctx.fillStyle="#ffe05c";ctx.fillText(`${w.id} ${w.name}`,25,38);ctx.fillStyle="#071522dd";ctx.fillRect(225,4,91,20);ctx.fillStyle="#e4fff6";ctx.fillText(`${g.lab?"LAB":"M01"} ${formatTime(g.time)}`,232,12);ctx.fillText(`SCORE ${String(g.score).padStart(6,"0")}`,232,20);ctx.fillStyle="#071522dd";ctx.fillRect(133,4,86,20);ctx.fillStyle="#7fa6a8";ctx.font="6px monospace";ctx.fillText(g.lab?"TEST ONLY":g.density,138,12);ctx.fillText(`HOSTILES ${g.liveEnemies}/${g.enemyLimit}`,138,20);ctx.font="7px monospace";const boss=g.enemies.find(e=>e.type==="boss"&&!e.dead);if(boss){ctx.fillStyle="#02060dcc";ctx.fillRect(42,158,236,15);ctx.fillStyle="#ff4f6d";ctx.fillRect(47,166,226*boss.hp/boss.maxHp,4);ctx.fillStyle="#ffe05c";ctx.fillText("B-01 MOTHER CRAWLER",94,164)}if(g.areaTimer>0){ctx.fillStyle="#020611dd";ctx.fillRect(55,67,210,28);ctx.fillStyle=g.bossStarted?"#ff4f6d":"#ffe05c";ctx.textAlign="center";ctx.font="bold 9px monospace";ctx.fillText(g.areaText,160,84);ctx.textAlign="left"}}
 
 function loop(ts){
   const begin=DEBUG?performance.now():0,dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;
@@ -564,7 +588,7 @@ async function copyLabReport(){
 }
 
 function startLab(openPanel=true,terrain='M01'){
-  if(!DEBUG)return false;startMission(terrain,true);
+  if(!DEBUG)return false;if(!game?.lab){artPreview.reset();previewRenderScale=1}startMission(terrain,true);
   game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=200;game.director.stopped=true;game.items.length=0;
   game.lab.terrain=terrain;game.enemies.length=0;game.liveEnemies=game.liveMobs=0;if(terrain==='M02')game.platforms=createM02Geometry();
   configureLabPlayer();
@@ -576,6 +600,12 @@ function startLab(openPanel=true,terrain='M01'){
 }
 function syncLabUI(){
   syncClassControls();
+  applyPreviewResolution();document.querySelector('#pauseArtControls').hidden=!DEBUG||!game?.lab;
+  if(artPreview)for(const prefix of ['lab','pause']){
+    document.querySelector(`#${prefix}ArtStyle`).value=artPreview.requested;
+    document.querySelector(`#${prefix}RenderScale`).value=String(game?.lab?previewRenderScale:1);
+    document.querySelector(`#${prefix}ArtStatus`).textContent=artPreview.loading?'Study 01読み込み中（従来表示を維持）':artPreview.error||`${activeStudy()?'STUDY 01':'ORIGINAL'} / ${canvas.width}×${canvas.height} / NO SAVE`;
+  }
   document.querySelector('#labGameoverReport').hidden=!game?.lab?.run||state!=='gameover';
   document.querySelector("#labToggle").hidden=!game?.lab||state!=="play";
   document.querySelector("#labLevelBadge").hidden=!game?.lab||state!=="play";
