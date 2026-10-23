@@ -20,6 +20,11 @@ export function movePlanets(planets,targets,stage,dt,maxSpeed=LIVE_GRAVITY.maxSp
     const obstacles=[...result.filter(q=>q.id!==p.id).map(q=>({...q,radius:q.radius+p.radius+8})),
       {...stage.launch.position,radius:p.radius+28}, {...stage.goal,radius:stage.goal.radius+p.radius+12}];
     let fraction=1;
+    const range=stage.rules?.placement;
+    if(range) {
+      end.x=Math.max(range.left+p.radius,Math.min(range.right-p.radius,end.x));
+      end.y=Math.max(range.top+p.radius,Math.min(range.bottom-p.radius,end.y));
+    }
     for(const obstacle of obstacles) {
       // At a boundary, motion away from the protected circle is permitted.
       if((p.x-obstacle.x)*(end.x-p.x)+(p.y-obstacle.y)*(end.y-p.y)>=0 && Math.hypot(p.x-obstacle.x,p.y-obstacle.y)>=obstacle.radius-1e-7)continue;

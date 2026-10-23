@@ -135,3 +135,16 @@ input[type='range'] { height: 36px; touch-action: pan-x; }
 .result button { min-height: 44px; }
 .edit-hint { max-width: calc(100% - 18px); }
 button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #a5ecff; outline-offset: 1px; }
+#openStages { flex-shrink: 0; min-height: 44px; border: 1px solid #31506a; border-radius: 6px; background: #123044; color: #d0eeff; font-size: 11px; }
+.mission { gap: 6px; }
+.mission strong { white-space: normal; }
+#stageDialog { width: min(94vw,430px); max-height: 88dvh; overflow-y: auto; border: 1px solid #427a94; border-radius: 12px; background: #091524; color: #d8eeff; padding: 14px; }
+#stageDialog::backdrop { background: #02060bd9; }
+#stageDialog header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#stageDialog h2 { font-size: 18px; }
+#stageDialog p { font-size: 11px; color: #a4bed0; }
+#stageDialog button { min-height: 44px; border: 1px solid #33536b; border-radius: 6px; background: #123044; color: #d8eeff; padding: 8px; }
+#stageList { display: grid; gap: 6px; margin-bottom: 10px; }
+#stageList button { text-align: left; }
+#stageList button:disabled { opacity: .45; }
+#stageList small { display: block; color: #9ebbd1; margin-top: 4px; }

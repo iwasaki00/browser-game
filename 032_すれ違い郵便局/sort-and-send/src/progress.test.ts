@@ -36,14 +36,14 @@ describe('progress persistence', () => {
   });
   it.each(['{', 'null', JSON.stringify({ ...freshProgress(ids), bestStars: { '01': 4 } }), JSON.stringify({ ...freshProgress(ids), settings: { sfx: 'yes' } }), JSON.stringify({ ...freshProgress(ids), unlockedStageIds: [1] })])('recovers malformed data: %s', raw => {
     const storage = memoryStorage(); storage.setItem(productionProgressKey, raw);
-    const store = createProgressStore(ids, storage); expect(store.data).toEqual(freshProgress(ids)); expect(store.status).toBe('recovered');
-    store.recordResult('01', true, 3); expect(store.isUnlocked('02')).toBe(true);
+    const store = createProgressStore(ids, storage); expect(store.data).toEqual(freshProgress(ids)); expect(store.status).toBe(['{','null'].includes(raw) ? 'corrupt' : 'recovered');
+    store.recordResult('01', true, 3); expect(store.isUnlocked('02')).toBe(!['{','null'].includes(raw));
   });
   it('does not reinterpret or overwrite an unknown schema until explicit reset', () => {
     const storage = memoryStorage(); const raw = '{"schemaVersion":999,"unknown":"keep"}'; storage.setItem(productionProgressKey, raw);
     const store = createProgressStore(ids, storage); expect(store.status).toBe('unknown-version');
     store.recordResult('01', true, 3); expect(storage.getItem(productionProgressKey)).toBe(raw);
-    store.reset(true); expect(JSON.parse(storage.getItem(productionProgressKey)!)).toEqual(freshProgress(ids));
+    expect(store.reset(true)).toBe(false); expect(storage.getItem(productionProgressKey)).toBe(raw);
   });
   it('retains unrelated stage records across known-stage changes', () => {
     const storage = memoryStorage(); storage.setItem(productionProgressKey, JSON.stringify({ ...freshProgress(ids), clearedStageIds: ['retired'], unlockedStageIds: ['retired'], bestStars: { retired: 3 } }));

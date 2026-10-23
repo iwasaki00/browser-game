@@ -1,6 +1,8 @@
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation, gravitationalAcceleration } from "./physics.js";
 import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './preview.js';
 import { getStage } from "./stages.js";
+import { CHALLENGES, getChallenge } from './challenges.js';
+import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
 import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
 import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS } from './planets.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
@@ -40,6 +42,11 @@ const pointers = new Set();
 let storage;
 try { storage = window.localStorage; } catch { /* Storage is optional. */ }
 let launchMode = loadLaunchMode(storage);
+let progress=loadProgress(storage);
+let playType='free';
+let challengeId=null;
+let freeSnapshot=null;
+let movement=0;
 let gameMode = loadGameMode(storage);
 let launchSnapshot = null;
 let moveTargets = {};
@@ -291,6 +298,7 @@ function setEditingControls(enabled) {
   launchButton.disabled = !enabled;
   editHint.hidden = !enabled;
   modeButtons.forEach(button => { button.disabled = !enabled; });
+  document.querySelector('#openStages').disabled=!enabled;
   updatePlanetEditor();
   gameModeInput.disabled = !enabled;
   previewButton.disabled = !enabled;
@@ -301,6 +309,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   if (mode !== "editing") return;
   cancelGesture();
   launchSnapshot = structuredClone(stage);
+  movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
   trail = [{ ...simulation.rocket.position }];
@@ -324,6 +333,14 @@ function showResult(status) {
   resultReason.textContent = reason;
   result.classList.toggle("success", status === "cleared");
   result.hidden = false;
+  document.querySelector('#clearStars').textContent='';
+  document.querySelector('#nextStage').hidden=true;
+  if(status==='cleared'&&playType==='challenge'){
+    const stars=rateClear(stage,status,{elapsed:simulation.elapsed,movement},gameMode);
+    progress=recordClear(progress,storage,stage.id,gameMode,stars);
+    document.querySelector('#clearStars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+    document.querySelector('#nextStage').hidden=CHALLENGES.findIndex(s=>s.id===challengeId)===CHALLENGES.length-1;
+  }
   statusText.textContent = status === "cleared" ? "軌道確立。ミッション成功。" : `${reason}。配置を調整して再挑戦。`;
 }
 
@@ -341,6 +358,10 @@ function retry() {
 }
 
 function reset() {
+  if(playType==='challenge') {
+    stage=getChallenge(challengeId);launchSnapshot=null;selectedPlanetId=stage.planets[0]?.id;
+    retry();return;
+  }
   stage = launchSnapshot ? structuredClone(launchSnapshot) : getStage(initialStage.id);
   selectedPlanetId = stage.planets[0]?.id;
   angleInput.value = String(stage.launch.angleDeg);
@@ -361,7 +382,9 @@ function tick(time) {
     accumulator += frameSeconds;
     const dt = DEFAULT_PHYSICS.fixedTimeStep;
     while (accumulator >= dt && simulation.status === "flying") {
+      const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      movement+=simulation.planets.reduce((sum,p,i)=>sum+Math.hypot(p.x-previousPlanets[i].x,p.y-previousPlanets[i].y),0);
       if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
       accumulator -= dt;
       physicsStepCount += 1;
@@ -460,7 +483,9 @@ function updatePlanetEditor() {
   planetType.value = planet?.type ?? 'earth';
   planetSize.value = planet?.size ?? 'medium';
   planetType.disabled = planetSize.disabled = mode !== 'editing' || !planet;
-  addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= MAX_PLANETS;
+  addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS);
+  for(const option of planetType.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.types.includes(option.value));
+  for(const option of planetSize.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.sizes.includes(option.value));
   deletePlanetButton.disabled = mode !== 'editing' || !planet;
   document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · M ${planet.mass}` : `惑星 ${stage.planets.length} / 3`;
 }
@@ -514,6 +539,43 @@ gameModeInput.addEventListener('change',()=>{
   cancelGesture();gameMode=saveGameMode(storage,gameModeInput.value);updateGameMode();
 });
 updateGameMode();
+function enterChallenge(id){
+  const index=CHALLENGES.findIndex(s=>s.id===id);
+  if(index<0||!isUnlocked(progress,index,CHALLENGES))return;
+  if(playType==='free')freeSnapshot={stage:structuredClone(stage),angle:angleInput.value,speed:speedInput.value,snapshot:launchSnapshot};
+  cancelGesture();playType='challenge';challengeId=id;stage=getChallenge(id);launchSnapshot=null;
+  selectedPlanetId=stage.planets[0]?.id;
+  document.querySelector('.mission strong').textContent=`${id.slice(-2)} ${stage.name}`;
+  retry();statusText.textContent=stage.description;
+  document.querySelector('#stageDialog').close();resizeCanvas();
+}
+function renderStages(){
+  const list=document.querySelector('#stageList');list.innerHTML='';
+  CHALLENGES.forEach((s,i)=>{
+    const button=document.createElement('button');button.type='button';button.disabled=!isUnlocked(progress,i,CHALLENGES);
+    const best=progress[gameMode][s.id]??0;
+    button.textContent=`${button.disabled?'🔒 ':best?'✓ ':''}${String(i+1).padStart(2,'0')} ${s.name} ${'★'.repeat(best)}${'☆'.repeat(3-best)}`;
+    const info=document.createElement('small');
+    info.textContent=`${s.description} 惑星${s.rules.maxPlanets}個まで / ★2 ${s.rating.two.maxTime}秒 / ★3 ${s.rating.three.maxTime}秒${gameMode==='live'?'・移動30以内':''}`;
+    button.append(info);button.addEventListener('click',()=>enterChallenge(s.id));list.append(button);
+  });
+}
+document.querySelector('#openStages').addEventListener('click',()=>{
+  if(mode!=='editing')return;cancelGesture();renderStages();document.querySelector('#stageDialog').showModal();
+});
+document.querySelector('#closeStages').addEventListener('click',()=>document.querySelector('#stageDialog').close());
+document.querySelector('#freePlay').addEventListener('click',()=>{
+  cancelGesture();playType='free';challengeId=null;
+  stage=freeSnapshot?structuredClone(freeSnapshot.stage):getStage();
+  launchSnapshot=freeSnapshot?.snapshot??null;selectedPlanetId=stage.planets[0]?.id;
+  if(freeSnapshot){angleInput.value=freeSnapshot.angle;speedInput.value=freeSnapshot.speed;}
+  document.querySelector('.mission strong').textContent=stage.name;
+  retry();updateOutputs();document.querySelector('#stageDialog').close();resizeCanvas();
+});
+document.querySelector('#nextStage').addEventListener('click',()=>{
+  if(playType!=='challenge'||mode!=='cleared')return;
+  const next=CHALLENGES[CHALLENGES.findIndex(s=>s.id===challengeId)+1];if(next)enterChallenge(next.id);
+});
 updatePlanetEditor();
 updateOutputs();
 updateMode();

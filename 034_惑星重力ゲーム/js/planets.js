@@ -16,6 +16,12 @@ export function configurePlanet(planet, type = 'earth', size = 'medium') {
 }
 export function placementAllowed(candidate, stage) {
   const { x, y, radius } = candidate;
+  const rules=stage.rules;
+  if(rules){
+    if(!rules.types.includes(candidate.type??'earth')||!rules.sizes.includes(candidate.size??'medium'))return false;
+    const r=rules.placement;
+    if(x-radius<r.left||x+radius>r.right||y-radius<r.top||y+radius>r.bottom)return false;
+  }
   if (x < radius || y < radius || x > stage.world.width-radius || y > stage.world.height-radius) return false;
   if (stage.planets.some(p => p.id !== candidate.id && Math.hypot(x-p.x,y-p.y) < radius+p.radius+8)) return false;
   const launch = stage.launch.position;
@@ -23,11 +29,11 @@ export function placementAllowed(candidate, stage) {
   return Math.hypot(x-stage.goal.x,y-stage.goal.y) >= radius+stage.goal.radius+12;
 }
 export function addPlanet(stage) {
-  if (stage.planets.length >= MAX_PLANETS) return null;
+  if (stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS)) return null;
   let index=1;
   while(stage.planets.some(p=>p.id===`added-${index}`)) index++;
   for(let y=80;y<stage.world.height;y+=20) for(let x=60;x<stage.world.width;x+=20) {
-    const candidate=configurePlanet({id:`added-${index}`,x,y});
+    const candidate=configurePlanet({id:`added-${index}`,x,y},stage.rules?.types[0]??'earth',stage.rules?.sizes[0]??'medium');
     if(placementAllowed(candidate,stage)) { stage.planets.push(candidate); return candidate; }
   }
   return null;

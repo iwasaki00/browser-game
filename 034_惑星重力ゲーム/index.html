@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Mobile Playability Check</title>
+  <title>ORBIT MAKER — Stage Balance</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,12 +19,13 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.4.1</div>
+      <div class="version">v0.5.1</div>
     </header>
 
     <section class="mission" aria-label="ミッション">
       <div><small>MISSION</small><strong>最初のスイングバイ</strong></div>
       <p id="statusText" aria-live="polite">惑星を動かして、軌道をつくれ。</p>
+      <button id="openStages" type="button">遊び方</button>
     </section>
 
     <section class="space-frame" id="spaceFrame">
@@ -33,6 +34,8 @@
         <p id="resultLabel">MISSION FAILED</p>
         <strong id="resultReason">惑星に衝突</strong>
         <button id="retryButton" type="button">再試行</button>
+        <p id="clearStars" aria-live="polite"></p>
+        <button id="nextStage" type="button" hidden>次ステージ</button>
       </div>
       <div class="edit-hint" id="editHint"><span></span><b id="editHintText">惑星をドラッグ</b></div>
     </section>
@@ -77,6 +80,13 @@
       </div>
     </section>
   </main>
+  <dialog id="stageDialog" aria-labelledby="stageDialogTitle">
+    <header><h2 id="stageDialogTitle">ステージ攻略</h2><button id="closeStages" type="button">閉じる</button></header>
+    <p>★1 到達 ／ ★2・★3 ステージごとの目標時間以内<br>重力操作の★3：惑星総移動30以内も必要</p>
+    <p>軌道設計・重力操作の記録は別々に保存します。</p>
+    <div id="stageList"></div>
+    <button id="freePlay" type="button">フリープレイ</button>
+  </dialog>
   <script type="module" src="./js/game.js"></script>
 </body>
 </html>

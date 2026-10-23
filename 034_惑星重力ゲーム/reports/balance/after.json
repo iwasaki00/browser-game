@@ -1,0 +1,4675 @@
+{
+  "stages": [
+    {
+      "id": "stage-01",
+      "name": "はじめての引力",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 196,
+          "y": 282,
+          "type": "earth",
+          "size": "medium",
+          "radius": 38,
+          "mass": 5200,
+          "color": "#6fd3ff"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 319,
+        "y": 105,
+        "radius": 24
+      },
+      "description": "惑星の横を通り、引力でゲートへ曲がろう。",
+      "rules": {
+        "maxPlanets": 1,
+        "types": [
+          "earth"
+        ],
+        "sizes": [
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 196,
+            "y": 282,
+            "type": "earth",
+            "size": "medium",
+            "radius": 38,
+            "mass": 5200,
+            "color": "#6fd3ff"
+          }
+        ],
+        "angleDeg": -72,
+        "speed": 126,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -72,
+        "speed": 126
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 2.9333333333333256,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-02",
+      "name": "すれすれ飛行",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 205,
+          "y": 275,
+          "type": "earth",
+          "size": "medium",
+          "radius": 38,
+          "mass": 5200,
+          "color": "#6fd3ff"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 319,
+        "y": 105,
+        "radius": 18
+      },
+      "description": "小さめのゲートを狙い、衝突を避けよう。",
+      "rules": {
+        "maxPlanets": 1,
+        "types": [
+          "earth"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 205,
+            "y": 275,
+            "type": "earth",
+            "size": "medium",
+            "radius": 38,
+            "mass": 5200,
+            "color": "#6fd3ff"
+          }
+        ],
+        "angleDeg": -72,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -72,
+        "speed": 124
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 3.0999999999999917,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-03",
+      "name": "大きなカーブ",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 220,
+          "y": 275,
+          "type": "gas",
+          "size": "medium",
+          "radius": 48,
+          "mass": 8000,
+          "color": "#e9b677"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 315,
+        "y": 100,
+        "radius": 28
+      },
+      "description": "巨大ガス惑星の強い引力を利用しよう。",
+      "rules": {
+        "maxPlanets": 1,
+        "types": [
+          "gas"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 2.6,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 220,
+            "y": 275,
+            "type": "gas",
+            "size": "medium",
+            "radius": 48,
+            "mass": 8000,
+            "color": "#e9b677"
+          }
+        ],
+        "angleDeg": -72,
+        "speed": 136,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -72,
+        "speed": 144
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 2.6249999999999933,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-04",
+      "name": "小さな調整",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 180,
+          "y": 275,
+          "type": "asteroid",
+          "size": "medium",
+          "radius": 22,
+          "mass": 1800,
+          "color": "#d0b797"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 315,
+        "y": 110,
+        "radius": 18
+      },
+      "description": "弱い引力に合わせて発射角度を微調整。",
+      "rules": {
+        "maxPlanets": 1,
+        "types": [
+          "asteroid"
+        ],
+        "sizes": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 180,
+            "y": 275,
+            "type": "asteroid",
+            "size": "medium",
+            "radius": 22,
+            "mass": 1800,
+            "color": "#d0b797"
+          }
+        ],
+        "angleDeg": -67,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -65,
+        "speed": 128
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 3.2666666666666577,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-05",
+      "name": "重力の輪",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 210,
+          "y": 260,
+          "type": "earth",
+          "size": "large",
+          "radius": 45.6,
+          "mass": 6760,
+          "color": "#6fd3ff"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 315,
+        "y": 95,
+        "radius": 20
+      },
+      "description": "惑星の外側に安全な航路を作ろう。",
+      "rules": {
+        "maxPlanets": 1,
+        "types": [
+          "earth",
+          "gas"
+        ],
+        "sizes": [
+          "medium",
+          "large"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 2.55,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 210,
+            "y": 260,
+            "type": "earth",
+            "size": "large",
+            "radius": 45.6,
+            "mass": 6760,
+            "color": "#6fd3ff"
+          }
+        ],
+        "angleDeg": -72,
+        "speed": 136,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -71,
+        "speed": 154
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 2.724999999999993,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-06",
+      "name": "二つの引力",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 190,
+          "y": 285,
+          "type": "earth",
+          "size": "medium",
+          "radius": 38,
+          "mass": 5200,
+          "color": "#6fd3ff"
+        },
+        {
+          "id": "planet-2",
+          "x": 95,
+          "y": 140,
+          "type": "asteroid",
+          "size": "medium",
+          "radius": 22,
+          "mass": 1800,
+          "color": "#d0b797"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 319,
+        "y": 105,
+        "radius": 18
+      },
+      "description": "二つの惑星が作る合成重力を使おう。",
+      "rules": {
+        "maxPlanets": 2,
+        "types": [
+          "earth",
+          "asteroid"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 3.6
+        },
+        "three": {
+          "maxTime": 2.65,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 190,
+            "y": 285,
+            "type": "earth",
+            "size": "medium",
+            "radius": 38,
+            "mass": 5200,
+            "color": "#6fd3ff"
+          },
+          {
+            "id": "planet-2",
+            "x": 95,
+            "y": 140,
+            "type": "asteroid",
+            "size": "medium",
+            "radius": 22,
+            "mass": 1800,
+            "color": "#d0b797"
+          }
+        ],
+        "angleDeg": -72,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -69,
+        "speed": 142
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 2.941666666666659,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-07",
+      "name": "S字飛行",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 220,
+          "y": 300,
+          "type": "earth",
+          "size": "small",
+          "radius": 30.400000000000002,
+          "mass": 3639.9999999999995,
+          "color": "#6fd3ff"
+        },
+        {
+          "id": "planet-2",
+          "x": 105,
+          "y": 160,
+          "type": "earth",
+          "size": "small",
+          "radius": 30.400000000000002,
+          "mass": 3639.9999999999995,
+          "color": "#6fd3ff"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 320,
+        "y": 90,
+        "radius": 16
+      },
+      "description": "左右に分かれた二つの引力を調整しよう。",
+      "rules": {
+        "maxPlanets": 2,
+        "types": [
+          "earth"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 3.5
+        },
+        "three": {
+          "maxTime": 2.55,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 220,
+            "y": 300,
+            "type": "earth",
+            "size": "small",
+            "radius": 30.400000000000002,
+            "mass": 3639.9999999999995,
+            "color": "#6fd3ff"
+          },
+          {
+            "id": "planet-2",
+            "x": 105,
+            "y": 160,
+            "type": "earth",
+            "size": "small",
+            "radius": 30.400000000000002,
+            "mass": 3639.9999999999995,
+            "color": "#6fd3ff"
+          }
+        ],
+        "angleDeg": -60,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -58,
+        "speed": 154
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 3.0166666666666586,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-08",
+      "name": "重力の橋",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 220,
+          "y": 285,
+          "type": "gas",
+          "size": "small",
+          "radius": 38.400000000000006,
+          "mass": 5600,
+          "color": "#e9b677"
+        },
+        {
+          "id": "planet-2",
+          "x": 85,
+          "y": 145,
+          "type": "asteroid",
+          "size": "medium",
+          "radius": 22,
+          "mass": 1800,
+          "color": "#d0b797"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 315,
+        "y": 100,
+        "radius": 14
+      },
+      "description": "種類の異なる二惑星でゲートまで橋をかけよう。",
+      "rules": {
+        "maxPlanets": 2,
+        "types": [
+          "gas",
+          "asteroid"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 3.4
+        },
+        "three": {
+          "maxTime": 2.45,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 220,
+            "y": 285,
+            "type": "gas",
+            "size": "small",
+            "radius": 38.400000000000006,
+            "mass": 5600,
+            "color": "#e9b677"
+          },
+          {
+            "id": "planet-2",
+            "x": 85,
+            "y": 145,
+            "type": "asteroid",
+            "size": "medium",
+            "radius": 22,
+            "mass": 1800,
+            "color": "#d0b797"
+          }
+        ],
+        "angleDeg": -69,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -64,
+        "speed": 158
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 3.0166666666666586,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-09",
+      "name": "三つの星",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 210,
+          "y": 285,
+          "type": "earth",
+          "size": "small",
+          "radius": 30.400000000000002,
+          "mass": 3639.9999999999995,
+          "color": "#6fd3ff"
+        },
+        {
+          "id": "planet-2",
+          "x": 85,
+          "y": 145,
+          "type": "asteroid",
+          "size": "small",
+          "radius": 17.6,
+          "mass": 1260,
+          "color": "#d0b797"
+        },
+        {
+          "id": "planet-3",
+          "x": 270,
+          "y": 190,
+          "type": "asteroid",
+          "size": "small",
+          "radius": 17.6,
+          "mass": 1260,
+          "color": "#d0b797"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 320,
+        "y": 100,
+        "radius": 14
+      },
+      "description": "三惑星の重力を読み、通り道を探そう。",
+      "rules": {
+        "maxPlanets": 3,
+        "types": [
+          "earth",
+          "asteroid"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 3.3
+        },
+        "three": {
+          "maxTime": 2.35,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 210,
+            "y": 285,
+            "type": "earth",
+            "size": "small",
+            "radius": 30.400000000000002,
+            "mass": 3639.9999999999995,
+            "color": "#6fd3ff"
+          },
+          {
+            "id": "planet-2",
+            "x": 85,
+            "y": 145,
+            "type": "asteroid",
+            "size": "small",
+            "radius": 17.6,
+            "mass": 1260,
+            "color": "#d0b797"
+          },
+          {
+            "id": "planet-3",
+            "x": 270,
+            "y": 190,
+            "type": "asteroid",
+            "size": "small",
+            "radius": 17.6,
+            "mass": 1260,
+            "color": "#d0b797"
+          }
+        ],
+        "angleDeg": -68,
+        "speed": 120,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -62,
+        "speed": 168
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 3.033333333333325,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    },
+    {
+      "id": "stage-10",
+      "name": "軌道マスター",
+      "world": {
+        "width": 375,
+        "height": 500
+      },
+      "rocketRadius": 6,
+      "launch": {
+        "position": {
+          "x": 48,
+          "y": 430
+        },
+        "angleDeg": -55,
+        "speed": 170,
+        "angleRange": [
+          -72,
+          -35
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "planets": [
+        {
+          "id": "planet-1",
+          "x": 210,
+          "y": 280,
+          "type": "gas",
+          "size": "small",
+          "radius": 38.400000000000006,
+          "mass": 5600,
+          "color": "#e9b677"
+        },
+        {
+          "id": "planet-2",
+          "x": 80,
+          "y": 145,
+          "type": "asteroid",
+          "size": "small",
+          "radius": 17.6,
+          "mass": 1260,
+          "color": "#d0b797"
+        },
+        {
+          "id": "planet-3",
+          "x": 270,
+          "y": 190,
+          "type": "earth",
+          "size": "small",
+          "radius": 30.400000000000002,
+          "mass": 3639.9999999999995,
+          "color": "#6fd3ff"
+        }
+      ],
+      "goal": {
+        "id": "goal",
+        "x": 320,
+        "y": 95,
+        "radius": 12
+      },
+      "description": "三種類を組み合わせ、小さなゲートを目指そう。",
+      "rules": {
+        "maxPlanets": 3,
+        "types": [
+          "earth",
+          "asteroid",
+          "gas"
+        ],
+        "sizes": [
+          "small",
+          "medium"
+        ],
+        "placement": {
+          "left": 20,
+          "top": 40,
+          "right": 355,
+          "bottom": 470
+        }
+      },
+      "launchConditions": {
+        "precisionAngleRange": [
+          -72,
+          -35
+        ],
+        "slingshotAngleRange": [
+          -180,
+          180
+        ],
+        "speedRange": [
+          120,
+          220
+        ]
+      },
+      "rating": {
+        "two": {
+          "maxTime": 3.1
+        },
+        "three": {
+          "maxTime": 2.25,
+          "maxMovement": 30
+        }
+      },
+      "solution": {
+        "planets": [
+          {
+            "id": "planet-1",
+            "x": 210,
+            "y": 280,
+            "type": "gas",
+            "size": "small",
+            "radius": 38.400000000000006,
+            "mass": 5600,
+            "color": "#e9b677"
+          },
+          {
+            "id": "planet-2",
+            "x": 80,
+            "y": 145,
+            "type": "asteroid",
+            "size": "small",
+            "radius": 17.6,
+            "mass": 1260,
+            "color": "#d0b797"
+          },
+          {
+            "id": "planet-3",
+            "x": 270,
+            "y": 190,
+            "type": "earth",
+            "size": "small",
+            "radius": 30.400000000000002,
+            "mass": 3639.9999999999995,
+            "color": "#6fd3ff"
+          }
+        ],
+        "angleDeg": -69,
+        "speed": 160,
+        "liveTargets": {}
+      },
+      "threeStarSolution": {
+        "angleDeg": -67,
+        "speed": 172
+      },
+      "verification": {
+        "design": "cleared",
+        "live": "cleared",
+        "elapsed": 2.316666666666661,
+        "fixedTimeStep": 0.008333333333333333
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "stage-01",
+      "name": "はじめての引力",
+      "time": 2.9333333333333256,
+      "status": "cleared",
+      "count": 1,
+      "types": [
+        "earth/medium"
+      ],
+      "angle": -72,
+      "speed": 126,
+      "turn": 48.337339600474955,
+      "net": 48.337339600474955,
+      "signChanges": 0,
+      "clearance": [
+        28.782584973748342
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 12,
+        "hits": 6,
+        "three": 6,
+        "launchHits": [
+          [
+            -72,
+            126
+          ],
+          [
+            -72,
+            130
+          ],
+          [
+            -72,
+            134
+          ],
+          [
+            -71,
+            130
+          ],
+          [
+            -71,
+            134
+          ],
+          [
+            -70,
+            134
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-02",
+      "name": "すれすれ飛行",
+      "time": 3.0999999999999917,
+      "status": "cleared",
+      "count": 1,
+      "types": [
+        "earth/medium"
+      ],
+      "angle": -72,
+      "speed": 120,
+      "turn": 49.49991350694695,
+      "net": 49.49991350694695,
+      "signChanges": 0,
+      "clearance": [
+        33.06900070523534
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 9,
+        "hits": 5,
+        "three": 3,
+        "launchHits": [
+          [
+            -72,
+            120
+          ],
+          [
+            -72,
+            124
+          ],
+          [
+            -72,
+            128
+          ],
+          [
+            -71,
+            124
+          ],
+          [
+            -71,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-03",
+      "name": "大きなカーブ",
+      "time": 2.6249999999999933,
+      "status": "cleared",
+      "count": 1,
+      "types": [
+        "gas/medium"
+      ],
+      "angle": -72,
+      "speed": 136,
+      "turn": 50.33207892272619,
+      "net": 50.33207892272619,
+      "signChanges": 0,
+      "clearance": [
+        33.879461284252955
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 7,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 6,
+        "three": 5,
+        "launchHits": [
+          [
+            -72,
+            136
+          ],
+          [
+            -72,
+            140
+          ],
+          [
+            -72,
+            144
+          ],
+          [
+            -71,
+            140
+          ],
+          [
+            -71,
+            144
+          ],
+          [
+            -70,
+            144
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 2.6,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-04",
+      "name": "小さな調整",
+      "time": 3.2666666666666577,
+      "status": "cleared",
+      "count": 1,
+      "types": [
+        "asteroid/medium"
+      ],
+      "angle": -67,
+      "speed": 120,
+      "turn": 28.484991051288922,
+      "net": 28.484991051288922,
+      "signChanges": 0,
+      "clearance": [
+        22.711706375935222
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 5,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 4,
+              "successes": [
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 7,
+        "three": 1,
+        "launchHits": [
+          [
+            -67,
+            120
+          ],
+          [
+            -66,
+            120
+          ],
+          [
+            -66,
+            124
+          ],
+          [
+            -66,
+            128
+          ],
+          [
+            -65,
+            120
+          ],
+          [
+            -65,
+            124
+          ],
+          [
+            -65,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 3,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-05",
+      "name": "重力の輪",
+      "time": 2.724999999999993,
+      "status": "cleared",
+      "count": 1,
+      "types": [
+        "earth/large"
+      ],
+      "angle": -72,
+      "speed": 136,
+      "turn": 49.32231047777001,
+      "net": 49.32231047777001,
+      "signChanges": 0,
+      "clearance": [
+        24.537185945993194
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 7,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 5,
+        "three": 0,
+        "launchHits": [
+          [
+            -72,
+            136
+          ],
+          [
+            -72,
+            140
+          ],
+          [
+            -72,
+            144
+          ],
+          [
+            -71,
+            140
+          ],
+          [
+            -71,
+            144
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 4
+        },
+        "three": {
+          "maxTime": 2.55,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-06",
+      "name": "二つの引力",
+      "time": 2.941666666666659,
+      "status": "cleared",
+      "count": 2,
+      "types": [
+        "earth/medium",
+        "asteroid/medium"
+      ],
+      "angle": -72,
+      "speed": 120,
+      "turn": 40.61690317553802,
+      "net": 40.61690317553802,
+      "signChanges": 0,
+      "clearance": [
+        24.83375945050804,
+        73.0435044413349
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 4,
+              "successes": [
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 3,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-2",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 9,
+        "hits": 6,
+        "three": 0,
+        "launchHits": [
+          [
+            -72,
+            120
+          ],
+          [
+            -72,
+            124
+          ],
+          [
+            -72,
+            128
+          ],
+          [
+            -71,
+            124
+          ],
+          [
+            -71,
+            128
+          ],
+          [
+            -70,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-2",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 3.6
+        },
+        "three": {
+          "maxTime": 2.65,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-07",
+      "name": "S字飛行",
+      "time": 3.0166666666666586,
+      "status": "cleared",
+      "count": 2,
+      "types": [
+        "earth/small",
+        "earth/small"
+      ],
+      "angle": -60,
+      "speed": 120,
+      "turn": 14.130431282404023,
+      "net": 10.673480489601806,
+      "signChanges": 1,
+      "clearance": [
+        38.329831688523385,
+        67.31163793126179
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 4,
+              "successes": [
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-2",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 8,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 7,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 6,
+        "three": 0,
+        "launchHits": [
+          [
+            -60,
+            120
+          ],
+          [
+            -60,
+            124
+          ],
+          [
+            -59,
+            120
+          ],
+          [
+            -59,
+            124
+          ],
+          [
+            -59,
+            128
+          ],
+          [
+            -58,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-2",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 3.5
+        },
+        "three": {
+          "maxTime": 2.55,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-08",
+      "name": "重力の橋",
+      "time": 3.0166666666666586,
+      "status": "cleared",
+      "count": 2,
+      "types": [
+        "gas/small",
+        "asteroid/medium"
+      ],
+      "angle": -69,
+      "speed": 120,
+      "turn": 33.32063722304149,
+      "net": 33.32063722304149,
+      "signChanges": 0,
+      "clearance": [
+        43.800220259539614,
+        77.47231840828418
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 3,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-2",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 8,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 7,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 6,
+        "three": 0,
+        "launchHits": [
+          [
+            -69,
+            120
+          ],
+          [
+            -68,
+            120
+          ],
+          [
+            -68,
+            124
+          ],
+          [
+            -68,
+            128
+          ],
+          [
+            -67,
+            124
+          ],
+          [
+            -67,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-2",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 3.4
+        },
+        "three": {
+          "maxTime": 2.45,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-09",
+      "name": "三つの星",
+      "time": 3.033333333333325,
+      "status": "cleared",
+      "count": 3,
+      "types": [
+        "earth/small",
+        "asteroid/small",
+        "asteroid/small"
+      ],
+      "angle": -68,
+      "speed": 120,
+      "turn": 39.477349962331445,
+      "net": 39.477349962331445,
+      "signChanges": 0,
+      "clearance": [
+        44.001331532433554,
+        81.34531835533096,
+        32.22033917706773
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 6,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 3,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-2",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-3",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 15,
+        "hits": 6,
+        "three": 0,
+        "launchHits": [
+          [
+            -68,
+            120
+          ],
+          [
+            -68,
+            124
+          ],
+          [
+            -67,
+            120
+          ],
+          [
+            -67,
+            124
+          ],
+          [
+            -67,
+            128
+          ],
+          [
+            -66,
+            128
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-2",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-3",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 3.3
+        },
+        "three": {
+          "maxTime": 2.35,
+          "maxMovement": 30
+        }
+      }
+    },
+    {
+      "id": "stage-10",
+      "name": "軌道マスター",
+      "time": 2.316666666666661,
+      "status": "cleared",
+      "count": 3,
+      "types": [
+        "gas/small",
+        "asteroid/small",
+        "earth/small"
+      ],
+      "angle": -69,
+      "speed": 160,
+      "turn": 44.165186770618874,
+      "net": 44.165186770618874,
+      "signChanges": 0,
+      "clearance": [
+        37.82750817854,
+        79.54895225154732,
+        26.007962373312253
+      ],
+      "placement": [
+        {
+          "id": "planet-1",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 5,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 3,
+              "successes": [
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-2",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "planet-3",
+          "levels": [
+            {
+              "radius": 2,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -2,
+                  -2
+                ],
+                [
+                  -2,
+                  0
+                ],
+                [
+                  -2,
+                  2
+                ],
+                [
+                  0,
+                  -2
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  -2
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  2
+                ]
+              ]
+            },
+            {
+              "radius": 4,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -4,
+                  -4
+                ],
+                [
+                  -4,
+                  0
+                ],
+                [
+                  -4,
+                  4
+                ],
+                [
+                  0,
+                  -4
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  4,
+                  -4
+                ],
+                [
+                  4,
+                  0
+                ],
+                [
+                  4,
+                  4
+                ]
+              ]
+            },
+            {
+              "radius": 8,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -8,
+                  -8
+                ],
+                [
+                  -8,
+                  0
+                ],
+                [
+                  -8,
+                  8
+                ],
+                [
+                  0,
+                  -8
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8
+                ],
+                [
+                  8,
+                  -8
+                ],
+                [
+                  8,
+                  0
+                ],
+                [
+                  8,
+                  8
+                ]
+              ]
+            },
+            {
+              "radius": 12,
+              "valid": 9,
+              "hits": 9,
+              "successes": [
+                [
+                  -12,
+                  -12
+                ],
+                [
+                  -12,
+                  0
+                ],
+                [
+                  -12,
+                  12
+                ],
+                [
+                  0,
+                  -12
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  12
+                ],
+                [
+                  12,
+                  -12
+                ],
+                [
+                  12,
+                  0
+                ],
+                [
+                  12,
+                  12
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "launch": {
+        "valid": 25,
+        "hits": 9,
+        "three": 2,
+        "launchHits": [
+          [
+            -70,
+            152
+          ],
+          [
+            -70,
+            156
+          ],
+          [
+            -69,
+            152
+          ],
+          [
+            -69,
+            156
+          ],
+          [
+            -69,
+            160
+          ],
+          [
+            -69,
+            164
+          ],
+          [
+            -68,
+            160
+          ],
+          [
+            -68,
+            164
+          ],
+          [
+            -68,
+            168
+          ]
+        ]
+      },
+      "removal": [
+        {
+          "id": "planet-1",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-2",
+          "status": "escaped"
+        },
+        {
+          "id": "planet-3",
+          "status": "escaped"
+        }
+      ],
+      "rating": {
+        "two": {
+          "maxTime": 3.1
+        },
+        "three": {
+          "maxTime": 2.25,
+          "maxMovement": 30
+        }
+      }
+    }
+  ],
+  "live": [
+    {
+      "id": "stage-01",
+      "example": {
+        "angleDeg": -72,
+        "speed": 122,
+        "planet": "planet-1",
+        "target": {
+          "x": 216,
+          "y": 282
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.058333333333325,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-02",
+      "example": {
+        "angleDeg": -71,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 225,
+          "y": 275
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.141666666666658,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-03",
+      "example": {
+        "angleDeg": -72,
+        "speed": 128,
+        "planet": "planet-1",
+        "target": {
+          "x": 240,
+          "y": 275
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 2.7666666666666595,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-04",
+      "example": {
+        "angleDeg": -69,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 160,
+          "y": 275
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.1749999999999914,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-05",
+      "example": {
+        "angleDeg": -72,
+        "speed": 128,
+        "planet": "planet-1",
+        "target": {
+          "x": 230,
+          "y": 260
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 2.8749999999999925,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-06",
+      "example": {
+        "angleDeg": -71,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 190,
+          "y": 305
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.049999999999992,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-07",
+      "example": {
+        "angleDeg": -62,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 200,
+          "y": 300
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 2.999999999999992,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-08",
+      "example": {
+        "angleDeg": -71,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 200,
+          "y": 285
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.024999999999992,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-09",
+      "example": {
+        "angleDeg": -70,
+        "speed": 120,
+        "planet": "planet-1",
+        "target": {
+          "x": 190,
+          "y": 285
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 3.0416666666666585,
+        "movement": 20,
+        "stars": 2
+      }
+    },
+    {
+      "id": "stage-10",
+      "example": {
+        "angleDeg": -71,
+        "speed": 152,
+        "planet": "planet-3",
+        "target": {
+          "x": 250,
+          "y": 190
+        },
+        "startStep": 24,
+        "endStep": 72,
+        "time": 2.4333333333333274,
+        "movement": 20,
+        "stars": 2
+      }
+    }
+  ]
+}

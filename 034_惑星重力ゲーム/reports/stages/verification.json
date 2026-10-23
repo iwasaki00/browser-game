@@ -1,0 +1,112 @@
+[
+  {
+    "id": "stage-01",
+    "title": "はじめての引力",
+    "angleDeg": -72,
+    "speed": 126,
+    "time": 2.9333333333333256,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-02",
+    "title": "すれすれ飛行",
+    "angleDeg": -72,
+    "speed": 120,
+    "time": 3.0999999999999917,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 2
+  },
+  {
+    "id": "stage-03",
+    "title": "大きなカーブ",
+    "angleDeg": -72,
+    "speed": 136,
+    "time": 2.699999999999993,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-04",
+    "title": "小さな調整",
+    "angleDeg": -67,
+    "speed": 120,
+    "time": 3.2666666666666577,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 2
+  },
+  {
+    "id": "stage-05",
+    "title": "重力の輪",
+    "angleDeg": -72,
+    "speed": 136,
+    "time": 2.724999999999993,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-06",
+    "title": "二つの引力",
+    "angleDeg": -72,
+    "speed": 120,
+    "time": 2.9083333333333257,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-07",
+    "title": "S字飛行",
+    "angleDeg": -60,
+    "speed": 120,
+    "time": 2.974999999999992,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-08",
+    "title": "重力の橋",
+    "angleDeg": -69,
+    "speed": 120,
+    "time": 2.966666666666659,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  },
+  {
+    "id": "stage-09",
+    "title": "三つの星",
+    "angleDeg": -68,
+    "speed": 120,
+    "time": 3.0999999999999917,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 2
+  },
+  {
+    "id": "stage-10",
+    "title": "軌道マスター",
+    "angleDeg": -72,
+    "speed": 132,
+    "time": 2.8499999999999925,
+    "design": "cleared",
+    "live": "cleared",
+    "slingshot": "cleared",
+    "stars": 3
+  }
+]

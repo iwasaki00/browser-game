@@ -16,6 +16,7 @@ import { stageFingerprint } from './fingerprint';
 import { createLabStore, productionLabKey } from './lab';
 import { recordRunOutcome, prepareLabRetry, resetProgressAndLab } from './lab-integration';
 import { LabPanel } from './lab-ui';
+import { SaveCoordinator } from './save-coordinator';
 
 type Mode = 'DESIGN' | 'RUN' | 'PAUSED' | 'RESULT';
 const get = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -28,7 +29,14 @@ const next = get<HTMLButtonElement>('next');
 const developerAccess = import.meta.env.DEV && new URLSearchParams(location.search).get('testMode') === '1';
 let storage: ProgressStorage | undefined;
 try { storage = developerAccess ? memoryStorage() : window.localStorage; } catch { /* Play in memory. */ }
-const progress = createProgressStore(stages.map(s => s.id), storage, import.meta.env.DEV ? 'sort-and-send.dev.progress.v1' : productionProgressKey);
+const coordinator = new SaveCoordinator(navigator.locks, developerAccess);
+const rawStorage = storage;
+if (rawStorage) storage = { getItem: key => rawStorage.getItem(key), setItem: (key, value) => {
+  if (!developerAccess && !coordinator.held) throw new Error('Exclusive save lock required');
+  rawStorage.setItem(key, value);
+} };
+const progressKey = import.meta.env.DEV ? 'sort-and-send.dev.progress.v1' : productionProgressKey;
+const progress = createProgressStore(stages.map(s => s.id), storage, progressKey, () => developerAccess || coordinator.held);
 const labSummaries: unknown[] = stageRatings;
 const lab = createLabStore(stages, labSummaries.filter(isSolverSummary), storage, import.meta.env.DEV ? 'sort-and-send.dev.lab.v1' : productionLabKey);
 // Explicit development-only fixture: ephemeral stars, zero discoveries, never production data.
@@ -289,7 +297,7 @@ get('report').addEventListener('click', event => {
   draw();
 });
 
-function animate(now: number) {
+async function animate(now: number) {
   animationId = undefined;
   if (mode !== 'RUN' || !result || !liveRun) return;
   elapsed = Math.min((now - startedAt) / tickMs, result.ticks, pauseAt ?? Infinity);
@@ -310,13 +318,13 @@ function animate(now: number) {
   if (elapsed < result.ticks) scheduleFrame();
   else {
     result = liveRun.finish();
-    mode = 'RESULT'; updateControls();
     const reports: unknown[] = stageRatings;
     const report = reports.filter(isSolverSummary).find(r => r.stageId === stage.id);
     const cost = deliveryCost(patterns, result);
     const minimum = verifiedMinimum(stage, report);
     const rating = rateDelivery({ stage, result, cost, rescueUsed: result.rescueUsed === true, report });
-    const outcome = recordRunOutcome(progress, lab, stage, runFingerprint, patterns, result, rating.stars);
+    const outcome = await coordinator.run(() => recordRunOutcome(progress, lab, stage, runFingerprint, patterns, result!, rating.stars));
+    mode = 'RESULT';
     const newRecord = outcome.newBest;
     if (result.clear) audio.play(newRecord ? 'record' : 'clear');
     updateControls();
@@ -451,8 +459,13 @@ new ResizeObserver(resize).observe(canvas);
 function updateStorageStatus() {
   get('storage-status').textContent = developerAccess ? `${labFixture ? '研究室GUIテスト用：全20面に一時的な星1、発見0件から開始。' : '開発用の全ステージ確認モード。'}記録はこのページ内のみ。本番の保存データは読み書きしません。` :
     progress.status === 'unavailable' ? 'この環境では保存できません。このページ内で引き続き遊べます。' :
-    progress.status === 'unknown-version' ? '未対応の保存形式です。元のデータを保護して一時的にプレイします。保存を再開する場合は進行を初期化してください。' :
-    progress.status === 'recovered' ? '保存データを読み取れなかったため、初期状態から再開しました。' : '解放状況・CLEAR履歴・最高星評価・設定はこのブラウザに保存されます。';
+    !coordinator.available ? '排他制御を利用できないため保存・初期化を停止しています。プレイはこのページ内のみです。' :
+    progress.status === 'unknown-version' ? '未対応の保存形式を保護しています。この版では保存・初期化できません。' :
+    progress.status === 'stale-generation' ? '別タブで進行が初期化されました。このタブの保存を停止しています。再読み込みしてください。' :
+    progress.status === 'reset-pending' ? '初期化が未完了です。通常保存を停止しています。進行初期化を再試行してください。' :
+    progress.status === 'corrupt' ? '保存データ全体を読み取れず、元データを保護しています。保存は停止中です。' :
+    progress.status === 'read-only' ? '安全な排他制御を確認できず保存を停止しています。' :
+    progress.status === 'recovered' ? '不正な項目を除外し、正常な進行・設定を復元しました。' : '解放状況・CLEAR履歴・最高星評価・設定はこのブラウザに保存されます。';
 }
 function readSettings(): Settings {
   return { sfx: get<HTMLInputElement>('sfx').checked, bgm: get<HTMLInputElement>('bgm').checked,
@@ -470,18 +483,27 @@ get<HTMLInputElement>('sfx').checked = settings.sfx;
 get<HTMLInputElement>('bgm').checked = settings.bgm;
 get<HTMLInputElement>('volume').value = String(Math.round(settings.volume * 100));
 get<HTMLInputElement>('reduced-motion').checked = settings.reducedMotion;
-for (const id of ['sfx', 'bgm', 'volume', 'reduced-motion']) get(id).addEventListener('change', () => { progress.setSettings(readSettings()); applySettings(); void audio.activate(); updateStorageStatus(); });
+for (const id of ['sfx', 'bgm', 'volume', 'reduced-motion']) get(id).addEventListener('change', async () => {
+  const settings = readSettings(), field = (id === 'reduced-motion' ? 'reducedMotion' : id) as keyof Settings;
+  await coordinator.run(() => progress.setSettings({ ...progress.data.settings, [field]: settings[field] }));
+  applySettings(); void audio.activate(); updateStorageStatus();
+});
 get('volume').addEventListener('input', applySettings);
 const resetDialog = get<HTMLDialogElement>('reset-confirm');
 get('reset-progress').addEventListener('click', () => { if (!activeRun()) { get('reset-error').textContent = ''; resetDialog.showModal(); } });
 get('cancel-reset').addEventListener('click', () => { resetProgressAndLab(progress, lab, false); resetDialog.close(); });
-get('confirm-reset').addEventListener('click', () => {
+get('confirm-reset').addEventListener('click', async () => {
   if (activeRun()) return;
-  const reset = resetProgressAndLab(progress, lab, true);
+  get<HTMLButtonElement>('confirm-reset').disabled = true;
+  const reset = await coordinator.run(() => resetProgressAndLab(progress, lab, true));
+  get<HTMLButtonElement>('confirm-reset').disabled = false;
   if (!reset.ok) { get('reset-error').textContent = reset.message; return; }
   resetDialog.close(); labPanel.close(); selectStage(0); get('storage-status').textContent = reset.message;
 });
-window.addEventListener('storage', event => { if (event.key === (import.meta.env.DEV ? 'sort-and-send.dev.lab.v1' : productionLabKey)) labPanel.sync(); });
+window.addEventListener('storage', event => {
+  if (event.key === progressKey || event.key === null) { progress.sync(); updateControls(); }
+  if (event.key === (import.meta.env.DEV ? 'sort-and-send.dev.lab.v1' : productionLabKey)) labPanel.sync();
+});
 applySettings();
 osMotion.addEventListener('change', applySettings);
 // The menu is two levels above the Vite source and three above its static build.

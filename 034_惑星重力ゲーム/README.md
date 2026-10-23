@@ -1,6 +1,18 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.4.1 — MOBILE PLAYABILITY CHECK
+Version 0.5.1 — STAGE BALANCE
+
+03は導入の許容幅を拡大、06〜10はゲート幅、09〜10は第3惑星の位置を調整しました。05以降を中心に★3時間を見直しています。
+分析手法・ステージ別比較・重力操作別解は [reports/balance/BALANCE.md](reports/balance/BALANCE.md)、最高評価解答は [reports/balance/THREE_STARS.md](reports/balance/THREE_STARS.md)。
+ステージIDと保存形式は変更せず、過去の星・解放を維持します。新しい条件は今後のプレイに適用します。
+
+ミッション横の「遊び方」からステージ攻略01〜10とフリープレイを選択します。
+初期解放は01のみ。どちらかのゲームモードでクリアすると次が解放され、最高星は軌道設計・重力操作で別々に保存します。
+★1は到達、★2・★3はステージ別の時間以内（重力操作の★3では総移動30以内も必要）。各ステージのratingに条件を定義しています。
+ステージの種類・サイズ・個数・配置範囲制約は編集と飛行中移動に適用します。
+攻略RESETはステージの初期惑星配置へ戻し、ANGLE・THRUSTは維持します。フリープレイのRESETは従来どおりです。
+ステージデータ・解答はjs/challenges.js、保存と評価はjs/progress.js。
+全10ステージの到達結果は [reports/stages/VERIFICATION.md](reports/stages/VERIFICATION.md) を参照してください。
 
 惑星編集と表示設定を折りたたみにし、狭い画面では設定欄だけ上下スクロールできます。発射・RESETは常に下部です。
 ボタン・selectは高さ44px以上、盤面のタッチ判定は最低44px直径に調整しました。

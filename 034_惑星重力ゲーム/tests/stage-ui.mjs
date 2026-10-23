@@ -1,0 +1,48 @@
+import {chromium} from '../../019_bomber-lab/tests/node_modules/playwright/index.mjs';
+import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import assert from 'node:assert/strict';
+const root=new URL('../',import.meta.url);
+const server=createServer(async(req,res)=>{try{
+ const url=new URL('.'+new URL(req.url,'http://localhost').pathname,root);
+ const target=url.pathname.endsWith('/')?new URL('index.html',url):url;
+ if(!fileURLToPath(target).startsWith(fileURLToPath(root)))throw Error();
+ res.setHeader('Content-Type',target.pathname.endsWith('.js')?'text/javascript':target.pathname.endsWith('.css')?'text/css':target.pathname.endsWith('.svg')?'image/svg+xml':'text/html');
+ res.end(await readFile(target));
+}catch{res.writeHead(404).end();}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const browser=await chromium.launch({channel:'chrome',headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:375,height:667},hasTouch:true,isMobile:true});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(`http://127.0.0.1:${server.address().port}/`);
+ await page.locator('#openStages').click();
+ assert.equal(await page.locator('#stageList button').count(),10);
+ assert.equal(await page.locator('#stageList button:disabled').count(),9);
+ await page.screenshot({path:fileURLToPath(new URL('reports/stages/selection-375.png',root))});
+ await page.locator('#stageList button').first().click();
+ assert.match(await page.locator('.mission strong').textContent(),/01 はじめて/);
+ await page.locator('#planetPanel').evaluate(el=>el.open=true);
+ assert.ok(await page.locator('#addPlanet').isDisabled());
+ assert.equal(await page.locator('#planetType option:disabled').count(),2);
+ await page.locator('#planetPanel').evaluate(el=>el.open=false);
+ await page.locator('#angleInput').fill('-72');await page.locator('#speedInput').fill('126');
+ await page.locator('#launchButton').click();
+ await page.locator('#result.success').waitFor({timeout:10000});
+ assert.equal(await page.locator('#clearStars').textContent(),'★★★');
+ await page.locator('#retryButton').click();
+ await page.locator('#openStages').click();
+ assert.ok(await page.locator('#stageList button').nth(1).isEnabled());
+ await page.locator('#closeStages').click();
+ await page.locator('#resetButton').click();
+ assert.equal(await page.locator('#angleInput').inputValue(),'-72');
+ await page.locator('#launchButton').click();await page.locator('#result.success').waitFor({timeout:10000});
+ await page.locator('#nextStage').click();assert.match(await page.locator('.mission strong').textContent(),/02 すれすれ/);
+ await page.locator('#openStages').click();await page.locator('#freePlay').click();
+ assert.match(await page.locator('.mission strong').textContent(),/最初のスイングバイ/);
+ await page.reload();await page.locator('#openStages').click();assert.ok(await page.locator('#stageList button').nth(1).isEnabled());
+ assert.deepEqual(errors,[]);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ console.log('375px Chrome: stage locks, restrictions, clear, stars, retry, RESET, next, free play, reload persistence PASS');
+}finally{await browser.close();await new Promise(r=>server.close(r));}

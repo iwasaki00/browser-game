@@ -1,6 +1,6 @@
 {
   "name": "sort-and-send",
-  "version": "0.5.0-C",
+  "version": "1.0.0-B",
   "private": true,
   "type": "module",
   "scripts": {
