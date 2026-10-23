@@ -2,6 +2,17 @@
 
 Version 0.2.3 — MISSION BALANCE & PLAYABILITY。ビルド不要で動く、オリジナルの8bit風横スクロール防衛アクションです。
 
+## ART DIRECTION REFRESH / Study 01（未採用サンプル）
+
+M03制作前の方向検討として、16bit寄りの読みやすい「鋼材の軍事SF＋分節甲殻の侵略生物」を別フォルダで制作しました。**本番素材の差し替え・ゲーム解像度の変更は行っていません。**
+
+- 方針・観察・配色・全展開の見積もり：[ART_DIRECTION.md](docs/ART_DIRECTION.md)
+- 現状との比較一覧：[comparison.png](assets/art-refresh/study-01/comparison.png)
+- ステージ/倍率/320・640描画面を切り替える独立プレビュー：[docs/art-preview/](docs/art-preview/index.html)（HTTPサーバー経由で開く）
+- 対象：RANGER/WING、E-01/E-03、B-01、A-01/R-04/H-08/T-06/D-19、M01/M02各8タイル・3背景レイヤー＋合成。19素材PNG＋3比較/構図PNGを `assets/art-refresh/study-01/` に出力します。
+- 再生成：`py -3 tools/generate_assets.py --art-study-only`。固定シードのローカル描画のみ。既存素材・ゲームロジック・性能・セーブ・Arcade031リンクは変更しません。
+- 現行320×180・最小0.35倍では新しい細部も欠落します。プレビューの640描画面は比較用の提案だけで、採用・実機検証は別フェーズです。
+
 ## ミッション攻略検証（0.2.3）
 
 - `?debug=1` → TEST LAB → **STAGE SELECT** からM01/M02の全5エリア、M02 AREA03の上下ルート、B-01/B-02戦を直接開始できます。通常の解放条件は変更しません。

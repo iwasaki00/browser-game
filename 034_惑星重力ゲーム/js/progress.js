@@ -2,7 +2,7 @@ export const PROGRESS_KEY='orbit-maker.stage-progress.v1';
 export function loadProgress(storage){
  const result={design:{},live:{}};
  try{const data=JSON.parse(storage?.getItem(PROGRESS_KEY)??'null');
-  for(const mode of ['design','live'])for(let i=1;i<=10;i++){
+  for(const mode of ['design','live'])for(let i=1;i<=20;i++){
    const id=`stage-${String(i).padStart(2,'0')}`,value=data?.[mode]?.[id];
    if(Number.isInteger(value)&&value>=1&&value<=3)result[mode][id]=value;
   }

@@ -1,5 +1,6 @@
 import { configurePlanet } from './planets.js';
 import { getStage } from './stages.js';
+import {SPECIAL_CHALLENGES}from'./special-challenges.js';
 
 const definitions = [
  ['はじめての引力','惑星の横を通り、引力でゲートへ曲がろう。',[[196,282,'earth','medium']],1,['earth'],['medium'],[319,105,24]],
@@ -25,7 +26,7 @@ export const CHALLENGES = definitions.map(([name,description,planets,maxPlanets,
  solution:{planets:planets.map(([x,y,type,size],j)=>configurePlanet({id:`planet-${j+1}`,x,y},type,size)),angleDeg:answers[i][0],speed:answers[i][1],liveTargets:{}},
  threeStarSolution:{angleDeg:threeStarAnswers[i][0],speed:threeStarAnswers[i][1]},
  verification:{design:'cleared',live:'cleared',elapsed:answers[i][2],fixedTimeStep:1/120},
-}));
+})).concat(SPECIAL_CHALLENGES);
 export function getChallenge(id) {
  const source=CHALLENGES.find(s=>s.id===id);if(!source)throw Error(`Unknown stage: ${id}`);
  return structuredClone(source);

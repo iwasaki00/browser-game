@@ -74,9 +74,9 @@ test('移動する恒星がロケットを横切る場合の熱領域も検出',
 });
 test('全10ステージのデータと通常惑星の軌道はv0.5.1と不変',async()=>{
  const baseline=JSON.parse(await readFile(new URL('../reports/balance/after.json',import.meta.url),'utf8'));
- assert.deepEqual(CHALLENGES,baseline.stages);
+ assert.deepEqual(CHALLENGES.slice(0,10),baseline.stages);
  // Shared force/contact changes affect all stages, so verify all reference and ★3 routes.
- for(const s of CHALLENGES){
+ for(const s of CHALLENGES.slice(0,10)){
   const r=simulateTrajectory(s,s.solution);assert.equal(r.state.status,'cleared');assert.ok(Math.abs(r.state.elapsed-s.verification.elapsed)<1e-9);
   const old=baseline.stages.find(q=>q.id===s.id);
   assert.deepEqual(r,simulateTrajectory(old,old.solution));

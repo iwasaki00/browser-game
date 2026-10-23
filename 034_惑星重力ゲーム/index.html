@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Special Planets</title>
+  <title>ORBIT MAKER — Orbit Share</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.6.0</div>
+      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.7.1</div></div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -51,6 +51,7 @@
         <div class="planet-toolbar"><output id="planetSelection" aria-live="polite"></output><button id="addPlanet" type="button">＋ 追加</button><button id="deletePlanet" type="button">削除</button></div>
         <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
         <p id="planetFeature" class="planet-feature"></p>
+        <p id="challengeConditions" class="planet-feature"></p>
         <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>
       </div>
       </details>
@@ -88,6 +89,25 @@
     <p>軌道設計・重力操作の記録は別々に保存します。</p>
     <div id="stageList"></div>
     <button id="freePlay" type="button">フリープレイ</button>
+  </dialog>
+  <p id="galleryNotice" role="status" aria-live="polite"></p>
+  <dialog id="galleryDialog" aria-labelledby="galleryTitle">
+    <header><h2 id="galleryTitle">軌道ギャラリー</h2><button id="closeGallery" type="button">閉じる</button></header>
+    <p id="galleryMessage" role="status"></p>
+    <section id="galleryListView"><p id="galleryCount"></p><div id="galleryList"></div></section>
+    <section id="galleryPlayer" hidden>
+      <div class="replay-heading"><button id="replayBack" type="button">一覧へ</button><strong id="replayTitle"></strong><button id="openArt" type="button">画像作成</button></div>
+      <div class="replay-board"><canvas id="replayCanvas" width="750" height="1000" aria-label="保存した飛行の再生"></canvas><strong id="replayResult" aria-live="polite"></strong></div>
+      <output id="replayTime"></output>
+      <div class="replay-controls"><button id="replayPlay" type="button">再生</button><button id="replayRestart" type="button">最初から</button><label>速度 <select id="replaySpeed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label><button id="replayFull" type="button" aria-pressed="false">軌道全体</button></div>
+    </section>
+    <section id="artView" hidden>
+      <header><button id="artBack" type="button">再生へ戻る</button><strong>軌道を画像にする</strong></header>
+      <div class="art-options"><label>形 <select id="artShape"><option value="square">正方形</option><option value="portrait">縦長</option></select></label><label>背景 <select id="artBackground"><option value="space">宇宙</option><option value="simple">シンプル</option></select></label><label><input id="artText" type="checkbox" checked>文字情報</label></div>
+      <div class="art-preview"><img id="artPreview" alt="保存画像の構図プレビュー"></div>
+      <p id="artMessage" role="status" aria-live="polite"></p>
+      <div class="art-actions"><button id="artGenerate" type="button">画像作成</button><button id="artSave" type="button" disabled>画像保存</button><button id="artShare" type="button" disabled>共有</button><a id="artOpenImage" target="_blank" rel="noopener" hidden>画像を開く</a></div>
+    </section>
   </dialog>
   <script type="module" src="./js/game.js"></script>
 </body>

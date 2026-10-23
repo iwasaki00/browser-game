@@ -1,0 +1,572 @@
+{
+  "study": "ART DIRECTION REFRESH / STUDY 01",
+  "status": "PROPOSAL_NOT_INTEGRATED",
+  "gameVersion": "0.2.3",
+  "seed": 24032023,
+  "sampling": "nearest",
+  "worldSourceScale": 2,
+  "palette": {
+    "ink": "#090f1b",
+    "deep": "#14242f",
+    "shadow": "#223743",
+    "steel": "#456573",
+    "mid": "#6d9297",
+    "edge": "#a0c0b5",
+    "light": "#c4d2b7",
+    "white": "#f1f0d5",
+    "olive0": "#39473e",
+    "olive": "#7a8964",
+    "olive1": "#bcc596",
+    "teal0": "#21767e",
+    "teal": "#44c6bd",
+    "teal1": "#adf0d1",
+    "shell0": "#382936",
+    "shell1": "#623d4d",
+    "shell2": "#ad6976",
+    "shell3": "#d98e82",
+    "shell4": "#edac88",
+    "bone": "#dfc29d",
+    "amber0": "#855033",
+    "amber": "#e59e54",
+    "gold": "#f2cf7c",
+    "acid0": "#6f894e",
+    "acid": "#aecb69",
+    "acid1": "#e5edaa",
+    "violet0": "#504a7d",
+    "violet": "#9987cf",
+    "violet1": "#d5c5f0",
+    "clear": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "weaponOrder": [
+    "A-01",
+    "R-04",
+    "H-08",
+    "T-06",
+    "D-19"
+  ],
+  "assets": {
+    "sprites/ranger.png": {
+      "size": [
+        96,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "frames": 2,
+      "columns": 2,
+      "poses": [
+        "aim_idle",
+        "stride_study"
+      ],
+      "role": "world sprite study, not animation complete",
+      "sha256": "03404a2677be04f95026e9498861a1cc39332e5edeb77123df5e887b3d8cc084"
+    },
+    "sprites/wing.png": {
+      "size": [
+        96,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "frames": 2,
+      "columns": 2,
+      "poses": [
+        "hover",
+        "rise_study"
+      ],
+      "role": "world sprite study, not animation complete",
+      "sha256": "0629d34c60f3b7b0156f1c3ea210cede3c8bcf146a7a7372f508e3258f457aa3"
+    },
+    "sprites/crawler.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "columns": 2,
+      "poses": [
+        "crawl_a",
+        "crawl_b"
+      ],
+      "role": "world sprite study, not animation complete",
+      "sha256": "e97bc8a70c293cbaa90a587197a02359d545f39926bd29cd9493baf352295a1f"
+    },
+    "sprites/needle.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 2,
+      "columns": 2,
+      "poses": [
+        "wing_low",
+        "wing_high"
+      ],
+      "role": "world sprite study, not animation complete",
+      "sha256": "573d12370af8d1f552e547036dddc4f646d9a11684a65c7b8f0fe8cde266c9d4"
+    },
+    "sprites/mother_crawler.png": {
+      "size": [
+        384,
+        128
+      ],
+      "cell": [
+        192,
+        128
+      ],
+      "logicalCell": [
+        96,
+        64
+      ],
+      "frames": 2,
+      "columns": 2,
+      "poses": [
+        "guard",
+        "mandible_attack_study"
+      ],
+      "role": "world sprite study, not animation complete",
+      "sha256": "2d5b1b03592e883656bf1f20c4071b1165f7452f7d985b68408138af063739b3"
+    },
+    "weapons/icons.png": {
+      "size": [
+        160,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 5,
+      "columns": 5,
+      "poses": [
+        "A-01",
+        "R-04",
+        "H-08",
+        "T-06",
+        "D-19"
+      ],
+      "role": "HUD icons",
+      "sha256": "1568cf5d10857695fbc5f4c047168a269df99f7b9dad25a5b84948da76549f3f"
+    },
+    "weapons/equipped.png": {
+      "size": [
+        160,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 5,
+      "columns": 5,
+      "poses": [
+        "A-01",
+        "R-04",
+        "H-08",
+        "T-06",
+        "D-19"
+      ],
+      "role": "equipment silhouette study",
+      "sha256": "1568cf5d10857695fbc5f4c047168a269df99f7b9dad25a5b84948da76549f3f"
+    },
+    "weapons/projectiles.png": {
+      "size": [
+        160,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 5,
+      "columns": 5,
+      "poses": [
+        "A-01",
+        "R-04",
+        "H-08",
+        "T-06",
+        "D-19"
+      ],
+      "role": "projectile visual only; no hitbox",
+      "sha256": "27171238e380abbee09d5e00602a1c27b530c0348032dbfafbd58f1c989dcee8"
+    },
+    "weapons/impacts.png": {
+      "size": [
+        256,
+        320
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 20,
+      "columns": 4,
+      "poses": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3",
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3",
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3",
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3",
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3"
+      ],
+      "role": "four impact phases per weapon row",
+      "sha256": "444f0c35c2a481b057d4ea7778e189e18464322181559b4197584780ede21382"
+    },
+    "tiles/city.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "poses": [
+        "asphalt_a",
+        "asphalt_crack",
+        "asphalt_branch",
+        "concrete_seam",
+        "platform_left",
+        "platform_middle",
+        "platform_right",
+        "supply_panel"
+      ],
+      "role": "M01 eight tile studies",
+      "sha256": "b807b46067ab795eb645c2e6f465e497dabbeb0711124c24a5a81798c7aaa794"
+    },
+    "tiles/underground.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 8,
+      "columns": 4,
+      "poses": [
+        "panel",
+        "vent",
+        "conduit",
+        "indicator",
+        "pipe",
+        "organic_cable",
+        "hazard",
+        "floor"
+      ],
+      "role": "M02 eight tile studies",
+      "sha256": "4856b1b29b0e6ac40acf87b2bdbcfdbac63607dbb5fb93e47ba7cca752852f58"
+    },
+    "backgrounds/city_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "far"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "cf545b0a81e4f9be2e2671b13ff1f6cad36e1ed8e6748f9cbaf5eeb37a78e19e"
+    },
+    "backgrounds/city_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "middle"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "748cf644cc64bc76b2e916b4a4d78fc417daa438ccc123c8ff8dec2fd67fe4e6"
+    },
+    "backgrounds/city_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "near"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "f02da020d94b7effaf350d31b85df5fe207fcf3b5225ab34397e0b779f32fe7c"
+    },
+    "backgrounds/city.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "composite"
+      ],
+      "role": "flattened background study",
+      "sha256": "673b06f6278f76e40f077a7cee1444b9c87e8ff201ee6040b635c5a8f061868b"
+    },
+    "backgrounds/underground_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "far"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "8db678847ab3f0f28886d5dc199f8e6072ede0fedbcaf97ebf32cc7ff10ebd33"
+    },
+    "backgrounds/underground_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "middle"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "ad564d80c865d53d2db416f145d265f582968a3c53b83ac7a14517bf32b91604"
+    },
+    "backgrounds/underground_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "near"
+      ],
+      "role": "background layer, no collision",
+      "sha256": "e897ca5ad74e9258a30a046db4ae16b949df69d749dd301c320f15f4c4e5f951"
+    },
+    "backgrounds/underground.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "composite"
+      ],
+      "role": "flattened background study",
+      "sha256": "b884b55638f097f75f170ce5b770d5f3c990f4215d2f7f3524d77d25eedf046e"
+    },
+    "preview/city_scene.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "composition"
+      ],
+      "role": "static art composition; not mission geometry",
+      "sha256": "81a264c7285e1c820176ead338755fd96618d9f2722d1ae9387a772de4dfa930"
+    },
+    "preview/underground_scene.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "composition"
+      ],
+      "role": "static art composition; not mission geometry",
+      "sha256": "f13372f7a542420036099e66a40ad1888d820d3bbb920178f4501dd889bd036b"
+    },
+    "comparison.png": {
+      "size": [
+        1400,
+        1320
+      ],
+      "cell": [
+        1400,
+        1320
+      ],
+      "logicalCell": [
+        1400,
+        1320
+      ],
+      "frames": 1,
+      "columns": 1,
+      "poses": [
+        "comparison"
+      ],
+      "role": "contact sheet; labels may use font antialiasing",
+      "sha256": "c6339972b5985cc8d04aee8f075b1adc89d660329453be6425e035dc217126e4"
+    }
+  },
+  "notes": [
+    "Production PNGs are read-only comparison inputs.",
+    "World sizes and hitboxes are not changed.",
+    "640 canvas is preview-only, not a game change.",
+    "Two poses are look studies, not completed animation sets."
+  ]
+}

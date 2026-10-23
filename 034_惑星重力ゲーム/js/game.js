@@ -1,7 +1,10 @@
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation, gravitationalAcceleration } from "./physics.js";
 import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './preview.js';
 import { getStage } from "./stages.js";
+import {createFlightRecorder}from'./flight-record.js';
+import {createGallery}from'./gallery-ui.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
+import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
 import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
 import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES } from './planets.js';
@@ -32,6 +35,7 @@ const planetSize = document.querySelector('#planetSize');
 const addPlanetButton = document.querySelector('#addPlanet');
 const deletePlanetButton = document.querySelector('#deletePlanet');
 let simulation = null;
+let recorder=null;
 let trail = [];
 let mode = "editing";
 let accumulator = 0;
@@ -295,7 +299,7 @@ function drawGravity() {
 
 function drawPrediction() {
   const velocity = aim && !aim.cancelled ? aim.velocity : velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));
-  const job = preview.update(stage, velocity, mode === 'editing');
+  const job = preview.update(stage, velocity, mode === 'editing'&&launchAllowed(stage,velocity,launchMode));
   if (!job || job.points.length < 2) return;
   ctx.save();
   ctx.beginPath(); ctx.rect(0,0,stage.world.width,stage.world.height); ctx.clip();
@@ -319,6 +323,7 @@ function setEditingControls(enabled) {
   editHint.hidden = !enabled;
   modeButtons.forEach(button => { button.disabled = !enabled; });
   document.querySelector('#openStages').disabled=!enabled;
+  document.querySelector('#openGallery').disabled=mode==='flying';
   updatePlanetEditor();
   gameModeInput.disabled = !enabled;
   previewButton.disabled = !enabled;
@@ -327,11 +332,13 @@ function setEditingControls(enabled) {
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
   if (mode !== "editing") return;
+  if(!launchAllowed(stage,velocity,launchMode)){statusText.textContent='角度・推力が発射条件外です。惑星編集内の条件を確認してください。';return;}
   cancelGesture();
   launchSnapshot = structuredClone(stage);
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  try{recorder=createFlightRecorder(stage,simulation,{gameMode,launchMode,playType,fixedTimeStep:DEFAULT_PHYSICS.fixedTimeStep});}catch{recorder=null;gallery.notify('飛行記録を開始できません。ゲームは続けられます。');}
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
   preview.clear();
@@ -342,6 +349,8 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
 }
 
 function showResult(status) {
+  finalizeRecording();
+  document.querySelector('#openGallery').disabled=false;
   const messages = {
     crashed: ["MISSION FAILED", "惑星に衝突"],
     escaped: ["MISSION FAILED", "航行エリアを逸脱"],
@@ -366,6 +375,7 @@ function showResult(status) {
 }
 
 function retry() {
+  finalizeRecording('reset');
   if (gameMode === 'live' && launchSnapshot) stage = structuredClone(launchSnapshot);
   moveTargets = {};
   preview.clear();
@@ -399,12 +409,14 @@ function updateOutputs() {
 function tick(time) {
   const frameSeconds = Math.min((time - lastTime) / 1000, .1);
   lastTime = time;
+  if(gallery.isOpen()){requestAnimationFrame(tick);return;}
   if (mode === "flying") {
     accumulator += frameSeconds;
     const dt = DEFAULT_PHYSICS.fixedTimeStep;
     while (accumulator >= dt && simulation.status === "flying") {
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      try{recorder?.capture(simulation);}catch{recorder=null;gallery.notify('飛行記録を中断しました。ゲームは続けられます。');}
       movement+=simulation.planets.reduce((sum,p,i)=>sum+Math.hypot(p.x-previousPlanets[i].x,p.y-previousPlanets[i].y),0);
       if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
       accumulator -= dt;
@@ -504,12 +516,14 @@ function updatePlanetEditor() {
   planetType.value = planet?.type ?? 'earth';
   planetSize.value = planet?.size ?? 'medium';
   planetType.disabled = planetSize.disabled = mode !== 'editing' || !planet;
+  if(stage.rules?.fixedPlanets){planetType.disabled=true;planetSize.disabled=true;}
   addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS);
   for(const option of planetType.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.types.includes(option.value));
   for(const option of planetSize.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.sizes.includes(option.value));
   document.querySelector('#planetFeature').textContent=planet?(PLANET_TYPES[planet.type??'earth'].description??`${PLANET_TYPES[planet.type??'earth'].name}：引力で航路を曲げる`):'惑星を選択してください';
   document.querySelector('#specialSample').disabled=playType!=='free'||mode!=='editing';
-  deletePlanetButton.disabled = mode !== 'editing' || !planet;
+  deletePlanetButton.disabled = mode !== 'editing' || !planet || stage.planets.length<=(stage.rules?.minPlanets??0);
+  document.querySelector('#challengeConditions').textContent=stage.rules?.fixedPlanets?`種類・個数固定／各惑星は初期位置から±12まで。ANGLE ${stage.launchConditions.precisionAngleRange.join('〜')}°／THRUST ${stage.launchConditions.speedRange.join('〜')}`:'';
   document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · M ${planet.mass}` : `惑星 ${stage.planets.length} / 3`;
 }
 addPlanetButton.addEventListener('click', () => {
@@ -522,6 +536,7 @@ addPlanetButton.addEventListener('click', () => {
 });
 deletePlanetButton.addEventListener('click', () => {
   if (mode !== 'editing') return;
+  if(stage.planets.length<=(stage.rules?.minPlanets??0))return;
   cancelGesture();
   stage.planets = stage.planets.filter(p=>p.id!==selectedPlanetId);
   selectedPlanetId = stage.planets[0]?.id;
@@ -576,6 +591,7 @@ function enterChallenge(id){
   if(playType==='free')freeSnapshot={stage:structuredClone(stage),angle:angleInput.value,speed:speedInput.value,snapshot:launchSnapshot};
   cancelGesture();playType='challenge';challengeId=id;stage=getChallenge(id);launchSnapshot=null;
   selectedPlanetId=stage.planets[0]?.id;
+  syncLaunchControls();
   document.querySelector('.mission strong').textContent=`${id.slice(-2)} ${stage.name}`;
   retry();statusText.textContent=stage.description;
   document.querySelector('#stageDialog').close();resizeCanvas();
@@ -599,6 +615,7 @@ document.querySelector('#freePlay').addEventListener('click',()=>{
   cancelGesture();playType='free';challengeId=null;
   stage=freeSnapshot?structuredClone(freeSnapshot.stage):getStage();
   launchSnapshot=freeSnapshot?.snapshot??null;selectedPlanetId=stage.planets[0]?.id;
+  syncLaunchControls();
   if(freeSnapshot){angleInput.value=freeSnapshot.angle;speedInput.value=freeSnapshot.speed;}
   document.querySelector('.mission strong').textContent=stage.name;
   retry();updateOutputs();document.querySelector('#stageDialog').close();resizeCanvas();
@@ -608,7 +625,20 @@ document.querySelector('#nextStage').addEventListener('click',()=>{
   const next=CHALLENGES[CHALLENGES.findIndex(s=>s.id===challengeId)+1];if(next)enterChallenge(next.id);
 });
 updatePlanetEditor();
+function syncLaunchControls(){
+  const [amin,amax]=stage.launch.angleRange,[smin,smax]=stage.launch.speedRange;
+  const oldAngle=Number(angleInput.value),oldSpeed=Number(speedInput.value);
+  angleInput.min=String(amin);angleInput.max=String(amax);speedInput.min=String(smin);speedInput.max=String(smax);
+  angleInput.value=String(oldAngle<amin||oldAngle>amax?stage.launch.angleDeg:oldAngle);
+  speedInput.value=String(oldSpeed<smin||oldSpeed>smax?stage.launch.speed:oldSpeed);updateOutputs();
+}
 updateOutputs();
 updateMode();
 resizeCanvas();
 requestAnimationFrame(tick);
+const gallery=createGallery({canOpen:()=>mode!=='flying',onOpen:cancelGesture});
+function finalizeRecording(reason){
+  if(!recorder||!simulation)return;
+  const current=recorder;recorder=null;
+  try{const record=current.finish(simulation,reason);if(record)void gallery.save(record);}catch{gallery.notify('飛行記録を保存できませんでした。ゲームは続けられます。');}
+}

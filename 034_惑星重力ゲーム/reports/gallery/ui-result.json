@@ -1,0 +1,20 @@
+{
+  "browser": "Windows Chrome; not iPhone Safari",
+  "viewport": [
+    "375x667",
+    "320x568"
+  ],
+  "policy": {
+    "limits": true,
+    "capped": true,
+    "restored": true,
+    "deleted": true,
+    "oldFavorites": true,
+    "nonInterference": true
+  },
+  "clearAndFail": true,
+  "replayControls": true,
+  "unavailableFallback": true,
+  "quotaNotice": true,
+  "errors": []
+}

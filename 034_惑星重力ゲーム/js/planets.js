@@ -34,9 +34,13 @@ export function placementAllowed(candidate, stage) {
   const radius=planetExtent(candidate);
   const rules=stage.rules;
   if(rules){
+    const fixed=rules.fixedPlanets?.find(p=>p.id===candidate.id);
+    if(rules.fixedPlanets&&(!fixed||candidate.type!==fixed.type||candidate.size!==fixed.size))return false;
     if(!rules.types.includes(candidate.type??'earth')||!rules.sizes.includes(candidate.size??'medium'))return false;
     const r=rules.placement;
     if(x-radius<r.left||x+radius>r.right||y-radius<r.top||y+radius>r.bottom)return false;
+    const area=rules.planetRanges?.[candidate.id];
+    if(area&&(x-radius<area.left||x+radius>area.right||y-radius<area.top||y+radius>area.bottom))return false;
   }
   if (x < radius || y < radius || x > stage.world.width-radius || y > stage.world.height-radius) return false;
   if (stage.planets.some(p => p.id !== candidate.id && Math.hypot(x-p.x,y-p.y) < radius+planetExtent(p)+8)) return false;

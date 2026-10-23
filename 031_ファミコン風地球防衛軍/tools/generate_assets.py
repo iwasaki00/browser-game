@@ -571,7 +571,14 @@ def main():
     parser.add_argument("--classes-only", action="store_true", help="Generate only the formal-class atlas")
     parser.add_argument("--weapons-only", action="store_true", help="Generate only weapon atlases")
     parser.add_argument("--underground-only", action="store_true", help="Generate only M02 assets and metadata")
+    parser.add_argument("--art-study-only", action="store_true", help="Generate isolated art-direction samples; never overwrite production PNGs")
     args=parser.parse_args()
+    if args.art_study_only:
+        if args.classes_only or args.weapons_only or args.underground_only:
+            parser.error("--art-study-only cannot be combined with production generation flags")
+        from art_direction_samples import generate
+        generate(ROOT)
+        return
     if args.classes_only:
         class_sheet()
         return

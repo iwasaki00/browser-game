@@ -22,7 +22,7 @@ export function movePlanets(planets,targets,stage,dt,maxSpeed=LIVE_GRAVITY.maxSp
     const obstacles=[...result.filter(q=>q.id!==p.id).map(q=>({...q,radius:planetExtent(q)+extent+8})),
       {...stage.launch.position,radius:extent+28}, {...stage.goal,radius:stage.goal.radius+extent+12}];
     let fraction=1;
-    const range=stage.rules?.placement;
+    const range=stage.rules?.planetRanges?.[p.id]??stage.rules?.placement;
     if(range) {
       end.x=Math.max(range.left+p.radius,Math.min(range.right-p.radius,end.x));
       end.y=Math.max(range.top+p.radius,Math.min(range.bottom-p.radius,end.y));

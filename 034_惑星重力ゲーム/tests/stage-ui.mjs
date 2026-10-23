@@ -18,8 +18,8 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(`http://127.0.0.1:${server.address().port}/`);
  await page.locator('#openStages').click();
- assert.equal(await page.locator('#stageList button').count(),10);
- assert.equal(await page.locator('#stageList button:disabled').count(),9);
+ assert.equal(await page.locator('#stageList button').count(),20);
+ assert.equal(await page.locator('#stageList button:disabled').count(),19);
  await page.screenshot({path:fileURLToPath(new URL('reports/stages/selection-375.png',root))});
  await page.locator('#stageList button').first().click();
  assert.match(await page.locator('.mission strong').textContent(),/01 はじめて/);

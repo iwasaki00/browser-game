@@ -1,4 +1,5 @@
-import {CHALLENGES} from '../js/challenges.js';
+import {CHALLENGES as ALL_CHALLENGES} from '../js/challenges.js';
+const CHALLENGES=ALL_CHALLENGES.slice(0,10);
 import {simulateTrajectory,createSimulation} from '../js/physics.js';
 import {stepLiveFlight} from '../js/live-gravity.js';
 import {placementAllowed} from '../js/planets.js';

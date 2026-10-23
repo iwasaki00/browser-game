@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>ART STUDY 01 | PIXEL DEFENSE FRONT</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <main>
+    <header class="intro">
+      <p class="eyebrow">PIXEL DEFENSE FRONT / LOOK DEVELOPMENT</p>
+      <h1>FIELD STEEL <span>/ LIVING CARAPACE</span></h1>
+      <p>軍事SFの鋼材と、侵略生物の甲殻。<strong>全差し替え前のアート提案</strong>です。ゲーム本体は0.2.3のまま変更していません。</p>
+      <nav aria-label="資料"><a href="../ART_DIRECTION.md">アート方針書</a><a href="../../assets/art-refresh/study-01/comparison.png">比較一覧PNG</a><a href="../../assets/art-refresh/study-01/manifest.json">素材マニフェスト</a></nav>
+    </header>
+    <section aria-labelledby="testHeading">
+      <h2 id="testHeading">同じ大きさ・同じ倍率で比較</h2>
+      <p>現状も改善案も、兵士24×32・敵32×32・ボス96×64 world px。描画面640はこのプレビューだけの提案です。現行320・0.35倍で細部が失われる点も確認してください。</p>
+      <form class="toolbar" onsubmit="return false" aria-label="アート比較条件">
+        <label>ステージ<select id="stage"><option value="city">M01 市街地</option><option value="underground">M02 地下</option></select></label>
+        <label>描画面<select id="resolution"><option value="1">現行 320×180</option><option value="2">提案 640×360（未実装）</option></select></label>
+        <label>ワールド倍率<select id="zoom"><option value="0.35">0.35 / 最広角</option><option value="0.5" selected>0.50 / 基準</option><option value="0.85">0.85 / 接近</option></select></label>
+      </form>
+      <p id="conditions" class="status" role="status">素材を読み込み中…</p>
+      <div class="battle-pair">
+        <figure><figcaption><span>CURRENT</span>現状素材</figcaption><canvas id="current" width="320" height="180" role="img" aria-label="現状素材の静的比較画面"></canvas></figure>
+        <figure><figcaption><span>STUDY 01</span>改善案・未採用</figcaption><canvas id="study" width="320" height="180" role="img" aria-label="改善案素材の静的比較画面"></canvas></figure>
+      </div>
+      <p class="note">非プレイアブルな静止美術見本。ミッション配置・当たり判定・HUDの再現ではありません。左右比較では1枚あたりのCSS表示幅が実ゲームと異なります。背景は既存と同じ論理単位で繰り返し、カメラ端の制作確認用ではありません。</p>
+    </section>
+    <section aria-labelledby="overviewHeading">
+      <h2 id="overviewHeading">差分一覧 / シルエット確認</h2>
+      <p>旧素材と同じワールド枠で拡大比較。右上の単色シルエットで、色に頼らない識別を確認できます。</p>
+      <a href="../../assets/art-refresh/study-01/comparison.png" class="board-link"><img class="comparison" src="../../assets/art-refresh/study-01/comparison.png" width="1400" height="1320" alt="RANGER・WING・地上敵・飛行敵・B-01・5武器の現状と改善案、単色シルエット、M01とM02背景の比較一覧"></a>
+    </section>
+    <section aria-labelledby="assetHeading">
+      <h2 id="assetHeading">サンプル原画</h2>
+      <p>整数座標で描いた透過PNG。各2ポーズはルック見本であり、完成アニメーションではありません。</p>
+      <div id="assetList" class="asset-grid"></div>
+    </section>
+    <section aria-labelledby="sceneHeading">
+      <h2 id="sceneHeading">背景・地形・配役の雰囲気</h2>
+      <p>原画640×360の静止構図。実際のM01/M02の地形や配置を変更するものではありません。</p>
+      <div class="battle-pair">
+        <figure><figcaption><span>M01</span>空気遠近・被災都市</figcaption><img class="scene" src="../../assets/art-refresh/study-01/preview/city_scene.png" width="640" height="360" alt="低彩度の被災市街地と新しい兵士・侵略生物の構図"></figure>
+        <figure><figcaption><span>M02</span>閉鎖空間・輸送管</figcaption><img class="scene" src="../../assets/art-refresh/study-01/preview/underground_scene.png" width="640" height="360" alt="地下のアーチ、配管、放置車両と新しい兵士・侵略生物の構図"></figure>
+      </div>
+      <details><summary>背景レイヤーと制作上の注意</summary><p>far / middle / near / 合成を各ステージ別に出力。近景は左右端を中心とし、中央戦闘帯の高コントラストを抑えています。全展開時は背景の継ぎ目・パララックスと、WING高所での見え方をゲーム内で検証します。</p><p>素材は <code>py -3 tools/generate_assets.py --art-study-only</code> で再生成できます。既存素材は上書きしません。画像生成サービス・外部画像は使っていません。</p></details>
+    </section>
+    <footer><p>STUDY 01 / PROPOSAL ONLY — 全体差し替え・採用は未実施。<br>確認したい点：甲殻の生物感、味方の装備感、色の落ち着き、縮小時の見やすさ。</p></footer>
+  </main>
+  <script type="module" src="preview.js"></script>
+</body>
+</html>

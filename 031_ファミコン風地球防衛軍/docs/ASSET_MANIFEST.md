@@ -1,6 +1,6 @@
 # Asset Manifest
 
-全素材は `tools/generate_assets.py` が固定シード7319で生成するオリジナルPNG。アンチエイリアスなし、透過RGBA（背景のみRGB）。
+本番素材は `tools/generate_assets.py` が固定シード7319（M02は2207319）で生成するオリジナルPNG。アンチエイリアスなし、透過RGBA（背景のみRGB）。未採用のアート検討素材は末尾の別枠を参照。
 
 | ファイル | フレーム | フレームサイズ | 用途 |
 |---|---:|---:|---|
@@ -56,3 +56,26 @@
 - 列0〜11：待機 / 走行1 / 走行2 / 走行3 / 跳躍 / 落下 / 射撃 / 被弾 / 死亡 / ダッシュ / 飛行 / ホバー。固有動作は対応兵科で使用。
 - 従来パレット・暗色輪郭・透過RGBA・アンチエイリアスなし。死亡は横倒し、SCOUTダッシュはスカーフ残光、WING飛行・ホバーは異なる噴射長。
 - `py -3 tools/generate_assets.py --classes-only` で兵科のみ生成。引数なしの全生成にも含む。クラス生成は乱数を使用せず、既存素材のシード順に影響しない。
+
+## ART DIRECTION REFRESH / Study 01 — 本番未使用
+
+`assets/art-refresh/study-01/`。固定シード24032023、ローカルの整数座標描画で新規制作。`--art-study-only` 専用で、通常生成には含めない。既存PNGは比較用に読み取るだけで上書きしない。
+
+| 相対パス | PNG数 | セル / コマ数 | 論理寸法・内容 |
+| --- | ---: | --- | --- |
+| sprites/ranger.png / wing.png | 2 | 48×64 / 各2 | 24×32 world、標準兵/双翼のルック |
+| sprites/crawler.png / needle.png | 2 | 64×64 / 各2 | 32×32描画枠、地上/飛行 |
+| sprites/mother_crawler.png | 1 | 192×128 / 2 | 96×64描画枠、B-01 |
+| weapons/icons.png | 1 | 32×32 / 5 | A-01・R-04・H-08・T-06・D-19 |
+| weapons/equipped.png | 1 | 32×32 / 5 | 論理16×16の形状見本、アイコン画稿を共用 |
+| weapons/projectiles.png | 1 | 32×32 / 5 | 論理16×16、弾体/電撃の見本 |
+| weapons/impacts.png | 1 | 64×64 / 20 | 4列×5行、武器ごと4段階の効果 |
+| tiles/city.png / underground.png | 2 | 32×32 / 各8 | 論理16×16。4列×2行 |
+| backgrounds/{city,underground}_{far,middle,near}.png | 6 | 640×360 / 各1 | 論理320×180、独立3レイヤー |
+| backgrounds/city.png / underground.png | 2 | 640×360 / 各1 | 背景の合成版 |
+| preview/city_scene.png / underground_scene.png | 2 | 640×360 / 各1 | 配役・地形の静的構図、ミッション図面ではない |
+| comparison.png | 1 | 1400×1320 / 1 | 現状/改善案/単色輪郭/背景の一覧 |
+
+素材19 PNG・69コマ相当＋プレビュー3 PNG＝22 PNG・72コマ相当。別に `manifest.json` にセル/論理寸法・ポーズ名・用途・SHA256を記録する。全PNGはRGBA、背景/比較は不透明、スプライト/弾/効果は二値透過。比較一覧の説明文字だけはOSフォントで描画するため、別OSでは文字のピクセルが異なり得る。素材の描画にフォントや外部画像は使わない。
+
+2ポーズは方向性確認用で、完成アニメーションではない。現在のゲームの素材マップには登録しない。描画サイズ・当たり判定・武器性能は既存のまま。詳細・検証・展開ルールは [ART_DIRECTION.md](ART_DIRECTION.md)。

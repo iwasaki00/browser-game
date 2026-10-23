@@ -1,0 +1,699 @@
+[
+  {
+    "id": "stage-11",
+    "name": "小さな巨人",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 185,
+          "y": 280,
+          "type": "dense",
+          "size": "medium",
+          "radius": 18,
+          "mass": 6800,
+          "color": "#8fa0b7",
+          "gravityMultiplier": 1,
+          "gravityDirection": 1,
+          "collisionRadius": 18,
+          "hazards": [],
+          "effect": "dense",
+          "render": {
+            "style": "dense",
+            "glow": "#8fa0b7"
+          }
+        }
+      ],
+      "angleDeg": -70,
+      "speed": 170,
+      "liveTargets": {},
+      "elapsed": 2.199999999999995,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 2.199999999999995,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "dense",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 36.06632729963206
+      }
+    ]
+  },
+  {
+    "id": "stage-12",
+    "name": "重力の針穴",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 180,
+          "y": 240,
+          "type": "dense",
+          "size": "medium",
+          "radius": 18,
+          "mass": 6800,
+          "color": "#8fa0b7",
+          "gravityMultiplier": 1,
+          "gravityDirection": 1,
+          "collisionRadius": 18,
+          "hazards": [],
+          "effect": "dense",
+          "render": {
+            "style": "dense",
+            "glow": "#8fa0b7"
+          }
+        }
+      ],
+      "angleDeg": -68,
+      "speed": 208,
+      "liveTargets": {},
+      "elapsed": 1.8666666666666625,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.8666666666666625,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "dense",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 6,
+          "tries": 9
+        },
+        "closestClearance": 13.824943250241958
+      }
+    ]
+  },
+  {
+    "id": "stage-13",
+    "name": "逆らう星",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 180,
+          "y": 300,
+          "type": "repulsor",
+          "size": "medium",
+          "radius": 28,
+          "mass": 3600,
+          "color": "#9880ff",
+          "gravityMultiplier": 1,
+          "gravityDirection": -1,
+          "collisionRadius": 28,
+          "hazards": [],
+          "effect": "repulsion",
+          "render": {
+            "style": "repulsor",
+            "glow": "#9b82ff"
+          }
+        }
+      ],
+      "angleDeg": -54,
+      "speed": 170,
+      "liveTargets": {},
+      "elapsed": 2.391666666666661,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 2.391666666666661,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "repulsor",
+        "removed": "escaped",
+        "gravityDisabled": "crashed",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 7,
+          "tries": 9
+        },
+        "closestClearance": 9.860313701067803
+      }
+    ]
+  },
+  {
+    "id": "stage-14",
+    "name": "押して曲げる",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 210,
+          "y": 300,
+          "type": "repulsor",
+          "size": "medium",
+          "radius": 28,
+          "mass": 3600,
+          "color": "#9880ff",
+          "gravityMultiplier": 1,
+          "gravityDirection": -1,
+          "collisionRadius": 28,
+          "hazards": [],
+          "effect": "repulsion",
+          "render": {
+            "style": "repulsor",
+            "glow": "#9b82ff"
+          }
+        },
+        {
+          "id": "special-2",
+          "x": 100,
+          "y": 170,
+          "type": "earth",
+          "size": "medium",
+          "radius": 38,
+          "mass": 5200,
+          "color": "#6fd3ff"
+        }
+      ],
+      "angleDeg": -50,
+      "speed": 220,
+      "liveTargets": {},
+      "elapsed": 1.741666666666663,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.741666666666663,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "repulsor",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 119,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 17.411011522096842
+      },
+      {
+        "id": "special-2",
+        "type": "earth",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 0,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 50.77184388687877
+      }
+    ]
+  },
+  {
+    "id": "stage-15",
+    "name": "灼熱の航路",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 220,
+          "y": 280,
+          "type": "star",
+          "size": "medium",
+          "radius": 32,
+          "mass": 7000,
+          "color": "#ffbd45",
+          "gravityMultiplier": 1.4,
+          "gravityDirection": 1,
+          "collisionRadius": 32,
+          "hazards": [
+            {
+              "radius": 48,
+              "reason": "overheated"
+            }
+          ],
+          "effect": "heat",
+          "render": {
+            "style": "star",
+            "glow": "#ff9d32"
+          }
+        }
+      ],
+      "angleDeg": -69,
+      "speed": 170,
+      "liveTargets": {},
+      "elapsed": 2.1583333333333283,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 2.1583333333333283,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "star",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 30.18480982899925
+      }
+    ]
+  },
+  {
+    "id": "stage-16",
+    "name": "太陽をかすめて",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 200,
+          "y": 240,
+          "type": "star",
+          "size": "medium",
+          "radius": 32,
+          "mass": 7000,
+          "color": "#ffbd45",
+          "gravityMultiplier": 1.4,
+          "gravityDirection": 1,
+          "collisionRadius": 32,
+          "hazards": [
+            {
+              "radius": 48,
+              "reason": "overheated"
+            }
+          ],
+          "effect": "heat",
+          "render": {
+            "style": "star",
+            "glow": "#ff9d32"
+          }
+        }
+      ],
+      "angleDeg": -72,
+      "speed": 176,
+      "liveTargets": {},
+      "elapsed": 2.1583333333333283,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 2.1583333333333283,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "star",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 6,
+          "tries": 9
+        },
+        "closestClearance": 8.114019113547421
+      }
+    ]
+  },
+  {
+    "id": "stage-17",
+    "name": "深淵の引力",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 230,
+          "y": 280,
+          "type": "blackhole",
+          "size": "medium",
+          "radius": 26,
+          "mass": 10000,
+          "color": "#170c2d",
+          "gravityMultiplier": 2,
+          "gravityDirection": 1,
+          "collisionRadius": 0,
+          "hazards": [
+            {
+              "radius": 16,
+              "reason": "absorbed"
+            }
+          ],
+          "effect": "absorption",
+          "render": {
+            "style": "blackhole",
+            "glow": "#d3a0ff"
+          }
+        }
+      ],
+      "angleDeg": -72,
+      "speed": 200,
+      "liveTargets": {},
+      "elapsed": 1.8583333333333292,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.8583333333333292,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "blackhole",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 221,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 5,
+          "tries": 9
+        },
+        "closestClearance": 74.07749030586065
+      }
+    ]
+  },
+  {
+    "id": "stage-18",
+    "name": "事象の境界",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 210,
+          "y": 230,
+          "type": "blackhole",
+          "size": "medium",
+          "radius": 26,
+          "mass": 10000,
+          "color": "#170c2d",
+          "gravityMultiplier": 2,
+          "gravityDirection": 1,
+          "collisionRadius": 0,
+          "hazards": [
+            {
+              "radius": 16,
+              "reason": "absorbed"
+            }
+          ],
+          "effect": "absorption",
+          "render": {
+            "style": "blackhole",
+            "glow": "#d3a0ff"
+          }
+        }
+      ],
+      "angleDeg": -74,
+      "speed": 220,
+      "liveTargets": {},
+      "elapsed": 1.7333333333333296,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.7333333333333296,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "blackhole",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 119,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 6,
+          "tries": 9
+        },
+        "closestClearance": 48.89935764287088
+      }
+    ]
+  },
+  {
+    "id": "stage-19",
+    "name": "相反する力",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 240,
+          "y": 300,
+          "type": "blackhole",
+          "size": "medium",
+          "radius": 26,
+          "mass": 10000,
+          "color": "#170c2d",
+          "gravityMultiplier": 2,
+          "gravityDirection": 1,
+          "collisionRadius": 0,
+          "hazards": [
+            {
+              "radius": 16,
+              "reason": "absorbed"
+            }
+          ],
+          "effect": "absorption",
+          "render": {
+            "style": "blackhole",
+            "glow": "#d3a0ff"
+          }
+        },
+        {
+          "id": "special-2",
+          "x": 100,
+          "y": 160,
+          "type": "repulsor",
+          "size": "medium",
+          "radius": 28,
+          "mass": 3600,
+          "color": "#9880ff",
+          "gravityMultiplier": 1,
+          "gravityDirection": -1,
+          "collisionRadius": 28,
+          "hazards": [],
+          "effect": "repulsion",
+          "render": {
+            "style": "repulsor",
+            "glow": "#9b82ff"
+          }
+        }
+      ],
+      "angleDeg": -72,
+      "speed": 220,
+      "liveTargets": {},
+      "elapsed": 1.741666666666663,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.741666666666663,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "blackhole",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 15,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 94.69299404305151
+      },
+      {
+        "id": "special-2",
+        "type": "repulsor",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 15,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 47.29692211326581
+      }
+    ]
+  },
+  {
+    "id": "stage-20",
+    "name": "宇宙の支配者",
+    "solution": {
+      "planets": [
+        {
+          "id": "special-1",
+          "x": 240,
+          "y": 300,
+          "type": "blackhole",
+          "size": "medium",
+          "radius": 26,
+          "mass": 10000,
+          "color": "#170c2d",
+          "gravityMultiplier": 2,
+          "gravityDirection": 1,
+          "collisionRadius": 0,
+          "hazards": [
+            {
+              "radius": 16,
+              "reason": "absorbed"
+            }
+          ],
+          "effect": "absorption",
+          "render": {
+            "style": "blackhole",
+            "glow": "#d3a0ff"
+          }
+        },
+        {
+          "id": "special-2",
+          "x": 80,
+          "y": 160,
+          "type": "repulsor",
+          "size": "medium",
+          "radius": 28,
+          "mass": 3600,
+          "color": "#9880ff",
+          "gravityMultiplier": 1,
+          "gravityDirection": -1,
+          "collisionRadius": 28,
+          "hazards": [],
+          "effect": "repulsion",
+          "render": {
+            "style": "repulsor",
+            "glow": "#9b82ff"
+          }
+        },
+        {
+          "id": "special-3",
+          "x": 270,
+          "y": 150,
+          "type": "dense",
+          "size": "medium",
+          "radius": 18,
+          "mass": 6800,
+          "color": "#8fa0b7",
+          "gravityMultiplier": 1,
+          "gravityDirection": 1,
+          "collisionRadius": 18,
+          "hazards": [],
+          "effect": "dense",
+          "render": {
+            "style": "dense",
+            "glow": "#8fa0b7"
+          }
+        }
+      ],
+      "angleDeg": -66,
+      "speed": 212,
+      "liveTargets": {},
+      "elapsed": 1.5916666666666635,
+      "status": "cleared"
+    },
+    "status": "cleared",
+    "time": 1.5916666666666635,
+    "stars": 3,
+    "live": "cleared",
+    "slingshot": "cleared",
+    "evidence": [
+      {
+        "id": "special-1",
+        "type": "blackhole",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 25,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 6,
+          "tries": 9
+        },
+        "closestClearance": 68.07582367530932
+      },
+      {
+        "id": "special-2",
+        "type": "repulsor",
+        "removed": "crashed",
+        "gravityDisabled": "crashed",
+        "counterfactualGrid": {
+          "tries": 25,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 9,
+          "tries": 9
+        },
+        "closestClearance": 86.06032165616247
+      },
+      {
+        "id": "special-3",
+        "type": "dense",
+        "removed": "escaped",
+        "gravityDisabled": "escaped",
+        "counterfactualGrid": {
+          "tries": 25,
+          "hits": 0
+        },
+        "placementTolerance": {
+          "hits": 7,
+          "tries": 9
+        },
+        "closestClearance": 1.5462778996463342
+      }
+    ]
+  }
+]

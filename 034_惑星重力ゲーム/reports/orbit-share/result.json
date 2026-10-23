@@ -1,0 +1,29 @@
+{
+  "browser": "Windows Chrome 375x667; not iPhone Safari",
+  "square": [
+    1080,
+    1080
+  ],
+  "portrait": [
+    1080,
+    1920
+  ],
+  "nonDestructive": true,
+  "workerAndFallback": true,
+  "switches": {
+    "noText": 0,
+    "withText": 3,
+    "pixel": [
+      6,
+      13,
+      28,
+      255
+    ]
+  },
+  "shareStub": true,
+  "unsupportedFallback": true,
+  "failureRecovery": true,
+  "urlsReleased": true,
+  "externalUpload": false,
+  "errors": []
+}
