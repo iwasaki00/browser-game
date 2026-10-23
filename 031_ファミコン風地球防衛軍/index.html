@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.2">
+  <link rel="stylesheet" href="styles.css?v=0.2.3">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.2</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.3</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -65,7 +65,7 @@
           <small>演出レベルとは独立。OFFでも撃破・爆発演出は表示します。</small>
         </fieldset></div>
       </section>
-      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button id="labGameoverReport" class="menu-button" data-action="lab-open" hidden>LAB計測結果 / 指定再開</button><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
       <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
       <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
@@ -74,6 +74,16 @@
       <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
         <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
         <div class="lab-fields">
+          <fieldset class="lab-stage-select"><legend>STAGE SELECT / NO SAVE</legend>
+            <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option></select></label>
+            <label>エリア<select id="labStageArea"></select></label>
+            <label>M02 AREA03ルート<select id="labStageRoute"><option value="LOWER">下ルート</option><option value="UPPER">上ルート</option></select></label>
+            <label>検証区分<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
+            <label>ミッション敵密度<select id="labStageDensity"><option>LIGHT</option><option selected>STANDARD</option><option>MASSIVE</option></select></label>
+            <div class="lab-buttons"><button data-action="lab-stage-start">指定地点から開始</button><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button></div>
+            <small>A〜CはDの攻略成功ではありません。Dは正式兵科・解放済み武器・無敵OFFが必要。密度は次の指定開始へ適用。ボス直接開始はB/C/D。</small>
+            <output id="labStageStatus" role="status">ミッション・エリアを選択してください。</output>
+          </fieldset>
           <fieldset><legend>ARSENAL / 全20武器</legend>
             <div class="lab-weapon-openers" role="group" aria-label="武器を変更するスロット">
               <button id="labWeaponSlot1" data-action="lab-weapons" data-slot="0" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 1</button>
@@ -113,6 +123,12 @@
             <small id="qaResult" role="status">BENCHは6秒・自動射撃・敵数補充（音声OFF）。通常プレイ計測とは別。</small>
           </fieldset>
         </div>
+        <fieldset class="lab-run-report"><legend>MISSION REPORT / 計測データ</legend>
+          <pre id="labRunSummary" aria-live="polite">エリア開始後に攻略データを収集します。</pre>
+          <pre id="labBenchmarkSummary"></pre>
+          <button data-action="lab-copy">計測JSONをコピー</button><small id="labCopyStatus" role="status"></small>
+          <label for="labRunReport">現在・直近20試行・BENCH比較（通常セーブなし）</label><textarea id="labRunReport" readonly rows="6" spellcheck="false"></textarea>
+        </fieldset>
         <footer class="lab-buttons"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></footer>
       </section>
       <section id="labWeaponPicker" class="lab-weapon-picker" role="dialog" aria-modal="true" aria-labelledby="labWeaponPickerTitle" hidden>
@@ -146,6 +162,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.2"></script>
+  <script type="module" src="js/game.js?v=0.2.3"></script>
 </body>
 </html>

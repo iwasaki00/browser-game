@@ -21,8 +21,9 @@ export function gravitationalAcceleration(position, planets, options = DEFAULT_P
     const softenedSquared = Math.max(distanceSquared, softening * softening);
     const inverseDistance = 1 / Math.sqrt(softenedSquared);
     const scale = g * planet.mass / softenedSquared * inverseDistance;
-    ax += dx * scale;
-    ay += dy * scale;
+    const forceScale = scale * (planet.gravityMultiplier ?? 1) * (planet.gravityDirection ?? 1);
+    ax += dx * forceScale;
+    ay += dy * forceScale;
   }
 
   return { x: ax, y: ay };
@@ -69,11 +70,20 @@ export function segmentCircleHit(start, end, circle, radius = circle.radius) {
   return null;
 }
 
+export function planetContactZones(planet) {
+  const zones=(planet.hazards??[]).map(h=>({...h}));
+  const radius=planet.collisionRadius??planet.radius;
+  if(radius>0)zones.push({radius});
+  return zones;
+}
+
 function earliestContact(start, end, planets, goal, rocketRadius) {
   const contacts = [];
   for (const planet of planets) {
-    const t = segmentCircleHit(start, end, planet, planet.radius + rocketRadius);
-    if (t !== null) contacts.push({ t, status: "crashed", target: planet.id });
+    for(const zone of planetContactZones(planet)){
+      const t = segmentCircleHit(start, end, planet, zone.radius + rocketRadius);
+      if (t !== null) contacts.push({ t, status: "crashed", target: planet.id, ...(zone.reason?{reason:zone.reason}:{}) });
+    }
   }
   const goalHit = segmentCircleHit(start, end, goal, goal.radius);
   if (goalHit !== null) contacts.push({ t: goalHit, status: "cleared", target: goal.id });
@@ -95,7 +105,7 @@ export function createSimulation(stage, launch = {}) {
       position: cloneVector(stage.launch.position),
       velocity,
     },
-    planets: stage.planets.map((planet) => ({ ...planet })),
+    planets: structuredClone(stage.planets),
     goal: { ...stage.goal },
     world: { ...stage.world },
   };
@@ -114,7 +124,7 @@ export function stepSimulation(state, dt, options = DEFAULT_PHYSICS) {
       x: previous.x + (rocket.position.x - previous.x) * contact.t,
       y: previous.y + (rocket.position.y - previous.y) * contact.t,
     };
-    return { ...state, rocket: { ...rocket, position }, elapsed, status: contact.status, target: contact.target };
+    return { ...state, rocket: { ...rocket, position }, elapsed, status: contact.status, target: contact.target, ...(contact.reason?{reason:contact.reason}:{}) };
   }
 
   const margin = options.boundsMargin ?? DEFAULT_PHYSICS.boundsMargin;

@@ -1,0 +1,14 @@
+{
+  "browser": "Windows Chrome, mobile viewport/touch emulation; not iPhone Safari",
+  "sizes": [
+    "375x667",
+    "320x568"
+  ],
+  "sampleOutcomes": {
+    "blackhole": "ブラックホールに吸収",
+    "repulsor": "航行エリアを逸脱",
+    "star": "恒星の熱領域へ侵入",
+    "dense": "ゲート到達！"
+  },
+  "errors": []
+}

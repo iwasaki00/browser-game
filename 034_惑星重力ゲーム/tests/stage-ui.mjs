@@ -25,7 +25,7 @@ try{
  assert.match(await page.locator('.mission strong').textContent(),/01 はじめて/);
  await page.locator('#planetPanel').evaluate(el=>el.open=true);
  assert.ok(await page.locator('#addPlanet').isDisabled());
- assert.equal(await page.locator('#planetType option:disabled').count(),2);
+ assert.equal(await page.locator('#planetType option:disabled').count(),6);
  await page.locator('#planetPanel').evaluate(el=>el.open=false);
  await page.locator('#angleInput').fill('-72');await page.locator('#speedInput').fill('126');
  await page.locator('#launchButton').click();

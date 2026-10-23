@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Stage Balance</title>
+  <title>ORBIT MAKER — Special Planets</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.5.1</div>
+      <div class="version">v0.6.0</div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -49,7 +49,9 @@
       <details class="settings-panel" id="planetPanel"><summary>惑星編集</summary>
       <div class="planet-editor">
         <div class="planet-toolbar"><output id="planetSelection" aria-live="polite"></output><button id="addPlanet" type="button">＋ 追加</button><button id="deletePlanet" type="button">削除</button></div>
-        <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
+        <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
+        <p id="planetFeature" class="planet-feature"></p>
+        <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>
       </div>
       </details>
       <div class="launch-mode" role="group" aria-label="発射方式">

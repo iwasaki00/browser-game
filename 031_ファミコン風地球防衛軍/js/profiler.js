@@ -19,7 +19,7 @@ export class FrameProfiler {
 
 // Bounded rolling measurements. RAF intervals and synchronous CPU work stay separate.
 export class LiveProfiler {
-  constructor(){this.frames=new Float64Array(240);this.updates=new Float64Array(240);this.draws=new Float64Array(240);this.reset()}
+  constructor(){this.frames=new Float64Array(240);this.updates=new Float64Array(240);this.draws=new Float64Array(240);this.sorted=new Float64Array(240);this.reset()}
   reset(){this.count=0;this.cursor=0;this.last=null;this.lastPublish=0;this.result=null;this.excluded=0}
   record(ts,updateMs,drawMs,active=true){
     const delta=this.last===null?0:ts-this.last;this.last=active?ts:null;
@@ -31,7 +31,25 @@ export class LiveProfiler {
     if(ts-this.lastPublish<500)return null;this.lastPublish=ts;
     let frame=0,update=0,draw=0,max=0;
     for(let j=0;j<this.count;j++){frame+=this.frames[j];update+=this.updates[j];draw+=this.draws[j];max=Math.max(max,this.frames[j])}
-    this.result={fps:1000/(frame/this.count),frameMs:frame/this.count,maxFrameMs:max,updateMs:update/this.count,drawMs:draw/this.count,samples:this.count,excluded:this.excluded};
+    this.sorted.set(this.frames);const sorted=this.sorted.subarray(0,this.count);sorted.sort();
+    this.result={fps:1000/(frame/this.count),frameMs:frame/this.count,p95FrameMs:sorted[Math.max(0,Math.ceil(this.count*.95)-1)],maxFrameMs:max,updateMs:update/this.count,drawMs:draw/this.count,samples:this.count,excluded:this.excluded};
     return this.result;
+  }
+}
+
+// O(1) per frame, bounded 0.5ms histogram; no long-session sample array growth.
+export class RunProfiler {
+  constructor(){this.bins=new Uint32Array(501);this.samples=0;this.excluded=0;this.last=null;this.totalFrameMs=0;this.updateCpuMs=0;this.drawCpuMs=0;this.maxFrameMs=0;this.maxEnemies=0;this.maxShots=0;this.maxEffects=0}
+  record(ts,updateMs,drawMs,counts={},active=true){
+    if(!active){this.last=null;return}
+    const delta=this.last===null?0:ts-this.last;this.last=ts;if(delta<=0)return;
+    if(delta>250){this.excluded++;return}
+    this.samples++;this.bins[Math.min(500,Math.ceil(delta*2))]++;this.totalFrameMs+=delta;this.updateCpuMs+=Math.max(0,updateMs);this.drawCpuMs+=Math.max(0,drawMs);this.maxFrameMs=Math.max(this.maxFrameMs,delta);
+    this.maxEnemies=Math.max(this.maxEnemies,counts.enemies??0);this.maxShots=Math.max(this.maxShots,counts.shots??0);this.maxEffects=Math.max(this.maxEffects,counts.effects??0);
+  }
+  snapshot(){
+    let n=0,p95=null;for(let i=0;i<this.bins.length;i++){n+=this.bins[i];if(n>=Math.ceil(this.samples*.95)&&this.samples){p95=i/2;break}}
+    return {samples:this.samples,excludedInterruptions:this.excluded,fps:this.samples?1000*this.samples/this.totalFrameMs:null,meanFrameMs:this.samples?this.totalFrameMs/this.samples:null,p95FrameMs:p95,maxFrameMs:this.samples?this.maxFrameMs:null,
+      updateCpuMs:this.samples?this.updateCpuMs/this.samples:null,drawCpuMs:this.samples?this.drawCpuMs/this.samples:null,maxEnemies:this.maxEnemies,maxShots:this.maxShots,maxEffects:this.maxEffects,histogramResolutionMs:.5};
   }
 }

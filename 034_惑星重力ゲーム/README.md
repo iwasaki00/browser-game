@@ -1,6 +1,11 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.5.1 — STAGE BALANCE
+Version 0.6.0 — SPECIAL PLANETS
+
+フリープレイでブラックホール・反重力惑星・恒星・高密度惑星が使えるようになりました。惑星編集から全7種類と特徴文を確認できます。
+「体験配置」から4種類のサンプルを読み込めます。RESETでサンプル配置へ戻り、ステージ進行は変化しません。
+Stage01〜10のデータ・通常惑星の挙動は維持しています。
+設定値と検証・実機チェック項目は [reports/special/VERIFICATION.md](reports/special/VERIFICATION.md)。
 
 03は導入の許容幅を拡大、06〜10はゲート幅、09〜10は第3惑星の位置を調整しました。05以降を中心に★3時間を見直しています。
 分析手法・ステージ別比較・重力操作別解は [reports/balance/BALANCE.md](reports/balance/BALANCE.md)、最高評価解答は [reports/balance/THREE_STARS.md](reports/balance/THREE_STARS.md)。

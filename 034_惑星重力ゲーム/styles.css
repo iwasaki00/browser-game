@@ -148,3 +148,6 @@ button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px
 #stageList button { text-align: left; }
 #stageList button:disabled { opacity: .45; }
 #stageList small { display: block; color: #9ebbd1; margin-top: 4px; }
+.planet-feature { margin: 3px 0; color: #c5daee; font-size: 10px; line-height: 1.4; }
+.sample-label { display: flex; align-items: center; gap: 6px; color: #9dc7df; font-size: 11px; }
+.sample-label select { min-width: 0; flex: 1; }

@@ -4,7 +4,8 @@ import { getStage } from "./stages.js";
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
 import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
-import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS } from './planets.js';
+import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES } from './planets.js';
+import {getSpecialSample} from './special-samples.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
 const canvas = document.querySelector("#gameCanvas");
@@ -135,20 +136,35 @@ function drawGoal(time) {
 }
 
 function drawPlanet(planet) {
+  const render=planet.render??PLANET_TYPES[planet.type??'earth'].render;
+  for(const hazard of planet.hazards??[]){
+    ctx.fillStyle=hazard.reason==='overheated'?'#ff883322':'#a67dff22';
+    ctx.strokeStyle=hazard.reason==='overheated'?'#ff9b45':'#bd9dff';
+    ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(planet.x,planet.y,hazard.radius,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.setLineDash([]);
+  }
+  if(render.style==='repulsor'||render.style==='blackhole'){
+    ctx.strokeStyle=render.glow;ctx.lineWidth=2;
+    for(const extra of [5,12]){ctx.beginPath();ctx.ellipse(planet.x,planet.y,planet.radius+extra,(planet.radius+extra)*.65,-.3,0,Math.PI*2);ctx.stroke();}
+  }
+  if(render.style==='repulsor'){
+    ctx.save();ctx.translate(planet.x,planet.y);ctx.strokeStyle=render.glow;
+    for(let i=0;i<4;i++){ctx.rotate(Math.PI/2);ctx.beginPath();ctx.moveTo(planet.radius+8,-3);ctx.lineTo(planet.radius+14,0);ctx.lineTo(planet.radius+8,3);ctx.stroke();}
+    ctx.restore();
+  }
   if (planet.id === selectedPlanetId && (mode === 'editing' || gameMode === 'live')) {
     ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius+7, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
   const glow = ctx.createRadialGradient(planet.x, planet.y, planet.radius * .5, planet.x, planet.y, planet.radius * 1.7);
-  glow.addColorStop(0, "rgba(70, 203, 255, .23)");
+  glow.addColorStop(0, render.style==='solid'?"rgba(70, 203, 255, .23)":`${render.glow}55`);
   glow.addColorStop(1, "rgba(70, 203, 255, 0)");
   ctx.fillStyle = glow;
   ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius * 1.7, 0, Math.PI * 2); ctx.fill();
 
   const body = ctx.createRadialGradient(planet.x - planet.radius * .35, planet.y - planet.radius * .4, 2, planet.x, planet.y, planet.radius);
-  body.addColorStop(0, "#d8faff");
+  body.addColorStop(0, render.style==='blackhole'?'#030107':render.style==='star'?'#fff5ae':render.style==='dense'?'#8190a6':"#d8faff");
   body.addColorStop(.32, planet.color);
-  body.addColorStop(1, "#155477");
+  body.addColorStop(1, render.style==='blackhole'?'#030107':render.style==='star'?'#dc571c':render.style==='dense'?'#222b3d':"#155477");
   ctx.fillStyle = body;
   ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2); ctx.fill();
   ctx.strokeStyle = "rgba(219, 250, 255, .55)";
@@ -158,8 +174,12 @@ function drawPlanet(planet) {
   ctx.strokeStyle = "rgba(114, 225, 255, .2)";
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius + 12, 0, Math.PI * 2); ctx.stroke();
-  ctx.fillStyle = "rgba(220, 250, 255, .25)";
+  ctx.fillStyle = render.style==='blackhole'?'#030107':"rgba(220, 250, 255, .25)";
   ctx.beginPath(); ctx.arc(planet.x - 9, planet.y + 7, 8, 0, Math.PI * 2); ctx.fill();
+  for(const hazard of planet.hazards??[])if(hazard.radius<=planet.radius){
+    ctx.strokeStyle=render.glow;ctx.lineWidth=1;ctx.setLineDash([2,3]);
+    ctx.beginPath();ctx.arc(planet.x,planet.y,hazard.radius,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+  }
 }
 
 function drawTrail() {
@@ -330,7 +350,8 @@ function showResult(status) {
   };
   const [label, reason] = messages[status];
   resultLabel.textContent = label;
-  resultReason.textContent = reason;
+  const hazardReason=simulation?.reason==='absorbed'?'ブラックホールに吸収':simulation?.reason==='overheated'?'恒星の熱領域へ侵入':null;
+  resultReason.textContent = hazardReason??reason;
   result.classList.toggle("success", status === "cleared");
   result.hidden = false;
   document.querySelector('#clearStars').textContent='';
@@ -486,6 +507,8 @@ function updatePlanetEditor() {
   addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS);
   for(const option of planetType.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.types.includes(option.value));
   for(const option of planetSize.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.sizes.includes(option.value));
+  document.querySelector('#planetFeature').textContent=planet?(PLANET_TYPES[planet.type??'earth'].description??`${PLANET_TYPES[planet.type??'earth'].name}：引力で航路を曲げる`):'惑星を選択してください';
+  document.querySelector('#specialSample').disabled=playType!=='free'||mode!=='editing';
   deletePlanetButton.disabled = mode !== 'editing' || !planet;
   document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · M ${planet.mass}` : `惑星 ${stage.planets.length} / 3`;
 }
@@ -510,12 +533,20 @@ function changePlanet() {
   const planet = stage.planets.find(p=>p.id===selectedPlanetId);
   if (!planet) return;
   const candidate = configurePlanet(planet, planetType.value, planetSize.value);
-  if (placementAllowed(candidate,stage)) Object.assign(planet,candidate);
+  if (placementAllowed(candidate,stage)) stage.planets=stage.planets.map(p=>p.id===candidate.id?candidate:p);
   else statusText.textContent = '周囲から離してから種類・サイズを変更してください。';
   updatePlanetEditor();
 }
 planetType.addEventListener('change',changePlanet);
 planetSize.addEventListener('change',changePlanet);
+document.querySelector('#specialSample').addEventListener('change',event=>{
+  if(playType!=='free'||mode!=='editing'||!event.target.value)return;
+  cancelGesture();stage=getSpecialSample(event.target.value);launchSnapshot=structuredClone(stage);
+  selectedPlanetId=stage.planets[0].id;
+  angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);
+  retry();updateOutputs();document.querySelector('.mission strong').textContent=stage.name;
+  event.target.value='';
+});
 function updatePreviewButton() {
   previewButton.textContent = `予測 ${preview.enabled ? 'ON' : 'OFF'}`;
   previewButton.setAttribute('aria-pressed',String(preview.enabled));

@@ -401,6 +401,13 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 .screen--lab button { min-height: 40px; padding: 6px 10px; color: var(--cyan); background: #0a2531; border: 1px solid var(--line); font-size: 12px; cursor: pointer; }
 .lab-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
 .lab-buttons button { flex: 1; }
+.lab-stage-select select, .lab-stage-select button, .lab-run-report button { min-height: 44px; }
+.lab-stage-select output { display: block; color: var(--yellow); font-size: 12px; overflow-wrap: anywhere; }
+.lab-run-report { min-width: 0; margin: 8px 0; padding: 10px; border: 1px solid var(--line); }
+.lab-run-report legend { color: var(--cyan); font-size: 12px; }
+.lab-run-report pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 monospace; color: var(--ink); }
+.lab-run-report textarea { display: block; width: 100%; min-width: 0; max-height: 160px; margin-top: 6px; background: #061321; color: var(--ink); border: 1px solid var(--line); font: 12px/1.5 monospace; user-select: text; -webkit-user-select: text; touch-action: pan-y; }
+.lab-run-report small { display: block; overflow-wrap: anywhere; }
 .lab-weapon-openers { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin-bottom: 8px; }
 .lab-weapon-openers button { min-width: 0; min-height: 44px; overflow-wrap: anywhere; }
 .lab-header button { min-height: 44px; }

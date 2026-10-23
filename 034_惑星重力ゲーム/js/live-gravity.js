@@ -1,4 +1,5 @@
-import { DEFAULT_PHYSICS, stepSimulation, segmentCircleHit } from './physics.js';
+import { DEFAULT_PHYSICS, stepSimulation, segmentCircleHit, planetContactZones } from './physics.js';
+import {planetExtent} from './planets.js';
 export const LIVE_GRAVITY = Object.freeze({ maxSpeed: 90 });
 export const GAME_MODE_KEY = 'orbit-maker.game-mode';
 export function loadGameMode(storage) {
@@ -12,13 +13,14 @@ export function saveGameMode(storage,mode) {
 export function movePlanets(planets,targets,stage,dt,maxSpeed=LIVE_GRAVITY.maxSpeed) {
   const result=planets.map(p=>({...p}));
   for(const p of [...result].sort((a,b)=>a.id.localeCompare(b.id))) {
+    const extent=planetExtent(p);
     const target=targets[p.id]; if(!target)continue;
     const dx=target.x-p.x,dy=target.y-p.y,d=Math.hypot(dx,dy);
     if(!Number.isFinite(d)||d===0)continue;
     const length=Math.min(d,Math.max(0,maxSpeed)*dt);
-    const end={x:Math.max(p.radius,Math.min(stage.world.width-p.radius,p.x+dx/d*length)),y:Math.max(p.radius,Math.min(stage.world.height-p.radius,p.y+dy/d*length))};
-    const obstacles=[...result.filter(q=>q.id!==p.id).map(q=>({...q,radius:q.radius+p.radius+8})),
-      {...stage.launch.position,radius:p.radius+28}, {...stage.goal,radius:stage.goal.radius+p.radius+12}];
+    const end={x:Math.max(extent,Math.min(stage.world.width-extent,p.x+dx/d*length)),y:Math.max(extent,Math.min(stage.world.height-extent,p.y+dy/d*length))};
+    const obstacles=[...result.filter(q=>q.id!==p.id).map(q=>({...q,radius:planetExtent(q)+extent+8})),
+      {...stage.launch.position,radius:extent+28}, {...stage.goal,radius:stage.goal.radius+extent+12}];
     let fraction=1;
     const range=stage.rules?.placement;
     if(range) {
@@ -43,10 +45,12 @@ export function stepLiveFlight(state,targets,stage,gameMode,dt=DEFAULT_PHYSICS.f
   let first=null;
   for(let i=0;i<planets.length;i++) {
     const old=state.planets[i],p=planets[i];
-    const hit=segmentCircleHit({x:state.rocket.position.x-old.x,y:state.rocket.position.y-old.y},
-      {x:next.rocket.position.x-p.x,y:next.rocket.position.y-p.y},{x:0,y:0,radius:p.radius+state.rocket.radius});
-    if(hit!==null&&(!first||hit<first.t))first={t:hit,id:p.id};
+    for(const zone of planetContactZones(p)){
+      const hit=segmentCircleHit({x:state.rocket.position.x-old.x,y:state.rocket.position.y-old.y},
+        {x:next.rocket.position.x-p.x,y:next.rocket.position.y-p.y},{x:0,y:0,radius:zone.radius+state.rocket.radius});
+      if(hit!==null&&(!first||hit<first.t))first={t:hit,id:p.id,reason:zone.reason};
+    }
   }
-  if(first&&(goalTime===null||first.t<=goalTime))next={...next,status:'crashed',target:first.id};
+  if(first&&(goalTime===null||first.t<=goalTime))next={...next,status:'crashed',target:first.id,...(first.reason?{reason:first.reason}:{})};
   return next;
 }
