@@ -1,5 +1,6 @@
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation } from "./physics.js";
 import { getStage } from "./stages.js";
+import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
 const canvas = document.querySelector("#gameCanvas");
 const frame = document.querySelector("#spaceFrame");
@@ -25,7 +26,13 @@ let mode = "editing";
 let accumulator = 0;
 let physicsStepCount = 0;
 let lastTime = performance.now();
-let draggingPlanet = null;
+let gesture = null;
+let aim = null;
+const pointers = new Set();
+let storage;
+try { storage = window.localStorage; } catch { /* Storage is optional. */ }
+let launchMode = loadLaunchMode(storage);
+const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
 
 const stars = Array.from({ length: 76 }, (_, i) => ({
@@ -146,7 +153,7 @@ function drawTrail() {
 
 function drawRocket(rocket, editing = false) {
   const angle = editing
-    ? Number(angleInput.value) * Math.PI / 180
+    ? (aim && !aim.cancelled ? aim.angleDeg : Number(angleInput.value)) * Math.PI / 180
     : Math.atan2(rocket.velocity.y, rocket.velocity.x);
   ctx.save();
   ctx.translate(rocket.position.x, rocket.position.y);
@@ -165,8 +172,8 @@ function drawRocket(rocket, editing = false) {
   ctx.beginPath(); ctx.moveTo(-4, 4); ctx.lineTo(-9, 8); ctx.lineTo(-7, 1); ctx.fill();
   ctx.restore();
 
-  if (editing) {
-    const length = 34 + (Number(speedInput.value) - 120) * .22;
+  if (editing && (launchMode === 'precision' || (aim && !aim.cancelled))) {
+    const length = 34 + ((aim?.speed ?? Number(speedInput.value)) - 120) * .22;
     ctx.save();
     ctx.translate(rocket.position.x, rocket.position.y);
     ctx.rotate(angle);
@@ -194,6 +201,17 @@ function draw(time) {
     velocity: { x: 0, y: 0 },
   };
   drawRocket(rocket, mode === "editing");
+  if (mode === 'editing' && launchMode === 'slingshot') {
+    const origin = stage.launch.position;
+    ctx.strokeStyle = aim?.cancelled ? '#ffb66f' : '#65e1ff';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(origin.x, origin.y, 28, 0, Math.PI * 2); ctx.stroke();
+    if (gesture?.type === 'rocket') {
+      ctx.beginPath(); ctx.moveTo(origin.x, origin.y); ctx.lineTo(gesture.point.x, gesture.point.y); ctx.stroke();
+      ctx.fillStyle = '#c6f3ff'; ctx.font = '700 10px monospace'; ctx.textAlign = 'left';
+      ctx.fillText(aim.cancelled ? 'CANCEL' : `POWER ${Math.round(aim.speed)}`, 12, 36);
+    }
+  }
 
   if (mode === "flying") {
     ctx.fillStyle = "rgba(3, 9, 18, .8)";
@@ -210,14 +228,13 @@ function setEditingControls(enabled) {
   speedInput.disabled = !enabled;
   launchButton.disabled = !enabled;
   editHint.hidden = !enabled;
+  modeButtons.forEach(button => { button.disabled = !enabled; });
 }
 
-function launch() {
+function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
   if (mode !== "editing") return;
-  simulation = createSimulation(stage, {
-    angleDeg: Number(angleInput.value),
-    speed: Number(speedInput.value),
-  });
+  cancelGesture();
+  simulation = createSimulation(stage, { velocity });
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
   accumulator = 0;
@@ -242,6 +259,7 @@ function showResult(status) {
 }
 
 function retry() {
+  cancelGesture();
   simulation = null;
   trail = [];
   mode = "editing";
@@ -285,39 +303,81 @@ function tick(time) {
   requestAnimationFrame(tick);
 }
 
+function cancelGesture() {
+  const previous = gesture;
+  gesture = null;
+  aim = null;
+  if (previous && canvas.hasPointerCapture(previous.pointerId)) canvas.releasePointerCapture(previous.pointerId);
+}
+
+function updateMode() {
+  cancelGesture();
+  const sling = launchMode === 'slingshot';
+  document.querySelector('.controls').classList.toggle('is-slingshot', sling);
+  document.querySelector('#precisionSettings').hidden = sling;
+  document.querySelector('#slingshotGuide').hidden = !sling;
+  launchButton.hidden = sling;
+  document.querySelector('#editHintText').textContent = sling ? 'ロケットを引いて離す / 惑星はドラッグ' : '惑星をドラッグ';
+  modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.launchMode === launchMode)));
+}
+
+window.addEventListener('pointerdown', event => {
+  pointers.add(event.pointerId);
+  if (pointers.size > 1) cancelGesture();
+}, true);
 canvas.addEventListener("pointerdown", (event) => {
-  if (mode !== "editing") return;
+  if (mode !== "editing" || pointers.size !== 1 || event.button !== 0) return;
   const point = worldPoint(event);
-  const planet = stage.planets.find((item) => Math.hypot(point.x - item.x, point.y - item.y) <= item.radius + 12);
-  if (!planet) return;
-  draggingPlanet = planet;
+  const target = classifyDragTarget(point, stage.launch.position, stage.planets, launchMode);
+  if (!target) return;
+  gesture = { ...target, pointerId: event.pointerId, point };
+  if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
   canvas.setPointerCapture(event.pointerId);
   event.preventDefault();
 });
 
 canvas.addEventListener("pointermove", (event) => {
-  if (!draggingPlanet || mode !== "editing") return;
+  if (!gesture || gesture.pointerId !== event.pointerId || mode !== "editing") return;
   const point = worldPoint(event);
-  draggingPlanet.x = Math.max(draggingPlanet.radius, Math.min(stage.world.width - draggingPlanet.radius, point.x));
-  draggingPlanet.y = Math.max(draggingPlanet.radius, Math.min(stage.world.height - draggingPlanet.radius, point.y));
+  gesture.point = point;
+  if (gesture.type === 'rocket') {
+    aim = slingshotLaunch(stage.launch.position, point);
+  } else {
+    const planet = stage.planets.find(item => item.id === gesture.id);
+    planet.x = Math.max(planet.radius, Math.min(stage.world.width - planet.radius, point.x));
+    planet.y = Math.max(planet.radius, Math.min(stage.world.height - planet.radius, point.y));
+  }
   event.preventDefault();
 });
 
 function stopDragging(event) {
-  if (!draggingPlanet) return;
-  draggingPlanet = null;
-  if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+  if (!gesture || gesture.pointerId !== event.pointerId) return;
+  const shot = gesture.type === 'rocket' && event.type === 'pointerup' && pointers.size === 1
+    ? slingshotLaunch(stage.launch.position, worldPoint(event)) : null;
+  cancelGesture();
+  if (shot && !shot.cancelled && mode === 'editing') launch(shot.velocity);
 }
 
 canvas.addEventListener("pointerup", stopDragging);
 canvas.addEventListener("pointercancel", stopDragging);
+canvas.addEventListener('lostpointercapture', cancelGesture);
+window.addEventListener('pointerup', event => pointers.delete(event.pointerId));
+window.addEventListener('pointercancel', event => pointers.delete(event.pointerId));
+window.addEventListener('blur', () => { cancelGesture(); pointers.clear(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelGesture(); pointers.clear(); } });
+modeButtons.forEach(button => button.addEventListener('click', () => {
+  if (mode !== 'editing') return;
+  launchMode = saveLaunchMode(storage, button.dataset.launchMode);
+  updateMode();
+}));
 angleInput.addEventListener("input", updateOutputs);
 speedInput.addEventListener("input", updateOutputs);
-launchButton.addEventListener("click", launch);
+launchButton.addEventListener("click", () => { if (launchMode === 'precision') launch(); });
 resetButton.addEventListener("click", reset);
 retryButton.addEventListener("click", retry);
 new ResizeObserver(resizeCanvas).observe(frame);
 
 updateOutputs();
+updateMode();
 resizeCanvas();
 requestAnimationFrame(tick);

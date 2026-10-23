@@ -73,6 +73,16 @@ canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%
 .result.success p { color: #73f5b4; }
 
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 12px; padding: 1px 2px 0; }
+.launch-mode, .precision-settings, .slingshot-guide { grid-column: 1 / -1; }
+.launch-mode, .precision-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.launch-mode button { min-height: 34px; border: 1px solid #29465d; border-radius: 7px; background: #0b1421; color: #90adc4; font-size: 11px; }
+.launch-mode button[aria-pressed="true"] { background: #16465c; color: #dcfaff; border-color: #61d9fa; }
+.slingshot-guide { min-height: 34px; text-align: center; color: #a6cadd; font-size: 11px; }
+.slingshot-guide p { margin: 0; }
+.slingshot-guide small { display: block; color: #7d99af; }
+[hidden] { display: none !important; }
+.controls.is-slingshot .actions { grid-template-columns: 1fr; }
+.edit-hint b { font-weight: 500; }
 .tuner label { display: flex; justify-content: space-between; margin-bottom: 3px; color: #7890a8; font: 700 9px/1 ui-monospace, monospace; letter-spacing: .08em; }
 .tuner output { color: #cbefff; letter-spacing: 0; }
 input[type="range"] { width: 100%; height: 20px; margin: 0; accent-color: #54d8ff; }

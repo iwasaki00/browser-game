@@ -1,4 +1,4 @@
-import {WORLD,clamp} from "./data.js?v=0.2.0";
+import {WORLD,clamp} from "./data.js?v=0.2.2";
 
 export const WEAPON_LIMITS=Object.freeze({shots:384,jobs:128,eventsPerTick:4,remoteHoldMs:450,turretActiveDistance:700,trailDraws:64});
 export function createArsenal(){return {ownerId:"player",nextId:1,installations:[],jobs:[],pending:[],candidates:[],stats:{blasts:0,maxDepth:0,strikes:0,splits:0},lastMineCount:-1}}
@@ -19,17 +19,17 @@ export function segmentEntry(x,y,nx,ny,left,top,right,bottom){
   if(!normalX&&!normalY){if(Math.abs(dx)>Math.abs(dy))normalX=dx>0?-1:1;else normalY=dy>0?-1:1}
   return {t:Math.max(0,enter),nx:normalX,ny:normalY};
 }
-export function terrainContact(x,y,nx,ny,platforms,r=0,ceiling=false){
+export function terrainContact(x,y,nx,ny,platforms,r=0,ceiling=false,world=WORLD){
   let best=null;
   const consider=hit=>{if(hit&&(!best||hit.t<best.t))best=hit};
   if(nx<r)consider({t:(r-x)/(nx-x),nx:1,ny:0});
-  if(nx>WORLD.width-r)consider({t:(WORLD.width-r-x)/(nx-x),nx:-1,ny:0});
-  if(ny>WORLD.ground-r)consider({t:(WORLD.ground-r-y)/(ny-y),nx:0,ny:-1});
+  if(nx>world.width-r)consider({t:(world.width-r-x)/(nx-x),nx:-1,ny:0});
+  if(ny>world.ground-r)consider({t:(world.ground-r-y)/(ny-y),nx:0,ny:-1});
   if(ceiling&&ny<r)consider({t:(r-y)/(ny-y),nx:0,ny:1});
-  for(const pl of platforms)consider(segmentEntry(x,y,nx,ny,pl.x-r,pl.y-r,pl.x+pl.w+r,pl.y+8+r));
+  for(const pl of platforms)if(pl.active!==false)consider(segmentEntry(x,y,nx,ny,pl.x-r,pl.y-r,pl.x+pl.w+r,pl.y+(pl.h??8)+r));
   if(best){best.t=clamp(best.t,0,1);best.x=x+(nx-x)*best.t;best.y=y+(ny-y)*best.t}return best;
 }
-function surfaceAt(g,x,fromY){let y=WORLD.ground;for(const p of g.platforms)if(x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)y=Math.min(y,p.y);return y}
+function surfaceAt(g,x,fromY){let y=WORLD.ground;for(const p of g.platforms)if(p.active!==false&&x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)y=Math.min(y,p.y);return y}
 function addShot(g,w,x,y,vx,vy,extra={}){
   if(g.shots.length+g.arsenal.pending.length>=WEAPON_LIMITS.shots)return null;
   const s={uid:g.arsenal.nextId++,ownerId:g.arsenal.ownerId,expanded:true,weapon:w,type:w.type,effectType:w.effectType,assetIndex:w.assetIndex,
@@ -38,18 +38,19 @@ function addShot(g,w,x,y,vx,vy,extra={}){
 }
 function flushShots(g){for(const s of g.arsenal.pending)g.shots.push(s);g.arsenal.pending.length=0}
 function queue(g,job){if(g.arsenal.jobs.length>=WEAPON_LIMITS.jobs)return false;g.arsenal.jobs.push(job);return true}
-function aimPoint(w,origin,target){const dx=target.x-origin.x,dy=target.y-origin.y,len=Math.hypot(dx,dy)||1,t=Math.min(1,w.range/len);return {x:clamp(origin.x+dx*t,8,WORLD.width-8),y:clamp(origin.y+dy*t,0,WORLD.ground)}}
+function aimPoint(w,origin,target,world=WORLD){const dx=target.x-origin.x,dy=target.y-origin.y,len=Math.hypot(dx,dy)||1,t=Math.min(1,w.range/len);return {x:clamp(origin.x+dx*t,8,world.width-8),y:clamp(origin.y+dy*t,0,world.ground)}}
 
 export function fireExpanded(g,w,origin,target,api){
   const a=g.arsenal,dx=target.x-origin.x,dy=target.y-origin.y,len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len;
   if(w.type==="mine"||w.type==="turret"){
     let count=0;for(const i of a.installations)if(i.type===w.type&&i.ownerId===a.ownerId)count++;
     if(count>=w.installLimit)return false;
-    const x=clamp(g.player.x+g.player.face*14,12,WORLD.width-12),y=surfaceAt(g,x,g.player.y+32);
+    const x=clamp(g.player.x+g.player.face*14,12,(g.world??WORLD).width-12),y=surfaceAt(g,x,g.player.y+32);
+    if(g.missionId==='M02'&&g.platforms.some(p=>p.active!==false&&x>=p.x&&x<=p.x+p.w&&y-10<p.y+(p.h??8)&&y>p.y))return false;
     a.installations.push({uid:a.nextId++,ownerId:a.ownerId,type:w.type,weapon:w,x,y,life:w.life,cooldown:.12});return true;
   }
   if(w.type==="storm"||w.type==="meteor"){
-    const point=aimPoint(w,origin,target);
+    const point=aimPoint(w,origin,target,g.world??WORLD);
     return queue(g,{kind:w.type,weapon:w,...point,timer:0,remaining:w.strikes,index:0,hits:new Map(),life:w.life});
   }
   const count=w.type==="spiral"?2:w.type==="wideflame"?w.pellets:1;
@@ -86,7 +87,7 @@ function splitShot(g,s,cluster){
   for(let i=0;i<w.children;i++){
     const angle=cluster?-Math.PI+(i+.5)*Math.PI/w.children:base+(i-(w.children-1)/2)*.23;
     const speed=cluster?70+(i%3)*15:185;
-    addShot(g,w,clamp(s.x,2,WORLD.width-2),Math.min(s.y,WORLD.ground-3),Math.cos(angle)*speed,Math.sin(angle)*speed,
+    addShot(g,w,clamp(s.x,2,(g.world??WORLD).width-2),Math.min(s.y,WORLD.ground-3),Math.cos(angle)*speed,Math.sin(angle)*speed,
       {generation:s.generation+1,life:cluster?.7+(i%3)*.10:1.6,gravity:cluster?330:0,w:6,h:6});
   }
   s.dead=true;return true;
@@ -118,10 +119,11 @@ function updateJobs(g,dt,api){
     if(j.timer<=0&&j.remaining>0){
       if(j.kind==="storm"){
         const e=nearest(g,j.x,j.y,w.targetRadius,j.hits,w.targetLimit),x=e?.x??j.x,y=e?e.y+e.h/2:Math.min(WORLD.ground,j.y+45);
-        if(e){j.hits.set(e.uid,(j.hits.get(e.uid)||0)+1);api.damage(e,w.damage,{type:w.type,effectType:w.effectType,assetIndex:w.assetIndex,vx:0,vy:1})}
+        const blocked=g.missionId==='M02'&&terrainContact(j.x,j.y-40,x,y,g.platforms,0,false,g.world??WORLD);
+        if(e&&!blocked){j.hits.set(e.uid,(j.hits.get(e.uid)||0)+1);api.damage(e,w.damage,{type:w.type,effectType:w.effectType,assetIndex:w.assetIndex,x,y,vx:0,vy:1})}
         api.effect({kind:"lightning",x:j.x,y:j.y-40,x2:x,y2:y,life:.16,max:.16,assetIndex:w.assetIndex});g.arsenal.stats.strikes++;
       }else{
-        const x=clamp(j.x+(j.index-(w.strikes-1)/2)*22,8,WORLD.width-8);
+        const x=clamp(j.x+(j.index-(w.strikes-1)/2)*22,8,(g.world??WORLD).width-8);
         addShot(g,w,x,-60-(j.index%3)*12,0,w.speed,{life:2,gravity:100,radius:w.radius});
       }
       j.index++;j.remaining--;j.timer+=w.strikeInterval;
@@ -156,7 +158,7 @@ export function updateExpanded(g,dt,api){
       const offset=Math.sin(s.age*w.frequency+s.phase)*w.amplitude;
       nx=s.originX+s.axisX*w.speed*s.age-s.axisY*offset;ny=s.originY+s.axisY*w.speed*s.age+s.axisX*offset;
     }
-    const contact=terrainContact(s.x,s.y,nx,ny,g.platforms,s.w/2,w.type==="bounce");
+    const contact=terrainContact(s.x,s.y,nx,ny,g.platforms,s.w/2,w.type==="bounce",g.world??WORLD);
     if(contact){nx=contact.x;ny=contact.y}
     // Enemy damage is independent of terrain reflection and uses swept positions.
     const list=g.grid.query(Math.min(s.x,nx)-s.w/2-48,Math.min(s.y,ny)-s.h/2-32,Math.max(s.x,nx)+s.w/2+48,Math.max(s.y,ny)+s.h/2+32,g.arsenal.candidates);
@@ -177,7 +179,7 @@ export function updateExpanded(g,dt,api){
       else{if(!s.dead){if((w.type==="split"||cluster)&&parent)splitShot(g,s,cluster);else if(s.radius)startBlast(g,s,api)}s.dead=true}
     }
     if(!s.dead&&s.life<=0){if((w.type==="split"||cluster)&&parent)splitShot(g,s,cluster);else if(s.radius)startBlast(g,s,api);s.dead=true}
-    if(s.x<0||s.x>WORLD.width||s.y< -200||s.y>WORLD.ground+32||!Number.isFinite(s.x+s.y))s.dead=true;
+    if(s.x<0||s.x>(g.world??WORLD).width||s.y< -200||s.y>WORLD.ground+32||!Number.isFinite(s.x+s.y))s.dead=true;
   }
   let write=0;for(const s of g.shots)if(!s.dead)g.shots[write++]=s;g.shots.length=write;flushShots(g);
 }
