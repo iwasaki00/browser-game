@@ -84,6 +84,8 @@ E-05/E-06/H-01/B-02は既存の死亡エンティティ・破片・LEVEL1〜3と
 
 関連モジュール（地形移動、武器、出現、カメラ、撃破、保存、LAB）に限定してテストした。M02専用テストは `tests/mission02.test.mjs`。
 
+最終結果：関連テスト199件成功・失敗0（12ファイルの198件と、最終描画修正後のM02カメラ端テスト1件）。うちM02専用44件（`node --test tests/mission02.test.mjs`）。共有変更の影響先としてdata / runtime / weapons / invasion / classes / class-movement / camera / impact / destruction / playground / lab-weapon-pickerを実行した。別プロジェクトや無関係な全画面GUI巡回は対象外。構文チェックと `git diff --check` も成功。
+
 | 項目 | 結果 |
 | --- | --- |
 | 旧M01クリア→M02 OPEN、GAME OVER/リトライ/再読込 | 成功、M03は選択不可 |

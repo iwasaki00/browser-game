@@ -385,12 +385,17 @@ function drawWorld(g){
 }
 function drawUnderground(g,bounds){
   const tile=(index,x,y,height=16,width=16)=>ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height);
+  // The final chamber is organic rather than another copy of the subway hall.
+  if(bounds.right>4500){
+    ctx.fillStyle='#160e28';ctx.fillRect(Math.max(4500,bounds.left),0,bounds.right-Math.max(4500,bounds.left)+16,WORLD.ground);
+    for(let x=Math.max(4500,Math.floor(bounds.left/80)*80);x<bounds.right+80;x+=80){ctx.strokeStyle='#50325e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+20,38);ctx.lineTo(x+6,66);ctx.lineTo(x+28,116);ctx.lineTo(x+18,148);ctx.stroke();tile(11,x+26,12);tile(8,x+48,124)}
+  }
   ctx.fillStyle='#0d202a';ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
-  for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(0,x,WORLD.ground);
+  for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(x>=3300?9:0,x,WORLD.ground);
   for(const p of g.platforms){if(p.active===false||p.kind==='barrier'||p.x+p.w<bounds.left||p.x>bounds.right)continue;
     ctx.fillStyle=p.kind==='pipe'?'#315d61':p.kind==='metal'?'#263e4e':'#152a38';ctx.fillRect(p.x,p.y,p.w,p.h??8);
     ctx.fillStyle=p.kind==='metal'?'#a0c6ab':'#517985';ctx.fillRect(p.x,p.y,p.w,2);
-    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?8:p.kind==='wall'?2:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x));
+    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?10:p.kind==='wall'?2:p.kind==='ceiling'?1:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x));
   }
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
@@ -418,7 +423,7 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
     else{if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}if(e.type==='nest'){ctx.fillStyle='#09121e';ctx.fillRect(x-24,e.y-8,48,5);ctx.fillStyle='#aef046';ctx.fillRect(x-24,e.y-8,48*e.hp/e.maxHp,5)}if(e.type==='queen'&&weakCore(e).open){const core=weakCore(e);ctx.strokeStyle='#fff08b';ctx.lineWidth=2;ctx.strokeRect(core.x-12,core.y-10,24,20)}}
   }}
 function drawUndergroundEnemy(e,frame,x,y){
-  if(e.type==='barrier'){ctx.drawImage(images.undergroundTiles,e.hp<e.maxHp/2?80:64,16,16,16,x-e.w/2,y,e.w,e.h);return}
+  if(e.type==='barrier'){ctx.drawImage(images.undergroundTiles,e.dead?96:e.hp<e.maxHp/2?80:64,16,16,16,x-e.w/2,y,e.w,e.h);return}
   ctx.drawImage(images[e.type],frame*e.w,0,e.w,e.h,x-e.w/2,Math.round(y),e.w,e.h);
 }
 function drawDeathGhost(e,x,y,angle,alpha,full){

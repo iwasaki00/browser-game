@@ -105,6 +105,13 @@ test('M02 LAB legacy presets use 5600px bounds and solid ceiling, not M01 moveme
   r.click('lab-open');r.change('labPreset','FLIGHT');r.click('lab-close');r.run('game.player.x=1100;game.player.y=60;input.right=false;input.up=true;update(.5)');assert.equal(r.run('game.player.y'),44);
 });
 
+test('lightning can damage a targeted breakable wall without treating the target itself as cover',()=>{
+  const r=mission({unlocked:['A-01','S-02','T-16'],equipped:['T-16','A-01']});
+  r.run("game.director.stopped=true;game.player.x=2320;input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot();for(let n=0;n<180;n++){game.time+=1/60;game.grid.rebuild(game.enemies);updateExpanded(game,1/60,weaponAPI)}");
+  assert.equal(r.run("game.enemies.find(e=>e.type==='barrier'&&e.x===2520).hp"),12);
+  assert.equal(r.run('game.arsenal.stats.strikes'),8);
+});
+
 test('boss death produces staged effects then one saved M02 reward, stats and COMING SOON M03',()=>{
   const r=mission();r.run("game.time=360;game.player.x=4800;startBoss();const initial=save.unlocked.length;damageEnemy(game.enemies[0],99999,{type:'rocket',vx:1,vy:0})");
   r.flush();r.flush();assert.equal(r.run('state'),'result');assert.equal(r.run('save.unlocked.length'),r.run('initial+1'));
@@ -141,6 +148,18 @@ test('new assets and frame metadata match runtime dimensions',()=>{
   const metadata=JSON.parse(readFileSync(new URL('../assets/underground.json',import.meta.url),'utf8'));
   assert.equal(metadata.version,'0.2.2');assert.ok(Object.keys(metadata.assets).length>=10);
   for(const name of ['backgrounds/underground.png','sprites/enemies/tunnel_worm.png','sprites/bosses/abyss_queen.png'])assert.ok(readFileSync(new URL('../assets/'+name,import.meta.url)).length>64);
+});
+
+test('M02 camera and renderer cover both 5600px world edges at minimum and maximum zoom',()=>{
+  const r=mission();r.run('assetsReady=true');
+  for(const zoom of [.35,.85])for(const right of [false,true]){
+    r.run(`game.player.x=${right?5575:8};game.battleCamera.zoom=game.battleCamera.targetZoom=${zoom};game.battleCamera.x=${right?5600-320/zoom:0};syncCameraView();draw()`);
+    assert.ok(r.run('game.camera')>=0);assert.ok(r.run('game.camera+view.width')<=5600+1e-7);
+    for(const call of r.drawCalls)for(const value of call.slice(1))if(typeof value==='number')assert.ok(Number.isFinite(value));
+    assert.ok(r.drawCalls.some(call=>call[0]==='fillText'&&String(call[1]).startsWith('M02 ')));
+    r.drawCalls.length=0;
+  }
+  assert.equal(WORLD.width,4800,'M01 world remains unchanged');
 });
 
 test('complete M02 engine run from x64 through all five areas to boss death and saved result, without warps',t=>{

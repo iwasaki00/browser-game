@@ -26,7 +26,7 @@ export function terrainContact(x,y,nx,ny,platforms,r=0,ceiling=false,world=WORLD
   if(nx>world.width-r)consider({t:(world.width-r-x)/(nx-x),nx:-1,ny:0});
   if(ny>world.ground-r)consider({t:(world.ground-r-y)/(ny-y),nx:0,ny:-1});
   if(ceiling&&ny<r)consider({t:(r-y)/(ny-y),nx:0,ny:1});
-  for(const pl of platforms)if(pl.active!==false)consider(segmentEntry(x,y,nx,ny,pl.x-r,pl.y-r,pl.x+pl.w+r,pl.y+(pl.h??8)+r));
+  for(const pl of platforms)if(pl.active!==false){const hit=segmentEntry(x,y,nx,ny,pl.x-r,pl.y-r,pl.x+pl.w+r,pl.y+(pl.h??8)+r);if(hit){hit.platform=pl;consider(hit)}}
   if(best){best.t=clamp(best.t,0,1);best.x=x+(nx-x)*best.t;best.y=y+(ny-y)*best.t}return best;
 }
 function surfaceAt(g,x,fromY){let y=WORLD.ground;for(const p of g.platforms)if(p.active!==false&&x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)y=Math.min(y,p.y);return y}
@@ -119,7 +119,8 @@ function updateJobs(g,dt,api){
     if(j.timer<=0&&j.remaining>0){
       if(j.kind==="storm"){
         const e=nearest(g,j.x,j.y,w.targetRadius,j.hits,w.targetLimit),x=e?.x??j.x,y=e?e.y+e.h/2:Math.min(WORLD.ground,j.y+45);
-        const blocked=g.missionId==='M02'&&terrainContact(j.x,j.y-40,x,y,g.platforms,0,false,g.world??WORLD);
+        const obstruction=g.missionId==='M02'?terrainContact(j.x,j.y-40,x,y,g.platforms,0,false,g.world??WORLD):null;
+        const blocked=obstruction&&(!e?.platform||obstruction.platform!==e.platform);
         if(e&&!blocked){j.hits.set(e.uid,(j.hits.get(e.uid)||0)+1);api.damage(e,w.damage,{type:w.type,effectType:w.effectType,assetIndex:w.assetIndex,x,y,vx:0,vy:1})}
         api.effect({kind:"lightning",x:j.x,y:j.y-40,x2:x,y2:y,life:.16,max:.16,assetIndex:w.assetIndex});g.arsenal.stats.strikes++;
       }else{
