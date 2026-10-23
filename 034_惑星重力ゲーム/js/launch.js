@@ -80,7 +80,7 @@ export function classifyDragTarget(point, rocketPosition, planets, launchMode, o
 
   const planet = planets
     .map((item) => ({ item, distance: Math.hypot(point.x - item.x, point.y - item.y) }))
-    .filter(({ item, distance }) => distance <= item.radius + 12)
+    .filter(({ item, distance }) => distance <= Math.max(item.radius + 12, options.minimumPlanetTouchRadius ?? 0))
     .sort((a, b) => a.distance - b.distance)[0]?.item;
 
   return planet ? { type: "planet", id: planet.id } : null;

@@ -114,3 +114,24 @@ input[type="range"] { width: 100%; height: 20px; margin: 0; accent-color: #54d8f
   .actions button { height: 36px; }
   .controls { gap: 3px 12px; }
 }
+
+/* Preserve the board; only the settings area scrolls on short screens. */
+.app { min-height: 0; grid-template-rows: auto auto minmax(260px, 1fr) minmax(0, auto); }
+.controls { display: grid; grid-template-columns: 1fr; grid-template-rows: minmax(0,1fr) auto; max-height: max(150px, calc(100dvh - 370px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); min-height: 0; gap: 6px; }
+.controls-body { min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-content: start; gap: 6px; padding: 0 2px 3px; touch-action: pan-y; }
+.settings-panel[open] { grid-column: 1 / -1; }
+.settings-panel { min-width: 0; border: 1px solid #263f54; border-radius: 6px; padding: 0 6px; }
+.settings-panel summary { min-height: 36px; display: flex; align-items: center; color: #a8cddd; cursor: pointer; font-size: 11px; touch-action: manipulation; }
+.settings-panel summary::before { content: '＋'; margin-right: 7px; }
+.settings-panel[open] summary::before { content: '−'; }
+.settings-panel[open] { padding-bottom: 6px; }
+.game-mode { flex-wrap: wrap; }
+.game-mode select, .planet-editor select { font-size: 16px; min-height: 44px; }
+.planet-editor button, .preview-options button, .launch-mode button, .actions button { min-height: 44px; height: auto; }
+.preview-options { flex-wrap: wrap; }
+.preview-options small { width: 100%; }
+input[type='range'] { height: 36px; touch-action: pan-x; }
+.actions { padding: 0 2px; }
+.result button { min-height: 44px; }
+.edit-hint { max-width: calc(100% - 18px); }
+button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #a5ecff; outline-offset: 1px; }

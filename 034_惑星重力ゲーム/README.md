@@ -1,6 +1,10 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.4.0 — LIVE GRAVITY
+Version 0.4.1 — MOBILE PLAYABILITY CHECK
+
+惑星編集と表示設定を折りたたみにし、狭い画面では設定欄だけ上下スクロールできます。発射・RESETは常に下部です。
+ボタン・selectは高さ44px以上、盤面のタッチ判定は最低44px直径に調整しました。
+4サイズのChrome表示・タッチ入力再現結果と、未実施のiPhone実機チェックは [reports/mobile/CHECK.md](reports/mobile/CHECK.md) を参照してください。
 
 MODEから「軌道設計」「重力操作」を選択します。発射前のみ変更でき、選択は保存されます。
 重力操作では飛行中の惑星ドラッグ位置へ毎秒90ワールド単位までで移動します。指を離す・キャンセルすると停止します。

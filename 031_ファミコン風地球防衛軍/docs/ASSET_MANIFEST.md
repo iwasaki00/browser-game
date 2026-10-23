@@ -20,6 +20,25 @@
 
 合計13 PNG、254フレーム相当。旧player.pngは互換素材として保持。現行のプレイヤーと兵科プレビューはclasses.pngを使用する。
 
+## 地下ステージ素材（0.2.2）
+
+`py -3 tools/generate_assets.py --underground-only` で以下10 PNG・計57フレーム相当と `assets/underground.json` を直接生成する。M02専用シード2207319を使用し、既存M01の13 PNGを上書きしない。再生成前後で全PNGのSHA256が一致することを確認済み。全体は23 PNG・311フレーム相当。
+
+| ファイル（assets/以下） | コマ数 | 1コマ | 内容 |
+| --- | ---: | --- | --- |
+| backgrounds/underground.png | 1 | 320×180 | 地下施設・地下鉄跡・配管・巣穴 |
+| tiles/underground_tiles.png | 16 | 16×16 | 金属床・天井・壁・配管・洞窟・破壊障害物3状態 |
+| sprites/enemies/tunnel_worm.png | 4 | 32×20 | E-05、うねり・攻撃・被弾 |
+| sprites/enemies/ceiling_spitter.png | 4 | 28×24 | E-06、脚・酸液器官 |
+| sprites/enemies/spawn_nest.png | 4 | 48×48 | H-01、根・発光する孵化口 |
+| sprites/bosses/abyss_queen.png | 4 | 120×96 | B-02、冠状装甲・多脚・腹部コア |
+| effects/acid.png | 4 | 16×16 | 酸弾 |
+| effects/ground_wave.png | 4 | 32×24 | 地上衝撃波 |
+| effects/nest_break.png | 8 | 64×64 | 巣穴爆散 |
+| effects/boss_break.png | 8 | 128×96 | ボス段階爆発 |
+
+キャラクター・効果は透過RGBA、背景は不透明、nearest-neighbor。メタデータにはフレーム幅・高さ・列数・コマ数・タイル用途を記録する。外部画像の流用・手動ダウンロードは不要。
+
 ## 新12武器（0.2.0）
 
 - 新武器分はアイコン12＋弾体12＋装備表示12＋固有エフェクト96＝132コマ。互換・共用のため旧8武器の装備表示8コマも生成する。PNGは2ファイル拡張・2ファイル追加。

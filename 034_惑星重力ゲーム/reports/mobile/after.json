@@ -1,0 +1,514 @@
+[
+  {
+    "size": "375x667",
+    "metrics": {
+      "viewport": [
+        375,
+        667
+      ],
+      "document": [
+        375,
+        667
+      ],
+      "board": {
+        "x": 12,
+        "y": 103.296875,
+        "width": 351,
+        "height": 295.703125,
+        "top": 103.296875,
+        "right": 363,
+        "bottom": 399,
+        "left": 12
+      },
+      "controls": [
+        {
+          "id": "gameMode",
+          "x": 47.328125,
+          "y": 408,
+          "width": 86,
+          "height": 44,
+          "top": 408,
+          "right": 133.328125,
+          "bottom": 452,
+          "left": 47.328125
+        },
+        {
+          "id": "表示設定",
+          "x": 23,
+          "y": 459,
+          "width": 154.5,
+          "height": 36,
+          "top": 459,
+          "right": 177.5,
+          "bottom": 495,
+          "left": 23
+        },
+        {
+          "id": "惑星編集",
+          "x": 197.5,
+          "y": 459,
+          "width": 154.5,
+          "height": 36,
+          "top": 459,
+          "right": 352,
+          "bottom": 495,
+          "left": 197.5
+        },
+        {
+          "id": "A 精密発射",
+          "x": 16,
+          "y": 502,
+          "width": 167.5,
+          "height": 44,
+          "top": 502,
+          "right": 183.5,
+          "bottom": 546,
+          "left": 16
+        },
+        {
+          "id": "B スリングショット",
+          "x": 191.5,
+          "y": 502,
+          "width": 167.5,
+          "height": 44,
+          "top": 502,
+          "right": 359,
+          "bottom": 546,
+          "left": 191.5
+        },
+        {
+          "id": "angleInput",
+          "x": 16,
+          "y": 564,
+          "width": 167.5,
+          "height": 36,
+          "top": 564,
+          "right": 183.5,
+          "bottom": 600,
+          "left": 16
+        },
+        {
+          "id": "speedInput",
+          "x": 191.5,
+          "y": 564,
+          "width": 167.5,
+          "height": 36,
+          "top": 564,
+          "right": 359,
+          "bottom": 600,
+          "left": 191.5
+        },
+        {
+          "id": "resetButton",
+          "x": 16,
+          "y": 613,
+          "width": 116.515625,
+          "height": 44,
+          "top": 613,
+          "right": 132.515625,
+          "bottom": 657,
+          "left": 16
+        },
+        {
+          "id": "launchButton",
+          "x": 140.515625,
+          "y": 613,
+          "width": 218.484375,
+          "height": 44,
+          "top": 613,
+          "right": 359,
+          "bottom": 657,
+          "left": 140.515625
+        }
+      ]
+    },
+    "errors": [],
+    "performance": {
+      "predictionUpdateMs": {
+        "samples": 127,
+        "p95": 0.40000009536743164,
+        "max": 1
+      },
+      "frameIntervalMs": {
+        "samples": 127,
+        "p95": 16.800000000000182,
+        "max": 33.30000000000018
+      }
+    }
+  },
+  {
+    "size": "390x844",
+    "metrics": {
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "board": {
+        "x": 12,
+        "y": 104.203125,
+        "width": 366,
+        "height": 471.796875,
+        "top": 104.203125,
+        "right": 378,
+        "bottom": 576,
+        "left": 12
+      },
+      "controls": [
+        {
+          "id": "gameMode",
+          "x": 47.328125,
+          "y": 585,
+          "width": 86,
+          "height": 44,
+          "top": 585,
+          "right": 133.328125,
+          "bottom": 629,
+          "left": 47.328125
+        },
+        {
+          "id": "表示設定",
+          "x": 23,
+          "y": 636,
+          "width": 162,
+          "height": 36,
+          "top": 636,
+          "right": 185,
+          "bottom": 672,
+          "left": 23
+        },
+        {
+          "id": "惑星編集",
+          "x": 205,
+          "y": 636,
+          "width": 162,
+          "height": 36,
+          "top": 636,
+          "right": 367,
+          "bottom": 672,
+          "left": 205
+        },
+        {
+          "id": "A 精密発射",
+          "x": 16,
+          "y": 679,
+          "width": 175,
+          "height": 44,
+          "top": 679,
+          "right": 191,
+          "bottom": 723,
+          "left": 16
+        },
+        {
+          "id": "B スリングショット",
+          "x": 199,
+          "y": 679,
+          "width": 175,
+          "height": 44,
+          "top": 679,
+          "right": 374,
+          "bottom": 723,
+          "left": 199
+        },
+        {
+          "id": "angleInput",
+          "x": 16,
+          "y": 741,
+          "width": 175,
+          "height": 36,
+          "top": 741,
+          "right": 191,
+          "bottom": 777,
+          "left": 16
+        },
+        {
+          "id": "speedInput",
+          "x": 199,
+          "y": 741,
+          "width": 175,
+          "height": 36,
+          "top": 741,
+          "right": 374,
+          "bottom": 777,
+          "left": 199
+        },
+        {
+          "id": "resetButton",
+          "x": 16,
+          "y": 790,
+          "width": 121.734375,
+          "height": 44,
+          "top": 790,
+          "right": 137.734375,
+          "bottom": 834,
+          "left": 16
+        },
+        {
+          "id": "launchButton",
+          "x": 145.734375,
+          "y": 790,
+          "width": 228.265625,
+          "height": 44,
+          "top": 790,
+          "right": 374,
+          "bottom": 834,
+          "left": 145.734375
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "size": "393x852",
+    "metrics": {
+      "viewport": [
+        393,
+        852
+      ],
+      "document": [
+        393,
+        852
+      ],
+      "board": {
+        "x": 12,
+        "y": 104.375,
+        "width": 369,
+        "height": 479.625,
+        "top": 104.375,
+        "right": 381,
+        "bottom": 584,
+        "left": 12
+      },
+      "controls": [
+        {
+          "id": "gameMode",
+          "x": 47.328125,
+          "y": 593,
+          "width": 86,
+          "height": 44,
+          "top": 593,
+          "right": 133.328125,
+          "bottom": 637,
+          "left": 47.328125
+        },
+        {
+          "id": "表示設定",
+          "x": 23,
+          "y": 644,
+          "width": 163.5,
+          "height": 36,
+          "top": 644,
+          "right": 186.5,
+          "bottom": 680,
+          "left": 23
+        },
+        {
+          "id": "惑星編集",
+          "x": 206.5,
+          "y": 644,
+          "width": 163.5,
+          "height": 36,
+          "top": 644,
+          "right": 370,
+          "bottom": 680,
+          "left": 206.5
+        },
+        {
+          "id": "A 精密発射",
+          "x": 16,
+          "y": 687,
+          "width": 176.5,
+          "height": 44,
+          "top": 687,
+          "right": 192.5,
+          "bottom": 731,
+          "left": 16
+        },
+        {
+          "id": "B スリングショット",
+          "x": 200.5,
+          "y": 687,
+          "width": 176.5,
+          "height": 44,
+          "top": 687,
+          "right": 377,
+          "bottom": 731,
+          "left": 200.5
+        },
+        {
+          "id": "angleInput",
+          "x": 16,
+          "y": 749,
+          "width": 176.5,
+          "height": 36,
+          "top": 749,
+          "right": 192.5,
+          "bottom": 785,
+          "left": 16
+        },
+        {
+          "id": "speedInput",
+          "x": 200.5,
+          "y": 749,
+          "width": 176.5,
+          "height": 36,
+          "top": 749,
+          "right": 377,
+          "bottom": 785,
+          "left": 200.5
+        },
+        {
+          "id": "resetButton",
+          "x": 16,
+          "y": 798,
+          "width": 122.78125,
+          "height": 44,
+          "top": 798,
+          "right": 138.78125,
+          "bottom": 842,
+          "left": 16
+        },
+        {
+          "id": "launchButton",
+          "x": 146.78125,
+          "y": 798,
+          "width": 230.21875,
+          "height": 44,
+          "top": 798,
+          "right": 377,
+          "bottom": 842,
+          "left": 146.78125
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "size": "320x568",
+    "metrics": {
+      "viewport": [
+        320,
+        568
+      ],
+      "document": [
+        320,
+        568
+      ],
+      "board": {
+        "x": 12,
+        "y": 87.796875,
+        "width": 296,
+        "height": 267.203125,
+        "top": 87.796875,
+        "right": 308,
+        "bottom": 355,
+        "left": 12
+      },
+      "controls": [
+        {
+          "id": "gameMode",
+          "x": 47.328125,
+          "y": 361,
+          "width": 86,
+          "height": 44,
+          "top": 361,
+          "right": 133.328125,
+          "bottom": 405,
+          "left": 47.328125
+        },
+        {
+          "id": "表示設定",
+          "x": 23,
+          "y": 412,
+          "width": 127,
+          "height": 36,
+          "top": 412,
+          "right": 150,
+          "bottom": 448,
+          "left": 23
+        },
+        {
+          "id": "惑星編集",
+          "x": 170,
+          "y": 412,
+          "width": 127,
+          "height": 36,
+          "top": 412,
+          "right": 297,
+          "bottom": 448,
+          "left": 170
+        },
+        {
+          "id": "A 精密発射",
+          "x": 16,
+          "y": 455,
+          "width": 140,
+          "height": 44,
+          "top": 455,
+          "right": 156,
+          "bottom": 499,
+          "left": 16
+        },
+        {
+          "id": "B スリングショット",
+          "x": 164,
+          "y": 455,
+          "width": 140,
+          "height": 44,
+          "top": 455,
+          "right": 304,
+          "bottom": 499,
+          "left": 164
+        },
+        {
+          "id": "angleInput",
+          "x": 16,
+          "y": 517,
+          "width": 140,
+          "height": 36,
+          "top": 517,
+          "right": 156,
+          "bottom": 553,
+          "left": 16
+        },
+        {
+          "id": "speedInput",
+          "x": 164,
+          "y": 517,
+          "width": 140,
+          "height": 36,
+          "top": 517,
+          "right": 304,
+          "bottom": 553,
+          "left": 164
+        },
+        {
+          "id": "resetButton",
+          "x": 16,
+          "y": 514,
+          "width": 97.390625,
+          "height": 44,
+          "top": 514,
+          "right": 113.390625,
+          "bottom": 558,
+          "left": 16
+        },
+        {
+          "id": "launchButton",
+          "x": 121.390625,
+          "y": 514,
+          "width": 182.609375,
+          "height": 44,
+          "top": 514,
+          "right": 304,
+          "bottom": 558,
+          "left": 121.390625
+        }
+      ]
+    },
+    "errors": []
+  }
+]

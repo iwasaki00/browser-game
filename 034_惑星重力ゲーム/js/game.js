@@ -403,7 +403,8 @@ window.addEventListener('pointerdown', event => {
 canvas.addEventListener("pointerdown", (event) => {
   if ((mode !== 'editing' && !(mode === 'flying' && gameMode === 'live')) || pointers.size !== 1 || event.button !== 0) return;
   const point = worldPoint(event);
-  const target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode);
+  const target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode,
+    { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
   if (!target) return;
   if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
   gesture = { ...target, pointerId: event.pointerId, point };

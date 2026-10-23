@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Trajectory Preview</title>
+  <title>ORBIT MAKER — Mobile Playability Check</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="version">v0.4.0</div>
+      <div class="version">v0.4.1</div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -38,12 +38,17 @@
     </section>
 
     <section class="controls" aria-label="発射設定">
+      <div class="controls-body" aria-label="操作設定（上下スクロール可能）" tabindex="0">
       <div class="game-mode"><label>MODE <select id="gameMode" aria-label="ゲームモード"><option value="design">軌道設計</option><option value="live">重力操作</option></select></label><small id="gameModeHelp"></small></div>
+      <details class="settings-panel" id="displayPanel"><summary>表示設定</summary>
       <div class="preview-options"><button id="previewToggle" type="button" aria-pressed="true">予測 ON</button><button id="gravityToggle" type="button" aria-pressed="false">重力目安 OFF</button><small>青：弱 ／ 黄：中 ／ 赤：強</small></div>
+      </details>
+      <details class="settings-panel" id="planetPanel"><summary>惑星編集</summary>
       <div class="planet-editor">
         <div class="planet-toolbar"><output id="planetSelection" aria-live="polite"></output><button id="addPlanet" type="button">＋ 追加</button><button id="deletePlanet" type="button">削除</button></div>
         <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
       </div>
+      </details>
       <div class="launch-mode" role="group" aria-label="発射方式">
         <button type="button" data-launch-mode="precision" aria-pressed="true"><span>A</span> 精密発射</button>
         <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
@@ -63,6 +68,7 @@
       <div class="slingshot-guide" id="slingshotGuide" hidden>
         <span aria-hidden="true">◀ · · 🚀</span>
         <p><strong>ロケットを引いて離す</strong><small>元の位置へ戻すとキャンセル</small></p>
+      </div>
       </div>
 
       <div class="actions">
