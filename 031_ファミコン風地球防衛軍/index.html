@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.1">
+  <link rel="stylesheet" href="styles.css?v=0.2.2">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.1</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.2</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -93,7 +93,8 @@
             <small>正式4兵科は通常と同じHP・特殊能力・エネルギー。切替時にHP/ENを補充。<br>旧実験用：STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110 px/s。FLIGHTのみ無制限飛行・無入力ホバー（W/S・UP/DOWN）。通常の選択兵科は変更しません。</small>
           </fieldset>
           <fieldset><legend>ENCOUNTER</legend>
-            <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option></select></label>
+            <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option></select></label>
+            <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option></select></label>
             <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>200</option></select></label>
             <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
             <div class="lab-buttons"><button data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-clear">敵・弾・演出を全消去</button></div>
@@ -145,6 +146,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.1"></script>
+  <script type="module" src="js/game.js?v=0.2.2"></script>
 </body>
 </html>

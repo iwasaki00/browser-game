@@ -1,0 +1,91 @@
+{
+  "version": "0.2.2",
+  "seed": 2207319,
+  "sampling": "nearest",
+  "animationOrder": [
+    "idle",
+    "move_or_pulse",
+    "attack",
+    "hit"
+  ],
+  "assets": {
+    "backgrounds/underground.png": {
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "frames": 1,
+      "columns": 1
+    },
+    "tiles/underground_tiles.png": {
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 16,
+      "columns": 8,
+      "tileNames": [
+        "metal_floor",
+        "metal_ceiling",
+        "metal_wall",
+        "pipe_horizontal",
+        "pipe_vertical",
+        "pipe_cross",
+        "subway_rail",
+        "subway_panel",
+        "cave_wall",
+        "cave_floor",
+        "cave_ceiling",
+        "nest_wall",
+        "barrier_intact",
+        "barrier_cracked",
+        "barrier_broken",
+        "warning_panel"
+      ]
+    },
+    "sprites/enemies/tunnel_worm.png": {
+      "frameWidth": 32,
+      "frameHeight": 20,
+      "frames": 4,
+      "columns": 4
+    },
+    "sprites/enemies/ceiling_spitter.png": {
+      "frameWidth": 28,
+      "frameHeight": 24,
+      "frames": 4,
+      "columns": 4
+    },
+    "sprites/enemies/spawn_nest.png": {
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "frames": 4,
+      "columns": 4
+    },
+    "sprites/bosses/abyss_queen.png": {
+      "frameWidth": 120,
+      "frameHeight": 96,
+      "frames": 4,
+      "columns": 4
+    },
+    "effects/acid.png": {
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "frames": 4,
+      "columns": 4
+    },
+    "effects/ground_wave.png": {
+      "frameWidth": 32,
+      "frameHeight": 24,
+      "frames": 4,
+      "columns": 4
+    },
+    "effects/nest_break.png": {
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "frames": 8,
+      "columns": 8
+    },
+    "effects/boss_break.png": {
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "frames": 8,
+      "columns": 8
+    }
+  }
+}

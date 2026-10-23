@@ -70,10 +70,17 @@ export function moveTunnelEnemy(g,e,dt){
   for(const p of g.platforms)if(p.active!==false&&e.x+e.w/2>p.x&&e.x-e.w/2<p.x+p.w&&e.y+e.h<=p.y&&y+e.h>=p.y){y=Math.min(y,p.y-e.h);e.vy=0}
   e.y=y;
 }
-export function weakCore(e){return {x:e.x,y:e.y+e.h-16,r:19,open:e.type==='queen'&&!e.dead&&(e.timer%ABYSS.weakCycle<ABYSS.weakOpen||e.phase==='charge')}}
+export function weakCore(e){return {x:e.x+4,y:e.y+60,r:19,open:e.type==='queen'&&!e.dead&&(e.timer%ABYSS.weakCycle<ABYSS.weakOpen||e.phase==='charge')}}
 export function queenDamage(e,damage,source){
   const core=weakCore(e),x=source.x??e.x,y=source.y??-1000;
-  return core.open&&Math.hypot(x-core.x,y-core.y)<=core.r+(source.radial?source.radius??0:0)?damage*ABYSS.weakMultiplier:damage;
+  let hit=Math.hypot(x-core.x,y-core.y)<=core.r+(source.radial?source.radius??0:0);
+  // A projectile hits the shell's front first. Evaluate its incoming ray against
+  // the exposed abdominal core, rather than demanding penetration of the body.
+  if(!source.radial&&Number.isFinite(source.vx+source.vy)){
+    const ox=source.originX??source.oldX??x,oy=source.originY??source.oldY??y,dx=core.x-ox,dy=core.y-oy,speed=Math.hypot(source.vx,source.vy);
+    if(speed>0)hit=dx*source.vx+dy*source.vy>=0&&Math.abs(dx*source.vy-dy*source.vx)/speed<=core.r;
+  }
+  return core.open&&hit?damage*ABYSS.weakMultiplier:damage;
 }
 export function updateQueen(g,e,dt,fire,spawn,effect){
   e.timer+=dt;e.actionWait=(e.actionWait??1.5)-dt;

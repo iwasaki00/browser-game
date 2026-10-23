@@ -206,6 +206,7 @@ function startMission(id=selectedMissionId,labOnly=false){
   }
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
+  canvas.setAttribute('aria-label',`ゲーム画面。${id} ${MISSIONS.find(m=>m.id===id).name}を進行中`);
 }
 function pause(){if(state!=="play")return;show("pause");resetInput()}
 function resume(){if(!game)return;show("play");canvas.focus()}
@@ -352,7 +353,12 @@ function draw(){
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
   drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(g.player);drawEffects(g);
-  ctx.restore();drawHud(g);drawClassHud(g);drawImpactHud(g);
+  ctx.restore();drawHud(g);if(g.missionId==='M02')drawUndergroundHud(g);drawClassHud(g);drawImpactHud(g);
+}
+function drawUndergroundHud(g){
+  ctx.fillStyle='#071522';ctx.fillRect(225,4,91,10);ctx.fillStyle='#e4fff6';ctx.font='7px monospace';ctx.fillText(`${g.lab?'LAB':g.missionId} ${formatTime(g.time)}`,232,12);
+  const boss=g.enemies.find(e=>e.type==='queen'&&!e.dead);if(!boss)return;
+  ctx.fillStyle='#02060dcc';ctx.fillRect(42,158,236,15);ctx.fillStyle='#ff4f6d';ctx.fillRect(47,166,226*boss.hp/boss.maxHp,4);ctx.fillStyle='#ffe05c';ctx.fillText('B-02 ABYSS QUEEN',94,164);
 }
 function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
@@ -371,13 +377,13 @@ function drawWorld(g){
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
 function drawUnderground(g,bounds){
-  const tile=(column,x,y)=>ctx.drawImage(images.undergroundTiles,column*16,0,16,16,x,y,16,16);
+  const tile=(index,x,y,height=16,width=16)=>ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height);
   ctx.fillStyle='#0d202a';ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
   for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(0,x,WORLD.ground);
   for(const p of g.platforms){if(p.active===false||p.kind==='barrier'||p.x+p.w<bounds.left||p.x>bounds.right)continue;
     ctx.fillStyle=p.kind==='pipe'?'#315d61':p.kind==='metal'?'#263e4e':'#152a38';ctx.fillRect(p.x,p.y,p.w,p.h??8);
     ctx.fillStyle=p.kind==='metal'?'#a0c6ab':'#517985';ctx.fillRect(p.x,p.y,p.w,2);
-    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?1:p.kind==='cave'?3:p.kind==='wall'?2:0,x,p.y);
+    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?8:p.kind==='wall'?2:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x));
   }
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
@@ -405,7 +411,7 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
     else{if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}if(e.type==='nest'){ctx.fillStyle='#09121e';ctx.fillRect(x-24,e.y-8,48,5);ctx.fillStyle='#aef046';ctx.fillRect(x-24,e.y-8,48*e.hp/e.maxHp,5)}if(e.type==='queen'&&weakCore(e).open){const core=weakCore(e);ctx.strokeStyle='#fff08b';ctx.lineWidth=2;ctx.strokeRect(core.x-12,core.y-10,24,20)}}
   }}
 function drawUndergroundEnemy(e,frame,x,y){
-  if(e.type==='barrier'){ctx.drawImage(images.undergroundTiles,6*16,0,16,16,x-e.w/2,y,e.w,e.h);return}
+  if(e.type==='barrier'){ctx.drawImage(images.undergroundTiles,e.hp<e.maxHp/2?80:64,16,16,16,x-e.w/2,y,e.w,e.h);return}
   ctx.drawImage(images[e.type],frame*e.w,0,e.w,e.h,x-e.w/2,Math.round(y),e.w,e.h);
 }
 function drawDeathGhost(e,x,y,angle,alpha,full){
@@ -416,7 +422,15 @@ function drawDeathGhost(e,x,y,angle,alpha,full){
   else{const size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,144,ENEMY_TYPES[e.type].row*48,48,48,-size/2,e.h/2-size,size,size)}
   ctx.restore();ctx.globalAlpha=1;
 }
-function drawShots(g){drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom));for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}for(const s of g.enemyShots){if(s.x<g.camera-8||s.x>g.camera+view.width+8)continue;ctx.fillStyle="#b5ef48";ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle="#fff08b";ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}}
+function drawShots(g){
+  drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom));
+  for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
+  for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;
+    if(s.kind==='acid')ctx.drawImage(images.acid,Math.floor(g.time*8)%4*16,0,16,16,s.x-8,s.y-8,16,16);
+    else if(s.kind==='wave')ctx.drawImage(images.wave,Math.floor(g.time*8)%4*32,0,32,24,s.x-16,s.y-18,32,24);
+    else{ctx.fillStyle='#b5ef48';ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle='#fff08b';ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}
+  }
+}
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
 function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
     if(f.kind==="explosion"){
@@ -480,9 +494,10 @@ renderWeaponGrid();document.querySelector("#soundToggle").textContent=`SOUND: ${
 // Test/QA hooks intentionally read-only except the explicit debug commands.
 window.__PDF_GAME__={version:VERSION,getState:()=>({state,time:game?.time||0,score:game?.score||0,playerHp:game?.player.hp??null,enemies:game?.enemies.length||0,boss:!!game?.bossStarted,unlocked:[...save.unlocked]}),start:startMission,spawnBoss:()=>{if(game&&!game.bossStarted){game.player.x=4200;startBoss()}},complete:()=>game&&completeMission()};
 
-function startLab(openPanel=true){
-  if(!DEBUG)return false;startMission("M01");
+function startLab(openPanel=true,terrain='M01'){
+  if(!DEBUG)return false;startMission(terrain,true);
   game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=200;game.director.stopped=true;game.items.length=0;
+  game.lab.terrain=terrain;game.enemies.length=0;game.liveEnemies=game.liveMobs=0;if(terrain==='M02')game.platforms=createM02Geometry();
   configureLabPlayer();
   game.player.x=game.lab.anchorX;game.areaText="TEST LAB / NO SAVE";game.areaTimer=1.5;
   document.querySelector("#labSpawnResult").textContent="生成は開始位置へ復帰して行います。ボスは専用アリーナ。";
@@ -497,13 +512,13 @@ function syncLabUI(){
   document.querySelector("#labPerformance").hidden=!game?.lab?.showFps||state!=="play";
   if(!game?.lab)return;const lab=game.lab;
   for(let slot=0;slot<2;slot++){const button=document.querySelector(`#labWeaponSlot${slot+1}`),w=weapon(lab.equipped[slot]);button.textContent=`SLOT ${slot+1}: ${w.id} ${w.name}`;button.setAttribute("aria-expanded",String(labWeaponPickerOpen&&labEditingSlot===slot))}
-  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom)};
+  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labTerrain:lab.terrain,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom)};
   for(const [id,value] of Object.entries(values))document.querySelector(`#${id}`).value=value;
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
   document.querySelector("#labDestruction").value=String(normalizeDestructionLevel(lab.settings.destructionLevel));document.querySelector("#labShake").checked=lab.settings.shake;
   document.querySelector("#labLevelBadge").textContent=`LEVEL ${impactLevel(game).id} · ${impactLevel(game).name}`;
   document.querySelector("#labZoom").disabled=lab.cameraMode!=="FIXED";
-  document.querySelector("#labCount").disabled=lab.enemy==="beetle"||lab.enemy==="boss";
+  document.querySelector("#labCount").disabled=['beetle','boss','queen','nest'].includes(lab.enemy);
   document.querySelector("#labBlast").disabled=!["rocket","grenade"].includes(weapon(activeEquipment()[game.player.weaponSlot]).type);
   document.querySelector("#labZoomValue").textContent=`${view.zoom.toFixed(2)}× / FIXED ${lab.fixedZoom.toFixed(2)}×`;
 }
@@ -555,6 +570,9 @@ function closeLabPanel(){if(!game?.lab||state!=="lab")return;resetInput();acc=0;
 function changeLabSetting(target){
   const lab=game?.lab;if(!lab||state!=="lab")return;
   const value=target.value;
+  if(target.id==='labTerrain'&&['M01','M02'].includes(value)){
+    const previous={...lab,settings:{...lab.settings},equipped:[...lab.equipped]};startLab(true,value);Object.assign(game.lab,previous,{terrain:value});configureLabPlayer();syncLabUI();return;
+  }
   if(target.id==="labWeapon1"||target.id==="labWeapon2"){if(weapon(value)){lab.equipped[target.id==="labWeapon1"?0:1]=value;game.player.shotCd=game.player.switchCd=0}}
   if(target.id==="labSlot"&&(value==="0"||value==="1")){game.player.weaponSlot=Number(value);game.player.shotCd=game.player.switchCd=0}
   if(target.id==="labInvincible"){lab.invincible=target.checked;game.player.invuln=0}
@@ -592,14 +610,16 @@ function labBlast(){
   game.grid.rebuild(game.enemies);closeLabPanel();explode({x:target.x,y:target.y+target.h/2,type:w.type,damage:w.damage,radius:w.radius});
 }
 function spawnLabEnemies(){
-  if(!game?.lab)return;const lab=game.lab;clearLabEnemies();
+  if(!game?.lab)return;
+  if(game.lab.enemy==='queen'&&game.lab.terrain!=='M02')changeLabSetting({id:'labTerrain',value:'M02'});
+  const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
   if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);
-  configureLabPlayer();game.player.x=lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
+  configureLabPlayer();game.player.x=lab.enemy==='queen'?M02.bossX:lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
   game.nextEnemyId=1;game.time=game.kills=game.score=game.crates=0;game.player.shotCd=game.player.switchCd=0;resetInput();
-  const leader=lab.enemy==="boss"||lab.enemy==="beetle",count=leader?1:lab.count;
-  for(let i=0;i<count;i++){const pos=lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}
-  game.bossStarted=lab.enemy==="boss";game.battleCamera=createBattleCamera(game.player);
+  const leader=['boss','beetle','queen','nest'].includes(lab.enemy),count=leader?1:lab.count;
+  for(let i=0;i<count;i++){const pos=lab.enemy==='queen'?{x:M02.bossSpawnX,y:52}:lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}
+  game.bossStarted=lab.enemy==="boss"||lab.enemy==='queen';game.battleCamera=createBattleCamera(game.player);
   if(lab.cameraMode==="FIXED")fixedLabCamera(game.battleCamera,game.player,lab.fixedZoom);else updateBattleCamera(game.battleCamera,game.player,game.enemies,game,1);
   syncCameraView();syncLabUI();document.querySelector("#labSpawnResult").textContent=`${game.liveEnemies}体を再配置（プレイヤーも開始位置へ復帰）`;
 }

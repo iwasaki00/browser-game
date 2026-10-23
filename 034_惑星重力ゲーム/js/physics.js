@@ -14,7 +14,7 @@ export function gravitationalAcceleration(position, planets, options = DEFAULT_P
   let ax = 0;
   let ay = 0;
 
-  for (const planet of planets) {
+  for (const planet of [...planets].sort((a,b) => a.x-b.x || a.y-b.y || a.mass-b.mass || a.radius-b.radius)) {
     const dx = planet.x - position.x;
     const dy = planet.y - position.y;
     const distanceSquared = dx * dx + dy * dy;

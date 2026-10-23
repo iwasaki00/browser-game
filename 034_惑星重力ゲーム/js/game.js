@@ -1,5 +1,7 @@
-import { DEFAULT_PHYSICS, createSimulation, stepSimulation } from "./physics.js";
+import { DEFAULT_PHYSICS, createSimulation, stepSimulation, gravitationalAcceleration } from "./physics.js";
+import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './preview.js';
 import { getStage } from "./stages.js";
+import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS } from './planets.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
 const canvas = document.querySelector("#gameCanvas");
@@ -20,6 +22,11 @@ const editHint = document.querySelector("#editHint");
 
 const initialStage = getStage();
 let stage = getStage();
+let selectedPlanetId = stage.planets[0]?.id;
+const planetType = document.querySelector('#planetType');
+const planetSize = document.querySelector('#planetSize');
+const addPlanetButton = document.querySelector('#addPlanet');
+const deletePlanetButton = document.querySelector('#deletePlanet');
 let simulation = null;
 let trail = [];
 let mode = "editing";
@@ -32,6 +39,10 @@ const pointers = new Set();
 let storage;
 try { storage = window.localStorage; } catch { /* Storage is optional. */ }
 let launchMode = loadLaunchMode(storage);
+const preview = new PreviewController(loadPreviewEnabled(storage));
+const previewButton = document.querySelector('#previewToggle');
+const gravityButton = document.querySelector('#gravityToggle');
+let showGravity = false;
 const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
 
@@ -112,6 +123,10 @@ function drawGoal(time) {
 }
 
 function drawPlanet(planet) {
+  if (planet.id === selectedPlanetId && mode === 'editing') {
+    ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius+7, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+  }
   const glow = ctx.createRadialGradient(planet.x, planet.y, planet.radius * .5, planet.x, planet.y, planet.radius * 1.7);
   glow.addColorStop(0, "rgba(70, 203, 255, .23)");
   glow.addColorStop(1, "rgba(70, 203, 255, 0)");
@@ -193,6 +208,8 @@ function draw(time) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * offsetX, dpr * offsetY);
   drawBackground();
+  drawGravity();
+  drawPrediction();
   drawGoal(time);
   drawTrail();
   for (const planet of stage.planets) drawPlanet(planet);
@@ -223,12 +240,47 @@ function draw(time) {
   }
 }
 
+function drawGravity() {
+  if (!showGravity || mode !== 'editing') return;
+  const planet = stage.planets.find(p => p.id === selectedPlanetId);
+  if (!planet) return;
+  const gradient = ctx.createRadialGradient(planet.x, planet.y, planet.radius, planet.x, planet.y, 200);
+  for (const fraction of [0, .2, .5, 1]) {
+    const radius = planet.radius + (200 - planet.radius) * fraction;
+    const acceleration = gravitationalAcceleration({x:planet.x+radius,y:planet.y},[planet]);
+    const strength = Math.min(1, Math.hypot(acceleration.x,acceleration.y)/250);
+    const hue = 220 * (1-strength);
+    gradient.addColorStop(fraction, `hsla(${hue},95%,60%,${.08 + strength*.18})`);
+  }
+  ctx.fillStyle = gradient; ctx.beginPath(); ctx.arc(planet.x,planet.y,200,0,Math.PI*2); ctx.fill();
+}
+
+function drawPrediction() {
+  const velocity = aim && !aim.cancelled ? aim.velocity : velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));
+  const job = preview.update(stage, velocity, mode === 'editing');
+  if (!job || job.points.length < 2) return;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0,0,stage.world.width,stage.world.height); ctx.clip();
+  ctx.strokeStyle = job.state.status === 'cleared' ? '#75f5af' : '#69dfff';
+  ctx.lineWidth = 1.4; ctx.setLineDash([3,5]);
+  ctx.beginPath(); ctx.moveTo(job.points[0].x,job.points[0].y);
+  // Keep every fourth sample and always the terminal point (at most 362 points).
+  for(let i=4;i<job.points.length-1;i+=4) ctx.lineTo(job.points[i].x,job.points[i].y);
+  const end = job.points.at(-1); ctx.lineTo(end.x,end.y); ctx.stroke(); ctx.setLineDash([]);
+  if(job.state.status === 'crashed') {
+    ctx.strokeStyle='#ff6d77'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(end.x-5,end.y-5);ctx.lineTo(end.x+5,end.y+5);ctx.moveTo(end.x+5,end.y-5);ctx.lineTo(end.x-5,end.y+5);ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function setEditingControls(enabled) {
   angleInput.disabled = !enabled;
   speedInput.disabled = !enabled;
   launchButton.disabled = !enabled;
   editHint.hidden = !enabled;
   modeButtons.forEach(button => { button.disabled = !enabled; });
+  updatePlanetEditor();
 }
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
@@ -237,6 +289,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   simulation = createSimulation(stage, { velocity });
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
+  preview.clear();
   accumulator = 0;
   physicsStepCount = 0;
   setEditingControls(false);
@@ -259,6 +312,7 @@ function showResult(status) {
 }
 
 function retry() {
+  preview.clear();
   cancelGesture();
   simulation = null;
   trail = [];
@@ -270,6 +324,7 @@ function retry() {
 
 function reset() {
   stage = getStage(initialStage.id);
+  selectedPlanetId = stage.planets[0]?.id;
   angleInput.value = String(stage.launch.angleDeg);
   speedInput.value = String(stage.launch.speed);
   updateOutputs();
@@ -330,6 +385,7 @@ canvas.addEventListener("pointerdown", (event) => {
   const point = worldPoint(event);
   const target = classifyDragTarget(point, stage.launch.position, stage.planets, launchMode);
   if (!target) return;
+  if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
   gesture = { ...target, pointerId: event.pointerId, point };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
   canvas.setPointerCapture(event.pointerId);
@@ -344,8 +400,8 @@ canvas.addEventListener("pointermove", (event) => {
     aim = slingshotLaunch(stage.launch.position, point);
   } else {
     const planet = stage.planets.find(item => item.id === gesture.id);
-    planet.x = Math.max(planet.radius, Math.min(stage.world.width - planet.radius, point.x));
-    planet.y = Math.max(planet.radius, Math.min(stage.world.height - planet.radius, point.y));
+    const candidate = { ...planet, x: Math.max(planet.radius, Math.min(stage.world.width-planet.radius,point.x)), y: Math.max(planet.radius, Math.min(stage.world.height-planet.radius,point.y)) };
+    if (placementAllowed(candidate, stage)) Object.assign(planet, candidate);
   }
   event.preventDefault();
 });
@@ -377,6 +433,57 @@ resetButton.addEventListener("click", reset);
 retryButton.addEventListener("click", retry);
 new ResizeObserver(resizeCanvas).observe(frame);
 
+function updatePlanetEditor() {
+  const planet = stage.planets.find(p=>p.id===selectedPlanetId);
+  planetType.value = planet?.type ?? 'earth';
+  planetSize.value = planet?.size ?? 'medium';
+  planetType.disabled = planetSize.disabled = mode !== 'editing' || !planet;
+  addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= MAX_PLANETS;
+  deletePlanetButton.disabled = mode !== 'editing' || !planet;
+  document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · M ${planet.mass}` : `惑星 ${stage.planets.length} / 3`;
+}
+addPlanetButton.addEventListener('click', () => {
+  if (mode !== 'editing') return;
+  cancelGesture();
+  const planet = addPlanet(stage);
+  if (planet) selectedPlanetId = planet.id;
+  else statusText.textContent = '追加できる空間がありません。';
+  updatePlanetEditor();
+});
+deletePlanetButton.addEventListener('click', () => {
+  if (mode !== 'editing') return;
+  cancelGesture();
+  stage.planets = stage.planets.filter(p=>p.id!==selectedPlanetId);
+  selectedPlanetId = stage.planets[0]?.id;
+  updatePlanetEditor();
+});
+function changePlanet() {
+  if (mode !== 'editing') return;
+  cancelGesture();
+  const planet = stage.planets.find(p=>p.id===selectedPlanetId);
+  if (!planet) return;
+  const candidate = configurePlanet(planet, planetType.value, planetSize.value);
+  if (placementAllowed(candidate,stage)) Object.assign(planet,candidate);
+  else statusText.textContent = '周囲から離してから種類・サイズを変更してください。';
+  updatePlanetEditor();
+}
+planetType.addEventListener('change',changePlanet);
+planetSize.addEventListener('change',changePlanet);
+function updatePreviewButton() {
+  previewButton.textContent = `予測 ${preview.enabled ? 'ON' : 'OFF'}`;
+  previewButton.setAttribute('aria-pressed',String(preview.enabled));
+}
+previewButton.addEventListener('click',()=>{
+  preview.enabled=!preview.enabled; preview.clear();
+  savePreviewEnabled(storage,preview.enabled); updatePreviewButton();
+});
+gravityButton.addEventListener('click',()=>{
+  showGravity=!showGravity;
+  gravityButton.textContent=`重力目安 ${showGravity ? 'ON' : 'OFF'}`;
+  gravityButton.setAttribute('aria-pressed',String(showGravity));
+});
+updatePreviewButton();
+updatePlanetEditor();
 updateOutputs();
 updateMode();
 resizeCanvas();
