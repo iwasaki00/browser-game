@@ -30,11 +30,12 @@ button { touch-action: manipulation; }
 
 .app {
   width: min(100%, 430px);
-  min-height: 100dvh;
+  height: 100dvh;
+  min-height: 500px;
   margin: 0 auto;
   padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom));
   display: grid;
-  grid-template-rows: auto auto minmax(300px, 1fr) auto;
+  grid-template-rows: auto auto minmax(200px, 1fr) auto;
   gap: 8px;
 }
 

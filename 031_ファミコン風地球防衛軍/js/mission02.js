@@ -59,6 +59,17 @@ export function updateNests(g,dt,spawn){
     n.spawnCycle=(n.spawnCycle??0)+1;n.nestWait=NEST.interval;
   }
 }
+export function moveTunnelEnemy(g,e,dt){
+  const previous=e.x;let x=clamp(e.x+e.vx*dt,e.w/2,g.world.width-e.w/2);
+  for(const p of g.platforms){if(p.active===false||e.y+e.h<=p.y||e.y>=p.y+(p.h??8))continue;
+    if(e.vx>0&&previous+e.w/2<=p.x&&x+e.w/2>p.x)x=Math.min(x,p.x-e.w/2);
+    if(e.vx<0&&previous-e.w/2>=p.x+p.w&&x-e.w/2<p.x+p.w)x=Math.max(x,p.x+p.w+e.w/2);
+  }
+  e.x=x;e.vy=Math.min(WORLD.maxFall,(e.vy??0)+WORLD.gravity*dt);
+  let y=Math.min(WORLD.ground-e.h,e.y+e.vy*dt);
+  for(const p of g.platforms)if(p.active!==false&&e.x+e.w/2>p.x&&e.x-e.w/2<p.x+p.w&&e.y+e.h<=p.y&&y+e.h>=p.y){y=Math.min(y,p.y-e.h);e.vy=0}
+  e.y=y;
+}
 export function weakCore(e){return {x:e.x,y:e.y+e.h-16,r:19,open:e.type==='queen'&&!e.dead&&(e.timer%ABYSS.weakCycle<ABYSS.weakOpen||e.phase==='charge')}}
 export function queenDamage(e,damage,source){
   const core=weakCore(e),x=source.x??e.x,y=source.y??-1000;

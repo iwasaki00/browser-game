@@ -6,7 +6,7 @@ import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,
 import {FrameProfiler,LiveProfiler} from "./profiler.js?v=0.1.5";
 import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.2.2";
 import {IMPACT,REACTIONS,impactLevel,createImpactState,pushImpactEffect,hitVisual,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.2.2";
-import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.2.2";
+import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,moveTunnelEnemy,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.2.2";
 
 const canvas=document.querySelector("#game"),ctx=canvas.getContext("2d",{alpha:false});
 ctx.imageSmoothingEnabled=false;
@@ -222,6 +222,7 @@ function spawnEnemy(type,x,y=null){
   if(game.bossStarted&&!['boss','queen'].includes(type)&&game.liveMobs>=INVASION.bossMinions[game.density])return null;
   if(game.missionId==='M02'){const pos=validEnemyPosition(game,type,x,y);x=pos.x;y=pos.y}
   const t=ENEMY_TYPES[type],uid=game.nextEnemyId++,v=variation(uid),baseY=y??(type==="needle"?45+v*40:type==="spider"?34:WORLD.ground-t.h);
+  if(game.missionId==='M02'&&['worm','crawler'].includes(type))for(const pl of game.platforms)if(pl.active!==false&&x+t.w/2>pl.x&&x-t.w/2<pl.x+pl.w&&baseY+t.h>pl.y&&baseY<pl.y+(pl.h??8))x=clamp(pl.x+pl.w+t.w/2+1,24,game.world.width-24);
   const e={uid,type,x,y:baseY,baseY,w:t.w,h:t.h,hp:t.hp,maxHp:t.hp,dead:false,death:0,phase:"move",timer:v,anim:v*8,attackFlash:0,face:-1,
     speedScale:isMob({type})?1+(v*2-1)*INVASION.speedVariation:1,shotCd:.7+v*1.6,vx:0,vy:0,separateX:0,separateY:0,thinkTime:0,diveCd:v*INVASION.diveCooldown,diveTimer:0,diveOffset:0,active:true};
   game.enemies.push(e);game.liveEnemies++;if(isMob(e))game.liveMobs++;if(type==="beetle")game.midbossAlive=true;return e;
@@ -291,15 +292,18 @@ function explode(s){
   if(s.assetIndex>=8)pushEffect({x:s.x,y:s.y,kind:"weaponBurst",assetIndex:s.assetIndex,life:.35,max:.35,r:s.radius});
   impactShake(game);tone(65,.18,"sawtooth",.04);
 }
-function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
+function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;const oldX=s.x,oldY=s.y;s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
+    const terrain=game.missionId==='M02'?terrainContact(oldX,oldY,s.x,s.y,game.platforms,s.w/2,false,game.world):null;if(terrain){s.x=terrain.x;s.y=terrain.y}
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
     const candidates=game.grid.query(s.x-s.w/2-48,s.y-s.h/2-32,s.x+s.w/2+48,s.y+s.h/2+32,game.shotCandidates);
-    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
+    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(game.missionId==='M02'?segmentEntry(oldX,oldY,s.x,s.y,e.x-e.w/2-s.w/2,e.y-s.h/2,e.x+e.w/2+s.w/2,e.y+e.h+s.h/2):hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
       if(s.radius){explode(s);s.dead=true}else if(s.pierce>0){s.pierce--}else s.dead=true}}
-  }let write=0;for(const s of game.shots)if(!s.dead&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.shots[write++]=s;game.shots.length=write}
+    if(terrain&&!s.dead){if(s.radius)explode(s);s.dead=true}
+  }let write=0;for(const s of game.shots)if(!s.dead&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.shots[write++]=s;game.shots.length=write}
 
 function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);prepareSeparation(game.enemies,game.grid,game.separationCandidates);game.attacks.begin(game.time,game.enemies,game.enemyShots);
   for(const e of game.enemies){e.anim+=dt*7;e.attackFlash=Math.max(0,e.attackFlash-dt);e.hitFlash=Math.max(0,(e.hitFlash||0)-dt);if(e.dead){updateDeath(game,e,dt);continue}const t=ENEMY_TYPES[e.type];e.shotCd-=dt;e.face=p.x>=e.x?1:-1;
+    if(game.missionId==='M02'&&(e.type==='nest'||e.type==='barrier')){e.active=Math.abs(e.x-p.x)<NEST.activationDistance;continue}
     const dx=p.x-e.x,far=Math.abs(dx)>INVASION.farDistance;e.thinkTime+=dt;const think=!far||e.thinkTime>=INVASION.farThinkInterval;if(think)e.thinkTime=0;
     if(e.type==="crawler"){const standOff=(e.uid%INVASION.contactLanes)*INVASION.contactSpacing,approach=clamp((Math.abs(dx)-standOff)/INVASION.approachRange,0,1);e.x+=Math.sign(dx)*t.speed*e.speedScale*approach*dt;e.y=WORLD.ground-e.h}
     if(e.type==="spider"){if(think)e.y=e.baseY+Math.sin(e.anim*.7)*9;e.x+=Math.sign(dx)*t.speed*.28*e.speedScale*dt;if(e.shotCd<=0&&Math.abs(dx)<230){if(game.attacks.ranged(game.time)){enemyFire(e,115);e.shotCd=1.65+variation(e.uid)*.6}else e.shotCd=.1+variation(e.uid)*.18}}
@@ -311,23 +315,30 @@ function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);p
     }
     if(e.type==="beetle"){if(Math.abs(e.x-p.x)>150)e.x+=Math.sign(p.x-e.x)*t.speed*dt;if(e.shotCd<=0){enemyBurst(e,3,155);e.shotCd=1.8}}
     if(e.type==="boss")updateBoss(e,dt);
-    if(isMob(e)){e.x=clamp(e.x+e.separateX*dt,8,WORLD.width-8);if(e.type==="needle")e.y=clamp(e.y+e.separateY*dt,12,WORLD.ground-e.h)}
+    if(e.type==='queen')updateQueen(game,e,dt,enemyFire,spawnEnemy,pushEffect);
+    if(e.type==='worm'){e.vx=Math.sign(dx)*t.speed*e.speedScale+e.separateX;moveTunnelEnemy(game,e,dt)}
+    if(e.type==='spitter'&&e.shotCd<=0&&Math.abs(dx)<300){if(game.attacks.ranged(game.time)){enemyFire(e,125);e.shotCd=2+variation(e.uid)}else e.shotCd=.2}
+    if(isMob(e)&&e.type!=='worm'){e.x=clamp(e.x+e.separateX*dt,8,(game.world??WORLD).width-8);if(e.type==="needle")e.y=clamp(e.y+e.separateY*dt,12,WORLD.ground-e.h)}
+    if(game.missionId==='M02'&&['needle','spider'].includes(e.type)){const safe=validEnemyPosition(game,'needle',e.x,e.y);e.y=safe.y}
     const pb={x:p.x,y:p.y+16,w:p.w,h:p.h},eb={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(hitRect(pb,eb))hurtPlayer(t.damage,e.x)
   }let write=0;for(const e of game.enemies)if(!e.dead||e.death>0)game.enemies[write++]=e;game.enemies.length=write}
 function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0:e.hp>400?1:2;if(e.phase==="charge"){e.x+=e.vx*dt;if(e.x<4130||e.x>4720){e.x=clamp(e.x,4130,4720);e.vx*=-1;e.phase="move";e.timer=0}}else{e.x+=Math.sign((phase===2?p.x:4540)-e.x)*ENEMY_TYPES.boss.speed*(phase===2?.45:.18)*dt;if(e.timer>2.2-phase*.3){e.timer=0;const action=Math.floor(Math.random()*3);if(action===0)enemyBurst(e,5,130);else if(action===1){for(let i=0;i<2+phase;i++)spawnBossMinion(e,i)}else{e.phase="charge";e.vx=Math.sign(p.x-e.x)*(100+phase*25)}}}}
-function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
+function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({kind:e.type==='spitter'||e.type==='queen'?'acid':null,x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:e.type==='spitter'?12:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
 function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;p.hp=Math.max(0,p.hp-amount*scale);p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
-function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<WORLD.width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
+function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){const x=s.x,y=s.y;s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(game.missionId==='M02'&&terrainContact(x,y,s.x,s.y,game.platforms,s.kind==='wave'?0:2,false,game.world))s.dead=true;if(!s.dead&&hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";storeSave()}
 function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
 
 function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;
-  const reward=game.missionId==="M01"&&!save.clearedMissions.includes("M01")&&!save.unlocked.includes("L-03")?"L-03":null;
+  const firstClear=!save.clearedMissions.includes(game.missionId);
+  const reward=game.missionId==='M02'?pickReward(save.unlocked,Math.random,false):game.missionId==="M01"&&firstClear&&!save.unlocked.includes("L-03")?"L-03":null;
+  if(game.missionId==='M02'){game.crates++;if(!reward)game.score+=500}
   if(reward)save.unlocked.push(reward);save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();clearArsenal(game);
+  const previous=save.missionStats[game.missionId];save.missionStats[game.missionId]={highScore:Math.max(previous?.highScore??0,game.score),bestTime:Math.min(previous?.bestTime??Infinity,game.time)};storeSave();
   const w=reward?weapon(reward):null;document.querySelector("#resultStats").innerHTML=`<div>TIME<b>${formatTime(game.time)}</b></div><div>SCORE<b>${game.score}</b></div><div>ENEMIES<b>${game.kills}</b></div><div>BOXES<b>${game.crates}</b></div>`;
-  document.querySelector("#rewardBox").innerHTML=w?`<span>WEAPON UNLOCKED</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
+  document.querySelector("#rewardBox").innerHTML=w?`<span>${game.missionId==='M02'?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?game.missionId==='M02'?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
 }
 
 function draw(){
@@ -347,15 +358,29 @@ function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320);
   // The zoom reveals sky above the original artwork. Fill it and repeat the city horizontally.
   ctx.fillStyle="#040a16";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
-  for(let x=start-320;x<bounds.right+320;x+=320)ctx.drawImage(images.bg,x,0);
+  for(let x=start-320;x<bounds.right+320;x+=320)ctx.drawImage(g.missionId==='M02'?images.underground:images.bg,x,0);
+  if(g.missionId==='M02'){ctx.fillStyle='#081321';ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,Math.max(0,-bounds.top));for(let x=Math.floor(bounds.left/96)*96;x<bounds.right+96;x+=96){ctx.fillStyle='#17353d';ctx.fillRect(x,bounds.top,5,Math.max(0,-bounds.top+8));ctx.fillStyle='#3c665e';ctx.fillRect(x+2,0,2,6)}}
 }
 function drawWorld(g){
   const bounds=viewBounds(g.camera,view.zoom);
+  if(g.missionId==='M02'){drawUnderground(g,bounds);return}
   ctx.fillStyle="#0b1825";ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
   for(let x=Math.floor(bounds.left/16)*16-16;x<bounds.right+16;x+=16)ctx.drawImage(images.tiles,((Math.floor(x/16)%8+8)%8)*16,0,16,16,x,WORLD.ground,16,16);
   ctx.fillStyle="#d4b944";for(let x=Math.floor(bounds.left/40)*40;x<bounds.right;x+=40)ctx.fillRect(x,168,19,2);
   for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2)}
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
+}
+function drawUnderground(g,bounds){
+  const tile=(column,x,y)=>ctx.drawImage(images.undergroundTiles,column*16,0,16,16,x,y,16,16);
+  ctx.fillStyle='#0d202a';ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
+  for(let x=Math.floor(bounds.left/16)*16;x<bounds.right+16;x+=16)tile(0,x,WORLD.ground);
+  for(const p of g.platforms){if(p.active===false||p.kind==='barrier'||p.x+p.w<bounds.left||p.x>bounds.right)continue;
+    ctx.fillStyle=p.kind==='pipe'?'#315d61':p.kind==='metal'?'#263e4e':'#152a38';ctx.fillRect(p.x,p.y,p.w,p.h??8);
+    ctx.fillStyle=p.kind==='metal'?'#a0c6ab':'#517985';ctx.fillRect(p.x,p.y,p.w,2);
+    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?1:p.kind==='cave'?3:p.kind==='wall'?2:0,x,p.y);
+  }
+  ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
+  for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
 }
 function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawClassHud(g){
@@ -374,13 +399,19 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
     }
     if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
     const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
-    if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
+    if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,frame,localX,localY);
+    else if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
     if(e.dead){if(e.deathType==="flame"||e.deathDelay>0){ctx.fillStyle=e.deathType==="flame"?"#ff8b42":"#b88cff";ctx.fillRect(-8,-3,4,2);ctx.fillRect(5,1,4,3)}ctx.restore();ctx.globalAlpha=1}
-    else if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}
+    else{if(e.hitFlash>0){ctx.fillStyle="#fff7d5";ctx.fillRect(x-6,Math.round(e.y+e.h/2),12,2)}if(e.type==='nest'){ctx.fillStyle='#09121e';ctx.fillRect(x-24,e.y-8,48,5);ctx.fillStyle='#aef046';ctx.fillRect(x-24,e.y-8,48*e.hp/e.maxHp,5)}if(e.type==='queen'&&weakCore(e).open){const core=weakCore(e);ctx.strokeStyle='#fff08b';ctx.lineWidth=2;ctx.strokeRect(core.x-12,core.y-10,24,20)}}
   }}
+function drawUndergroundEnemy(e,frame,x,y){
+  if(e.type==='barrier'){ctx.drawImage(images.undergroundTiles,6*16,0,16,16,x-e.w/2,y,e.w,e.h);return}
+  ctx.drawImage(images[e.type],frame*e.w,0,e.w,e.h,x-e.w/2,Math.round(y),e.w,e.h);
+}
 function drawDeathGhost(e,x,y,angle,alpha,full){
   ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y+e.h/2));ctx.rotate(angle);
   if(!full){ctx.fillStyle=e.deathColor;ctx.fillRect(-3,0,6,2)}
+  else if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,3,0,-e.h/2);
   else if(e.type==="boss")ctx.drawImage(images.boss,288,0,96,64,-48,-e.h/2,96,64);
   else{const size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,144,ENEMY_TYPES[e.type].row*48,48,48,-size/2,e.h/2-size,size,size)}
   ctx.restore();ctx.globalAlpha=1;
@@ -395,6 +426,8 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
       for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
       ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
       for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
+    }else if(f.kind==='nestBreak'||f.kind==='bossBreak'){
+      const boss=f.kind==='bossBreak',width=boss?128:64,height=boss?96:64;ctx.drawImage(boss?images.bossBreak:images.nestBreak,Math.min(7,Math.floor((1-a)*8))*width,0,width,height,x-width/2,f.y-height/2,width,height);
     }else if(f.kind==="weaponBurst"){
       const size=Math.max(32,(f.r||24)*2)*(f.visualScale||1);ctx.drawImage(images.weaponFx,(4+Math.min(3,Math.floor((1-a)*4)))*32,(f.assetIndex-8)*32,32,32,x-size/2,f.y-size/2,size,size);
     }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
