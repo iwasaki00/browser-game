@@ -95,6 +95,18 @@ py -3 -m http.server 8034
 
 ## テスト
 
+v0.9.0-Aの監査（既存証拠の検証と、不足していた画面・性能・継続確認）：
+
+```powershell
+node tests/quality-audit.mjs
+node --test --test-name-pattern='同じ初期条件では同じ軌道になる' tests/physics.test.mjs
+node tests/quality-audit-ui.mjs
+```
+
+結果は `reports/quality-audit/` に出力します。監査は独立ブラウザ環境を使い、利用者の保存データへ接続しません。
+
+v0.8.0の関連テストを再実行する場合：
+
 ```powershell
 cd C:\_wk\github\browser-game\034_惑星重力ゲーム
 node --test tests/space-experience.test.mjs tests/launch.test.mjs
