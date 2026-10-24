@@ -7,11 +7,12 @@ import {SpaceExperience, loadExperience, saveExperience, failureKind} from './sp
 import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
 import {Camera} from './camera.js';
+import {createFreeWorld,getHugeSample} from './worlds.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
 import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
-import { placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES } from './planets.js';
+import { placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES,planetExtent } from './planets.js';
 import {getSpecialSample} from './special-samples.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
@@ -72,19 +73,26 @@ const preview = new PreviewController(loadPreviewEnabled(storage));
 const previewButton = document.querySelector('#previewToggle');
 const gravityButton = document.querySelector('#gravityToggle');
 let showGravity = false;
+let showMinimap=true;
 const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
 const camera=new Camera();
 camera.fit(stage);
 const cameraPointers=new Map();
 let cameraActive=false;
-function syncCamera(){view={...view,...camera.transform};document.querySelector('#cameraZoom').textContent=`${camera.zoom.toFixed(1)}×`;}
+function syncCamera(){view={...view,...camera.transform};document.querySelector('#cameraZoom').textContent=`${camera.zoom.toFixed(2)}×`;document.querySelector('#cameraMode').value=camera.mode??'fixed';}
 function fitCamera(){camera.fit(stage);syncCamera();}
 function screenPoint(event){const b=canvas.getBoundingClientRect();return {x:event.clientX-b.left,y:event.clientY-b.top};}
 function clearCameraGesture(){cameraPointers.clear();cameraActive=false;camera.endGesture();}
-document.querySelector('#zoomIn').addEventListener('click',()=>{cancelGesture();camera.zoomAt(camera.zoom*1.25);syncCamera();});
-document.querySelector('#zoomOut').addEventListener('click',()=>{cancelGesture();camera.zoomAt(camera.zoom/1.25);syncCamera();});
+function zoomCamera(factor){cancelGesture();if(camera.mode!=='follow')camera.mode='fixed';camera.zoomAt(camera.zoom*factor);syncCamera();}
+document.querySelector('#zoomIn').addEventListener('click',()=>zoomCamera(1.25));
+document.querySelector('#zoomOut').addEventListener('click',()=>zoomCamera(.8));
 document.querySelector('#fitCamera').addEventListener('click',()=>{cancelGesture();fitCamera();});
+document.querySelector('#cameraMode').addEventListener('change',event=>{cancelGesture();camera.setMode(event.target.value,stage);if(simulation)camera.follow(simulation.rocket.position);syncCamera();});
+document.querySelector('#minimapToggle').addEventListener('click',event=>{showMinimap=!showMinimap;event.target.textContent=`ミニマップ ${showMinimap?'ON':'OFF'}`;event.target.setAttribute('aria-pressed',String(showMinimap));});
+function loadFreeWorld(next){if(playType!=='free'||mode!=='editing')return;stage=next;launchSnapshot=structuredClone(stage);selectedPlanetId=null;syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);retry();updateOutputs();document.querySelector('.mission strong').textContent=stage.name;settingsUI.closeAll();fitCamera();}
+document.querySelector('#worldSize').addEventListener('change',event=>loadFreeWorld(createFreeWorld(event.target.value)));
+document.querySelector('#hugeSample').addEventListener('change',event=>{if(event.target.value)loadFreeWorld(getHugeSample(event.target.value));event.target.value='';});
 
 const stars = Array.from({ length: 76 }, (_, i) => ({
   x: (i * 137.5 + 29) % stage.world.width,
@@ -98,7 +106,7 @@ function resizeCanvas() {
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   canvas.width = Math.max(1, Math.round(bounds.width * dpr));
   canvas.height = Math.max(1, Math.round(bounds.height * dpr));
-  view.dpr=dpr;camera.resize(bounds.width,bounds.height);syncCamera();
+  view.dpr=dpr;camera.resize(bounds.width,bounds.height);if(camera.mode==='overview')camera.fit(stage);syncCamera();
 }
 
 function worldPoint(event) {
@@ -114,6 +122,7 @@ function drawBackground(time) {
   ctx.fillStyle = "#030713";
   ctx.fillRect(0, 0, stage.world.width, stage.world.height);
   const light = experience.quality === 'light';
+  const viewport={a:camera.toWorld({x:0,y:0}),b:camera.toWorld({x:camera.width,y:camera.height})};
   for (const [i, star] of stars.entries()) {
     if(light && i % 2) continue;
     ctx.globalAlpha = star.alpha;
@@ -121,17 +130,19 @@ function drawBackground(time) {
     ctx.beginPath();
     const depth = i % 3;
     const drift = light ? 0 : Math.sin(time*.00008+depth)*depth*1.6;
-    ctx.arc(star.x+drift, star.y+drift*.5, star.radius, 0, Math.PI * 2);
+    const sx=star.x/375*stage.world.width,sy=star.y/500*stage.world.height;
+    ctx.arc(sx+drift, sy+drift*.5, star.radius/view.scale, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalAlpha = 1;
 
   ctx.strokeStyle = "rgba(57, 104, 145, .11)";
   ctx.lineWidth = .65;
-  for (let x = 0; x <= stage.world.width; x += 25) {
+  const spacing=view.scale<.3?250:25;
+  for (let x = Math.max(0,Math.floor(viewport.a.x/spacing)*spacing); x <= Math.min(stage.world.width,viewport.b.x); x += spacing) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, stage.world.height); ctx.stroke();
   }
-  for (let y = 0; y <= stage.world.height; y += 25) {
+  for (let y = Math.max(0,Math.floor(viewport.a.y/spacing)*spacing); y <= Math.min(stage.world.height,viewport.b.y); y += spacing) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(stage.world.width, y); ctx.stroke();
   }
 }
@@ -153,6 +164,7 @@ function drawGoal(time) {
   ctx.font = "700 8px ui-monospace, monospace";
   ctx.textAlign = "center";
   ctx.fillText("GATE", 0, 3);
+  if(view.scale<.3){ctx.font=`700 ${9/view.scale}px monospace`;ctx.fillText('GATE',0,-radius-5/view.scale);}
   ctx.restore();
 }
 
@@ -188,7 +200,7 @@ function drawPlanet(planet, time) {
   }
   if (planet.id === selectedPlanetId && (mode === 'editing' || gameMode === 'live')) {
     ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
-    ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius+7, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(planet.x, planet.y, Math.max(planet.radius+7,9/view.scale), 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
   if(animated) {
   const glow = ctx.createRadialGradient(planet.x, planet.y, planet.radius * .5, planet.x, planet.y, planet.radius * 1.7);
@@ -228,7 +240,7 @@ function drawTrail() {
   for (let i = 1; i < trail.length; i += 1) {
     ctx.globalAlpha = .12 + .7 * (i / trail.length);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.8 + proximity * 1.4;
+    ctx.lineWidth = Math.max(1.8 + proximity * 1.4,1.2/view.scale);
     ctx.beginPath();
     ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
     ctx.lineTo(trail[i].x, trail[i].y);
@@ -244,6 +256,7 @@ function drawTrail() {
 }
 
 function drawRocket(rocket, editing = false) {
+  if(view.scale<.3){ctx.fillStyle='#fff4c4';ctx.beginPath();ctx.arc(rocket.position.x,rocket.position.y,3/view.scale,0,Math.PI*2);ctx.fill();}
   const angle = editing
     ? (aim && !aim.cancelled ? aim.angleDeg : Number(angleInput.value)) * Math.PI / 180
     : Math.atan2(rocket.velocity.y, rocket.velocity.x);
@@ -251,6 +264,7 @@ function drawRocket(rocket, editing = false) {
   ctx.translate(rocket.position.x, rocket.position.y);
   ctx.rotate(angle);
   if (mode === "flying") {
+    statusText.textContent=`T+${simulation.elapsed.toFixed(1)}s · (${Math.round(rocket.position.x)}, ${Math.round(rocket.position.y)}) · ${camera.mode.toUpperCase()}`;
     const flicker = 12 + Math.sin(performance.now() * .03) * 4 + Math.max(0,1-experience.age/.45)*9;
     ctx.fillStyle = "#ff9f43";
     ctx.beginPath(); ctx.moveTo(-8, -3); ctx.lineTo(-flicker, 0); ctx.lineTo(-8, 3); ctx.fill();
@@ -291,7 +305,7 @@ function draw(time) {
   drawPrediction();
   drawGoal(time);
   drawTrail();
-  for (const planet of stage.planets) drawPlanet(planet,time);
+  for (const planet of stage.planets){const p=camera.toScreen(planet),r=planetExtent(planet)*1.8*view.scale;if(p.x+r>=0&&p.y+r>=0&&p.x-r<=camera.width&&p.y-r<=camera.height)drawPlanet(planet,time);}
   if (mode === 'flying' && gameMode === 'live') for(const planet of stage.planets) {
     const target=moveTargets[planet.id];if(!target)continue;
     ctx.strokeStyle='#ffdb80';ctx.lineWidth=1;ctx.setLineDash([3,4]);
@@ -327,6 +341,15 @@ function draw(time) {
     ctx.textAlign = "center";
     ctx.fillText(`T+${simulation.elapsed.toFixed(1)}s`, 325, 480);
   }
+  drawMinimap(rocket.position);
+}
+
+function drawMinimap(rocket){
+ const map=document.querySelector('#minimap');map.hidden=!showMinimap||!stage.worldPreset;if(map.hidden)return;
+ const c=map.getContext('2d'),w=map.width,h=map.height,s=Math.min((w-8)/stage.world.width,(h-8)/stage.world.height),ox=(w-stage.world.width*s)/2,oy=(h-stage.world.height*s)/2;
+ c.clearRect(0,0,w,h);c.fillStyle='#061122e8';c.fillRect(0,0,w,h);c.strokeStyle='#526a87';c.strokeRect(ox,oy,stage.world.width*s,stage.world.height*s);
+ for(const [p,color,r]of [...stage.planets.map(p=>[p,p.color,2]),[stage.goal,'#72ffb3',3],[rocket,'#fff4c4',2]]){c.fillStyle=color;c.beginPath();c.arc(ox+p.x*s,oy+p.y*s,r,0,Math.PI*2);c.fill();}
+ const a=camera.toWorld({x:0,y:0}),b=camera.toWorld({x:camera.width,y:camera.height});c.strokeStyle='#7bdcff';c.strokeRect(ox+Math.max(0,a.x)*s,oy+Math.max(0,a.y)*s,(Math.min(stage.world.width,b.x)-Math.max(0,a.x))*s,(Math.min(stage.world.height,b.y)-Math.max(0,a.y))*s);
 }
 
 function drawGravity() {
@@ -347,14 +370,16 @@ function drawGravity() {
 function drawPrediction() {
   const velocity = aim && !aim.cancelled ? aim.velocity : velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));
   const job = preview.update(stage, velocity, mode === 'editing'&&launchAllowed(stage,velocity,launchMode));
+  document.querySelector('#previewStatus').textContent=!job?'':!job.done?'予測計算中…':job.state.status==='flying'?`予測${Math.round(job.state.elapsed)}秒まで（この先は未予測）`:job.state.status==='timeout'?'飛行時間上限までの予測：到達なし':job.state.status==='cleared'?'ゴール到達予測':'';
   if (!job || job.points.length < 2) return;
   ctx.save();
   ctx.beginPath(); ctx.rect(0,0,stage.world.width,stage.world.height); ctx.clip();
   ctx.strokeStyle = job.state.status === 'cleared' ? '#75f5af' : '#69dfff';
-  ctx.lineWidth = 1.4; ctx.setLineDash([3,5]);
+  ctx.lineWidth = Math.max(1.4,1/view.scale); ctx.setLineDash([3/view.scale,5/view.scale]);
   ctx.beginPath(); ctx.moveTo(job.points[0].x,job.points[0].y);
   // Keep every fourth sample and always the terminal point (at most 362 points).
-  for(let i=4;i<job.points.length-1;i+=4) ctx.lineTo(job.points[i].x,job.points[i].y);
+  const stride=Math.max(4,Math.ceil(job.points.length/1000));
+  for(let i=stride;i<job.points.length-1;i+=stride) ctx.lineTo(job.points[i].x,job.points[i].y);
   const end = job.points.at(-1); ctx.lineTo(end.x,end.y); ctx.stroke(); ctx.setLineDash([]);
   if(job.state.status === 'crashed') {
     ctx.strokeStyle='#ff6d77'; ctx.lineWidth=2;
@@ -478,7 +503,7 @@ function tick(time) {
       if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
       accumulator -= dt;
       physicsStepCount += 1;
-      if (physicsStepCount % 3 === 0) trail.push({ ...simulation.rocket.position });
+      if (physicsStepCount % 3 === 0) {trail.push({ ...simulation.rocket.position });if(trail.length>3600)trail=trail.filter((_,i)=>i===0||i%2===1);}
     }
     if (simulation.status !== "flying") {
       trail.push({ ...simulation.rocket.position });
@@ -486,6 +511,7 @@ function tick(time) {
       showResult(simulation.status);
     }
   }
+  if(mode==='flying'&&camera.mode==='follow'){camera.follow(simulation.rocket.position);syncCamera();}
   draw(time);
   requestAnimationFrame(tick);
 }
@@ -520,7 +546,7 @@ canvas.addEventListener("pointerdown", (event) => {
   cameraPointers.set(event.pointerId,screenPoint(event));
   canvas.setPointerCapture(event.pointerId);
   if(cameraPointers.size>=2){
-    cancelGesture();cameraActive=true;
+    cancelGesture();cameraActive=true;camera.mode='fixed';syncCamera();
     for(const id of cameraPointers.keys())canvas.setPointerCapture(id);
     if(cameraPointers.size===2)camera.beginGesture([...cameraPointers.values()]);
     event.preventDefault();return;
@@ -528,8 +554,9 @@ canvas.addEventListener("pointerdown", (event) => {
   if(cameraActive)return;
   if ((mode !== 'editing' && !(mode === 'flying' && gameMode === 'live')) || pointers.size !== 1 || event.button !== 0) return;
   const point = worldPoint(event);
-  const target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode,
+  let target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode,
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
+  if(!target&&mode==='editing'&&playType==='free'&&stage.worldPreset&&Math.hypot(point.x-stage.goal.x,point.y-stage.goal.y)<=Math.max(stage.goal.radius,22/view.scale))target={type:'goal'};
   if (!target) {selectedPlanetId=null;updatePlanetEditor();return;}
   if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
   gesture = { ...target, pointerId: event.pointerId, point };
@@ -549,6 +576,9 @@ canvas.addEventListener("pointermove", (event) => {
   gesture.point = point;
   if (gesture.type === 'rocket') {
     aim = slingshotLaunch(stage.launch.position, point);
+  } else if(gesture.type==='goal'){
+    const goal={...stage.goal,x:Math.max(stage.goal.radius,Math.min(stage.world.width-stage.goal.radius,point.x)),y:Math.max(stage.goal.radius,Math.min(stage.world.height-stage.goal.radius,point.y))};
+    if(stage.planets.every(p=>Math.hypot(p.x-goal.x,p.y-goal.y)>planetExtent(p)+goal.radius+12)&&Math.hypot(goal.x-stage.launch.position.x,goal.y-stage.launch.position.y)>goal.radius+28)Object.assign(stage.goal,goal);
   } else {
     const planet = stage.planets.find(item => item.id === gesture.id);
     if(mode === 'flying') { moveTargets[planet.id] = point; event.preventDefault(); return; }
@@ -609,6 +639,8 @@ function updatePlanetEditor() {
   if(!planetSize.value||stage.rules&&!stage.rules.sizes.includes(planetSize.value))planetSize.value=stage.rules?.sizes[0]??'medium';
   document.querySelector('#planetFeature').textContent=PLANET_TYPES[planetType.value]?.description??'引力でロケットの航路を曲げます。';
   document.querySelector('#specialSample').disabled=playType!=='free'||mode!=='editing';
+  document.querySelector('#worldSize').disabled=document.querySelector('#hugeSample').disabled=playType!=='free'||mode!=='editing';
+  document.querySelector('#worldSize').value=stage.worldPreset??'standard';
   deletePlanetButton.disabled = mode !== 'editing' || fixed || !planet || stage.planets.length<=(stage.rules?.minPlanets??0);
   document.querySelector('#selectionBar').hidden=!planet;
   document.querySelector('#deleteReason').textContent=deletePlanetButton.disabled?(mode!=='editing'?'飛行後は削除できません':'ステージの個数・種類は固定です'):'';

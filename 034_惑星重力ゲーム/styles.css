@@ -278,3 +278,7 @@ input[type='range'] { height:30px; }
 .settings-dialog .planet-editor { gap:12px; }
 .slingshot-guide { min-height:38px; display:flex; align-items:center; justify-content:center; gap:10px; }
 @media(max-height:500px) { .app { grid-template-rows:38px minmax(0,1fr) auto; } .topbar button { min-height:38px!important; } }
+.world-option { display:flex; flex-direction:column; gap:6px; font-size:12px; color:#aad1e6; }
+#minimap { inset:42px 7px auto auto; width:72px; height:96px; border:1px solid #31516e; border-radius:5px; pointer-events:none; }
+.preview-status { position:absolute; bottom:57px; left:8px; right:8px; pointer-events:none; font-size:10px; color:#a0dfec; text-shadow:0 1px 3px #000; }
+.preview-status:empty { display:none; }

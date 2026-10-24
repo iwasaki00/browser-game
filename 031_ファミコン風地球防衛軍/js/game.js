@@ -1,4 +1,4 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-D";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-E";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-C";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
@@ -37,6 +37,9 @@ const missionTimers=new Set();
 const deferredMissionCallbacks=[];
 const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
 const artPreview=DEBUG?new ArtPreview():null;
+// Release art and LAB comparison own independent selection / loading tokens.
+// Both use the same validated, per-resource fallback loader and render adapters.
+const releaseArt=new ArtPreview();
 let previewRenderScale=1,artComparison=false;
 const profiler=DEBUG?new FrameProfiler():null;
 const liveProfiler=DEBUG?new LiveProfiler():null;
@@ -104,7 +107,9 @@ function renderClassGrid(){
   const grid=document.querySelector("#classGrid");grid.replaceChildren();
   for(const c of Object.values(PLAYER_CLASSES)){
     const button=document.createElement("button");button.className=`class-card ${save.selectedClass===c.id?"selected":""}`;button.dataset.action="select-class";button.dataset.playerClass=c.id;button.setAttribute("aria-pressed",String(save.selectedClass===c.id));
-    button.innerHTML=`<span class="class-pic" style="--class-row:${c.row};background-position:0 ${-64*c.row}px" aria-hidden="true"></span><span><strong>${c.id}</strong><small>HP ${c.hp} / ${c.speed}px/s</small><small>${c.ability}</small></span>`;grid.append(button);
+    const portrait=activeStudy()?._u?.[c.id.toLowerCase()]?activeStudy()[c.id.toLowerCase()]:null;
+    button.innerHTML=`${portrait?'':`<span class="class-pic" style="--class-row:${c.row};background-position:0 ${-64*c.row}px" aria-hidden="true"></span>`}<span><strong>${c.id}</strong><small>HP ${c.hp} / ${c.speed}px/s</small><small>${c.ability}</small></span>`;
+    if(portrait){const pic=document.createElement('canvas');pic.className='class-pic';pic.width=48;pic.height=64;pic.style.background='none';pic.style.order=-1;pic.setAttribute('aria-hidden','true');const c=pic.getContext('2d');c.imageSmoothingEnabled=false;c.drawImage(portrait,0,0,48,64,0,0,48,64);button.append(pic)}grid.append(button);
   }
 }
 function syncSettings(){document.querySelector("#destructionSelect").value=String(save.settings.destructionLevel);document.querySelector("#shakeToggle").checked=save.settings.shake}
@@ -126,7 +131,9 @@ function renderWeaponGrid(){
   for(let slot=0;slot<2;slot++){const button=document.querySelector(`#equipSlot${slot+1}`);button.textContent=`${slot+1}: ${selected[slot]||"未装備"}`;button.setAttribute("aria-pressed",String(activeEquipSlot===slot))}
   for(const w of WEAPONS){if(weaponFilter!=="ALL"&&w.category!==weaponFilter)continue;
     const unlocked=save.unlocked.includes(w.id),b=document.createElement("button");b.className=`weapon-card ${selected.includes(w.id)?"selected":""} ${unlocked?"":"locked"}`;b.disabled=!unlocked;b.dataset.weapon=w.id;
-    b.innerHTML=`<span class="weapon-pic" style="background-position:${w.assetIndex*-32}px 0"></span><span><strong>${w.id} ${w.name}</strong><small>DMG ${w.damage} / ${w.interval}s · ${WEAPON_CATEGORIES[w.category]}</small><small>${w.detail}</small><small>${unlocked?selected.includes(w.id)?`SLOT ${selected.indexOf(w.id)+1}`:"OPEN":"LOCKED"}</small></span>`;
+    const icon=document.createElement('canvas');icon.width=icon.height=32;const iconCtx=icon.getContext('2d');iconCtx.imageSmoothingEnabled=false;const unifiedIcon=drawStudyIcon(iconCtx,activeStudy(),w.id,0,0,32,32);
+    b.innerHTML=`${unifiedIcon?'':`<span class="weapon-pic" style="background-position:${w.assetIndex*-32}px 0"></span>`}<span><strong>${w.id} ${w.name}</strong><small>DMG ${w.damage} / ${w.interval}s · ${WEAPON_CATEGORIES[w.category]}</small><small>${w.detail}</small><small>${unlocked?selected.includes(w.id)?`SLOT ${selected.indexOf(w.id)+1}`:"OPEN":"LOCKED"}</small></span>`;
+    if(unifiedIcon){icon.className='weapon-pic';icon.style.background='none';icon.style.order=-1;icon.setAttribute('aria-hidden','true');b.append(icon)}
     b.addEventListener("click",()=>{if(!save.unlocked.includes(w.id))return;const other=selected.indexOf(w.id);if(other>=0)activeEquipSlot=other;else selected[activeEquipSlot]=w.id;renderWeaponGrid()});weaponGrid.append(b);
   }
   equipMessage.textContent=`${save.unlocked.length}/${WEAPONS.length} 解放 · 枠を選んで武器を指定`;
@@ -385,11 +392,16 @@ function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true
   document.querySelector("#rewardBox").innerHTML=w?`<span>${game.missionId==='M02'?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?game.missionId==='M02'?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
 }
 
-function activeStudy(){return DEBUG&&game?.lab&&artPreview.style!=='ORIGINAL'?artPreview.pack:null}
+function activeArt(){return game?.lab?artPreview:releaseArt}
+function activeStudy(){const art=activeArt();return art&&art.style!=='ORIGINAL'?art.pack:null}
+async function loadReleaseArt(loader){
+  const result=await releaseArt.select('UNIFIED_01',loader);
+  applyPreviewResolution();if(state==='equip'&&!game?.lab)renderWeaponGrid();return result;
+}
 function applyPreviewResolution(){
   const scale=DEBUG&&game?.lab?previewRenderScale:1,width=VIEW.canvasWidth*scale,height=VIEW.canvasHeight*scale;
   if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;ctx.imageSmoothingEnabled=false}
-  canvas.dataset.artStyle=activeStudy()?artPreview.style:'ORIGINAL';canvas.dataset.renderResolution=`${width}x${height}`;return scale;
+  canvas.dataset.artStyle=activeStudy()?activeArt().style:'ORIGINAL';canvas.dataset.artLoading=String(!!activeArt()?.loading);canvas.dataset.artFallbacks=(activeStudy()?.fallbacks??[]).join(',');canvas.dataset.renderResolution=`${width}x${height}`;return scale;
 }
 async function setArtStyle(value){
   if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state))return false;
@@ -401,14 +413,14 @@ function draw(){
   const renderScale=applyPreviewResolution();ctx.setTransform(renderScale,0,0,renderScale,0,0);ctx.imageSmoothingEnabled=false;
   view.renderOffset=0;
   if(!assetsReady){ctx.fillStyle="#050915";ctx.fillRect(0,0,320,180);return}
-  if(!game||!["play","pause","confirm","lab","settings"].includes(state)){ctx.drawImage(images.bg,0,0);return}
+  if(!game||!["play","pause","confirm","lab","settings"].includes(state)){const backdrop=activeStudy()?.city;if(backdrop)ctx.drawImage(backdrop,0,0,640,360,0,0,320,180);else ctx.drawImage(images.bg,0,0);return}
   const g=game,shake=!artComparison&&g.shake&&activeSettings().shake?(Math.random()-.5)*g.shake:0;
   view.renderOffset=Math.round(shake);
   ctx.save();
   const origin=worldToScreen({x:0,y:0},g.camera,view.zoom);
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
-  artPreview?.prepare(view.zoom);
+  activeArt()?.prepare(view.zoom);
   drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(g.player);drawEffects(g);
   ctx.restore();drawHud(g);if(g.missionId==='M02')drawUndergroundHud(g);drawClassHud(g);drawImpactHud(g);
 }
@@ -565,6 +577,8 @@ function startBenchmark(mode){
 }
 
 loadAssets().catch(()=>{document.querySelector("#screenTitle h1").textContent="ASSET LOAD ERROR"});
+// Do not block the existing fallback art / game startup on optional new images.
+loadReleaseArt();
 renderWeaponGrid();document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;requestAnimationFrame(loop);
 
 // Test/QA hooks intentionally read-only except the explicit debug commands.

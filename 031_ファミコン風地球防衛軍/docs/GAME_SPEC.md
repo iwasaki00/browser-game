@@ -1,8 +1,9 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.2.3-C — ART UNIFICATION（LAB比較試用、通常アートはORIGINAL）
+- Version: 0.2.3-E — ART RELEASE（通常アートはUNIFIED 01）
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
-- LAB描画: ORIGINAL / STUDY 01 / STUDY 01-B / UNIFIED 01。640×360は画素密度2倍の実験表示、論理座標320×180を維持。素材・描画のみ変更、兵科／武器／AI／地形／進行／セーブに変更なし。詳細は[ART_UNIFICATION.md](ART_UNIFICATION.md)。
+- 通常描画: debug不要でUNIFIED 01。通常用ArtPreviewを起動時に読み込み、未読込中は旧素材、欠損は画像単位で旧セットへ代替する。M01/M02・4兵科・全20武器・敵／両ボス／ネスト・背景／地形／対応FXに適用。兵科／武器プレビューにも使用。HUD文字・バー・アイテム・小粒子プリミティブは従来どおり。
+- LAB描画: ORIGINALを初期値としてORIGINAL / STUDY 01 / STUDY 01-B / UNIFIED 01を比較。640×360はLAB限定・画素密度2倍、論理座標320×180を維持。通常用とLAB用のアート状態を分離し、LAB設定は通常セーブにも標準アートにも反映しない。兵科／武器／AI／地形／進行／セーブに変更なし。詳細は[ART_UNIFICATION.md](ART_UNIFICATION.md)。
 - ステージ: M01 市街地防衛線（幅4,800px）／M02 地下侵攻作戦（幅5,600px）、各5エリア
 - プレイヤー: RANGER / SCOUT / GUARDIAN / WING（全兵科使用可能）。性能は `js/data.js` の `PLAYER_CLASSES`、挙動は `js/player.js`。重力620px/s²、無敵1秒を継続
 - 進行: タイトル → ミッション選択 → 兵科・装備選択 → 本編 → リザルト → 武器解放

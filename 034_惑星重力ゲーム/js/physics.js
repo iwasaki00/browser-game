@@ -108,10 +108,11 @@ export function createSimulation(stage, launch = {}) {
     planets: structuredClone(stage.planets),
     goal: { ...stage.goal },
     world: { ...stage.world },
+    ...(stage.flightLimits?{flightLimits:{...stage.flightLimits}}:{}),
   };
 }
 
-export function stepSimulation(state, dt, options = DEFAULT_PHYSICS) {
+export function stepSimulation(state, dt, options = {}) {
   if (state.status !== "flying") return state;
 
   const previous = state.rocket.position;
@@ -130,7 +131,7 @@ export function stepSimulation(state, dt, options = DEFAULT_PHYSICS) {
   const margin = options.boundsMargin ?? DEFAULT_PHYSICS.boundsMargin;
   const outside = rocket.position.x < -margin || rocket.position.x > state.world.width + margin
     || rocket.position.y < -margin || rocket.position.y > state.world.height + margin;
-  const timedOut = elapsed >= (options.maxFlightTime ?? DEFAULT_PHYSICS.maxFlightTime);
+  const timedOut = elapsed >= (options.maxFlightTime ?? state.flightLimits?.maxFlightTime ?? DEFAULT_PHYSICS.maxFlightTime);
 
   return {
     ...state,
@@ -140,9 +141,9 @@ export function stepSimulation(state, dt, options = DEFAULT_PHYSICS) {
   };
 }
 
-export function simulateTrajectory(stage, launch = {}, options = DEFAULT_PHYSICS) {
+export function simulateTrajectory(stage, launch = {}, options = {}) {
   const dt = options.fixedTimeStep ?? DEFAULT_PHYSICS.fixedTimeStep;
-  const maxSteps = Math.ceil((options.maxFlightTime ?? DEFAULT_PHYSICS.maxFlightTime) / dt) + 1;
+  const maxSteps = Math.ceil((options.maxFlightTime ?? stage.flightLimits?.maxFlightTime ?? DEFAULT_PHYSICS.maxFlightTime) / dt) + 1;
   let state = createSimulation(stage, launch);
   const points = [cloneVector(state.rocket.position)];
 

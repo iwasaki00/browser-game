@@ -59,7 +59,7 @@ test('B enemy pose / variant / feet and death trails use drawing only, no sort o
   assert.equal(r.run('JSON.stringify(game)'),r.run('before'));assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='B:crawler'&&c[2]===192));
   assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='B:boss'));assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='B:needle'));
 });
-test('B and ORIGINAL run identical actual combat updates including deaths; normal mode always original',async()=>{
+test('B and ORIGINAL run identical actual combat updates; normal mode keeps ORIGINAL fallback while release images are pending',async()=>{
   const a=lab(),b=lab();await b.run("setArtStyle('STUDY_01_B')");b.run('setPreviewResolution(2)');
   for(const r of [a,b])r.run("show('play');spawnEnemy('crawler',1120);input.fire=true;input.aimMode='touch';input.touchDx=1;input.touchDy=0;for(let i=0;i<120;i++){update(1/60);draw()}");
   assert.equal(a.run('JSON.stringify(game)'),b.run('JSON.stringify(game)'));

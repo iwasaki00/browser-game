@@ -9,11 +9,12 @@ export function savePreviewEnabled(storage, enabled) {
 }
 
 // Each job owns a snapshot; stepping it never mutates the editor or flight.
-export function createPreview(stage, velocity, maxSteps = 1441) {
+export function createPreview(stage, velocity, maxSteps = Math.ceil((stage.previewSeconds??12)*120)+1) {
+  const limit=Math.max(1,Math.min(14401,Math.floor(maxSteps)));
   return {
     state: createSimulation(stage, { velocity }),
     points: [{ ...stage.launch.position, time: 0 }],
-    steps: 0, maxSteps: Math.max(1, Math.min(1441, Math.floor(maxSteps))), done: false,
+    steps: 0, maxSteps:limit, sampleEvery:Math.ceil(limit/3601), done: false,
   };
 }
 export function advancePreview(job, budget = 120, deadline = Infinity) {
@@ -21,8 +22,8 @@ export function advancePreview(job, budget = 120, deadline = Infinity) {
   while (!job.done && count < budget && performance.now() < deadline) {
     job.state = stepSimulation(job.state, DEFAULT_PHYSICS.fixedTimeStep);
     job.steps++; count++;
-    job.points.push({ ...job.state.rocket.position, time: job.state.elapsed });
     job.done = job.state.status !== 'flying' || job.steps >= job.maxSteps;
+    if(job.steps%job.sampleEvery===0||job.done)job.points.push({ ...job.state.rocket.position, time: job.state.elapsed });
   }
   return job;
 }

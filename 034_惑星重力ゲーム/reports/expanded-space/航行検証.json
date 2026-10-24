@@ -1,0 +1,92 @@
+[
+  {
+    "id": "voyage",
+    "name": "LONG VOYAGE",
+    "world": {
+      "width": 3750,
+      "height": 5000
+    },
+    "start": {
+      "x": 250,
+      "y": 4500
+    },
+    "goal": {
+      "id": "distant-goal",
+      "x": 2164,
+      "y": 879,
+      "radius": 60
+    },
+    "end": {
+      "x": 2143.166953226622,
+      "y": 935.2670788484548
+    },
+    "elapsed": 17.749999999999634,
+    "status": "cleared",
+    "distance": 4059.798198009621,
+    "maxX": 2143.166953226622,
+    "minY": 935.2670788484548,
+    "turnDegrees": 27.6179692564184,
+    "frames": 356,
+    "withoutPlanets": "escaped"
+  },
+  {
+    "id": "swing",
+    "name": "MULTI SWING-BY",
+    "world": {
+      "width": 3750,
+      "height": 5000
+    },
+    "start": {
+      "x": 250,
+      "y": 4500
+    },
+    "goal": {
+      "id": "distant-goal",
+      "x": 3051,
+      "y": 1615,
+      "radius": 60
+    },
+    "end": {
+      "x": 3005.4284245659146,
+      "y": 1654.028598648369
+    },
+    "elapsed": 17.73333333333297,
+    "status": "cleared",
+    "distance": 4090.0182366889453,
+    "maxX": 3005.4284245659146,
+    "minY": 1654.028598648369,
+    "turnDegrees": 52.100244302014595,
+    "frames": 363,
+    "withoutPlanets": "escaped"
+  },
+  {
+    "id": "deep",
+    "name": "DEEP SPACE",
+    "world": {
+      "width": 3750,
+      "height": 5000
+    },
+    "start": {
+      "x": 250,
+      "y": 4500
+    },
+    "goal": {
+      "id": "distant-goal",
+      "x": 1798,
+      "y": 768,
+      "radius": 60
+    },
+    "end": {
+      "x": 1773.1363731828258,
+      "y": 822.6058610544353
+    },
+    "elapsed": 17.749999999999634,
+    "status": "cleared",
+    "distance": 3984.247973245625,
+    "maxX": 1773.1363731828258,
+    "minY": 822.6058610544353,
+    "turnDegrees": 13.4164982187413,
+    "frames": 356,
+    "withoutPlanets": "escaped"
+  }
+]

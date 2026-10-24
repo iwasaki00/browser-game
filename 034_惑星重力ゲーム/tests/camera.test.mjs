@@ -19,7 +19,7 @@ test('ピンチの中心を保ち、2本指の平行移動で視点を移す。�
  c.moveGesture([{x:90,y:215},{x:290,y:215}]);close(c.zoom,2);
  const after=c.toScreen(anchor);close(after.x,190);close(after.y,215);
  c.moveGesture([{x:-2000,y:0},{x:2000,y:0}]);assert.equal(c.zoom,3);
- c.zoomAt(.01);assert.equal(c.zoom,.5);c.fit(getStage());assert.equal(c.zoom,1);
+ c.zoomAt(.01);assert.equal(c.zoom,.1);c.fit(getStage());assert.equal(c.zoom,1);
  c.endGesture();const old=structuredClone(c.center);c.moveGesture([{x:0,y:0},{x:100,y:100}]);assert.deepEqual(c.center,old);
 });
 test('追加時の種類・サイズを適用し、ステージ固定条件と配置制約を守る',()=>{

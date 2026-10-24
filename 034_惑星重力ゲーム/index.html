@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Big Space UI</title>
+  <title>ORBIT MAKER — Expanded Space</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -24,6 +24,8 @@
 
     <section class="space-frame" id="spaceFrame">
       <canvas id="gameCanvas" width="750" height="1000" aria-label="ロケット、惑星、ゴールがある宇宙空間"></canvas>
+      <canvas id="minimap" width="90" height="120" hidden aria-label="ワールド全体・ロケット・惑星・ゴール・表示範囲のミニマップ"></canvas>
+      <output id="previewStatus" class="preview-status" aria-live="polite"></output>
       <p id="statusText" class="board-status" aria-live="polite">惑星を動かして、軌道をつくれ。</p><div id="selectionBar" class="selection-bar" hidden><output id="planetSelection" aria-live="polite"></output><button id="deletePlanet" type="button">削除</button><small id="deleteReason"></small></div><div class="camera-controls" aria-label="カメラ操作"><output id="cameraZoom" aria-live="polite">1.0×</output><button id="zoomOut" type="button" aria-label="縮小">−</button><button id="zoomIn" type="button" aria-label="拡大">＋</button><button id="fitCamera" type="button">全体</button></div><div id="experienceCue" class="experience-cue" role="status" aria-live="polite"></div>
       <div class="result" id="result" hidden>
         <p id="resultLabel">MISSION FAILED</p>
@@ -60,7 +62,13 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v0.9.2</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">      <div class="controls-toolbar">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v0.9.3</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+      <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
+      <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
+      <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option></select></label>
+      <button id="minimapToggle" type="button" aria-pressed="true">ミニマップ ON</button>
+      <p class="settings-note">広域ワールドでは発射前にゲートもドラッグできます。広さ変更・体験配置はフリープレイを新しい配置に置き換えます。ピンチ・視点移動は追従を解除し、ズームボタンは追従を維持します。</p>
+      <div class="controls-toolbar">
         <div class="game-mode"><label for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp"></small></div>
         <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>
 

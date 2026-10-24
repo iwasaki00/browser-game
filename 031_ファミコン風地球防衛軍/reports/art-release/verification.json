@@ -1,0 +1,97 @@
+{
+  "version": "0.2.3-E",
+  "normal": {
+    "art": "UNIFIED_01",
+    "resolution": "320x180",
+    "labVisible": false
+  },
+  "checks": [
+    {
+      "name": "LAB original keeps position/HP/checkpoint",
+      "before": {
+        "checkpoint": "M02-A2-MAIN",
+        "hp": "65",
+        "mission": "M02",
+        "x": "940"
+      },
+      "after": {
+        "checkpoint": "M02-A2-MAIN",
+        "hp": "65",
+        "mission": "M02",
+        "x": "940"
+      }
+    },
+    {
+      "area": "5",
+      "artFallbacks": "",
+      "artLoading": "false",
+      "artStyle": "UNIFIED_01",
+      "boss": "1",
+      "cameraMode": "boss",
+      "cameraX": "4669.08",
+      "checkpoint": "M02-A5-BOSS",
+      "density": "MASSIVE",
+      "enemies": "1",
+      "enemyLimit": "100",
+      "flightEnergy": "100.0",
+      "gameState": "play",
+      "missionId": "M02",
+      "playerClass": "WING",
+      "playerHp": "65",
+      "playerX": "4800",
+      "renderResolution": "320x180",
+      "targetZoom": "0.424",
+      "validationMode": "C",
+      "viewZoom": "0.428",
+      "visibleWorldWidth": "748.12"
+    },
+    {
+      "area": "5",
+      "artFallbacks": "",
+      "artLoading": "false",
+      "artStyle": "UNIFIED_01",
+      "boss": "1",
+      "cameraMode": "boss",
+      "cameraX": "3988.36",
+      "checkpoint": "M01-A5-BOSS",
+      "density": "MASSIVE",
+      "enemies": "1",
+      "enemyLimit": "100",
+      "flightEnergy": "100.0",
+      "gameState": "play",
+      "missionId": "M01",
+      "playerClass": "WING",
+      "playerHp": "65",
+      "playerX": "4160",
+      "renderResolution": "320x180",
+      "targetZoom": "0.618",
+      "validationMode": "C",
+      "viewZoom": "0.523",
+      "visibleWorldWidth": "611.56"
+    },
+    {
+      "name": "normal mission after LAB ORIGINAL/640",
+      "area": "1",
+      "artFallbacks": "",
+      "artLoading": "false",
+      "artStyle": "UNIFIED_01",
+      "boss": "0",
+      "cameraMode": "idle",
+      "cameraX": "0.00",
+      "density": "MASSIVE",
+      "enemies": "0",
+      "enemyLimit": "100",
+      "flightEnergy": "0.0",
+      "gameState": "play",
+      "missionId": "M01",
+      "playerClass": "RANGER",
+      "playerHp": "100",
+      "playerX": "64",
+      "renderResolution": "320x180",
+      "targetZoom": "0.500",
+      "viewZoom": "0.500",
+      "visibleWorldWidth": "640.00"
+    }
+  ],
+  "console": []
+}

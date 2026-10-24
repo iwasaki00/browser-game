@@ -94,7 +94,7 @@ test('all 20 weapon data and identical simulations survive render-only swapping'
   assert.equal(a.run('JSON.stringify(game)'),b.run('JSON.stringify(game)'));assert.equal(JSON.stringify(WEAPONS),before);
 });
 
-test('stage restart retains preview, LAB exit and normal starts always render ORIGINAL 320',async()=>{
+test('stage restart retains preview; normal starts use 320 with ORIGINAL while release images are pending',async()=>{
   const r=lab(),saved=r.storage.get(SAVE_KEY);await r.run("setArtStyle('STUDY_01')");r.run('setPreviewResolution(2)');r.click('lab-stage-start');assert.equal(r.get('game').width,640);assert.equal(r.get('game').dataset.artStyle,'STUDY_01');
   r.click('lab-open');r.click('lab-exit');assert.equal(r.get('game').width,320);assert.equal(r.get('game').dataset.artStyle,'ORIGINAL');assert.equal(r.storage.get(SAVE_KEY),saved);
   r.run('startMission()');assert.equal(await r.run("setArtStyle('STUDY_01')"),false);assert.equal(r.run('setPreviewResolution(2)'),false);assert.equal(r.get('game').width,320);
