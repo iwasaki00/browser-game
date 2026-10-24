@@ -1,4 +1,4 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-C";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-D";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-C";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
@@ -22,6 +22,15 @@ let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
 let weaponFilter="ALL",activeEquipSlot=0,remoteTimer=null,remoteHeld=false;
 let labWeaponPickerOpen=false,labEditingSlot=0,labWeaponQuery="";
+// UI-only state: never stored in game/save, and never advances the simulation.
+const LAB_TABS=['stage','loadout','enemies','visual','metrics'];
+let labTab='stage',labTabScroll={},labTerrainChoice=null,labMessage='設定を選んでください。';
+const LAB_UI_PRESETS={
+  art:'カメラFIXED 0.50・揺れOFF → 見た目。アート・解像度・HP・戦闘は維持。',
+  boss:'開始候補をAREA05に変更 → ステージ。ボス開始ボタンを押すまで再開始しません。',
+  mass:'生成候補をE-01・200体・密集に変更 → 敵・ボス。生成するまで現在の敵は維持。',
+  normal:'QA区分D・無敵OFF → ステージ。兵科と武器は維持。開始時に正式兵科・解放済み装備を検証。'
+};
 const labRunHistory=[],labBenchmarkHistory=[];
 const weaponAPI={damage:damageEnemy,blast:explode,effect:pushEffect};
 const missionTimers=new Set();
@@ -129,7 +138,7 @@ window.addEventListener("keydown",e=>{
   if(labWeaponPickerOpen){handleLabWeaponKey(e);return}
   if(artComparison&&state==='pause'){if(e.key==='Escape'||e.key==='F2'){e.preventDefault();show('play');openLabPanel()}return}
   if(state==="settings"){if(e.key==="Escape")closeSettings();return}
-  if(game?.lab&&state==="lab"){if(e.key==="Escape")closeLabPanel();return}
+  if(game?.lab&&state==="lab"){handleLabKey(e);return}
   if(game?.lab&&(e.key==="F2")){e.preventDefault();if(state==="play"||state==="gameover")openLabPanel();return}
   if(state==="confirm"){if(e.key==="Escape")cancelTitle();return}
   if(e.target?.matches?.("input,select,button,textarea")&&state!=="play")return;
@@ -161,6 +170,10 @@ aimPad.addEventListener("pointerdown",e=>{e.preventDefault();aimPad.setPointerCa
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");if(!a)return;initAudio();tone(620,.05);const action=a.dataset.action;
   if(labWeaponPickerOpen)return;
+  if(action==='lab-tab'){switchLabTab(a.dataset.labTab);return}
+  if(action==='lab-boss-tab'){switchLabTab('stage',true);return}
+  if(action==='lab-preset-apply'){applyLabUIPreset();return}
+  if(action==='lab-terrain-apply'){if(applyLabTerrain(true))setLabMessage('検証地形を適用。位置・敵・弾・FX・時間等を初期化しました。');return}
   if(action==="lab-weapons"){openLabWeaponPicker(Number(a.dataset.slot));return}
   if(action==="title"||action==="quit"||action==="back-title"){requestTitle();return}
   if(action==="confirm-title"){discardMission();show("title");document.querySelector('[data-action="start"]').focus();return}
@@ -170,13 +183,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="test-lab"){if(DEBUG)startLab();return}
   if(action==="lab-open"){openLabPanel();return}
   if(action==="lab-close"){closeLabPanel();return}
-  if(action==="lab-spawn"){if(game?.lab)spawnLabEnemies();return}
+  if(action==="lab-spawn"){if(game?.lab){applyLabTerrain();spawnLabEnemies();setLabMessage(`${game.liveEnemies}体を再配置。位置・HP・時間・弾・FX・設置を初期化。`)}return}
   if(action==="lab-blast"){labBlast();return}
   if(action==="lab-test"){labTestShot();return}
-  if(action==="lab-clear"){if(game?.lab)clearLabEnemies();return}
-  if(action==='lab-stage-start'){startLabCheckpoint();return}
-  if(action==='lab-boss-1'){startLabCheckpoint('M01');return}
-  if(action==='lab-boss-2'){startLabCheckpoint('M02');return}
+  if(action==="lab-clear"){if(game?.lab){clearLabEnemies();syncLabUI();setLabMessage('敵・弾・FX・設置・アイテム・攻略計測を消去。位置・地形は維持。')}return}
+  if(action==='lab-stage-start'){runLabStart();return}
+  if(action==='lab-boss-1'){runLabStart('M01');return}
+  if(action==='lab-boss-2'){runLabStart('M02');return}
   if(action==='lab-copy'){copyLabReport();return}
   if(action==='art-compare'){beginArtComparison();return}
   if(action==='art-lab'){if(game?.lab){show('play');openLabPanel()}return}
@@ -194,9 +207,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound)tone(700,.06)});
 document.addEventListener("change",e=>{
+  if(game?.lab&&state==='lab'&&e.target.id==='labTerrain'){
+    if(['M01','M02'].includes(e.target.value)){labTerrainChoice=e.target.value;setLabMessage('地形は保留中。「生成」または「地形だけ適用」で初期化します。');syncLabWorkbench()}return;
+  }
+  if(game?.lab&&state==='lab'&&e.target.id==='labUIPreset'){syncLabWorkbench();return}
   if(['labArtStyle','pauseArtStyle'].includes(e.target.id)){setArtStyle(e.target.value);return}
   if(['labRenderScale','pauseRenderScale'].includes(e.target.id)){setPreviewResolution(e.target.value);return}
-  if(game?.lab){changeLabSetting(e.target);return}
+  if(game?.lab){changeLabSetting(e.target);if(state==='lab')setLabMessage(['labStageMission','labStageArea','labStageRoute','labStageDensity','labEnemy','labCount','labPlacement'].includes(e.target.id)?'候補を更新しました。開始／生成ボタンを押すまで現在の戦闘は維持。':e.target.id==='labValidation'?'QA候補を更新。B/Dは無敵OFF・CはONに即時連動。':'LAB設定を即時反映しました。');return}
   if(e.target.id==="weaponFilter"&&(e.target.value==="ALL"||Object.hasOwn(WEAPON_CATEGORIES,e.target.value))){weaponFilter=e.target.value;renderWeaponGrid();return}
   if(e.target.id==="destructionSelect"&&state==="settings"){save.settings.destructionLevel=normalizeDestructionLevel(e.target.value);storeSave();syncSettings();return}
   if(e.target.id==="shakeToggle"&&state==="settings"){save.settings.shake=e.target.checked;if(game&&!e.target.checked){game.shake=0;game.impact.shakeUntil=0}storeSave();return}
@@ -580,7 +597,7 @@ function finishLabRun(outcome){
   const run=game?.lab?.run;if(!run||run.outcome!=='RUNNING')return;
   run.outcome=outcome;run.elapsed=game.time;run.resultAt=game.time;run.finalHp=game.player.hp;game.clear=true;game.director.stopped=true;resetInput();clearArsenal(game);pauseLabMeasurement();
   document.querySelector('#labStageStatus').textContent=`RESULT: ${run.mode} ${VALIDATION_MODES[run.mode]} / ${outcome} / 通常報酬なし`;
-  show('lab');renderLabReport();document.querySelector('#labRunReport').focus();document.querySelector('#labRunReport').scrollIntoView?.({block:'nearest'});
+  show('lab');switchLabTab('metrics');renderLabReport();document.querySelector('#labJSON').open=true;document.querySelector('#labRunReport').focus();document.querySelector('#labRunReport').scrollIntoView?.({block:'nearest'});
 }
 function labExport(){return {version:VERSION,current:game?.lab?.run?.snapshot(game)??null,recentRuns:labRunHistory,benchmarks:labBenchmarkHistory,notice:'A/B/CはDの攻略成功ではありません。途中開始は全編攻略ではありません。通常セーブには保存しません。'}}
 function renderLabReport(){
@@ -590,11 +607,11 @@ function renderLabReport(){
 }
 async function copyLabReport(){
   if(!game?.lab||state!=='lab')return;renderLabReport();const output=document.querySelector('#labRunReport'),status=document.querySelector('#labCopyStatus');
-  try{if(!navigator.clipboard?.writeText)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(output.value);status.textContent='JSONをコピーしました（通常セーブなし）'}catch{output.focus();output.select?.();status.textContent='自動コピーできません。下のJSONを選択して手動コピーしてください。'}
+  try{if(!navigator.clipboard?.writeText)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(output.value);status.textContent='JSONをコピーしました（通常セーブなし）';setLabMessage(status.textContent)}catch{switchLabTab('metrics');document.querySelector('#labJSON').open=true;output.focus();output.select?.();status.textContent='自動コピーできません。下のJSONを選択して手動コピーしてください。';setLabMessage(status.textContent)}
 }
 
 function startLab(openPanel=true,terrain='M01'){
-  if(!DEBUG)return false;if(!game?.lab){artPreview.reset();previewRenderScale=1}startMission(terrain,true);
+  if(!DEBUG)return false;if(!game?.lab){artPreview.reset();previewRenderScale=1;labTab='stage';labTabScroll={}}labTerrainChoice=null;startMission(terrain,true);
   game.lab=createLabState(save.equipped,save.settings);game.density="MASSIVE";game.enemyLimit=200;game.director.stopped=true;game.items.length=0;
   game.lab.terrain=terrain;game.enemies.length=0;game.liveEnemies=game.liveMobs=0;if(terrain==='M02')game.platforms=createM02Geometry();
   configureLabPlayer();
@@ -619,7 +636,7 @@ function syncLabUI(){
   if(!game?.lab)return;const lab=game.lab;
   for(let slot=0;slot<2;slot++){const button=document.querySelector(`#labWeaponSlot${slot+1}`),w=weapon(lab.equipped[slot]);button.textContent=`SLOT ${slot+1}: ${w.id} ${w.name}`;button.setAttribute("aria-expanded",String(labWeaponPickerOpen&&labEditingSlot===slot))}
   syncLabStageOptions();
-  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labTerrain:lab.terrain,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom),labStageMission:lab.stageMission,labStageArea:String(lab.stageArea),labStageRoute:lab.stageRoute,labValidation:lab.validationMode,labStageDensity:lab.stageDensity};
+  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labTerrain:labTerrainChoice??lab.terrain,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom),labStageMission:lab.stageMission,labStageArea:String(lab.stageArea),labStageRoute:lab.stageRoute,labValidation:lab.validationMode,labStageDensity:lab.stageDensity};
   for(const [id,value] of Object.entries(values))document.querySelector(`#${id}`).value=value;
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
   document.querySelector("#labDestruction").value=String(normalizeDestructionLevel(lab.settings.destructionLevel));document.querySelector("#labShake").checked=lab.settings.shake;
@@ -628,7 +645,58 @@ function syncLabUI(){
   document.querySelector("#labCount").disabled=['beetle','boss','queen','nest'].includes(lab.enemy);
   document.querySelector("#labBlast").disabled=!["rocket","grenade"].includes(weapon(activeEquipment()[game.player.weaponSlot]).type);
   document.querySelector("#labZoomValue").textContent=`${view.zoom.toFixed(2)}× / FIXED ${lab.fixedZoom.toFixed(2)}×`;
-  renderLabReport();
+  renderLabReport();syncLabWorkbench();
+}
+function setLabMessage(text){labMessage=text;const el=document.querySelector('#labNotice');el.textContent=text;el.title=text;syncLabWorkbench()}
+function switchLabTab(name,focus=false){
+  if(!game?.lab||state!=='lab'||!LAB_TABS.includes(name)||labWeaponPickerOpen)return false;
+  const content=document.querySelector('#labContent');labTabScroll[labTab]=content.scrollTop||0;labTab=name;resetInput();syncLabWorkbench();content.scrollTop=labTabScroll[name]||0;
+  if(focus)document.querySelector(`#labTab-${name}`).focus();return true;
+}
+function syncLabWorkbench(){
+  if(!game?.lab)return;const lab=game.lab;
+  document.querySelector('#labTerrain').value=labTerrainChoice??lab.terrain;
+  for(const name of LAB_TABS){const active=labTab===name,button=document.querySelector(`#labTab-${name}`);button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;document.querySelector(`#labPanel-${name}`).hidden=!active}
+  document.querySelector('#labStartButton').hidden=labTab!=='stage';
+  const effectiveQA=['A','D'].includes(lab.validationMode)?lab.validationMode:lab.invincible?'C':'B';
+  const locationLabel=lab.run?`AREA${String((game.area??0)+1).padStart(2,'0')} QA:${lab.run.mode}`:lab.benchmarkPerformance?`BENCH${profiler?.running?'計測中':'終了'}`:'自由配置';
+  const rows={labCurrentSummary:`現在 ${game.missionId} / ${locationLabel} / ${lab.preset} / ${game.density}（上限${game.enemyLimit}）`,labVisualSummary:`${activeStudy()?artStyleLabel(artPreview.style):'ORIGINAL'} / ${canvas.width}×${canvas.height} / CAMERA ${lab.cameraMode} ${view.zoom.toFixed(2)}×`,labNextSummary:`次の開始 ${lab.stageMission} / AREA${String(lab.stageArea+1).padStart(2,'0')}${lab.stageMission==='M02'&&lab.stageArea===2?lab.stageRoute==='UPPER'?' 上':' 下':''} / ${lab.stageDensity} / QA:${lab.validationMode}${effectiveQA!==lab.validationMode?`→${effectiveQA}`:''}`};
+  for(const [id,text] of Object.entries(rows)){const el=document.querySelector(`#${id}`);el.textContent=text;el.title=text}
+  document.querySelector('#labNextSummary').hidden=labTab!=='stage';
+  const metrics=liveProfiler?.result;
+  document.querySelector('#labMetrics').textContent=`${metrics?`直近の有効区間：FPS ${metrics.fps.toFixed(1)} / 平均${metrics.frameMs.toFixed(1)}ms / p95 ${metrics.p95FrameMs.toFixed(1)}ms / 最大${metrics.maxFrameMs.toFixed(1)}ms\nCPU 更新${metrics.updateMs.toFixed(2)}ms / 描画${metrics.drawMs.toFixed(2)}ms / 有効${metrics.samples}・中断除外${metrics.excluded}区間`:'FPS / CPU：有効な前景プレイ区間は未計測（または中断）'}\n敵${game.liveEnemies} / 弾${game.shots.length+game.enemyShots.length} / FX${game.effects.length+game.impact.particles.length} / 死亡${game.impact.corpses} / ${view.zoom.toFixed(2)}×`;
+  const damage=game.lab.run?.snapshot(game)?.weaponDamage;
+  document.querySelector('#labDamageSummary').textContent=`武器別ダメージ：${damage&&Object.keys(damage).length?Object.entries(damage).map(([id,n])=>`${id} ${Number(n).toFixed(1)}`).join(' / '):'未記録'}`;
+  const preset=document.querySelector('#labUIPreset').value||'art';document.querySelector('#labUIPresetDescription').textContent=LAB_UI_PRESETS[preset]||'';
+  const notice=artPreview?.loading?'アート読み込み中。現在の描画を維持しています。':artPreview?.error||labMessage;document.querySelector('#labNotice').textContent=notice;document.querySelector('#labNotice').title=notice;
+}
+function applyLabTerrain(force=false){
+  if(!game?.lab||state!=='lab')return false;
+  const terrain=labTerrainChoice??game.lab.terrain;labTerrainChoice=null;
+  if(force||terrain!==game.lab.terrain)changeLabSetting({id:'labTerrain',value:terrain});
+  syncLabUI();return true;
+}
+function runLabStart(mission=null){
+  const ok=startLabCheckpoint(mission);if(ok)labTerrainChoice=null;
+  setLabMessage(ok?'指定地点から開始しました。HP・位置・敵・弾・時間等を初期化。':`開始不可：${document.querySelector('#labStageStatus').textContent}`);return ok;
+}
+function applyLabUIPreset(){
+  if(!game?.lab||state!=='lab')return false;
+  const preset=document.querySelector('#labUIPreset').value;if(!Object.hasOwn(LAB_UI_PRESETS,preset))return false;
+  if(preset==='art'){changeLabSetting({id:'labCamera',value:'FIXED'});changeLabSetting({id:'labZoom',value:'.5'});changeLabSetting({id:'labShake',checked:false});switchLabTab('visual')}
+  if(preset==='boss'){changeLabSetting({id:'labStageArea',value:'4'});switchLabTab('stage')}
+  if(preset==='mass'){for(const [id,value] of [['labEnemy','crawler'],['labCount','200'],['labPlacement','dense']])changeLabSetting({id,value});switchLabTab('enemies')}
+  if(preset==='normal'){changeLabSetting({id:'labValidation',value:'D'});switchLabTab('stage')}
+  setLabMessage(`適用済み：${LAB_UI_PRESETS[preset]}`);return true;
+}
+function handleLabKey(e){
+  if(e.key==='Escape'||e.key==='F2'){e.preventDefault();closeLabPanel();return}
+  const target=e.target??document.activeElement,tab=target?.dataset?.labTab;
+  if(tab&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const i=LAB_TABS.indexOf(tab),n=e.key==='Home'?0:e.key==='End'?4:(i+(e.key==='ArrowRight'?1:4))%5;switchLabTab(LAB_TABS[n],true);return}
+  if(e.key!=='Tab')return;
+  const elements=[...document.querySelectorAll('#screenLab button, #screenLab select, #screenLab input, #screenLab textarea, #screenLab summary')].filter(el=>!el.disabled&&el.tabIndex!==-1&&!el.closest?.('[hidden]')&&(!el.getClientRects||el.getClientRects().length));
+  const first=elements[0],last=elements.at(-1);if(!first)return;
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
 }
 function syncLabStageOptions(){
   const lab=game.lab,select=document.querySelector('#labStageArea');if(select.dataset.mission!==lab.stageMission){select.replaceChildren();const areas=lab.stageMission==='M02'?M02.areas:MISSION_AREAS;areas.forEach((a,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=`AREA ${String(i+1).padStart(2,'0')} ${a.name}`;select.append(option)});select.dataset.mission=lab.stageMission}
@@ -682,7 +750,7 @@ document.querySelector("#labWeaponSearch").addEventListener("input",e=>{if(!labW
 document.querySelector("#labWeaponPickerClose").addEventListener("click",()=>closeLabWeaponPicker());
 for(let slot=0;slot<2;slot++)document.querySelector(`#labPickerSlot${slot+1}`).addEventListener("click",()=>{labEditingSlot=slot;renderLabWeaponList()});
 for(const event of ["click","pointerdown","pointermove","pointerup","pointercancel","wheel","touchstart","touchmove","touchend"])document.querySelector("#labWeaponPicker").addEventListener(event,e=>e.stopPropagation(),{passive:true});
-function openLabPanel(){if(!game?.lab||!['play','gameover'].includes(state))return;pauseLabMeasurement();resetInput();if(profiler)profiler.running=false;show("lab");document.querySelector('[data-action="lab-close"]').focus()}
+function openLabPanel(){if(!game?.lab||!['play','gameover'].includes(state))return;pauseLabMeasurement();resetInput();if(profiler)profiler.running=false;show("lab");document.querySelector(`#labTab-${labTab}`).focus()}
 function closeLabPanel(){if(!game?.lab||state!=="lab")return;resetInput();acc=0;liveProfiler.reset();if(game.lab.run?.outcome==='GAME_OVER'){show('gameover');return}document.querySelector("#labPerformance").textContent="FPS: 計測中…";show("play");canvas.focus()}
 function changeLabSetting(target){
   const lab=game?.lab;if(!lab||state!=="lab")return;
@@ -755,5 +823,5 @@ function publishLabPerformance(result){
 }
 if(DEBUG){
   document.querySelector("#testLabButton").hidden=false;
-  document.querySelectorAll("[data-benchmark]").forEach(button=>button.addEventListener("click",()=>{if(game?.lab)startBenchmark(button.dataset.benchmark)}));
+  document.querySelectorAll("[data-benchmark]").forEach(button=>button.addEventListener("click",()=>{if(game?.lab){setLabMessage('BENCH開始：M01・実験STANDARD・アサルト・自動射撃へ初期化。');startBenchmark(button.dataset.benchmark)}}));
 }

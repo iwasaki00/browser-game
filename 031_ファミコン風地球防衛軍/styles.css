@@ -429,6 +429,67 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
   #screenPause.is-art-comparison { top:auto; bottom:max(12px,env(safe-area-inset-bottom)); }
 }
 #screenLab { max-height: calc(var(--app-height,100dvh) - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))); }
+/* 0.2.3-D: the dialog frame never scrolls; only the active work area does. */
+#screenLab {
+  --lab-top: max(8px,env(safe-area-inset-top)); --lab-bottom: max(8px,env(safe-area-inset-bottom));
+  height: calc(var(--app-height,100dvh) - var(--lab-top) - var(--lab-bottom));
+  max-width: 960px; padding: 0; overflow: hidden; gap: 0;
+  grid-template-rows: auto auto auto minmax(0,1fr) auto;
+  grid-template-columns: minmax(0,1fr); justify-content: stretch;
+}
+#screenLab.is-active { display: grid; }
+#screenLab .lab-header { position: static; padding: 6px 10px; min-width: 0; border-bottom: 1px solid var(--line); }
+#screenLab .lab-header h2 { font-size: 20px; letter-spacing: .04em; }
+#screenLab .lab-header h2 span { font-size: 10px; color: var(--yellow); vertical-align: middle; }
+#screenLab .lab-header small { font-size: 10px; }
+#screenLab button, #screenLab select { min-height: 44px; min-width: 0; max-width: 100%; }
+#screenLab button { touch-action: manipulation; }
+#screenLab button:focus-visible, #screenLab select:focus-visible, #screenLab input:focus-visible, #screenLab summary:focus-visible { outline: 2px solid var(--yellow); outline-offset: -3px; }
+#screenLab .lab-tabs { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); padding: 4px 8px; gap: 4px; background: #0a1e2c; }
+#screenLab .lab-tabs button { padding: 4px; font-size: 13px; border-color: transparent; color: var(--muted); }
+#screenLab .lab-tabs [aria-selected="true"] { border-color: var(--yellow); background: #25362e; color: var(--yellow); font-weight: bold; }
+.lab-summary { padding: 4px 12px; background: #05101d; border-bottom: 1px solid var(--line); font: 11px/1.5 "Yu Gothic UI",monospace; }
+.lab-summary > div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#labCurrentSummary { color: var(--ink); } #labVisualSummary { color: var(--cyan); } #labNextSummary { color: var(--yellow); }
+.lab-content { min-height: 0; min-width: 0; padding: 10px; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
+.lab-tab-panel { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; gap: 10px; min-width: 0; }
+#screenLab .lab-card { min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--line); }
+#screenLab legend { font-size: 13px; color: var(--ink); } #screenLab legend span { font-size: 10px; color: var(--yellow); }
+#screenLab label { display: grid; gap: 4px; margin-bottom: 8px; font-size: 12px; min-width: 0; }
+#screenLab select, #screenLab input[type="range"] { width: 100%; color: var(--ink); background: #0b2230; border: 1px solid var(--line); padding: 4px; font: 16px "Yu Gothic UI",monospace; }
+#screenLab .lab-check { display: flex; align-items: center; min-height: 44px; gap: 8px; }
+#screenLab input[type="checkbox"] { width: 22px; height: 22px; margin: 0; }
+.lab-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 8px; }
+.lab-action-stack { display: grid; gap: 6px; }
+#screenLab .lab-hint { font-size: 11px; color: var(--muted); margin: 8px 0; line-height: 1.5; }
+#screenLab details { margin-top: 8px; font-size: 12px; line-height: 1.6; color: var(--muted); }
+#screenLab summary { cursor: pointer; min-height: 36px; padding: 7px 0; color: var(--cyan); }
+#screenLab details p { margin: 6px 0; overflow-wrap: anywhere; }
+#screenLab output { display: block; font-size: 11px; color: var(--yellow); overflow-wrap: anywhere; }
+#screenLab pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 monospace; margin: 8px 0; }
+#screenLab .lab-quick { margin-top: 10px; padding: 0 10px; }
+#screenLab .lab-quick summary { min-height: 44px; }
+.lab-bench-buttons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin: 8px 0; }
+.lab-footer { padding: 5px 10px 8px; background: #0a1e2c; border-top: 1px solid var(--line); }
+#screenLab .lab-footer > div { display: flex; gap: 8px; }
+#screenLab .lab-footer button { flex: 1; }
+#screenLab .lab-primary { background: #164344; border-color: var(--cyan); color: #efffe8; font-weight: bold; }
+#screenLab #labNotice { min-height: 16px; max-height: 30px; overflow: hidden; margin-bottom: 4px; font-size: 11px; line-height: 15px; }
+@media(max-width:600px) {
+  .lab-tab-panel { grid-template-columns: minmax(0,1fr); }
+  #screenLab .lab-tabs button { font-size: 11px; }
+  #screenLab .lab-header h2 { font-size: 18px; }
+  #screenLab .lab-header small { font-size: 9px; }
+}
+@media(max-height:420px) {
+  #screenLab .lab-header { padding: 2px 8px; }
+  #screenLab .lab-header small { display: none; }
+  #screenLab .lab-tabs { padding: 2px 6px; }
+  #screenLab .lab-summary { font-size: 10px; line-height: 14px; padding: 3px 10px; }
+  .lab-content { padding: 6px 8px; }
+  #screenLab .lab-card { padding: 6px 8px; }
+  .lab-footer { padding: 3px 8px 5px; }
+}
 /* A separate fixed picker avoids a scrolling list inside the scrolling LAB form. */
 .lab-weapon-picker {
   position: fixed; z-index: 70; inset: 0; height: var(--app-height,100dvh);

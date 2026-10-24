@@ -1,0 +1,2209 @@
+{
+  "version": "0.2.3-D",
+  "date": "2026-10-25",
+  "layouts": [
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 308,
+        "client": 153,
+        "clientWidth": 811,
+        "h": 153,
+        "right": 835,
+        "scroll": 345,
+        "scrollWidth": 811,
+        "w": 826,
+        "x": 9,
+        "y": 155
+      },
+      "footer": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "frame": {
+        "bottom": 382,
+        "client": 372,
+        "clientWidth": 826,
+        "h": 374,
+        "right": 836,
+        "scroll": 372,
+        "scrollWidth": 826,
+        "w": 828,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        844,
+        390
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "stage",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 48,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 308,
+        "client": 167,
+        "clientWidth": 811,
+        "h": 167,
+        "right": 835,
+        "scroll": 374,
+        "scrollWidth": 811,
+        "w": 826,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "frame": {
+        "bottom": 382,
+        "client": 372,
+        "clientWidth": 826,
+        "h": 374,
+        "right": 836,
+        "scroll": 372,
+        "scrollWidth": 826,
+        "w": 828,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        844,
+        390
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "loadout",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 48,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 308,
+        "client": 167,
+        "clientWidth": 811,
+        "h": 167,
+        "right": 835,
+        "scroll": 364,
+        "scrollWidth": 811,
+        "w": 826,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "frame": {
+        "bottom": 382,
+        "client": 372,
+        "clientWidth": 826,
+        "h": 374,
+        "right": 836,
+        "scroll": 372,
+        "scrollWidth": 826,
+        "w": 828,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        844,
+        390
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "enemies",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 48,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 308,
+        "client": 167,
+        "clientWidth": 811,
+        "h": 167,
+        "right": 835,
+        "scroll": 357,
+        "scrollWidth": 811,
+        "w": 826,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "frame": {
+        "bottom": 382,
+        "client": 372,
+        "clientWidth": 826,
+        "h": 374,
+        "right": 836,
+        "scroll": 372,
+        "scrollWidth": 826,
+        "w": 828,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        844,
+        390
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "visual",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 48,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 308,
+        "client": 167,
+        "clientWidth": 811,
+        "h": 167,
+        "right": 835,
+        "scroll": 368,
+        "scrollWidth": 811,
+        "w": 826,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "frame": {
+        "bottom": 382,
+        "client": 372,
+        "clientWidth": 826,
+        "h": 374,
+        "right": 836,
+        "scroll": 372,
+        "scrollWidth": 826,
+        "w": 828,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        844,
+        390
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "metrics",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 48,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 278,
+        "client": 123,
+        "clientWidth": 747,
+        "h": 123,
+        "right": 771,
+        "scroll": 345,
+        "scrollWidth": 747,
+        "w": 762,
+        "x": 9,
+        "y": 155
+      },
+      "footer": {
+        "bottom": 351,
+        "client": 72,
+        "clientWidth": 762,
+        "h": 73,
+        "right": 771,
+        "scroll": 72,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "frame": {
+        "bottom": 352,
+        "client": 342,
+        "clientWidth": 762,
+        "h": 344,
+        "right": 772,
+        "scroll": 342,
+        "scrollWidth": 762,
+        "w": 764,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 49,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        780,
+        360
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "stage",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 48,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 278,
+        "client": 137,
+        "clientWidth": 747,
+        "h": 137,
+        "right": 771,
+        "scroll": 374,
+        "scrollWidth": 747,
+        "w": 762,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 351,
+        "client": 72,
+        "clientWidth": 762,
+        "h": 73,
+        "right": 771,
+        "scroll": 72,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "frame": {
+        "bottom": 352,
+        "client": 342,
+        "clientWidth": 762,
+        "h": 344,
+        "right": 772,
+        "scroll": 342,
+        "scrollWidth": 762,
+        "w": 764,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 49,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        780,
+        360
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "loadout",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 48,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 278,
+        "client": 137,
+        "clientWidth": 747,
+        "h": 137,
+        "right": 771,
+        "scroll": 364,
+        "scrollWidth": 747,
+        "w": 762,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 351,
+        "client": 72,
+        "clientWidth": 762,
+        "h": 73,
+        "right": 771,
+        "scroll": 72,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "frame": {
+        "bottom": 352,
+        "client": 342,
+        "clientWidth": 762,
+        "h": 344,
+        "right": 772,
+        "scroll": 342,
+        "scrollWidth": 762,
+        "w": 764,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 49,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        780,
+        360
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "enemies",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 48,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 278,
+        "client": 137,
+        "clientWidth": 747,
+        "h": 137,
+        "right": 771,
+        "scroll": 357,
+        "scrollWidth": 747,
+        "w": 762,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 351,
+        "client": 72,
+        "clientWidth": 762,
+        "h": 73,
+        "right": 771,
+        "scroll": 72,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "frame": {
+        "bottom": 352,
+        "client": 342,
+        "clientWidth": 762,
+        "h": 344,
+        "right": 772,
+        "scroll": 342,
+        "scrollWidth": 762,
+        "w": 764,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 49,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        780,
+        360
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "visual",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 48,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 278,
+        "client": 137,
+        "clientWidth": 747,
+        "h": 137,
+        "right": 771,
+        "scroll": 368,
+        "scrollWidth": 747,
+        "w": 762,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 351,
+        "client": 72,
+        "clientWidth": 762,
+        "h": 73,
+        "right": 771,
+        "scroll": 72,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "frame": {
+        "bottom": 352,
+        "client": 342,
+        "clientWidth": 762,
+        "h": 344,
+        "right": 772,
+        "scroll": 342,
+        "scrollWidth": 762,
+        "w": 764,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 49,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        780,
+        360
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "metrics",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 762,
+        "h": 48,
+        "right": 771,
+        "scroll": 48,
+        "scrollWidth": 762,
+        "w": 762,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 293,
+        "client": 138,
+        "clientWidth": 634,
+        "h": 138,
+        "right": 658,
+        "scroll": 345,
+        "scrollWidth": 634,
+        "w": 649,
+        "x": 9,
+        "y": 155
+      },
+      "footer": {
+        "bottom": 366,
+        "client": 72,
+        "clientWidth": 649,
+        "h": 73,
+        "right": 658,
+        "scroll": 72,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 293
+      },
+      "frame": {
+        "bottom": 367,
+        "client": 357,
+        "clientWidth": 649,
+        "h": 359,
+        "right": 659,
+        "scroll": 357,
+        "scrollWidth": 649,
+        "w": 651,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 49,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        667,
+        375
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "stage",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 48,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 293,
+        "client": 152,
+        "clientWidth": 634,
+        "h": 152,
+        "right": 658,
+        "scroll": 378,
+        "scrollWidth": 634,
+        "w": 649,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 366,
+        "client": 72,
+        "clientWidth": 649,
+        "h": 73,
+        "right": 658,
+        "scroll": 72,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 293
+      },
+      "frame": {
+        "bottom": 367,
+        "client": 357,
+        "clientWidth": 649,
+        "h": 359,
+        "right": 659,
+        "scroll": 357,
+        "scrollWidth": 649,
+        "w": 651,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 49,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        667,
+        375
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "loadout",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 48,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 293,
+        "client": 152,
+        "clientWidth": 634,
+        "h": 152,
+        "right": 658,
+        "scroll": 364,
+        "scrollWidth": 634,
+        "w": 649,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 366,
+        "client": 72,
+        "clientWidth": 649,
+        "h": 73,
+        "right": 658,
+        "scroll": 72,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 293
+      },
+      "frame": {
+        "bottom": 367,
+        "client": 357,
+        "clientWidth": 649,
+        "h": 359,
+        "right": 659,
+        "scroll": 357,
+        "scrollWidth": 649,
+        "w": 651,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 49,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        667,
+        375
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "enemies",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 48,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 293,
+        "client": 152,
+        "clientWidth": 634,
+        "h": 152,
+        "right": 658,
+        "scroll": 357,
+        "scrollWidth": 634,
+        "w": 649,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 366,
+        "client": 72,
+        "clientWidth": 649,
+        "h": 73,
+        "right": 658,
+        "scroll": 72,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 293
+      },
+      "frame": {
+        "bottom": 367,
+        "client": 357,
+        "clientWidth": 649,
+        "h": 359,
+        "right": 659,
+        "scroll": 357,
+        "scrollWidth": 649,
+        "w": 651,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 49,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        667,
+        375
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "visual",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 48,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 293,
+        "client": 152,
+        "clientWidth": 634,
+        "h": 152,
+        "right": 658,
+        "scroll": 401,
+        "scrollWidth": 634,
+        "w": 649,
+        "x": 9,
+        "y": 141
+      },
+      "footer": {
+        "bottom": 366,
+        "client": 72,
+        "clientWidth": 649,
+        "h": 73,
+        "right": 658,
+        "scroll": 72,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 293
+      },
+      "frame": {
+        "bottom": 367,
+        "client": 357,
+        "clientWidth": 649,
+        "h": 359,
+        "right": 659,
+        "scroll": 357,
+        "scrollWidth": 649,
+        "w": 651,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 49,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        667,
+        375
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "metrics",
+      "tabs": {
+        "bottom": 106,
+        "client": 48,
+        "clientWidth": 649,
+        "h": 48,
+        "right": 658,
+        "scroll": 48,
+        "scrollWidth": 649,
+        "w": 649,
+        "x": 9,
+        "y": 58
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 757,
+        "client": 581,
+        "clientWidth": 372,
+        "h": 580.5,
+        "right": 381,
+        "scroll": 581,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 176.5
+      },
+      "footer": {
+        "bottom": 835,
+        "client": 77,
+        "clientWidth": 372,
+        "h": 78,
+        "right": 381,
+        "scroll": 77,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "frame": {
+        "bottom": 836,
+        "client": 826,
+        "clientWidth": 372,
+        "h": 828,
+        "right": 382,
+        "scroll": 826,
+        "scrollWidth": 372,
+        "w": 374,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 372,
+        "h": 57,
+        "right": 381,
+        "scroll": 56,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        390,
+        844
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "stage",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 372,
+        "h": 52,
+        "right": 381,
+        "scroll": 52,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 757,
+        "client": 597,
+        "clientWidth": 357,
+        "h": 597,
+        "right": 381,
+        "scroll": 617,
+        "scrollWidth": 357,
+        "w": 372,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 835,
+        "client": 77,
+        "clientWidth": 372,
+        "h": 78,
+        "right": 381,
+        "scroll": 77,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "frame": {
+        "bottom": 836,
+        "client": 826,
+        "clientWidth": 372,
+        "h": 828,
+        "right": 382,
+        "scroll": 826,
+        "scrollWidth": 372,
+        "w": 374,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 372,
+        "h": 57,
+        "right": 381,
+        "scroll": 56,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        390,
+        844
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "loadout",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 372,
+        "h": 52,
+        "right": 381,
+        "scroll": 52,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 757,
+        "client": 597,
+        "clientWidth": 372,
+        "h": 597,
+        "right": 381,
+        "scroll": 597,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 835,
+        "client": 77,
+        "clientWidth": 372,
+        "h": 78,
+        "right": 381,
+        "scroll": 77,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "frame": {
+        "bottom": 836,
+        "client": 826,
+        "clientWidth": 372,
+        "h": 828,
+        "right": 382,
+        "scroll": 826,
+        "scrollWidth": 372,
+        "w": 374,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 372,
+        "h": 57,
+        "right": 381,
+        "scroll": 56,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        390,
+        844
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "enemies",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 372,
+        "h": 52,
+        "right": 381,
+        "scroll": 52,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 757,
+        "client": 597,
+        "clientWidth": 357,
+        "h": 597,
+        "right": 381,
+        "scroll": 631,
+        "scrollWidth": 357,
+        "w": 372,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 835,
+        "client": 77,
+        "clientWidth": 372,
+        "h": 78,
+        "right": 381,
+        "scroll": 77,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "frame": {
+        "bottom": 836,
+        "client": 826,
+        "clientWidth": 372,
+        "h": 828,
+        "right": 382,
+        "scroll": 826,
+        "scrollWidth": 372,
+        "w": 374,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 372,
+        "h": 57,
+        "right": 381,
+        "scroll": 56,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        390,
+        844
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "visual",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 372,
+        "h": 52,
+        "right": 381,
+        "scroll": 52,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 757,
+        "client": 597,
+        "clientWidth": 357,
+        "h": 597,
+        "right": 381,
+        "scroll": 657,
+        "scrollWidth": 357,
+        "w": 372,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 835,
+        "client": 77,
+        "clientWidth": 372,
+        "h": 78,
+        "right": 381,
+        "scroll": 77,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "frame": {
+        "bottom": 836,
+        "client": 826,
+        "clientWidth": 372,
+        "h": 828,
+        "right": 382,
+        "scroll": 826,
+        "scrollWidth": 372,
+        "w": 374,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 372,
+        "h": 57,
+        "right": 381,
+        "scroll": 56,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        390,
+        844
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "metrics",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 372,
+        "h": 52,
+        "right": 381,
+        "scroll": 52,
+        "scrollWidth": 372,
+        "w": 372,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 481,
+        "client": 305,
+        "clientWidth": 287,
+        "h": 304.5,
+        "right": 311,
+        "scroll": 609,
+        "scrollWidth": 287,
+        "w": 302,
+        "x": 9,
+        "y": 176.5
+      },
+      "footer": {
+        "bottom": 559,
+        "client": 77,
+        "clientWidth": 302,
+        "h": 78,
+        "right": 311,
+        "scroll": 77,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 481
+      },
+      "frame": {
+        "bottom": 560,
+        "client": 550,
+        "clientWidth": 302,
+        "h": 552,
+        "right": 312,
+        "scroll": 550,
+        "scrollWidth": 302,
+        "w": 304,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 302,
+        "h": 57,
+        "right": 311,
+        "scroll": 56,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        320,
+        568
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "stage",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 302,
+        "h": 52,
+        "right": 311,
+        "scroll": 52,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 481,
+        "client": 321,
+        "clientWidth": 287,
+        "h": 321,
+        "right": 311,
+        "scroll": 614,
+        "scrollWidth": 287,
+        "w": 302,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 559,
+        "client": 77,
+        "clientWidth": 302,
+        "h": 78,
+        "right": 311,
+        "scroll": 77,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 481
+      },
+      "frame": {
+        "bottom": 560,
+        "client": 550,
+        "clientWidth": 302,
+        "h": 552,
+        "right": 312,
+        "scroll": 550,
+        "scrollWidth": 302,
+        "w": 304,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 302,
+        "h": 57,
+        "right": 311,
+        "scroll": 56,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        320,
+        568
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "loadout",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 302,
+        "h": 52,
+        "right": 311,
+        "scroll": 52,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 481,
+        "client": 321,
+        "clientWidth": 287,
+        "h": 321,
+        "right": 311,
+        "scroll": 578,
+        "scrollWidth": 287,
+        "w": 302,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 559,
+        "client": 77,
+        "clientWidth": 302,
+        "h": 78,
+        "right": 311,
+        "scroll": 77,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 481
+      },
+      "frame": {
+        "bottom": 560,
+        "client": 550,
+        "clientWidth": 302,
+        "h": 552,
+        "right": 312,
+        "scroll": 550,
+        "scrollWidth": 302,
+        "w": 304,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 302,
+        "h": 57,
+        "right": 311,
+        "scroll": 56,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        320,
+        568
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "enemies",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 302,
+        "h": 52,
+        "right": 311,
+        "scroll": 52,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 481,
+        "client": 321,
+        "clientWidth": 287,
+        "h": 321,
+        "right": 311,
+        "scroll": 647,
+        "scrollWidth": 287,
+        "w": 302,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 559,
+        "client": 77,
+        "clientWidth": 302,
+        "h": 78,
+        "right": 311,
+        "scroll": 77,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 481
+      },
+      "frame": {
+        "bottom": 560,
+        "client": 550,
+        "clientWidth": 302,
+        "h": 552,
+        "right": 312,
+        "scroll": 550,
+        "scrollWidth": 302,
+        "w": 304,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 302,
+        "h": 57,
+        "right": 311,
+        "scroll": 56,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        320,
+        568
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "visual",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 302,
+        "h": 52,
+        "right": 311,
+        "scroll": 52,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 66
+      }
+    },
+    {
+      "candidate": "次の開始 M01 / AREA01 / STANDARD / QA:C",
+      "content": {
+        "bottom": 481,
+        "client": 321,
+        "clientWidth": 287,
+        "h": 321,
+        "right": 311,
+        "scroll": 690,
+        "scrollWidth": 287,
+        "w": 302,
+        "x": 9,
+        "y": 160
+      },
+      "footer": {
+        "bottom": 559,
+        "client": 77,
+        "clientWidth": 302,
+        "h": 78,
+        "right": 311,
+        "scroll": 77,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 481
+      },
+      "frame": {
+        "bottom": 560,
+        "client": 550,
+        "clientWidth": 302,
+        "h": 552,
+        "right": 312,
+        "scroll": 550,
+        "scrollWidth": 302,
+        "w": 304,
+        "x": 8,
+        "y": 8
+      },
+      "header": {
+        "bottom": 66,
+        "client": 56,
+        "clientWidth": 302,
+        "h": 57,
+        "right": 311,
+        "scroll": 56,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 9
+      },
+      "size": [
+        320,
+        568
+      ],
+      "state": "lab",
+      "summary": [
+        "現在 M01 / 自由配置 / STANDARD / MASSIVE（上限200）",
+        "ORIGINAL / 320×180 / CAMERA AUTO 0.50×"
+      ],
+      "tab": "metrics",
+      "tabs": {
+        "bottom": 118,
+        "client": 52,
+        "clientWidth": 302,
+        "h": 52,
+        "right": 311,
+        "scroll": 52,
+        "scrollWidth": 302,
+        "w": 302,
+        "x": 9,
+        "y": 66
+      }
+    }
+  ],
+  "actions": [
+    {
+      "kind": "picker",
+      "size": [
+        844,
+        390
+      ],
+      "slot": 1,
+      "count": 20,
+      "filtered": 1,
+      "label": "SLOT 1: M-20 メテオランチャー",
+      "bottom": 375,
+      "height": 197,
+      "scroll": 763,
+      "totalHeight": 960
+    },
+    {
+      "kind": "picker",
+      "size": [
+        780,
+        360
+      ],
+      "slot": 2,
+      "count": 20,
+      "filtered": 1,
+      "label": "SLOT 2: M-20 メテオランチャー",
+      "bottom": 345,
+      "height": 167,
+      "scroll": 793,
+      "totalHeight": 960
+    },
+    {
+      "kind": "picker",
+      "size": [
+        667,
+        375
+      ],
+      "slot": 1,
+      "count": 20,
+      "filtered": 1,
+      "label": "SLOT 1: M-20 メテオランチャー",
+      "bottom": 360,
+      "height": 182,
+      "scroll": 778,
+      "totalHeight": 960
+    },
+    {
+      "kind": "picker",
+      "size": [
+        390,
+        844
+      ],
+      "slot": 2,
+      "count": 20,
+      "filtered": 1,
+      "label": "SLOT 2: M-20 メテオランチャー",
+      "bottom": 721,
+      "height": 421,
+      "scroll": 539,
+      "totalHeight": 960
+    },
+    {
+      "kind": "picker",
+      "size": [
+        320,
+        568
+      ],
+      "slot": 1,
+      "count": 20,
+      "filtered": 1,
+      "label": "SLOT 1: M-20 メテオランチャー",
+      "bottom": 549,
+      "height": 353,
+      "scroll": 607,
+      "totalHeight": 960
+    },
+    {
+      "kind": "stage-candidate",
+      "current": "現在 M01 / AREA01 / WING / MASSIVE（上限200）",
+      "candidate": "次の開始 M02 / AREA03 上 / LIGHT / QA:C"
+    },
+    {
+      "kind": "stage-start",
+      "summary": "現在 M02 / AREA03 / WING / LIGHT（上限30）",
+      "checkpoint": "M02-A3-UPPER"
+    },
+    {
+      "kind": "art",
+      "style": "STUDY_01",
+      "status": "STUDY 01 / 320×180 / NO SAVE"
+    },
+    {
+      "kind": "art",
+      "style": "STUDY_01_B",
+      "status": "STUDY 01-B / 320×180 / NO SAVE"
+    },
+    {
+      "kind": "art",
+      "style": "UNIFIED_01",
+      "status": "UNIFIED 01 / 320×180 / NO SAVE"
+    },
+    {
+      "kind": "art",
+      "style": "ORIGINAL",
+      "status": "ORIGINAL / 320×180 / NO SAVE"
+    },
+    {
+      "kind": "visual-retained",
+      "summary": "UNIFIED 01 / 640×360 / CAMERA FIXED 0.35×",
+      "style": "UNIFIED_01",
+      "level": "3"
+    },
+    {
+      "kind": "lab-boss-1",
+      "checkpoint": "M01-A5-BOSS",
+      "summary": "現在 M01 / AREA05 / WING / LIGHT（上限30）"
+    },
+    {
+      "kind": "lab-boss-2",
+      "checkpoint": "M02-A5-BOSS",
+      "summary": "現在 M02 / AREA05 / WING / LIGHT（上限30）"
+    },
+    {
+      "kind": "spawn200",
+      "summary": "現在 M01 / AREA01 / WING / MASSIVE（上限200）",
+      "metrics": "FPS / CPU：有効な前景プレイ区間は未計測（または中断）\n敵200 / 弾0 / FX0 / 死亡0 / 0.50×"
+    },
+    {
+      "kind": "clear",
+      "metrics": "FPS / CPU：有効な前景プレイ区間は未計測（または中断）\n敵0 / 弾0 / FX0 / 死亡0 / 0.50×"
+    },
+    {
+      "kind": "central-scroll",
+      "headerBefore": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "headerAfter": {
+        "bottom": 58,
+        "client": 48,
+        "clientWidth": 826,
+        "h": 49,
+        "right": 835,
+        "scroll": 48,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "footerBefore": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "footerAfter": {
+        "bottom": 381,
+        "client": 72,
+        "clientWidth": 826,
+        "h": 73,
+        "right": 835,
+        "scroll": 72,
+        "scrollWidth": 826,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "scrollTop": 211
+    },
+    {
+      "kind": "preset-preview",
+      "text": "生成候補をE-01・200体・密集に変更 → 敵・ボス。生成するまで現在の敵は維持。",
+      "current": "現在 M01 / AREA01 / WING / MASSIVE（上限200）"
+    },
+    {
+      "kind": "preset-applied",
+      "tab": "敵・ボス",
+      "notice": "適用済み：生成候補をE-01・200体・密集に変更 → 敵・ボス。生成するまで現在の敵は維持。"
+    },
+    {
+      "kind": "keyboard",
+      "arrow": "labTab-loadout",
+      "end": "labTab-metrics",
+      "wrap": "labHeaderClose",
+      "reverse": "labFooterClose",
+      "tab": "見た目",
+      "state": "lab"
+    },
+    {
+      "kind": "copy",
+      "status": "JSONをコピーしました（通常セーブなし）",
+      "version": "0.2.3-D",
+      "benchmarkRows": 4
+    },
+    {
+      "kind": "bench-tabs",
+      "tab": "true",
+      "summary": "現在 M01 / AREA01 / STANDARD / MASSIVE（上限200）"
+    },
+    {
+      "kind": "header-close-F2-return",
+      "before": {
+        "hp": "100",
+        "x": "3200"
+      },
+      "after": {
+        "hp": "100",
+        "x": "3200"
+      },
+      "tab": "計測"
+    },
+    {
+      "kind": "compare-return",
+      "paused": "pause",
+      "tab": "見た目"
+    },
+    {
+      "kind": "footer-close-return",
+      "tab": "見た目"
+    }
+  ],
+  "shots": [
+    "844x390-stage.jpg",
+    "844x390-loadout.jpg",
+    "844x390-enemies.jpg",
+    "844x390-visual.jpg",
+    "844x390-metrics.jpg",
+    "780x360-stage.jpg",
+    "780x360-loadout.jpg",
+    "780x360-enemies.jpg",
+    "780x360-visual.jpg",
+    "780x360-metrics.jpg",
+    "667x375-stage.jpg",
+    "667x375-loadout.jpg",
+    "667x375-enemies.jpg",
+    "667x375-visual.jpg",
+    "667x375-metrics.jpg",
+    "390x844-stage.jpg",
+    "390x844-loadout.jpg",
+    "390x844-enemies.jpg",
+    "390x844-visual.jpg",
+    "390x844-metrics.jpg",
+    "320x568-stage.jpg",
+    "320x568-loadout.jpg",
+    "320x568-enemies.jpg",
+    "320x568-visual.jpg",
+    "320x568-metrics.jpg",
+    "844x390-m20.jpg",
+    "780x360-m20.jpg",
+    "667x375-m20.jpg",
+    "390x844-m20.jpg",
+    "320x568-m20.jpg"
+  ],
+  "benches": [
+    {
+      "limit": 30,
+      "samples": 54,
+      "averageFps": 8.726,
+      "low1PercentFps": 1.763,
+      "meanCpuMs": 2.693,
+      "p95CpuMs": 5.6,
+      "maxCpuMs": 7.6,
+      "minEnemies": 30,
+      "maxEnemies": 30,
+      "destructionLevel": 3,
+      "acceptedPerformance": {
+        "samples": 45,
+        "excludedInterruptions": 9,
+        "fps": 22.861207071733116,
+        "meanFrameMs": 43.742222222222736,
+        "p95FrameMs": 183.5,
+        "maxFrameMs": 200,
+        "updateCpuMs": 0.9288888825310602,
+        "drawCpuMs": 1.3733333322736951,
+        "maxEnemies": 30,
+        "maxShots": 4,
+        "maxEffects": 10,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true
+    },
+    {
+      "limit": 50,
+      "samples": 39,
+      "averageFps": 6.169,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 2.518,
+      "p95CpuMs": 4.1,
+      "maxCpuMs": 5.6,
+      "minEnemies": 50,
+      "maxEnemies": 50,
+      "destructionLevel": 3,
+      "acceptedPerformance": {
+        "samples": 34,
+        "excludedInterruptions": 5,
+        "fps": 25.790791170447015,
+        "meanFrameMs": 38.773529411764365,
+        "p95FrameMs": 34,
+        "maxFrameMs": 217.19999999995343,
+        "updateCpuMs": 0.8676470693419961,
+        "drawCpuMs": 1.4323529355666216,
+        "maxEnemies": 50,
+        "maxShots": 3,
+        "maxEffects": 11,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true
+    },
+    {
+      "limit": 100,
+      "samples": 41,
+      "averageFps": 6.608,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 3.085,
+      "p95CpuMs": 5.7,
+      "maxCpuMs": 6.2,
+      "minEnemies": 100,
+      "maxEnemies": 100,
+      "destructionLevel": 3,
+      "acceptedPerformance": {
+        "samples": 36,
+        "excludedInterruptions": 5,
+        "fps": 29.977516862354108,
+        "meanFrameMs": 33.35833333333236,
+        "p95FrameMs": 33.5,
+        "maxFrameMs": 33.5,
+        "updateCpuMs": 1.1861111157470279,
+        "drawCpuMs": 1.549999992052714,
+        "maxEnemies": 100,
+        "maxShots": 3,
+        "maxEffects": 18,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true
+    },
+    {
+      "limit": 200,
+      "samples": 60,
+      "averageFps": 9.909,
+      "low1PercentFps": 1.578,
+      "meanCpuMs": 5.755,
+      "p95CpuMs": 11.5,
+      "maxCpuMs": 21.4,
+      "minEnemies": 200,
+      "maxEnemies": 200,
+      "destructionLevel": 3,
+      "acceptedPerformance": {
+        "samples": 53,
+        "excludedInterruptions": 7,
+        "fps": 21.469658915984464,
+        "meanFrameMs": 46.577358490566695,
+        "p95FrameMs": 133.5,
+        "maxFrameMs": 233.59999999997672,
+        "updateCpuMs": 2.8509434011747254,
+        "drawCpuMs": 2.1716981136573934,
+        "maxEnemies": 200,
+        "maxShots": 5,
+        "maxEffects": 7,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true
+    }
+  ],
+  "logs": []
+}

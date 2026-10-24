@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.3-C">
+  <link rel="stylesheet" href="styles.css?v=0.2.3-D">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.3-C</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.2.3-D</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -78,71 +78,82 @@
       <output id="labLevelBadge" class="lab-level" aria-label="現在の撃破演出レベル" hidden>LEVEL 1 · STANDARD</output>
       <output id="labPerformance" class="lab-performance" aria-label="実プレイ計測" hidden>FPS: 計測中…</output>
       <section id="screenLab" class="screen screen--lab" role="dialog" aria-modal="true" aria-labelledby="labTitle">
-        <header class="lab-header"><div><h2 id="labTitle">TEST LAB</h2><small>NO SAVE · パネル表示中は戦闘停止</small></div><button data-action="lab-close">閉じてプレイ</button></header>
-        <div class="lab-fields">
-          <fieldset class="art-controls"><legend>ART PREVIEW IN-GAME / 仮適用</legend>
-            <label>ART STYLE<select id="labArtStyle"><option value="ORIGINAL">ORIGINAL</option><option value="STUDY_01">STUDY 01</option><option value="STUDY_01_B">STUDY 01-B</option><option value="UNIFIED_01">UNIFIED 01</option></select></label>
-            <label>RENDER RESOLUTION<select id="labRenderScale"><option value="1">ORIGINAL 320×180</option><option value="2">EXPERIMENTAL 640×360</option></select></label>
-            <output id="labArtStatus" role="status">ORIGINAL / 320×180 / NO SAVE</output>
-            <button data-action="art-compare">同じ場面で比較（一時停止）</button>
-            <small>UNIFIED 01は全兵科・敵・20武器の統合試用版。欠損画像は01-B→01→ORIGINALへ代替。HP・位置・戦闘・通常セーブを変えません。640描画はLAB限定の実験です。</small>
-          </fieldset>
-          <fieldset class="lab-stage-select"><legend>STAGE SELECT / NO SAVE</legend>
-            <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option></select></label>
-            <label>エリア<select id="labStageArea"></select></label>
-            <label>M02 AREA03ルート<select id="labStageRoute"><option value="LOWER">下ルート</option><option value="UPPER">上ルート</option></select></label>
-            <label>検証区分<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
-            <label>ミッション敵密度<select id="labStageDensity"><option>LIGHT</option><option selected>STANDARD</option><option>MASSIVE</option></select></label>
-            <div class="lab-buttons"><button data-action="lab-stage-start">指定地点から開始</button><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button></div>
-            <small>A〜CはDの攻略成功ではありません。Dは正式兵科・解放済み武器・無敵OFFが必要。密度は次の指定開始へ適用。ボス直接開始はB/C/D。</small>
-            <output id="labStageStatus" role="status">ミッション・エリアを選択してください。</output>
-          </fieldset>
-          <fieldset><legend>ARSENAL / 全20武器</legend>
-            <div class="lab-weapon-openers" role="group" aria-label="武器を変更するスロット">
-              <button id="labWeaponSlot1" data-action="lab-weapons" data-slot="0" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 1</button>
-              <button id="labWeaponSlot2" data-action="lab-weapons" data-slot="1" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 2</button>
-            </div>
-            <small>枠を押すと、検索・スクロールできる全20武器の一覧を開きます。</small>
-            <label>使用スロット<select id="labSlot"><option value="0">1</option><option value="1">2</option></select></label>
-            <small>性能は通常と共通。Q / E / SWで切替。</small>
-            <button data-action="lab-test">選択武器を1回試射（照準を敵群へ）</button>
-            <small>マイン：V / SWを0.45秒長押しで起爆。短押しは武器切替。再配置で設置物・連鎖・雷雲も消去します。</small>
-            <button id="labBlast" data-action="lab-blast" disabled>敵群で爆発テスト（R-04 / G-07）</button>
-            <small>選択スロットの爆発を敵群先頭で再現。通常の射撃とは別の演出検証です。</small>
-          </fieldset>
-          <fieldset><legend>PLAYER</legend>
-            <label><input id="labInvincible" type="checkbox" checked> 無敵（HP減少・ノックバックなし）</label>
-            <label>兵科 / 実験性能<select id="labPreset"><optgroup label="正式兵科（通常ミッションと同じ）"><option>RANGER</option><option>SCOUT</option><option>GUARDIAN</option><option>WING</option></optgroup><optgroup label="旧LAB実験用（全HP100・固有能力なし）"><option selected>STANDARD</option><option>SPEED</option><option>HEAVY</option><option>FLIGHT</option></optgroup></select></label>
-            <small>正式4兵科は通常と同じHP・特殊能力・エネルギー。切替時にHP/ENを補充。<br>旧実験用：STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110 px/s。FLIGHTのみ無制限飛行・無入力ホバー（W/S・UP/DOWN）。通常の選択兵科は変更しません。</small>
-          </fieldset>
-          <fieldset><legend>ENCOUNTER</legend>
-            <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option></select></label>
-            <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option></select></label>
-            <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>200</option></select></label>
-            <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
-            <div class="lab-buttons"><button data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-clear">敵・弾・演出を全消去</button></div>
-            <small id="labSpawnResult" role="status">生成は開始位置へ復帰して行います。ボスは専用アリーナ。</small>
-          </fieldset>
-          <fieldset><legend>CAMERA / PERFORMANCE</legend>
-            <label>DESTRUCTION LEVEL<select id="labDestruction"><option value="1">LEVEL 1：標準</option><option value="2">LEVEL 2：強烈</option><option value="3">LEVEL 3：超強烈</option></select></label>
-            <label><input id="labShake" type="checkbox" checked> LAB画面揺れON（外すとOFF）</label>
-            <small>LAB内のみの一時設定。既に死亡中の敵は生成時のレベルを維持。</small>
-            <label>カメラ<select id="labCamera"><option>AUTO</option><option>FIXED</option></select></label>
-            <label>固定倍率<input id="labZoom" type="range" min="0.35" max="0.85" step="0.01" value="0.50"></label>
-            <output id="labZoomValue">0.50×</output>
-            <label><input id="labFps" type="checkbox" checked> FPS・CPU計測表示</label>
-            <small>RAF間隔とCPU処理時間を別計測。非表示・停止・250ms超の中断を除外。表示更新0.5秒。</small>
-            <div class="lab-buttons"><button data-benchmark="LIGHT">BENCH 30</button><button data-benchmark="STANDARD">BENCH 50</button><button data-benchmark="MASSIVE">BENCH 100</button><button data-benchmark="LAB200">BENCH 200</button></div>
-            <small id="qaResult" role="status">BENCHは6秒・自動射撃・敵数補充（音声OFF）。通常プレイ計測とは別。</small>
-          </fieldset>
+        <header class="lab-header"><div><h2 id="labTitle">TEST LAB <span>NO SAVE</span></h2><small>表示中は戦闘停止 · 設定は通常セーブに保存しません</small></div><button id="labHeaderClose" data-action="lab-close" aria-label="LABを閉じてプレイへ戻る">閉じる ×</button></header>
+        <nav class="lab-tabs" role="tablist" aria-label="テスト目的">
+          <button id="labTab-stage" role="tab" aria-controls="labPanel-stage" aria-selected="true" tabindex="0" data-action="lab-tab" data-lab-tab="stage">ステージ</button>
+          <button id="labTab-loadout" role="tab" aria-controls="labPanel-loadout" aria-selected="false" tabindex="-1" data-action="lab-tab" data-lab-tab="loadout">兵科・武器</button>
+          <button id="labTab-enemies" role="tab" aria-controls="labPanel-enemies" aria-selected="false" tabindex="-1" data-action="lab-tab" data-lab-tab="enemies">敵・ボス</button>
+          <button id="labTab-visual" role="tab" aria-controls="labPanel-visual" aria-selected="false" tabindex="-1" data-action="lab-tab" data-lab-tab="visual">見た目</button>
+          <button id="labTab-metrics" role="tab" aria-controls="labPanel-metrics" aria-selected="false" tabindex="-1" data-action="lab-tab" data-lab-tab="metrics">計測</button>
+        </nav>
+        <div class="lab-summary" aria-label="現在の設定と次の開始候補"><div id="labCurrentSummary"></div><div id="labVisualSummary"></div><div id="labNextSummary"></div></div>
+        <div id="labContent" class="lab-content">
+          <section id="labPanel-stage" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-stage">
+            <fieldset class="lab-card"><legend>開始候補 <span>開始時に適用</span></legend><div class="lab-form-grid">
+              <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option></select></label>
+              <label>エリア<select id="labStageArea"></select></label>
+              <label>M02 AREA03ルート<select id="labStageRoute"><option value="LOWER">下ルート</option><option value="UPPER">上ルート</option></select></label>
+              <label>検証区分（無敵も連動）<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
+              <label>開始時の敵密度<select id="labStageDensity"><option>LIGHT</option><option selected>STANDARD</option><option>MASSIVE</option></select></label>
+            </div><output id="labStageStatus" role="status">候補を選び、下の「選択地点から開始」を押してください。</output></fieldset>
+            <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button></div>
+              <p class="lab-hint">開始すると敵・弾・FX・設置物・時間・スコア・位置を初期化します。</p>
+              <details><summary>HELP：QA区分・開始条件</summary><p>A〜Cは通常攻略Dの成功ではありません。B/Dの選択は無敵OFF、CはONへ即時連動します。Dは正式兵科・解放済み武器2枠・無敵OFFが必要。ボス直接開始はB/C/D。兵科・武器・LAB演出設定は維持、通常報酬なし。</p></details>
+            </fieldset>
+          </section>
+          <section id="labPanel-loadout" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-loadout" hidden>
+            <fieldset class="lab-card"><legend>兵科・能力 <span>即時反映</span></legend>
+              <label>兵科 / 実験性能<select id="labPreset"><optgroup label="正式兵科（通常と同じ）"><option>RANGER</option><option>SCOUT</option><option>GUARDIAN</option><option>WING</option></optgroup><optgroup label="旧LAB実験用"><option selected>STANDARD</option><option>SPEED</option><option>HEAVY</option><option>FLIGHT</option></optgroup></select></label>
+              <label class="lab-check"><input id="labInvincible" type="checkbox" checked> 無敵（HP減少・ノックバックなし）</label>
+              <p class="lab-hint">兵科切替でHP・EN補充。地上タイプへは安全に着地。</p>
+              <details><summary>HELP：性能・特殊操作</summary><p>正式4兵科は通常と共通。SCOUT：C / DASH。WING：W / FLY上昇、Space / HOLDホバー、S下降。旧実験：STANDARD 95 / SPEED 180 / HEAVY 65 / FLIGHT 110px/s、全HP100。FLIGHTのみ無制限・無入力ホバー、W/SまたはUP/DOWN。</p></details>
+            </fieldset>
+            <fieldset class="lab-card"><legend>武器 / 全20種 <span>即時反映</span></legend>
+              <div class="lab-weapon-openers" role="group" aria-label="武器を変更するスロット"><button id="labWeaponSlot1" data-action="lab-weapons" data-slot="0" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 1</button><button id="labWeaponSlot2" data-action="lab-weapons" data-slot="1" aria-haspopup="dialog" aria-controls="labWeaponPicker" aria-expanded="false">SLOT 2</button></div>
+              <label>現在使うスロット<select id="labSlot"><option value="0">1</option><option value="1">2</option></select></label>
+              <div class="lab-action-stack"><button data-action="lab-test">選択武器を1回試射（プレイ再開）</button><button id="labBlast" data-action="lab-blast" disabled>敵群で爆発テスト（R-04 / G-07）</button></div>
+              <details><summary>HELP：選択・試射・マイン</summary><p>枠を押すと検索・スクロールできる20武器一覧。未解放もLAB限定で使用可能。装備／スロット変更は射撃・切替待ちをリセットします。Q / E / SWで切替。マインはV / SWを0.45秒長押しで起爆、短押しで切替。試射は敵0なら再配置後に再開。爆発テストは選択スロットの爆発を敵群先頭で再現します。</p></details>
+            </fieldset>
+          </section>
+          <section id="labPanel-enemies" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-enemies" hidden>
+            <fieldset class="lab-card"><legend>生成候補 <span>生成時に適用</span></legend><div class="lab-form-grid">
+              <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option></select></label>
+              <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option></select></label>
+              <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>200</option></select></label>
+              <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
+            </div></fieldset>
+            <fieldset class="lab-card"><legend>再配置・消去 <span>実行操作</span></legend><div class="lab-action-stack"><button class="lab-primary" data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-terrain-apply">地形だけ適用（LAB初期化）</button><button data-action="lab-clear">敵・弾・演出を全消去</button><button data-action="lab-boss-tab">本編ボスの直接開始へ →</button></div>
+              <output id="labSpawnResult" role="status"></output><details><summary>HELP：初期化されるもの</summary><p>生成は位置・HP・時間・スコアを開始状態へ戻し、敵・弾・FX・設置・攻略計測を初期化。地形変更も「生成」か「適用」を押すまで保留。消去は敵・弾・FX・アイテム・設置物と攻略計測を消去。ネスト／クイーンは既存どおりM02へ移行、ボス・中ボス・ネストは単体です。</p></details>
+            </fieldset>
+          </section>
+          <section id="labPanel-visual" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-visual" hidden>
+            <fieldset class="lab-card art-controls"><legend>アート・描画 <span>即時反映</span></legend>
+              <label>アート / ART STYLE<select id="labArtStyle"><option value="ORIGINAL">ORIGINAL</option><option value="STUDY_01">STUDY 01</option><option value="STUDY_01_B">STUDY 01-B</option><option value="UNIFIED_01">UNIFIED 01</option></select></label>
+              <label>描画解像度<select id="labRenderScale"><option value="1">320×180 / 標準</option><option value="2">640×360 / LAB限定</option></select></label>
+              <output id="labArtStatus" role="status"></output><button class="lab-primary" data-action="art-compare">同じ場面で比較（一時停止）</button>
+              <details><summary>HELP：アート比較</summary><p>HP・位置・敵・進行を維持して切替。欠損画像はUNIFIED→01-B→01→ORIGINAL。640はLAB実験用、論理座標・可視範囲は不変。通常ゲームの初期アートはORIGINAL。</p></details>
+            </fieldset>
+            <fieldset class="lab-card"><legend>カメラ・撃破演出 <span>即時反映</span></legend><div class="lab-form-grid">
+              <label>カメラ<select id="labCamera"><option>AUTO</option><option>FIXED</option></select></label>
+              <label>撃破演出<select id="labDestruction"><option value="1">LEVEL 1：標準</option><option value="2">LEVEL 2：強烈</option><option value="3">LEVEL 3：超強烈</option></select></label>
+            </div><label>固定倍率<input id="labZoom" type="range" min="0.35" max="0.85" step="0.01" value="0.50"></label><output id="labZoomValue">0.50×</output>
+              <label class="lab-check"><input id="labShake" type="checkbox" checked> 画面揺れON</label><p class="lab-hint">死亡中の敵は生成時のLEVELを維持。通常設定へ保存しません。</p>
+            </fieldset>
+          </section>
+          <section id="labPanel-metrics" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-metrics" hidden>
+            <fieldset class="lab-card"><legend>実プレイ計測 <span>表示／実行操作</span></legend>
+              <label class="lab-check"><input id="labFps" type="checkbox" checked> ゲーム上にFPS・CPU表示</label><pre id="labMetrics"></pre>
+              <div class="lab-bench-buttons"><button data-benchmark="LIGHT">BENCH 30</button><button data-benchmark="STANDARD">BENCH 50</button><button data-benchmark="MASSIVE">BENCH 100</button><button data-benchmark="LAB200">BENCH 200</button></div><output id="qaResult" role="status">BENCHはM01実験状態へ初期化し、6秒の自動射撃・敵数補充。</output>
+              <details><summary>HELP：計測と中断除外</summary><p>RAF間隔と更新／描画CPUは別計測。非表示・停止・250ms超の中断は有効FPSから除外。表示更新0.5秒。BENCHは音声OFF・実験STANDARD・アサルトで再開始。200体はLAB限定。CPU時間はGPU時間ではありません。</p></details>
+            </fieldset>
+            <fieldset class="lab-card lab-run-report"><legend>攻略データ / MISSION REPORT</legend><pre id="labRunSummary"></pre><pre id="labDamageSummary"></pre><pre id="labBenchmarkSummary"></pre><button data-action="lab-copy">計測JSONをコピー</button><output id="labCopyStatus" role="status"></output>
+              <details id="labJSON"><summary>JSON：現在・直近20試行・BENCH</summary><label for="labRunReport">通常セーブに保存しない計測データ</label><textarea id="labRunReport" readonly rows="6" spellcheck="false"></textarea></details>
+              <details><summary>管理：初期化・LAB終了</summary><p>現在のテストを破棄します。通常セーブは保持します。</p><div class="lab-action-stack"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></div></details>
+            </fieldset>
+          </section>
+          <details id="labQuickSetup" class="lab-card lab-quick"><summary>クイック設定（選ぶだけでは変更しません）</summary><label>プリセット<select id="labUIPreset"><option value="art">アート比較</option><option value="boss">ボス戦テスト</option><option value="mass">大量敵テスト</option><option value="normal">通常攻略確認</option></select></label><p id="labUIPresetDescription"></p><button data-action="lab-preset-apply">表示された設定を適用（再開始なし）</button></details>
         </div>
-        <fieldset class="lab-run-report"><legend>MISSION REPORT / 計測データ</legend>
-          <pre id="labRunSummary" aria-live="polite">エリア開始後に攻略データを収集します。</pre>
-          <pre id="labBenchmarkSummary"></pre>
-          <button data-action="lab-copy">計測JSONをコピー</button><small id="labCopyStatus" role="status"></small>
-          <label for="labRunReport">現在・直近20試行・BENCH比較（通常セーブなし）</label><textarea id="labRunReport" readonly rows="6" spellcheck="false"></textarea>
-        </fieldset>
-        <footer class="lab-buttons"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></footer>
+        <footer class="lab-footer"><output id="labNotice" role="status" aria-live="polite">設定を選んでください。</output><div><button id="labStartButton" class="lab-primary" data-action="lab-stage-start">選択地点から開始</button><button id="labFooterClose" data-action="lab-close">閉じてプレイ</button></div></footer>
       </section>
       <section id="labWeaponPicker" class="lab-weapon-picker" role="dialog" aria-modal="true" aria-labelledby="labWeaponPickerTitle" hidden>
         <div class="lab-weapon-panel">
@@ -175,6 +186,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.3-C"></script>
+  <script type="module" src="js/game.js?v=0.2.3-D"></script>
 </body>
 </html>

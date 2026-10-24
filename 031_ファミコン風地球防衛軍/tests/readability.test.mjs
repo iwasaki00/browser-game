@@ -67,14 +67,14 @@ test('B and ORIGINAL run identical actual combat updates including deaths; norma
 });
 
 test('B M02 drawing preserves all terrain, nest/barrier/queen data and unsupported tiles',async()=>{
-  const r=lab();r.change('labTerrain','M02');await r.run("setArtStyle('STUDY_01_B')");
+  const r=lab();r.change('labTerrain','M02');r.click('lab-terrain-apply');await r.run("setArtStyle('STUDY_01_B')");
   r.run("game.player.x=3100;game.camera=2800;syncCameraView();const terrainBefore=JSON.stringify(game.platforms),before=JSON.stringify(game);draw()");
   assert.equal(r.run('JSON.stringify(game)'),r.run('before'));assert.equal(r.run('JSON.stringify(game.platforms)'),r.run('terrainBefore'));
   assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='B:underTiles'));assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='OLD:undergroundTiles'));
 });
 test('actual RANGER walking and WING flight/collision/energy updates are identical for B and ORIGINAL',async()=>{
   for(const terrain of ['M01','M02'])for(const id of ['RANGER','WING']){
-    const a=lab(),b=lab();for(const r of [a,b]){r.change('labTerrain',terrain);r.change('labPreset',id)}await b.run("setArtStyle('STUDY_01_B')");
+    const a=lab(),b=lab();for(const r of [a,b]){r.change('labTerrain',terrain);r.click('lab-terrain-apply');r.change('labPreset',id)}await b.run("setArtStyle('STUDY_01_B')");
     for(const r of [a,b])r.run("show('play');input.right=true;input.jump=input.up=true;for(let i=0;i<90;i++){update(1/60);draw()}");
     assert.equal(a.run('JSON.stringify(game)'),b.run('JSON.stringify(game)'),terrain+' '+id);
   }

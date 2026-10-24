@@ -1,0 +1,35 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 12,
+      "y": 116,
+      "width": 296,
+      "height": 242
+    },
+    "errors": []
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 12,
+      "y": 126,
+      "width": 351,
+      "height": 328
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 12,
+      "y": 126,
+      "width": 366,
+      "height": 505
+    },
+    "errors": []
+  }
+]

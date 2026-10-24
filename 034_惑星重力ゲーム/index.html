@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Mobile UI &amp; Audio Fix</title>
+  <title>ORBIT MAKER — Big Space UI</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -16,21 +16,15 @@
   <main class="app">
     <header class="topbar">
       <div>
-        <p class="kicker">GRAVITY LAB / 01</p>
-        <h1>ORBIT <span>MAKER</span></h1>
-      </div>
-      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.9.1</div></div>
-    </header>
 
-    <section class="mission" aria-label="ミッション">
-      <div><small>MISSION</small><strong>最初のスイングバイ</strong></div>
-      <p id="statusText" aria-live="polite">惑星を動かして、軌道をつくれ。</p>
-      <button id="openStages" type="button">遊び方</button>
-    </section>
+        <h1>ORBIT <span>MAKER</span></h1><small id="modeSummary" class="mode-summary"></small><div class="mission"><strong>最初のスイングバイ</strong></div>
+      </div>
+      <button id="openMenuSettings" type="button" aria-haspopup="dialog" aria-controls="menuPanel">☰ メニュー</button>
+    </header>
 
     <section class="space-frame" id="spaceFrame">
       <canvas id="gameCanvas" width="750" height="1000" aria-label="ロケット、惑星、ゴールがある宇宙空間"></canvas>
-      <div id="experienceCue" class="experience-cue" role="status" aria-live="polite"></div>
+      <p id="statusText" class="board-status" aria-live="polite">惑星を動かして、軌道をつくれ。</p><div id="selectionBar" class="selection-bar" hidden><output id="planetSelection" aria-live="polite"></output><button id="deletePlanet" type="button">削除</button><small id="deleteReason"></small></div><div class="camera-controls" aria-label="カメラ操作"><output id="cameraZoom" aria-live="polite">1.0×</output><button id="zoomOut" type="button" aria-label="縮小">−</button><button id="zoomIn" type="button" aria-label="拡大">＋</button><button id="fitCamera" type="button">全体</button></div><div id="experienceCue" class="experience-cue" role="status" aria-live="polite"></div>
       <div class="result" id="result" hidden>
         <p id="resultLabel">MISSION FAILED</p>
         <strong id="resultReason">惑星に衝突</strong>
@@ -43,16 +37,6 @@
 
     <section class="controls" aria-label="発射設定">
       <div class="controls-body" aria-label="操作設定">
-      <div class="controls-toolbar">
-        <div class="game-mode"><label class="sr-only" for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp" class="sr-only"></small></div>
-        <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>
-        <button id="openPlanetSettings" type="button" aria-haspopup="dialog" aria-controls="planetPanel">惑星編集</button>
-      </div>
-      <div class="launch-mode" role="group" aria-label="発射方式">
-        <button type="button" data-launch-mode="precision" aria-pressed="true"><span>A</span> 精密発射</button>
-        <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
-      </div>
-
       <div class="precision-settings" id="precisionSettings">
         <div class="tuner">
           <label for="angleInput"><span>ANGLE</span><output id="angleOutput">−55°</output></label>
@@ -70,12 +54,23 @@
       </div>
       </div>
 
-      <div class="actions">
+      <div class="actions"><button id="openPlanetSettings" type="button" aria-haspopup="dialog" aria-controls="planetPanel">＋惑星</button>
         <button class="reset" id="resetButton" type="button">RESET</button>
         <button class="launch" id="launchButton" type="button"><span>▶</span> LAUNCH</button>
       </div>
     </section>
   </main>
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v0.9.2</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">      <div class="controls-toolbar">
+        <div class="game-mode"><label for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp"></small></div>
+        <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>
+
+      </div>
+      <div class="launch-mode" role="group" aria-label="発射方式">
+        <button type="button" data-launch-mode="precision" aria-pressed="true"><span>A</span> 精密発射</button>
+        <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
+      </div>
+
+<button id="openStages" type="button">ステージ選択・フリープレイ</button><button id="openGallery" type="button">軌道ギャラリー</button>      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>      <details class="settings-help"><summary>遊び方・ステージ条件</summary><p class="settings-note">惑星はタップして選択、ドラッグで移動。2本指でズーム・カメラ移動。「全体」で元の表示へ。精密発射はANGLE・THRUSTを調整してLAUNCH。スリングショットはロケットを引いて離します。元へ戻すとキャンセル。惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details><p class="settings-note">メニュー・設定中は飛行を一時停止します。</p></div></dialog>
   <dialog id="displayPanel" class="settings-dialog" aria-labelledby="displayTitle">
     <header><div><small>SETTINGS</small><h2 id="displayTitle">表示・音</h2></div><button id="closeDisplaySettings" type="button">閉じる</button></header>
     <div class="settings-content">
@@ -89,15 +84,15 @@
     </div>
   </dialog>
   <dialog id="planetPanel" class="settings-dialog" aria-labelledby="planetTitle">
-    <header><div><small>PLANET LAB</small><h2 id="planetTitle">惑星編集</h2></div><button id="closePlanetSettings" type="button">閉じる</button></header>
+    <header><div><small>PLANET LAB</small><h2 id="planetTitle">惑星追加</h2></div><button id="closePlanetSettings" type="button">閉じる</button></header>
     <div class="settings-content planet-editor">
-      <p class="settings-note">選択・移動は盤面で。設定中は飛行を一時停止します。</p>
-      <output id="planetSelection" aria-live="polite"></output>
-      <div class="planet-toolbar"><button id="addPlanet" type="button">＋ 惑星追加</button><button id="deletePlanet" type="button">惑星削除</button></div>
+      <p class="settings-note">種類・サイズを選んで空いた場所へ追加します。</p>
+
       <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
       <p id="planetFeature" class="planet-feature"></p>
-      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>
-      <details class="settings-help"><summary>編集ルール・ステージ条件</summary><p class="settings-note">惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details>
+      <p id="addReason" class="settings-note" role="status"></p><button id="addPlanet" type="button">追加</button>
+
+
     </div>
   </dialog>
   <dialog id="stageDialog" aria-labelledby="stageDialogTitle">

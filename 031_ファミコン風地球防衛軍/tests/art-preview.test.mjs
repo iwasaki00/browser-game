@@ -102,7 +102,7 @@ test('stage restart retains preview, LAB exit and normal starts always render OR
 });
 
 test('render adapter does not mutate terrain, entities, jobs or effects; missing terrain stays original',async()=>{
-  const r=lab();r.change('labTerrain','M02');r.run("spawnEnemy('crawler',1100);spawnEnemy('needle',1150);spawnEnemy('spider',1200);game.player.y=70;game.player.onGround=false;const before=JSON.stringify(game)");
+  const r=lab();r.change('labTerrain','M02');r.click('lab-terrain-apply');r.run("spawnEnemy('crawler',1100);spawnEnemy('needle',1150);spawnEnemy('spider',1200);game.player.y=70;game.player.onGround=false;const before=JSON.stringify(game)");
   await r.run("setArtStyle('STUDY_01')");r.run('draw()');assert.equal(r.run('JSON.stringify(game)'),r.run('before'));
   assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:underTiles'));assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='original:undergroundTiles'));
   const {ctx}=calls();assert.equal(drawStudyTile(ctx,pack(),'M02',8,0,0),false);

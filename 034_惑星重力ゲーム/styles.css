@@ -237,3 +237,44 @@ body.settings-open { overflow: hidden; }
 .settings-dialog .planet-feature { margin: 0; font-size: 11px; }
 .settings-dialog .sample-label { flex-direction: column; align-items: stretch; }
 @media(max-height:600px) { .app { gap: 5px; } input[type='range'] { height: 28px; } .settings-dialog > header { padding-block: 8px; } }
+
+/* v0.9.2: the board owns all remaining height; menus never resize it. */
+html,body { height:100%; overflow:hidden; }
+.app { width:min(100%,700px); padding:max(4px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left)); grid-template-rows:44px minmax(0,1fr) auto; gap:4px; }
+.topbar { min-width:0; gap:6px; }
+.topbar>div { min-width:0; }
+h1 { font-size:16px; letter-spacing:.02em; }
+.topbar h1 { display:inline; }
+.mode-summary { margin-left:6px; font-size:8px; color:#90afc5; }
+.mission { display:block; border:0; padding:0; background:none; }
+.mission strong { font-size:10px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#openMenuSettings { flex-shrink:0; min-height:44px; border:1px solid #31506a; border-radius:8px; background:#10283c; color:#ccefff; padding:0 10px; font-size:12px; }
+.space-frame { border-radius:9px; }
+.controls,.controls-body { gap:2px; padding:0; }
+.precision-settings { gap:12px; padding:0 4px; }
+.tuner label { margin:2px 0 0; font-size:9px; }
+input[type='range'] { height:30px; }
+.actions,.controls.is-slingshot .actions { grid-template-columns:1fr 1fr 1.4fr; padding:0; gap:5px; }
+.controls.is-slingshot .actions { grid-template-columns:1fr 1fr; }
+.actions button { min-height:44px; font-size:12px; letter-spacing:.02em; }
+#openPlanetSettings { border:1px solid #477c94; background:#123448; color:#c5f0ff; }
+.board-status { position:absolute; top:5px; left:8px; right:8px; margin:0; font-size:10px; line-height:1.4; color:#b7cddd; pointer-events:none; text-shadow:0 1px 3px #000; }
+.edit-hint { top:auto; bottom:20px; max-width:calc(100% - 200px); font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.camera-controls { position:absolute; bottom:5px; right:5px; display:flex; align-items:center; gap:3px; padding:2px; border-radius:8px; background:#06101edb; }
+.camera-controls button,.selection-bar button { min-width:44px; min-height:44px; padding:3px 8px; border:1px solid #35576d; border-radius:7px; background:#0b2538; color:#c9edff; font-size:14px; }
+.camera-controls output { color:#9ab9cb; font:10px monospace; padding:0 4px; }
+.selection-bar { position:absolute; top:39px; left:7px; display:flex; align-items:center; flex-wrap:wrap; gap:5px; max-width:calc(100% - 14px); padding:3px 6px; border-radius:7px; background:#091928ed; color:#ffdf91; font-size:10px; }
+.selection-bar small { color:#b3bdca; font-size:9px; }
+.selection-bar button { font-size:11px; min-width:48px; }
+.selection-bar button:disabled { opacity:.5; }
+.result { z-index:2; }
+.menu-content { display:flex; flex-direction:column; gap:12px; }
+.menu-content .controls-toolbar { display:flex; flex-direction:column; }
+.menu-content .game-mode { display:grid; grid-template-columns:80px minmax(0,1fr); align-items:center; font-size:12px; }
+.menu-content .game-mode select { flex:1; }
+.menu-content #gameModeHelp { display:block; grid-column:1/-1; color:#91bbcf; font-size:11px; }
+.menu-content .launch-mode { margin-top:12px; }
+.menu-content #openGallery,.menu-content #openStages { font-size:12px; }
+.settings-dialog .planet-editor { gap:12px; }
+.slingshot-guide { min-height:38px; display:flex; align-items:center; justify-content:center; gap:10px; }
+@media(max-height:500px) { .app { grid-template-rows:38px minmax(0,1fr) auto; } .topbar button { min-height:38px!important; } }

@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.9.1 — MOBILE UI & AUDIO FIX
+Version 0.9.2 — BIG SPACE UI
+
+盤面を広げ、発射設定と「＋惑星」を下部に集約しました。その他の機能はメニューから開きます。惑星は追加時に種類・サイズを選び、盤面で選択・移動・削除します。2本指でズームと視点移動、＋／−と「全体」でも表示を調整できます。物理・ステージ・保存形式は維持しています。
+
+[画面比較・関連テスト・iPhone確認手順](reports/big-space/VERIFICATION.md) ／ [宇宙ギミック拡張方針](SPACE_OBJECT_DESIGN.md)。公開・pushは未実施、iPhone実機未確認です。
+
+関連テストのみ：`node --test tests/camera.test.mjs tests/planets.test.mjs tests/launch.test.mjs tests/preview.test.mjs`。画面・操作確認：`node tests/big-space-ui.mjs`（既存019プロジェクトのPlaywrightとローカルChromeを使用）。
+
+以下はv0.9.1以前の実装・検証記録です。現在のギャラリー・体験配置・モード切替・ステージ条件はメニュー、惑星の種類・サイズは追加用パネルにあります。
 
 「表示・音」「惑星編集」をオーバーレイへ変更しました。開閉で盤面や発射操作を押し下げず、設定中は飛行を一時停止し、閉じると同じ状態から再開します。
 サウンドON時の確認音、実際の合成音経路を使う「テスト音を鳴らす」、開始・中断・再開の診断情報を追加しました。音の初期値はOFFです。

@@ -48,12 +48,13 @@ export function placementAllowed(candidate, stage) {
   if (Math.hypot(x-launch.x,y-launch.y) < radius+28) return false;
   return Math.hypot(x-stage.goal.x,y-stage.goal.y) >= radius+stage.goal.radius+12;
 }
-export function addPlanet(stage) {
+export function addPlanet(stage, type=stage.rules?.types[0]??'earth', size=stage.rules?.sizes[0]??'medium') {
+  if(!PLANET_TYPES[type]||!PLANET_SIZES[size]||stage.rules?.fixedPlanets)return null;
   if (stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS)) return null;
   let index=1;
   while(stage.planets.some(p=>p.id===`added-${index}`)) index++;
   for(let y=80;y<stage.world.height;y+=20) for(let x=60;x<stage.world.width;x+=20) {
-    const candidate=configurePlanet({id:`added-${index}`,x,y},stage.rules?.types[0]??'earth',stage.rules?.sizes[0]??'medium');
+    const candidate=configurePlanet({id:`added-${index}`,x,y},type,size);
     if(placementAllowed(candidate,stage)) { stage.planets.push(candidate); return candidate; }
   }
   return null;

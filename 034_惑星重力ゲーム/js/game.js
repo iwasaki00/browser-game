@@ -6,11 +6,12 @@ import {createGallery}from'./gallery-ui.js';
 import {SpaceExperience, loadExperience, saveExperience, failureKind} from './space-experience.js';
 import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
+import {Camera} from './camera.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
 import { loadGameMode, saveGameMode, stepLiveFlight } from './live-gravity.js';
-import { configurePlanet, placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES } from './planets.js';
+import { placementAllowed, addPlanet, MAX_PLANETS, PLANET_TYPES } from './planets.js';
 import {getSpecialSample} from './special-samples.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
@@ -32,7 +33,7 @@ const editHint = document.querySelector("#editHint");
 
 const initialStage = getStage();
 let stage = getStage();
-let selectedPlanetId = stage.planets[0]?.id;
+let selectedPlanetId = null;
 const planetType = document.querySelector('#planetType');
 const planetSize = document.querySelector('#planetSize');
 const addPlanetButton = document.querySelector('#addPlanet');
@@ -55,7 +56,7 @@ const experience = new SpaceExperience(experienceSettings.quality, kind => audio
 const soundButton = document.querySelector('#soundToggle');
 const qualityInput = document.querySelector('#effectQuality');
 const experienceCue = document.querySelector('#experienceCue');
-const settingsUI = createSettingsUI({onOpen:cancelGesture});
+const settingsUI = createSettingsUI({onOpen:()=>{cancelGesture();clearCameraGesture();}});
 const testSoundButton = document.querySelector('#testSound');
 let launchMode = loadLaunchMode(storage);
 let progress=loadProgress(storage);
@@ -73,6 +74,17 @@ const gravityButton = document.querySelector('#gravityToggle');
 let showGravity = false;
 const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
+const camera=new Camera();
+camera.fit(stage);
+const cameraPointers=new Map();
+let cameraActive=false;
+function syncCamera(){view={...view,...camera.transform};document.querySelector('#cameraZoom').textContent=`${camera.zoom.toFixed(1)}×`;}
+function fitCamera(){camera.fit(stage);syncCamera();}
+function screenPoint(event){const b=canvas.getBoundingClientRect();return {x:event.clientX-b.left,y:event.clientY-b.top};}
+function clearCameraGesture(){cameraPointers.clear();cameraActive=false;camera.endGesture();}
+document.querySelector('#zoomIn').addEventListener('click',()=>{cancelGesture();camera.zoomAt(camera.zoom*1.25);syncCamera();});
+document.querySelector('#zoomOut').addEventListener('click',()=>{cancelGesture();camera.zoomAt(camera.zoom/1.25);syncCamera();});
+document.querySelector('#fitCamera').addEventListener('click',()=>{cancelGesture();fitCamera();});
 
 const stars = Array.from({ length: 76 }, (_, i) => ({
   x: (i * 137.5 + 29) % stage.world.width,
@@ -82,25 +94,15 @@ const stars = Array.from({ length: 76 }, (_, i) => ({
 }));
 
 function resizeCanvas() {
-  const bounds = frame.getBoundingClientRect();
+  const bounds = canvas.getBoundingClientRect();
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   canvas.width = Math.max(1, Math.round(bounds.width * dpr));
   canvas.height = Math.max(1, Math.round(bounds.height * dpr));
-  const scale = Math.min(bounds.width / stage.world.width, bounds.height / stage.world.height);
-  view = {
-    scale,
-    offsetX: (bounds.width - stage.world.width * scale) / 2,
-    offsetY: (bounds.height - stage.world.height * scale) / 2,
-    dpr,
-  };
+  view.dpr=dpr;camera.resize(bounds.width,bounds.height);syncCamera();
 }
 
 function worldPoint(event) {
-  const bounds = canvas.getBoundingClientRect();
-  return {
-    x: (event.clientX - bounds.left - view.offsetX) / view.scale,
-    y: (event.clientY - bounds.top - view.offsetY) / view.scale,
-  };
+  return camera.toWorld(screenPoint(event));
 }
 
 function roundRect(x, y, width, height, radius) {
@@ -377,7 +379,7 @@ function setEditingControls(enabled) {
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
   if (mode !== "editing") return;
-  if(!launchAllowed(stage,velocity,launchMode)){statusText.textContent='角度・推力が発射条件外です。惑星編集内の条件を確認してください。';return;}
+  if(!launchAllowed(stage,velocity,launchMode)){statusText.textContent='角度・推力が発射条件外です。メニュー内のステージ条件を確認してください。';return;}
   cancelGesture();
   launchSnapshot = structuredClone(stage);
   movement=0;
@@ -442,7 +444,7 @@ function retry() {
 function reset() {
   if(playType==='challenge') {
     stage=getChallenge(challengeId);launchSnapshot=null;selectedPlanetId=stage.planets[0]?.id;
-    retry();return;
+    retry();fitCamera();return;
   }
   stage = launchSnapshot ? structuredClone(launchSnapshot) : getStage(initialStage.id);
   selectedPlanetId = stage.planets[0]?.id;
@@ -450,6 +452,7 @@ function reset() {
   speedInput.value = String(stage.launch.speed);
   updateOutputs();
   retry();
+  fitCamera();
 }
 
 function updateOutputs() {
@@ -502,8 +505,9 @@ function updateMode() {
   document.querySelector('#precisionSettings').hidden = sling;
   document.querySelector('#slingshotGuide').hidden = !sling;
   launchButton.hidden = sling;
-  document.querySelector('#editHintText').textContent = sling ? 'ロケットを引いて離す / 惑星はドラッグ' : '惑星をドラッグ';
+  document.querySelector('#editHintText').textContent = '惑星をドラッグ';
   modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.launchMode === launchMode)));
+  syncModeLabel();
 }
 
 window.addEventListener('pointerdown', event => {
@@ -512,11 +516,21 @@ window.addEventListener('pointerdown', event => {
   if (pointers.size > 1) cancelGesture();
 }, true);
 canvas.addEventListener("pointerdown", (event) => {
+  if(event.button!==0)return;
+  cameraPointers.set(event.pointerId,screenPoint(event));
+  canvas.setPointerCapture(event.pointerId);
+  if(cameraPointers.size>=2){
+    cancelGesture();cameraActive=true;
+    for(const id of cameraPointers.keys())canvas.setPointerCapture(id);
+    if(cameraPointers.size===2)camera.beginGesture([...cameraPointers.values()]);
+    event.preventDefault();return;
+  }
+  if(cameraActive)return;
   if ((mode !== 'editing' && !(mode === 'flying' && gameMode === 'live')) || pointers.size !== 1 || event.button !== 0) return;
   const point = worldPoint(event);
   const target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode,
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
-  if (!target) return;
+  if (!target) {selectedPlanetId=null;updatePlanetEditor();return;}
   if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
   gesture = { ...target, pointerId: event.pointerId, point };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
@@ -525,6 +539,11 @@ canvas.addEventListener("pointerdown", (event) => {
 });
 
 canvas.addEventListener("pointermove", (event) => {
+  if(cameraPointers.has(event.pointerId))cameraPointers.set(event.pointerId,screenPoint(event));
+  if(cameraActive){
+    if(cameraPointers.size===2){camera.moveGesture([...cameraPointers.values()]);syncCamera();}
+    event.preventDefault();return;
+  }
   if (!gesture || gesture.pointerId !== event.pointerId || (mode !== 'editing' && !(mode === 'flying' && gameMode === 'live'))) return;
   const point = worldPoint(event);
   gesture.point = point;
@@ -540,6 +559,13 @@ canvas.addEventListener("pointermove", (event) => {
 });
 
 function stopDragging(event) {
+  cameraPointers.delete(event.pointerId);
+  if(cameraActive){
+    if(cameraPointers.size===2)camera.beginGesture([...cameraPointers.values()]);
+    else camera.endGesture();
+    if(!cameraPointers.size)cameraActive=false;
+    cancelGesture();return;
+  }
   if (!gesture || gesture.pointerId !== event.pointerId) return;
   const shot = gesture.type === 'rocket' && event.type === 'pointerup' && pointers.size === 1
     ? slingshotLaunch(stage.launch.position, worldPoint(event)) : null;
@@ -549,12 +575,14 @@ function stopDragging(event) {
 
 canvas.addEventListener("pointerup", stopDragging);
 canvas.addEventListener("pointercancel", stopDragging);
-canvas.addEventListener('lostpointercapture', cancelGesture);
-window.addEventListener('pointerup', event => pointers.delete(event.pointerId));
-window.addEventListener('pointercancel', event => pointers.delete(event.pointerId));
-window.addEventListener('blur', () => { cancelGesture(); pointers.clear(); });
+canvas.addEventListener('lostpointercapture', event=>{if(gesture?.pointerId===event.pointerId)cancelGesture();});
+for(const type of ['pointerup','pointercancel'])window.addEventListener(type,event=>{
+  if(cameraPointers.has(event.pointerId))stopDragging({...event,type,pointerId:event.pointerId,clientX:event.clientX,clientY:event.clientY});
+  pointers.delete(event.pointerId);
+});
+window.addEventListener('blur', () => { cancelGesture(); pointers.clear();clearCameraGesture(); });
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { cancelGesture(); pointers.clear(); audio.backgrounded(); }
+  if (document.hidden) { cancelGesture(); pointers.clear();clearCameraGesture(); audio.backgrounded(); }
   else audio.foregrounded();
 });
 window.addEventListener('pageshow',()=>audio.foregrounded());
@@ -572,47 +600,42 @@ new ResizeObserver(resizeCanvas).observe(frame);
 
 function updatePlanetEditor() {
   const planet = stage.planets.find(p=>p.id===selectedPlanetId);
-  planetType.value = planet?.type ?? 'earth';
-  planetSize.value = planet?.size ?? 'medium';
-  planetType.disabled = planetSize.disabled = mode !== 'editing' || !planet;
-  if(stage.rules?.fixedPlanets){planetType.disabled=true;planetSize.disabled=true;}
-  addPlanetButton.disabled = mode !== 'editing' || stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS);
+  const fixed=Boolean(stage.rules?.fixedPlanets);
+  planetType.disabled = planetSize.disabled = mode !== 'editing'||fixed;
+  addPlanetButton.disabled = mode !== 'editing' || fixed || stage.planets.length >= (stage.rules?.maxPlanets??MAX_PLANETS);
   for(const option of planetType.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.types.includes(option.value));
   for(const option of planetSize.options??[])option.disabled=Boolean(stage.rules&&!stage.rules.sizes.includes(option.value));
-  document.querySelector('#planetFeature').textContent=planet?(PLANET_TYPES[planet.type??'earth'].description??`${PLANET_TYPES[planet.type??'earth'].name}：引力で航路を曲げる`):'惑星を選択してください';
+  if(!planetType.value||stage.rules&&!stage.rules.types.includes(planetType.value))planetType.value=stage.rules?.types[0]??'earth';
+  if(!planetSize.value||stage.rules&&!stage.rules.sizes.includes(planetSize.value))planetSize.value=stage.rules?.sizes[0]??'medium';
+  document.querySelector('#planetFeature').textContent=PLANET_TYPES[planetType.value]?.description??'引力でロケットの航路を曲げます。';
   document.querySelector('#specialSample').disabled=playType!=='free'||mode!=='editing';
-  deletePlanetButton.disabled = mode !== 'editing' || !planet || stage.planets.length<=(stage.rules?.minPlanets??0);
+  deletePlanetButton.disabled = mode !== 'editing' || fixed || !planet || stage.planets.length<=(stage.rules?.minPlanets??0);
+  document.querySelector('#selectionBar').hidden=!planet;
+  document.querySelector('#deleteReason').textContent=deletePlanetButton.disabled?(mode!=='editing'?'飛行後は削除できません':'ステージの個数・種類は固定です'):'';
+  document.querySelector('#addReason').textContent=addPlanetButton.disabled?(mode!=='editing'?'飛行後は追加できません':fixed?'このステージは惑星の種類・サイズ・個数が固定です':`惑星は${stage.rules?.maxPlanets??MAX_PLANETS}個までです`):'惑星・発射地点・ゲートを避けて配置します。';
+  document.querySelector('#openPlanetSettings').disabled=mode!=='editing';
+  document.querySelector('#openPlanetSettings').textContent=addPlanetButton.disabled?'＋惑星（制限）':'＋惑星';
   document.querySelector('#challengeConditions').textContent=stage.rules?.fixedPlanets?`種類・個数固定／各惑星は初期位置から±12まで。ANGLE ${stage.launchConditions.precisionAngleRange.join('〜')}°／THRUST ${stage.launchConditions.speedRange.join('〜')}`:'';
-  document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · M ${planet.mass}` : `惑星 ${stage.planets.length} / 3`;
+  document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · ${PLANET_TYPES[planet.type??'earth'].name}` : `惑星 ${stage.planets.length} / 3`;
 }
 addPlanetButton.addEventListener('click', () => {
-  if (mode !== 'editing') return;
+  if (mode !== 'editing'||addPlanetButton.disabled) return;
   cancelGesture();
-  const planet = addPlanet(stage);
-  if (planet) selectedPlanetId = planet.id;
-  else statusText.textContent = '追加できる空間がありません。';
+  const planet = addPlanet(stage,planetType.value,planetSize.value);
+  if (planet) {selectedPlanetId = planet.id;settingsUI.closeAll();statusText.textContent='追加した惑星を選択中。ドラッグで移動できます。';}
+  else {statusText.textContent = '追加できる空間がありません。';document.querySelector('#addReason').textContent=statusText.textContent;return;}
   updatePlanetEditor();
 });
 deletePlanetButton.addEventListener('click', () => {
-  if (mode !== 'editing') return;
+  if (mode !== 'editing'||deletePlanetButton.disabled) return;
   if(stage.planets.length<=(stage.rules?.minPlanets??0))return;
   cancelGesture();
   stage.planets = stage.planets.filter(p=>p.id!==selectedPlanetId);
-  selectedPlanetId = stage.planets[0]?.id;
+  selectedPlanetId = null;
   updatePlanetEditor();
 });
-function changePlanet() {
-  if (mode !== 'editing') return;
-  cancelGesture();
-  const planet = stage.planets.find(p=>p.id===selectedPlanetId);
-  if (!planet) return;
-  const candidate = configurePlanet(planet, planetType.value, planetSize.value);
-  if (placementAllowed(candidate,stage)) stage.planets=stage.planets.map(p=>p.id===candidate.id?candidate:p);
-  else statusText.textContent = '周囲から離してから種類・サイズを変更してください。';
-  updatePlanetEditor();
-}
-planetType.addEventListener('change',changePlanet);
-planetSize.addEventListener('change',changePlanet);
+planetType.addEventListener('change',updatePlanetEditor);
+planetSize.addEventListener('change',updatePlanetEditor);
 document.querySelector('#specialSample').addEventListener('change',event=>{
   if(playType!=='free'||mode!=='editing'||!event.target.value)return;
   cancelGesture();stage=getSpecialSample(event.target.value);launchSnapshot=structuredClone(stage);
@@ -620,6 +643,7 @@ document.querySelector('#specialSample').addEventListener('change',event=>{
   angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);
   retry();updateOutputs();document.querySelector('.mission strong').textContent=stage.name;
   event.target.value='';
+  settingsUI.closeAll();fitCamera();
 });
 function updatePreviewButton() {
   previewButton.textContent = `予測 ${preview.enabled ? 'ON' : 'OFF'}`;
@@ -672,7 +696,9 @@ updateAudioStatus();
 function updateGameMode() {
   gameModeInput.value=gameMode;
   document.querySelector('#gameModeHelp').textContent=gameMode==='live'?'重力操作：発射後も惑星をドラッグして誘導':'軌道設計：発射後は惑星固定';
+  syncModeLabel();
 }
+function syncModeLabel(){document.querySelector('#modeSummary').textContent=`${gameMode==='live'?'重力操作':'軌道設計'} / ${launchMode==='precision'?'精密':'スリング'}`;}
 gameModeInput.addEventListener('change',()=>{
   if(mode!=='editing')return;
   cancelGesture();gameMode=saveGameMode(storage,gameModeInput.value);updateGameMode();
@@ -687,7 +713,7 @@ function enterChallenge(id){
   syncLaunchControls();
   document.querySelector('.mission strong').textContent=`${id.slice(-2)} ${stage.name}`;
   retry();statusText.textContent=stage.description;
-  document.querySelector('#stageDialog').close();resizeCanvas();
+  document.querySelector('#stageDialog').close();resizeCanvas();fitCamera();
 }
 function renderStages(){
   const list=document.querySelector('#stageList');list.innerHTML='';
@@ -711,7 +737,7 @@ document.querySelector('#freePlay').addEventListener('click',()=>{
   syncLaunchControls();
   if(freeSnapshot){angleInput.value=freeSnapshot.angle;speedInput.value=freeSnapshot.speed;}
   document.querySelector('.mission strong').textContent=stage.name;
-  retry();updateOutputs();document.querySelector('#stageDialog').close();resizeCanvas();
+  retry();updateOutputs();document.querySelector('#stageDialog').close();resizeCanvas();fitCamera();
 });
 document.querySelector('#nextStage').addEventListener('click',()=>{
   if(playType!=='challenge'||mode!=='cleared')return;
