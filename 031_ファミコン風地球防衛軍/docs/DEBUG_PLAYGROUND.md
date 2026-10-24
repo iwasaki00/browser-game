@@ -1,4 +1,12 @@
-# Version 0.2.3 — DEBUG PLAYGROUND / MISSION BALANCE & PLAYABILITY
+# Version 0.2.3-A — DEBUG PLAYGROUND / ART PREVIEW IN-GAME
+
+## 新旧アートのゲーム内比較（0.2.3-A）
+
+- `?debug=1` → TEST LAB → ART PREVIEWのART STYLEでORIGINAL / STUDY 01を切り替える。通常ゲームへ保存せず、通常ミッションは旧素材のまま。読込失敗時はORIGINALへ戻す。
+- STAGE SELECTのM01/M02・エリア、兵科、武器を指定して比較可能。アートは再配置・チェックポイント開始をまたいで保持し、新規LABではリセットする。兵科・敵・弾・HP・スコアを変える切替ではない。
+- 「同じ場面で比較（一時停止）」で比較バーへ移る。停止状態のまま新旧／320・実験640を選べる。Esc / F2 / LABへ戻るで停止したLABへ戻り、閉じると再開。ポーズ画面にも同じ切替がある。
+- 640は描画密度だけ2倍、論理座標・HUDサイズ・カメラ倍率・入力位置は同じ。通常プレイの正式設定ではない。
+- 対応範囲・原画／接地／銃口アンカー・テスト・未確認事項は [ART_DIRECTION.md](ART_DIRECTION.md#ゲーム内試用版023-a)。今回の実ブラウザ表示／比較撮影／描画性能は、ブラウザ自動承認の利用上限で未確認。
 
 ## STAGE SELECT・攻略計測（0.2.3）
 

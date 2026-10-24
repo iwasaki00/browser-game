@@ -424,6 +424,10 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 #screenPause.is-art-comparison button[data-action="art-compare"] { display:none; }
 #screenPause.is-art-comparison button[data-action="art-lab"] { grid-column:3; grid-row:1 / 3; }
 @media(max-width:480px) { #screenPause.is-art-comparison #pauseArtControls { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } #screenPause.is-art-comparison button[data-action="art-lab"] { grid-row:auto; grid-column:1 / 3; } }
+@media(orientation:portrait) and (max-width:900px) {
+  /* Keep the upper game viewport visible; the paused touch-pad area hosts comparison controls. */
+  #screenPause.is-art-comparison { top:auto; bottom:max(12px,env(safe-area-inset-bottom)); }
+}
 #screenLab { max-height: calc(var(--app-height,100dvh) - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))); }
 /* A separate fixed picker avoids a scrolling list inside the scrolling LAB form. */
 .lab-weapon-picker {

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Orbit Share</title>
+  <title>ORBIT MAKER — Final Quality Audit</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.7.1</div></div>
+      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.9.0-A</div></div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -30,6 +30,7 @@
 
     <section class="space-frame" id="spaceFrame">
       <canvas id="gameCanvas" width="750" height="1000" aria-label="ロケット、惑星、ゴールがある宇宙空間"></canvas>
+      <div id="experienceCue" class="experience-cue" role="status" aria-live="polite"></div>
       <div class="result" id="result" hidden>
         <p id="resultLabel">MISSION FAILED</p>
         <strong id="resultReason">惑星に衝突</strong>
@@ -45,6 +46,7 @@
       <div class="game-mode"><label>MODE <select id="gameMode" aria-label="ゲームモード"><option value="design">軌道設計</option><option value="live">重力操作</option></select></label><small id="gameModeHelp"></small></div>
       <details class="settings-panel" id="displayPanel"><summary>表示設定</summary>
       <div class="preview-options"><button id="previewToggle" type="button" aria-pressed="true">予測 ON</button><button id="gravityToggle" type="button" aria-pressed="false">重力目安 OFF</button><small>青：弱 ／ 黄：中 ／ 赤：強</small></div>
+      <div class="experience-options"><label>演出品質 <select id="effectQuality"><option value="standard">標準</option><option value="light">軽量</option></select></label><button id="soundToggle" type="button" aria-pressed="false">サウンド OFF</button><small id="soundHelp">音は初期OFF。ONにして操作すると再生します。</small></div>
       </details>
       <details class="settings-panel" id="planetPanel"><summary>惑星編集</summary>
       <div class="planet-editor">

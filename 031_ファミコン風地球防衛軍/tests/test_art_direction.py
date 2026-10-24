@@ -9,7 +9,7 @@ import subprocess
 import sys
 import unittest
 from PIL import Image, ImageChops, ImageColor
-from tools.art_direction_samples import generate, P
+from tools.art_direction_samples import generate, generate_in_game, P
 
 ROOT=Path(__file__).resolve().parents[1]
 OUTPUT=ROOT/"assets/art-refresh/study-01"
@@ -90,6 +90,34 @@ class ArtDirectionTests(unittest.TestCase):
         self.assertEqual(self.before,hashes(self.production))
         mixed=subprocess.run([sys.executable,str(ROOT/"tools/generate_assets.py"),"--art-study-only","--classes-only"],capture_output=True,text=True)
         self.assertNotEqual(mixed.returncode,0)
+
+    def test_08_in_game_companions_are_reproducible_and_leave_existing_pngs_untouched(self):
+        existing=hashes([*self.production,*[OUTPUT/name for name in self.manifest['assets']]])
+        with contextlib.redirect_stdout(io.StringIO()):generate_in_game(ROOT)
+        folder=OUTPUT/'in-game';first=hashes(folder.iterdir())
+        with contextlib.redirect_stdout(io.StringIO()):generate_in_game(ROOT)
+        self.assertEqual(first,hashes(folder.iterdir()))
+        self.assertEqual(existing,hashes([ROOT/name for name in existing]))
+        metadata=json.loads((folder/'anchors.json').read_text(encoding='utf-8'))
+        self.assertEqual(len(metadata['assets']),2)
+        for name,record in metadata['assets'].items():
+            with self.subTest(name=name),Image.open(folder/name) as im,Image.open(OUTPUT/'sprites'/name.replace('_body','')) as old:
+                self.assertEqual(im.size,(96,64));self.assertEqual(record['cell'],[48,64])
+                self.assertEqual(hashlib.sha256((folder/name).read_bytes()).hexdigest(),record['sha256'])
+                self.assertLessEqual(set(im.getchannel('A').getdata()),{0,255})
+                self.assertTrue(ImageChops.difference(im,old).getbbox())
+
+    def test_09_companion_entry_point_and_game_image_dimensions(self):
+        result=subprocess.run([sys.executable,str(ROOT/'tools/generate_assets.py'),'--art-in-game-only'],capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(self.before,hashes(self.production))
+        mixed=subprocess.run([sys.executable,str(ROOT/'tools/generate_assets.py'),'--art-in-game-only','--weapons-only'],capture_output=True,text=True)
+        self.assertNotEqual(mixed.returncode,0)
+        js=(ROOT/'js/art-preview.js').read_text(encoding='utf-8')
+        files=re.findall(r"\w+:\['([^']+)',(\d+),(\d+)\]",js)
+        self.assertEqual(len(files),13)
+        for path,w,h in files:
+            with self.subTest(path=path),Image.open(OUTPUT/path) as im:self.assertEqual(im.size,(int(w),int(h)))
 
 
 if __name__=="__main__":unittest.main()

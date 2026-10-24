@@ -3,6 +3,8 @@ import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './pre
 import { getStage } from "./stages.js";
 import {createFlightRecorder}from'./flight-record.js';
 import {createGallery}from'./gallery-ui.js';
+import {SpaceExperience, loadExperience, saveExperience, failureKind} from './space-experience.js';
+import {SpaceAudio} from './space-audio.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
@@ -46,6 +48,12 @@ let aim = null;
 const pointers = new Set();
 let storage;
 try { storage = window.localStorage; } catch { /* Storage is optional. */ }
+let experienceSettings = loadExperience(storage);
+const audio = new SpaceAudio(experienceSettings.sound, window);
+const experience = new SpaceExperience(experienceSettings.quality, kind => audio.play(kind));
+const soundButton = document.querySelector('#soundToggle');
+const qualityInput = document.querySelector('#effectQuality');
+const experienceCue = document.querySelector('#experienceCue');
 let launchMode = loadLaunchMode(storage);
 let progress=loadProgress(storage);
 let playType='free';
@@ -97,14 +105,18 @@ function roundRect(x, y, width, height, radius) {
   ctx.roundRect(x, y, width, height, radius);
 }
 
-function drawBackground() {
+function drawBackground(time) {
   ctx.fillStyle = "#030713";
   ctx.fillRect(0, 0, stage.world.width, stage.world.height);
-  for (const star of stars) {
+  const light = experience.quality === 'light';
+  for (const [i, star] of stars.entries()) {
+    if(light && i % 2) continue;
     ctx.globalAlpha = star.alpha;
     ctx.fillStyle = "#d9eeff";
     ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    const depth = i % 3;
+    const drift = light ? 0 : Math.sin(time*.00008+depth)*depth*1.6;
+    ctx.arc(star.x+drift, star.y+drift*.5, star.radius, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalAlpha = 1;
@@ -139,8 +151,22 @@ function drawGoal(time) {
   ctx.restore();
 }
 
-function drawPlanet(planet) {
+function drawPlanet(planet, time) {
   const render=planet.render??PLANET_TYPES[planet.type??'earth'].render;
+  const animated = experience.quality === 'standard';
+  if(animated && render.style!=='solid') {
+    // Two procedural rings per special planet; no texture allocation or particles.
+    ctx.save();ctx.strokeStyle=render.glow;ctx.lineWidth=1.2;
+    for(let i=0;i<2;i++){
+      const phase=(time*.0004+i*.5)%1;
+      const inward=render.style==='blackhole';
+      const radius=planet.radius+4+(render.style==='dense'?8:22)*(inward?1-phase:phase);
+      ctx.globalAlpha=(1-phase)*.42;
+      const ripple=render.style==='star'?1+Math.sin(time*.003+i)*.035:1;
+      ctx.beginPath();ctx.ellipse(planet.x,planet.y,radius,radius*(render.style==='blackhole'?.65:ripple),-.3,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.restore();
+  }
   for(const hazard of planet.hazards??[]){
     ctx.fillStyle=hazard.reason==='overheated'?'#ff883322':'#a67dff22';
     ctx.strokeStyle=hazard.reason==='overheated'?'#ff9b45':'#bd9dff';
@@ -159,11 +185,13 @@ function drawPlanet(planet) {
     ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius+7, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
+  if(animated) {
   const glow = ctx.createRadialGradient(planet.x, planet.y, planet.radius * .5, planet.x, planet.y, planet.radius * 1.7);
   glow.addColorStop(0, render.style==='solid'?"rgba(70, 203, 255, .23)":`${render.glow}55`);
   glow.addColorStop(1, "rgba(70, 203, 255, 0)");
   ctx.fillStyle = glow;
   ctx.beginPath(); ctx.arc(planet.x, planet.y, planet.radius * 1.7, 0, Math.PI * 2); ctx.fill();
+  }
 
   const body = ctx.createRadialGradient(planet.x - planet.radius * .35, planet.y - planet.radius * .4, 2, planet.x, planet.y, planet.radius);
   body.addColorStop(0, render.style==='blackhole'?'#030107':render.style==='star'?'#fff5ae':render.style==='dense'?'#8190a6':"#d8faff");
@@ -190,13 +218,21 @@ function drawTrail() {
   if (trail.length < 2) return;
   ctx.save();
   ctx.lineCap = "round";
+  const proximity = experience.observer.proximity;
+  const color = proximity > .15 ? experience.observer.tint : '#7ce7ff';
   for (let i = 1; i < trail.length; i += 1) {
     ctx.globalAlpha = .12 + .7 * (i / trail.length);
-    ctx.strokeStyle = "#7ce7ff";
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.8 + proximity * 1.4;
     ctx.beginPath();
     ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
     ctx.lineTo(trail[i].x, trail[i].y);
+    ctx.stroke();
+  }
+  if(experience.quality==='standard') {
+    ctx.shadowBlur=4+proximity*5;ctx.shadowColor=color;ctx.globalAlpha=.65;ctx.lineWidth=1.4;
+    const start=Math.max(0,trail.length-65);ctx.beginPath();ctx.moveTo(trail[start].x,trail[start].y);
+    for(let i=start+1;i<trail.length;i++)ctx.lineTo(trail[i].x,trail[i].y);
     ctx.stroke();
   }
   ctx.restore();
@@ -210,9 +246,11 @@ function drawRocket(rocket, editing = false) {
   ctx.translate(rocket.position.x, rocket.position.y);
   ctx.rotate(angle);
   if (mode === "flying") {
-    const flicker = 12 + Math.sin(performance.now() * .03) * 4;
+    const flicker = 12 + Math.sin(performance.now() * .03) * 4 + Math.max(0,1-experience.age/.45)*9;
     ctx.fillStyle = "#ff9f43";
     ctx.beginPath(); ctx.moveTo(-8, -3); ctx.lineTo(-flicker, 0); ctx.lineTo(-8, 3); ctx.fill();
+    ctx.fillStyle = '#fff0bb';
+    ctx.beginPath();ctx.moveTo(-8,-1.7);ctx.lineTo(-flicker*.8,0);ctx.lineTo(-8,1.7);ctx.fill();
   }
   ctx.fillStyle = "#f6fbff";
   ctx.beginPath(); ctx.moveTo(9, 0); ctx.lineTo(-5, -5); ctx.lineTo(-8, 0); ctx.lineTo(-5, 5); ctx.closePath(); ctx.fill();
@@ -243,12 +281,12 @@ function draw(time) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * offsetX, dpr * offsetY);
-  drawBackground();
+  drawBackground(time);
   drawGravity();
   drawPrediction();
   drawGoal(time);
   drawTrail();
-  for (const planet of stage.planets) drawPlanet(planet);
+  for (const planet of stage.planets) drawPlanet(planet,time);
   if (mode === 'flying' && gameMode === 'live') for(const planet of stage.planets) {
     const target=moveTargets[planet.id];if(!target)continue;
     ctx.strokeStyle='#ffdb80';ctx.lineWidth=1;ctx.setLineDash([3,4]);
@@ -260,6 +298,10 @@ function draw(time) {
     velocity: { x: 0, y: 0 },
   };
   drawRocket(rocket, mode === "editing");
+  experience.draw(ctx);
+  const cue = result.hidden ? experience.notice : null;
+  if(experienceCue.textContent !== (cue?.text??'')) experienceCue.textContent=cue?.text??'';
+  experienceCue.style.color=cue?.color??'';
   if (mode === 'editing' && launchMode === 'slingshot') {
     const origin = stage.launch.position;
     ctx.strokeStyle = aim?.cancelled ? '#ffb66f' : '#65e1ff';
@@ -338,6 +380,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  experience.launch(simulation);
   try{recorder=createFlightRecorder(stage,simulation,{gameMode,launchMode,playType,fixedTimeStep:DEFAULT_PHYSICS.fixedTimeStep});}catch{recorder=null;gallery.notify('飛行記録を開始できません。ゲームは続けられます。');}
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
@@ -349,13 +392,15 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
 }
 
 function showResult(status) {
+  experience.finish(simulation);
+  result.dataset.effect = status === 'cleared' ? 'cleared' : failureKind(simulation);
   finalizeRecording();
   document.querySelector('#openGallery').disabled=false;
   const messages = {
     crashed: ["MISSION FAILED", "惑星に衝突"],
     escaped: ["MISSION FAILED", "航行エリアを逸脱"],
     timeout: ["MISSION FAILED", "飛行時間を超過"],
-    cleared: ["ORBIT LOCKED", "ゲート到達！"],
+    cleared: ["CLEAR", "ゲート到達！"],
   };
   const [label, reason] = messages[status];
   resultLabel.textContent = label;
@@ -375,6 +420,9 @@ function showResult(status) {
 }
 
 function retry() {
+  experience.reset();
+  experienceCue.textContent='';
+  audio.silence();
   finalizeRecording('reset');
   if (gameMode === 'live' && launchSnapshot) stage = structuredClone(launchSnapshot);
   moveTargets = {};
@@ -410,12 +458,15 @@ function tick(time) {
   const frameSeconds = Math.min((time - lastTime) / 1000, .1);
   lastTime = time;
   if(gallery.isOpen()){requestAnimationFrame(tick);return;}
+  experience.update(frameSeconds);
   if (mode === "flying") {
     accumulator += frameSeconds;
     const dt = DEFAULT_PHYSICS.fixedTimeStep;
     while (accumulator >= dt && simulation.status === "flying") {
+      const previousState=simulation;
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      experience.observe(previousState,simulation);
       try{recorder?.capture(simulation);}catch{recorder=null;gallery.notify('飛行記録を中断しました。ゲームは続けられます。');}
       movement+=simulation.planets.reduce((sum,p,i)=>sum+Math.hypot(p.x-previousPlanets[i].x,p.y-previousPlanets[i].y),0);
       if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
@@ -453,6 +504,7 @@ function updateMode() {
 }
 
 window.addEventListener('pointerdown', event => {
+  audio.unlock();
   pointers.add(event.pointerId);
   if (pointers.size > 1) cancelGesture();
 }, true);
@@ -498,7 +550,7 @@ canvas.addEventListener('lostpointercapture', cancelGesture);
 window.addEventListener('pointerup', event => pointers.delete(event.pointerId));
 window.addEventListener('pointercancel', event => pointers.delete(event.pointerId));
 window.addEventListener('blur', () => { cancelGesture(); pointers.clear(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelGesture(); pointers.clear(); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelGesture(); pointers.clear(); audio.silence(); } });
 modeButtons.forEach(button => button.addEventListener('click', () => {
   if (mode !== 'editing') return;
   launchMode = saveLaunchMode(storage, button.dataset.launchMode);
@@ -576,6 +628,25 @@ gravityButton.addEventListener('click',()=>{
   gravityButton.setAttribute('aria-pressed',String(showGravity));
 });
 updatePreviewButton();
+function updateExperienceControls() {
+  qualityInput.value=experienceSettings.quality;
+  soundButton.textContent=`サウンド ${experienceSettings.sound?'ON':'OFF'}`;
+  soundButton.setAttribute('aria-pressed',String(experienceSettings.sound));
+}
+soundButton.addEventListener('click',()=>{
+  experienceSettings=saveExperience(storage,{...experienceSettings,sound:!experienceSettings.sound});
+  audio.setEnabled(experienceSettings.sound);audio.unlock();updateExperienceControls();
+  if(audio.unavailable) document.querySelector('#soundHelp').textContent='この環境では音声を開始できません。ゲームはそのまま遊べます。';
+});
+qualityInput.addEventListener('change',()=>{
+  experienceSettings=saveExperience(storage,{...experienceSettings,quality:qualityInput.value});
+  experience.setQuality(experienceSettings.quality);updateExperienceControls();
+});
+// Capture also handles keyboard activation. Sound synthesis never unlocks audio.
+document.addEventListener('click',event=>{
+  if(event.target?.closest?.('button, select, summary')){audio.unlock();audio.play('ui');}
+},true);
+updateExperienceControls();
 function updateGameMode() {
   gameModeInput.value=gameMode;
   document.querySelector('#gameModeHelp').textContent=gameMode==='live'?'重力操作：発射後も惑星をドラッグして誘導':'軌道設計：発射後は惑星固定';

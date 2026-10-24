@@ -109,3 +109,23 @@ test('render adapter does not mutate terrain, entities, jobs or effects; missing
 });
 
 test('normal non-debug startup cannot use preview controls',async()=>{const r=runtime();assert.equal(r.run('artPreview'),null);r.run('startMission()');assert.equal(await r.run("setArtStyle('STUDY_01')"),false);assert.equal(r.get('pauseArtControls').hidden,true)});
+
+for(const id of ['A-01','R-04','H-08','T-06','D-19'])test(`${id}: real firing keeps weapon data and uses supported Study rendering`,async()=>{
+  const r=lab();r.change('labPreset','RANGER');r.change('labWeapon1',id);await r.run("setArtStyle('STUDY_01')");r.click('lab-close');
+  r.run("input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot()");r.drawCalls.length=0;r.run('draw()');
+  assert.equal(r.run('game.player.shotCd'),WEAPON_BY_ID.get(id).interval);
+  assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:held'));
+  assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:icons'));
+  if(id==='D-19')assert.equal(r.run('game.arsenal.installations.length'),1);
+  else assert.ok(r.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:shots'));
+});
+
+test('hit, lightning and rocket FX switch textures without changing damage or death animations',async()=>{
+  const a=lab(),b=lab();await b.run("setArtStyle('STUDY_01')");
+  for(const r of [a,b])r.run("spawnEnemy('crawler',1100);game.grid.rebuild(game.enemies);explode({x:1100,y:138,type:'rocket',damage:45,radius:64,weapon:weapon('R-04')});pushEffect({x:1090,y:135,kind:'hit',type:'bullet',life:.1,max:.1});pushEffect({x:1090,y:130,x2:1150,y2:120,kind:'lightning',life:.1,max:.1});draw()");
+  assert.equal(a.run('JSON.stringify(game)'),b.run('JSON.stringify(game)'));
+  assert.ok(b.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:fx'));
+  assert.ok(b.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='study:shots'));
+  assert.ok(b.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='original:enemies'&&c[2]===144));
+  b.run("game.player.hitPose=.1;drawPlayer(game.player)");assert.ok(b.drawCalls.some(c=>c[0]==='drawImage'&&c[1]==='original:classes'));
+});

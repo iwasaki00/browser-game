@@ -1,6 +1,17 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.7.1 — ORBIT SHARE
+Version 0.9.0-A — FINAL QUALITY AUDIT
+
+正式完成前の品質監査版です。新しいゲーム機能・物理・ステージ・保存形式の変更はありません。
+PC検証とiPhone実機検証を区別した [品質監査レポート](reports/quality-audit/AUDIT.md) と、利用者が記入できる [iPhone実機試験書](reports/quality-audit/IPHONE_CHECKLIST.md) を参照してください。今回は公開しません。
+
+以下はv0.8.0までに実装した機能の説明です。
+
+発射の噴射・粒子、接近時に明るくなる航跡、スイングバイ、特殊惑星の波紋・発光、CLEARと失敗理由別の演出を追加しました。
+ブラックホール吸収域・恒星熱領域をぎりぎりで安全に抜けると「CLOSE CALL」を表示します。星評価・難易度への影響はありません。
+「表示設定」で演出品質（標準／軽量）とサウンドを変更できます。音は初期OFFで、ONを保存した場合も再読み込み後のユーザー操作を待って開始します。
+物理・ステージ・予測・ギャラリー・画像保存のデータ形式は変更していません。
+演出一覧、関連テスト、iPhone実機チェックと引き継ぎは [reports/space-experience/VERIFICATION.md](reports/space-experience/VERIFICATION.md) を参照してください。
 
 軌道ギャラリーの詳細から「画像作成」を選ぶと、保存済みの座標を宇宙アートへ再描画します。
 構図プレビューで正方形／縦長、文字ON/OFF、宇宙／シンプル背景を選び、1080×1080または1080×1920のPNGを生成できます。
@@ -86,8 +97,11 @@ py -3 -m http.server 8034
 
 ```powershell
 cd C:\_wk\github\browser-game\034_惑星重力ゲーム
-npm test
+node --test tests/space-experience.test.mjs tests/launch.test.mjs
+node tests/space-experience-ui.mjs
 ```
+
+上記はv0.8.0の関連範囲のみ。UI確認スクリプトは既存の019_bomber-lab内のPlaywrightとインストール済みChromeを使用します。ゲーム本体には依存パッケージは不要です。
 
 ## 構成
 

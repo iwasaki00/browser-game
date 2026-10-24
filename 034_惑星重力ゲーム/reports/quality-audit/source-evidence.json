@@ -1,0 +1,523 @@
+{
+  "version": "v0.9.0-A",
+  "date": "2026-10-24",
+  "environment": "Windows Node; no iPhone verification",
+  "reused": [
+    {
+      "report": "reports/special-challenges/verification.json",
+      "files": [
+        "js/physics.js",
+        "js/planets.js",
+        "js/launch.js",
+        "js/live-gravity.js",
+        "js/challenges.js",
+        "js/special-challenges.js",
+        "js/progress.js",
+        "tests/special-planets.test.mjs",
+        "tests/special-challenges.test.mjs"
+      ],
+      "scope": "Stage11–20到達・★3・特殊効果・旧01–10保護・旧セーブ互換",
+      "commit": "f37388a733097d497b8e8c4e447055311d6ef47c",
+      "sources": [
+        {
+          "file": "js/physics.js",
+          "sha256": "7adabce0866eea18ed2ab827db41f07d5e5adcd89ef067f4da04dfe6064b9ee1"
+        },
+        {
+          "file": "js/planets.js",
+          "sha256": "aaf08425820a6b8052f0a5affd5046a23fafd924392423da8ed3a21faff9796c"
+        },
+        {
+          "file": "js/launch.js",
+          "sha256": "8c1bfc3f43856aa5d69d5168fa71a5ac853650b66bfab8e711784d4402557cb3"
+        },
+        {
+          "file": "js/live-gravity.js",
+          "sha256": "bccade090b507f1355dadc1b958d79c9179ea204273f46c1fdbe074bea53c3c1"
+        },
+        {
+          "file": "js/challenges.js",
+          "sha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca"
+        },
+        {
+          "file": "js/special-challenges.js",
+          "sha256": "e8335bfe88545d6c29330ae177dec80e4454f050f7837c1b220723158a796d3f"
+        },
+        {
+          "file": "js/progress.js",
+          "sha256": "57b0aa9d160b0c48e8abdb78dcb30e4d056b4c237b27f1f54a156f454f9e8539"
+        },
+        {
+          "file": "tests/special-planets.test.mjs",
+          "sha256": "53fae000f88ec13cb6e1191435a1ecf1a5bf31e234515e828d060bb7cb60463c"
+        },
+        {
+          "file": "tests/special-challenges.test.mjs",
+          "sha256": "42163d5ca2c60d2d5b3452bc0e508c388ee666f1d601b1956e4aaa0889123c57"
+        }
+      ],
+      "status": "PASS",
+      "method": "report and dependency source equality; no simulation rerun"
+    },
+    {
+      "report": "reports/gallery/ui-result.json",
+      "files": [
+        "js/gallery-store.js",
+        "js/flight-record.js",
+        "js/gallery-ui.js",
+        "tests/gallery.test.mjs",
+        "tests/gallery-ui.mjs"
+      ],
+      "scope": "IndexedDB保存復元・20/30上限・削除・お気に入り・保存不能/容量不足",
+      "commit": "f37388a733097d497b8e8c4e447055311d6ef47c",
+      "sources": [
+        {
+          "file": "js/gallery-store.js",
+          "sha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244"
+        },
+        {
+          "file": "js/flight-record.js",
+          "sha256": "5b4390fa65f8cc784585afd6c8d44f46232c44e0c91c68e82eac717abbfd8570"
+        },
+        {
+          "file": "js/gallery-ui.js",
+          "sha256": "6db072492e2a87082856207083456c51e45dd2b625885fab177a7c7ac22e98ad"
+        },
+        {
+          "file": "tests/gallery.test.mjs",
+          "sha256": "a4e14c2c51119ce09ca8815d9cdd5ef9671a682b52f8f12c9cf8391ed9c45382"
+        },
+        {
+          "file": "tests/gallery-ui.mjs",
+          "sha256": "53a47934fc18f9334690c6cb93687578157c950106e71c8389a5e8aed198b4a1"
+        }
+      ],
+      "status": "PASS",
+      "method": "report and dependency source equality; no simulation rerun"
+    },
+    {
+      "report": "reports/orbit-share/result.json",
+      "files": [
+        "js/orbit-art.js",
+        "js/orbit-art-worker.js",
+        "js/orbit-share-ui.js",
+        "js/flight-record.js",
+        "tests/orbit-art.test.mjs",
+        "tests/orbit-share-ui.mjs"
+      ],
+      "scope": "PNG両サイズ・非破壊・失敗復旧・共有模擬/非対応代替",
+      "commit": "f37388a733097d497b8e8c4e447055311d6ef47c",
+      "sources": [
+        {
+          "file": "js/orbit-art.js",
+          "sha256": "24254205d436cf05d1023d682ccf997b5189233c2ac427248ccf74dd0aaf7685"
+        },
+        {
+          "file": "js/orbit-art-worker.js",
+          "sha256": "9904506d8e38c61b52408c05d6987d70c624bf0cb74019701547ec95d84f2da0"
+        },
+        {
+          "file": "js/orbit-share-ui.js",
+          "sha256": "9000e4c171ea8e8dbe3b20c4ee646be0f20cc80dae0c6db3bd3439fcf7d6ef78"
+        },
+        {
+          "file": "js/flight-record.js",
+          "sha256": "5b4390fa65f8cc784585afd6c8d44f46232c44e0c91c68e82eac717abbfd8570"
+        },
+        {
+          "file": "tests/orbit-art.test.mjs",
+          "sha256": "f4460d3dedf6003faffb22588780e942998fa5203d8175174ca0a6ac18106c63"
+        },
+        {
+          "file": "tests/orbit-share-ui.mjs",
+          "sha256": "60c82712a126dc0688a0af3e29d8bb85b4f3122d73f5bb45cc513da22d24c47d"
+        }
+      ],
+      "status": "PASS",
+      "method": "report and dependency source equality; no simulation rerun"
+    },
+    {
+      "report": "reports/space-experience/unit-result.txt + browser-result.json",
+      "scope": "直前v0.8.0の14件・予測/演出非干渉・入力/音声",
+      "status": "PASS",
+      "method": "same working-tree implementation as previous turn; only version/title metadata changed in this audit",
+      "sources": [
+        {
+          "file": "js/game.js",
+          "sha256": "815fcbe08580728ae21b367df778879bbbfa6fc0155abbde71f64c461cea4e62"
+        },
+        {
+          "file": "js/space-experience.js",
+          "sha256": "86fe72a288f9e4d229bd347a204c9ffa2de02cf8129e5edf0857e25bd0cf9ea5"
+        },
+        {
+          "file": "js/space-audio.js",
+          "sha256": "7ccbbfaedd91b278dc672abee1f79101ce957f0b943b183d9c88956ae66b92bb"
+        },
+        {
+          "file": "js/preview.js",
+          "sha256": "dee288db83577a9be1ad0844dc27c8496390430843be8ebb9e2bb1d7b6dc83eb"
+        },
+        {
+          "file": "js/physics.js",
+          "sha256": "7adabce0866eea18ed2ab827db41f07d5e5adcd89ef067f4da04dfe6064b9ee1"
+        },
+        {
+          "file": "tests/space-experience.test.mjs",
+          "sha256": "d6926923df27ce2d17029884bf5d176c187626bad58d26ca086956268765cfa0"
+        },
+        {
+          "file": "tests/launch.test.mjs",
+          "sha256": "c842c8fc05aa56ea589e77de4a725b7d42af32df1bc12ebda369eade9d2c4cea"
+        }
+      ]
+    }
+  ],
+  "stageEvidence": [
+    {
+      "id": "stage-01",
+      "name": "はじめての引力",
+      "angle": -72,
+      "speed": 126,
+      "baselineAngle": -72,
+      "baselineSpeed": 126,
+      "baselineSeconds": 2.9333333333333256,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-02",
+      "name": "すれすれ飛行",
+      "angle": -72,
+      "speed": 124,
+      "baselineAngle": -72,
+      "baselineSpeed": 120,
+      "baselineSeconds": 3.0999999999999917,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-03",
+      "name": "大きなカーブ",
+      "angle": -72,
+      "speed": 144,
+      "baselineAngle": -72,
+      "baselineSpeed": 136,
+      "baselineSeconds": 2.6249999999999933,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-04",
+      "name": "小さな調整",
+      "angle": -65,
+      "speed": 128,
+      "baselineAngle": -67,
+      "baselineSpeed": 120,
+      "baselineSeconds": 3.2666666666666577,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-05",
+      "name": "重力の輪",
+      "angle": -71,
+      "speed": 154,
+      "baselineAngle": -72,
+      "baselineSpeed": 136,
+      "baselineSeconds": 2.724999999999993,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-06",
+      "name": "二つの引力",
+      "angle": -69,
+      "speed": 142,
+      "baselineAngle": -72,
+      "baselineSpeed": 120,
+      "baselineSeconds": 2.941666666666659,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-07",
+      "name": "S字飛行",
+      "angle": -58,
+      "speed": 154,
+      "baselineAngle": -60,
+      "baselineSpeed": 120,
+      "baselineSeconds": 3.0166666666666586,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-08",
+      "name": "重力の橋",
+      "angle": -64,
+      "speed": 158,
+      "baselineAngle": -69,
+      "baselineSpeed": 120,
+      "baselineSeconds": 3.0166666666666586,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-09",
+      "name": "三つの星",
+      "angle": -62,
+      "speed": 168,
+      "baselineAngle": -68,
+      "baselineSpeed": 120,
+      "baselineSeconds": 3.033333333333325,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-10",
+      "name": "軌道マスター",
+      "angle": -67,
+      "speed": 172,
+      "baselineAngle": -69,
+      "baselineSpeed": 160,
+      "baselineSeconds": 2.316666666666661,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/balance/after.json + THREE_STARS.md + v0.6.0旧軌道保護検証"
+    },
+    {
+      "id": "stage-11",
+      "name": "小さな巨人",
+      "angle": -70,
+      "speed": 170,
+      "baselineAngle": -70,
+      "baselineSpeed": 170,
+      "baselineSeconds": 2.199999999999995,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-12",
+      "name": "重力の針穴",
+      "angle": -68,
+      "speed": 208,
+      "baselineAngle": -68,
+      "baselineSpeed": 208,
+      "baselineSeconds": 1.8666666666666625,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-13",
+      "name": "逆らう星",
+      "angle": -54,
+      "speed": 170,
+      "baselineAngle": -54,
+      "baselineSpeed": 170,
+      "baselineSeconds": 2.391666666666661,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-14",
+      "name": "押して曲げる",
+      "angle": -50,
+      "speed": 220,
+      "baselineAngle": -50,
+      "baselineSpeed": 220,
+      "baselineSeconds": 1.741666666666663,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-15",
+      "name": "灼熱の航路",
+      "angle": -69,
+      "speed": 170,
+      "baselineAngle": -69,
+      "baselineSpeed": 170,
+      "baselineSeconds": 2.1583333333333283,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-16",
+      "name": "太陽をかすめて",
+      "angle": -72,
+      "speed": 176,
+      "baselineAngle": -72,
+      "baselineSpeed": 176,
+      "baselineSeconds": 2.1583333333333283,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-17",
+      "name": "深淵の引力",
+      "angle": -72,
+      "speed": 200,
+      "baselineAngle": -72,
+      "baselineSpeed": 200,
+      "baselineSeconds": 1.8583333333333292,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-18",
+      "name": "事象の境界",
+      "angle": -74,
+      "speed": 220,
+      "baselineAngle": -74,
+      "baselineSpeed": 220,
+      "baselineSeconds": 1.7333333333333296,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-19",
+      "name": "相反する力",
+      "angle": -72,
+      "speed": 220,
+      "baselineAngle": -72,
+      "baselineSpeed": 220,
+      "baselineSeconds": 1.741666666666663,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    },
+    {
+      "id": "stage-20",
+      "name": "宇宙の支配者",
+      "angle": -66,
+      "speed": 212,
+      "baselineAngle": -66,
+      "baselineSpeed": 212,
+      "baselineSeconds": 1.5916666666666635,
+      "status": "PASS",
+      "method": "既存検証を再利用（再計算なし）",
+      "evidence": "reports/special-challenges/verification.json"
+    }
+  ],
+  "static": {
+    "syntaxModules": 19,
+    "localImports": 30,
+    "duplicateIds": 0,
+    "missingIds": 0,
+    "findings": [],
+    "relativeAssets": true,
+    "rootMenuLink": true,
+    "noJekyll": true,
+    "externalRuntimeDependency": false
+  },
+  "manifest": [
+    {
+      "file": "js/challenges.js",
+      "sha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca"
+    },
+    {
+      "file": "js/flight-record.js",
+      "sha256": "5b4390fa65f8cc784585afd6c8d44f46232c44e0c91c68e82eac717abbfd8570"
+    },
+    {
+      "file": "js/gallery-store.js",
+      "sha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244"
+    },
+    {
+      "file": "js/gallery-ui.js",
+      "sha256": "6db072492e2a87082856207083456c51e45dd2b625885fab177a7c7ac22e98ad"
+    },
+    {
+      "file": "js/game.js",
+      "sha256": "815fcbe08580728ae21b367df778879bbbfa6fc0155abbde71f64c461cea4e62"
+    },
+    {
+      "file": "js/launch.js",
+      "sha256": "8c1bfc3f43856aa5d69d5168fa71a5ac853650b66bfab8e711784d4402557cb3"
+    },
+    {
+      "file": "js/live-gravity.js",
+      "sha256": "bccade090b507f1355dadc1b958d79c9179ea204273f46c1fdbe074bea53c3c1"
+    },
+    {
+      "file": "js/orbit-art-worker.js",
+      "sha256": "9904506d8e38c61b52408c05d6987d70c624bf0cb74019701547ec95d84f2da0"
+    },
+    {
+      "file": "js/orbit-art.js",
+      "sha256": "24254205d436cf05d1023d682ccf997b5189233c2ac427248ccf74dd0aaf7685"
+    },
+    {
+      "file": "js/orbit-share-ui.js",
+      "sha256": "9000e4c171ea8e8dbe3b20c4ee646be0f20cc80dae0c6db3bd3439fcf7d6ef78"
+    },
+    {
+      "file": "js/physics.js",
+      "sha256": "7adabce0866eea18ed2ab827db41f07d5e5adcd89ef067f4da04dfe6064b9ee1"
+    },
+    {
+      "file": "js/planets.js",
+      "sha256": "aaf08425820a6b8052f0a5affd5046a23fafd924392423da8ed3a21faff9796c"
+    },
+    {
+      "file": "js/preview.js",
+      "sha256": "dee288db83577a9be1ad0844dc27c8496390430843be8ebb9e2bb1d7b6dc83eb"
+    },
+    {
+      "file": "js/progress.js",
+      "sha256": "57b0aa9d160b0c48e8abdb78dcb30e4d056b4c237b27f1f54a156f454f9e8539"
+    },
+    {
+      "file": "js/space-audio.js",
+      "sha256": "7ccbbfaedd91b278dc672abee1f79101ce957f0b943b183d9c88956ae66b92bb"
+    },
+    {
+      "file": "js/space-experience.js",
+      "sha256": "86fe72a288f9e4d229bd347a204c9ffa2de02cf8129e5edf0857e25bd0cf9ea5"
+    },
+    {
+      "file": "js/special-challenges.js",
+      "sha256": "e8335bfe88545d6c29330ae177dec80e4454f050f7837c1b220723158a796d3f"
+    },
+    {
+      "file": "js/special-samples.js",
+      "sha256": "91b4cc67eb17269cc25310224608ceaaf04adcffb100dbca5e35597d54da7ec2"
+    },
+    {
+      "file": "js/stages.js",
+      "sha256": "91748849f8bbfb222e128cb18b8802adcd6dcf9cdcef60e20bdc202d314d21d1"
+    },
+    {
+      "file": "index.html",
+      "sha256": "3fa91b8a2f737a0fabda83e615debfdabc68dbe1ac01f87f5534838f59bd8e1e"
+    },
+    {
+      "file": "styles.css",
+      "sha256": "7c8f5d2d560d2b534b4f0cd0b7af5f2e2fcf77a77916708c08b069dd06e8d5fe"
+    },
+    {
+      "file": "icon.svg",
+      "sha256": "bf55c8dfb02c47820dbbd6b4b27048d4fe716abc80d5ded4af37a065a01c00f2"
+    },
+    {
+      "file": "package.json",
+      "sha256": "d2dac7e6d740a749877266f6aba65f4d0f023d4400c63f8abfe00cda5ba85e56"
+    }
+  ]
+}

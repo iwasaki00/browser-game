@@ -1,0 +1,60 @@
+{
+  "browser": "Windows Chrome mobile viewport, not iPhone Safari",
+  "launch": true,
+  "closecall": true,
+  "swingby": true,
+  "clear": true,
+  "absorbed": true,
+  "overheated": true,
+  "reset": true,
+  "nextStage": true,
+  "settingsRestored": true,
+  "initialMute": true,
+  "userGestureAudio": true,
+  "savedOnDoesNotAutoplay": true,
+  "mute": true,
+  "light": true,
+  "oldProgressPreserved": true,
+  "performanceResult": {
+    "frames": 198,
+    "medianMs": 16.699999999999818,
+    "p95Ms": 16.899999999999864,
+    "cues": [
+      "LIFTOFF",
+      "",
+      "SWINGBY",
+      "CLOSE CALL",
+      ""
+    ],
+    "audio": {
+      "contexts": 1,
+      "starts": 6,
+      "active": 1,
+      "peak": 2,
+      "gesture": true
+    }
+  },
+  "layout": {
+    "width": 320,
+    "scrollWidth": 320,
+    "board": 260,
+    "buttons": [
+      {
+        "x": 148,
+        "right": 221.15625,
+        "height": 44
+      },
+      {
+        "x": 16,
+        "right": 113.390625,
+        "height": 44
+      },
+      {
+        "x": 121.390625,
+        "right": 304,
+        "height": 44
+      }
+    ]
+  },
+  "errors": []
+}

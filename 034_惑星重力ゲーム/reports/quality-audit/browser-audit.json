@@ -1,0 +1,321 @@
+{
+  "version": "v0.9.0-A",
+  "browser": "Windows Chrome (mobile viewport / CDP touch), not iPhone Safari",
+  "screens": [
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "document": [
+        375,
+        667
+      ],
+      "board": {
+        "x": 12,
+        "y": 130,
+        "width": 351,
+        "height": 269,
+        "top": 130,
+        "right": 363,
+        "bottom": 399,
+        "left": 12
+      },
+      "canvasTouch": "none",
+      "userSelect": "none",
+      "zoom": "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no",
+      "controlsReachable": true,
+      "status": "PASS (Chrome only)"
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "document": [
+        390,
+        844
+      ],
+      "board": {
+        "x": 12,
+        "y": 130,
+        "width": 366,
+        "height": 446,
+        "top": 130,
+        "right": 378,
+        "bottom": 576,
+        "left": 12
+      },
+      "canvasTouch": "none",
+      "userSelect": "none",
+      "zoom": "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no",
+      "controlsReachable": true,
+      "status": "PASS (Chrome only)"
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "document": [
+        320,
+        568
+      ],
+      "board": {
+        "x": 12,
+        "y": 116,
+        "width": 296,
+        "height": 260,
+        "top": 116,
+        "right": 308,
+        "bottom": 376,
+        "left": 12
+      },
+      "canvasTouch": "none",
+      "userSelect": "none",
+      "zoom": "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no",
+      "controlsReachable": true,
+      "status": "PASS (Chrome only)"
+    }
+  ],
+  "performance": {
+    "cpu": {
+      "idle/previewMs": {
+        "samples": 8,
+        "median": 0.09999990463256836,
+        "p95": 1,
+        "max": 1
+      },
+      "three-planets-preview/previewMs": {
+        "samples": 72,
+        "median": 0,
+        "p95": 0.3999999761581421,
+        "max": 0.9000000953674316
+      },
+      "three-special-glows-preview/previewMs": {
+        "samples": 50,
+        "median": 0.09999990463256836,
+        "p95": 0.19999992847442627,
+        "max": 0.20000004768371582
+      },
+      "continuous-standard/previewMs": {
+        "samples": 709,
+        "median": 0,
+        "p95": 0.09999990463256836,
+        "max": 0.40000009536743164
+      },
+      "continuous-standard/encounterMs": {
+        "samples": 1146,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "max": 0.40000009536743164
+      },
+      "continuous-light/previewMs": {
+        "samples": 707,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "max": 0.6000000238418579
+      },
+      "continuous-light/encounterMs": {
+        "samples": 1146,
+        "median": 0,
+        "p95": 0.10000002384185791,
+        "max": 0.20000004768371582
+      },
+      "png-fallback/previewMs": {
+        "samples": 2,
+        "median": 0.10000002384185791,
+        "p95": 0.10000002384185791,
+        "max": 0.10000002384185791
+      }
+    },
+    "frameIntervalsMs": {
+      "idle": {
+        "samples": 8,
+        "median": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "max": 16.700000000000273
+      },
+      "three-planets-preview": {
+        "samples": 72,
+        "median": 16.699999999999818,
+        "p95": 17,
+        "max": 33.400000000000546
+      },
+      "three-special-glows-preview": {
+        "samples": 50,
+        "median": 16.699999999999818,
+        "p95": 16.899999999999636,
+        "max": 16.900000000000546
+      },
+      "continuous-standard": {
+        "samples": 709,
+        "median": 16.699999999999818,
+        "p95": 16.899999999999636,
+        "max": 17.19999999999891
+      },
+      "continuous-light": {
+        "samples": 718,
+        "median": 16.700000000000728,
+        "p95": 16.900000000001455,
+        "max": 17.5
+      },
+      "gallery-replay-1441": {
+        "samples": 73,
+        "median": 16.700000000000728,
+        "p95": 16.900000000001455,
+        "max": 16.900000000001455
+      },
+      "png-square": {
+        "samples": 5,
+        "median": 16.600000000002183,
+        "p95": 16.80000000000291,
+        "max": 16.80000000000291
+      },
+      "png-portrait": {
+        "samples": 4,
+        "median": 16.799999999999272,
+        "p95": 16.799999999999272,
+        "max": 16.799999999999272
+      },
+      "png-fallback": {
+        "samples": 15,
+        "median": 16.69999999999709,
+        "p95": 16.799999999999272,
+        "max": 16.799999999999272
+      }
+    }
+  },
+  "continuous": [
+    {
+      "flight": 1,
+      "quality": "standard",
+      "wallMs": 1907.9568,
+      "records": 2
+    },
+    {
+      "flight": 2,
+      "quality": "standard",
+      "wallMs": 1898.5304999999998,
+      "records": 3
+    },
+    {
+      "flight": 3,
+      "quality": "standard",
+      "wallMs": 1904.0586000000003,
+      "records": 4
+    },
+    {
+      "flight": 4,
+      "quality": "standard",
+      "wallMs": 1918.9857999999986,
+      "records": 5
+    },
+    {
+      "flight": 5,
+      "quality": "standard",
+      "wallMs": 1899.4490999999998,
+      "records": 6
+    },
+    {
+      "flight": 6,
+      "quality": "standard",
+      "wallMs": 1888.4480999999996,
+      "records": 7
+    },
+    {
+      "flight": 7,
+      "quality": "light",
+      "wallMs": 1901.0282000000007,
+      "records": 8
+    },
+    {
+      "flight": 8,
+      "quality": "light",
+      "wallMs": 1904.0701000000008,
+      "records": 9
+    },
+    {
+      "flight": 9,
+      "quality": "light",
+      "wallMs": 1899.7301000000007,
+      "records": 10
+    },
+    {
+      "flight": 10,
+      "quality": "light",
+      "wallMs": 1900.5593999999983,
+      "records": 11
+    },
+    {
+      "flight": 11,
+      "quality": "light",
+      "wallMs": 1901.9738999999972,
+      "records": 12
+    },
+    {
+      "flight": 12,
+      "quality": "light",
+      "wallMs": 1892.0542000000023,
+      "records": 13
+    }
+  ],
+  "errors": [],
+  "failedResponses": [],
+  "touchLiveGravity": true,
+  "liveFrameIntervalsMs": {
+    "samples": 40,
+    "median": 16.699999999999818,
+    "p95": 17.100000000000364,
+    "max": 33.30000000000018
+  },
+  "continuousSeconds": 23.538253700000002,
+  "heapBefore": {
+    "usedBytes": 2827864,
+    "totalBytes": 3506176
+  },
+  "heapAfter": {
+    "usedBytes": 3357216,
+    "totalBytes": 4292608
+  },
+  "png": [
+    {
+      "shape": "square",
+      "ms": 74.29999995231628,
+      "bytes": 1152462,
+      "type": "image/png",
+      "width": 1080,
+      "height": 1080,
+      "worker": true
+    },
+    {
+      "shape": "portrait",
+      "ms": 82.60000002384186,
+      "bytes": 1688175,
+      "type": "image/png",
+      "width": 1080,
+      "height": 1920,
+      "worker": true
+    },
+    {
+      "shape": "square-fallback",
+      "ms": 41.199999928474426,
+      "bytes": 1152462,
+      "type": "image/png"
+    }
+  ],
+  "blobUrlsReleased": true,
+  "heapAfterArt": {
+    "usedBytes": 3679884,
+    "totalBytes": 4554752
+  },
+  "restored": true,
+  "oldStarsPreserved": true,
+  "favoritePreserved": true,
+  "network": {
+    "sameOriginGetAndLocalBlobOnly": true,
+    "requests": 73,
+    "externalUploads": 0,
+    "unexpected": []
+  }
+}

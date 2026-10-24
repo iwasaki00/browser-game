@@ -14,7 +14,7 @@ export const ART_ANCHORS=Object.freeze({
   held:{'A-01':[30,14],'R-04':[28,15],'H-08':[27,14],'T-06':[29,16],'D-19':[30,11]}
 });
 export function loadStudyImage(src,width,height){return new Promise((resolve,reject)=>{
-  const im=new Image(),timer=setTimeout(()=>reject(new Error('画像読み込みがタイムアウトしました')),12000);
+  const im=new Image(),timer=setTimeout(()=>finish(()=>reject(new Error('画像読み込みがタイムアウトしました'))),12000);
   const finish=fn=>{clearTimeout(timer);im.onload=im.onerror=null;fn()};
   im.onload=()=>finish(()=>{if(im.naturalWidth!==width||im.naturalHeight!==height)reject(new Error('画像サイズが一致しません'));else resolve(im)});
   im.onerror=()=>finish(()=>reject(new Error('画像を読み込めません')));im.src=ROOT+src;
