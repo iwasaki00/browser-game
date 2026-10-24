@@ -114,7 +114,7 @@ class ArtDirectionTests(unittest.TestCase):
         mixed=subprocess.run([sys.executable,str(ROOT/'tools/generate_assets.py'),'--art-in-game-only','--weapons-only'],capture_output=True,text=True)
         self.assertNotEqual(mixed.returncode,0)
         js=(ROOT/'js/art-preview.js').read_text(encoding='utf-8')
-        files=re.findall(r"\w+:\['([^']+)',(\d+),(\d+)\]",js)
+        files=re.findall(r"\w+:\['([^']+)',(\d+),(\d+)\]",js.split('export const STUDY_FILES=Object.freeze({',1)[1].split('});',1)[0])
         self.assertEqual(len(files),13)
         for path,w,h in files:
             with self.subTest(path=path),Image.open(OUTPUT/path) as im:self.assertEqual(im.size,(int(w),int(h)))

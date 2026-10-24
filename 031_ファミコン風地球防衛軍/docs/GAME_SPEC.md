@@ -1,7 +1,8 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.2.2 — UNDERGROUND INVASION
+- Version: 0.2.3-C — ART UNIFICATION（LAB比較試用、通常アートはORIGINAL）
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
+- LAB描画: ORIGINAL / STUDY 01 / STUDY 01-B / UNIFIED 01。640×360は画素密度2倍の実験表示、論理座標320×180を維持。素材・描画のみ変更、兵科／武器／AI／地形／進行／セーブに変更なし。詳細は[ART_UNIFICATION.md](ART_UNIFICATION.md)。
 - ステージ: M01 市街地防衛線（幅4,800px）／M02 地下侵攻作戦（幅5,600px）、各5エリア
 - プレイヤー: RANGER / SCOUT / GUARDIAN / WING（全兵科使用可能）。性能は `js/data.js` の `PLAYER_CLASSES`、挙動は `js/player.js`。重力620px/s²、無敵1秒を継続
 - 進行: タイトル → ミッション選択 → 兵科・装備選択 → 本編 → リザルト → 武器解放

@@ -1,0 +1,22 @@
+{
+  "version": "v0.9.1",
+  "protectedSourceDiff": false,
+  "protectedFiles": [
+    "js/physics.js",
+    "js/stages.js",
+    "js/challenges.js",
+    "js/special-challenges.js",
+    "js/planets.js",
+    "js/live-gravity.js",
+    "js/launch.js",
+    "js/progress.js",
+    "js/gallery-store.js",
+    "js/flight-record.js",
+    "js/orbit-art.js",
+    "js/orbit-share-ui.js"
+  ],
+  "duplicateIds": 0,
+  "localDocumentLinks": 25,
+  "gameRegression": "only related tests; no full suite",
+  "iphoneAudible": "UNVERIFIED"
+}

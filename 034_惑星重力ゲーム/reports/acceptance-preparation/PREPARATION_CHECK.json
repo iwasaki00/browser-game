@@ -1,0 +1,13 @@
+{
+  "work": "v0.9.0-B",
+  "result": "preparation documents and read-only state checks completed",
+  "localLinks": 17,
+  "operationRows": 12,
+  "stageRows": 20,
+  "runtimeFilesUnchanged": 23,
+  "gameVersionUnchanged": "0.9.0-A",
+  "remoteReadOnly": true,
+  "gameRegressionTestsRun": false,
+  "iphoneResult": "UNVERIFIED",
+  "checkedAt": "2026-10-24T11:08:40.500Z"
+}

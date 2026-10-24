@@ -1,0 +1,385 @@
+{
+  "version": "0.2.3-B",
+  "study": "STUDY 01-B / ART READABILITY",
+  "status": "LAB_PREVIEW_ONLY",
+  "seed": 24032024,
+  "baseSeed": 24032023,
+  "sampling": "nearest",
+  "source": "tools/art_direction_samples.py + targeted authored readability clusters (no additional randomness)",
+  "assets": {
+    "sprites/ranger.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "poses": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "columns": 12,
+      "frames": 12,
+      "rows": 1,
+      "sha256": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2"
+    },
+    "sprites/wing.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "poses": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "columns": 12,
+      "frames": 12,
+      "rows": 1,
+      "sha256": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e"
+    },
+    "sprites/crawler.png": {
+      "size": [
+        256,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "poses": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead"
+      ],
+      "columns": 4,
+      "frames": 12,
+      "rows": 3,
+      "sha256": "c6f613666439029139ddb67b480ff9bab6bd17807274410146b498f7d417afe7"
+    },
+    "sprites/needle.png": {
+      "size": [
+        256,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "poses": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead"
+      ],
+      "columns": 4,
+      "frames": 12,
+      "rows": 3,
+      "sha256": "7f75476be5c6c3255af13f4415ca587a2a1ce770ca48340797704a582a4e5210"
+    },
+    "sprites/mother_crawler.png": {
+      "size": [
+        768,
+        128
+      ],
+      "cell": [
+        192,
+        128
+      ],
+      "logicalCell": [
+        96,
+        64
+      ],
+      "poses": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead"
+      ],
+      "columns": 4,
+      "frames": 4,
+      "rows": 1,
+      "sha256": "c2570da592dd31f2ceaefe5e10027c6ef7cdbed52d12f92b77d0590216aa9451"
+    },
+    "backgrounds/city_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "far"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "1cdf13368db261eac6fc2a6155b40478a26b8f497e0b4b8ac217368febd27c32"
+    },
+    "backgrounds/city_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "middle"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "40a441014debffb8ac26a540bbd49ea1470f8213bed9e3d59d85bbe6526c9505"
+    },
+    "backgrounds/city_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "near"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "f28953cedd3bff6bcb9721396063c8e6daf7aa7e8eeb69bffdae2eac13b1436e"
+    },
+    "backgrounds/city.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "composite"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "5224a834bd1f03f87b0c82696d843249bfd369378f48280ec638184fdd182e72"
+    },
+    "tiles/city.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "poses": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "columns": 4,
+      "frames": 8,
+      "rows": 2,
+      "sha256": "027074d8ae5740fdb052675d9ef73339792e08ed8aff23afdee926cc356eff46"
+    },
+    "backgrounds/underground_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "far"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "44ffc5206d0d6b913ed2e8984148800dd5831ecd4773b862c84a0a521b5e58db"
+    },
+    "backgrounds/underground_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "middle"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "fefd95a2cc80fdbd0ebd455da5aaaabd859392a74ee0ebdb07f0e6af17792ddc"
+    },
+    "backgrounds/underground_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "near"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "b571277d7de358db74165136989336d9249642930e36b161472b3a65eaf3f1cc"
+    },
+    "backgrounds/underground.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "poses": [
+        "composite"
+      ],
+      "columns": 1,
+      "frames": 1,
+      "rows": 1,
+      "sha256": "9953939e8413b2f4485d0aaf3248c8960b4b819d23f254ae28ddf46f9510e038"
+    },
+    "tiles/underground.png": {
+      "size": [
+        128,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "poses": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "columns": 4,
+      "frames": 8,
+      "rows": 2,
+      "sha256": "24355a08665b6d54b94ce0315505dfc2ef5b7852df5d84f49548947346d5bd4a"
+    }
+  },
+  "weaponFallback": [
+    "A-01",
+    "R-04",
+    "H-08",
+    "T-06",
+    "D-19"
+  ],
+  "enemyVariants": 3,
+  "notes": [
+    "No production or Study 01 PNG overwritten.",
+    "Weapons reuse Study 01 without positional/performance changes.",
+    "No runtime glow or sorting; stable uid selects three authored shell palettes.",
+    "B-01 organ is not a newly added weak point."
+  ]
+}

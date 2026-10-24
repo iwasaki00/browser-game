@@ -573,7 +573,21 @@ def main():
     parser.add_argument("--underground-only", action="store_true", help="Generate only M02 assets and metadata")
     parser.add_argument("--art-study-only", action="store_true", help="Generate isolated art-direction samples; never overwrite production PNGs")
     parser.add_argument("--art-in-game-only", action="store_true", help="Generate only the two gun-free Study 01 companion sprites")
+    parser.add_argument("--art-readability-only", action="store_true", help="Generate isolated Study 01-B readability art only")
+    parser.add_argument("--art-unified-only", action="store_true", help="Generate isolated UNIFIED 01 art only; preserve all earlier sets")
     args=parser.parse_args()
+    if args.art_unified_only:
+        if args.classes_only or args.weapons_only or args.underground_only or args.art_study_only or args.art_in_game_only or args.art_readability_only:
+            parser.error("--art-unified-only cannot be combined with other generation flags")
+        from art_unification import generate
+        generate(ROOT)
+        return
+    if args.art_readability_only:
+        if args.classes_only or args.weapons_only or args.underground_only or args.art_study_only or args.art_in_game_only:
+            parser.error("--art-readability-only cannot be combined with other generation flags")
+        from art_readability import generate
+        generate(ROOT)
+        return
     if args.art_study_only:
         if args.classes_only or args.weapons_only or args.underground_only or args.art_in_game_only:
             parser.error("--art-study-only cannot be combined with production generation flags")

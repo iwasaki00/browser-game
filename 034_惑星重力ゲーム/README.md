@@ -1,9 +1,17 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.9.0-A — FINAL QUALITY AUDIT
+Version 0.9.1 — MOBILE UI & AUDIO FIX
+
+「表示・音」「惑星編集」をオーバーレイへ変更しました。開閉で盤面や発射操作を押し下げず、設定中は飛行を一時停止し、閉じると同じ状態から再開します。
+サウンドON時の確認音、実際の合成音経路を使う「テスト音を鳴らす」、開始・中断・再開の診断情報を追加しました。音の初期値はOFFです。
+修正前後の画面、原因候補、関連テスト、iPhone再確認手順は [v0.9.1検証レポート](reports/mobile-ui-audio/VERIFICATION.md) を参照してください。PC検証では実機の聴感を合格と扱いません。公開・pushは未実施です。
+
+以下は過去Versionの監査記録です。
 
 正式完成前の品質監査版です。新しいゲーム機能・物理・ステージ・保存形式の変更はありません。
 PC検証とiPhone実機検証を区別した [品質監査レポート](reports/quality-audit/AUDIT.md) と、利用者が記入できる [iPhone実機試験書](reports/quality-audit/IPHONE_CHECKLIST.md) を参照してください。今回は公開しません。
+
+v0.9.0-Bは実機受入の準備作業です。[公開状態の調査結果](reports/acceptance-preparation/PREPARATION_REPORT.md) と [iPhoneでの起動・簡易チェック表](reports/acceptance-preparation/IPHONE_QUICK_CHECK.md) を追加しました。準備時点のゲーム本体はv0.9.0-Aです。
 
 以下はv0.8.0までに実装した機能の説明です。
 
@@ -94,6 +102,15 @@ py -3 -m http.server 8034
 ブラウザで `http://localhost:8034/` を開いてください。
 
 ## テスト
+
+v0.9.1のUI・音声に関連する範囲だけを確認する場合：
+
+```powershell
+node --test tests/mobile-audio.test.mjs tests/space-experience.test.mjs tests/launch.test.mjs
+node tests/mobile-ui-audio-ui.mjs
+```
+
+ブラウザ確認は独立したChrome contextを使用します。既存のiPhone・通常ブラウザの保存データには接続しません。
 
 v0.9.0-Aの監査（既存証拠の検証と、不足していた画面・性能・継続確認）：
 

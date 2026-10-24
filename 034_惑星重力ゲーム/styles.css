@@ -116,21 +116,19 @@ input[type="range"] { width: 100%; height: 20px; margin: 0; accent-color: #54d8f
 }
 
 /* Preserve the board; only the settings area scrolls on short screens. */
-.app { min-height: 0; grid-template-rows: auto auto minmax(260px, 1fr) minmax(0, auto); }
-.controls { display: grid; grid-template-columns: 1fr; grid-template-rows: minmax(0,1fr) auto; max-height: max(150px, calc(100dvh - 370px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); min-height: 0; gap: 6px; }
-.controls-body { min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-content: start; gap: 6px; padding: 0 2px 3px; touch-action: pan-y; }
-.settings-panel[open] { grid-column: 1 / -1; }
-.settings-panel { min-width: 0; border: 1px solid #263f54; border-radius: 6px; padding: 0 6px; }
-.settings-panel summary { min-height: 36px; display: flex; align-items: center; color: #a8cddd; cursor: pointer; font-size: 11px; touch-action: manipulation; }
-.settings-panel summary::before { content: '＋'; margin-right: 7px; }
-.settings-panel[open] summary::before { content: '−'; }
-.settings-panel[open] { padding-bottom: 6px; }
+.app { min-height: 0; grid-template-rows: auto auto minmax(220px, 1fr) auto; gap: 6px; }
+.controls { display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto; min-height: 0; gap: 6px; }
+.controls-body { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr); gap: 6px; padding: 0 2px; }
+.controls-toolbar { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 6px; }
+.controls-toolbar .game-mode { min-width: 0; grid-column: auto; }
+.controls-toolbar select { width: 100%; }
+.controls-toolbar button { min-width: 0; min-height: 44px; border: 1px solid #31506a; border-radius: 7px; background: #0d2133; color: #c6e8f6; font-size: 12px; }
 .game-mode { flex-wrap: wrap; }
 .game-mode select, .planet-editor select { font-size: 16px; min-height: 44px; }
 .planet-editor button, .preview-options button, .launch-mode button, .actions button { min-height: 44px; height: auto; }
 .preview-options { flex-wrap: wrap; }
 .preview-options small { width: 100%; }
-input[type='range'] { height: 36px; touch-action: pan-x; }
+input[type='range'] { height: 30px; touch-action: pan-x; }
 .actions { padding: 0 2px; }
 .result button { min-height: 44px; }
 .edit-hint { max-width: calc(100% - 18px); }
@@ -206,3 +204,36 @@ button:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px
 .result[data-effect='timeout'] p { color: #afbdce; }
 .result.success #resultLabel { font-size: 34px; text-shadow: 0 0 18px #67ffc780; }
 .result #clearStars:not(:empty) { font-size: 28px; color: #ffe28b; letter-spacing: .15em; line-height: 1.3; text-shadow: 0 2px 8px #020610; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+body.settings-open { overflow: hidden; }
+.settings-dialog { position: fixed; inset: calc(env(safe-area-inset-top) + 12px) 12px calc(env(safe-area-inset-bottom) + 12px); margin: auto; width: min(400px,calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px); padding: 0; overflow: hidden; border: 1px solid #3c718b; border-radius: 15px; background: #0a1726; color: #d8edff; box-shadow: 0 18px 80px #0009; }
+.settings-dialog[open] { display: flex; flex-direction: column; }
+.settings-dialog::backdrop { background: #020711b8; }
+.settings-dialog > header { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #263c50; }
+.settings-dialog h2 { font-size: 19px; margin: 3px 0 0; }
+.settings-dialog header small { font: 700 9px monospace; color: #65d9ee; letter-spacing: .15em; }
+.settings-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 12px 14px 16px; touch-action: pan-y; }
+.settings-dialog button, .settings-dialog select { min-height: 44px; border: 1px solid #35536b; border-radius: 7px; padding: 6px 10px; background: #102c40; color: #daf4ff; }
+.settings-dialog select { font-size: 16px; max-width: 100%; }
+.settings-dialog button { font-size: 12px; }
+.settings-dialog header button { min-width: 64px; }
+.settings-dialog .preview-options { display: grid; grid-template-columns: 1fr 1fr; }
+.settings-dialog .preview-options small { grid-column: 1/-1; font-size: 10px; }
+.settings-dialog .experience-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+.settings-dialog .experience-options label { flex-direction: column; align-items: stretch; }
+.settings-dialog #soundToggle { align-self: end; }
+.settings-dialog .test-sound { width: 100%; background: #18475c; border-color: #56b7cc; font-weight: 700; }
+.settings-dialog :disabled { opacity: .45; }
+.settings-note { margin: 0 0 12px; font-size: 11px; line-height: 1.6; color: #adc4d7; }
+#soundHelp { margin-top: 10px; color: #a9e8ef; }
+.settings-help { margin-top: 8px; border-top: 1px solid #263c50; padding-top: 8px; }
+.settings-help summary { min-height: 44px; font-size: 12px; color: #9bc5dc; cursor: pointer; }
+#audioDiagnostics { display: block; font: 11px/1.6 ui-monospace,monospace; white-space: pre-wrap; overflow-wrap: anywhere; color: #abc4d9; }
+.settings-dialog .planet-editor { display: flex; flex-direction: column; gap: 12px; }
+.settings-dialog #planetSelection { color: #ffdf91; font-size: 12px; padding: 10px; background: #142a3a; border-radius: 7px; }
+.settings-dialog .planet-toolbar button { flex: 1; }
+.settings-dialog .planet-options { flex-direction: column; align-items: stretch; gap: 10px; }
+.settings-dialog .planet-options label { display: grid; grid-template-columns: 45px minmax(0,1fr); font-size: 12px; }
+.settings-dialog .planet-feature { margin: 0; font-size: 11px; }
+.settings-dialog .sample-label { flex-direction: column; align-items: stretch; }
+@media(max-height:600px) { .app { gap: 5px; } input[type='range'] { height: 28px; } .settings-dialog > header { padding-block: 8px; } }

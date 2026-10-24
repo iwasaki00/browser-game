@@ -5,6 +5,7 @@ import {createFlightRecorder}from'./flight-record.js';
 import {createGallery}from'./gallery-ui.js';
 import {SpaceExperience, loadExperience, saveExperience, failureKind} from './space-experience.js';
 import {SpaceAudio} from './space-audio.js';
+import {createSettingsUI} from './settings-ui.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
@@ -54,6 +55,8 @@ const experience = new SpaceExperience(experienceSettings.quality, kind => audio
 const soundButton = document.querySelector('#soundToggle');
 const qualityInput = document.querySelector('#effectQuality');
 const experienceCue = document.querySelector('#experienceCue');
+const settingsUI = createSettingsUI({onOpen:cancelGesture});
+const testSoundButton = document.querySelector('#testSound');
 let launchMode = loadLaunchMode(storage);
 let progress=loadProgress(storage);
 let playType='free';
@@ -457,7 +460,7 @@ function updateOutputs() {
 function tick(time) {
   const frameSeconds = Math.min((time - lastTime) / 1000, .1);
   lastTime = time;
-  if(gallery.isOpen()){requestAnimationFrame(tick);return;}
+  if(gallery.isOpen()||settingsUI.isOpen()){requestAnimationFrame(tick);return;}
   experience.update(frameSeconds);
   if (mode === "flying") {
     accumulator += frameSeconds;
@@ -504,7 +507,7 @@ function updateMode() {
 }
 
 window.addEventListener('pointerdown', event => {
-  audio.unlock();
+  if(!event.target?.closest?.('#soundToggle, #testSound'))void audio.unlock();
   pointers.add(event.pointerId);
   if (pointers.size > 1) cancelGesture();
 }, true);
@@ -550,7 +553,11 @@ canvas.addEventListener('lostpointercapture', cancelGesture);
 window.addEventListener('pointerup', event => pointers.delete(event.pointerId));
 window.addEventListener('pointercancel', event => pointers.delete(event.pointerId));
 window.addEventListener('blur', () => { cancelGesture(); pointers.clear(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelGesture(); pointers.clear(); audio.silence(); } });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { cancelGesture(); pointers.clear(); audio.backgrounded(); }
+  else audio.foregrounded();
+});
+window.addEventListener('pageshow',()=>audio.foregrounded());
 modeButtons.forEach(button => button.addEventListener('click', () => {
   if (mode !== 'editing') return;
   launchMode = saveLaunchMode(storage, button.dataset.launchMode);
@@ -635,18 +642,33 @@ function updateExperienceControls() {
 }
 soundButton.addEventListener('click',()=>{
   experienceSettings=saveExperience(storage,{...experienceSettings,sound:!experienceSettings.sound});
-  audio.setEnabled(experienceSettings.sound);audio.unlock();updateExperienceControls();
-  if(audio.unavailable) document.querySelector('#soundHelp').textContent='この環境では音声を開始できません。ゲームはそのまま遊べます。';
+  audio.setEnabled(experienceSettings.sound);updateExperienceControls();
+  if(experienceSettings.sound)void audio.testSound();
 });
+testSoundButton.addEventListener('click',()=>{void audio.testSound();});
+function updateAudioStatus() {
+  const info=audio.diagnostics();
+  testSoundButton.disabled=!info.enabled||info.pending;
+  const help=!info.enabled?'サウンドをONにすると短い確認音を送ります。'
+    :info.pending?'音声を開始しています…'
+    :info.lastTest==='failed'||info.clockAdvancing===false?'音声を開始できません。テスト音をもう一度タップしてください。診断情報も確認できます。'
+    :info.lastTest==='sent'?'テスト音を出力経路へ送りました。実際に聞こえるか確認してください。'
+    :info.needsGesture?'音声の再開は、テスト音または次の操作で行います。':'サウンドON。テスト音で出力を確認できます。';
+  document.querySelector('#soundHelp').textContent=help;
+  document.querySelector('#audioDiagnostics').textContent=`AudioContext: ${info.state}\n開始待ち: ${info.pending?'あり':'なし'} / 再開試行: ${info.resumeAttempts}\nテスト音: ${info.lastTest} / 出力要求: ${info.sent}\n音声時計: ${info.clockAdvancing===null?'未計測':info.clockAdvancing?'進行':'停止'}\nAudioSession: ${info.sessionType}\nエラー: ${info.lastError||'なし'}`;
+}
+audio.onChange=updateAudioStatus;
 qualityInput.addEventListener('change',()=>{
   experienceSettings=saveExperience(storage,{...experienceSettings,quality:qualityInput.value});
   experience.setQuality(experienceSettings.quality);updateExperienceControls();
 });
 // Capture also handles keyboard activation. Sound synthesis never unlocks audio.
 document.addEventListener('click',event=>{
-  if(event.target?.closest?.('button, select, summary')){audio.unlock();audio.play('ui');}
+  if(event.target?.closest?.('#soundToggle, #testSound'))return;
+  if(event.target?.closest?.('button, select, summary')){void audio.unlock();audio.play('ui');}
 },true);
 updateExperienceControls();
+updateAudioStatus();
 function updateGameMode() {
   gameModeInput.value=gameMode;
   document.querySelector('#gameModeHelp').textContent=gameMode==='live'?'重力操作：発射後も惑星をドラッグして誘導':'軌道設計：発射後は惑星固定';

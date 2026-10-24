@@ -1,0 +1,7233 @@
+{
+  "version": "0.2.3-C",
+  "style": "UNIFIED 01",
+  "status": "LAB_PREVIEW_ONLY",
+  "seed": 24032025,
+  "sampling": "nearest",
+  "assets": {
+    "sprites/ranger.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "RANGER:idle:0",
+        "RANGER:walk_a:0",
+        "RANGER:walk_b:0",
+        "RANGER:walk_c:0",
+        "RANGER:jump:0",
+        "RANGER:fall:0",
+        "RANGER:shoot:0",
+        "RANGER:hit:0",
+        "RANGER:dead:0",
+        "RANGER:dash:0",
+        "RANGER:fly:0",
+        "RANGER:hover:0"
+      ],
+      "sha256": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2"
+    },
+    "far/ranger.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "RANGER:far:idle:0",
+        "RANGER:far:walk_a:0",
+        "RANGER:far:walk_b:0",
+        "RANGER:far:walk_c:0",
+        "RANGER:far:jump:0",
+        "RANGER:far:fall:0",
+        "RANGER:far:shoot:0",
+        "RANGER:far:hit:0",
+        "RANGER:far:dead:0",
+        "RANGER:far:dash:0",
+        "RANGER:far:fly:0",
+        "RANGER:far:hover:0"
+      ],
+      "sha256": "b15ff463f4c6bd2a781a05561875eae343f43a99696909dbe3d9160e4e4bb8d9"
+    },
+    "sprites/scout.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "SCOUT:idle:0",
+        "SCOUT:walk_a:0",
+        "SCOUT:walk_b:0",
+        "SCOUT:walk_c:0",
+        "SCOUT:jump:0",
+        "SCOUT:fall:0",
+        "SCOUT:shoot:0",
+        "SCOUT:hit:0",
+        "SCOUT:dead:0",
+        "SCOUT:dash:0",
+        "SCOUT:fly:0",
+        "SCOUT:hover:0"
+      ],
+      "sha256": "34ff3d1c9d8dd8649c2f6f8ed3ae34024e73a17530e1dd92a5a16268ccea853a"
+    },
+    "far/scout.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "SCOUT:far:idle:0",
+        "SCOUT:far:walk_a:0",
+        "SCOUT:far:walk_b:0",
+        "SCOUT:far:walk_c:0",
+        "SCOUT:far:jump:0",
+        "SCOUT:far:fall:0",
+        "SCOUT:far:shoot:0",
+        "SCOUT:far:hit:0",
+        "SCOUT:far:dead:0",
+        "SCOUT:far:dash:0",
+        "SCOUT:far:fly:0",
+        "SCOUT:far:hover:0"
+      ],
+      "sha256": "35ecc702769e5e366b1f35ede296b86151f7c4ad57ec17fecda1a303eac9a2fe"
+    },
+    "sprites/guardian.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "GUARDIAN:idle:0",
+        "GUARDIAN:walk_a:0",
+        "GUARDIAN:walk_b:0",
+        "GUARDIAN:walk_c:0",
+        "GUARDIAN:jump:0",
+        "GUARDIAN:fall:0",
+        "GUARDIAN:shoot:0",
+        "GUARDIAN:hit:0",
+        "GUARDIAN:dead:0",
+        "GUARDIAN:dash:0",
+        "GUARDIAN:fly:0",
+        "GUARDIAN:hover:0"
+      ],
+      "sha256": "468c65f417ac778a184ee4def86e8f998373a796eaddf7f180bb79e2c0c9fa7c"
+    },
+    "far/guardian.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "GUARDIAN:far:idle:0",
+        "GUARDIAN:far:walk_a:0",
+        "GUARDIAN:far:walk_b:0",
+        "GUARDIAN:far:walk_c:0",
+        "GUARDIAN:far:jump:0",
+        "GUARDIAN:far:fall:0",
+        "GUARDIAN:far:shoot:0",
+        "GUARDIAN:far:hit:0",
+        "GUARDIAN:far:dead:0",
+        "GUARDIAN:far:dash:0",
+        "GUARDIAN:far:fly:0",
+        "GUARDIAN:far:hover:0"
+      ],
+      "sha256": "36ffbb230ade85c85d3c1015059cd938d212f03f6a94577211a8e517df141c9f"
+    },
+    "sprites/wing.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "WING:idle:0",
+        "WING:walk_a:0",
+        "WING:walk_b:0",
+        "WING:walk_c:0",
+        "WING:jump:0",
+        "WING:fall:0",
+        "WING:shoot:0",
+        "WING:hit:0",
+        "WING:dead:0",
+        "WING:dash:0",
+        "WING:fly:0",
+        "WING:hover:0"
+      ],
+      "sha256": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e"
+    },
+    "far/wing.png": {
+      "size": [
+        576,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 12,
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "frameIds": [
+        "WING:far:idle:0",
+        "WING:far:walk_a:0",
+        "WING:far:walk_b:0",
+        "WING:far:walk_c:0",
+        "WING:far:jump:0",
+        "WING:far:fall:0",
+        "WING:far:shoot:0",
+        "WING:far:hit:0",
+        "WING:far:dead:0",
+        "WING:far:dash:0",
+        "WING:far:fly:0",
+        "WING:far:hover:0"
+      ],
+      "sha256": "d521301cf2eef7ab1d0d2f6a455d4da8d0a070970ce20cffc2930b4fe78e4eb0"
+    },
+    "sprites/crawler.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-01:move_a:0",
+        "E-01:move_b:0",
+        "E-01:attack:0",
+        "E-01:dead:0",
+        "E-01:hit:0",
+        "E-01:weak_open:0",
+        "E-01:move_a:1",
+        "E-01:move_b:1",
+        "E-01:attack:1",
+        "E-01:dead:1",
+        "E-01:hit:1",
+        "E-01:weak_open:1",
+        "E-01:move_a:2",
+        "E-01:move_b:2",
+        "E-01:attack:2",
+        "E-01:dead:2",
+        "E-01:hit:2",
+        "E-01:weak_open:2"
+      ],
+      "sha256": "70a3aee844dcd685bd88163eb323f5a306e1f8a31c2f50da0b8895affdabff91"
+    },
+    "far/crawler.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-01:far:move_a:0",
+        "E-01:far:move_b:0",
+        "E-01:far:attack:0",
+        "E-01:far:dead:0",
+        "E-01:far:hit:0",
+        "E-01:far:weak_open:0",
+        "E-01:far:move_a:1",
+        "E-01:far:move_b:1",
+        "E-01:far:attack:1",
+        "E-01:far:dead:1",
+        "E-01:far:hit:1",
+        "E-01:far:weak_open:1",
+        "E-01:far:move_a:2",
+        "E-01:far:move_b:2",
+        "E-01:far:attack:2",
+        "E-01:far:dead:2",
+        "E-01:far:hit:2",
+        "E-01:far:weak_open:2"
+      ],
+      "sha256": "f1689b591ef3eed64d87d56edcf4fd8c5fce28d683e74a89d9ca40ec42c19df9"
+    },
+    "sprites/spider.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-02:move_a:0",
+        "E-02:move_b:0",
+        "E-02:attack:0",
+        "E-02:dead:0",
+        "E-02:hit:0",
+        "E-02:weak_open:0",
+        "E-02:move_a:1",
+        "E-02:move_b:1",
+        "E-02:attack:1",
+        "E-02:dead:1",
+        "E-02:hit:1",
+        "E-02:weak_open:1",
+        "E-02:move_a:2",
+        "E-02:move_b:2",
+        "E-02:attack:2",
+        "E-02:dead:2",
+        "E-02:hit:2",
+        "E-02:weak_open:2"
+      ],
+      "sha256": "d41f9d3b28c2c10ecc3ef949735e44e5ac0d7ff209681d458fb184455a87bd04"
+    },
+    "far/spider.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-02:far:move_a:0",
+        "E-02:far:move_b:0",
+        "E-02:far:attack:0",
+        "E-02:far:dead:0",
+        "E-02:far:hit:0",
+        "E-02:far:weak_open:0",
+        "E-02:far:move_a:1",
+        "E-02:far:move_b:1",
+        "E-02:far:attack:1",
+        "E-02:far:dead:1",
+        "E-02:far:hit:1",
+        "E-02:far:weak_open:1",
+        "E-02:far:move_a:2",
+        "E-02:far:move_b:2",
+        "E-02:far:attack:2",
+        "E-02:far:dead:2",
+        "E-02:far:hit:2",
+        "E-02:far:weak_open:2"
+      ],
+      "sha256": "c485fc9d3ba69fbe914566b2ccbd36e3ca050035da458a1b1f1b08b8fc0b5e79"
+    },
+    "sprites/needle.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-03:move_a:0",
+        "E-03:move_b:0",
+        "E-03:attack:0",
+        "E-03:dead:0",
+        "E-03:hit:0",
+        "E-03:weak_open:0",
+        "E-03:move_a:1",
+        "E-03:move_b:1",
+        "E-03:attack:1",
+        "E-03:dead:1",
+        "E-03:hit:1",
+        "E-03:weak_open:1",
+        "E-03:move_a:2",
+        "E-03:move_b:2",
+        "E-03:attack:2",
+        "E-03:dead:2",
+        "E-03:hit:2",
+        "E-03:weak_open:2"
+      ],
+      "sha256": "89267eef9371597e4f8ea6aed15e2f40fac3e2ea54dfb80fe767f90806de26cf"
+    },
+    "far/needle.png": {
+      "size": [
+        384,
+        192
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-03:far:move_a:0",
+        "E-03:far:move_b:0",
+        "E-03:far:attack:0",
+        "E-03:far:dead:0",
+        "E-03:far:hit:0",
+        "E-03:far:weak_open:0",
+        "E-03:far:move_a:1",
+        "E-03:far:move_b:1",
+        "E-03:far:attack:1",
+        "E-03:far:dead:1",
+        "E-03:far:hit:1",
+        "E-03:far:weak_open:1",
+        "E-03:far:move_a:2",
+        "E-03:far:move_b:2",
+        "E-03:far:attack:2",
+        "E-03:far:dead:2",
+        "E-03:far:hit:2",
+        "E-03:far:weak_open:2"
+      ],
+      "sha256": "cfb69c2154781eae5e8209d97a60c0169356f09644803fa90939ac1cd649b345"
+    },
+    "sprites/beetle.png": {
+      "size": [
+        576,
+        288
+      ],
+      "cell": [
+        96,
+        96
+      ],
+      "logicalCell": [
+        48,
+        48
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-04:move_a:0",
+        "E-04:move_b:0",
+        "E-04:attack:0",
+        "E-04:dead:0",
+        "E-04:hit:0",
+        "E-04:weak_open:0",
+        "E-04:move_a:1",
+        "E-04:move_b:1",
+        "E-04:attack:1",
+        "E-04:dead:1",
+        "E-04:hit:1",
+        "E-04:weak_open:1",
+        "E-04:move_a:2",
+        "E-04:move_b:2",
+        "E-04:attack:2",
+        "E-04:dead:2",
+        "E-04:hit:2",
+        "E-04:weak_open:2"
+      ],
+      "sha256": "97340dff39d9ab42a12b6a257f02e0967d00fc2f16816e2149d407cb4065110e"
+    },
+    "far/beetle.png": {
+      "size": [
+        576,
+        288
+      ],
+      "cell": [
+        96,
+        96
+      ],
+      "logicalCell": [
+        48,
+        48
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-04:far:move_a:0",
+        "E-04:far:move_b:0",
+        "E-04:far:attack:0",
+        "E-04:far:dead:0",
+        "E-04:far:hit:0",
+        "E-04:far:weak_open:0",
+        "E-04:far:move_a:1",
+        "E-04:far:move_b:1",
+        "E-04:far:attack:1",
+        "E-04:far:dead:1",
+        "E-04:far:hit:1",
+        "E-04:far:weak_open:1",
+        "E-04:far:move_a:2",
+        "E-04:far:move_b:2",
+        "E-04:far:attack:2",
+        "E-04:far:dead:2",
+        "E-04:far:hit:2",
+        "E-04:far:weak_open:2"
+      ],
+      "sha256": "7301b004dfdcab43a01ee137414589a8938098bbc23d55b58d822d19fbb24736"
+    },
+    "sprites/worm.png": {
+      "size": [
+        384,
+        120
+      ],
+      "cell": [
+        64,
+        40
+      ],
+      "logicalCell": [
+        32,
+        20
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-05:move_a:0",
+        "E-05:move_b:0",
+        "E-05:attack:0",
+        "E-05:dead:0",
+        "E-05:hit:0",
+        "E-05:weak_open:0",
+        "E-05:move_a:1",
+        "E-05:move_b:1",
+        "E-05:attack:1",
+        "E-05:dead:1",
+        "E-05:hit:1",
+        "E-05:weak_open:1",
+        "E-05:move_a:2",
+        "E-05:move_b:2",
+        "E-05:attack:2",
+        "E-05:dead:2",
+        "E-05:hit:2",
+        "E-05:weak_open:2"
+      ],
+      "sha256": "8aff0493ebe05f7d4ef9e2f11c27c61412294bb8368437ff22d289e5e39a3b47"
+    },
+    "far/worm.png": {
+      "size": [
+        384,
+        120
+      ],
+      "cell": [
+        64,
+        40
+      ],
+      "logicalCell": [
+        32,
+        20
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-05:far:move_a:0",
+        "E-05:far:move_b:0",
+        "E-05:far:attack:0",
+        "E-05:far:dead:0",
+        "E-05:far:hit:0",
+        "E-05:far:weak_open:0",
+        "E-05:far:move_a:1",
+        "E-05:far:move_b:1",
+        "E-05:far:attack:1",
+        "E-05:far:dead:1",
+        "E-05:far:hit:1",
+        "E-05:far:weak_open:1",
+        "E-05:far:move_a:2",
+        "E-05:far:move_b:2",
+        "E-05:far:attack:2",
+        "E-05:far:dead:2",
+        "E-05:far:hit:2",
+        "E-05:far:weak_open:2"
+      ],
+      "sha256": "71ea61c092215808ec9e13a7c1b03d3f0f8c8f3130e6b0d766e6c1538c733709"
+    },
+    "sprites/spitter.png": {
+      "size": [
+        336,
+        144
+      ],
+      "cell": [
+        56,
+        48
+      ],
+      "logicalCell": [
+        28,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-06:move_a:0",
+        "E-06:move_b:0",
+        "E-06:attack:0",
+        "E-06:dead:0",
+        "E-06:hit:0",
+        "E-06:weak_open:0",
+        "E-06:move_a:1",
+        "E-06:move_b:1",
+        "E-06:attack:1",
+        "E-06:dead:1",
+        "E-06:hit:1",
+        "E-06:weak_open:1",
+        "E-06:move_a:2",
+        "E-06:move_b:2",
+        "E-06:attack:2",
+        "E-06:dead:2",
+        "E-06:hit:2",
+        "E-06:weak_open:2"
+      ],
+      "sha256": "36871cb0653b11001dfe3e36dc2ee5593311bb742c010c5e0929c6439e5b3010"
+    },
+    "far/spitter.png": {
+      "size": [
+        336,
+        144
+      ],
+      "cell": [
+        56,
+        48
+      ],
+      "logicalCell": [
+        28,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "E-06:far:move_a:0",
+        "E-06:far:move_b:0",
+        "E-06:far:attack:0",
+        "E-06:far:dead:0",
+        "E-06:far:hit:0",
+        "E-06:far:weak_open:0",
+        "E-06:far:move_a:1",
+        "E-06:far:move_b:1",
+        "E-06:far:attack:1",
+        "E-06:far:dead:1",
+        "E-06:far:hit:1",
+        "E-06:far:weak_open:1",
+        "E-06:far:move_a:2",
+        "E-06:far:move_b:2",
+        "E-06:far:attack:2",
+        "E-06:far:dead:2",
+        "E-06:far:hit:2",
+        "E-06:far:weak_open:2"
+      ],
+      "sha256": "d3397b4eae2dec3bbf654e4d225541ee783cf28d7b58688928bd952402891d16"
+    },
+    "sprites/boss.png": {
+      "size": [
+        1152,
+        128
+      ],
+      "cell": [
+        192,
+        128
+      ],
+      "logicalCell": [
+        96,
+        64
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "B-01:move_a:0",
+        "B-01:move_b:0",
+        "B-01:attack:0",
+        "B-01:dead:0",
+        "B-01:hit:0",
+        "B-01:weak_open:0"
+      ],
+      "sha256": "2e0f8e2983dea4f4289cf267e91e5cdd356894b5bb6881fd70d6821e2185f6d2"
+    },
+    "far/boss.png": {
+      "size": [
+        1152,
+        128
+      ],
+      "cell": [
+        192,
+        128
+      ],
+      "logicalCell": [
+        96,
+        64
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "B-01:far:move_a:0",
+        "B-01:far:move_b:0",
+        "B-01:far:attack:0",
+        "B-01:far:dead:0",
+        "B-01:far:hit:0",
+        "B-01:far:weak_open:0"
+      ],
+      "sha256": "4f79bf57bb79d2e337ee0f50c1411523460152949a212e0c95301a49e4f741a5"
+    },
+    "sprites/queen.png": {
+      "size": [
+        1440,
+        192
+      ],
+      "cell": [
+        240,
+        192
+      ],
+      "logicalCell": [
+        120,
+        96
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "B-02:move_a:0",
+        "B-02:move_b:0",
+        "B-02:attack:0",
+        "B-02:dead:0",
+        "B-02:hit:0",
+        "B-02:weak_open:0"
+      ],
+      "sha256": "63a3cce62ee6c40287d816cb2f5a4b6dcef2a77c2a50d287ededbef67b279c2f"
+    },
+    "far/queen.png": {
+      "size": [
+        1440,
+        192
+      ],
+      "cell": [
+        240,
+        192
+      ],
+      "logicalCell": [
+        120,
+        96
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "B-02:far:move_a:0",
+        "B-02:far:move_b:0",
+        "B-02:far:attack:0",
+        "B-02:far:dead:0",
+        "B-02:far:hit:0",
+        "B-02:far:weak_open:0"
+      ],
+      "sha256": "3506387ab5423cdf585fa1c13c921bcc8670ac3fcad13aabfa486eae2a18542f"
+    },
+    "sprites/nest.png": {
+      "size": [
+        576,
+        96
+      ],
+      "cell": [
+        96,
+        96
+      ],
+      "logicalCell": [
+        48,
+        48
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "H-01:move_a:0",
+        "H-01:move_b:0",
+        "H-01:attack:0",
+        "H-01:dead:0",
+        "H-01:hit:0",
+        "H-01:weak_open:0"
+      ],
+      "sha256": "887d4b3febd20d65890c37679f31e6ceeed008ef106f36568028fab692e37018"
+    },
+    "far/nest.png": {
+      "size": [
+        576,
+        96
+      ],
+      "cell": [
+        96,
+        96
+      ],
+      "logicalCell": [
+        48,
+        48
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "H-01:far:move_a:0",
+        "H-01:far:move_b:0",
+        "H-01:far:attack:0",
+        "H-01:far:dead:0",
+        "H-01:far:hit:0",
+        "H-01:far:weak_open:0"
+      ],
+      "sha256": "3cf3ffe20ed1191ab537e830537a9f3d19cd3de81189b2fe7fd4b7c2d8e482a0"
+    },
+    "sprites/barrier.png": {
+      "size": [
+        288,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "O-01:move_a:0",
+        "O-01:move_b:0",
+        "O-01:attack:0",
+        "O-01:dead:0",
+        "O-01:hit:0",
+        "O-01:weak_open:0"
+      ],
+      "sha256": "0bd69cbcf698a28e35cc5511e0b8c86bd1b2c434ee6d1a23164482d302b39b20"
+    },
+    "far/barrier.png": {
+      "size": [
+        288,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "logicalCell": [
+        24,
+        32
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "frameIds": [
+        "O-01:far:move_a:0",
+        "O-01:far:move_b:0",
+        "O-01:far:attack:0",
+        "O-01:far:dead:0",
+        "O-01:far:hit:0",
+        "O-01:far:weak_open:0"
+      ],
+      "sha256": "d0c62fd78ee4acf2a26e0c7c2408fdadaf3f486fe0838ceeb79245dff1686a13"
+    },
+    "weapons/icons.png": {
+      "size": [
+        640,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 20,
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "frameIds": [
+        "WEAPONS20:icon:A-01:0",
+        "WEAPONS20:icon:S-02:0",
+        "WEAPONS20:icon:L-03:0",
+        "WEAPONS20:icon:R-04:0",
+        "WEAPONS20:icon:F-05:0",
+        "WEAPONS20:icon:T-06:0",
+        "WEAPONS20:icon:G-07:0",
+        "WEAPONS20:icon:H-08:0",
+        "WEAPONS20:icon:B-09:0",
+        "WEAPONS20:icon:R-10:0",
+        "WEAPONS20:icon:X-11:0",
+        "WEAPONS20:icon:P-12:0",
+        "WEAPONS20:icon:P-13:0",
+        "WEAPONS20:icon:G-14:0",
+        "WEAPONS20:icon:F-15:0",
+        "WEAPONS20:icon:T-16:0",
+        "WEAPONS20:icon:S-17:0",
+        "WEAPONS20:icon:M-18:0",
+        "WEAPONS20:icon:D-19:0",
+        "WEAPONS20:icon:M-20:0"
+      ],
+      "sha256": "d6628d33979d645a4c60da05b3558a7be039ae840baa937cace1f41a2d81cb73"
+    },
+    "weapons/equipped.png": {
+      "size": [
+        640,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 20,
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "frameIds": [
+        "WEAPONS20:held:A-01:0",
+        "WEAPONS20:held:S-02:0",
+        "WEAPONS20:held:L-03:0",
+        "WEAPONS20:held:R-04:0",
+        "WEAPONS20:held:F-05:0",
+        "WEAPONS20:held:T-06:0",
+        "WEAPONS20:held:G-07:0",
+        "WEAPONS20:held:H-08:0",
+        "WEAPONS20:held:B-09:0",
+        "WEAPONS20:held:R-10:0",
+        "WEAPONS20:held:X-11:0",
+        "WEAPONS20:held:P-12:0",
+        "WEAPONS20:held:P-13:0",
+        "WEAPONS20:held:G-14:0",
+        "WEAPONS20:held:F-15:0",
+        "WEAPONS20:held:T-16:0",
+        "WEAPONS20:held:S-17:0",
+        "WEAPONS20:held:M-18:0",
+        "WEAPONS20:held:D-19:0",
+        "WEAPONS20:held:M-20:0"
+      ],
+      "sha256": "152fcd9d9796ec85e77cd301cb6ebb521650b968741288fd8bd918fec380d547"
+    },
+    "weapons/projectiles.png": {
+      "size": [
+        640,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 20,
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "frameIds": [
+        "WEAPONS20:shot:A-01:0",
+        "WEAPONS20:shot:S-02:0",
+        "WEAPONS20:shot:L-03:0",
+        "WEAPONS20:shot:R-04:0",
+        "WEAPONS20:shot:F-05:0",
+        "WEAPONS20:shot:T-06:0",
+        "WEAPONS20:shot:G-07:0",
+        "WEAPONS20:shot:H-08:0",
+        "WEAPONS20:shot:B-09:0",
+        "WEAPONS20:shot:R-10:0",
+        "WEAPONS20:shot:X-11:0",
+        "WEAPONS20:shot:P-12:0",
+        "WEAPONS20:shot:P-13:0",
+        "WEAPONS20:shot:G-14:0",
+        "WEAPONS20:shot:F-15:0",
+        "WEAPONS20:shot:T-16:0",
+        "WEAPONS20:shot:S-17:0",
+        "WEAPONS20:shot:M-18:0",
+        "WEAPONS20:shot:D-19:0",
+        "WEAPONS20:shot:M-20:0"
+      ],
+      "sha256": "44ed51227ce4ce93c01299e3a93f3b6df6f771660ef8d77535248eb941e530c7"
+    },
+    "weapons/impacts.png": {
+      "size": [
+        256,
+        1280
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 4,
+      "frames": 80,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3",
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3",
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3",
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3",
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3",
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3",
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3",
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3",
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3",
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3",
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3",
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3",
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3",
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3",
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3",
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3",
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3",
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3",
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3",
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "frameIds": [
+        "WEAPONS20:impacts:A-01:0:0",
+        "WEAPONS20:impacts:A-01:1:0",
+        "WEAPONS20:impacts:A-01:2:0",
+        "WEAPONS20:impacts:A-01:3:0",
+        "WEAPONS20:impacts:S-02:0:0",
+        "WEAPONS20:impacts:S-02:1:0",
+        "WEAPONS20:impacts:S-02:2:0",
+        "WEAPONS20:impacts:S-02:3:0",
+        "WEAPONS20:impacts:L-03:0:0",
+        "WEAPONS20:impacts:L-03:1:0",
+        "WEAPONS20:impacts:L-03:2:0",
+        "WEAPONS20:impacts:L-03:3:0",
+        "WEAPONS20:impacts:R-04:0:0",
+        "WEAPONS20:impacts:R-04:1:0",
+        "WEAPONS20:impacts:R-04:2:0",
+        "WEAPONS20:impacts:R-04:3:0",
+        "WEAPONS20:impacts:F-05:0:0",
+        "WEAPONS20:impacts:F-05:1:0",
+        "WEAPONS20:impacts:F-05:2:0",
+        "WEAPONS20:impacts:F-05:3:0",
+        "WEAPONS20:impacts:T-06:0:0",
+        "WEAPONS20:impacts:T-06:1:0",
+        "WEAPONS20:impacts:T-06:2:0",
+        "WEAPONS20:impacts:T-06:3:0",
+        "WEAPONS20:impacts:G-07:0:0",
+        "WEAPONS20:impacts:G-07:1:0",
+        "WEAPONS20:impacts:G-07:2:0",
+        "WEAPONS20:impacts:G-07:3:0",
+        "WEAPONS20:impacts:H-08:0:0",
+        "WEAPONS20:impacts:H-08:1:0",
+        "WEAPONS20:impacts:H-08:2:0",
+        "WEAPONS20:impacts:H-08:3:0",
+        "WEAPONS20:impacts:B-09:0:0",
+        "WEAPONS20:impacts:B-09:1:0",
+        "WEAPONS20:impacts:B-09:2:0",
+        "WEAPONS20:impacts:B-09:3:0",
+        "WEAPONS20:impacts:R-10:0:0",
+        "WEAPONS20:impacts:R-10:1:0",
+        "WEAPONS20:impacts:R-10:2:0",
+        "WEAPONS20:impacts:R-10:3:0",
+        "WEAPONS20:impacts:X-11:0:0",
+        "WEAPONS20:impacts:X-11:1:0",
+        "WEAPONS20:impacts:X-11:2:0",
+        "WEAPONS20:impacts:X-11:3:0",
+        "WEAPONS20:impacts:P-12:0:0",
+        "WEAPONS20:impacts:P-12:1:0",
+        "WEAPONS20:impacts:P-12:2:0",
+        "WEAPONS20:impacts:P-12:3:0",
+        "WEAPONS20:impacts:P-13:0:0",
+        "WEAPONS20:impacts:P-13:1:0",
+        "WEAPONS20:impacts:P-13:2:0",
+        "WEAPONS20:impacts:P-13:3:0",
+        "WEAPONS20:impacts:G-14:0:0",
+        "WEAPONS20:impacts:G-14:1:0",
+        "WEAPONS20:impacts:G-14:2:0",
+        "WEAPONS20:impacts:G-14:3:0",
+        "WEAPONS20:impacts:F-15:0:0",
+        "WEAPONS20:impacts:F-15:1:0",
+        "WEAPONS20:impacts:F-15:2:0",
+        "WEAPONS20:impacts:F-15:3:0",
+        "WEAPONS20:impacts:T-16:0:0",
+        "WEAPONS20:impacts:T-16:1:0",
+        "WEAPONS20:impacts:T-16:2:0",
+        "WEAPONS20:impacts:T-16:3:0",
+        "WEAPONS20:impacts:S-17:0:0",
+        "WEAPONS20:impacts:S-17:1:0",
+        "WEAPONS20:impacts:S-17:2:0",
+        "WEAPONS20:impacts:S-17:3:0",
+        "WEAPONS20:impacts:M-18:0:0",
+        "WEAPONS20:impacts:M-18:1:0",
+        "WEAPONS20:impacts:M-18:2:0",
+        "WEAPONS20:impacts:M-18:3:0",
+        "WEAPONS20:impacts:D-19:0:0",
+        "WEAPONS20:impacts:D-19:1:0",
+        "WEAPONS20:impacts:D-19:2:0",
+        "WEAPONS20:impacts:D-19:3:0",
+        "WEAPONS20:impacts:M-20:0:0",
+        "WEAPONS20:impacts:M-20:1:0",
+        "WEAPONS20:impacts:M-20:2:0",
+        "WEAPONS20:impacts:M-20:3:0"
+      ],
+      "sha256": "a331f85f5356e67cade021bef52ab0313151d49c40152b86bfd1927bdc0e0743"
+    },
+    "weapons/special.png": {
+      "size": [
+        256,
+        1280
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 4,
+      "frames": 80,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3",
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3",
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3",
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3",
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3",
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3",
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3",
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3",
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3",
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3",
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3",
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3",
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3",
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3",
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3",
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3",
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3",
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3",
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3",
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "frameIds": [
+        "WEAPONS20:special:A-01:0:0",
+        "WEAPONS20:special:A-01:1:0",
+        "WEAPONS20:special:A-01:2:0",
+        "WEAPONS20:special:A-01:3:0",
+        "WEAPONS20:special:S-02:0:0",
+        "WEAPONS20:special:S-02:1:0",
+        "WEAPONS20:special:S-02:2:0",
+        "WEAPONS20:special:S-02:3:0",
+        "WEAPONS20:special:L-03:0:0",
+        "WEAPONS20:special:L-03:1:0",
+        "WEAPONS20:special:L-03:2:0",
+        "WEAPONS20:special:L-03:3:0",
+        "WEAPONS20:special:R-04:0:0",
+        "WEAPONS20:special:R-04:1:0",
+        "WEAPONS20:special:R-04:2:0",
+        "WEAPONS20:special:R-04:3:0",
+        "WEAPONS20:special:F-05:0:0",
+        "WEAPONS20:special:F-05:1:0",
+        "WEAPONS20:special:F-05:2:0",
+        "WEAPONS20:special:F-05:3:0",
+        "WEAPONS20:special:T-06:0:0",
+        "WEAPONS20:special:T-06:1:0",
+        "WEAPONS20:special:T-06:2:0",
+        "WEAPONS20:special:T-06:3:0",
+        "WEAPONS20:special:G-07:0:0",
+        "WEAPONS20:special:G-07:1:0",
+        "WEAPONS20:special:G-07:2:0",
+        "WEAPONS20:special:G-07:3:0",
+        "WEAPONS20:special:H-08:0:0",
+        "WEAPONS20:special:H-08:1:0",
+        "WEAPONS20:special:H-08:2:0",
+        "WEAPONS20:special:H-08:3:0",
+        "WEAPONS20:special:B-09:0:0",
+        "WEAPONS20:special:B-09:1:0",
+        "WEAPONS20:special:B-09:2:0",
+        "WEAPONS20:special:B-09:3:0",
+        "WEAPONS20:special:R-10:0:0",
+        "WEAPONS20:special:R-10:1:0",
+        "WEAPONS20:special:R-10:2:0",
+        "WEAPONS20:special:R-10:3:0",
+        "WEAPONS20:special:X-11:0:0",
+        "WEAPONS20:special:X-11:1:0",
+        "WEAPONS20:special:X-11:2:0",
+        "WEAPONS20:special:X-11:3:0",
+        "WEAPONS20:special:P-12:0:0",
+        "WEAPONS20:special:P-12:1:0",
+        "WEAPONS20:special:P-12:2:0",
+        "WEAPONS20:special:P-12:3:0",
+        "WEAPONS20:special:P-13:0:0",
+        "WEAPONS20:special:P-13:1:0",
+        "WEAPONS20:special:P-13:2:0",
+        "WEAPONS20:special:P-13:3:0",
+        "WEAPONS20:special:G-14:0:0",
+        "WEAPONS20:special:G-14:1:0",
+        "WEAPONS20:special:G-14:2:0",
+        "WEAPONS20:special:G-14:3:0",
+        "WEAPONS20:special:F-15:0:0",
+        "WEAPONS20:special:F-15:1:0",
+        "WEAPONS20:special:F-15:2:0",
+        "WEAPONS20:special:F-15:3:0",
+        "WEAPONS20:special:T-16:0:0",
+        "WEAPONS20:special:T-16:1:0",
+        "WEAPONS20:special:T-16:2:0",
+        "WEAPONS20:special:T-16:3:0",
+        "WEAPONS20:special:S-17:0:0",
+        "WEAPONS20:special:S-17:1:0",
+        "WEAPONS20:special:S-17:2:0",
+        "WEAPONS20:special:S-17:3:0",
+        "WEAPONS20:special:M-18:0:0",
+        "WEAPONS20:special:M-18:1:0",
+        "WEAPONS20:special:M-18:2:0",
+        "WEAPONS20:special:M-18:3:0",
+        "WEAPONS20:special:D-19:0:0",
+        "WEAPONS20:special:D-19:1:0",
+        "WEAPONS20:special:D-19:2:0",
+        "WEAPONS20:special:D-19:3:0",
+        "WEAPONS20:special:M-20:0:0",
+        "WEAPONS20:special:M-20:1:0",
+        "WEAPONS20:special:M-20:2:0",
+        "WEAPONS20:special:M-20:3:0"
+      ],
+      "sha256": "b09f6d3331ff6a0206437d00521a23d2dbcd9b7de45734ea6e8e833660464448"
+    },
+    "backgrounds/city_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "far"
+      ],
+      "frameIds": [
+        "city:far:far:0"
+      ],
+      "sha256": "1cdf13368db261eac6fc2a6155b40478a26b8f497e0b4b8ac217368febd27c32"
+    },
+    "backgrounds/city_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "middle"
+      ],
+      "frameIds": [
+        "city:middle:middle:0"
+      ],
+      "sha256": "40a441014debffb8ac26a540bbd49ea1470f8213bed9e3d59d85bbe6526c9505"
+    },
+    "backgrounds/city_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "near"
+      ],
+      "frameIds": [
+        "city:near:near:0"
+      ],
+      "sha256": "f28953cedd3bff6bcb9721396063c8e6daf7aa7e8eeb69bffdae2eac13b1436e"
+    },
+    "backgrounds/city.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "composite"
+      ],
+      "frameIds": [
+        "city:composite:0"
+      ],
+      "sha256": "5224a834bd1f03f87b0c82696d843249bfd369378f48280ec638184fdd182e72"
+    },
+    "tiles/city.png": {
+      "size": [
+        256,
+        256
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 8,
+      "frames": 64,
+      "states": [
+        "tile0:variant0",
+        "tile1:variant0",
+        "tile2:variant0",
+        "tile3:variant0",
+        "tile4:variant0",
+        "tile5:variant0",
+        "tile6:variant0",
+        "tile7:variant0",
+        "tile8:variant0",
+        "tile9:variant0",
+        "tile10:variant0",
+        "tile11:variant0",
+        "tile12:variant0",
+        "tile13:variant0",
+        "tile14:variant0",
+        "tile15:variant0",
+        "tile0:variant1",
+        "tile1:variant1",
+        "tile2:variant1",
+        "tile3:variant1",
+        "tile4:variant1",
+        "tile5:variant1",
+        "tile6:variant1",
+        "tile7:variant1",
+        "tile8:variant1",
+        "tile9:variant1",
+        "tile10:variant1",
+        "tile11:variant1",
+        "tile12:variant1",
+        "tile13:variant1",
+        "tile14:variant1",
+        "tile15:variant1",
+        "tile0:variant2",
+        "tile1:variant2",
+        "tile2:variant2",
+        "tile3:variant2",
+        "tile4:variant2",
+        "tile5:variant2",
+        "tile6:variant2",
+        "tile7:variant2",
+        "tile8:variant2",
+        "tile9:variant2",
+        "tile10:variant2",
+        "tile11:variant2",
+        "tile12:variant2",
+        "tile13:variant2",
+        "tile14:variant2",
+        "tile15:variant2",
+        "tile0:variant3",
+        "tile1:variant3",
+        "tile2:variant3",
+        "tile3:variant3",
+        "tile4:variant3",
+        "tile5:variant3",
+        "tile6:variant3",
+        "tile7:variant3",
+        "tile8:variant3",
+        "tile9:variant3",
+        "tile10:variant3",
+        "tile11:variant3",
+        "tile12:variant3",
+        "tile13:variant3",
+        "tile14:variant3",
+        "tile15:variant3"
+      ],
+      "frameIds": [
+        "city:tiles:tile0:variant0:0",
+        "city:tiles:tile1:variant0:0",
+        "city:tiles:tile2:variant0:0",
+        "city:tiles:tile3:variant0:0",
+        "city:tiles:tile4:variant0:0",
+        "city:tiles:tile5:variant0:0",
+        "city:tiles:tile6:variant0:0",
+        "city:tiles:tile7:variant0:0",
+        "city:tiles:tile8:variant0:0",
+        "city:tiles:tile9:variant0:0",
+        "city:tiles:tile10:variant0:0",
+        "city:tiles:tile11:variant0:0",
+        "city:tiles:tile12:variant0:0",
+        "city:tiles:tile13:variant0:0",
+        "city:tiles:tile14:variant0:0",
+        "city:tiles:tile15:variant0:0",
+        "city:tiles:tile0:variant1:0",
+        "city:tiles:tile1:variant1:0",
+        "city:tiles:tile2:variant1:0",
+        "city:tiles:tile3:variant1:0",
+        "city:tiles:tile4:variant1:0",
+        "city:tiles:tile5:variant1:0",
+        "city:tiles:tile6:variant1:0",
+        "city:tiles:tile7:variant1:0",
+        "city:tiles:tile8:variant1:0",
+        "city:tiles:tile9:variant1:0",
+        "city:tiles:tile10:variant1:0",
+        "city:tiles:tile11:variant1:0",
+        "city:tiles:tile12:variant1:0",
+        "city:tiles:tile13:variant1:0",
+        "city:tiles:tile14:variant1:0",
+        "city:tiles:tile15:variant1:0",
+        "city:tiles:tile0:variant2:0",
+        "city:tiles:tile1:variant2:0",
+        "city:tiles:tile2:variant2:0",
+        "city:tiles:tile3:variant2:0",
+        "city:tiles:tile4:variant2:0",
+        "city:tiles:tile5:variant2:0",
+        "city:tiles:tile6:variant2:0",
+        "city:tiles:tile7:variant2:0",
+        "city:tiles:tile8:variant2:0",
+        "city:tiles:tile9:variant2:0",
+        "city:tiles:tile10:variant2:0",
+        "city:tiles:tile11:variant2:0",
+        "city:tiles:tile12:variant2:0",
+        "city:tiles:tile13:variant2:0",
+        "city:tiles:tile14:variant2:0",
+        "city:tiles:tile15:variant2:0",
+        "city:tiles:tile0:variant3:0",
+        "city:tiles:tile1:variant3:0",
+        "city:tiles:tile2:variant3:0",
+        "city:tiles:tile3:variant3:0",
+        "city:tiles:tile4:variant3:0",
+        "city:tiles:tile5:variant3:0",
+        "city:tiles:tile6:variant3:0",
+        "city:tiles:tile7:variant3:0",
+        "city:tiles:tile8:variant3:0",
+        "city:tiles:tile9:variant3:0",
+        "city:tiles:tile10:variant3:0",
+        "city:tiles:tile11:variant3:0",
+        "city:tiles:tile12:variant3:0",
+        "city:tiles:tile13:variant3:0",
+        "city:tiles:tile14:variant3:0",
+        "city:tiles:tile15:variant3:0"
+      ],
+      "sha256": "36cd0ee11e999d08a9ecf393f3ad892ab3dbaf338085f730a3b90150f43fcac8"
+    },
+    "backgrounds/underground_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "far"
+      ],
+      "frameIds": [
+        "underground:far:far:0"
+      ],
+      "sha256": "44ffc5206d0d6b913ed2e8984148800dd5831ecd4773b862c84a0a521b5e58db"
+    },
+    "backgrounds/underground_middle.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "middle"
+      ],
+      "frameIds": [
+        "underground:middle:middle:0"
+      ],
+      "sha256": "fefd95a2cc80fdbd0ebd455da5aaaabd859392a74ee0ebdb07f0e6af17792ddc"
+    },
+    "backgrounds/underground_near.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "near"
+      ],
+      "frameIds": [
+        "underground:near:near:0"
+      ],
+      "sha256": "b571277d7de358db74165136989336d9249642930e36b161472b3a65eaf3f1cc"
+    },
+    "backgrounds/underground.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "composite"
+      ],
+      "frameIds": [
+        "underground:composite:0"
+      ],
+      "sha256": "9953939e8413b2f4485d0aaf3248c8960b4b819d23f254ae28ddf46f9510e038"
+    },
+    "tiles/underground.png": {
+      "size": [
+        256,
+        256
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 8,
+      "frames": 64,
+      "states": [
+        "tile0:variant0",
+        "tile1:variant0",
+        "tile2:variant0",
+        "tile3:variant0",
+        "tile4:variant0",
+        "tile5:variant0",
+        "tile6:variant0",
+        "tile7:variant0",
+        "tile8:variant0",
+        "tile9:variant0",
+        "tile10:variant0",
+        "tile11:variant0",
+        "tile12:variant0",
+        "tile13:variant0",
+        "tile14:variant0",
+        "tile15:variant0",
+        "tile0:variant1",
+        "tile1:variant1",
+        "tile2:variant1",
+        "tile3:variant1",
+        "tile4:variant1",
+        "tile5:variant1",
+        "tile6:variant1",
+        "tile7:variant1",
+        "tile8:variant1",
+        "tile9:variant1",
+        "tile10:variant1",
+        "tile11:variant1",
+        "tile12:variant1",
+        "tile13:variant1",
+        "tile14:variant1",
+        "tile15:variant1",
+        "tile0:variant2",
+        "tile1:variant2",
+        "tile2:variant2",
+        "tile3:variant2",
+        "tile4:variant2",
+        "tile5:variant2",
+        "tile6:variant2",
+        "tile7:variant2",
+        "tile8:variant2",
+        "tile9:variant2",
+        "tile10:variant2",
+        "tile11:variant2",
+        "tile12:variant2",
+        "tile13:variant2",
+        "tile14:variant2",
+        "tile15:variant2",
+        "tile0:variant3",
+        "tile1:variant3",
+        "tile2:variant3",
+        "tile3:variant3",
+        "tile4:variant3",
+        "tile5:variant3",
+        "tile6:variant3",
+        "tile7:variant3",
+        "tile8:variant3",
+        "tile9:variant3",
+        "tile10:variant3",
+        "tile11:variant3",
+        "tile12:variant3",
+        "tile13:variant3",
+        "tile14:variant3",
+        "tile15:variant3"
+      ],
+      "frameIds": [
+        "underground:tiles:tile0:variant0:0",
+        "underground:tiles:tile1:variant0:0",
+        "underground:tiles:tile2:variant0:0",
+        "underground:tiles:tile3:variant0:0",
+        "underground:tiles:tile4:variant0:0",
+        "underground:tiles:tile5:variant0:0",
+        "underground:tiles:tile6:variant0:0",
+        "underground:tiles:tile7:variant0:0",
+        "underground:tiles:tile8:variant0:0",
+        "underground:tiles:tile9:variant0:0",
+        "underground:tiles:tile10:variant0:0",
+        "underground:tiles:tile11:variant0:0",
+        "underground:tiles:tile12:variant0:0",
+        "underground:tiles:tile13:variant0:0",
+        "underground:tiles:tile14:variant0:0",
+        "underground:tiles:tile15:variant0:0",
+        "underground:tiles:tile0:variant1:0",
+        "underground:tiles:tile1:variant1:0",
+        "underground:tiles:tile2:variant1:0",
+        "underground:tiles:tile3:variant1:0",
+        "underground:tiles:tile4:variant1:0",
+        "underground:tiles:tile5:variant1:0",
+        "underground:tiles:tile6:variant1:0",
+        "underground:tiles:tile7:variant1:0",
+        "underground:tiles:tile8:variant1:0",
+        "underground:tiles:tile9:variant1:0",
+        "underground:tiles:tile10:variant1:0",
+        "underground:tiles:tile11:variant1:0",
+        "underground:tiles:tile12:variant1:0",
+        "underground:tiles:tile13:variant1:0",
+        "underground:tiles:tile14:variant1:0",
+        "underground:tiles:tile15:variant1:0",
+        "underground:tiles:tile0:variant2:0",
+        "underground:tiles:tile1:variant2:0",
+        "underground:tiles:tile2:variant2:0",
+        "underground:tiles:tile3:variant2:0",
+        "underground:tiles:tile4:variant2:0",
+        "underground:tiles:tile5:variant2:0",
+        "underground:tiles:tile6:variant2:0",
+        "underground:tiles:tile7:variant2:0",
+        "underground:tiles:tile8:variant2:0",
+        "underground:tiles:tile9:variant2:0",
+        "underground:tiles:tile10:variant2:0",
+        "underground:tiles:tile11:variant2:0",
+        "underground:tiles:tile12:variant2:0",
+        "underground:tiles:tile13:variant2:0",
+        "underground:tiles:tile14:variant2:0",
+        "underground:tiles:tile15:variant2:0",
+        "underground:tiles:tile0:variant3:0",
+        "underground:tiles:tile1:variant3:0",
+        "underground:tiles:tile2:variant3:0",
+        "underground:tiles:tile3:variant3:0",
+        "underground:tiles:tile4:variant3:0",
+        "underground:tiles:tile5:variant3:0",
+        "underground:tiles:tile6:variant3:0",
+        "underground:tiles:tile7:variant3:0",
+        "underground:tiles:tile8:variant3:0",
+        "underground:tiles:tile9:variant3:0",
+        "underground:tiles:tile10:variant3:0",
+        "underground:tiles:tile11:variant3:0",
+        "underground:tiles:tile12:variant3:0",
+        "underground:tiles:tile13:variant3:0",
+        "underground:tiles:tile14:variant3:0",
+        "underground:tiles:tile15:variant3:0"
+      ],
+      "sha256": "a1088d942d600e266ed9a9e827c5855c8db3c7f42953f3033ba4674e88b359a9"
+    },
+    "effects/acid.png": {
+      "size": [
+        128,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "acid:0",
+        "acid:1",
+        "acid:2",
+        "acid:3"
+      ],
+      "frameIds": [
+        "acid:acid:0:0",
+        "acid:acid:1:0",
+        "acid:acid:2:0",
+        "acid:acid:3:0"
+      ],
+      "sha256": "8fbf6015056328c943817830d632ea32491fefd2b3cdb164e1a4257dc41ad249"
+    },
+    "effects/wave.png": {
+      "size": [
+        256,
+        48
+      ],
+      "cell": [
+        64,
+        48
+      ],
+      "logicalCell": [
+        32,
+        24
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "wave:0",
+        "wave:1",
+        "wave:2",
+        "wave:3"
+      ],
+      "frameIds": [
+        "wave:wave:0:0",
+        "wave:wave:1:0",
+        "wave:wave:2:0",
+        "wave:wave:3:0"
+      ],
+      "sha256": "30cb4a133258f434ab9c8f4076768046ed411fbe7247bf84c94532c06c3dcde4"
+    },
+    "effects/nestBreak.png": {
+      "size": [
+        1024,
+        128
+      ],
+      "cell": [
+        128,
+        128
+      ],
+      "logicalCell": [
+        64,
+        64
+      ],
+      "columns": 8,
+      "frames": 8,
+      "states": [
+        "nestBreak:0",
+        "nestBreak:1",
+        "nestBreak:2",
+        "nestBreak:3",
+        "nestBreak:4",
+        "nestBreak:5",
+        "nestBreak:6",
+        "nestBreak:7"
+      ],
+      "frameIds": [
+        "nestBreak:nestBreak:0:0",
+        "nestBreak:nestBreak:1:0",
+        "nestBreak:nestBreak:2:0",
+        "nestBreak:nestBreak:3:0",
+        "nestBreak:nestBreak:4:0",
+        "nestBreak:nestBreak:5:0",
+        "nestBreak:nestBreak:6:0",
+        "nestBreak:nestBreak:7:0"
+      ],
+      "sha256": "11a564c7c420a994dace45d923489d76164c71bf84b4d57becac07d4fba345e0"
+    },
+    "effects/bossBreak.png": {
+      "size": [
+        2048,
+        192
+      ],
+      "cell": [
+        256,
+        192
+      ],
+      "logicalCell": [
+        128,
+        96
+      ],
+      "columns": 8,
+      "frames": 8,
+      "states": [
+        "bossBreak:0",
+        "bossBreak:1",
+        "bossBreak:2",
+        "bossBreak:3",
+        "bossBreak:4",
+        "bossBreak:5",
+        "bossBreak:6",
+        "bossBreak:7"
+      ],
+      "frameIds": [
+        "bossBreak:bossBreak:0:0",
+        "bossBreak:bossBreak:1:0",
+        "bossBreak:bossBreak:2:0",
+        "bossBreak:bossBreak:3:0",
+        "bossBreak:bossBreak:4:0",
+        "bossBreak:bossBreak:5:0",
+        "bossBreak:bossBreak:6:0",
+        "bossBreak:bossBreak:7:0"
+      ],
+      "sha256": "e448ee1d851a0289ec263fae8c3b8d77ebcd5a265cef99dc8d9b348e7e7f6cfb"
+    }
+  },
+  "mapping": [
+    {
+      "assetId": "RANGER:ranger",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "RANGER",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/sprites/ranger.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "RANGER:far:ranger",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "RANGER:far",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/far/ranger.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "SCOUT:scout",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "SCOUT",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/sprites/scout.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "SCOUT:far:scout",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "SCOUT:far",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/far/scout.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "GUARDIAN:guardian",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "GUARDIAN",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/sprites/guardian.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "GUARDIAN:far:guardian",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "GUARDIAN:far",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/far/guardian.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WING:wing",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WING",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/sprites/wing.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WING:far:wing",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WING:far",
+      "original": "assets/sprites/player/classes.png",
+      "unified": "assets/art-refresh/unified-01/far/wing.png",
+      "frames": 12,
+      "states": [
+        "idle",
+        "walk_a",
+        "walk_b",
+        "walk_c",
+        "jump",
+        "fall",
+        "shoot",
+        "hit",
+        "dead",
+        "dash",
+        "fly",
+        "hover"
+      ],
+      "anchor": {
+        "topLeft": [
+          -12,
+          0
+        ],
+        "muzzleWorld": [
+          "x+18 / x-3",
+          "y+13"
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-01:crawler",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-01",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/sprites/crawler.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-01:far:crawler",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-01:far",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/far/crawler.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-02:spider",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-02",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/sprites/spider.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-02:far:spider",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-02:far",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/far/spider.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-03:needle",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-03",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/sprites/needle.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-03:far:needle",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-03:far",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/far/needle.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-04:beetle",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-04",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/sprites/beetle.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-04:far:beetle",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-04:far",
+      "original": "assets/sprites/enemies/enemies.png",
+      "unified": "assets/art-refresh/unified-01/far/beetle.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-05:worm",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-05",
+      "original": "assets/sprites/enemies/tunnel_worm.png",
+      "unified": "assets/art-refresh/unified-01/sprites/worm.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-05:far:worm",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-05:far",
+      "original": "assets/sprites/enemies/tunnel_worm.png",
+      "unified": "assets/art-refresh/unified-01/far/worm.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-06:spitter",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-06",
+      "original": "assets/sprites/enemies/ceiling_spitter.png",
+      "unified": "assets/art-refresh/unified-01/sprites/spitter.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "E-06:far:spitter",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "E-06:far",
+      "original": "assets/sprites/enemies/ceiling_spitter.png",
+      "unified": "assets/art-refresh/unified-01/far/spitter.png",
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-01:boss",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-01",
+      "original": "assets/sprites/bosses/mother_crawler.png",
+      "unified": "assets/art-refresh/unified-01/sprites/boss.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-01:far:boss",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-01:far",
+      "original": "assets/sprites/bosses/mother_crawler.png",
+      "unified": "assets/art-refresh/unified-01/far/boss.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-02:queen",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-02",
+      "original": "assets/sprites/bosses/abyss_queen.png",
+      "unified": "assets/art-refresh/unified-01/sprites/queen.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": [
+          4,
+          60
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-02:far:queen",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-02:far",
+      "original": "assets/sprites/bosses/abyss_queen.png",
+      "unified": "assets/art-refresh/unified-01/far/queen.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": [
+          4,
+          60
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-01:nest",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-01",
+      "original": "assets/sprites/enemies/spawn_nest.png",
+      "unified": "assets/art-refresh/unified-01/sprites/nest.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-01:far:nest",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-01:far",
+      "original": "assets/sprites/enemies/spawn_nest.png",
+      "unified": "assets/art-refresh/unified-01/far/nest.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "O-01:barrier",
+      "purpose": "sprites",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "O-01",
+      "original": "assets/tiles/underground_tiles.png",
+      "unified": "assets/art-refresh/unified-01/sprites/barrier.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "O-01:far:barrier",
+      "purpose": "far",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "O-01:far",
+      "original": "assets/tiles/underground_tiles.png",
+      "unified": "assets/art-refresh/unified-01/far/barrier.png",
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": "existing y/feet",
+        "weakCore": null
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WEAPONS20:icon:icons",
+      "purpose": "weapons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WEAPONS20:icon",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WEAPONS20:held:equipped",
+      "purpose": "weapons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WEAPONS20:held",
+      "original": "assets/sprites/weapons/equipped.png",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WEAPONS20:shot:projectiles",
+      "purpose": "weapons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WEAPONS20:shot",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 20,
+      "states": [
+        "A-01",
+        "S-02",
+        "L-03",
+        "R-04",
+        "F-05",
+        "T-06",
+        "G-07",
+        "H-08",
+        "B-09",
+        "R-10",
+        "X-11",
+        "P-12",
+        "P-13",
+        "G-14",
+        "F-15",
+        "T-16",
+        "S-17",
+        "M-18",
+        "D-19",
+        "M-20"
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WEAPONS20:impacts:impacts",
+      "purpose": "weapons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WEAPONS20:impacts",
+      "original": "assets/effects/weapon_fx.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 80,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3",
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3",
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3",
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3",
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3",
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3",
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3",
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3",
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3",
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3",
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3",
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3",
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3",
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3",
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3",
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3",
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3",
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3",
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3",
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "WEAPONS20:special:special",
+      "purpose": "weapons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "WEAPONS20:special",
+      "original": "assets/effects/weapon_fx.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 80,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3",
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3",
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3",
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3",
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3",
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3",
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3",
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3",
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3",
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3",
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3",
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3",
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3",
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3",
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3",
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3",
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3",
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3",
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3",
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "A-01:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "A-01",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "A-01"
+      ],
+      "sourceRect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "A-01:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "A-01",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "A-01"
+      ],
+      "sourceRect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "A-01:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "A-01",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "A-01"
+      ],
+      "sourceRect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "A-01:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "A-01",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3"
+      ],
+      "sourceRect": [
+        0,
+        0,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "A-01:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "A-01",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "A-01:0",
+        "A-01:1",
+        "A-01:2",
+        "A-01:3"
+      ],
+      "sourceRect": [
+        0,
+        0,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-02:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-02",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "S-02"
+      ],
+      "sourceRect": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-02:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-02",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "S-02"
+      ],
+      "sourceRect": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-02:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-02",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "S-02"
+      ],
+      "sourceRect": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-02:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-02",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3"
+      ],
+      "sourceRect": [
+        0,
+        64,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-02:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-02",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "S-02:0",
+        "S-02:1",
+        "S-02:2",
+        "S-02:3"
+      ],
+      "sourceRect": [
+        0,
+        64,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "L-03:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "L-03",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "L-03"
+      ],
+      "sourceRect": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "L-03:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "L-03",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "L-03"
+      ],
+      "sourceRect": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "L-03:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "L-03",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "L-03"
+      ],
+      "sourceRect": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "L-03:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "L-03",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3"
+      ],
+      "sourceRect": [
+        0,
+        128,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "L-03:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "L-03",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "L-03:0",
+        "L-03:1",
+        "L-03:2",
+        "L-03:3"
+      ],
+      "sourceRect": [
+        0,
+        128,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-04:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-04",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "R-04"
+      ],
+      "sourceRect": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-04:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-04",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "R-04"
+      ],
+      "sourceRect": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-04:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-04",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "R-04"
+      ],
+      "sourceRect": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-04:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-04",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3"
+      ],
+      "sourceRect": [
+        0,
+        192,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-04:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-04",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "R-04:0",
+        "R-04:1",
+        "R-04:2",
+        "R-04:3"
+      ],
+      "sourceRect": [
+        0,
+        192,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-05:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-05",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "F-05"
+      ],
+      "sourceRect": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-05:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-05",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "F-05"
+      ],
+      "sourceRect": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-05:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-05",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "F-05"
+      ],
+      "sourceRect": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-05:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-05",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3"
+      ],
+      "sourceRect": [
+        0,
+        256,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-05:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-05",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "F-05:0",
+        "F-05:1",
+        "F-05:2",
+        "F-05:3"
+      ],
+      "sourceRect": [
+        0,
+        256,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-06:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-06",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "T-06"
+      ],
+      "sourceRect": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-06:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-06",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "T-06"
+      ],
+      "sourceRect": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-06:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-06",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "T-06"
+      ],
+      "sourceRect": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-06:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-06",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3"
+      ],
+      "sourceRect": [
+        0,
+        320,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-06:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-06",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "T-06:0",
+        "T-06:1",
+        "T-06:2",
+        "T-06:3"
+      ],
+      "sourceRect": [
+        0,
+        320,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-07:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-07",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "G-07"
+      ],
+      "sourceRect": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-07:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-07",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "G-07"
+      ],
+      "sourceRect": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-07:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-07",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "G-07"
+      ],
+      "sourceRect": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-07:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-07",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3"
+      ],
+      "sourceRect": [
+        0,
+        384,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-07:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-07",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "G-07:0",
+        "G-07:1",
+        "G-07:2",
+        "G-07:3"
+      ],
+      "sourceRect": [
+        0,
+        384,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-08:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-08",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "H-08"
+      ],
+      "sourceRect": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-08:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-08",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "H-08"
+      ],
+      "sourceRect": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-08:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-08",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "H-08"
+      ],
+      "sourceRect": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-08:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-08",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3"
+      ],
+      "sourceRect": [
+        0,
+        448,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "H-08:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "H-08",
+      "original": "js/game.js",
+      "originalRendering": "drawHitEffect / drawEffects / explosion.png",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "H-08:0",
+        "H-08:1",
+        "H-08:2",
+        "H-08:3"
+      ],
+      "sourceRect": [
+        0,
+        448,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-09:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-09",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "B-09"
+      ],
+      "sourceRect": [
+        256,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-09:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-09",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "B-09"
+      ],
+      "sourceRect": [
+        256,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-09:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-09",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "B-09"
+      ],
+      "sourceRect": [
+        256,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-09:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-09",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3"
+      ],
+      "sourceRect": [
+        0,
+        512,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "B-09:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "B-09",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "B-09:0",
+        "B-09:1",
+        "B-09:2",
+        "B-09:3"
+      ],
+      "sourceRect": [
+        0,
+        512,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-10:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-10",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "R-10"
+      ],
+      "sourceRect": [
+        288,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-10:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-10",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "R-10"
+      ],
+      "sourceRect": [
+        288,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-10:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-10",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "R-10"
+      ],
+      "sourceRect": [
+        288,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-10:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-10",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3"
+      ],
+      "sourceRect": [
+        0,
+        576,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "R-10:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "R-10",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "R-10:0",
+        "R-10:1",
+        "R-10:2",
+        "R-10:3"
+      ],
+      "sourceRect": [
+        0,
+        576,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "X-11:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "X-11",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "X-11"
+      ],
+      "sourceRect": [
+        320,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "X-11:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "X-11",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "X-11"
+      ],
+      "sourceRect": [
+        320,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "X-11:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "X-11",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "X-11"
+      ],
+      "sourceRect": [
+        320,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "X-11:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "X-11",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3"
+      ],
+      "sourceRect": [
+        0,
+        640,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "X-11:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "X-11",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "X-11:0",
+        "X-11:1",
+        "X-11:2",
+        "X-11:3"
+      ],
+      "sourceRect": [
+        0,
+        640,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-12:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-12",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "P-12"
+      ],
+      "sourceRect": [
+        352,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-12:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-12",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "P-12"
+      ],
+      "sourceRect": [
+        352,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-12:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-12",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "P-12"
+      ],
+      "sourceRect": [
+        352,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-12:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-12",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3"
+      ],
+      "sourceRect": [
+        0,
+        704,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-12:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-12",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "P-12:0",
+        "P-12:1",
+        "P-12:2",
+        "P-12:3"
+      ],
+      "sourceRect": [
+        0,
+        704,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-13:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-13",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "P-13"
+      ],
+      "sourceRect": [
+        384,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-13:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-13",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "P-13"
+      ],
+      "sourceRect": [
+        384,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-13:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-13",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "P-13"
+      ],
+      "sourceRect": [
+        384,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-13:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-13",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3"
+      ],
+      "sourceRect": [
+        0,
+        768,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "P-13:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "P-13",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "P-13:0",
+        "P-13:1",
+        "P-13:2",
+        "P-13:3"
+      ],
+      "sourceRect": [
+        0,
+        768,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-14:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-14",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "G-14"
+      ],
+      "sourceRect": [
+        416,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-14:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-14",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "G-14"
+      ],
+      "sourceRect": [
+        416,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-14:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-14",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "G-14"
+      ],
+      "sourceRect": [
+        416,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-14:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-14",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3"
+      ],
+      "sourceRect": [
+        0,
+        832,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "G-14:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "G-14",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "G-14:0",
+        "G-14:1",
+        "G-14:2",
+        "G-14:3"
+      ],
+      "sourceRect": [
+        0,
+        832,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-15:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-15",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "F-15"
+      ],
+      "sourceRect": [
+        448,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-15:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-15",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "F-15"
+      ],
+      "sourceRect": [
+        448,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-15:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-15",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "F-15"
+      ],
+      "sourceRect": [
+        448,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-15:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-15",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3"
+      ],
+      "sourceRect": [
+        0,
+        896,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "F-15:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "F-15",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "F-15:0",
+        "F-15:1",
+        "F-15:2",
+        "F-15:3"
+      ],
+      "sourceRect": [
+        0,
+        896,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-16:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-16",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "T-16"
+      ],
+      "sourceRect": [
+        480,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-16:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-16",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "T-16"
+      ],
+      "sourceRect": [
+        480,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-16:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-16",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "T-16"
+      ],
+      "sourceRect": [
+        480,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-16:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-16",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3"
+      ],
+      "sourceRect": [
+        0,
+        960,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "T-16:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "T-16",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "T-16:0",
+        "T-16:1",
+        "T-16:2",
+        "T-16:3"
+      ],
+      "sourceRect": [
+        0,
+        960,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-17:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-17",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "S-17"
+      ],
+      "sourceRect": [
+        512,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-17:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-17",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "S-17"
+      ],
+      "sourceRect": [
+        512,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-17:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-17",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "S-17"
+      ],
+      "sourceRect": [
+        512,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-17:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-17",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3"
+      ],
+      "sourceRect": [
+        0,
+        1024,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "S-17:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "S-17",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "S-17:0",
+        "S-17:1",
+        "S-17:2",
+        "S-17:3"
+      ],
+      "sourceRect": [
+        0,
+        1024,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-18:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-18",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "M-18"
+      ],
+      "sourceRect": [
+        544,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-18:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-18",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "M-18"
+      ],
+      "sourceRect": [
+        544,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-18:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-18",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "M-18"
+      ],
+      "sourceRect": [
+        544,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-18:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-18",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3"
+      ],
+      "sourceRect": [
+        0,
+        1088,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-18:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-18",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "M-18:0",
+        "M-18:1",
+        "M-18:2",
+        "M-18:3"
+      ],
+      "sourceRect": [
+        0,
+        1088,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "D-19:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "D-19",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "D-19"
+      ],
+      "sourceRect": [
+        576,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "D-19:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "D-19",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "D-19"
+      ],
+      "sourceRect": [
+        576,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "D-19:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "D-19",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "D-19"
+      ],
+      "sourceRect": [
+        576,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "D-19:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "D-19",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3"
+      ],
+      "sourceRect": [
+        0,
+        1152,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "D-19:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "D-19",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "D-19:0",
+        "D-19:1",
+        "D-19:2",
+        "D-19:3"
+      ],
+      "sourceRect": [
+        0,
+        1152,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-20:icons",
+      "purpose": "icons",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-20",
+      "original": "assets/sprites/weapons/weapon_icons.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/icons.png",
+      "frames": 1,
+      "states": [
+        "M-20"
+      ],
+      "sourceRect": [
+        608,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-20:equipped",
+      "purpose": "equipped",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-20",
+      "original": "assets/sprites/weapons/equipped.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "frames": 1,
+      "states": [
+        "M-20"
+      ],
+      "sourceRect": [
+        608,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "muzzleSource": [
+          30,
+          14
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-20:projectiles",
+      "purpose": "projectiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-20",
+      "original": "assets/sprites/weapons/projectiles.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "frames": 1,
+      "states": [
+        "M-20"
+      ],
+      "sourceRect": [
+        608,
+        0,
+        32,
+        32
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-20:impacts",
+      "purpose": "impacts",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-20",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "frames": 4,
+      "states": [
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "sourceRect": [
+        0,
+        1216,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "M-20:special",
+      "purpose": "special",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "M-20",
+      "original": "assets/effects/weapon_fx.png",
+      "originalRendering": "atlas",
+      "unified": "assets/art-refresh/unified-01/weapons/special.png",
+      "frames": 4,
+      "states": [
+        "M-20:0",
+        "M-20:1",
+        "M-20:2",
+        "M-20:3"
+      ],
+      "sourceRect": [
+        0,
+        1216,
+        256,
+        64
+      ],
+      "anchor": {
+        "center": [
+          16,
+          16
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "city:far:city_far",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "city:far",
+      "original": "assets/backgrounds/city.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/city_far.png",
+      "frames": 1,
+      "states": [
+        "far"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "city:middle:city_middle",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "city:middle",
+      "original": "assets/backgrounds/city.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/city_middle.png",
+      "frames": 1,
+      "states": [
+        "middle"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "city:near:city_near",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "city:near",
+      "original": "assets/backgrounds/city.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/city_near.png",
+      "frames": 1,
+      "states": [
+        "near"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "city:city",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "city",
+      "original": "assets/backgrounds/city.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/city.png",
+      "frames": 1,
+      "states": [
+        "composite"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "city:tiles:city",
+      "purpose": "tiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "city:tiles",
+      "original": "assets/tiles/city_tiles.png",
+      "unified": "assets/art-refresh/unified-01/tiles/city.png",
+      "frames": 64,
+      "states": [
+        "tile0:variant0",
+        "tile1:variant0",
+        "tile2:variant0",
+        "tile3:variant0",
+        "tile4:variant0",
+        "tile5:variant0",
+        "tile6:variant0",
+        "tile7:variant0",
+        "tile8:variant0",
+        "tile9:variant0",
+        "tile10:variant0",
+        "tile11:variant0",
+        "tile12:variant0",
+        "tile13:variant0",
+        "tile14:variant0",
+        "tile15:variant0",
+        "tile0:variant1",
+        "tile1:variant1",
+        "tile2:variant1",
+        "tile3:variant1",
+        "tile4:variant1",
+        "tile5:variant1",
+        "tile6:variant1",
+        "tile7:variant1",
+        "tile8:variant1",
+        "tile9:variant1",
+        "tile10:variant1",
+        "tile11:variant1",
+        "tile12:variant1",
+        "tile13:variant1",
+        "tile14:variant1",
+        "tile15:variant1",
+        "tile0:variant2",
+        "tile1:variant2",
+        "tile2:variant2",
+        "tile3:variant2",
+        "tile4:variant2",
+        "tile5:variant2",
+        "tile6:variant2",
+        "tile7:variant2",
+        "tile8:variant2",
+        "tile9:variant2",
+        "tile10:variant2",
+        "tile11:variant2",
+        "tile12:variant2",
+        "tile13:variant2",
+        "tile14:variant2",
+        "tile15:variant2",
+        "tile0:variant3",
+        "tile1:variant3",
+        "tile2:variant3",
+        "tile3:variant3",
+        "tile4:variant3",
+        "tile5:variant3",
+        "tile6:variant3",
+        "tile7:variant3",
+        "tile8:variant3",
+        "tile9:variant3",
+        "tile10:variant3",
+        "tile11:variant3",
+        "tile12:variant3",
+        "tile13:variant3",
+        "tile14:variant3",
+        "tile15:variant3"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "underground:far:underground_far",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "underground:far",
+      "original": "assets/backgrounds/underground.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/underground_far.png",
+      "frames": 1,
+      "states": [
+        "far"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "underground:middle:underground_middle",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "underground:middle",
+      "original": "assets/backgrounds/underground.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/underground_middle.png",
+      "frames": 1,
+      "states": [
+        "middle"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "underground:near:underground_near",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "underground:near",
+      "original": "assets/backgrounds/underground.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/underground_near.png",
+      "frames": 1,
+      "states": [
+        "near"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "underground:underground",
+      "purpose": "backgrounds",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "underground",
+      "original": "assets/backgrounds/underground.png",
+      "unified": "assets/art-refresh/unified-01/backgrounds/underground.png",
+      "frames": 1,
+      "states": [
+        "composite"
+      ],
+      "anchor": {
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "underground:tiles:underground",
+      "purpose": "tiles",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "underground:tiles",
+      "original": "assets/tiles/underground_tiles.png",
+      "unified": "assets/art-refresh/unified-01/tiles/underground.png",
+      "frames": 64,
+      "states": [
+        "tile0:variant0",
+        "tile1:variant0",
+        "tile2:variant0",
+        "tile3:variant0",
+        "tile4:variant0",
+        "tile5:variant0",
+        "tile6:variant0",
+        "tile7:variant0",
+        "tile8:variant0",
+        "tile9:variant0",
+        "tile10:variant0",
+        "tile11:variant0",
+        "tile12:variant0",
+        "tile13:variant0",
+        "tile14:variant0",
+        "tile15:variant0",
+        "tile0:variant1",
+        "tile1:variant1",
+        "tile2:variant1",
+        "tile3:variant1",
+        "tile4:variant1",
+        "tile5:variant1",
+        "tile6:variant1",
+        "tile7:variant1",
+        "tile8:variant1",
+        "tile9:variant1",
+        "tile10:variant1",
+        "tile11:variant1",
+        "tile12:variant1",
+        "tile13:variant1",
+        "tile14:variant1",
+        "tile15:variant1",
+        "tile0:variant2",
+        "tile1:variant2",
+        "tile2:variant2",
+        "tile3:variant2",
+        "tile4:variant2",
+        "tile5:variant2",
+        "tile6:variant2",
+        "tile7:variant2",
+        "tile8:variant2",
+        "tile9:variant2",
+        "tile10:variant2",
+        "tile11:variant2",
+        "tile12:variant2",
+        "tile13:variant2",
+        "tile14:variant2",
+        "tile15:variant2",
+        "tile0:variant3",
+        "tile1:variant3",
+        "tile2:variant3",
+        "tile3:variant3",
+        "tile4:variant3",
+        "tile5:variant3",
+        "tile6:variant3",
+        "tile7:variant3",
+        "tile8:variant3",
+        "tile9:variant3",
+        "tile10:variant3",
+        "tile11:variant3",
+        "tile12:variant3",
+        "tile13:variant3",
+        "tile14:variant3",
+        "tile15:variant3"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "acid:acid",
+      "purpose": "effects",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "acid",
+      "original": "assets/effects/acid.png",
+      "unified": "assets/art-refresh/unified-01/effects/acid.png",
+      "frames": 4,
+      "states": [
+        "acid:0",
+        "acid:1",
+        "acid:2",
+        "acid:3"
+      ],
+      "anchor": {
+        "center": [
+          8.0,
+          8.0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "wave:wave",
+      "purpose": "effects",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "wave",
+      "original": "assets/effects/ground_wave.png",
+      "unified": "assets/art-refresh/unified-01/effects/wave.png",
+      "frames": 4,
+      "states": [
+        "wave:0",
+        "wave:1",
+        "wave:2",
+        "wave:3"
+      ],
+      "anchor": {
+        "center": [
+          16.0,
+          12.0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "nestBreak:nestBreak",
+      "purpose": "effects",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "nestBreak",
+      "original": "assets/effects/nest_break.png",
+      "unified": "assets/art-refresh/unified-01/effects/nestBreak.png",
+      "frames": 8,
+      "states": [
+        "nestBreak:0",
+        "nestBreak:1",
+        "nestBreak:2",
+        "nestBreak:3",
+        "nestBreak:4",
+        "nestBreak:5",
+        "nestBreak:6",
+        "nestBreak:7"
+      ],
+      "anchor": {
+        "center": [
+          32.0,
+          32.0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    },
+    {
+      "assetId": "bossBreak:bossBreak",
+      "purpose": "effects",
+      "missions": [
+        "M01",
+        "M02"
+      ],
+      "owner": "bossBreak",
+      "original": "assets/effects/boss_break.png",
+      "unified": "assets/art-refresh/unified-01/effects/bossBreak.png",
+      "frames": 8,
+      "states": [
+        "bossBreak:0",
+        "bossBreak:1",
+        "bossBreak:2",
+        "bossBreak:3",
+        "bossBreak:4",
+        "bossBreak:5",
+        "bossBreak:6",
+        "bossBreak:7"
+      ],
+      "anchor": {
+        "center": [
+          64.0,
+          48.0
+        ]
+      },
+      "generator": "tools/art_unification.py",
+      "status": "LAB_PREVIEW_READY"
+    }
+  ],
+  "weapons": [
+    {
+      "id": "A-01",
+      "name": "アサルト",
+      "type": "bullet",
+      "color": "#37e8df"
+    },
+    {
+      "id": "S-02",
+      "name": "ショットガン",
+      "type": "spread",
+      "color": "#ffe05c"
+    },
+    {
+      "id": "L-03",
+      "name": "レーザー",
+      "type": "laser",
+      "color": "#6ffcff"
+    },
+    {
+      "id": "R-04",
+      "name": "ロケット",
+      "type": "rocket",
+      "color": "#ff8b42"
+    },
+    {
+      "id": "F-05",
+      "name": "フレイム",
+      "type": "flame",
+      "color": "#ff4f6d"
+    },
+    {
+      "id": "T-06",
+      "name": "サンダー",
+      "type": "thunder",
+      "color": "#b88cff"
+    },
+    {
+      "id": "G-07",
+      "name": "グレネード",
+      "type": "grenade",
+      "color": "#72df8f"
+    },
+    {
+      "id": "H-08",
+      "name": "ホーミング",
+      "type": "homing",
+      "color": "#fff08b"
+    },
+    {
+      "id": "B-09",
+      "name": "バウンドレーザー",
+      "type": "bounce",
+      "color": "#6ffcff"
+    },
+    {
+      "id": "R-10",
+      "name": "スプリットロケット",
+      "type": "split",
+      "color": "#ff8b42"
+    },
+    {
+      "id": "X-11",
+      "name": "チェインボム",
+      "type": "chain",
+      "color": "#ff4f6d"
+    },
+    {
+      "id": "P-12",
+      "name": "ドリルショット",
+      "type": "drill",
+      "color": "#ffe05c"
+    },
+    {
+      "id": "P-13",
+      "name": "プラズマキャノン",
+      "type": "plasma",
+      "color": "#37e8df"
+    },
+    {
+      "id": "G-14",
+      "name": "クラスターグレネード",
+      "type": "cluster",
+      "color": "#72df8f"
+    },
+    {
+      "id": "F-15",
+      "name": "ワイドフレイム",
+      "type": "wideflame",
+      "color": "#ff4f6d"
+    },
+    {
+      "id": "T-16",
+      "name": "ライトニングストーム",
+      "type": "storm",
+      "color": "#b88cff"
+    },
+    {
+      "id": "S-17",
+      "name": "スパイラルショット",
+      "type": "spiral",
+      "color": "#fff08b"
+    },
+    {
+      "id": "M-18",
+      "name": "リモートマイン",
+      "type": "mine",
+      "color": "#ff4f6d"
+    },
+    {
+      "id": "D-19",
+      "name": "オートタレット",
+      "type": "turret",
+      "color": "#37e8df"
+    },
+    {
+      "id": "M-20",
+      "name": "メテオランチャー",
+      "type": "meteor",
+      "color": "#ff8b42"
+    }
+  ],
+  "missingRuntimeTargets": [],
+  "limitations": [
+    "Ranger/Wing and M01/M02 backdrop shapes intentionally retain Study 01-B basis.",
+    "Unused compatibility frames do not add class abilities.",
+    "Enemy frame 5 is only selected for queen weakCore.open; other kinds keep an unused compatibility cell.",
+    "City tiles 8-15 are optional unplaced decoration studies; all existing M01 runtime tile indices 0-7 are covered.",
+    "UI typography, health bars, pickup art and procedural particle primitives remain ORIGINAL; outside this art set.",
+    "Far sprites are an experimental LAB-only color-cluster simplification, not official adoption."
+  ]
+}

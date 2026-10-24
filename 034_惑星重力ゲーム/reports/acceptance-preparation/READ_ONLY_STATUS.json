@@ -1,0 +1,242 @@
+{
+  "work": "v0.9.0-B acceptance preparation",
+  "gameVersion": "0.9.0-A",
+  "checkedAtUtc": "2026-10-24T11:03:17.618Z",
+  "checkedAtJapan": "2026-10-24 20:03:17 JST",
+  "initialWorkingTree": "clean before preparation files were created (git status --short empty)",
+  "localHead": "ccdf6e0050502d0b2cb131842c15a96997a6973e",
+  "originMain": "ccdf6e0050502d0b2cb131842c15a96997a6973e",
+  "pages": {
+    "url": "https://iwasaki00.github.io/browser-game/",
+    "status": "built",
+    "buildType": "legacy",
+    "source": {
+      "branch": "main",
+      "path": "/"
+    },
+    "httpsEnforced": true
+  },
+  "latestBuild": {
+    "status": "built",
+    "commit": "ccdf6e0050502d0b2cb131842c15a96997a6973e",
+    "createdAt": "2026-10-24T03:24:54Z",
+    "updatedAt": "2026-10-24T03:25:13Z",
+    "error": {
+      "message": null
+    }
+  },
+  "testUrl": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/",
+  "files": [
+    {
+      "file": "js/challenges.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/challenges.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca",
+      "servedSha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/flight-record.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/flight-record.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "5b4390fa65f8cc784585afd6c8d44f46232c44e0c91c68e82eac717abbfd8570",
+      "servedSha256": "5b4390fa65f8cc784585afd6c8d44f46232c44e0c91c68e82eac717abbfd8570",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/gallery-store.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/gallery-store.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244",
+      "servedSha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/gallery-ui.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/gallery-ui.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "6db072492e2a87082856207083456c51e45dd2b625885fab177a7c7ac22e98ad",
+      "servedSha256": "6db072492e2a87082856207083456c51e45dd2b625885fab177a7c7ac22e98ad",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/game.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/game.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "815fcbe08580728ae21b367df778879bbbfa6fc0155abbde71f64c461cea4e62",
+      "servedSha256": "815fcbe08580728ae21b367df778879bbbfa6fc0155abbde71f64c461cea4e62",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/launch.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/launch.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "8c1bfc3f43856aa5d69d5168fa71a5ac853650b66bfab8e711784d4402557cb3",
+      "servedSha256": "8c1bfc3f43856aa5d69d5168fa71a5ac853650b66bfab8e711784d4402557cb3",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/live-gravity.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/live-gravity.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "bccade090b507f1355dadc1b958d79c9179ea204273f46c1fdbe074bea53c3c1",
+      "servedSha256": "bccade090b507f1355dadc1b958d79c9179ea204273f46c1fdbe074bea53c3c1",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/orbit-art-worker.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/orbit-art-worker.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "9904506d8e38c61b52408c05d6987d70c624bf0cb74019701547ec95d84f2da0",
+      "servedSha256": "9904506d8e38c61b52408c05d6987d70c624bf0cb74019701547ec95d84f2da0",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/orbit-art.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/orbit-art.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "24254205d436cf05d1023d682ccf997b5189233c2ac427248ccf74dd0aaf7685",
+      "servedSha256": "24254205d436cf05d1023d682ccf997b5189233c2ac427248ccf74dd0aaf7685",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/orbit-share-ui.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/orbit-share-ui.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "9000e4c171ea8e8dbe3b20c4ee646be0f20cc80dae0c6db3bd3439fcf7d6ef78",
+      "servedSha256": "9000e4c171ea8e8dbe3b20c4ee646be0f20cc80dae0c6db3bd3439fcf7d6ef78",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/physics.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/physics.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "7adabce0866eea18ed2ab827db41f07d5e5adcd89ef067f4da04dfe6064b9ee1",
+      "servedSha256": "7adabce0866eea18ed2ab827db41f07d5e5adcd89ef067f4da04dfe6064b9ee1",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/planets.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/planets.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "aaf08425820a6b8052f0a5affd5046a23fafd924392423da8ed3a21faff9796c",
+      "servedSha256": "aaf08425820a6b8052f0a5affd5046a23fafd924392423da8ed3a21faff9796c",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/preview.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/preview.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "dee288db83577a9be1ad0844dc27c8496390430843be8ebb9e2bb1d7b6dc83eb",
+      "servedSha256": "dee288db83577a9be1ad0844dc27c8496390430843be8ebb9e2bb1d7b6dc83eb",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/progress.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/progress.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "57b0aa9d160b0c48e8abdb78dcb30e4d056b4c237b27f1f54a156f454f9e8539",
+      "servedSha256": "57b0aa9d160b0c48e8abdb78dcb30e4d056b4c237b27f1f54a156f454f9e8539",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/space-audio.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/space-audio.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "7ccbbfaedd91b278dc672abee1f79101ce957f0b943b183d9c88956ae66b92bb",
+      "servedSha256": "7ccbbfaedd91b278dc672abee1f79101ce957f0b943b183d9c88956ae66b92bb",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/space-experience.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/space-experience.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "86fe72a288f9e4d229bd347a204c9ffa2de02cf8129e5edf0857e25bd0cf9ea5",
+      "servedSha256": "86fe72a288f9e4d229bd347a204c9ffa2de02cf8129e5edf0857e25bd0cf9ea5",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/special-challenges.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/special-challenges.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "e8335bfe88545d6c29330ae177dec80e4454f050f7837c1b220723158a796d3f",
+      "servedSha256": "e8335bfe88545d6c29330ae177dec80e4454f050f7837c1b220723158a796d3f",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/special-samples.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/special-samples.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "91b4cc67eb17269cc25310224608ceaaf04adcffb100dbca5e35597d54da7ec2",
+      "servedSha256": "91b4cc67eb17269cc25310224608ceaaf04adcffb100dbca5e35597d54da7ec2",
+      "matchesLocal": true
+    },
+    {
+      "file": "js/stages.js",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/js/stages.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "localSha256": "91748849f8bbfb222e128cb18b8802adcd6dcf9cdcef60e20bdc202d314d21d1",
+      "servedSha256": "91748849f8bbfb222e128cb18b8802adcd6dcf9cdcef60e20bdc202d314d21d1",
+      "matchesLocal": true
+    },
+    {
+      "file": "index.html",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/index.html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "localSha256": "3fa91b8a2f737a0fabda83e615debfdabc68dbe1ac01f87f5534838f59bd8e1e",
+      "servedSha256": "3fa91b8a2f737a0fabda83e615debfdabc68dbe1ac01f87f5534838f59bd8e1e",
+      "matchesLocal": true
+    },
+    {
+      "file": "styles.css",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/styles.css",
+      "httpStatus": 200,
+      "contentType": "text/css; charset=utf-8",
+      "localSha256": "7c8f5d2d560d2b534b4f0cd0b7af5f2e2fcf77a77916708c08b069dd06e8d5fe",
+      "servedSha256": "7c8f5d2d560d2b534b4f0cd0b7af5f2e2fcf77a77916708c08b069dd06e8d5fe",
+      "matchesLocal": true
+    },
+    {
+      "file": "icon.svg",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/icon.svg",
+      "httpStatus": 200,
+      "contentType": "image/svg+xml",
+      "localSha256": "bf55c8dfb02c47820dbbd6b4b27048d4fe716abc80d5ded4af37a065a01c00f2",
+      "servedSha256": "bf55c8dfb02c47820dbbd6b4b27048d4fe716abc80d5ded4af37a065a01c00f2",
+      "matchesLocal": true
+    },
+    {
+      "file": "package.json",
+      "url": "https://iwasaki00.github.io/browser-game/034_%E6%83%91%E6%98%9F%E9%87%8D%E5%8A%9B%E3%82%B2%E3%83%BC%E3%83%A0/package.json",
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "localSha256": "d2dac7e6d740a749877266f6aba65f4d0f023d4400c63f8abfe00cda5ba85e56",
+      "servedSha256": "d2dac7e6d740a749877266f6aba65f4d0f023d4400c63f8abfe00cda5ba85e56",
+      "matchesLocal": true
+    }
+  ],
+  "allServedFilesMatch": true,
+  "localRemoteBuildSame": true,
+  "method": "Read-only GET/ls-remote/hash comparison. No page JavaScript execution, browser storage access, push or deployment.",
+  "iphoneResult": "UNVERIFIED"
+}

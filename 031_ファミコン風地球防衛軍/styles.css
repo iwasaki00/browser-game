@@ -462,6 +462,11 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 .lab-weapon-option span { overflow-wrap: anywhere; }
 .lab-weapon-option strong, .lab-weapon-option small { font-size: 12px; }
 .lab-weapon-option small { text-align: right; }
+.lab-weapon-option.has-art { grid-template-columns: 32px 54px minmax(0,1fr) 44px; }
+.lab-weapon-option.has-art strong { grid-column: 2; grid-row: 1; }
+.lab-weapon-option.has-art span { grid-column: 3; grid-row: 1; }
+.lab-weapon-option.has-art small { grid-column: 4; grid-row: 1; }
+.lab-weapon-art { grid-column: 1; grid-row: 1; width: 32px; height: 32px; image-rendering: pixelated; pointer-events: none; }
 .lab-weapon-empty { margin: 12px 4px; color: var(--muted); font-size: 14px; }
 @media (max-height: 420px) {
   .lab-weapon-panel { padding: 6px; gap: 4px; }

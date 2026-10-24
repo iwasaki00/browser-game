@@ -91,11 +91,11 @@ function fakeAudio(){
  }
  return{counts,Context};
 }
-test('音声は操作後に開始、ON/OFF、種類別音、重複制限・ノード解放',()=>{
+test('音声は操作後に開始、ON/OFF、種類別音、重複制限・ノード解放',async()=>{
  const {counts,Context}=fakeAudio();const audio=new SpaceAudio(false,{webkitAudioContext:Context});
  audio.unlock();audio.play('launch');assert.equal(counts.contexts,0);
  audio.setEnabled(true);audio.play('launch');assert.equal(counts.contexts,0);
- audio.unlock();assert.equal(counts.contexts,1);assert.equal(counts.resumes,1);assert.equal(audio.master.gain.value,.055);
+ await audio.unlock();assert.equal(counts.contexts,1);assert.equal(counts.resumes,1);assert.equal(audio.master.gain.value,.055);
  assert.equal(audio.play('launch'),true);assert.equal(audio.play('launch'),false);
  for(const kind of ['approach','swingby','closecall'])assert.equal(audio.play(kind),true);
  assert.equal(audio.play('cleared'),false);assert.equal(audio.voices.size,4);
@@ -104,7 +104,7 @@ test('音声は操作後に開始、ON/OFF、種類別音、重複制限・ノ�
   audio.context.currentTime+=2;assert.equal(audio.play(kind),true);for(const v of [...audio.voices])v.onended();
  }
  audio.context.currentTime+=2;audio.play('launch');audio.setEnabled(false);assert.equal(audio.voices.size,0);assert.equal(audio.play('ui'),false);
- assert.ok(counts.disconnects>0);audio.setEnabled(true);audio.unlock();assert.equal(counts.contexts,1);
+ assert.ok(counts.disconnects>0);audio.setEnabled(true);await audio.unlock();assert.equal(counts.contexts,1);
 });
 test('音声非対応・開始拒否でもゲーム側へ例外を出さない',async()=>{
  const missing=new SpaceAudio(true,{});missing.unlock();assert.equal(missing.unavailable,true);assert.equal(missing.play('launch'),false);

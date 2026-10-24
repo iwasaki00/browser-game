@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Final Quality Audit</title>
+  <title>ORBIT MAKER — Mobile UI &amp; Audio Fix</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,7 +19,7 @@
         <p class="kicker">GRAVITY LAB / 01</p>
         <h1>ORBIT <span>MAKER</span></h1>
       </div>
-      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.9.0-A</div></div>
+      <div class="header-tools"><button id="openGallery" type="button">軌道一覧</button><div class="version">v0.9.1</div></div>
     </header>
 
     <section class="mission" aria-label="ミッション">
@@ -42,21 +42,12 @@
     </section>
 
     <section class="controls" aria-label="発射設定">
-      <div class="controls-body" aria-label="操作設定（上下スクロール可能）" tabindex="0">
-      <div class="game-mode"><label>MODE <select id="gameMode" aria-label="ゲームモード"><option value="design">軌道設計</option><option value="live">重力操作</option></select></label><small id="gameModeHelp"></small></div>
-      <details class="settings-panel" id="displayPanel"><summary>表示設定</summary>
-      <div class="preview-options"><button id="previewToggle" type="button" aria-pressed="true">予測 ON</button><button id="gravityToggle" type="button" aria-pressed="false">重力目安 OFF</button><small>青：弱 ／ 黄：中 ／ 赤：強</small></div>
-      <div class="experience-options"><label>演出品質 <select id="effectQuality"><option value="standard">標準</option><option value="light">軽量</option></select></label><button id="soundToggle" type="button" aria-pressed="false">サウンド OFF</button><small id="soundHelp">音は初期OFF。ONにして操作すると再生します。</small></div>
-      </details>
-      <details class="settings-panel" id="planetPanel"><summary>惑星編集</summary>
-      <div class="planet-editor">
-        <div class="planet-toolbar"><output id="planetSelection" aria-live="polite"></output><button id="addPlanet" type="button">＋ 追加</button><button id="deletePlanet" type="button">削除</button></div>
-        <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
-        <p id="planetFeature" class="planet-feature"></p>
-        <p id="challengeConditions" class="planet-feature"></p>
-        <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>
+      <div class="controls-body" aria-label="操作設定">
+      <div class="controls-toolbar">
+        <div class="game-mode"><label class="sr-only" for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp" class="sr-only"></small></div>
+        <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>
+        <button id="openPlanetSettings" type="button" aria-haspopup="dialog" aria-controls="planetPanel">惑星編集</button>
       </div>
-      </details>
       <div class="launch-mode" role="group" aria-label="発射方式">
         <button type="button" data-launch-mode="precision" aria-pressed="true"><span>A</span> 精密発射</button>
         <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
@@ -85,6 +76,30 @@
       </div>
     </section>
   </main>
+  <dialog id="displayPanel" class="settings-dialog" aria-labelledby="displayTitle">
+    <header><div><small>SETTINGS</small><h2 id="displayTitle">表示・音</h2></div><button id="closeDisplaySettings" type="button">閉じる</button></header>
+    <div class="settings-content">
+      <p class="settings-note">設定中は飛行を一時停止します。</p>
+      <div class="preview-options"><button id="previewToggle" type="button" aria-pressed="true">予測 ON</button><button id="gravityToggle" type="button" aria-pressed="false">重力目安 OFF</button><small>重力目安：青は弱、黄は中、赤は強</small></div>
+      <div class="experience-options"><label>演出品質 <select id="effectQuality"><option value="standard">標準</option><option value="light">軽量</option></select></label><button id="soundToggle" type="button" aria-pressed="false">サウンド OFF</button></div>
+      <button id="testSound" class="test-sound" type="button" disabled>♪ テスト音を鳴らす</button>
+      <p id="soundHelp" class="settings-note" role="status" aria-live="polite">サウンドをONにすると短い確認音を送ります。</p>
+      <p class="settings-note">聞こえない場合は、消音モード・メディア音量・イヤホンやBluetoothの出力先を確認してください。</p>
+      <details class="settings-help"><summary>音声の診断情報</summary><output id="audioDiagnostics" aria-live="polite"></output></details>
+    </div>
+  </dialog>
+  <dialog id="planetPanel" class="settings-dialog" aria-labelledby="planetTitle">
+    <header><div><small>PLANET LAB</small><h2 id="planetTitle">惑星編集</h2></div><button id="closePlanetSettings" type="button">閉じる</button></header>
+    <div class="settings-content planet-editor">
+      <p class="settings-note">選択・移動は盤面で。設定中は飛行を一時停止します。</p>
+      <output id="planetSelection" aria-live="polite"></output>
+      <div class="planet-toolbar"><button id="addPlanet" type="button">＋ 惑星追加</button><button id="deletePlanet" type="button">惑星削除</button></div>
+      <div class="planet-options"><label>種類 <select id="planetType"><option value="asteroid">小惑星</option><option value="earth">地球型惑星</option><option value="gas">巨大ガス惑星</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label><label>サイズ <select id="planetSize"><option value="small">小</option><option value="medium" selected>中</option><option value="large">大</option></select></label></div>
+      <p id="planetFeature" class="planet-feature"></p>
+      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>
+      <details class="settings-help"><summary>編集ルール・ステージ条件</summary><p class="settings-note">惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details>
+    </div>
+  </dialog>
   <dialog id="stageDialog" aria-labelledby="stageDialogTitle">
     <header><h2 id="stageDialogTitle">ステージ攻略</h2><button id="closeStages" type="button">閉じる</button></header>
     <p>★1 到達 ／ ★2・★3 ステージごとの目標時間以内<br>重力操作の★3：惑星総移動30以内も必要</p>

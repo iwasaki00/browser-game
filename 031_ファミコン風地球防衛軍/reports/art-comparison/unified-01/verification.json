@@ -1,0 +1,2355 @@
+{
+  "shots": [
+    {
+      "file": "m01-ranger-z050-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "620.00",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "STANDARD",
+        "enemies": "0",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "940",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-ranger-z050-844x390-B.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "STUDY_01_B",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "620.00",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "STANDARD",
+        "enemies": "0",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "940",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-ranger-z050-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "620.00",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "STANDARD",
+        "enemies": "0",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "940",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-ranger-z050-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "620.00",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "STANDARD",
+        "enemies": "0",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "940",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-crawler50-z035-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "50",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-crawler50-z035-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "50",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-crawler50-z035-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "50",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "640x360",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-guardian-beetle-z085-780x360-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "897.35",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "1",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "GUARDIAN",
+        "playerHp": "200",
+        "playerX": "1086",
+        "renderResolution": "320x180",
+        "targetZoom": "0.850",
+        "validationMode": "C",
+        "viewZoom": "0.850",
+        "visibleWorldWidth": "376.47"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m01-guardian-beetle-z085-780x360-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "897.35",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "1",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "GUARDIAN",
+        "playerHp": "200",
+        "playerX": "1086",
+        "renderResolution": "320x180",
+        "targetZoom": "0.850",
+        "validationMode": "C",
+        "viewZoom": "0.850",
+        "visibleWorldWidth": "376.47"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m01-guardian-beetle-z085-780x360-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "2",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "897.35",
+        "checkpoint": "M01-A2-MAIN",
+        "density": "MASSIVE",
+        "enemies": "1",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "GUARDIAN",
+        "playerHp": "200",
+        "playerX": "1086",
+        "renderResolution": "640x360",
+        "targetZoom": "0.850",
+        "validationMode": "C",
+        "viewZoom": "0.850",
+        "visibleWorldWidth": "376.47"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m02-wing-worm30-z035-390x844-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "density": "MASSIVE",
+        "enemies": "30",
+        "enemyLimit": "100",
+        "flightEnergy": "92.5",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 219.375,
+        "w": 390,
+        "x": 0,
+        "y": 40
+      },
+      "screen": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "m02-wing-worm30-z035-390x844-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "density": "MASSIVE",
+        "enemies": "30",
+        "enemyLimit": "100",
+        "flightEnergy": "92.5",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 219.375,
+        "w": 390,
+        "x": 0,
+        "y": 40
+      },
+      "screen": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "m02-wing-worm30-z035-390x844-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "542.86",
+        "density": "MASSIVE",
+        "enemies": "30",
+        "enemyLimit": "100",
+        "flightEnergy": "92.5",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "640x360",
+        "targetZoom": "0.350",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 219.375,
+        "w": 390,
+        "x": 0,
+        "y": 40
+      },
+      "screen": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "m02-wing-spitter10-z050-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-wing-spitter10-z050-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-wing-spitter10-z050-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-spider10-z050-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-spider10-z050-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-scout-spider10-z050-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "1000",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-wing-needle10-z050-780x360-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m01-wing-needle10-z050-780x360-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m01-wing-needle10-z050-780x360-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "1",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "680.00",
+        "density": "MASSIVE",
+        "enemies": "10",
+        "enemyLimit": "100",
+        "flightEnergy": "100.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "WING",
+        "playerHp": "65",
+        "playerX": "1000",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 318,
+        "w": 565.328125,
+        "x": 107.328125,
+        "y": 40
+      },
+      "screen": [
+        780,
+        360
+      ]
+    },
+    {
+      "file": "m01-b01-z050-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "ORIGINAL",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "3840.00",
+        "checkpoint": "M01-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "4160",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-b01-z050-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "UNIFIED_01",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "3840.00",
+        "checkpoint": "M01-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "4160",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m01-b01-z050-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "UNIFIED_01",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "3840.00",
+        "checkpoint": "M01-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M01",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "4160",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-branch-z035-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "3",
+        "artStyle": "ORIGINAL",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "1762.86",
+        "checkpoint": "M02-A3-LOWER",
+        "density": "STANDARD",
+        "enemies": "15",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "2220",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-branch-z035-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "3",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "1762.86",
+        "checkpoint": "M02-A3-LOWER",
+        "density": "STANDARD",
+        "enemies": "15",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "2220",
+        "renderResolution": "320x180",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-branch-z035-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "3",
+        "artStyle": "UNIFIED_01",
+        "boss": "0",
+        "cameraMode": "fixed",
+        "cameraX": "1762.86",
+        "checkpoint": "M02-A3-LOWER",
+        "density": "STANDARD",
+        "enemies": "15",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "RANGER",
+        "playerHp": "100",
+        "playerX": "2220",
+        "renderResolution": "640x360",
+        "targetZoom": "0.350",
+        "validationMode": "C",
+        "viewZoom": "0.350",
+        "visibleWorldWidth": "914.29"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-b02-z050-844x390-A.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "ORIGINAL",
+        "benchmark": "{\"limit\":200,\"samples\":6,\"averageFps\":0.999,\"low1PercentFps\":0.999,\"meanCpuMs\":11.617,\"p95CpuMs\":12.7,\"maxCpuMs\":12.7,\"minEnemies\":200,\"maxEnemies\":200,\"destructionLevel\":1,\"acceptedPerformance\":{\"samples\":0,\"excludedInterruptions\":6,\"fps\":null,\"meanFrameMs\":null,\"p95FrameMs\":null,\"maxFrameMs\":null,\"updateCpuMs\":null,\"drawCpuMs\":null,\"maxEnemies\":0,\"maxShots\":0,\"maxEffects\":0,\"histogramResolutionMs\":0.5},\"rawIntervalsIncludeInterruptions\":true}",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "4732.00",
+        "checkpoint": "M02-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "5052",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-b02-z050-844x390-C.jpg",
+      "canvas": [
+        320,
+        180
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "UNIFIED_01",
+        "benchmark": "{\"limit\":200,\"samples\":6,\"averageFps\":0.999,\"low1PercentFps\":0.999,\"meanCpuMs\":11.617,\"p95CpuMs\":12.7,\"maxCpuMs\":12.7,\"minEnemies\":200,\"maxEnemies\":200,\"destructionLevel\":1,\"acceptedPerformance\":{\"samples\":0,\"excludedInterruptions\":6,\"fps\":null,\"meanFrameMs\":null,\"p95FrameMs\":null,\"maxFrameMs\":null,\"updateCpuMs\":null,\"drawCpuMs\":null,\"maxEnemies\":0,\"maxShots\":0,\"maxEffects\":0,\"histogramResolutionMs\":0.5},\"rawIntervalsIncludeInterruptions\":true}",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "4732.00",
+        "checkpoint": "M02-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "5052",
+        "renderResolution": "320x180",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    },
+    {
+      "file": "m02-b02-z050-844x390-D.jpg",
+      "canvas": [
+        640,
+        360
+      ],
+      "data": {
+        "area": "5",
+        "artStyle": "UNIFIED_01",
+        "benchmark": "{\"limit\":200,\"samples\":6,\"averageFps\":0.999,\"low1PercentFps\":0.999,\"meanCpuMs\":11.617,\"p95CpuMs\":12.7,\"maxCpuMs\":12.7,\"minEnemies\":200,\"maxEnemies\":200,\"destructionLevel\":1,\"acceptedPerformance\":{\"samples\":0,\"excludedInterruptions\":6,\"fps\":null,\"meanFrameMs\":null,\"p95FrameMs\":null,\"maxFrameMs\":null,\"updateCpuMs\":null,\"drawCpuMs\":null,\"maxEnemies\":0,\"maxShots\":0,\"maxEffects\":0,\"histogramResolutionMs\":0.5},\"rawIntervalsIncludeInterruptions\":true}",
+        "boss": "1",
+        "cameraMode": "fixed",
+        "cameraX": "4732.00",
+        "checkpoint": "M02-A5-BOSS",
+        "density": "STANDARD",
+        "enemies": "1",
+        "enemyLimit": "50",
+        "flightEnergy": "0.0",
+        "gameState": "pause",
+        "missionId": "M02",
+        "playerClass": "SCOUT",
+        "playerHp": "75",
+        "playerX": "5052",
+        "renderResolution": "640x360",
+        "targetZoom": "0.500",
+        "validationMode": "C",
+        "viewZoom": "0.500",
+        "visibleWorldWidth": "640.00"
+      },
+      "rect": {
+        "h": 348,
+        "w": 618.65625,
+        "x": 112.671875,
+        "y": 40
+      },
+      "screen": [
+        844,
+        390
+      ]
+    }
+  ],
+  "group": "m02-b02-z050-844x390",
+  "conditions": [
+    [
+      "A",
+      "ORIGINAL",
+      "1"
+    ],
+    [
+      "B",
+      "STUDY_01_B",
+      "1"
+    ],
+    [
+      "C",
+      "UNIFIED_01",
+      "1"
+    ],
+    [
+      "D",
+      "UNIFIED_01",
+      "2"
+    ]
+  ],
+  "records": [
+    {
+      "kind": "picker-last",
+      "viewport": [
+        844,
+        390
+      ],
+      "label": "SLOT 1: M-20 メテオランチャー",
+      "layout": {
+        "bottom": 375,
+        "height": 197,
+        "icons": 20,
+        "scrollHeight": 1040,
+        "scrollTop": 843
+      }
+    },
+    {
+      "kind": "picker-last",
+      "viewport": [
+        780,
+        360
+      ],
+      "label": "SLOT 2: M-20 メテオランチャー",
+      "layout": {
+        "bottom": 345,
+        "height": 167,
+        "icons": 20,
+        "scrollHeight": 1040,
+        "scrollTop": 873
+      }
+    },
+    {
+      "kind": "picker-last",
+      "viewport": [
+        390,
+        844
+      ],
+      "label": "SLOT 1: M-20 メテオランチャー",
+      "layout": {
+        "bottom": 721,
+        "height": 421,
+        "icons": 20,
+        "scrollHeight": 1040,
+        "scrollTop": 619
+      }
+    }
+  ],
+  "benches": [
+    {
+      "scale": 1,
+      "limit": 50,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 5.25,
+      "p95CpuMs": 7.8,
+      "maxCpuMs": 7.8,
+      "minEnemies": 50,
+      "maxEnemies": 50,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    },
+    {
+      "scale": 1,
+      "limit": 100,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 7.517,
+      "p95CpuMs": 10.8,
+      "maxCpuMs": 10.8,
+      "minEnemies": 100,
+      "maxEnemies": 100,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    },
+    {
+      "scale": 1,
+      "limit": 200,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 12.95,
+      "p95CpuMs": 16.2,
+      "maxCpuMs": 16.2,
+      "minEnemies": 200,
+      "maxEnemies": 200,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    },
+    {
+      "scale": 2,
+      "limit": 50,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 3.517,
+      "p95CpuMs": 5.4,
+      "maxCpuMs": 5.4,
+      "minEnemies": 50,
+      "maxEnemies": 50,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    },
+    {
+      "scale": 2,
+      "limit": 100,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 5.983,
+      "p95CpuMs": 8,
+      "maxCpuMs": 8,
+      "minEnemies": 100,
+      "maxEnemies": 100,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    },
+    {
+      "scale": 2,
+      "limit": 200,
+      "samples": 6,
+      "averageFps": 0.999,
+      "low1PercentFps": 0.999,
+      "meanCpuMs": 11.617,
+      "p95CpuMs": 12.7,
+      "maxCpuMs": 12.7,
+      "minEnemies": 200,
+      "maxEnemies": 200,
+      "destructionLevel": 1,
+      "acceptedPerformance": {
+        "samples": 0,
+        "excludedInterruptions": 6,
+        "fps": null,
+        "meanFrameMs": null,
+        "p95FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "histogramResolutionMs": 0.5
+      },
+      "rawIntervalsIncludeInterruptions": true,
+      "artStyle": "UNIFIED_01"
+    }
+  ],
+  "weaponIds": [
+    "A-01",
+    "S-02",
+    "L-03",
+    "R-04",
+    "F-05",
+    "T-06",
+    "G-07",
+    "H-08",
+    "B-09",
+    "R-10",
+    "X-11",
+    "P-12",
+    "P-13",
+    "G-14",
+    "F-15",
+    "T-16",
+    "S-17",
+    "M-18",
+    "D-19",
+    "M-20"
+  ],
+  "weaponSelections": [
+    {
+      "id": "A-01",
+      "selected": "SLOT 1: A-01 アサルト"
+    },
+    {
+      "id": "S-02",
+      "selected": "SLOT 1: S-02 ショットガン"
+    },
+    {
+      "id": "L-03",
+      "selected": "SLOT 1: L-03 レーザー"
+    },
+    {
+      "id": "R-04",
+      "selected": "SLOT 1: R-04 ロケット"
+    },
+    {
+      "id": "F-05",
+      "selected": "SLOT 1: F-05 フレイム"
+    },
+    {
+      "id": "T-06",
+      "selected": "SLOT 1: T-06 サンダー"
+    },
+    {
+      "id": "G-07",
+      "selected": "SLOT 1: G-07 グレネード"
+    },
+    {
+      "id": "H-08",
+      "selected": "SLOT 1: H-08 ホーミング"
+    },
+    {
+      "id": "B-09",
+      "selected": "SLOT 1: B-09 バウンドレーザー"
+    },
+    {
+      "id": "R-10",
+      "selected": "SLOT 1: R-10 スプリットロケット"
+    },
+    {
+      "id": "X-11",
+      "selected": "SLOT 1: X-11 チェインボム"
+    },
+    {
+      "id": "P-12",
+      "selected": "SLOT 1: P-12 ドリルショット"
+    },
+    {
+      "id": "P-13",
+      "selected": "SLOT 1: P-13 プラズマキャノン"
+    },
+    {
+      "id": "G-14",
+      "selected": "SLOT 1: G-14 クラスターグレネード"
+    },
+    {
+      "id": "F-15",
+      "selected": "SLOT 1: F-15 ワイドフレイム"
+    },
+    {
+      "id": "T-16",
+      "selected": "SLOT 1: T-16 ライトニングストーム"
+    },
+    {
+      "id": "S-17",
+      "selected": "SLOT 1: S-17 スパイラルショット"
+    },
+    {
+      "id": "M-18",
+      "selected": "SLOT 1: M-18 リモートマイン"
+    },
+    {
+      "id": "D-19",
+      "selected": "SLOT 1: D-19 オートタレット"
+    },
+    {
+      "id": "M-20",
+      "selected": "SLOT 1: M-20 メテオランチャー"
+    }
+  ],
+  "firing": [
+    {
+      "id": "A-01",
+      "equipped": "SLOT 1: A-01 アサルト",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "S-02",
+      "equipped": "SLOT 1: S-02 ショットガン",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "L-03",
+      "equipped": "SLOT 1: L-03 レーザー",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "R-04",
+      "equipped": "SLOT 1: R-04 ロケット",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "F-05",
+      "equipped": "SLOT 1: F-05 フレイム",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "T-06",
+      "equipped": "SLOT 1: T-06 サンダー",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "G-07",
+      "equipped": "SLOT 1: G-07 グレネード",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "H-08",
+      "equipped": "SLOT 1: H-08 ホーミング",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "50",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "B-09",
+      "equipped": "SLOT 1: B-09 バウンドレーザー",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "49",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "R-10",
+      "equipped": "SLOT 1: R-10 スプリットロケット",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "49",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "X-11",
+      "equipped": "SLOT 1: X-11 チェインボム",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "42",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "P-12",
+      "equipped": "SLOT 1: P-12 ドリルショット",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "42",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "P-13",
+      "equipped": "SLOT 1: P-13 プラズマキャノン",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "42",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "G-14",
+      "equipped": "SLOT 1: G-14 クラスターグレネード",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "42",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "F-15",
+      "equipped": "SLOT 1: F-15 ワイドフレイム",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "41",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "T-16",
+      "equipped": "SLOT 1: T-16 ライトニングストーム",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "39",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "S-17",
+      "equipped": "SLOT 1: S-17 スパイラルショット",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "37",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "M-18",
+      "equipped": "SLOT 1: M-18 リモートマイン",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "37",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "D-19",
+      "equipped": "SLOT 1: D-19 オートタレット",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "30",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "id": "M-20",
+      "equipped": "SLOT 1: M-20 メテオランチャー",
+      "canvas": {
+        "canvas": [
+          640,
+          360
+        ],
+        "data": {
+          "area": "1",
+          "artStyle": "UNIFIED_01",
+          "boss": "0",
+          "cameraMode": "fixed",
+          "cameraX": "542.86",
+          "density": "MASSIVE",
+          "enemies": "14",
+          "enemyLimit": "100",
+          "flightEnergy": "0.0",
+          "gameState": "lab",
+          "missionId": "M01",
+          "playerClass": "RANGER",
+          "playerHp": "100",
+          "playerX": "1000",
+          "renderResolution": "640x360",
+          "targetZoom": "0.350",
+          "viewZoom": "0.350",
+          "visibleWorldWidth": "914.29"
+        },
+        "rect": {
+          "h": 348,
+          "w": 618.65625,
+          "x": 112.671875,
+          "y": 40
+        },
+        "screen": [
+          844,
+          390
+        ]
+      }
+    }
+  ],
+  "logs": [],
+  "date": "2026-10-24",
+  "notice": "Browser screenshots are real UI captures. Stops and checkpoints are QA, not full normal clears. FPS needs accepted foreground samples.",
+  "normal": {
+    "artStyle": "ORIGINAL",
+    "canvas": [
+      320,
+      180
+    ],
+    "labHidden": true
+  }
+}

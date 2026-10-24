@@ -1,0 +1,21 @@
+{
+  "browser": "Windows Chrome, not iPhone Safari",
+  "panelsPreserveInputs": true,
+  "editor": true,
+  "stage20FixedConditions": true,
+  "flightPauseResume": true,
+  "initialMute": true,
+  "soundRestoredWithoutAutoplay": true,
+  "testSentToDestination": true,
+  "actualChromeSuspendResume": true,
+  "rejectedResumeRecovered": true,
+  "muteStopsNodes": true,
+  "waveform": {
+    "rms": 0.00439707001476415,
+    "frames": 22050,
+    "sampleRate": 44100,
+    "method": "PC OfflineAudioContext, not iPhone speaker"
+  },
+  "iphoneAudible": "UNVERIFIED",
+  "errors": []
+}

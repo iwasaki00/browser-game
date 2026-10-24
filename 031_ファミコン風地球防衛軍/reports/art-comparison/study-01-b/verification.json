@@ -1,0 +1,25 @@
+{
+  "version":"0.2.3-B",
+  "dateJst":"2026-10-24",
+  "status":"STUDY_01_B_COMPARISON_PREVIEW_ONLY",
+  "browser":"Chrome desktop with CSS viewport override; not an iPhone device",
+  "captureCount":84,
+  "mainMatrix":{"scenes":["m01-ranger","m01-boss","m02-wing"],"zooms":[0.50,0.35],"viewports":[[844,390],[780,360],[390,844]],"conditions":{"A":"ORIGINAL/320x180","B":"STUDY_01/320x180","C":"STUDY_01_B/320x180","D":"STUDY_01_B/640x360"},"captures":72},
+  "extraCaptures":{"m01-swarm50":{"count":50,"zooms":[0.50,0.35],"viewport":[844,390],"conditions":["A","B","C","D"],"captures":8},"m01-e03":{"count":10,"zoom":0.50,"viewport":[844,390],"conditions":["A","B","C","D"],"captures":4}},
+  "captureRules":["Same paused scene within each comparison group","Input and update blocked while switching","Public DOM HP/X/enemies/energy/camera/checkpoint identical within each scene+zoom","Canvas dimensions and settled viewport/control rectangles asserted before capture","Original JPEGs retained, no repaint/sharpening","Focus images use nearest-neighbor x4, not additional source detail"],
+  "states":{
+    "m01-ranger":{"checkpoint":"M01-A2-MAIN","class":"RANGER","x":940,"hp":100,"enemies":0,"energy":0,"cameraX050":620,"cameraX035":482.86},
+    "m01-boss":{"checkpoint":"M01-A5-BOSS","class":"RANGER","x":4160,"hp":100,"enemies":1,"energy":0,"cameraX050":3840,"cameraX035":3702.86,"bossStarted":true},
+    "m02-wing":{"checkpoint":"M02-A2-MAIN","class":"WING","x":940,"hp":65,"enemies":6,"energy":82,"cameraX050":620,"cameraX035":482.86,"flightSetup":"actual W / Space (FLY / HOLD) input"},
+    "m01-swarm50":{"class":"RANGER","x":1000,"hp":100,"enemies":50,"energy":0,"cameraX050":680,"cameraX035":542.86,"labEnemyLimit":100},
+    "m01-e03":{"class":"RANGER","x":1000,"hp":100,"enemies":10,"energy":0,"cameraX050":680,"labEnemyLimit":100}
+  },
+  "browserWarningsOrErrors":0,
+  "performance":{"validComparison":false,"scenario":"Existing BENCH 50, LEVEL 1, STUDY_01_B; each condition once","runs":[
+    {"resolution":"320x180","acceptedSamples":0,"excludedInterruptions":6,"fps":null,"p95FrameMs":null,"updateCpuMs":null,"drawCpuMs":null,"enemiesMin":50,"enemiesMax":50,"rawInterruptedFps":0.999,"rawCombinedCpuMeanMs":5.333,"rawCombinedCpuMaxMs":8.7},
+    {"resolution":"640x360","acceptedSamples":0,"excludedInterruptions":6,"fps":null,"p95FrameMs":null,"updateCpuMs":null,"drawCpuMs":null,"enemiesMin":50,"enemiesMax":50,"rawInterruptedFps":0.999,"rawCombinedCpuMeanMs":4.367,"rawCombinedCpuMaxMs":9.3}
+  ],"reason":"Approximately 1-second RAF intervals all exceeded the existing 250ms interruption threshold. Raw combined CPU includes fixed-step catch-up and is not isolated drawing CPU/GPU time. No performance ranking or normal FPS claim."},
+  "automatedChecks":{"node":56,"python":15,"scope":"Only art adapter/generation and related existing input/camera/save checks; not full regression suite","saveIsolation":"VM tests compare save bytes AND in-memory save object","oldAssets":"All existing assets excluded Study 01-B hashed before/after regeneration; unchanged"},
+  "unverified":["iPhone Safari real device and touch feel","Smooth real-time animation / all poses at normal foreground FPS","All weapons in all airborne/left-facing poses visually","100/200-enemy or thermal/GPU profiling","0.85 browser art comparison","Normal-difficulty full mission completion"],
+  "notes":["Free-encounter metadata was stale immediately after reconfiguration; those 12 captures were replaced after briefly playing then pausing, without changing game code.","B-01 organ is a visual landmark only; no new weak point or damage rule.","No external images/API, no runtime halo, no enemy sorting or movement changes."]
+}

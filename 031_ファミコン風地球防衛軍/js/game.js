@@ -1,6 +1,6 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-A";
-import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-A";
-import {ArtPreview,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning} from "./art-preview.js?v=0.2.3-A";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.2.3-C";
+import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-C";
+import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=0.2.2";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.2.2";
@@ -368,15 +368,15 @@ function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true
   document.querySelector("#rewardBox").innerHTML=w?`<span>${game.missionId==='M02'?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?game.missionId==='M02'?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;scheduleMission(()=>show("result"),500)
 }
 
-function activeStudy(){return DEBUG&&game?.lab&&artPreview.style==='STUDY_01'?artPreview.pack:null}
+function activeStudy(){return DEBUG&&game?.lab&&artPreview.style!=='ORIGINAL'?artPreview.pack:null}
 function applyPreviewResolution(){
   const scale=DEBUG&&game?.lab?previewRenderScale:1,width=VIEW.canvasWidth*scale,height=VIEW.canvasHeight*scale;
   if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;ctx.imageSmoothingEnabled=false}
-  canvas.dataset.artStyle=activeStudy()?'STUDY_01':'ORIGINAL';canvas.dataset.renderResolution=`${width}x${height}`;return scale;
+  canvas.dataset.artStyle=activeStudy()?artPreview.style:'ORIGINAL';canvas.dataset.renderResolution=`${width}x${height}`;return scale;
 }
 async function setArtStyle(value){
   if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state))return false;
-  const promise=artPreview.select(value);syncLabUI();const result=await promise;syncLabUI();return result;
+  const promise=artPreview.select(value);syncLabUI();const result=await promise;syncLabUI();if(labWeaponPickerOpen)renderLabWeaponList();return result;
 }
 function setPreviewResolution(value){if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state)||!['1','2'].includes(String(value)))return false;previewRenderScale=Number(value);applyPreviewResolution();syncLabUI();return true}
 function beginArtComparison(){if(!DEBUG||!game?.lab||game.player.dead)return;artComparison=true;pauseLabMeasurement();resetInput();show('pause')}
@@ -391,6 +391,7 @@ function draw(){
   const origin=worldToScreen({x:0,y:0},g.camera,view.zoom);
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
+  artPreview?.prepare(view.zoom);
   drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawShots(g);drawPlayer(g.player);drawEffects(g);
   ctx.restore();drawHud(g);if(g.missionId==='M02')drawUndergroundHud(g);drawClassHud(g);drawImpactHud(g);
 }
@@ -403,20 +404,20 @@ function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320),study=activeStudy();
   // The zoom reveals sky above the original artwork. Fill it and repeat the city horizontally.
   ctx.fillStyle="#040a16";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
-  for(let x=start-320;x<bounds.right+320;x+=320)if(study)ctx.drawImage(g.missionId==='M02'?study.underground:study.city,0,0,640,360,x,0,320,180);else ctx.drawImage(g.missionId==='M02'?images.underground:images.bg,x,0);
+  for(let x=start-320;x<bounds.right+320;x+=320)if(study?.[g.missionId==='M02'?'underground':'city'])ctx.drawImage(g.missionId==='M02'?study.underground:study.city,0,0,640,360,x,0,320,180);else ctx.drawImage(g.missionId==='M02'?images.underground:images.bg,x,0);
   if(g.missionId==='M02'){ctx.fillStyle='#081321';ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,Math.max(0,-bounds.top));for(let x=Math.floor(bounds.left/96)*96;x<bounds.right+96;x+=96){ctx.fillStyle='#17353d';ctx.fillRect(x,bounds.top,5,Math.max(0,-bounds.top+8));ctx.fillStyle='#3c665e';ctx.fillRect(x+2,0,2,6)}}
 }
 function drawWorld(g){
   const bounds=viewBounds(g.camera,view.zoom),study=activeStudy();
   if(g.missionId==='M02'){drawUnderground(g,bounds);return}
   ctx.fillStyle="#0b1825";ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
-  for(let x=Math.floor(bounds.left/16)*16-16;x<bounds.right+16;x+=16)if(study)drawStudyTile(ctx,study,'M01',studyTileVariant(x),x,WORLD.ground);else ctx.drawImage(images.tiles,((Math.floor(x/16)%8+8)%8)*16,0,16,16,x,WORLD.ground,16,16);
+  for(let x=Math.floor(bounds.left/16)*16-16;x<bounds.right+16;x+=16)if(!drawStudyTile(ctx,study,'M01',studyTileVariant(x),x,WORLD.ground))ctx.drawImage(images.tiles,((Math.floor(x/16)%8+8)%8)*16,0,16,16,x,WORLD.ground,16,16);
   ctx.fillStyle="#d4b944";for(let x=Math.floor(bounds.left/40)*40;x<bounds.right;x+=40)ctx.fillRect(x,168,19,2);
   for(const pl of g.platforms)if(pl.x+pl.w>bounds.left&&pl.x<bounds.right){ctx.fillStyle="#203e4a";ctx.fillRect(pl.x,pl.y,pl.w,8);ctx.fillStyle="#57a1a0";ctx.fillRect(pl.x,pl.y,pl.w,2);if(study)for(let x=Math.max(pl.x,Math.floor(bounds.left/16)*16);x<pl.x+pl.w&&x<bounds.right;x+=16)drawStudyTile(ctx,study,'M01',x===pl.x?4:x+16>=pl.x+pl.w?6:5,x,pl.y,Math.min(16,pl.x+pl.w-x),8)}
   for(const a of MISSION_AREAS)if(a.x>bounds.left&&a.x<bounds.right){ctx.fillStyle="#37e8df44";ctx.fillRect(a.x,30,1,118)}
 }
 function drawUnderground(g,bounds){
-  const study=activeStudy(),tile=(index,x,y,height=16,width=16,studyIndex=null)=>{if(study&&studyIndex!==null)return drawStudyTile(ctx,study,'M02',studyIndex,x,y,width,height);ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height)};
+  const study=activeStudy(),tile=(index,x,y,height=16,width=16,studyIndex=null)=>{if(drawUnifiedTile(ctx,study,'M02',index,x,y,width,height))return;if(studyIndex!==null&&drawStudyTile(ctx,study,'M02',studyIndex,x,y,width,height))return;ctx.drawImage(images.undergroundTiles,index%8*16,Math.floor(index/8)*16,width,height,x,y,width,height)};
   // The final chamber is organic rather than another copy of the subway hall.
   if(bounds.right>4500){
     ctx.fillStyle='#160e28';ctx.fillRect(Math.max(4500,bounds.left),0,bounds.right-Math.max(4500,bounds.left)+16,WORLD.ground);
@@ -427,7 +428,11 @@ function drawUnderground(g,bounds){
   for(const p of g.platforms){if(p.active===false||p.kind==='barrier'||p.x+p.w<bounds.left||p.x>bounds.right)continue;
     ctx.fillStyle=p.kind==='pipe'?'#315d61':p.kind==='metal'?'#263e4e':'#152a38';ctx.fillRect(p.x,p.y,p.w,p.h??8);
     ctx.fillStyle=p.kind==='metal'?'#a0c6ab':'#517985';ctx.fillRect(p.x,p.y,p.w,2);
-    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16)tile(p.kind==='pipe'?3:p.kind==='cave'?10:p.kind==='wall'?2:p.kind==='ceiling'?1:0,x,p.y,Math.min(16,p.h??8),Math.min(16,p.x+p.w-x),p.kind==='metal'?0:p.kind==='pipe'&&p.w>=16&&(p.h??8)<=16?4:null);
+    for(let x=Math.max(p.x,Math.floor(bounds.left/16)*16);x<p.x+p.w&&x<bounds.right;x+=16){
+      const height=p.h??8,width=Math.min(16,p.x+p.w-x),index=p.kind==='pipe'?3:p.kind==='cave'?10:p.kind==='wall'?2:p.kind==='ceiling'?1:0;
+      if(study?._u?.underTiles)for(let y=p.y;y<p.y+height;y+=16)tile(index,x,y,Math.min(16,p.y+height-y),width);
+      else tile(index,x,p.y,Math.min(16,height),width,p.kind==='metal'?0:p.kind==='pipe'&&p.w>=16&&height<=16?4:null);
+    }
   }
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
@@ -462,6 +467,7 @@ function drawUndergroundEnemy(e,frame,x,y){
 function drawDeathGhost(e,x,y,angle,alpha,full){
   ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y+e.h/2));ctx.rotate(angle);
   if(!full){ctx.fillStyle=e.deathColor;ctx.fillRect(-3,0,6,2)}
+  else if((activeStudy()?._u?.[e.type]||activeStudy()?._b?.[e.type])&&drawStudyEnemy(ctx,activeStudy(),e,0,-e.h/2)){}
   else if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,3,0,-e.h/2);
   else if(e.type==="boss")ctx.drawImage(images.boss,288,0,96,64,-48,-e.h/2,96,64);
   else{const size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,144,ENEMY_TYPES[e.type].row*48,48,48,-size/2,e.h/2-size,size,size)}
@@ -469,11 +475,11 @@ function drawDeathGhost(e,x,y,angle,alpha,full){
 }
 function drawShots(g){
   const study=activeStudy();
-  drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom),study?{projectile:(c,s,x,y,size)=>drawStudyProjectile(c,study,s.weapon.id,x,y,size,size),installation:(c,i)=>i.weapon.id==='D-19'&&drawStudyIcon(c,study,i.weapon.id,Math.round(i.x)-12,i.y-22.5,24,24)}:null);
+  drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom),study?{projectile:(c,s,x,y,size)=>drawStudyProjectile(c,study,s.weapon.id,x,y,size,size),installation:(c,i)=>(study._u?.icons||i.weapon.id==='D-19')&&drawStudyIcon(c,study,i.weapon.id,Math.round(i.x)-12,i.y-(study._u?.icons&&i.weapon.type==='mine'?21:22.5),24,24),storm:(c,j)=>drawUnifiedSpecial(c,study,j.weapon.id,(g.time%1),j.x,j.y-48,64,32),trail:(c,s)=>drawUnifiedTrail(c,study,s)}:null);
   for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);if(study){ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(s.vy,s.vx));const drawn=drawStudyProjectile(ctx,study,s.weapon.id,-8,-8);ctx.restore();if(drawn)continue}ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
   for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;
-    if(s.kind==='acid')ctx.drawImage(images.acid,Math.floor(g.time*8)%4*16,0,16,16,s.x-8,s.y-8,16,16);
-    else if(s.kind==='wave')ctx.drawImage(images.wave,Math.floor(g.time*8)%4*32,0,32,24,s.x-16,s.y-18,32,24);
+    if(s.kind==='acid'){if(!drawUnifiedEnvironmentalEffect(ctx,study,'acid',g.time*2%1,s.x,s.y,16,16))ctx.drawImage(images.acid,Math.floor(g.time*8)%4*16,0,16,16,s.x-8,s.y-8,16,16)}
+    else if(s.kind==='wave'){if(!drawUnifiedEnvironmentalEffect(ctx,study,'wave',g.time*2%1,s.x,s.y-6,32,24))ctx.drawImage(images.wave,Math.floor(g.time*8)%4*32,0,32,24,s.x-16,s.y-18,32,24)}
     else{ctx.fillStyle='#b5ef48';ctx.fillRect(Math.round(s.x)-3,Math.round(s.y)-3,6,6);ctx.fillStyle='#fff08b';ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-1,2,2)}
   }
 }
@@ -487,9 +493,9 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
       ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
       for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
     }else if(f.kind==='nestBreak'||f.kind==='bossBreak'){
-      const boss=f.kind==='bossBreak',width=boss?128:64,height=boss?96:64;ctx.drawImage(boss?images.bossBreak:images.nestBreak,Math.min(7,Math.floor((1-a)*8))*width,0,width,height,x-width/2,f.y-height/2,width,height);
+      const boss=f.kind==='bossBreak',width=boss?128:64,height=boss?96:64;if(!drawUnifiedEnvironmentalEffect(ctx,activeStudy(),f.kind,1-a,x,f.y,width,height))ctx.drawImage(boss?images.bossBreak:images.nestBreak,Math.min(7,Math.floor((1-a)*8))*width,0,width,height,x-width/2,f.y-height/2,width,height);
     }else if(f.kind==="weaponBurst"){
-      const size=Math.max(32,(f.r||24)*2)*(f.visualScale||1);ctx.drawImage(images.weaponFx,(4+Math.min(3,Math.floor((1-a)*4)))*32,(f.assetIndex-8)*32,32,32,x-size/2,f.y-size/2,size,size);
+      const size=Math.max(32,(f.r||24)*2)*(f.visualScale||1);if(!drawUnifiedSpecial(ctx,activeStudy(),WEAPONS[f.assetIndex]?.id,1-a,x,f.y,size))ctx.drawImage(images.weaponFx,(4+Math.min(3,Math.floor((1-a)*4)))*32,(f.assetIndex-8)*32,32,32,x-size/2,f.y-size/2,size,size);
     }else if(f.kind==="hit")drawHitEffect(f,g.enemyLimit>100?2:4);
     else if(f.kind==="lightning"){if(!drawStudyLightning(ctx,activeStudy(),f)){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}}
     else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}
@@ -604,7 +610,7 @@ function syncLabUI(){
   if(artPreview)for(const prefix of ['lab','pause']){
     document.querySelector(`#${prefix}ArtStyle`).value=artPreview.requested;
     document.querySelector(`#${prefix}RenderScale`).value=String(game?.lab?previewRenderScale:1);
-    document.querySelector(`#${prefix}ArtStatus`).textContent=artPreview.loading?'Study 01読み込み中（従来表示を維持）':artPreview.error||`${activeStudy()?'STUDY 01':'ORIGINAL'} / ${canvas.width}×${canvas.height} / NO SAVE`;
+    document.querySelector(`#${prefix}ArtStatus`).textContent=artPreview.loading?'アート読み込み中（現在の表示を維持）':artPreview.error||`${activeStudy()?artStyleLabel(artPreview.style):'ORIGINAL'} / ${canvas.width}×${canvas.height} / NO SAVE${activeStudy()?.fallbacks?.length?` / 代替素材: ${activeStudy().fallbacks.join(', ')}`:''}`;
   }
   document.querySelector('#labGameoverReport').hidden=!game?.lab?.run||state!=='gameover';
   document.querySelector("#labToggle").hidden=!game?.lab||state!=="play";
@@ -637,6 +643,11 @@ function renderLabWeaponList(focusId=null){
     if(query&&!weaponSearchKey(`${w.id} ${w.name}`).includes(query))continue;count++;
     const selected=game.lab.equipped[labEditingSlot]===w.id,button=document.createElement("button");button.type="button";button.className="lab-weapon-option";button.dataset.weapon=w.id;button.setAttribute("aria-pressed",String(selected));
     button.innerHTML=`<strong>${w.id}</strong><span>${w.name}</span><small>${selected?"選択中":"選択"}</small>`;
+    if(activeStudy()?._u?.icons){
+      button.className+=' has-art';
+      const icon=document.createElement('canvas');icon.width=icon.height=32;icon.className='lab-weapon-art';icon.setAttribute('aria-hidden','true');
+      const c=icon.getContext('2d');c.imageSmoothingEnabled=false;drawStudyIcon(c,activeStudy(),w.id,0,0,32,32);button.append(icon);
+    }
     button.addEventListener("click",()=>selectLabWeapon(w.id));list.append(button);if(w.id===focusId)focused=button;
   }
   if(!count){const empty=document.createElement("p");empty.className="lab-weapon-empty";empty.textContent="一致する武器がありません";list.append(empty)}

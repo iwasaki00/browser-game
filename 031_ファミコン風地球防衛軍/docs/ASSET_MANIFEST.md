@@ -1,5 +1,27 @@
 # Asset Manifest
 
+## UNIFIED 01 / 0.2.3-C（LAB統合試用）
+
+生成：`py -3 tools/generate_assets.py --art-unified-only` → `assets/art-refresh/unified-01/`。既存のORIGINAL／Study 01／01-Bは上書きしない。全寸法・SHA256・フレームID・147行の対応表は[統合JSON](../assets/art-refresh/unified-01/manifest.json)、状態・アンカー・利用制限は[ART_UNIFICATION.md](ART_UNIFICATION.md)。
+
+| ファイル群（新ルート内） | PNG | 索引セル | 制作・参照 |
+| --- | ---: | ---: | --- |
+| sprites/ranger, scout, guardian, wing | 4 | 48 | 全4兵科・既存12列、source48×64→24×32world |
+| sprites/crawler, spider, needle, beetle, worm, spitter | 6 | 108 | 全6通常敵、6列×3配色 |
+| sprites/boss, queen, nest, barrier | 4 | 24 | 両ボス・ネスト・破壊障害物、各6列 |
+| far/上記14種 | 14 | 180 | 同サイズ・同アンカーの実験用遠景版 |
+| weapons/icons, equipped, projectiles | 3 | 60 | 既存20武器、各1セル。名称・IDはデータから取得 |
+| weapons/impacts, special | 2 | 160 | 20武器×各4コマ、実弾・命中・特殊FXに接続 |
+| backgrounds/city*, underground* | 8 | 8 | 各3レイヤー＋合成。実ゲームは合成2枚のみ読込 |
+| tiles/city, underground | 2 | 128 | 各16種×4差分。M01の8〜15は未配置の装飾候補 |
+| effects/acid, wave, nestBreak, bossBreak | 4 | 24 | 4／4／8／8コマ、既存寿命・位置を維持 |
+| contact-sheet | 1 | — | 素材一覧。ゲーム画面ではない |
+| **合計** | **48** | **740** | 配色・遠景・未使用互換列を含む。740動作という意味ではない |
+
+`manifest.json`は各シートの元アセット、所有者、ミッション、状態、論理寸法、生成元、描画基準点を記録し、20×5件の武器セル対応も明示する。今回の対象に未制作のランタイム画像はない。文字／バー／アイテム／既存小粒子は対象外。ORIGINALを通常初期表示として維持し、統合セットは正式採用しない。
+
+実行時は41アトラスのみを初回遅延読込し、個体ごとに複製しない。ファイル計206,982 bytes、RGBA展開寸法の単純合計16,410,624 bytes（約15.7 MiB）。ブラウザの実メモリ／GPU使用量ではなく概算であり、旧セットのキャッシュやGPUコピーは別途必要。実機測定は未確認。
+
 本番素材は `tools/generate_assets.py` が固定シード7319（M02は2207319）で生成するオリジナルPNG。アンチエイリアスなし、透過RGBA（背景のみRGB）。未採用のアート検討素材は末尾の別枠を参照。
 
 | ファイル | フレーム | フレームサイズ | 用途 |
@@ -83,3 +105,18 @@
 ### 0.2.3-Aの最小補完
 
 `--art-in-game-only` で `in-game/ranger_body.png` / `wing_body.png`（各96×64、48×64セル2コマ、論理24×32）と `anchors.json` を生成。焼き込まれた銃だけを除き、武器表示の二重化を防ぐ。元のStudy 01の22 PNG／マニフェストは変更しない。Studyフォルダ合計は24 PNGとなるが、追加の2 PNGは本番素材ではなくLAB内試用専用。独立プレビューは引き続き元サンプルを使用する。
+
+## STUDY 01-B / 0.2.3-B — 比較試用専用
+
+出力 `assets/art-refresh/study-01-b/`。生成は `py -3 tools/generate_assets.py --art-readability-only`、`tools/art_readability.py`。識別シード24032024、元形状／配置のシード24032023、追加乱数なし。同環境で再生成バイト一致、二値透過、旧assetsのハッシュ不変を検証する。通常公開素材は置換しない。
+
+| パス | PNG数 | 原画セル／配列 | 論理寸法・用途 |
+| --- | ---: | --- | --- |
+| sprites/ranger.png / wing.png | 2 | 48×64、12列1行＝各12コマ | 24×32、銃なし胴体、待機／歩行3／跳躍／落下／射撃／被弾／死亡／互換ダッシュ／飛行／ホバー |
+| sprites/crawler.png / needle.png | 2 | 64×64、4列3行＝各12セル | 32×32、移動2／攻撃／死亡、3つの甲殻配色 |
+| sprites/mother_crawler.png | 1 | 192×128、4列1行＝4コマ | 96×64、B-01の移動2／攻撃／死亡 |
+| backgrounds/{city,underground}_{far,middle,near}.png | 6 | 640×360、各1 | 320×180、深度・戦闘帯で彩度／明度調整 |
+| backgrounds/city.png / underground.png | 2 | 640×360、各1 | 同3層の合成。既存の反復／パララックスに接続 |
+| tiles/city.png / underground.png | 2 | 32×32、4列2行＝各8 | 16×16、衝突面の上端だけ明瞭化 |
+
+計15 PNG、76セル相当（うち通常敵配色重複を含む）＋JSONマニフェスト。列順／行数／実寸／SHA256を記録する。武器5種の4 PNGは元Study 01を共用し、新フォルダに重複出力しない。元Study 01の24 PNGと本番23 PNGは維持。素材帳は `reports/art-comparison/study-01-b/asset-catalogue.png`、実画面の証拠とは区別する。
