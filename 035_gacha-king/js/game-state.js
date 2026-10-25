@@ -1,6 +1,7 @@
 import { GOALS, ITEMS, MACHINE, VERSION, itemById } from "./data.js";
 
 export const SAVE_KEY = "gacha-king-save-v1";
+const COMPATIBLE_VERSIONS = new Set(["0.1.0", VERSION]);
 
 export function createInitialState(legacy = {}) {
   return {
@@ -31,8 +32,9 @@ function normalizeState(raw) {
     cycle: raw?.cycle,
     settings: raw?.settings
   });
-  if (!raw || raw.version !== VERSION) return base;
+  if (!raw || !COMPATIBLE_VERSIONS.has(raw.version)) return base;
   const state = { ...base, ...raw };
+  state.version = VERSION;
   state.coins = Math.max(0, Number(state.coins) || 0);
   state.followers = Math.max(0, Number(state.followers) || 0);
   state.inventory = Array.isArray(state.inventory) ? state.inventory.filter((entry) => itemById(entry.itemId)) : [];
@@ -75,12 +77,13 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
     const roll = Math.min(0.999999999, Math.max(0, rng())) * 10000;
     let cursor = 0;
     const item = ITEMS.find((candidate) => (cursor += candidate.weight) > roll) || ITEMS.at(-1);
+    const isNew = !state.discovered.includes(item.id);
     const owned = { uid: `i${state.nextId++}`, itemId: item.id, acquiredAt: now(), posted: false };
     state.inventory.unshift(owned);
     if (!state.discovered.includes(item.id)) state.discovered.push(item.id);
     state.stats.draws += 1;
     emit();
-    return { ok: true, item: clone(item), owned: clone(owned) };
+    return { ok: true, item: clone(item), owned: clone(owned), isNew };
   }
 
   function findOwned(uid) { return state.inventory.find((entry) => entry.uid === uid); }

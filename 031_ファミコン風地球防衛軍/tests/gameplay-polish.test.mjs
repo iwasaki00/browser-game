@@ -78,6 +78,9 @@ test('unavailable / rejected / failed Web Audio never stops gameplay and removes
 });
 test('normal mute and volume remain persisted; LAB audio/FX metrics and controls remain NO SAVE',()=>{
   const r=lab(),saved=r.storage.get(SAVE_KEY);r.run('sampleCombatResources(game)');const resources=r.json('labExport().resources');assert.deepEqual(resources.current,{effects:0,particles:0,shake:0,voices:0});assert.equal(resources.audio.limit,8);
-  r.run('syncLabUI()');assert.match(r.get('labMetrics').textContent,/粒子.*音0\/8/);r.change('settingsVolume','0.4');assert.equal(r.storage.get(SAVE_KEY),saved);
+  r.run('syncLabUI()');assert.match(r.get('labMetrics').textContent,/粒子.*音0\/8/);
+  r.run('const calls=[];audioBus.play=(...args)=>calls.push(args);game.lab.settings.sound=true;game.lab.settings.volume=.4;tone(440,.1,"sine",.02);game.lab.settings.volume=0;tone(440,.1,"sine",.02)');assert.equal(r.run('calls.length'),1);assert.equal(r.run('calls[0][3]'),.008);
+  r.get('soundToggle').listeners.click[0]({currentTarget:r.get('soundToggle')});assert.equal(r.storage.get(SAVE_KEY),saved);
+  const seed=structuredClone(DEFAULT_SAVE);seed.settings.volume=.35;const normal=runtime(seed);normal.get('soundToggle').listeners.click[0]({currentTarget:normal.get('soundToggle')});assert.equal(JSON.parse(normal.storage.get(SAVE_KEY)).settings.volume,.35);assert.equal(JSON.parse(normal.storage.get(SAVE_KEY)).settings.sound,true);
   const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.doesNotMatch(html,/user-scalable=no|maximum-scale=1/);assert.equal((html.match(/role="tab"/g)||[]).length,5);assert.equal(WEAPONS.length,20);assert.equal(Object.keys(PLAYER_CLASSES).length,4);
 });

@@ -89,7 +89,7 @@ function storeSave(){if(game?.lab)return;try{localStorage.setItem(SAVE_KEY,JSON.
 // Keep the original storage key so v1 records migrate in place.
 storeSave();
 function loadAssets(){return Promise.all(Object.entries(imageFiles).map(([key,src])=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{images[key]=im;resolve()};im.onerror=reject;im.src=src}))).then(()=>assetsReady=true)}
-function show(name){if(name==="result"||name==="gameover")document.querySelector(`#screen${name==="result"?"Result":"Gameover"}`).classList.toggle("skip-intro",false);if(name!=='pause')artComparison=false;document.querySelector('#screenPause').classList.toggle('is-art-comparison',artComparison);if(name!=="lab")closeLabWeaponPicker(false);if(name==="mission")renderMissionList();screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play"||name==="lab"||artComparison);touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?game?.lab?"TEST LABを進行中":`ゲーム画面。${game.missionId} 市街地防衛線を進行中`:`${name}画面`);syncLabUI()}
+function show(name){if(name==="result"||name==="gameover")document.querySelector(`#screen${name==="result"?"Result":"Gameover"}`).classList.toggle("skip-intro",false);if(name!=='pause')artComparison=false;document.querySelector('#screenPause').classList.toggle('is-art-comparison',artComparison);if(name!=="lab")closeLabWeaponPicker(false);if(name==="mission")renderMissionList();screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play"||name==="lab"||artComparison);touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?game?.lab?"TEST LABを進行中":`ゲーム画面。${game.missionId} ${MISSIONS.find(m=>m.id===game.missionId)?.name??''}を進行中`:`${name}画面`);syncLabUI()}
 function scheduleMission(callback,delay){const current=game;const timer=setTimeout(()=>{missionTimers.delete(timer);if(game!==current)return;if(state==="confirm")deferredMissionCallbacks.push({current,callback});else callback()},delay);missionTimers.add(timer)}
 function missionScreen(name){if(state==="confirm")returnState=name;else show(name)}
 function discardMission(){archiveLabRun();for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;if(profiler)profiler.running=false;liveProfiler?.reset();game=null;acc=0;resetInput();syncCameraView();gameShell.dataset.flight="false";document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss;delete canvas.dataset.density;delete canvas.dataset.enemyLimit;delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode}
@@ -109,6 +109,7 @@ function activeSettings(){return game?.lab?.settings??save.settings}
 function formalClass(){return !game?.lab||Object.hasOwn(PLAYER_CLASSES,game.lab.preset)}
 function syncClassControls(){
   const id=game?.player.classId??"RANGER";
+  if(game)document.querySelector('#combatStatus').textContent=combatHudText(game,activeEquipment());
   gameShell.dataset.playerClass=id;
   gameShell.dataset.flight=String(game?.lab?.preset==="FLIGHT");
   gameShell.dataset.wing=String(!!game&&formalClass()&&id==="WING");
@@ -132,7 +133,7 @@ function closeSettings(){if(state!=="settings")return;resetInput();acc=0;show(se
 function formatTime(t){const m=Math.floor(t/60),s=Math.floor(t%60),ms=Math.floor(t*100)%100;return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(ms).padStart(2,"0")}`}
 
 function initAudio(){if(activeSettings().sound){audioBus.unlock();audio=audioBus.context}}
-function tone(freq=.05,duration=.04,type="square",volume=.025,event='generic'){if(!activeSettings().sound||profiler?.running)return;audioBus.play(freq,duration,type,volume*activeSettings().volume,event)}
+function tone(freq=.05,duration=.04,type="square",volume=.025,event='generic'){const settings=activeSettings(),level=Number.isFinite(settings.volume)?clamp(settings.volume,0,1):.65;if(!settings.sound||level===0||profiler?.running)return;audioBus.play(freq,duration,type,volume*level,event)}
 function feedbackSound(category){const sound=category==='WEAK POINT'?[780,.06,'sine',.016,'weak']:category==='ARMOR HIT'?[180,.045,'triangle',.012,'armor']:[320,.035,'square',.008,'hit'];tone(...sound)}
 
 function renderWeaponGrid(){
@@ -424,7 +425,7 @@ function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;i
 
 function statCards(entries){return entries.map(([label,value])=>`<div><span>${label}</span><b>${value}</b></div>`).join('')}
 function renderGameover(){
-  const d=outcomeData(game);document.querySelector('#gameoverStats').innerHTML=statCards([
+  const d=outcomeData(game);document.querySelector('#gameoverMode').textContent=d.qa?'TEST LAB / QA / NO SAVE':'通常ミッション';document.querySelector('#gameoverStats').innerHTML=statCards([
     ['MISSION',d.missionId],['兵科',d.classId],['到達エリア',`AREA ${String(d.area).padStart(2,'0')} ${d.areaName}`],['プレイ時間',formatTime(d.time)],['撃破数',d.kills],['SCORE',d.score]
   ]);
   document.querySelector('#gameoverStats').setAttribute('aria-label',`${d.qa?'QA / NO SAVE / ':''}${d.missionName} / ${d.areaName}`);
@@ -898,10 +899,10 @@ function spawnLabEnemies(){
 }
 function sampleCombatResources(g){
   if(!g.lab)return null;
-  const current={effects:g.effects.length,particles:g.impact.particles.length,shake:g.shake,voices:audioBus.voices.size};
+  const audio=audioBus.snapshot(),current={effects:g.effects.length,particles:g.impact.particles.length,shake:g.shake,voices:audio.voices};
   const peaks=g.lab.resourcePeaks??={effects:0,particles:0,shake:0,voices:0};
   for(const key of Object.keys(current))peaks[key]=Math.max(peaks[key],current[key]);
-  return {current,peaks:{...peaks},audio:audioBus.snapshot(),feedbackDropped:g.impact.feedbackDropped};
+  return {current,peaks:{...peaks},audio,feedbackDropped:g.impact.feedbackDropped};
 }
 function publishLabPerformance(result){
   if(!Number.isFinite(result.fps)){const output=document.querySelector("#labPerformance");output.textContent=`${result.statusLabel} / FPS —\n${result.reason}\n中断除外=${result.excluded} 有効サンプル=${result.samples}`;output.dataset.metrics=JSON.stringify(result);return}

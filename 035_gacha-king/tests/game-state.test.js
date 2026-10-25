@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { createGame, createInitialState, SAVE_KEY } from "../js/game-state.js";
-import { GOALS, ITEMS, MACHINE } from "../js/data.js";
+import { GOALS, ITEMS, MACHINE, VERSION } from "../js/data.js";
+
+const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 
 function memoryStorage(initial = {}) {
   const data = new Map(Object.entries(initial));
@@ -71,6 +75,69 @@ test("セーブ・ロードと周回で王冠・図鑑・設定を継承する",
   const next = loaded.getState();
   assert.equal(next.cycle, 2); assert.equal(next.crowns.money, 1); assert.equal(next.discovered.length, 1);
   assert.equal(next.settings.reducedMotion, true); assert.equal(next.inventory.length, 0); assert.equal(next.coins, 1000);
+});
+
+test("Version 0.1.0セーブを初期化せず0.1.1へ移行する", () => {
+  const legacy = createInitialState();
+  legacy.version = "0.1.0";
+  legacy.coins = 4321;
+  legacy.followers = 87;
+  legacy.discovered = [ITEMS[0].id, ITEMS[8].id];
+  legacy.inventory = [{ uid: "i44", itemId: ITEMS[8].id, acquiredAt: 100, posted: false }];
+  legacy.crowns = { money: 2, collection: 1, popularity: 3 };
+  const storage = memoryStorage({ [SAVE_KEY]: JSON.stringify(legacy) });
+  const migrated = createGame({ storage });
+  migrated.load();
+  const state = migrated.getState();
+  assert.equal(state.version, VERSION);
+  assert.equal(state.coins, 4321);
+  assert.equal(state.followers, 87);
+  assert.deepEqual(state.discovered, legacy.discovered);
+  assert.deepEqual(state.inventory, legacy.inventory);
+  assert.deepEqual(state.crowns, legacy.crowns);
+});
+
+test("正式画像12種と既存IDの対応が一意で、PNGは512×512", () => {
+  const manifest = JSON.parse(readFileSync(`${projectRoot}/assets/items/henteko-vol01/manifest.json`, "utf8"));
+  assert.equal(ITEMS.length, 12);
+  assert.equal(manifest.items.length, 12);
+  assert.equal(new Set(ITEMS.map((item) => item.id)).size, 12);
+  assert.equal(new Set(ITEMS.map((item) => item.assetId)).size, 12);
+  assert.equal(new Set(ITEMS.map((item) => item.image)).size, 12);
+  for (const item of ITEMS) {
+    const mapped = manifest.items.find((entry) => entry.gameId === item.id);
+    assert.ok(mapped, `${item.id} mapping`);
+    assert.equal(mapped.assetId, item.assetId);
+    assert.equal(mapped.name, item.name);
+    assert.equal(mapped.gameRarity, item.rarity);
+    const imagePath = `${projectRoot}/${item.image.replace(/^\.\//, "")}`;
+    assert.equal(existsSync(imagePath), true, item.image);
+    const png = readFileSync(imagePath);
+    assert.equal(png.toString("hex", 0, 8), "89504e470d0a1a0a");
+    assert.equal(png.readUInt32BE(16), 512);
+    assert.equal(png.readUInt32BE(20), 512);
+  }
+});
+
+test("0.1.0の価格・weight・レア度別排出率を維持する", () => {
+  assert.deepEqual(ITEMS.map(({ rarity, weight, value }) => [rarity, weight, value]), [
+    ["common", 1500, 100], ["common", 1500, 110], ["common", 1500, 120],
+    ["rare", 1000, 220], ["rare", 1000, 240], ["rare", 1000, 260],
+    ["epic", 750, 480], ["epic", 750, 520],
+    ["legendary", 400, 950], ["legendary", 400, 1050],
+    ["mythic", 100, 2400], ["mythic", 100, 2800]
+  ]);
+  assert.deepEqual(MACHINE.rates, [["common", 45], ["rare", 30], ["epic", 15], ["legendary", 8], ["mythic", 2]]);
+  assert.equal(ITEMS.reduce((sum, item) => sum + item.weight, 0), 10000);
+});
+
+test("画像エラー時の代替表示処理を備える", () => {
+  const appSource = readFileSync(`${projectRoot}/js/app.js`, "utf8");
+  const cssSource = readFileSync(`${projectRoot}/styles.css`, "utf8");
+  assert.match(appSource, /data-item-image/);
+  assert.match(appSource, /classList\.add\("image-error"\)/);
+  assert.match(cssSource, /\.item-art\.image-error img\{display:none\}/);
+  assert.match(cssSource, /\.item-art\.image-error \.image-fallback\{display:grid/);
 });
 
 test("資金・所持品・出品がない時だけ救済を受け取れる", () => {

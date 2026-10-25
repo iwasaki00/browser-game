@@ -16,11 +16,11 @@ test("TITLE confirms, cancellation continues, acceptance discards only session a
   assert.equal(r.rafCount(),1);
 });
 
-test("clear, game over, retry, selection and reload keep progression; M02 opens and M03 never starts",()=>{
+test("clear, game over, retry, selection and reload keep progression; M02 opens, M03 stays locked until M02, M04 never starts",()=>{
   const r=runtime();r.run("startMission();game.time=100;completeMission()");r.flush();assert.equal(r.run("state"),"result");
   assert.deepEqual(r.json("save.unlockedMissions"),["M01","M02"]);
   r.click("mission-select");assert.equal(r.run("state"),"mission");
-  const list=r.get("missionList").children;assert.equal(list[0].dataset.status,"CLEAR");assert.equal(list[1].dataset.status,"OPEN");assert.equal(list[1].disabled,false);assert.equal(list[2].dataset.status,"COMING SOON");
+  const list=r.get("missionList").children;assert.equal(list[0].dataset.status,"CLEAR");assert.equal(list[1].dataset.status,"OPEN");assert.equal(list[1].disabled,false);assert.equal(list[2].dataset.status,"LOCKED");assert.equal(list[3].dataset.status,"COMING SOON");assert.equal(r.run('startMission("M04")'),false);
   r.click("select-mission","M03");assert.equal(r.run("state"),"mission");assert.equal(r.run('startMission("M03")'),false);assert.equal(r.run("game"),null);
   r.click("select-mission","M01");r.click("deploy");r.run("game.player.hp=0;update(1/60)");r.flush();assert.equal(r.run("state"),"gameover");
   r.click("retry");assert.equal(r.run("state"),"play");assert.deepEqual(r.json("save.unlockedMissions"),["M01","M02"]);
@@ -56,9 +56,10 @@ test("render fills background and ground past both camera edges; HUD is outside 
   const r=runtime();r.run("startMission();assetsReady=true;Object.keys(imageFiles).forEach(k=>images[k]=k)");
   for(const zoom of [.35,.5,.85])for(const x of [8,4775]){
     r.drawCalls.length=0;r.run(`game.player.x=${x};game.battleCamera.zoom=${zoom};game.battleCamera.x=followCamera(${x},${zoom});syncCameraView();draw()`);
-    const calls=r.drawCalls,scaleIndex=calls.findIndex(c=>c[0]==="scale"&&c[1]===zoom),lastRestore=calls.findLastIndex(c=>c[0]==="restore");
+    const calls=r.drawCalls,scaleIndex=calls.findIndex(c=>c[0]==="scale"&&c[1]===zoom),hpIndex=calls.findIndex(c=>c[0]==="fillText"&&c[1]==="HP"),lastRestore=calls.findLastIndex((c,i)=>c[0]==="restore"&&i<hpIndex);
     assert.ok(scaleIndex>=0);assert.ok(calls.some((c,i)=>c[0]==="drawImage"&&c[1]==="bg"&&i>scaleIndex&&i<lastRestore));
     assert.ok(calls.some((c,i)=>c[0]==="fillText"&&String(c[1]).startsWith("HP")&&i>lastRestore));
+    let scale=[1,1];const stack=[];for(const c of calls.slice(0,hpIndex+1)){if(c[0]==='setTransform')scale=[c[1],c[4]];if(c[0]==='save')stack.push([...scale]);if(c[0]==='restore')scale=stack.pop();if(c[0]==='scale')scale=[scale[0]*c[1],scale[1]*c[2]]}assert.deepEqual(scale,[1,1]);
     const bounds=r.json("viewBounds(game.camera,view.zoom)"),fill=calls.find(c=>c[0]==="fillRect"&&c[2]===data.WORLD.ground);
     assert.ok(fill[1]<=bounds.left);assert.ok(fill[1]+fill[3]>=bounds.right);
     const bg=calls.filter(c=>c[0]==="drawImage"&&c[1]==="bg");assert.ok(bg[0][2]<=bounds.left);assert.ok(bg.at(-1)[2]+320>=bounds.right);

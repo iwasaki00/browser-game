@@ -610,7 +610,7 @@ input, textarea { user-select: text; -webkit-user-select: text; }
 .outcome-actions button { min-height: 44px; margin: 0; }
 .result-rewards { max-width: 100%; min-width: 0; }
 .result-rewards .reward-box { width: 100%; margin: 0; min-width: 0; padding: 9px; }
-#resultUnlock { margin: 7px 0; color: var(--cyan); font-size: 11px; overflow-wrap: anywhere; }
+#resultUnlock, #resultWeapons { margin: 7px 0; color: var(--cyan); font-size: 11px; overflow-wrap: anywhere; }
 .outcome-skip { font-size: 9px; color: var(--muted); }
 .outcome-screen.is-active .outcome-heading { animation: outcome-in .22s ease-out both; }
 .outcome-screen.skip-intro .outcome-heading { animation: none; }

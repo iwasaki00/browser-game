@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "seriesId": "hk01",
+  "seriesName": "へんてこ生物",
+  "sourceImageSize": { "width": 512, "height": 512 },
+  "note": "gameId is retained from v0.1.0 for save compatibility. gameRarity remains the v0.1.0 balance value; sourceRarity is reference metadata only.",
+  "items": [
+    { "gameId": "soda-ring", "legacyName": "ソーダリング", "assetId": "hk01_001", "name": "ねむみみ", "gameRarity": "common", "sourceRarity": "N", "image": "hk01_001.png" },
+    { "gameId": "pixel-cat", "legacyName": "ピクセルねこ", "assetId": "hk01_002", "name": "めだまめ", "gameRarity": "common", "sourceRarity": "N", "image": "hk01_002.png" },
+    { "gameId": "moon-sticker", "legacyName": "月面ステッカー", "assetId": "hk01_003", "name": "もこつの", "gameRarity": "common", "sourceRarity": "N", "image": "hk01_003.png" },
+    { "gameId": "neon-key", "legacyName": "ネオンキー", "assetId": "hk01_004", "name": "ぷくひれ", "gameRarity": "rare", "sourceRarity": "N", "image": "hk01_004.png" },
+    { "gameId": "cloud-bottle", "legacyName": "雲の小瓶", "assetId": "hk01_005", "name": "しっぽろ", "gameRarity": "rare", "sourceRarity": "N", "image": "hk01_005.png" },
+    { "gameId": "golden-dice", "legacyName": "黄金ダイス", "assetId": "hk01_006", "name": "かさぷに", "gameRarity": "rare", "sourceRarity": "R", "image": "hk01_006.png" },
+    { "gameId": "dj-slime", "legacyName": "DJスライム", "assetId": "hk01_007", "name": "ほしづの", "gameRarity": "epic", "sourceRarity": "R", "image": "hk01_007.png" },
+    { "gameId": "meteor-shard", "legacyName": "流星のかけら", "assetId": "hk01_008", "name": "はなぐち", "gameRarity": "epic", "sourceRarity": "R", "image": "hk01_008.png" },
+    { "gameId": "dragon-egg", "legacyName": "眠り竜の卵", "assetId": "hk01_009", "name": "しまうろこ", "gameRarity": "legendary", "sourceRarity": "R", "image": "hk01_009.png" },
+    { "gameId": "king-cape", "legacyName": "はじまりの王衣", "assetId": "hk01_010", "name": "つきまんと", "gameRarity": "legendary", "sourceRarity": "SR", "image": "hk01_010.png" },
+    { "gameId": "galaxy-crown", "legacyName": "銀河王冠", "assetId": "hk01_011", "name": "にじはね", "gameRarity": "mythic", "sourceRarity": "SR", "image": "hk01_011.png" },
+    { "gameId": "time-capsule", "legacyName": "時のカプセル", "assetId": "hk01_012", "name": "おうかんぽよ", "gameRarity": "mythic", "sourceRarity": "SSR", "image": "hk01_012.png" }
+  ]
+}

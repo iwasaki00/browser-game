@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Cinematic Camera</title>
+  <title>ORBIT MAKER — Cinematic Flight Replay</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -66,7 +66,7 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.3</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.4</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
@@ -146,9 +146,9 @@
     <section id="galleryListView"><p id="galleryCount"></p><div id="galleryList"></div></section>
     <section id="galleryPlayer" hidden>
       <div class="replay-heading"><button id="replayBack" type="button">一覧へ</button><strong id="replayTitle"></strong><button id="openArt" type="button">画像作成</button></div>
-      <div class="replay-board"><canvas id="replayCanvas" width="750" height="1000" aria-label="保存した飛行の再生"></canvas><strong id="replayResult" aria-live="polite"></strong></div>
-      <output id="replayTime"></output>
-      <div class="replay-controls"><button id="replayPlay" type="button">再生</button><button id="replayRestart" type="button">最初から</button><label>速度 <select id="replaySpeed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label><button id="replayFull" type="button" aria-pressed="false">軌道全体</button></div>
+      <div class="replay-board"><canvas id="replayCanvas" width="750" height="1000" aria-label="保存した飛行の再生。ドラッグで視点移動、ピンチで拡大縮小"></canvas><label class="replay-camera"><select id="replayCamera" aria-label="再生カメラ"><option value="normal">通常再生</option><option value="follow">FOLLOW</option><option value="cinematic">CINEMATIC</option><option value="overview">OVERVIEW</option><option value="manual" disabled>手動カメラ</option></select></label><output id="replayPhase" class="replay-phase"></output><div class="replay-zoom"><button id="replayZoomOut" type="button" aria-label="再生映像を縮小">−</button><button id="replayZoomIn" type="button" aria-label="再生映像を拡大">＋</button><button id="replayOverview" type="button">全体</button></div><strong id="replayResult" aria-live="polite"></strong></div>
+      <div class="replay-seek"><output id="replayTime"></output><input id="replayPosition" type="range" min="0" max="1" step="0.01" value="0" aria-label="再生位置。変更すると一時停止"></div>
+      <div class="replay-controls"><button id="replayPlay" type="button">再生</button><button id="replayRestart" type="button">最初から</button><label>再生速度 <select id="replaySpeed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label><button id="replayFull" type="button" aria-pressed="false">軌道全体</button></div>
     </section>
     <section id="artView" hidden>
       <header><button id="artBack" type="button">再生へ戻る</button><strong>軌道を画像にする</strong></header>

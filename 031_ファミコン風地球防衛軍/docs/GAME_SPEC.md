@@ -1,6 +1,10 @@
 # ドット防衛戦線 — Game Spec
 
-- Version: 0.3.0 — COASTAL DEFENSE（通常アートはUNIFIED 01）
+- Version: 0.3.2 — GAMEPLAY POLISH（通常アートはUNIFIED 01）
+- 戦闘表示: HIT / ARMOR HIT / WEAK POINT / FINISHを既存FXへ追加。ダメージや弱点ルールは維持。HUDは共通画面座標で兵科・HP現在/最大・WING EN・両武器／使用枠・ミッション／エリア・敵数、ボス戦のみ上段ボスHPを表示。B-01の弱点は新設しない。
+- 操作・音: 指ごとの同時入力、押下色、回転・lostpointercapture時の解除。ゲーム操作面だけtouch-action:none。ユーザー操作後にWeb Audioを開始／再開、同時8音・秒24音。ミュート・音量を継承する。
+- 結果: M01〜M03共通で使用兵科・時間・撃破数・スコア、クリア報酬・新規武器・新規の実装済み解放ミッションを表示。220ms演出は省略可能。保存形式と報酬は変更なし。
+- LAB: 第5プリセット「通常攻略QA」は正式兵科・無敵OFF・初期武器・次回STANDARD。明示適用とステージ開始を分離。途中QAは正式クリアにしない。[詳細](GAMEPLAY_POLISH.md)。
 - 内部解像度: 320×180 / Canvas 2D / nearest-neighbor
 - 通常描画: debug不要でUNIFIED 01。通常用ArtPreviewを起動時に読み込み、未読込中は旧素材、欠損は画像単位で旧セットへ代替する。M01/M02・4兵科・全20武器・敵／両ボス／ネスト・背景／地形／対応FXに適用。兵科／武器プレビューにも使用。HUD文字・バー・アイテム・小粒子プリミティブは従来どおり。
 - LAB描画: ORIGINALを初期値としてORIGINAL / STUDY 01 / STUDY 01-B / UNIFIED 01を比較。640×360はLAB限定・画素密度2倍、論理座標320×180を維持。通常用とLAB用のアート状態を分離し、LAB設定は通常セーブにも標準アートにも反映しない。兵科／武器／AI／地形／進行／セーブに変更なし。詳細は[ART_UNIFICATION.md](ART_UNIFICATION.md)。

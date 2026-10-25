@@ -1,4 +1,6 @@
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
+export const ASSET_SERIES = "henteko-vol01";
+const ASSET_BASE = `./assets/items/${ASSET_SERIES}/`;
 
 export const RARITIES = {
   common: { label: "COMMON", stars: 1, color: "#8da0aa" },
@@ -9,18 +11,18 @@ export const RARITIES = {
 };
 
 export const ITEMS = [
-  { id: "soda-ring", name: "ソーダリング", rarity: "common", weight: 1500, value: 100, icon: "◉", flavor: "しゅわっと光る玩具の指輪。" },
-  { id: "pixel-cat", name: "ピクセルねこ", rarity: "common", weight: 1500, value: 110, icon: "▣", flavor: "8bitの夢を見る小さなねこ。" },
-  { id: "moon-sticker", name: "月面ステッカー", rarity: "common", weight: 1500, value: 120, icon: "☾", flavor: "どこに貼っても月面仕様。" },
-  { id: "neon-key", name: "ネオンキー", rarity: "rare", weight: 1000, value: 220, icon: "◆", flavor: "まだ見ぬ扉の合鍵。" },
-  { id: "cloud-bottle", name: "雲の小瓶", rarity: "rare", weight: 1000, value: 240, icon: "☁", flavor: "晴れの日に採れた雲入り。" },
-  { id: "golden-dice", name: "黄金ダイス", rarity: "rare", weight: 1000, value: 260, icon: "⚄", flavor: "王になる目だけ少し重い。" },
-  { id: "dj-slime", name: "DJスライム", rarity: "epic", weight: 750, value: 480, icon: "♬", flavor: "夜になるとビートを刻む。" },
-  { id: "meteor-shard", name: "流星のかけら", rarity: "epic", weight: 750, value: 520, icon: "✦", flavor: "願い事は一回まで。" },
-  { id: "dragon-egg", name: "眠り竜の卵", rarity: "legendary", weight: 400, value: 950, icon: "⬡", flavor: "たまに中から寝息が聞こえる。" },
-  { id: "king-cape", name: "はじまりの王衣", rarity: "legendary", weight: 400, value: 1050, icon: "♜", flavor: "着る者の背筋が自然と伸びる。" },
-  { id: "galaxy-crown", name: "銀河王冠", rarity: "mythic", weight: 100, value: 2400, icon: "♛", flavor: "星々が認めた王のしるし。" },
-  { id: "time-capsule", name: "時のカプセル", rarity: "mythic", weight: 100, value: 2800, icon: "∞", flavor: "開けた瞬間が未来になる。" }
+  { id: "soda-ring", legacyName: "ソーダリング", assetId: "hk01_001", assetRarity: "N", name: "ねむみみ", rarity: "common", weight: 1500, value: 100, icon: "◉", image: `${ASSET_BASE}hk01_001.png`, flavor: "桃色の洋ナシ体型。大きなたれ耳で夢を見るへんてこ生物。" },
+  { id: "pixel-cat", legacyName: "ピクセルねこ", assetId: "hk01_002", assetRarity: "N", name: "めだまめ", rarity: "common", weight: 1500, value: 110, icon: "▣", image: `${ASSET_BASE}hk01_002.png`, flavor: "そら豆型の緑の体。大きな一つ目と葉っぱの触角が自慢。" },
+  { id: "moon-sticker", legacyName: "月面ステッカー", assetId: "hk01_003", assetRarity: "N", name: "もこつの", rarity: "common", weight: 1500, value: 120, icon: "☾", image: `${ASSET_BASE}hk01_003.png`, flavor: "黄色い丸三角の体に、サンゴ色の一本角ともこもこの裾。" },
+  { id: "neon-key", legacyName: "ネオンキー", assetId: "hk01_004", assetRarity: "N", name: "ぷくひれ", rarity: "rare", weight: 1000, value: 220, icon: "◆", image: `${ASSET_BASE}hk01_004.png`, flavor: "水色のしずく体型。丸いヒレでゆったり泳ぐ。" },
+  { id: "cloud-bottle", legacyName: "雲の小瓶", assetId: "hk01_005", assetRarity: "N", name: "しっぽろ", rarity: "rare", weight: 1000, value: 240, icon: "☁", image: `${ASSET_BASE}hk01_005.png`, flavor: "薄紫色の丸い体よりも、大きな渦巻きしっぽが目印。" },
+  { id: "golden-dice", legacyName: "黄金ダイス", assetId: "hk01_006", assetRarity: "R", name: "かさぷに", rarity: "rare", weight: 1000, value: 260, icon: "⚄", image: `${ASSET_BASE}hk01_006.png`, flavor: "水玉模様の大きな傘と、青緑のひだ襟を持つ雨の生物。" },
+  { id: "dj-slime", legacyName: "DJスライム", assetId: "hk01_007", assetRarity: "R", name: "ほしづの", rarity: "epic", weight: 750, value: 480, icon: "♬", image: `${ASSET_BASE}hk01_007.png`, flavor: "星形の先端を持つ、金色の二本角が夜空にきらめく。" },
+  { id: "meteor-shard", legacyName: "流星のかけら", assetId: "hk01_008", assetRarity: "R", name: "はなぐち", rarity: "epic", weight: 750, value: 520, icon: "✦", image: `${ASSET_BASE}hk01_008.png`, flavor: "花びらの大きな襟と、すぼめた口がチャームポイント。" },
+  { id: "dragon-egg", legacyName: "眠り竜の卵", assetId: "hk01_009", assetRarity: "R", name: "しまうろこ", rarity: "legendary", weight: 400, value: 950, icon: "⬡", image: `${ASSET_BASE}hk01_009.png`, flavor: "太いうろこ帯をまとい、稲妻形の尾をひらめかせる。" },
+  { id: "king-cape", legacyName: "はじまりの王衣", assetId: "hk01_010", assetRarity: "SR", name: "つきまんと", rarity: "legendary", weight: 400, value: 1050, icon: "♜", image: `${ASSET_BASE}hk01_010.png`, flavor: "金の三日月角と、縁取りのある紫のマントをまとう。" },
+  { id: "galaxy-crown", legacyName: "銀河王冠", assetId: "hk01_011", assetRarity: "SR", name: "にじはね", rarity: "mythic", weight: 100, value: 2400, icon: "♛", image: `${ASSET_BASE}hk01_011.png`, flavor: "桃・黄・水色の三色でできた大きな虹の羽。" },
+  { id: "time-capsule", legacyName: "時のカプセル", assetId: "hk01_012", assetRarity: "SSR", name: "おうかんぽよ", rarity: "mythic", weight: 100, value: 2800, icon: "∞", image: `${ASSET_BASE}hk01_012.png`, flavor: "大きな王冠と巻き角を持つ、へんてこ生物たちの王。" }
 ];
 
 export const MACHINE = {
