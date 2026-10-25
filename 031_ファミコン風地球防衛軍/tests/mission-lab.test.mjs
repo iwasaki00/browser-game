@@ -147,7 +147,7 @@ test('spawn-cap event and required nest checks log suspicions without deleting e
 for(const count of [50,100,200])test(`${count} enemies: bounded profiler keeps RAF / CPU separate and excludes inactive & long gaps`,()=>{
   const p=new RunProfiler();for(let n=0;n<=120;n++)p.record(n*1000/60,1.2,2.3,{enemies:count,shots:40,effects:12});
   p.record(4000,999,999,{enemies:999});p.record(5000,999,999,{},false);p.record(6000,1,1,{},true);p.record(6000+1000/60,1.2,2.3,{enemies:count});
-  const s=p.snapshot();near(s.fps,60);near(s.updateCpuMs,1.2);near(s.drawCpuMs,2.3);assert.equal(s.maxEnemies,count);assert.equal(s.excludedInterruptions,1);assert.equal(s.samples,121);assert.equal(s.p95FrameMs,17);assert.equal(p.bins.length,501);
+  const s=p.snapshot();near(s.fps,60);near(s.updateCpuMs,1.2);near(s.drawCpuMs,2.3);assert.equal(s.maxEnemies,count);assert.equal(s.excludedInterruptions,1);assert.equal(s.samples,90);assert.ok(s.warmupExcluded>=30);assert.equal(s.inactivePeriods,1);assert.equal(s.p95FrameMs,17);assert.equal(p.bins.length,501);
 });
 
 test('rolling profiler exposes frame p95 independently from CPU',()=>{const p=new LiveProfiler();for(let n=0;n<=60;n++)p.record(n*1000/60,1,2);near(p.result.fps,60);assert.ok(p.result.p95FrameMs>16&&p.result.p95FrameMs<17);near(p.result.updateMs,1);near(p.result.drawMs,2)});
@@ -155,6 +155,6 @@ test('rolling profiler exposes frame p95 independently from CPU',()=>{const p=ne
 test('BENCH publishes accepted RAF samples, configuration and bounded comparison history, not raw interrupted FPS',()=>{
   const r=lab(),saved=r.storage.get(SAVE_KEY);r.run("startBenchmark('STANDARD');for(let n=0;n<=361;n++)loop(n*1000/60)");
   const b=r.json('labExport().benchmarks.at(-1)');assert.equal(b.limit,50);assert.equal(b.class,'STANDARD');assert.equal(b.validationMode,'C');assert.equal(b.destructionLevel,1);assert.deepEqual(b.weapons,['A-01','S-02']);
-  near(b.performance.fps,60);assert.equal(b.performance.maxEnemies,50);assert.equal(b.performance.excludedInterruptions,0);assert.ok(b.performance.samples>=359);assert.equal(r.storage.get(SAVE_KEY),saved);
+  near(b.performance.fps,60);assert.equal(b.performance.maxEnemies,50);assert.equal(b.performance.excludedInterruptions,0);assert.ok(b.performance.samples>=330);assert.equal(r.storage.get(SAVE_KEY),saved);
   const count=r.run('game.lab.benchmarkPerformance.samples');r.run('loop(7000)');assert.equal(r.run('game.lab.benchmarkPerformance.samples'),count,'completed benchmark must stop accumulating samples');
 });

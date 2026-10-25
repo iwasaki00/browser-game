@@ -83,7 +83,7 @@ export class MissionLabRun {
     validationMode:this.mode,validationLabel:VALIDATION_MODES[this.mode],coverage:this.checkpoint.areaIndex===0?'FROM_MISSION_START':'CHECKPOINT_ONLY',inputMethod:'MANUAL_OR_QA_NOT_AUTOMATICALLY_CERTIFIED',
     outcome:this.outcome,elapsed:this.elapsed,class:this.startClass,weapons:this.startWeapons,density:this.density,destructionLevel:this.level,startedInvincible:this.startedInvincible,
     areaArrivals:this.arrivals,damageTaken:this.damageTaken,kills:this.kills,weaponDamage:{...this.weaponDamage},remainingHp:this.finalHp??g.player.hp,gameOver:this.gameOver,
-    bossStartedAt:this.bossStartedAt,bossDefeatedAt:this.bossDefeatedAt,bossDefeatTime:this.bossDefeatedAt===null?null:this.bossDefeatedAt-(this.bossStartedAt??0),
+    bossStartPhase:this.bossStartPhase??null,bossStartedAt:this.bossStartedAt,bossDefeatedAt:this.bossDefeatedAt,bossDefeatTime:this.bossDefeatedAt===null?null:this.bossDefeatedAt-(this.bossStartedAt??0),
     maxLiveEnemies:this.maxLiveEnemies,performance:this.profile.snapshot(),diagnostics:[...this.warnings],configurationChanges:[...this.changes],
     normalProgressSaved:false,normalClearCertified:false};}
 }

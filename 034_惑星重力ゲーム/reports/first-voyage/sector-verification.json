@@ -1,0 +1,44 @@
+[
+  {
+    "sector": "homeward-01",
+    "title": "消えた星図",
+    "elapsed": 17.749999999999634,
+    "status": "cleared",
+    "distance": 4059.798198009621,
+    "end": {
+      "x": 2143.166953226622,
+      "y": 935.2670788484548
+    },
+    "frames": 357,
+    "preview": "all saved prediction points and terminal state match",
+    "liveAndSlingshot": "cleared"
+  },
+  {
+    "sector": "homeward-02",
+    "title": "ふたつの潮",
+    "elapsed": 17.73333333333297,
+    "status": "cleared",
+    "distance": 4090.0182366889453,
+    "end": {
+      "x": 3005.4284245659146,
+      "y": 1654.028598648369
+    },
+    "frames": 364,
+    "preview": "all saved prediction points and terminal state match",
+    "liveAndSlingshot": "cleared"
+  },
+  {
+    "sector": "homeward-03",
+    "title": "青い残響",
+    "elapsed": 17.64999999999964,
+    "status": "cleared",
+    "distance": 4197.901674383225,
+    "end": {
+      "x": 2666.7457943911168,
+      "y": 1292.6591760479698
+    },
+    "frames": 361,
+    "preview": "all saved prediction points and terminal state match",
+    "liveAndSlingshot": "cleared"
+  }
+]

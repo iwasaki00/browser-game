@@ -302,3 +302,14 @@ input[type='range'] { height:30px; }
 .settings-dialog .homeward-primary { width:100%; background:#164f50; border-color:#70d5c8; font-weight:700; }
 .homeward-save-notice { color:#ffc68c; font-size:12px; line-height:1.6; }
 .homeward-save-notice:empty { display:none; }
+.homeward-coach { position:absolute; top:25px; left:7px; right:85px; max-height:calc(100% - 100px); overflow-y:auto; overscroll-behavior:contain; touch-action:pan-y; padding:6px 8px; border:1px solid #a5b875; border-radius:9px; background:#0b2134f2; color:#dcecf8; z-index:1; }
+.homeward-coach header { display:flex; align-items:center; justify-content:space-between; gap:4px; }
+.homeward-coach strong { font-size:10px; color:#ffe6a1; }
+.homeward-coach p { margin:4px 0; font-size:11px; line-height:1.5; }
+.homeward-coach button { min-height:44px; border:1px solid #486877; border-radius:6px; background:#16384a; color:#d6f5ff; padding:3px 7px; font-size:10px; touch-action:manipulation; }
+.homeward-coach>div { display:flex; gap:6px; }
+.homeward-coach #tutorialHintText { color:#ffe9ab; }
+.tutorial-target { outline:2px solid #ffe6a1!important; outline-offset:1px; box-shadow:0 0 9px #ffe6a14d; }
+.space-frame.tutorial-active .selection-bar { display:none; }
+.voyage-log { position:absolute; bottom:79px; left:8px; right:8px; pointer-events:none; color:#ffe8ab; font-size:11px; text-shadow:0 1px 4px #000; }
+.voyage-log:empty { display:none; }

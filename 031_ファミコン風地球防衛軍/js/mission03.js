@@ -1,4 +1,4 @@
-import {WORLD,clamp} from './data.js?v=0.3.0';
+import {WORLD,clamp} from './data.js?v=0.3.1';
 
 // All coastal geometry/events are additive. M01/M02 retain their original data.
 export const M03=Object.freeze({id:'M03',world:{...WORLD,width:6400,ground:220},bossX:5480,bossSpawnX:6060,
@@ -23,7 +23,29 @@ export const M03=Object.freeze({id:'M03',world:{...WORLD,width:6400,ground:220},
 });
 export const COAST=Object.freeze({waterY:148,rescueY:158,rescueDamage:12,rescueCooldown:1.2,landingTime:.65,shotLimit:64,
   turretRange:360,turretInterval:.7,turretDamage:12,turretShotLimit:12,formationSize:6,
-  bossHp:3000,bossWeakMultiplier:1.5,bossWarning:.95,bossSummonLimit:12});
+  bossHp:3000,bossWeakMultiplier:1.5,bossWarning:1.25,bossSummonLimit:12});
+// B-03 only: visual warnings and damage share the same locked attack plan.
+export const B03_COMBAT=Object.freeze({warning:COAST.bossWarning,entryGrace:1.5,recovery:2.1,finalRecovery:1.3,
+  waveLife:5,waveRecovery:5.25,tentacleWidth:42,tentacleTop:120,tentacleLife:.24,tentacleSpacing:76,
+  phaseHp:Object.freeze([3000,1950,900]),reactionMargin:.25});
+export const RAY_READABILITY=Object.freeze({diveWarning:.4,columnSpacing:48,rowSpacing:16,groupSpacing:72,groupHeightSpacing:12});
+export const coastalPhase=e=>e.hp>1950?1:e.hp>900?2:3;
+export function resetCoastalBossPhase(e,phase=1){
+  const n=[1,2,3].includes(Number(phase))?Number(phase):1;
+  Object.assign(e,{hp:B03_COMBAT.phaseHp[n-1],coastPhase:n,timer:0,phase:'move',actionIndex:0,
+    actionWait:B03_COMBAT.entryGrace,warningLeft:0,coastAction:null,attackPlan:null,attackFlash:0,
+    warnX:0,warnY:0,vx:0,vy:0,hitFlash:0,chargeTime:0});
+}
+export function coastalAttackPlan(g,e){
+  const phase=coastalPhase(e),action=(e.actionIndex??0)%3,p=g.player;
+  const plan={phase,action,originX:e.x,originY:e.y+e.h/2,targetX:p.x,targetY:p.y+16,shotSpeed:action===1?85+phase*8:95,shotLife:5,zones:[],targets:[]};
+  if(action===0){const half=(phase-1)/2*B03_COMBAT.tentacleSpacing,anchor=clamp(p.x,5500+half,6330-half);for(let i=0;i<phase;i++)plan.zones.push({x:anchor+(i-(phase-1)/2)*B03_COMBAT.tentacleSpacing,y:B03_COMBAT.tentacleTop,w:B03_COMBAT.tentacleWidth,h:148-B03_COMBAT.tentacleTop})}
+  else if(action===1)for(let i=0;i<3+phase*2;i++)plan.targets.push({x:p.x+(i-1-phase)*45,y:p.y+16});
+  else if(phase===1)plan.targets.push({x:p.x,y:p.y+16});
+  else if(phase===2)for(let i=0;i<3;i++)plan.targets.push({x:clamp(p.x+230+i*36,5520,6300),y:i===2?48:124});
+  else plan.zones.push({x:(5480+6375)/2,y:136,w:6375-5480,h:12});
+  return plan;
+}
 export const createM03Geometry=()=>M03.platforms.map(p=>({...p}));
 export const createCoastalState=()=>({safeX:64,safeY:116,rescueWait:0,rescues:0,formations:new Map(),turrets:M03.turrets.map(x=>({x,y:116,hp:160,wait:0})),aaShots:[],turretsEnabled:true,hazards:[]});
 export function coastalFloor(platforms,x,width=1){let y=220;for(const p of platforms)if(p.active!==false&&x+width/2>p.x&&x-width/2<p.x+p.w)y=Math.min(y,p.y);return y}
@@ -38,7 +60,7 @@ export function recoverCoastalPlayer(g,dt,hurt,effect){
 export function registerCoastalFormation(g,e){
   if(e.type!=='skyray')return;
   const key=e.formationId??`lab-${Math.floor((e.uid-1)/6)}`;e.formationId=key;e.formationOrder??=(e.uid-1)%6;e.formationPattern??='V';
-  if(!g.coast.formations.has(key))g.coast.formations.set(key,{x:e.x,y:48,age:0,count:0});
+  if(!g.coast.formations.has(key))g.coast.formations.set(key,{x:e.x,y:24+(g.coast.formations.size%3)*RAY_READABILITY.groupHeightSpacing,age:0,count:0,lane:g.coast.formations.size%4});
 }
 export function advanceCoastalFormations(g,dt){
   for(const group of g.coast.formations.values()){group.count=0;group.age+=dt;const dx=g.player.x-group.x;group.x+=Math.sign(dx)*Math.min(Math.abs(dx),48*dt)}
@@ -47,9 +69,9 @@ export function advanceCoastalFormations(g,dt){
 }
 function coastShot(g,e,x,y,speed,damage,kind='coastOrb'){
   if(g.enemyShots.length>=COAST.shotLimit)return false;
-  const ox=e.x,oy=e.y+e.h/2,a=Math.atan2(y-oy,x-ox);g.enemyShots.push({kind,x:ox,y:oy,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:kind==='artillery'?12:7,h:kind==='artillery'?12:7,damage,life:5,normal:e.type!=='leviathan'});return true;
+  const ox=e.x,oy=e.y+e.h/2,a=Math.atan2(y-oy,x-ox);g.enemyShots.push({kind,x:ox,y:oy,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:kind==='artillery'?12:7,h:kind==='artillery'?12:7,damage,life:5,normal:e.type!=='leviathan',coastalBoss:e.type==='leviathan'});return true;
 }
-export function coastalWeakCore(e){const phase=e.hp>1950?1:e.hp>900?2:3;return {x:e.x,y:e.y+58,r:22,open:!e.dead&&(e.timer??0)%4<(phase===1?1.6:phase===2?2:3)}}
+export function coastalWeakCore(e){const phase=coastalPhase(e);return {x:e.x,y:e.y+58,r:22,open:!e.dead&&(e.timer??0)%4<(phase===1?1.6:phase===2?2:3)}}
 export function coastalDamage(e,damage,s={}){
   const c=coastalWeakCore(e);let hit=Math.hypot((s.x??-1e6)-c.x,(s.y??-1e6)-c.y)<=c.r+(s.radial?s.radius??0:0);
   if(!s.radial&&Number.isFinite(s.vx+s.vy)){const dx=c.x-(s.originX??s.oldX??s.x),dy=c.y-(s.originY??s.oldY??s.y),speed=Math.hypot(s.vx,s.vy);if(speed)hit=dx*s.vx+dy*s.vy>=0&&Math.abs(dx*s.vy-dy*s.vx)/speed<=c.r}
@@ -62,26 +84,31 @@ export function updateCoastalEnemy(g,e,dt,spawn,effect){
     e.x=clamp(e.x+(Math.sign(dx)*36*e.speedScale+e.separateX)*dt,24,6376);e.y=coastalFloor(g.platforms,e.x,e.w)-e.h;
   }else if(e.type==='skyray'){
     registerCoastalFormation(g,e);const group=g.coast.formations.get(e.formationId),i=e.formationOrder%6;
-    const offset=e.formationPattern==='LINE'?{x:i*38,y:0}:e.formationPattern==='STEP'?{x:i*30,y:(i%3)*18}:{x:Math.abs(i-2.5)*30,y:Math.abs(i-2.5)*12};
-    e.x=clamp(e.x+(group.x+offset.x-e.x)*Math.min(1,dt*3)+e.separateX*dt,24,6376);e.diveCd-=dt;e.diveTimer=Math.max(0,e.diveTimer-dt);
-    if(Math.abs(dx)<170&&e.diveCd<=0&&g.attacks.dive(g.time)){e.diveTimer=.9;e.diveCd=3+(e.uid%5)*.2}
+    const spacing=RAY_READABILITY.columnSpacing,offset=e.formationPattern==='LINE'?{x:i*spacing,y:0}:e.formationPattern==='STEP'?{x:i*spacing,y:(i%3)*RAY_READABILITY.rowSpacing}:{x:(i%2?1:-1)*(spacing/2+Math.floor(i/2)*spacing),y:Math.floor(i/2)*12};
+    e.x=clamp(e.x+(group.x+group.lane*RAY_READABILITY.groupSpacing+offset.x-e.x)*Math.min(1,dt*3)+e.separateX*dt,24,6376);e.diveCd-=dt;e.diveTimer=Math.max(0,e.diveTimer-dt);
+    if(e.diveWarningLeft>0){e.diveWarningLeft=Math.max(0,e.diveWarningLeft-dt);if(!e.diveWarningLeft)e.diveTimer=.9}
+    else if(!e.diveTimer&&Math.abs(dx)<170&&e.diveCd<=0&&g.attacks.dive(g.time)){e.diveWarningLeft=RAY_READABILITY.diveWarning;e.diveCd=3+(e.uid%5)*.2}
     const y=e.diveTimer>0?112:group.y+offset.y+Math.sin(group.age*2+i)*8;e.y=clamp(e.y+(y-e.y)*Math.min(1,dt*4)+e.separateY*dt,16,124);
   }else if(e.type==='siegebeetle'){
     if(Math.abs(dx)>230)e.x+=Math.sign(dx)*18*dt;e.y=coastalFloor(g.platforms,e.x,e.w)-e.h;
     if(e.warningLeft>0){e.warningLeft=Math.max(0,e.warningLeft-dt);if(!e.warningLeft&&g.attacks.ranged(g.time)){coastShot(g,e,e.warnX,e.warnY,115,18,'artillery');e.shotCd=3.3}}
     else if(e.shotCd<=0&&Math.abs(dx)<500&&e.x>=g.camera&&e.x<=g.camera+320/g.battleCamera.zoom){e.warningLeft=1;e.warnX=p.x;e.warnY=p.y+16;effect({kind:'coastWarning',x:e.warnX,y:140,life:1,max:1})}
   }else if(e.type==='leviathan'){
-    e.timer+=dt;e.coastPhase=e.hp>1950?1:e.hp>900?2:3;e.actionWait=(e.actionWait??1.6)-dt;
+    e.timer+=dt;e.coastPhase=coastalPhase(e);e.actionWait=(e.actionWait??B03_COMBAT.entryGrace)-dt;
     if(e.warningLeft>0){e.warningLeft=Math.max(0,e.warningLeft-dt);if(!e.warningLeft){
-      const action=e.coastAction;
-      if(action===0){for(let i=0;i<e.coastPhase;i++){const x=clamp(e.warnX+(i-(e.coastPhase-1)/2)*76,5500,6330);if(g.coast.hazards.length<8)g.coast.hazards.push({x,w:42,life:.24,hit:false});effect({kind:'coastTentacle',x,y:132,life:.35,max:.35})}}
-      else if(action===1){for(let i=0;i<3+e.coastPhase*2;i++)coastShot(g,e,p.x+(i-1-e.coastPhase)*45,p.y+16,85+e.coastPhase*8,12)}
-      else if(e.coastPhase===1){coastShot(g,e,p.x,p.y+16,95,16)}
-      else if(e.coastPhase===2){for(let i=0;i<3;i++)if(g.liveMobs<COAST.bossSummonLimit)spawn(i===2?'skyray':'shorecrab',clamp(p.x+230+i*36,5520,6300),i===2?48:null)}
-      else{for(const direction of [-1,1])if(g.enemyShots.length<COAST.shotLimit)g.enemyShots.push({kind:'wave',x:e.x,y:142,vx:direction*135,vy:0,w:22,h:12,life:5,damage:22});effect({kind:'coastSplash',x:e.x,y:148,life:.5,max:.5})}
-      e.actionWait=e.coastPhase===3?1.3:2.1;
-    }}else if(e.actionWait<=0&&Math.abs(dx)<600){e.coastAction=(e.actionIndex??0)%3;e.actionIndex=(e.actionIndex??0)+1;e.warningLeft=COAST.bossWarning;e.warnX=p.x;e.warnY=p.y+16;e.attackFlash=.3;
-      for(let i=0;i<(e.coastAction===0?e.coastPhase:1);i++)effect({kind:'coastWarning',x:clamp(p.x+(i-(e.coastPhase-1)/2)*76,5500,6330),y:140,life:COAST.bossWarning,max:COAST.bossWarning});}
+      const plan=e.attackPlan;
+      if(plan.action===0){for(const zone of plan.zones){if(g.coast.hazards.length<8)g.coast.hazards.push({...zone,life:B03_COMBAT.tentacleLife,hit:false});effect({kind:'coastTentacle',x:zone.x,y:132,life:.35,max:.35})}}
+      else if(plan.action===1||plan.phase===1){for(const t of plan.targets)coastShot(g,e,t.x,t.y,plan.shotSpeed,plan.action===1?12:16)}
+      else if(plan.phase===2){for(let i=0;i<plan.targets.length;i++)if(g.liveMobs<COAST.bossSummonLimit)spawn(i===2?'skyray':'shorecrab',plan.targets[i].x,plan.targets[i].y)}
+      else{for(const direction of [-1,1])if(g.enemyShots.length<COAST.shotLimit)g.enemyShots.push({kind:'wave',coastalBoss:true,x:plan.originX,y:142,vx:direction*135,vy:0,w:22,h:12,life:B03_COMBAT.waveLife,damage:22});effect({kind:'coastSplash',x:plan.originX,y:148,life:.5,max:.5})}
+      e.actionWait=plan.action===2&&plan.phase===3?B03_COMBAT.waveRecovery:plan.phase===3?B03_COMBAT.finalRecovery:B03_COMBAT.recovery;e.attackPlan=null;
+    }}else if(e.actionWait<=0&&Math.abs(dx)<600){
+      // A ground wave gets its own dodge window, not a crossfire of old boss orbs.
+      const wave=coastalPhase(e)===3&&(e.actionIndex??0)%3===2;
+      if(wave&&g.enemyShots.some(s=>s.coastalBoss&&s.life>0)){e.actionWait=.25;return}
+      e.attackPlan=coastalAttackPlan(g,e);e.coastAction=e.attackPlan.action;e.actionIndex=(e.actionIndex??0)+1;
+      e.warningLeft=B03_COMBAT.warning;e.warnX=p.x;e.warnY=p.y+16;e.attackFlash=.3;
+    }
   }
 }
 export function updateCoastalDevices(g,dt,damage,hurt,effect){

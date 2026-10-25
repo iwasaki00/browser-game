@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.3.0">
+  <link rel="stylesheet" href="styles.css?v=0.3.1">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.3.0</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.3.1</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -96,7 +96,9 @@
               <label>検証区分（無敵も連動）<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
               <label>開始時の敵密度<select id="labStageDensity"><option>LIGHT</option><option selected>STANDARD</option><option>MASSIVE</option></select></label>
             </div><output id="labStageStatus" role="status">候補を選び、下の「選択地点から開始」を押してください。</output></fieldset>
-            <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button><button data-action="lab-boss-3">M03 / B-03直接開始</button></div>
+            <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button>
+              <label>B-03開始Phase（開始時に適用）<select id="labBossPhase"><option value="1">Phase 1 / HP100〜65%</option><option value="2">Phase 2 / HP65〜30%</option><option value="3">Phase 3 / HP30%以下</option></select></label>
+              <button data-action="lab-boss-3">B-03をこのPhaseから開始</button></div>
               <p class="lab-hint">開始すると敵・弾・FX・設置物・時間・スコア・位置を初期化します。</p>
               <details><summary>HELP：QA区分・開始条件</summary><p>A〜Cは通常攻略Dの成功ではありません。B/Dの選択は無敵OFF、CはONへ即時連動します。Dは正式兵科・解放済み武器2枠・無敵OFFが必要。ボス直接開始はB/C/D。兵科・武器・LAB演出設定は維持、通常報酬なし。</p></details>
             </fieldset>
@@ -142,7 +144,8 @@
           </section>
           <section id="labPanel-metrics" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-metrics" hidden>
             <fieldset class="lab-card"><legend>実プレイ計測 <span>表示／実行操作</span></legend>
-              <label class="lab-check"><input id="labFps" type="checkbox" checked> ゲーム上にFPS・CPU表示</label><pre id="labMetrics"></pre>
+              <label class="lab-check"><input id="labFps" type="checkbox" checked> ゲーム上にFPS・CPU表示</label><output id="labMeasureStatus" role="status"></output><pre id="labMetrics"></pre>
+              <p class="lab-hint">閉じて前景で連続実行。復帰後500msを除外、30サンプル・有効500ms以上でFPS集計。250ms超は中断として除外。</p>
               <div class="lab-bench-buttons"><button data-benchmark="LIGHT">BENCH 30</button><button data-benchmark="STANDARD">BENCH 50</button><button data-benchmark="MASSIVE">BENCH 100</button><button data-benchmark="LAB200">BENCH 200</button></div><output id="qaResult" role="status">BENCHはM01実験状態へ初期化し、6秒の自動射撃・敵数補充。</output>
               <details><summary>HELP：計測と中断除外</summary><p>RAF間隔と更新／描画CPUは別計測。非表示・停止・250ms超の中断は有効FPSから除外。表示更新0.5秒。BENCHは音声OFF・実験STANDARD・アサルトで再開始。200体はLAB限定。CPU時間はGPU時間ではありません。</p></details>
             </fieldset>
@@ -186,6 +189,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.3.0"></script>
+  <script type="module" src="js/game.js?v=0.3.1"></script>
 </body>
 </html>

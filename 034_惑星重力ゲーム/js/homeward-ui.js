@@ -17,11 +17,12 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
    const node=$('#homewardNode'+sector.number);node.classList.toggle('current',current);node.classList.toggle('visited',cleared);node.classList.toggle('locked',!unlocked);
   }
   $('#homewardMapLog').textContent=state.cleared.length?getHomewardDefinition(state.cleared.at(-1))?.arrival??'':'帰還航路は、最初のセクターから始まる。';
+  $('#homewardRouteHint').textContent=getHomewardDefinition(state.currentSector).hint;
   $('#homewardFoundationEnd').hidden=state.cleared.length!==3;
  }
  function open(){render();if(progress.state.openingSeen)show('map');else{$('#homewardOpening').textContent=HOMEWARD.opening;show('intro');}}
  function briefing(id){const s=getHomewardDefinition(id);if(progress.state.eventsSeen.includes(`${id}:enter`)){dialog.close();return;}
-  pending=id;$('#homewardEventTitle').textContent=`SECTOR ${s.number} / ${s.name}`;$('#homewardEventText').textContent=s.enter;$('#homewardSaveNotice').textContent=progress.notice;show('event');
+  pending=id;$('#homewardEventTitle').textContent=`SECTOR ${s.number} / ${s.name}`;$('#homewardEventText').textContent=s.enter;$('#homewardBriefHint').textContent=s.hint;$('#homewardSaveNotice').textContent=progress.notice;show('event');
  }
  $('#closeHomeward').addEventListener('click',()=>dialog.close());
  $('#homewardStart').addEventListener('click',()=>{progress.start();onChange();onEnter(progress.state.currentSector);});

@@ -116,9 +116,9 @@ test("LiveProfiler separates RAF/CPU, updates at 0.5s and excludes hidden/pause/
   const p=new LiveProfiler();p.record(0,2,3);
   for(let i=1;i<=60;i++)p.record(i*1000/60,2,3);
   assert.ok(Math.abs(p.result.fps-60)<.001);assert.equal(p.result.updateMs,2);assert.equal(p.result.drawMs,3);
-  const count=p.count;const interrupted=p.record(3000,100,100);assert.equal(p.count,count);assert.equal(p.excluded,1);assert.equal(interrupted.interrupted,true);assert.equal(p.result,null);
-  p.record(3010,2,3,false);p.record(9000,2,3);assert.equal(p.count,count);
-  p.record(9020,4,5);assert.equal(p.count,count+1);
+  const count=p.count;const interrupted=p.record(3000,100,100);assert.equal(p.count,0);assert.equal(p.excluded,1);assert.equal(interrupted.interrupted,true);assert.equal(p.result,null);
+  p.record(3010,2,3,false);p.record(9000,2,3);assert.equal(p.count,0);
+  p.record(9020,4,5);assert.equal(p.count,0);assert.equal(p.status,'WARMUP');
   for(let i=1;i<=600;i++)p.record(9020+i*20,4,5);assert.equal(p.count,240);assert.equal(p.frames.length,240);
 });
 

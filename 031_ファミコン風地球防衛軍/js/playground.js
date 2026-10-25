@@ -11,7 +11,7 @@ export function createLabState(equipped,settings){return {
   equipped:[...equipped],settings:{...settings},invincible:true,preset:"STANDARD",
   enemy:"crawler",count:30,placement:"dense",cameraMode:"AUTO",fixedZoom:.5,showFps:true,
   // Reposition always starts from this anchor, not the player's later position.
-  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD'
+  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD',bossPhase:1
 }}
 
 export function landLabPlayer(p,platforms){

@@ -11,6 +11,7 @@ import {createFreeWorld,getHugeSample} from './worlds.js';
 import {getHomewardSector,getHomewardDefinition} from './homeward-data.js';
 import {HomewardProgress,homewardDistance,sectorUnlocked} from './homeward-progress.js';
 import {createHomewardUI} from './homeward-ui.js';
+import {TUTORIAL_STEPS,tutorialEntry,tutorialTransition} from './homeward-tutorial.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
@@ -78,6 +79,7 @@ const previewButton = document.querySelector('#previewToggle');
 const gravityButton = document.querySelector('#gravityToggle');
 let showGravity = false;
 let showMinimap=true;
+let tutorialKey='',tutorialTarget='';
 const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
 const camera=new Camera();
@@ -320,6 +322,7 @@ function draw(time) {
     velocity: { x: 0, y: 0 },
   };
   drawRocket(rocket, mode === "editing");
+  drawTutorialTarget();
   experience.draw(ctx);
   const cue = result.hidden ? experience.notice : null;
   if(experienceCue.textContent !== (cue?.text??'')) experienceCue.textContent=cue?.text??'';
@@ -345,6 +348,8 @@ function draw(time) {
     ctx.fillText(`T+${simulation.elapsed.toFixed(1)}s`, 325, 480);
   }
   drawMinimap(rocket.position);
+  const log=playType==='homeward'&&mode==='flying'&&simulation.elapsed<3?getHomewardDefinition(stage.id).departure:'';
+  if(document.querySelector('#voyageLog').textContent!==log)document.querySelector('#voyageLog').textContent=log;
 }
 
 function drawMinimap(rocket){
@@ -378,7 +383,7 @@ function drawPrediction() {
   ctx.save();
   ctx.beginPath(); ctx.rect(0,0,stage.world.width,stage.world.height); ctx.clip();
   ctx.strokeStyle = job.state.status === 'cleared' ? '#75f5af' : '#69dfff';
-  ctx.lineWidth = Math.max(1.4,1/view.scale); ctx.setLineDash([3/view.scale,5/view.scale]);
+  ctx.lineWidth = Math.max(1.4,(tutorialTarget==='preview'?1.7:1)/view.scale); ctx.setLineDash([3/view.scale,5/view.scale]);
   ctx.beginPath(); ctx.moveTo(job.points[0].x,job.points[0].y);
   // Keep every fourth sample and always the terminal point (at most 362 points).
   const stride=Math.max(4,Math.ceil(job.points.length/1000));
@@ -414,6 +419,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  notifyTutorial('launch');
   experience.launch(simulation);
   try{recorder=createFlightRecorder(stage,simulation,{gameMode,launchMode,playType,fixedTimeStep:DEFAULT_PHYSICS.fixedTimeStep});}catch{recorder=null;gallery.notify('飛行記録を開始できません。ゲームは続けられます。');}
   trail = [{ ...simulation.rocket.position }];
@@ -482,7 +488,7 @@ function reset() {
   if(playType==='homeward'){
     stage=getHomewardSector(stage.id);launchSnapshot=null;selectedPlanetId=null;
     angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);
-    updateOutputs();retry();fitCamera();return;
+    updateOutputs();retry();notifyTutorial('retry');fitCamera();return;
   }
   if(playType==='challenge') {
     stage=getChallenge(challengeId);launchSnapshot=null;selectedPlanetId=stage.planets[0]?.id;
@@ -505,6 +511,7 @@ function updateOutputs() {
 function tick(time) {
   const frameSeconds = Math.min((time - lastTime) / 1000, .1);
   lastTime = time;
+  renderTutorial();
   if(gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()){requestAnimationFrame(tick);return;}
   experience.update(frameSeconds);
   if (mode === "flying") {
@@ -575,7 +582,7 @@ canvas.addEventListener("pointerdown", (event) => {
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
   if(!target&&mode==='editing'&&playType==='free'&&stage.worldPreset&&Math.hypot(point.x-stage.goal.x,point.y-stage.goal.y)<=Math.max(stage.goal.radius,22/view.scale))target={type:'goal'};
   if (!target) {selectedPlanetId=null;updatePlanetEditor();return;}
-  if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor(); }
+  if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor();if(stage.planets.find(p=>p.id===target.id)?.type==='repulsor')notifyTutorial('select'); }
   gesture = { ...target, pointerId: event.pointerId, point };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
   canvas.setPointerCapture(event.pointerId);
@@ -638,11 +645,12 @@ modeButtons.forEach(button => button.addEventListener('click', () => {
   launchMode = saveLaunchMode(storage, button.dataset.launchMode);
   updateMode();
 }));
-angleInput.addEventListener("input", updateOutputs);
-speedInput.addEventListener("input", updateOutputs);
+angleInput.addEventListener("input",()=>{updateOutputs();notifyTutorial('angle');});
+speedInput.addEventListener("input",()=>{updateOutputs();notifyTutorial('thrust');});
+for(const input of [angleInput,speedInput])input.addEventListener('change',()=>notifyTutorial('settings'));
 launchButton.addEventListener("click", () => { if (launchMode === 'precision') launch(); });
 resetButton.addEventListener("click", reset);
-retryButton.addEventListener("click", retry);
+retryButton.addEventListener("click",()=>{retry();notifyTutorial('retry');});
 new ResizeObserver(resizeCanvas).observe(frame);
 
 function updatePlanetEditor() {
@@ -813,6 +821,40 @@ resizeCanvas();
 requestAnimationFrame(tick);
 const gallery=createGallery({canOpen:()=>mode!=='flying',onOpen:cancelGesture});
 const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
+function notifyTutorial(event){
+  if(playType!=='homeward')return;
+  const old=tutorialEntry(homewardProgress.state,stage.id),values={angleDeg:Number(angleInput.value),speed:Number(speedInput.value)};
+  const next=tutorialTransition(old,stage.id,event,values,getHomewardDefinition(stage.id).initial);
+  if(JSON.stringify(old)!==JSON.stringify(next)){homewardProgress.setTutorial(stage.id,next);updateHomewardControls();}
+}
+function renderTutorial(){
+  const entry=playType==='homeward'?tutorialEntry(homewardProgress.state,stage.id):null;
+  const visible=entry?.status==='active'&&(mode==='editing'||mode==='flying')&&!homewardUI.isOpen()&&!settingsUI.isOpen()&&!gallery.isOpen();
+  const key=JSON.stringify([playType,stage.id,entry?.status,entry?.step,visible,mode,launchMode,preview.enabled]);if(key===tutorialKey)return;tutorialKey=key;
+  const coach=document.querySelector('#homewardCoach');coach.hidden=!visible;frame.classList.toggle('tutorial-active',Boolean(visible));
+  for(const selector of ['#launchButton','#angleInput','#speedInput','#openMenuSettings'])document.querySelector(selector).classList.toggle('tutorial-target',false);
+  tutorialTarget='';if(!visible)return;
+  const steps=TUTORIAL_STEPS[stage.id],step=steps[entry.step];tutorialTarget=step.target;
+  const sling=launchMode==='slingshot',needsPrecision=sling&&['angle','thrust'].includes(step.target);
+  const needsPreview=step.target==='preview'&&!preview.enabled;
+  const text=needsPrecision?'メニューで精密発射を選ぶと数値を調整できます。スリングで試す場合はスキップも可能です。':needsPreview?'予測はOFFです。メニュー→表示・音でONにするか、そのまま次へ進めます。':sling&&step.id==='launch'?'ロケットを引いて離し、自分の航路を発射しよう。':step.text;
+  document.querySelector('#tutorialTitle').textContent=`航法ガイド ${entry.step+1}/${steps.length}`;
+  document.querySelector('#tutorialText').textContent=text;document.querySelector('#tutorialNext').hidden=!step.manual;
+  document.querySelector('#tutorialHintText').hidden=true;document.querySelector('#tutorialHintText').textContent=getHomewardDefinition(stage.id).hint;
+  document.querySelector('#tutorialHint').textContent='ヒント';document.querySelector('#tutorialHint').setAttribute('aria-expanded','false');
+  const selector=needsPrecision||needsPreview?'#openMenuSettings':{launch:sling?null:'#launchButton',angle:'#angleInput',thrust:'#speedInput'}[step.target];
+  if(selector)document.querySelector(selector).classList.toggle('tutorial-target',true);
+  if(sling&&step.id==='launch')tutorialTarget='rocket';
+}
+function drawTutorialTarget(){
+  if(!['planet','rocket'].includes(tutorialTarget)||document.querySelector('#homewardCoach').hidden)return;
+  const p=tutorialTarget==='rocket'?stage.launch.position:stage.planets[0];
+  ctx.save();ctx.strokeStyle='#ffe6a1';ctx.lineWidth=2/view.scale;ctx.setLineDash([3/view.scale,3/view.scale]);
+  ctx.beginPath();ctx.arc(p.x,p.y,Math.max((p.radius??6)+8,18/view.scale),0,Math.PI*2);ctx.stroke();ctx.restore();
+}
+document.querySelector('#tutorialSkip').addEventListener('click',()=>notifyTutorial('skip'));
+document.querySelector('#tutorialNext').addEventListener('click',()=>notifyTutorial('next'));
+document.querySelector('#tutorialHint').addEventListener('click',event=>{const hint=document.querySelector('#tutorialHintText');hint.hidden=!hint.hidden;event.currentTarget.textContent=hint.hidden?'ヒント':'閉じる';event.currentTarget.setAttribute('aria-expanded',String(!hint.hidden));});
 function updateHomewardControls(){
   document.querySelector('#openHomeward').disabled=document.querySelector('#chooseFreeSpace').disabled=document.querySelector('#chooseClassic').disabled=mode==='flying';
   for(const [selector,type]of [['#openHomeward','homeward'],['#chooseFreeSpace','free'],['#chooseClassic','challenge']])document.querySelector(selector).setAttribute('aria-pressed',String(playType===type));
@@ -827,8 +869,10 @@ function enterHomeward(id,{restoring=false}={}){
   cancelGesture();clearCameraGesture();settingsUI.closeAll();document.querySelector('#stageDialog').close();
   playType='homeward';challengeId=null;stage=getHomewardSector(id);launchSnapshot=null;selectedPlanetId=null;
   syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);updateOutputs();
+  const guide=tutorialEntry(homewardProgress.state,id);
+  if(guide.status==='active'){angleInput.value=String(guide.angleDeg??stage.launch.angleDeg);speedInput.value=String(guide.speed??stage.launch.speed);updateOutputs();}
   document.querySelector('.mission strong').textContent=stage.name;
-  retry();resizeCanvas();fitCamera();homewardUI.briefing(id);
+  retry();notifyTutorial('restore');resizeCanvas();fitCamera();homewardUI.briefing(id);
 }
 document.querySelector('#openHomeward').addEventListener('click',()=>{if(mode!=='flying')homewardUI.open();});
 document.querySelector('#chooseClassic').addEventListener('click',()=>{if(mode!=='flying')document.querySelector('#openStages').click();});

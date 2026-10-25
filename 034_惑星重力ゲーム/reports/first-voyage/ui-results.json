@@ -1,0 +1,104 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 417
+    },
+    "panel": {
+      "x": 12,
+      "y": 71.5625,
+      "width": 296,
+      "height": 424.859375
+    },
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "fullFlow": "PASS",
+    "sectors": 3,
+    "reload": "PASS",
+    "classic": "Stage01 clear, 20 stages available",
+    "freeSpace": "edited launch conditions restored",
+    "legacyFavorite": "preserved",
+    "galleryReplay": "CLEAR",
+    "saved": {
+      "version": 1,
+      "currentSector": "homeward-01",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03"
+      ],
+      "openingSeen": true,
+      "eventsSeen": [
+        "homeward-01:enter",
+        "homeward-01:arrival",
+        "homeward-02:enter",
+        "homeward-02:arrival",
+        "homeward-03:enter",
+        "homeward-03:arrival"
+      ],
+      "active": false,
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 1,
+          "angleDeg": -65,
+          "speed": 220
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 3,
+          "angleDeg": -65,
+          "speed": 220
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 5,
+          "angleDeg": -65,
+          "speed": 220
+        }
+      }
+    }
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 516
+    },
+    "panel": {
+      "x": 12,
+      "y": 139.59375,
+      "width": 351,
+      "height": 387.8125
+    },
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 693
+    },
+    "panel": {
+      "x": 12,
+      "y": 228.09375,
+      "width": 366,
+      "height": 387.8125
+    },
+    "errors": [],
+    "status": "PASS"
+  }
+]

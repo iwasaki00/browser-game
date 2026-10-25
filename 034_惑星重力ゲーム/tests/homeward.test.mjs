@@ -9,11 +9,11 @@ import {createFlightRecorder,replayFrame} from '../js/flight-record.js';
 import {stepLiveFlight} from '../js/live-gravity.js';
 import {slingshotLaunch} from '../js/launch.js';
 import {placementAllowed} from '../js/planets.js';
-const dir=new URL('../reports/homeward/',import.meta.url);mkdirSync(dir,{recursive:true});const metrics=[];
+const dir=new URL('../reports/first-voyage/',import.meta.url);mkdirSync(dir,{recursive:true});const metrics=[];
 for(const definition of HOMEWARD_SECTORS)test(`${definition.id}: データ整合性・到達・広域予測一致・両方式と両モード・ギャラリーv1`,()=>{
  const s=getHomewardSector(definition.id),before=structuredClone(s);assert.ok(s.planets.every(p=>placementAllowed(p,s)));
- assert.equal(s.launch.speed,220);assert.ok(s.world.width>375);assert.equal(definition.next,HOMEWARD_SECTORS[Number(definition.number)]?.id??null);
- let state=createSimulation(s);const states=[state],rec=createFlightRecorder(s,state,{playType:'homeward',gameMode:'design',launchMode:'precision'},1);let distance=0;
+ assert.equal(s.launch.speed,definition.initial.speed);assert.ok(s.world.width>375);assert.equal(definition.next,HOMEWARD_SECTORS[Number(definition.number)]?.id??null);
+ let state=createSimulation(s,s.solution);const states=[state],rec=createFlightRecorder(s,state,{playType:'homeward',gameMode:'design',launchMode:'precision'},1);let distance=0;
  while(state.status==='flying'){const old=state;state=stepSimulation(state,1/120);distance+=Math.hypot(state.rocket.position.x-old.rocket.position.x,state.rocket.position.y-old.rocket.position.y);states.push(state);rec.capture(state);}
  assert.equal(state.status,'cleared');assert.ok(distance>3500);assert.ok(state.elapsed>12);
  const job=createPreview(s,states[0].rocket.velocity);while(!job.done)advancePreview(job,2000);assert.deepEqual(job.state,state);

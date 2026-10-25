@@ -84,7 +84,7 @@ export class AttackDirector {
   begin(time,enemies,shots){
     if(time-this.windowStart>=INVASION.normalAttackWindow){this.windowStart=time;this.starts=0}
     this.activeDives=0;this.projectiles=0;
-    for(let i=0;i<enemies.length;i++)if(!enemies[i].dead&&enemies[i].diveTimer>0)this.activeDives++;
+    for(let i=0;i<enemies.length;i++)if(!enemies[i].dead&&(enemies[i].diveTimer>0||enemies[i].type==='skyray'&&enemies[i].diveWarningLeft>0))this.activeDives++;
     for(let i=0;i<shots.length;i++)if(shots[i].normal&&!shots[i].dead)this.projectiles++;
   }
   ranged(time){

@@ -1,6 +1,7 @@
 import {HOMEWARD,HOMEWARD_SECTORS,getHomewardDefinition} from './homeward-data.js';
+import {tutorialEntry,tutorialTransition} from './homeward-tutorial.js';
 export const HOMEWARD_KEY='orbit-maker.homeward.v1';
-export const newHomeward=()=>({version:1,currentSector:'homeward-01',cleared:[],openingSeen:false,eventsSeen:[],active:false});
+export const newHomeward=()=>({version:1,currentSector:'homeward-01',cleared:[],openingSeen:false,eventsSeen:[],active:false,tutorial:{}});
 export function sectorUnlocked(state,id){const i=HOMEWARD_SECTORS.findIndex(s=>s.id===id);return i===0||i>0&&state.cleared.includes(HOMEWARD_SECTORS[i-1].id);}
 export function homewardDistance(state){const travelled=HOMEWARD_SECTORS.filter(s=>state.cleared.includes(s.id)).reduce((n,s)=>n+s.distance,0);return {travelled,remaining:HOMEWARD.totalDistance-travelled,percent:travelled/HOMEWARD.totalDistance*100};}
 export class HomewardProgress {
@@ -12,6 +13,8 @@ export class HomewardProgress {
    const cleared=HOMEWARD_SECTORS.filter((s,i)=>data.cleared.includes(s.id)&&HOMEWARD_SECTORS.slice(0,i).every(p=>data.cleared.includes(p.id))).map(s=>s.id);
    this.state={...newHomeward(),cleared,openingSeen:data.openingSeen===true,eventsSeen:Array.isArray(data.eventsSeen)?data.eventsSeen.filter(e=>typeof e==='string'):[],active:data.active===true};
    this.state.currentSector=getHomewardDefinition(data.currentSector)&&sectorUnlocked(this.state,data.currentSector)?data.currentSector:HOMEWARD_SECTORS.find(s=>!cleared.includes(s.id))?.id??'homeward-03';
+   const source={cleared,tutorial:data.tutorial&&typeof data.tutorial==='object'?data.tutorial:{}};
+   this.state.tutorial=Object.fromEntries(HOMEWARD_SECTORS.filter(s=>source.tutorial[s.id]||cleared.includes(s.id)).map(s=>[s.id,tutorialEntry(source,s.id)]));
   }catch{this.writable=false;this.notice='HOMEWARDの保存情報を読み込めません。元のデータを保護し、今回は一時プレイになります。';}
  }
  commit(patch){
@@ -22,7 +25,8 @@ export class HomewardProgress {
  }
  start(){this.commit({openingSeen:true,active:true});}
  enter(id){if(!this.state.openingSeen||!sectorUnlocked(this.state,id))return false;this.commit({currentSector:id,active:true});return true;}
- clear(id){if(!this.state.active||!this.state.openingSeen||id!==this.state.currentSector||!sectorUnlocked(this.state,id))return false;this.commit({cleared:[...new Set([...this.state.cleared,id])],eventsSeen:[...new Set([...this.state.eventsSeen,`${id}:arrival`])]});return true;}
+ clear(id){if(!this.state.active||!this.state.openingSeen||id!==this.state.currentSector||!sectorUnlocked(this.state,id))return false;this.commit({cleared:[...new Set([...this.state.cleared,id])],eventsSeen:[...new Set([...this.state.eventsSeen,`${id}:arrival`])],tutorial:{...this.state.tutorial,[id]:tutorialTransition(tutorialEntry(this.state,id),id,'clear')}});return true;}
+ setTutorial(id,entry){if(getHomewardDefinition(id)&&entry)this.commit({tutorial:{...this.state.tutorial,[id]:entry}});}
  markEvent(id){if(!this.state.eventsSeen.includes(id))this.commit({eventsSeen:[...this.state.eventsSeen,id]});}
  leave(){if(this.state.active)this.commit({active:false});}
 }

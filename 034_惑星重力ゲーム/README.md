@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 1.0.0 — HOMEWARD FOUNDATION
+Version 1.0.1 — HOMEWARD FIRST VOYAGE
+
+HOMEWARD序盤を「01：発射して観察」「02：推力を調整」「03：特殊惑星を読み、角度と推力を調整」の順に改善しました。01は初期設定で到達、02・03は未調整では到達しません。02はANGLE −65°／THRUST 220、03もANGLE −65°／THRUST 220が解答例です。03のブラックホール・恒星配置を見直し、全特殊惑星が解答航路に寄与することを検証しています。
+
+通常の盤面上の航法ガイドが対象を強調し、実操作で一つずつ進みます。ヒント・スキップに対応。未完ガイドの段階と発射設定を保存し、クリア後は通常操作へ戻ります。旧HOMEWARDのクリア・解放・既読を維持し、通過済みセクターではガイドを強制しません。
+
+[v1.0.1検証報告・攻略・iPhone確認手順](reports/first-voyage/VERIFICATION.md)。関連テスト：`node --test tests/homeward.test.mjs tests/first-voyage.test.mjs tests/launch.test.mjs`、画面・操作：`node tests/first-voyage-ui.mjs`。公開・pushは行っていません。iPhone実機は未確認です。
+
+以下はv1.0.0以前の実装・検証記録です。当時の「全3セクター初期設定で到達」は現行版では01のみです。
 
 宇宙探索ストーリーモード「HOMEWARD / 帰還航路」の初期版を追加しました。メニューでCLASSIC／FREE SPACE／HOMEWARDを選択できます。調査船ヒナギが、惑星の重力を借りて地球へ続く航路を探します。序章、セクター01〜03、宇宙マップ、帰還進捗、進行保存・復元に対応しています。
 

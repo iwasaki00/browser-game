@@ -1,5 +1,5 @@
 import {loadStudyImage} from './art-preview.js?v=0.2.3-C';
-import {coastalWeakCore} from './mission03.js?v=0.3.0';
+import {coastalWeakCore} from './mission03.js?v=0.3.1';
 export const COAST_FILES=Object.freeze({coast:['backgrounds/coast.png',640,360],tiles:['tiles/coast.png',256,256],
   shorecrab:['sprites/shorecrab.png',480,144],skyray:['sprites/skyray.png',480,144],siegebeetle:['sprites/siegebeetle.png',576,240],leviathan:['sprites/leviathan.png',1920,192],aa:['sprites/aa.png',384,64],
   shorecrabFar:['far/shorecrab.png',480,144],skyrayFar:['far/skyray.png',480,144],siegebeetleFar:['far/siegebeetle.png',576,240],leviathanFar:['far/leviathan.png',1920,192],
@@ -9,11 +9,28 @@ export async function loadCoastalArt(loader=loadStudyImage){return Object.fromEn
 export function drawCoastalEnemy(ctx,pack,e,x,y,far){
   const size=COAST_ACTORS[e.type];if(!size)return false;const [w,h]=size;
   const image=far&&pack?.[e.type+'Far']?pack[e.type+'Far']:pack?.[e.type];
-  const frame=e.dead?3:e.hitFlash>0?4:e.type==='leviathan'&&coastalWeakCore(e).open?5:e.warningLeft>0||e.attackFlash>0?2:Math.floor(e.anim||0)%2,row=e.type==='leviathan'?0:(e.uid??0)%3;
+  const frame=e.dead?3:e.hitFlash>0?4:e.type==='leviathan'&&coastalWeakCore(e).open?5:e.warningLeft>0||e.diveWarningLeft>0||e.diveTimer>0||e.attackFlash>0?2:Math.floor(e.anim||0)%2,row=e.type==='leviathan'?0:(e.uid??0)%3;
   if(image){ctx.save();if(e.face>0&&e.type!=='leviathan'){ctx.translate(x*2,0);ctx.scale(-1,1)}ctx.drawImage(image,frame*w*2,row*h*2,w*2,h*2,x-w/2,y,w,h);if(e.type==='leviathan'&&e.hp<=900&&!e.dead)ctx.drawImage(image,3*w*2+92,40,80,48,x-w/2+46,y+20,40,24);ctx.restore()}
   else{ctx.fillStyle=e.type==='skyray'?'#acb6cf':'#967c9c';ctx.fillRect(x-w/2,y,w,h);ctx.fillStyle='#e1dfbf';ctx.fillRect(x-5,y+4,10,5)}
-  if(!e.dead&&e.warningLeft>0){const n=e.type==='leviathan'&&e.coastAction===0?e.coastPhase:1;ctx.strokeStyle='#ffb77e';ctx.lineWidth=2;for(let i=0;i<n;i++){const wx=e.type==='leviathan'&&e.coastAction===2?e.x:e.warnX+(i-(n-1)/2)*76;ctx.strokeRect(wx-21,120,42,28)}}
+  if(!e.dead&&e.type==='skyray'&&(e.diveWarningLeft>0||e.diveTimer>0)){ctx.strokeStyle=e.diveWarningLeft>0?'#ffcc81':'#ff896f';ctx.lineWidth=1;ctx.strokeRect(x-9,y-4,18,3);ctx.beginPath();ctx.moveTo(x-4,y+h+2);ctx.lineTo(x,y+h+6);ctx.lineTo(x+4,y+h+2);ctx.stroke()}
   return true;
+}
+// World-space cues remain visible even if the emitting boss is culled. No HUD transform.
+export function drawCoastalWarnings(ctx,g){
+  ctx.save();ctx.lineWidth=1;
+  for(const e of g.enemies){if(e.dead||!e.warningLeft)continue;
+    if(e.type==='siegebeetle'){ctx.strokeStyle='#ffc285';ctx.strokeRect(e.warnX-9,e.warnY-9,18,18);continue}
+    const plan=e.attackPlan;if(e.type!=='leviathan'||!plan)continue;
+    ctx.strokeStyle='#ffc285';ctx.fillStyle='#d66d582d';
+    for(const z of plan.zones){ctx.fillRect(z.x-z.w/2,z.y,z.w,z.h);ctx.strokeRect(z.x-z.w/2,z.y,z.w,z.h);
+      if(plan.action===2)for(let x=z.x-z.w/2+12;x<z.x+z.w/2;x+=32){ctx.beginPath();ctx.moveTo(x,138);ctx.lineTo(x+4,142);ctx.lineTo(x+8,138);ctx.stroke()}}
+    for(const t of plan.targets){if(plan.action===2&&plan.phase===2){ctx.strokeRect(t.x-12,t.y-8,24,16);continue}
+      const a=Math.atan2(t.y-plan.originY,t.x-plan.originX),len=plan.shotSpeed*plan.shotLife;ctx.globalAlpha=.65;
+      ctx.beginPath();ctx.moveTo(plan.originX,plan.originY);ctx.lineTo(plan.originX+Math.cos(a)*len,plan.originY+Math.sin(a)*len);ctx.stroke();ctx.globalAlpha=1;
+      ctx.strokeRect(t.x-4,t.y-4,8,8);
+    }
+  }
+  ctx.restore();
 }
 export function drawCoastTile(ctx,pack,index,x,y,w=16,h=16){if(!pack?.tiles){ctx.fillStyle=index===2?'#476c78':'#203e4a';ctx.fillRect(x,y,w,h);return}const variant=((Math.floor(x/16)*7+Math.floor(y/16)*3)%4+4)%4,cell=variant*16+index;ctx.drawImage(pack.tiles,cell%8*32,Math.floor(cell/8)*32,w*2,h*2,x,y,w,h)}
 export function drawCoastalWorld(ctx,pack,g,bounds){

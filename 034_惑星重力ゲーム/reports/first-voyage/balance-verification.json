@@ -1,0 +1,155 @@
+[
+  {
+    "sector": "homeward-01",
+    "initial": {
+      "angle": -65,
+      "speed": 220,
+      "status": "cleared",
+      "elapsed": 17.749999999999634
+    },
+    "answer": {
+      "angle": -65,
+      "speed": 220,
+      "status": "cleared",
+      "elapsed": 17.749999999999634,
+      "end": {
+        "x": 2143.166953226622,
+        "y": 935.2670788484548
+      }
+    },
+    "closest": [
+      {
+        "type": "dense",
+        "clearance": 134.0261838185029
+      },
+      {
+        "type": "earth",
+        "clearance": 32.916055780545065
+      },
+      {
+        "type": "gas",
+        "clearance": 459.85506810202094
+      }
+    ],
+    "ablation": [
+      {
+        "type": "dense",
+        "status": "escaped"
+      },
+      {
+        "type": "earth",
+        "status": "escaped"
+      },
+      {
+        "type": "gas",
+        "status": "cleared"
+      }
+    ],
+    "clearingSpeeds": [
+      220
+    ]
+  },
+  {
+    "sector": "homeward-02",
+    "initial": {
+      "angle": -65,
+      "speed": 200,
+      "status": "escaped",
+      "elapsed": 22.51666666666603
+    },
+    "answer": {
+      "angle": -65,
+      "speed": 220,
+      "status": "cleared",
+      "elapsed": 17.73333333333297,
+      "end": {
+        "x": 3005.4284245659146,
+        "y": 1654.028598648369
+      }
+    },
+    "closest": [
+      {
+        "type": "dense",
+        "clearance": 9.599285272558923
+      },
+      {
+        "type": "dense",
+        "clearance": 106.86058817341075
+      },
+      {
+        "type": "gas",
+        "clearance": 1105.1375047980919
+      }
+    ],
+    "ablation": [
+      {
+        "type": "dense",
+        "status": "crashed"
+      },
+      {
+        "type": "dense",
+        "status": "escaped"
+      },
+      {
+        "type": "gas",
+        "status": "cleared"
+      }
+    ],
+    "clearingSpeeds": [
+      218,
+      220
+    ]
+  },
+  {
+    "sector": "homeward-03",
+    "initial": {
+      "angle": -60,
+      "speed": 200,
+      "status": "crashed",
+      "elapsed": 7.375000000000156
+    },
+    "answer": {
+      "angle": -65,
+      "speed": 220,
+      "status": "cleared",
+      "elapsed": 17.64999999999964,
+      "end": {
+        "x": 2666.7457943911168,
+        "y": 1292.6591760479698
+      }
+    },
+    "closest": [
+      {
+        "type": "repulsor",
+        "clearance": 104.20300129776777
+      },
+      {
+        "type": "blackhole",
+        "clearance": 35.392607578449635
+      },
+      {
+        "type": "star",
+        "clearance": 54.83515079075505
+      }
+    ],
+    "ablation": [
+      {
+        "type": "repulsor",
+        "status": "crashed"
+      },
+      {
+        "type": "blackhole",
+        "status": "escaped"
+      },
+      {
+        "type": "star",
+        "status": "escaped"
+      }
+    ],
+    "clearingSpeeds": [
+      216,
+      218,
+      220
+    ]
+  }
+]
