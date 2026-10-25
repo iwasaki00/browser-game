@@ -575,7 +575,14 @@ def main():
     parser.add_argument("--art-in-game-only", action="store_true", help="Generate only the two gun-free Study 01 companion sprites")
     parser.add_argument("--art-readability-only", action="store_true", help="Generate isolated Study 01-B readability art only")
     parser.add_argument("--art-unified-only", action="store_true", help="Generate isolated UNIFIED 01 art only; preserve all earlier sets")
+    parser.add_argument("--coastal-only", action="store_true", help="Generate only M03 COASTAL 01 assets; preserve all earlier PNGs")
     args=parser.parse_args()
+    if args.coastal_only:
+        if any(value for key,value in vars(args).items() if key!='coastal_only'):
+            parser.error("--coastal-only cannot be combined with other generation flags")
+        from coastal_assets import generate
+        generate(ROOT)
+        return
     if args.art_unified_only:
         if args.classes_only or args.weapons_only or args.underground_only or args.art_study_only or args.art_in_game_only or args.art_readability_only:
             parser.error("--art-unified-only cannot be combined with other generation flags")

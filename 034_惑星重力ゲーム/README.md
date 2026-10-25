@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.9.2 — BIG SPACE UI
+Version 0.9.3 — EXPANDED SPACE
+
+フリープレイにSTANDARD（375×500）、LARGE（1125×1500）、HUGE（3750×5000）を追加しました。メニューの「広さ」「HUGE体験航行」から選べます。HUGEの全体表示は0.10倍。カメラはFIXED／FOLLOW／OVERVIEWを選べ、ミニマップも切り替えられます。広域ワールドでは発射前にゲートもドラッグできます。
+
+重力式・固定刻み・発射速度は維持し、新ワールドの飛行時間だけ45秒／180秒へ拡張。予測はLARGE 45秒、HUGE 120秒までで、その先を未予測と表示します。3つのHUGE配置で約4000ワールド単位の航行とクリア、予測一致、ギャラリー記録を検証しました。
+
+[v0.9.3検証レポート・画面・実機確認手順](reports/expanded-space/VERIFICATION.md)。関連テスト：`node --test tests/expanded-space.test.mjs tests/physics.test.mjs tests/camera.test.mjs tests/preview.test.mjs tests/launch.test.mjs tests/gallery.test.mjs tests/special-planets.test.mjs tests/live-gravity.test.mjs`。画面・操作確認：`node tests/expanded-space-ui.mjs`。公開・pushは行っていません。iPhone実機は未確認です。
+
+以下はv0.9.2以前の実装・検証記録です。過去版の画面確認スクリプトには当時のUI・倍率表示の期待値が含まれるため、現在版の画面確認には上記の専用スクリプトを使用してください。
 
 盤面を広げ、発射設定と「＋惑星」を下部に集約しました。その他の機能はメニューから開きます。惑星は追加時に種類・サイズを選び、盤面で選択・移動・削除します。2本指でズームと視点移動、＋／−と「全体」でも表示を調整できます。物理・ステージ・保存形式は維持しています。
 

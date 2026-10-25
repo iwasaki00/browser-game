@@ -347,7 +347,7 @@ function drawMinimap(rocket){
  const map=document.querySelector('#minimap');map.hidden=!showMinimap||!stage.worldPreset;if(map.hidden)return;
  const c=map.getContext('2d'),w=map.width,h=map.height,s=Math.min((w-8)/stage.world.width,(h-8)/stage.world.height),ox=(w-stage.world.width*s)/2,oy=(h-stage.world.height*s)/2;
  c.clearRect(0,0,w,h);c.fillStyle='#061122e8';c.fillRect(0,0,w,h);c.strokeStyle='#526a87';c.strokeRect(ox,oy,stage.world.width*s,stage.world.height*s);
- for(const [p,color,r]of [...stage.planets.map(p=>[p,p.color,2]),[stage.goal,'#72ffb3',3],[rocket,'#fff4c4',2]]){c.fillStyle=color;c.beginPath();c.arc(ox+p.x*s,oy+p.y*s,r,0,Math.PI*2);c.fill();}
+ for(const [p,color,r]of [...stage.planets.map(p=>[p,p.render?.glow??p.color,2]),[stage.goal,'#72ffb3',3],[rocket,'#fff4c4',2]]){c.fillStyle=color;c.beginPath();c.arc(ox+p.x*s,oy+p.y*s,r,0,Math.PI*2);c.fill();}
  const a=camera.toWorld({x:0,y:0}),b=camera.toWorld({x:camera.width,y:camera.height});c.strokeStyle='#7bdcff';c.strokeRect(ox+Math.max(0,a.x)*s,oy+Math.max(0,a.y)*s,(Math.min(stage.world.width,b.x)-Math.max(0,a.x))*s,(Math.min(stage.world.height,b.y)-Math.max(0,a.y))*s);
 }
 

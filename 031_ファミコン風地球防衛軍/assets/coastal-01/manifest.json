@@ -1,0 +1,627 @@
+{
+  "version": "0.3.0",
+  "style": "UNIFIED 01 / COASTAL 01",
+  "seed": 3006400,
+  "sampling": "nearest",
+  "generator": "tools/coastal_assets.py",
+  "missions": [
+    "M03"
+  ],
+  "assets": {
+    "backgrounds/coast_far.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "far"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "be9ade95d2e5dd9aa35896447ecc0864261533a9cb8c67b45ce268adc7aecc4e"
+    },
+    "backgrounds/coast_mid.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "mid"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "70aaee4dcf5fbb0cdaf3d712e8fc64883aa2677b0a187fe9506f4c7d5481164a"
+    },
+    "backgrounds/coast_front.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "front"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "bd1835c0ff35e78ad560f44c7a54e3f2f456bc4e39fc0cd234fc71bda357f5e2"
+    },
+    "backgrounds/coast.png": {
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "columns": 1,
+      "frames": 1,
+      "states": [
+        "composite"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "cfe323e3a5b0ae87cee1451252f96be056373c0f1fea9494edbbf03de9786168"
+    },
+    "tiles/coast.png": {
+      "size": [
+        256,
+        256
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 8,
+      "frames": 64,
+      "states": [
+        "tile0:variant0",
+        "tile1:variant0",
+        "tile2:variant0",
+        "tile3:variant0",
+        "tile4:variant0",
+        "tile5:variant0",
+        "tile6:variant0",
+        "tile7:variant0",
+        "tile8:variant0",
+        "tile9:variant0",
+        "tile10:variant0",
+        "tile11:variant0",
+        "tile12:variant0",
+        "tile13:variant0",
+        "tile14:variant0",
+        "tile15:variant0",
+        "tile0:variant1",
+        "tile1:variant1",
+        "tile2:variant1",
+        "tile3:variant1",
+        "tile4:variant1",
+        "tile5:variant1",
+        "tile6:variant1",
+        "tile7:variant1",
+        "tile8:variant1",
+        "tile9:variant1",
+        "tile10:variant1",
+        "tile11:variant1",
+        "tile12:variant1",
+        "tile13:variant1",
+        "tile14:variant1",
+        "tile15:variant1",
+        "tile0:variant2",
+        "tile1:variant2",
+        "tile2:variant2",
+        "tile3:variant2",
+        "tile4:variant2",
+        "tile5:variant2",
+        "tile6:variant2",
+        "tile7:variant2",
+        "tile8:variant2",
+        "tile9:variant2",
+        "tile10:variant2",
+        "tile11:variant2",
+        "tile12:variant2",
+        "tile13:variant2",
+        "tile14:variant2",
+        "tile15:variant2",
+        "tile0:variant3",
+        "tile1:variant3",
+        "tile2:variant3",
+        "tile3:variant3",
+        "tile4:variant3",
+        "tile5:variant3",
+        "tile6:variant3",
+        "tile7:variant3",
+        "tile8:variant3",
+        "tile9:variant3",
+        "tile10:variant3",
+        "tile11:variant3",
+        "tile12:variant3",
+        "tile13:variant3",
+        "tile14:variant3",
+        "tile15:variant3"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "6b710ca564ea10a032c3257d9c2b3922b6daae7587d2217d00ebeae0c374eb38"
+    },
+    "sprites/shorecrab.png": {
+      "size": [
+        480,
+        144
+      ],
+      "cell": [
+        80,
+        48
+      ],
+      "logicalCell": [
+        40,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "7da04d8c8f9e0b5815e9243212bca6c626de42e0a340d7dc2ccf51b4a09e8a18"
+    },
+    "far/shorecrab.png": {
+      "size": [
+        480,
+        144
+      ],
+      "cell": [
+        80,
+        48
+      ],
+      "logicalCell": [
+        40,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "6567fc19d51e212e6bc4704a6631d58c4d38ecab86460d47c5651155712ef022"
+    },
+    "sprites/skyray.png": {
+      "size": [
+        480,
+        144
+      ],
+      "cell": [
+        80,
+        48
+      ],
+      "logicalCell": [
+        40,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "78e180b19e978fc7a33824ee25c052f741e290ec19995ae4e84b8dbb94f2d4fe"
+    },
+    "far/skyray.png": {
+      "size": [
+        480,
+        144
+      ],
+      "cell": [
+        80,
+        48
+      ],
+      "logicalCell": [
+        40,
+        24
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "68c5ac65c09823e83e0314b72e9e04f835cf311313b12ae9d6e989852a5fa00d"
+    },
+    "sprites/siegebeetle.png": {
+      "size": [
+        576,
+        240
+      ],
+      "cell": [
+        96,
+        80
+      ],
+      "logicalCell": [
+        48,
+        40
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 40
+      },
+      "sha256": "e28646af7299977a7b33a41331ce55c9fc4bba144fe9c1ea6f6d59978c57fd65"
+    },
+    "far/siegebeetle.png": {
+      "size": [
+        576,
+        240
+      ],
+      "cell": [
+        96,
+        80
+      ],
+      "logicalCell": [
+        48,
+        40
+      ],
+      "columns": 6,
+      "frames": 18,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 40
+      },
+      "sha256": "b0ba49f4a2bc6668525478c45f1bfa226d958c7ec29f674c319f1c9cf4d29266"
+    },
+    "sprites/leviathan.png": {
+      "size": [
+        1920,
+        192
+      ],
+      "cell": [
+        320,
+        192
+      ],
+      "logicalCell": [
+        160,
+        96
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0,
+        "weakCore": [
+          0,
+          58
+        ]
+      },
+      "sha256": "8bb0779627dd5cfedf723c9d190cb91798467a45f99ed314b74206b47881320c"
+    },
+    "far/leviathan.png": {
+      "size": [
+        1920,
+        192
+      ],
+      "cell": [
+        320,
+        192
+      ],
+      "logicalCell": [
+        160,
+        96
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0,
+        "weakCore": [
+          0,
+          58
+        ]
+      },
+      "sha256": "77c43797e2033441b1b193edf90b9b26691cc3fe4c01a249bb57493085fa3957"
+    },
+    "sprites/aa.png": {
+      "size": [
+        384,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "columns": 6,
+      "frames": 6,
+      "states": [
+        "move_a",
+        "move_b",
+        "attack",
+        "dead",
+        "hit",
+        "weak_open"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "6085debfa830be31719ff449b056f520ef5c2583ecd15797246b19ae4ceeecdc"
+    },
+    "effects/splash.png": {
+      "size": [
+        128,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "splash:0",
+        "splash:1",
+        "splash:2",
+        "splash:3"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "5228785a86d39223e919e4eb1c90f3cbb2a6421f4c84d4ff662138100b213a8a"
+    },
+    "effects/warning.png": {
+      "size": [
+        128,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "warning:0",
+        "warning:1",
+        "warning:2",
+        "warning:3"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "26cc60b35ed65a79e3c3877249990efc3e0bf4a0b152921df82d4a3683c27bf5"
+    },
+    "effects/artillery.png": {
+      "size": [
+        128,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "artillery:0",
+        "artillery:1",
+        "artillery:2",
+        "artillery:3"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "979c1ec2929d02836753627b59cd104886979c47e89f2157eb8b705628ed5411"
+    },
+    "effects/tentacle.png": {
+      "size": [
+        512,
+        128
+      ],
+      "cell": [
+        128,
+        128
+      ],
+      "logicalCell": [
+        64,
+        64
+      ],
+      "columns": 4,
+      "frames": 4,
+      "states": [
+        "tentacle:0",
+        "tentacle:1",
+        "tentacle:2",
+        "tentacle:3"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "02737807944f908700b686d20a9225d8298ac2fd7670fa0d34b30c10da76a2cb"
+    },
+    "effects/bossBreak.png": {
+      "size": [
+        2560,
+        192
+      ],
+      "cell": [
+        320,
+        192
+      ],
+      "logicalCell": [
+        160,
+        96
+      ],
+      "columns": 8,
+      "frames": 8,
+      "states": [
+        "bossBreak:0",
+        "bossBreak:1",
+        "bossBreak:2",
+        "bossBreak:3",
+        "bossBreak:4",
+        "bossBreak:5",
+        "bossBreak:6",
+        "bossBreak:7"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "top": 0
+      },
+      "sha256": "00d637fd7b377b84284b6c7897e2dbd9de8f5510971f35cf16662e6d722e65d1"
+    }
+  },
+  "poses": [
+    "move_a",
+    "move_b",
+    "attack",
+    "dead",
+    "hit",
+    "weak_open"
+  ],
+  "tileIndex": {
+    "road": 0,
+    "quay": 1,
+    "container": 2,
+    "defense": 3,
+    "wreck": 4,
+    "water": 5,
+    "foam": 6,
+    "crane": 7
+  },
+  "notes": [
+    "Source cells are 2x world logical cells. Never changes collision sizes.",
+    "Leviathan must not be mirrored: core center logical(80,58), world offset(0,58).",
+    "Six ordinary animation columns and three color variants; boss has one row.",
+    "Far sheets preserve alpha silhouettes. Existing M01/M02 material is not written."
+  ]
+}

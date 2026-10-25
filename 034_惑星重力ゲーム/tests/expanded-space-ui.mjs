@@ -50,6 +50,8 @@ try{
    await page.locator('#openMenuSettings').click();await page.locator('#openStages').click();await page.locator('#stageList>button').nth(19).click();await page.locator('#openMenuSettings').click();assert.equal(await page.locator('#worldSize').isDisabled(),true);assert.equal(await page.locator('#hugeSample').isDisabled(),true);await page.locator('#closeMenuSettings').click();
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('orbit-maker.stage-progress.v1'))),progress);
    const restored=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return (await new GalleryStore().list())[0];});assert.equal(restored.id,record.id);assert.equal(restored.favorite,true);
+   await page.locator('#openMenuSettings').click();await page.locator('#openStages').click();await page.locator('#freePlay').click();
+   for(const sample of ['swing','deep']){await page.locator('#openMenuSettings').click();await page.locator('#hugeSample').selectOption(sample);await page.clock.runFor(1000);assert.equal(await page.locator('#cameraZoom').textContent(),'0.10×');await page.screenshot({path:fileURLToPath(new URL(`huge-${sample}-375x667.png`,dir))});}
    results.push({browserFlight:{duration:record.duration,world:record.world,start:record.frames[0],end:record.frames.at(-1),frames:record.frames.length},follow:following});
   }
   assert.deepEqual(errors,[]);results.push({width,height,board,errors,status:'PASS'});await context.close();
