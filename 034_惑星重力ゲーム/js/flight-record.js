@@ -6,15 +6,24 @@ export function createFlightRecorder(stage,state,metadata={},now=Date.now()){
   planets:structuredClone(state.planets),launch:{position:{...state.rocket.position},velocity:{...state.rocket.velocity},angleDeg:Math.atan2(state.rocket.velocity.y,state.rocket.velocity.x)*180/Math.PI,speed:Math.hypot(state.rocket.velocity.x,state.rocket.velocity.y)},...metadata,frames};
  let ended=false;
  let sampleEvery=Math.max(1,Math.ceil((stage.flightLimits?.maxFlightTime??12)*120/3600)),step=0;
+ let lastObserved=null;
+ const row=state=>[state.elapsed,state.rocket.position.x,state.rocket.position.y,...state.planets.flatMap(p=>[p.x,p.y])];
  function capture(state,force=false){
   if(ended)return;
   if(frames.at(-1)?.[0]===state.elapsed)return;
+  // Contacts clamp position inside the last physics step. Preserve its start as
+  // well as the terminal point, instead of interpolating across a long interval.
+  if(state.status!=='flying'){
+   force=true;
+   if(lastObserved&&frames.at(-1)?.[0]!==lastObserved.elapsed)frames.push(row(lastObserved));
+  }
+  lastObserved=state;
   const previous=frames.at(-1),before=frames.at(-2);
   let turn=false;
   if(previous&&before){const a=Math.atan2(previous[2]-before[2],previous[1]-before[1]),b=Math.atan2(state.rocket.position.y-previous[2],state.rocket.position.x-previous[1]);turn=Math.abs(Math.atan2(Math.sin(b-a),Math.cos(b-a)))>.04;}
   if(!force&&frames.length&&++step%sampleEvery&&!turn)return;
   if(frames.length>=4095){const keep=frames.filter((_,i)=>i===0||i%2===1);frames.splice(0,frames.length,...keep);sampleEvery*=2;}
-  frames.push([state.elapsed,state.rocket.position.x,state.rocket.position.y,...state.planets.flatMap(p=>[p.x,p.y])]);
+  frames.push(row(state));
  }
  capture(state);
  return {capture,finish(state,reason){

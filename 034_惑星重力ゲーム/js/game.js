@@ -161,10 +161,9 @@ function drawGoal(time) {
   ctx.beginPath(); ctx.arc(0, 0, radius * pulse, 0, Math.PI * 2); ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle = "#96ffd0";
-  ctx.font = "700 8px ui-monospace, monospace";
+  ctx.font = `700 ${view.scale<.3?9/view.scale:8}px ui-monospace, monospace`;
   ctx.textAlign = "center";
-  ctx.fillText("GATE", 0, 3);
-  if(view.scale<.3){ctx.font=`700 ${9/view.scale}px monospace`;ctx.fillText('GATE',0,-radius-5/view.scale);}
+  ctx.fillText("GATE", 0, view.scale<.3?-radius-5/view.scale:3);
   ctx.restore();
 }
 

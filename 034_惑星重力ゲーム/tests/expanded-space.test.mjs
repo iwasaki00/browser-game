@@ -9,6 +9,8 @@ import {createFlightRecorder,replayFrame} from '../js/flight-record.js';
 import {configurePlanet,placementAllowed} from '../js/planets.js';
 import {Camera} from '../js/camera.js';
 import {CHALLENGES} from '../js/challenges.js';
+import {stepLiveFlight} from '../js/live-gravity.js';
+import {slingshotLaunch} from '../js/launch.js';
 const dt=1/120,report=new URL('../reports/expanded-space/',import.meta.url);mkdirSync(report,{recursive:true});
 const metrics=[];
 for(const id of ['voyage','swing','deep'])test(`HUGE ${id}：長距離到達・予測一致・記録終端・引力の寄与`,()=>{
@@ -23,8 +25,11 @@ for(const id of ['voyage','swing','deep'])test(`HUGE ${id}：長距離到達・�
  const prediction=createPreview(s,states[0].rocket.velocity);while(!prediction.done)advancePreview(prediction,2000);
  assert.deepEqual(prediction.state,state);for(const p of prediction.points)assert.deepEqual({x:p.x,y:p.y},states[Math.round(p.time*120)].rocket.position);
  const record=rec.finish(state);assert.deepEqual(replayFrame(record,record.duration).rocket,state.rocket.position);assert.equal(record.frames[0][0],0);assert.equal(record.frames.at(-1)[0],state.elapsed);assert.ok(record.frames.length<=4096);assert.equal(record.version,1);assert.deepEqual(s,before);
+ let maxReplayError=0;for(const a of states){const p=replayFrame(record,a.elapsed).rocket;maxReplayError=Math.max(maxReplayError,Math.hypot(p.x-a.rocket.position.x,p.y-a.rocket.position.y));}assert.ok(maxReplayError<1);
+ const rad=s.launch.angleDeg*Math.PI/180,shot=slingshotLaunch(s.launch.position,{x:s.launch.position.x-Math.cos(rad)*105,y:s.launch.position.y-Math.sin(rad)*105});
+ let live=createSimulation(s,{velocity:shot.velocity});while(live.status==='flying')live=stepLiveFlight(live,{},s,'live',dt);assert.equal(live.status,'cleared');assert.ok(Math.hypot(live.rocket.position.x-state.rocket.position.x,live.rocket.position.y-state.rocket.position.y)<1e-7);
  const noGravity=simulateTrajectory({...s,planets:[]});assert.notEqual(noGravity.state.status,'cleared');
- const row={id,name:s.name,world:s.world,start:s.launch.position,goal:s.goal,end:state.rocket.position,elapsed:state.elapsed,status:state.status,distance,maxX,minY,turnDegrees:turn*180/Math.PI,frames:record.frames.length,withoutPlanets:noGravity.state.status};metrics.push(row);
+ const row={id,name:s.name,world:s.world,start:s.launch.position,goal:s.goal,end:state.rocket.position,elapsed:state.elapsed,status:state.status,distance,maxX,minY,turnDegrees:turn*180/Math.PI,frames:record.frames.length,maxReplayError,withoutPlanets:noGravity.state.status};metrics.push(row);
  writeFileSync(new URL(`${id}-flight.json`,report),JSON.stringify(record));writeFileSync(new URL('航行検証.json',report),JSON.stringify(metrics,null,2));
 });
 test('STANDARDは従来のデータ・12秒制限。拡張ワールドでは旧境界を越えて飛べる',()=>{
@@ -51,7 +56,8 @@ for(const [type,reason]of [['earth',undefined],['blackhole','absorbed'],['star',
  const a=stepSimulation(createSimulation(s,{velocity:{x:30000,y:0}}),dt);assert.equal(a.status,'crashed');assert.equal(a.reason,reason);
 });
 test('共通物理変更の影響範囲：Stage01〜20全基準軌道を変更前エンジンと各ステップ比較',async()=>{
- const source=execFileSync('git',['show','HEAD:034_惑星重力ゲーム/js/physics.js'],{encoding:'utf8'});
+ // Pin the actual v0.9.2 source, independent of later commits/checkpoints.
+ const source=execFileSync('git',['show','ba20c0564fd07b60a955a00119b7ba61ecb60233:034_惑星重力ゲーム/js/physics.js'],{encoding:'utf8'});
  const old=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
  for(const s of CHALLENGES){let a=createSimulation(s,s.solution),b=old.createSimulation(s,s.solution);while(a.status==='flying'){a=stepSimulation(a,dt);b=old.stepSimulation(b,dt);assert.deepEqual(a,b,s.id);}assert.equal(a.status,'cleared',s.id);}
 });

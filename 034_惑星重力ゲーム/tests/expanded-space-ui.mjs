@@ -25,6 +25,9 @@ try{
    const world=async(x,y)=>page.evaluate(([x,y])=>{const b=document.querySelector('#gameCanvas').getBoundingClientRect(),[a,,,d,e,f]=worldMatrix;return {x:b.left+(a*x+e)/devicePixelRatio,y:b.top+(d*y+f)/devicePixelRatio};},[x,y]);
    // A 38-world-unit planet remains selectable at .1x using a 22 CSS-pixel hit area.
    const p=await world(1000,3300);await page.touchscreen.tap(p.x+10,p.y);assert.equal(await page.locator('#selectionBar').isVisible(),true);
+   const move=async(from,to)=>{await page.mouse.move(from.x,from.y);await page.mouse.down();await page.mouse.move(to.x,to.y,{steps:4});await page.mouse.up();};
+   await move(await world(2164,879),await world(2564,1279));await page.clock.runFor(2000);assert.notEqual(await page.locator('#previewStatus').textContent(),'ゴール到達予測');
+   await move(await world(2564,1279),await world(2164,879));await page.clock.runFor(2000);assert.equal(await page.locator('#previewStatus').textContent(),'ゴール到達予測');
    await page.locator('#openMenuSettings').click();await page.locator('#cameraMode').selectOption('follow');await page.locator('#closeMenuSettings').click();
    await page.locator('#zoomIn').click();await page.locator('#zoomIn').click();assert.equal(await page.locator('#cameraMode').inputValue(),'follow');
    await page.locator('#launchButton').click();await page.clock.runFor(8000);
@@ -39,13 +42,14 @@ try{
    await writeFile(new URL('browser-flight.json',dir),JSON.stringify(record));
    await page.screenshot({path:fileURLToPath(new URL('huge-clear-375x667.png',dir))});
    await page.locator('#resetButton').click();assert.equal(await page.locator('#cameraZoom').textContent(),'0.10×');assert.equal(await page.locator('#launchButton').isDisabled(),false);
+   await page.locator('#openMenuSettings').click();await page.locator('#openGallery').click();await page.locator('.gallery-record').first().click();await page.clock.runFor(19000);assert.equal(await page.locator('#replayResult').textContent(),'CLEAR');await page.locator('#replayBack').click();await page.getByRole('button',{name:'☆ お気に入り',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#galleryCount').textContent.includes('お気に入り 1/30'));await page.locator('#closeGallery').click();
    await page.locator('#openMenuSettings').click();await page.locator('#minimapToggle').click();await page.locator('#closeMenuSettings').click();await page.clock.runFor(50);assert.equal(await page.locator('#minimap').isVisible(),false);
    // Existing storage is only seeded inside this isolated browser context.
    const progress={design:{'stage-19':3},live:{'stage-01':2}};
    await page.evaluate(p=>localStorage.setItem('orbit-maker.stage-progress.v1',JSON.stringify(p)),progress);await page.reload();await page.clock.runFor(50);
    await page.locator('#openMenuSettings').click();await page.locator('#openStages').click();await page.locator('#stageList>button').nth(19).click();await page.locator('#openMenuSettings').click();assert.equal(await page.locator('#worldSize').isDisabled(),true);assert.equal(await page.locator('#hugeSample').isDisabled(),true);await page.locator('#closeMenuSettings').click();
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('orbit-maker.stage-progress.v1'))),progress);
-   const restored=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return (await new GalleryStore().list())[0];});assert.equal(restored.id,record.id);
+   const restored=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return (await new GalleryStore().list())[0];});assert.equal(restored.id,record.id);assert.equal(restored.favorite,true);
    results.push({browserFlight:{duration:record.duration,world:record.world,start:record.frames[0],end:record.frames.at(-1),frames:record.frames.length},follow:following});
   }
   assert.deepEqual(errors,[]);results.push({width,height,board,errors,status:'PASS'});await context.close();

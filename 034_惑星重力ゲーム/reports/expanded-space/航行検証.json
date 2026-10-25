@@ -26,7 +26,8 @@
     "maxX": 2143.166953226622,
     "minY": 935.2670788484548,
     "turnDegrees": 27.6179692564184,
-    "frames": 356,
+    "frames": 357,
+    "maxReplayError": 0.032786302664513205,
     "withoutPlanets": "escaped"
   },
   {
@@ -56,7 +57,8 @@
     "maxX": 3005.4284245659146,
     "minY": 1654.028598648369,
     "turnDegrees": 52.100244302014595,
-    "frames": 363,
+    "frames": 364,
+    "maxReplayError": 0.13796233922384774,
     "withoutPlanets": "escaped"
   },
   {
@@ -86,7 +88,8 @@
     "maxX": 1773.1363731828258,
     "minY": 822.6058610544353,
     "turnDegrees": 13.4164982187413,
-    "frames": 356,
+    "frames": 357,
+    "maxReplayError": 0.007193615951755487,
     "withoutPlanets": "escaped"
   }
 ]
