@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 0.9.3 — EXPANDED SPACE
+Version 1.0.0 — HOMEWARD FOUNDATION
+
+宇宙探索ストーリーモード「HOMEWARD / 帰還航路」の初期版を追加しました。メニューでCLASSIC／FREE SPACE／HOMEWARDを選択できます。調査船ヒナギが、惑星の重力を借りて地球へ続く航路を探します。序章、セクター01〜03、宇宙マップ、帰還進捗、進行保存・復元に対応しています。
+
+全3セクターは初期ANGLE −65°・THRUST 220で到達できます。クリア後に「次のセクターへ」を選びます。03通過時は帰還進捗8.4%で、地球帰還は今後の物語へ続きます。物理演算・既存Stage01〜20・既存の保存形式は変更していません。HOMEWARD進行は専用キーに保存します。
+
+[HOMEWARD全体仕様](HOMEWARD_SPEC.md) ／ [関連検証・画面・iPhone確認手順](reports/homeward/VERIFICATION.md)。関連テスト：`node --test tests/homeward.test.mjs tests/launch.test.mjs`、画面・遷移確認：`node tests/homeward-ui.mjs`。iPhone実機は未確認です。公開・pushは行っていません。
+
+以下はv0.9.3以前の実装・検証記録です。
 
 フリープレイにSTANDARD（375×500）、LARGE（1125×1500）、HUGE（3750×5000）を追加しました。メニューの「広さ」「HUGE体験航行」から選べます。HUGEの全体表示は0.10倍。カメラはFIXED／FOLLOW／OVERVIEWを選べ、ミニマップも切り替えられます。広域ワールドでは発射前にゲートもドラッグできます。
 

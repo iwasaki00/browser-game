@@ -1,5 +1,21 @@
 # Asset Manifest
 
+## COASTAL 01 / 0.3.0（M03・UNIFIED 01準拠）
+
+`py -3 tools/generate_assets.py --coastal-only` → `assets/coastal-01/`。固定シード、Pillowの整数pixel図形・二値透過・NEAREST。19素材PNG＋一覧PNG、218索引セル。SHA256・状態・寸法は[生成マニフェスト](../assets/coastal-01/manifest.json)。既存M01/M02 PNGへ書き込みません。
+
+| 群 | PNG | 論理仕様 |
+| --- | ---: | --- |
+| 港湾背景・遠景／中景／前景 | 4 | 640×360。3レイヤーを生成時にcoast.pngへ合成 |
+| 地形 | 1 | 256×256、16種類×4変化。道路・岸壁・コンテナ・海面等 |
+| E-07/E-08/E-09 | 3 | 40×24／40×24／48×40world、6状態×3配色、source2倍 |
+| B-03本体・触手・弱点 | 1 | 160×96world、6状態。弱点source論理(80,58)、左右反転禁止 |
+| 味方対空砲台 | 1 | 32×32world、6状態 |
+| 上記4敵の遠景版 | 4 | 同じ外形・基準点、色面を整理 |
+| splash / warning / artillery / tentacle / bossBreak | 5 | 4/4/4/4/8コマ、上陸・砲火・触手・段階爆発 |
+
+実行時は合成背景を含む16シートを読込、分離3背景は制作・比較用。`coastal-art.js`で寸法検証し、欠損時はプリミティブ代替。遠景版は既存ArtPreviewの0.40/0.44ヒステリシスに連動する。兵科・武器・共通FXは既存UNIFIEDを再利用する。素材一覧：[contact-sheet.png](../assets/coastal-01/contact-sheet.png)。
+
 ## UNIFIED 01 / 0.2.3-C（LAB統合試用）
 
 生成：`py -3 tools/generate_assets.py --art-unified-only` → `assets/art-refresh/unified-01/`。既存のORIGINAL／Study 01／01-Bは上書きしない。全寸法・SHA256・フレームID・147行の対応表は[統合JSON](../assets/art-refresh/unified-01/manifest.json)、状態・アンカー・利用制限は[ART_UNIFICATION.md](ART_UNIFICATION.md)。

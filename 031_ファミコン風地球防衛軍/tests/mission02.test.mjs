@@ -112,10 +112,10 @@ test('lightning can damage a targeted breakable wall without treating the target
   assert.equal(r.run('game.arsenal.stats.strikes'),8);
 });
 
-test('boss death produces staged effects then one saved M02 reward, stats and COMING SOON M03',()=>{
+test('boss death produces staged effects then one saved M02 reward, stats and opens implemented M03',()=>{
   const r=mission();r.run("game.time=360;game.player.x=4800;startBoss();const initial=save.unlocked.length;damageEnemy(game.enemies[0],99999,{type:'rocket',vx:1,vy:0})");
   r.flush();r.flush();assert.equal(r.run('state'),'result');assert.equal(r.run('save.unlocked.length'),r.run('initial+1'));
-  const saved=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(saved.clearedMissions.includes('M02'));assert.ok(saved.unlockedMissions.includes('M03'));assert.equal(canPlayMission('M03',saved),false);assert.equal(saved.missionStats.M02.bestTime,360);
+  const saved=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(saved.clearedMissions.includes('M02'));assert.ok(saved.unlockedMissions.includes('M03'));assert.equal(canPlayMission('M03',saved),true);assert.equal(canPlayMission('M04',saved),false);assert.equal(saved.missionStats.M02.bestTime,360);
   r.run('completeMission()');assert.equal(r.storage.get(SAVE_KEY),JSON.stringify(saved));
 });
 

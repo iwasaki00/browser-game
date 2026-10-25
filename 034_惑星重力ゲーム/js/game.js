@@ -8,6 +8,9 @@ import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
 import {Camera} from './camera.js';
 import {createFreeWorld,getHugeSample} from './worlds.js';
+import {getHomewardSector,getHomewardDefinition} from './homeward-data.js';
+import {HomewardProgress,homewardDistance,sectorUnlocked} from './homeward-progress.js';
+import {createHomewardUI} from './homeward-ui.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
 import {loadProgress,isUnlocked,rateClear,recordClear} from './progress.js';
@@ -51,6 +54,7 @@ let aim = null;
 const pointers = new Set();
 let storage;
 try { storage = window.localStorage; } catch { /* Storage is optional. */ }
+const homewardProgress=new HomewardProgress(storage);
 let experienceSettings = loadExperience(storage);
 const audio = new SpaceAudio(experienceSettings.sound, window);
 const experience = new SpaceExperience(experienceSettings.quality, kind => audio.play(kind));
@@ -399,6 +403,7 @@ function setEditingControls(enabled) {
   gameModeInput.disabled = !enabled;
   previewButton.disabled = !enabled;
   updateGameMode();
+  updateHomewardControls();
 }
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
@@ -445,6 +450,14 @@ function showResult(status) {
     document.querySelector('#clearStars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
     document.querySelector('#nextStage').hidden=CHALLENGES.findIndex(s=>s.id===challengeId)===CHALLENGES.length-1;
   }
+  if(status==='cleared'&&playType==='homeward'){
+    homewardProgress.clear(stage.id);
+    const sector=getHomewardDefinition(stage.id);
+    resultReason.textContent=sector.arrival;
+    document.querySelector('#nextStage').textContent=sector.next?'次のセクターへ':'宇宙マップへ';
+    document.querySelector('#nextStage').hidden=false;
+  }
+  updateHomewardControls();
   statusText.textContent = status === "cleared" ? "軌道確立。ミッション成功。" : `${reason}。配置を調整して再挑戦。`;
 }
 
@@ -466,6 +479,11 @@ function retry() {
 }
 
 function reset() {
+  if(playType==='homeward'){
+    stage=getHomewardSector(stage.id);launchSnapshot=null;selectedPlanetId=null;
+    angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);
+    updateOutputs();retry();fitCamera();return;
+  }
   if(playType==='challenge') {
     stage=getChallenge(challengeId);launchSnapshot=null;selectedPlanetId=stage.planets[0]?.id;
     retry();fitCamera();return;
@@ -487,7 +505,7 @@ function updateOutputs() {
 function tick(time) {
   const frameSeconds = Math.min((time - lastTime) / 1000, .1);
   lastTime = time;
-  if(gallery.isOpen()||settingsUI.isOpen()){requestAnimationFrame(tick);return;}
+  if(gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()){requestAnimationFrame(tick);return;}
   experience.update(frameSeconds);
   if (mode === "flying") {
     accumulator += frameSeconds;
@@ -738,6 +756,7 @@ updateGameMode();
 function enterChallenge(id){
   const index=CHALLENGES.findIndex(s=>s.id===id);
   if(index<0||!isUnlocked(progress,index,CHALLENGES))return;
+  homewardProgress.leave();document.querySelector('#nextStage').textContent='次ステージ';
   if(playType==='free')freeSnapshot={stage:structuredClone(stage),angle:angleInput.value,speed:speedInput.value,snapshot:launchSnapshot};
   cancelGesture();playType='challenge';challengeId=id;stage=getChallenge(id);launchSnapshot=null;
   selectedPlanetId=stage.planets[0]?.id;
@@ -762,6 +781,8 @@ document.querySelector('#openStages').addEventListener('click',()=>{
 });
 document.querySelector('#closeStages').addEventListener('click',()=>document.querySelector('#stageDialog').close());
 document.querySelector('#freePlay').addEventListener('click',()=>{
+  if(mode==='flying')return;
+  homewardProgress.leave();settingsUI.closeAll();homewardUI.close();
   cancelGesture();playType='free';challengeId=null;
   stage=freeSnapshot?structuredClone(freeSnapshot.stage):getStage();
   launchSnapshot=freeSnapshot?.snapshot??null;selectedPlanetId=stage.planets[0]?.id;
@@ -771,6 +792,10 @@ document.querySelector('#freePlay').addEventListener('click',()=>{
   retry();updateOutputs();document.querySelector('#stageDialog').close();resizeCanvas();fitCamera();
 });
 document.querySelector('#nextStage').addEventListener('click',()=>{
+  if(playType==='homeward'&&mode==='cleared'){
+    const next=getHomewardDefinition(stage.id).next;
+    if(next)enterHomeward(next);else homewardUI.open();return;
+  }
   if(playType!=='challenge'||mode!=='cleared')return;
   const next=CHALLENGES[CHALLENGES.findIndex(s=>s.id===challengeId)+1];if(next)enterChallenge(next.id);
 });
@@ -787,6 +812,32 @@ updateMode();
 resizeCanvas();
 requestAnimationFrame(tick);
 const gallery=createGallery({canOpen:()=>mode!=='flying',onOpen:cancelGesture});
+const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
+function updateHomewardControls(){
+  document.querySelector('#openHomeward').disabled=document.querySelector('#chooseFreeSpace').disabled=document.querySelector('#chooseClassic').disabled=mode==='flying';
+  for(const [selector,type]of [['#openHomeward','homeward'],['#chooseFreeSpace','free'],['#chooseClassic','challenge']])document.querySelector(selector).setAttribute('aria-pressed',String(playType===type));
+  const hud=document.querySelector('#homewardProgress');hud.hidden=playType!=='homeward';
+  const d=homewardDistance(homewardProgress.state);
+  hud.textContent=playType==='homeward'?`地球まで ${d.remaining.toLocaleString('ja-JP')} · 帰還 ${d.percent.toFixed(1)}%${homewardProgress.notice?' · 保存注意':''}`:'';
+}
+function enterHomeward(id,{restoring=false}={}){
+  if(mode==='flying'||!sectorUnlocked(homewardProgress.state,id))return;
+  if(playType==='free')freeSnapshot={stage:structuredClone(stage),angle:angleInput.value,speed:speedInput.value,snapshot:launchSnapshot};
+  if(!restoring&&!homewardProgress.enter(id))return;
+  cancelGesture();clearCameraGesture();settingsUI.closeAll();document.querySelector('#stageDialog').close();
+  playType='homeward';challengeId=null;stage=getHomewardSector(id);launchSnapshot=null;selectedPlanetId=null;
+  syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);updateOutputs();
+  document.querySelector('.mission strong').textContent=stage.name;
+  retry();resizeCanvas();fitCamera();homewardUI.briefing(id);
+}
+document.querySelector('#openHomeward').addEventListener('click',()=>{if(mode!=='flying')homewardUI.open();});
+document.querySelector('#chooseClassic').addEventListener('click',()=>{if(mode!=='flying')document.querySelector('#openStages').click();});
+document.querySelector('#chooseFreeSpace').addEventListener('click',()=>{if(mode!=='flying')document.querySelector('#freePlay').click();});
+updateHomewardControls();
+if(homewardProgress.state.active&&homewardProgress.state.openingSeen){
+  enterHomeward(homewardProgress.state.currentSector,{restoring:true});
+  if(homewardProgress.state.cleared.includes(homewardProgress.state.currentSector))homewardUI.open();
+}
 function finalizeRecording(reason){
   if(!recorder||!simulation)return;
   const current=recorder;recorder=null;

@@ -55,7 +55,7 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
     const dx=enemy.x-player.x,dy=enemy.y+(enemy.h||0)/2-playerY;
     const distance=Math.hypot(dx,dy);
     if(distance>c.evaluationDistance)continue;
-    if(enemy.type==="boss"||enemy.type==="queen"){
+    if(enemy.type==="boss"||enemy.type==="queen"||enemy.type==='leviathan'){
       if(battle.bossStarted)boss=enemy;
       continue;
     }

@@ -1,10 +1,10 @@
-import {WORLD,clamp,WEAPON_BY_ID} from './data.js?v=0.3.0';
+import {WORLD,clamp} from './data.js?v=0.3.0';
 
 // All coastal geometry/events are additive. M01/M02 retain their original data.
 export const M03=Object.freeze({id:'M03',world:{...WORLD,width:6400,ground:220},bossX:5480,bossSpawnX:6060,
   areas:[{x:0,name:'沿岸防衛線'},{x:1100,name:'コンテナ埠頭'},{x:2300,name:'対空迎撃区画'},{x:3700,name:'崩壊した岸壁'},{x:5100,name:'沖合決戦'}],
-  gaps:[{x:4056,w:28},{x:4560,w:32}],
-  platforms:[{x:0,y:148,w:4056,h:72,solid:true,kind:'quay'},{x:4084,y:148,w:476,h:72,solid:true,kind:'quay'},{x:4592,y:148,w:1808,h:72,solid:true,kind:'quay'},
+  gaps:[{x:4056,w:28},{x:4560,w:24}],
+  platforms:[{x:0,y:148,w:4056,h:72,solid:true,kind:'quay'},{x:4084,y:148,w:476,h:72,solid:true,kind:'quay'},{x:4584,y:148,w:1816,h:72,solid:true,kind:'quay'},
     {x:1260,y:124,w:80,h:24,solid:true,kind:'container'},{x:1600,y:120,w:96,h:28,solid:true,kind:'container'},
     {x:1960,y:124,w:96,h:24,solid:true,kind:'container'},{x:2860,y:132,w:64,h:16,solid:true,kind:'defense'},
     {x:3870,y:124,w:64,h:24,solid:true,kind:'wreck'},{x:4800,y:124,w:80,h:24,solid:true,kind:'wreck'}],
@@ -29,7 +29,8 @@ export const createCoastalState=()=>({safeX:64,safeY:116,rescueWait:0,rescues:0,
 export function coastalFloor(platforms,x,width=1){let y=220;for(const p of platforms)if(p.active!==false&&x+width/2>p.x&&x-width/2<p.x+p.w)y=Math.min(y,p.y);return y}
 export function recoverCoastalPlayer(g,dt,hurt,effect){
   const c=g.coast,p=g.player;c.rescueWait=Math.max(0,c.rescueWait-dt);
-  if(p.onGround&&p.y+32<=148&&coastalFloor(g.platforms,p.x,14)<=148){c.safeX=p.x;c.safeY=p.y}
+  const supported=p.onGround&&g.platforms.some(b=>b.active!==false&&p.x-12>=b.x&&p.x+12<=b.x+b.w&&Math.abs(p.y+32-b.y)<.01);
+  if(supported&&p.y+32<=148){c.safeX=p.x;c.safeY=p.y}
   if(p.y<=COAST.rescueY||p.dead)return false;
   Object.assign(p,{x:c.safeX,y:c.safeY,vx:0,vy:0,onGround:true});c.rescues++;
   if(c.rescueWait===0){hurt(COAST.rescueDamage,p.x-1);c.rescueWait=COAST.rescueCooldown}effect({kind:'coastSplash',x:p.x,y:148,life:.4,max:.4});return true;

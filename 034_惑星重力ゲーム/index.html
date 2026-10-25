@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Expanded Space</title>
+  <title>ORBIT MAKER — Homeward Foundation</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -17,7 +17,7 @@
     <header class="topbar">
       <div>
 
-        <h1>ORBIT <span>MAKER</span></h1><small id="modeSummary" class="mode-summary"></small><div class="mission"><strong>最初のスイングバイ</strong></div>
+        <h1>ORBIT <span>MAKER</span></h1><small id="modeSummary" class="mode-summary"></small><div class="mission"><strong>最初のスイングバイ</strong></div><output id="homewardProgress" class="homeward-progress" hidden></output>
       </div>
       <button id="openMenuSettings" type="button" aria-haspopup="dialog" aria-controls="menuPanel">☰ メニュー</button>
     </header>
@@ -62,7 +62,8 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v0.9.3</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+      <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
       <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option></select></label>
@@ -79,6 +80,29 @@
       </div>
 
 <button id="openStages" type="button">ステージ選択・フリープレイ</button><button id="openGallery" type="button">軌道ギャラリー</button>      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>      <details class="settings-help"><summary>遊び方・ステージ条件</summary><p class="settings-note">惑星はタップして選択、ドラッグで移動。2本指でズーム・カメラ移動。「全体」で元の表示へ。精密発射はANGLE・THRUSTを調整してLAUNCH。スリングショットはロケットを引いて離します。元へ戻すとキャンセル。惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details><p class="settings-note">メニュー・設定中は飛行を一時停止します。</p></div></dialog>
+  <dialog id="homewardDialog" class="settings-dialog" aria-labelledby="homewardTitle">
+    <header><div><small>ORIGINAL VOYAGE / HOMEWARD</small><h2 id="homewardTitle">帰還航路</h2></div><button id="closeHomeward" type="button">閉じる</button></header>
+    <div class="settings-content">
+      <section id="homeward-intro"><p class="homeward-eyebrow">PROLOGUE / 調査船ヒナギ</p><h3>一つずつ、故郷へ。</h3><p id="homewardOpening" class="homeward-story"></p><p class="settings-note">惑星の引力を借りて、宙域のゲートへ。次のセクターに渡り、地球へ続く航路を探します。</p><button id="homewardStart" class="homeward-primary" type="button">帰還航路を始める</button></section>
+      <section id="homeward-map" hidden>
+        <p id="homewardDistance" class="homeward-distance"></p><progress id="homewardMeter" max="100" value="0" aria-label="地球への帰還進捗"></progress>
+        <svg class="homeward-map" viewBox="0 0 100 100" role="img" aria-label="セクター01、02、03から未知宙域を経て地球へ向かう航路。現在地と解放状態は下の一覧に表示。">
+          <defs><radialGradient id="homewardMist"><stop stop-color="#16354c"/><stop offset="1" stop-color="#050e1b"/></radialGradient></defs>
+          <rect width="100" height="100" rx="5" fill="url(#homewardMist)"/>
+          <path d="M12 78L35 62L60 46" fill="none" stroke="#6adcf5" stroke-width=".6"/><path d="M60 46L90 18" fill="none" stroke="#647f97" stroke-dasharray="1 2" stroke-width=".5"/>
+          <g id="homewardNode01"><circle cx="12" cy="78" r="3"/><text x="6" y="88">01</text></g>
+          <g id="homewardNode02"><circle cx="35" cy="62" r="3"/><text x="29" y="72">02</text></g>
+          <g id="homewardNode03"><circle cx="60" cy="46" r="3"/><text x="54" y="56">03</text></g>
+          <circle cx="90" cy="18" r="4" fill="#72cbef" stroke="#a5ffc2" stroke-width=".6"/><text x="82" y="9">地球</text><text x="65" y="32">未知宙域</text>
+        </svg>
+        <p class="settings-note">黄色：現在地 ／ ✓：通過済み ／ 🔒：未到達</p>
+        <div id="homewardSectorList"></div><p id="homewardMapLog" class="homeward-story"></p>
+        <p id="homewardFoundationEnd" class="homeward-distance" hidden>最初の3セクターを航行しました。地球はまだ先。帰還航路は、次の宙域へ続きます。</p>
+      </section>
+      <section id="homeward-event" hidden><p class="homeward-eyebrow">航法記録</p><h3 id="homewardEventTitle"></h3><p id="homewardEventText" class="homeward-story"></p><p class="settings-note">最初の航路は現在の角度・推力で到達できます。惑星を動かし、自分の航路を探すこともできます。</p><button id="homewardContinue" class="homeward-primary" type="button">航行を始める</button></section>
+      <p id="homewardSaveNotice" class="homeward-save-notice" role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
   <dialog id="displayPanel" class="settings-dialog" aria-labelledby="displayTitle">
     <header><div><small>SETTINGS</small><h2 id="displayTitle">表示・音</h2></div><button id="closeDisplaySettings" type="button">閉じる</button></header>
     <div class="settings-content">

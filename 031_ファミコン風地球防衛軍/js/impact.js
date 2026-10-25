@@ -18,7 +18,7 @@ export const REACTIONS=Object.freeze({
   grenade:{speed:235,lift:185,spin:11,life:.48,color:"#ffe05c"},
   homing:{speed:145,lift:120,spin:6,life:.42,color:"#fff08b"}
 });
-const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1"};
+const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1",shorecrab:"#b7a9b4",skyray:"#7eacd1",siegebeetle:"#9f8aab",leviathan:"#b5a0c4"};
 const noise=n=>((n*2654435761)>>>0)/4294967296;
 export function createImpactState(){return {clock:0,stop:0,nextStop:0,budgetStart:0,spent:0,shakeUntil:0,nextShake:0,
   corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0}}
@@ -64,7 +64,7 @@ export function beginDeath(g,e,source={},bounds){
   const radial=source.radial,dx=radial?e.x-source.x:source.vx??(e.x-g.player.x),dy=radial?e.y+e.h/2-source.y:source.vy??0;
   const length=Math.hypot(dx,dy)||1,sign=Math.sign(dx)||(e.uid%2?1:-1);
   const close=type==="spread"?1.15-.55*clamp(Math.abs(e.x-(source.originX??g.player.x))/150,0,1):1;
-  const leader=e.type==="boss"||e.type==="beetle"||e.type==="queen"||e.type==="nest",weight=leader?.25:1;
+  const leader=e.type==="boss"||e.type==="beetle"||e.type==="queen"||e.type==="leviathan"||e.type==="nest",weight=leader?.25:1;
   e.deathType=type;e.deathColor=ENEMY_COLORS[e.type];e.deathMax=e.death=(leader?.48:r.life)*level.life;
   e.deathVx=(radial?(Math.abs(dx)<.01?sign*.7:dx/length):sign)*r.speed*close*weight*level.speed;
   e.deathVy=(-r.lift+clamp(dy/length,-1,1)*r.speed*.3)*weight*level.speed;

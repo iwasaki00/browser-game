@@ -1,6 +1,6 @@
 import {WORLD,ENEMY_TYPES,DENSITY_MODES,INVASION,SPAWN_PATTERNS,M01_ENCOUNTERS,clamp} from "./data.js";
 
-export const isMob = e => !["boss","beetle","queen","nest","barrier"].includes(e.type);
+export const isMob = e => !["boss","beetle","queen","leviathan","nest","barrier"].includes(e.type);
 export const variation = uid => ((uid*2654435761)>>>0)/4294967296;
 
 export class SpatialGrid {
@@ -54,6 +54,8 @@ export class SpawnDirector {
         if(!position)break;
         const enemy=spawn(d.enemy??pattern.enemy,position.x,position.y);
         if(!enemy)break;
+        if(d.formation){enemy.formationId=`${d.id}-${Math.floor(entry.spawned/6)}`;enemy.formationOrder=entry.spawned%6;enemy.formationPattern=d.formation}
+        if(d.sea)enemy.landingLeft=.65;
         entry.spawned++;this.spawned++;if(d.enemy==="beetle")this.midbossSpawned=true;
       }
       entry.wait=d.interval??pattern.interval;
@@ -66,13 +68,13 @@ export class SpawnDirector {
     let direction=game.battleCamera?.direction||Math.sign(p.vx)||1;
     if(pattern.sides==="both"&&ordinal%2)direction*=-1;
     const column=ordinal%INVASION.columns,row=Math.floor(ordinal/INVASION.columns);
-    const edge=direction>0?bounds.right:bounds.left;
+    const edge=(direction>0?bounds.right:bounds.left)+(d.sea?(direction>0?-64:64):0);
     const offset=INVASION.outsideMargin+column*INVASION.columnSpacing+row*9;
     const desired=direction>0?Math.max(edge+offset,p.x+INVASION.minSpawnDistance+offset):Math.min(edge-offset,p.x-INVASION.minSpawnDistance-offset);
     const x=clamp(desired,24,(game.world??WORLD).width-24);
     if(Math.abs(x-p.x)<INVASION.minSpawnDistance)return null;
     const type=d.enemy??pattern.enemy;
-    const y=type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
+    const y=type==="skyray"?36+(ordinal%3)*12:type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
     return {x,y};
   }
 }

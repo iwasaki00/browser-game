@@ -1,0 +1,20 @@
+[
+  {
+    "requested": 50,
+    "enemies": "50",
+    "metrics": "{\"interrupted\":true,\"gapMs\":1000.9000000000233,\"excluded\":4,\"samples\":0}",
+    "text": "FPS: 中断区間を除外 (1001ms)\n中断除外=4 有効サンプル=0\n計測再開待ち / 全体FPSではありません"
+  },
+  {
+    "requested": 100,
+    "enemies": "100",
+    "metrics": "{\"interrupted\":true,\"gapMs\":1001,\"excluded\":4,\"samples\":0}",
+    "text": "FPS: 中断区間を除外 (1001ms)\n中断除外=4 有効サンプル=0\n計測再開待ち / 全体FPSではありません"
+  },
+  {
+    "requested": 200,
+    "enemies": "200",
+    "metrics": "{\"interrupted\":true,\"gapMs\":1000.7999999999884,\"excluded\":4,\"samples\":0}",
+    "text": "FPS: 中断区間を除外 (1001ms)\n中断除外=4 有効サンプル=0\n計測再開待ち / 全体FPSではありません"
+  }
+]

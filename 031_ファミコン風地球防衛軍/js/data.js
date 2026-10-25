@@ -1,4 +1,4 @@
-export const VERSION = "0.2.3-E";
+export const VERSION = "0.3.0";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -74,7 +74,8 @@ export const M01_ENCOUNTERS = Object.freeze([
 export const MISSIONS = Object.freeze([
   {id:"M01",name:"市街地防衛線",description:"侵攻群を突破し、巣の中心を破壊せよ",implemented:true},
   {id:"M02",name:"地下侵攻作戦",description:"配管と上下分岐を突破し、アビス・クイーンを撃破せよ",implemented:true},
-  {id:"M03",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
+  {id:"M03",name:"沿岸防衛戦",description:"港湾を守り、海洋侵略生物リヴァイアサンを撃破せよ",implemented:true},
+  {id:"M04",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
 ]);
 
 const validMissionId = id => typeof id==="string" && /^M\d{2,}$/.test(id) && Number(id.slice(1))>0 && Number.isSafeInteger(Number(id.slice(1)));
@@ -136,7 +137,11 @@ export const ENEMY_TYPES = {
   spitter:{id:"E-06",name:"シーリングスピッター",hp:55,speed:0,damage:12,score:240,w:28,h:24},
   nest:{id:"H-01",name:"スポーンネスト",hp:250,speed:0,damage:0,score:1500,w:48,h:48},
   queen:{id:"B-02",name:"アビス・クイーン",hp:2400,speed:120,damage:25,score:18000,w:120,h:96},
-  barrier:{id:"O-01",name:"破壊障害物",hp:48,speed:0,damage:0,score:50,w:24,h:32}
+  barrier:{id:"O-01",name:"破壊障害物",hp:48,speed:0,damage:0,score:50,w:24,h:32},
+  shorecrab:{id:"E-07",name:"ショアクラブ",hp:70,speed:36,damage:12,score:220,w:40,h:24},
+  skyray:{id:"E-08",name:"スカイレイ",hp:45,speed:48,damage:10,score:260,w:40,h:24},
+  siegebeetle:{id:"E-09",name:"シージビートル",hp:180,speed:18,damage:18,score:900,w:48,h:40},
+  leviathan:{id:"B-03",name:"リヴァイアサン",hp:3000,speed:0,damage:25,score:24000,w:160,h:96}
 };
 
 export const MISSION_AREAS = [

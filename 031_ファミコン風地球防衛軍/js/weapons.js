@@ -29,7 +29,7 @@ export function terrainContact(x,y,nx,ny,platforms,r=0,ceiling=false,world=WORLD
   for(const pl of platforms)if(pl.active!==false){const hit=segmentEntry(x,y,nx,ny,pl.x-r,pl.y-r,pl.x+pl.w+r,pl.y+(pl.h??8)+r);if(hit){hit.platform=pl;consider(hit)}}
   if(best){best.t=clamp(best.t,0,1);best.x=x+(nx-x)*best.t;best.y=y+(ny-y)*best.t}return best;
 }
-function surfaceAt(g,x,fromY){let y=WORLD.ground;for(const p of g.platforms)if(p.active!==false&&x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)y=Math.min(y,p.y);return y}
+function surfaceAt(g,x,fromY){let y=g.missionId==='M03'?g.world.ground:WORLD.ground;for(const p of g.platforms)if(p.active!==false&&x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)y=Math.min(y,p.y);return y}
 function addShot(g,w,x,y,vx,vy,extra={}){
   if(g.shots.length+g.arsenal.pending.length>=WEAPON_LIMITS.shots)return null;
   const s={uid:g.arsenal.nextId++,ownerId:g.arsenal.ownerId,expanded:true,weapon:w,type:w.type,effectType:w.effectType,assetIndex:w.assetIndex,
@@ -46,6 +46,7 @@ export function fireExpanded(g,w,origin,target,api){
     let count=0;for(const i of a.installations)if(i.type===w.type&&i.ownerId===a.ownerId)count++;
     if(count>=w.installLimit)return false;
     const x=clamp(g.player.x+g.player.face*14,12,(g.world??WORLD).width-12),y=surfaceAt(g,x,g.player.y+32);
+    if(g.missionId==='M03'&&y>=158)return false; // no floating mines/turrets over a broken quay
     if(g.missionId==='M02'&&g.platforms.some(p=>p.active!==false&&x>=p.x&&x<=p.x+p.w&&y-10<p.y+(p.h??8)&&y>p.y))return false;
     a.installations.push({uid:a.nextId++,ownerId:a.ownerId,type:w.type,weapon:w,x,y,life:w.life,cooldown:.12});return true;
   }

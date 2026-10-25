@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.3-E">
+  <link rel="stylesheet" href="styles.css?v=0.3.0">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.2.3-E</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.3.0</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -90,13 +90,13 @@
         <div id="labContent" class="lab-content">
           <section id="labPanel-stage" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-stage">
             <fieldset class="lab-card"><legend>開始候補 <span>開始時に適用</span></legend><div class="lab-form-grid">
-              <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option></select></label>
+              <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option><option>M03</option></select></label>
               <label>エリア<select id="labStageArea"></select></label>
               <label>M02 AREA03ルート<select id="labStageRoute"><option value="LOWER">下ルート</option><option value="UPPER">上ルート</option></select></label>
               <label>検証区分（無敵も連動）<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
               <label>開始時の敵密度<select id="labStageDensity"><option>LIGHT</option><option selected>STANDARD</option><option>MASSIVE</option></select></label>
             </div><output id="labStageStatus" role="status">候補を選び、下の「選択地点から開始」を押してください。</output></fieldset>
-            <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button></div>
+            <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button><button data-action="lab-boss-3">M03 / B-03直接開始</button></div>
               <p class="lab-hint">開始すると敵・弾・FX・設置物・時間・スコア・位置を初期化します。</p>
               <details><summary>HELP：QA区分・開始条件</summary><p>A〜Cは通常攻略Dの成功ではありません。B/Dの選択は無敵OFF、CはONへ即時連動します。Dは正式兵科・解放済み武器2枠・無敵OFFが必要。ボス直接開始はB/C/D。兵科・武器・LAB演出設定は維持、通常報酬なし。</p></details>
             </fieldset>
@@ -117,12 +117,12 @@
           </section>
           <section id="labPanel-enemies" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-enemies" hidden>
             <fieldset class="lab-card"><legend>生成候補 <span>生成時に適用</span></legend><div class="lab-form-grid">
-              <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option></select></label>
-              <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option></select></label>
+              <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option><option value="M03">M03 沿岸防衛戦</option></select></label>
+              <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option><option value="shorecrab">E-07 ショアクラブ</option><option value="skyray">E-08 スカイレイ</option><option value="siegebeetle">E-09 シージビートル</option><option value="leviathan">B-03 リヴァイアサン（単体）</option></select></label>
               <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>200</option></select></label>
               <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
             </div></fieldset>
-            <fieldset class="lab-card"><legend>再配置・消去 <span>実行操作</span></legend><div class="lab-action-stack"><button class="lab-primary" data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-terrain-apply">地形だけ適用（LAB初期化）</button><button data-action="lab-clear">敵・弾・演出を全消去</button><button data-action="lab-boss-tab">本編ボスの直接開始へ →</button></div>
+            <fieldset class="lab-card"><legend>再配置・消去 <span>実行操作</span></legend><div class="lab-action-stack"><button class="lab-primary" data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-terrain-apply">地形だけ適用（LAB初期化）</button><button data-action="lab-clear">敵・弾・演出を全消去</button><details><summary>M03：海上侵攻・対空砲台の検証</summary><p>海上侵攻テストはM03へ再配置。砲台は現在のM03でのみON/OFF。</p><button data-action="lab-coast-invasion">M03 海上侵攻テスト（再配置）</button><button data-action="lab-coast-turrets">M03 対空砲台ON/OFF</button></details><button data-action="lab-boss-tab">本編ボスの直接開始へ →</button></div>
               <output id="labSpawnResult" role="status"></output><details><summary>HELP：初期化されるもの</summary><p>生成は位置・HP・時間・スコアを開始状態へ戻し、敵・弾・FX・設置・攻略計測を初期化。地形変更も「生成」か「適用」を押すまで保留。消去は敵・弾・FX・アイテム・設置物と攻略計測を消去。ネスト／クイーンは既存どおりM02へ移行、ボス・中ボス・ネストは単体です。</p></details>
             </fieldset>
           </section>
@@ -186,6 +186,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.2.3-E"></script>
+  <script type="module" src="js/game.js?v=0.3.0"></script>
 </body>
 </html>

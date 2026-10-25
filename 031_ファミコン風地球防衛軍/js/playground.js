@@ -5,7 +5,7 @@ export const PLAYER_PRESETS=Object.freeze({
   STANDARD:{...PLAYER_CLASSES.RANGER}, SPEED:{...PLAYER_CLASSES.SCOUT,jump:220},
   HEAVY:{...PLAYER_CLASSES.GUARDIAN,jump:176}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
 });
-export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen"});
+export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen","E-07":"shorecrab","E-08":"skyray","E-09":"siegebeetle","B-03":"leviathan"});
 export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);
 export function createLabState(equipped,settings){return {
   equipped:[...equipped],settings:{...settings},invincible:true,preset:"STANDARD",

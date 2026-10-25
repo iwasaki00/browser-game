@@ -1,0 +1,31 @@
+{
+  "version": "0.3.0",
+  "checks": [
+    "C 無敵QA / M03-A1-MAIN / NO SAVE",
+    "C 無敵QA / M03-A2-MAIN / NO SAVE",
+    "C 無敵QA / M03-A3-MAIN / NO SAVE",
+    "C 無敵QA / M03-A4-MAIN / NO SAVE",
+    "C 無敵QA / M03-A5-MAIN / NO SAVE",
+    "対空砲台 OFF（LABのみ）",
+    "30体を再配置（プレイヤーも開始位置へ復帰）"
+  ],
+  "layouts": [
+    {
+      "footerBottom": 381,
+      "height": 390,
+      "horizontal": 0,
+      "outerScroll": 0,
+      "panelBottom": 382,
+      "width": 844
+    },
+    {
+      "footerBottom": 835,
+      "height": 844,
+      "horizontal": 0,
+      "outerScroll": 0,
+      "panelBottom": 836,
+      "width": 390
+    }
+  ],
+  "console": []
+}
