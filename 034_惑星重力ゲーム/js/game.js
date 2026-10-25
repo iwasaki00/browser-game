@@ -7,6 +7,7 @@ import {SpaceExperience, loadExperience, saveExperience, failureKind} from './sp
 import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
 import {Camera} from './camera.js';
+import {CinematicCamera} from './cinematic-camera.js';
 import {FlightClock} from './flight-clock.js';
 import {Starfield} from './starfield.js';
 import {createFreeWorld,getHugeSample} from './worlds.js';
@@ -88,18 +89,19 @@ let tutorialKey='',tutorialTarget='';
 const modeButtons = [...document.querySelectorAll('[data-launch-mode]')];
 let view = { scale: 1, offsetX: 0, offsetY: 0, dpr: 1 };
 const camera=new Camera();
+const cinematic=new CinematicCamera();
 camera.fit(stage);
 const cameraPointers=new Map();
 let cameraActive=false;
-function syncCamera(){view={...view,...camera.transform};document.querySelector('#cameraZoom').textContent=`${camera.zoom.toFixed(2)}×`;document.querySelector('#cameraMode').value=camera.mode??'fixed';}
-function fitCamera(){camera.fit(stage);syncCamera();}
+function syncCamera(){view={...view,...camera.transform};document.querySelector('#cameraZoom').textContent=`${camera.zoom.toFixed(2)}×`;document.querySelector('#cameraMode').value=camera.mode??'fixed';const badge=document.querySelector('#cameraModeBadge'),text=(camera.mode??'fixed').toUpperCase();if(badge.textContent!==text)badge.textContent=text;}
+function fitCamera(){const automatic=camera.mode==='cinematic';camera.fit(stage);if(automatic)camera.setMode('cinematic',stage);cinematic.reset();syncCamera();}
 function screenPoint(event){const b=canvas.getBoundingClientRect();return {x:event.clientX-b.left,y:event.clientY-b.top};}
 function clearCameraGesture(){cameraPointers.clear();cameraActive=false;camera.endGesture();}
 function zoomCamera(factor){cancelGesture();if(camera.mode!=='follow')camera.mode='fixed';camera.zoomAt(camera.zoom*factor);syncCamera();}
 document.querySelector('#zoomIn').addEventListener('click',()=>zoomCamera(1.25));
 document.querySelector('#zoomOut').addEventListener('click',()=>zoomCamera(.8));
-document.querySelector('#fitCamera').addEventListener('click',()=>{cancelGesture();fitCamera();});
-document.querySelector('#cameraMode').addEventListener('change',event=>{cancelGesture();camera.setMode(event.target.value,stage);if(simulation)camera.follow(simulation.rocket.position);syncCamera();});
+document.querySelector('#fitCamera').addEventListener('click',()=>{cancelGesture();camera.fit(stage);cinematic.reset();syncCamera();});
+document.querySelector('#cameraMode').addEventListener('change',event=>{cancelGesture();camera.setMode(event.target.value,stage);cinematic.reset();if(simulation)camera.follow(simulation.rocket.position);syncCamera();});
 document.querySelector('#minimapToggle').addEventListener('click',event=>{showMinimap=!showMinimap;event.target.textContent=`ミニマップ ${showMinimap?'ON':'OFF'}`;event.target.setAttribute('aria-pressed',String(showMinimap));});
 function loadFreeWorld(next){if(playType!=='free'||mode!=='editing')return;stage=next;launchSnapshot=structuredClone(stage);selectedPlanetId=null;syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);retry();updateOutputs();document.querySelector('.mission strong').textContent=stage.name;settingsUI.closeAll();fitCamera();}
 document.querySelector('#worldSize').addEventListener('change',event=>loadFreeWorld(createFreeWorld(event.target.value)));
@@ -406,6 +408,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  cinematic.reset();
   notifyTutorial('launch');
   experience.launch(simulation);
   try{recorder=createFlightRecorder(stage,simulation,{gameMode,launchMode,playType,fixedTimeStep:DEFAULT_PHYSICS.fixedTimeStep});}catch{recorder=null;gallery.notify('飛行記録を開始できません。ゲームは続けられます。');}
@@ -456,6 +459,7 @@ function showResult(status) {
 }
 
 function retry() {
+  cinematic.reset();
   experience.reset();
   experienceCue.textContent='';
   audio.silence();
@@ -524,6 +528,10 @@ function tick(time) {
     }
   }
   if(mode==='flying'&&camera.mode==='follow'){camera.follow(simulation.rocket.position);syncCamera();}
+  if(camera.mode==='cinematic'){
+    const snapshot=simulation??{status:'ready',elapsed:0,world:stage.world,goal:stage.goal,planets:stage.planets,rocket:{position:stage.launch.position,velocity:velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value)),radius:stage.rocketRadius}};
+    cinematic.update(camera,snapshot,frameSeconds,mode==='flying'?flightClock.rate:1);syncCamera();
+  }
   draw(time);
   requestAnimationFrame(tick);
 }

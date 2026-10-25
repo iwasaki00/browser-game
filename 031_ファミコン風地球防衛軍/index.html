@@ -2,18 +2,18 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050915">
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.3.1">
+  <link rel="stylesheet" href="styles.css?v=0.3.2">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.3.1</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.3.2</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -71,8 +71,8 @@
           <small>演出レベルとは独立。OFFでも撃破・爆発演出は表示します。</small>
         </fieldset></div>
       </section>
-      <div id="screenGameover" class="screen screen--panel"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverStats"></p><button id="labGameoverReport" class="menu-button" data-action="lab-open" hidden>LAB計測結果 / 指定再開</button><button class="menu-button menu-button--primary" data-action="retry">RETRY</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
-      <div id="screenResult" class="screen screen--result"><p class="eyebrow">MISSION COMPLETE</p><h2>市街地防衛成功</h2><div id="resultStats" class="result-stats"></div><div id="rewardBox" class="reward-box"><span>WEAPON UNLOCKED</span><strong>L-03 レーザー</strong></div><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div>
+      <div id="screenGameover" class="screen screen--panel outcome-screen"><div class="outcome-heading"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2></div><div id="gameoverStats" class="result-stats"></div><div class="outcome-actions"><button id="labGameoverReport" class="menu-button" data-action="lab-open" hidden>LAB計測結果 / 指定再開</button><button class="menu-button menu-button--primary" data-action="retry">再挑戦</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div><small class="outcome-skip">タップ・キー入力で演出をスキップ</small></div>
+      <div id="screenResult" class="screen screen--result outcome-screen"><div class="outcome-heading"><p class="eyebrow">MISSION COMPLETE</p><h2 id="resultTitle">ミッション完了</h2><p id="resultClass"></p></div><div id="resultStats" class="result-stats"></div><div class="result-rewards"><div id="rewardBox" class="reward-box"></div><p id="resultWeapons"></p><p id="resultUnlock"></p></div><div class="outcome-actions"><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div><small class="outcome-skip">タップ・キー入力で演出をスキップ</small></div>
       <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
       <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
       <output id="labLevelBadge" class="lab-level" aria-label="現在の撃破演出レベル" hidden>LEVEL 1 · STANDARD</output>
@@ -154,7 +154,7 @@
               <details><summary>管理：初期化・LAB終了</summary><p>現在のテストを破棄します。通常セーブは保持します。</p><div class="lab-action-stack"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></div></details>
             </fieldset>
           </section>
-          <details id="labQuickSetup" class="lab-card lab-quick"><summary>クイック設定（選ぶだけでは変更しません）</summary><label>プリセット<select id="labUIPreset"><option value="art">アート比較</option><option value="boss">ボス戦テスト</option><option value="mass">大量敵テスト</option><option value="normal">通常攻略確認</option></select></label><p id="labUIPresetDescription"></p><button data-action="lab-preset-apply">表示された設定を適用（再開始なし）</button></details>
+          <details id="labQuickSetup" class="lab-card lab-quick"><summary>クイック設定（選ぶだけでは変更しません）</summary><label>プリセット<select id="labUIPreset"><option value="art">アート比較</option><option value="boss">ボス戦テスト</option><option value="mass">大量敵テスト</option><option value="normal">通常攻略確認</option><option value="gameplay">通常攻略QA（初期武器・無敵なし）</option></select></label><p id="labUIPresetDescription"></p><button data-action="lab-preset-apply">表示された設定を適用（再開始なし）</button></details>
         </div>
         <footer class="lab-footer"><output id="labNotice" role="status" aria-live="polite">設定を選んでください。</output><div><button id="labStartButton" class="lab-primary" data-action="lab-stage-start">選択地点から開始</button><button id="labFooterClose" data-action="lab-close">閉じてプレイ</button></div></footer>
       </section>
@@ -171,6 +171,7 @@
         </div>
       </section>
       </div>
+      <output id="combatStatus" class="sr-only" aria-label="戦闘ステータス" aria-live="off"></output>
       <div id="touchControls" class="touch-controls" aria-label="タッチ操作">
         <div class="touch-group touch-group--move">
           <span class="touch-label">MOVE</span>
@@ -189,6 +190,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.3.1"></script>
+  <script type="module" src="js/game.js?v=0.3.2"></script>
 </body>
 </html>

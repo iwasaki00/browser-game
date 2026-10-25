@@ -34,6 +34,6 @@ export class Camera {
     this.center={x:start.center.x-(point.x-start.point.x)/this.scale,y:start.center.y-(point.y-start.point.y)/this.scale};this.clamp();
   }
   endPan(){this.panStart=null;}
-  setMode(mode,stage){if(mode==='overview')this.fit(stage);else this.mode=mode==='follow'?'follow':'fixed';}
+  setMode(mode,stage){if(mode==='overview')this.fit(stage);else this.mode=['follow','cinematic'].includes(mode)?mode:'fixed';}
   follow(position){if(this.mode==='follow'){this.center={...position};this.clamp();}}
 }

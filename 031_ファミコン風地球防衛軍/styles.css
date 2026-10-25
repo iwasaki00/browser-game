@@ -23,7 +23,7 @@ body {
   overflow: hidden;
   background: radial-gradient(circle at 50% 10%, #102b3a, var(--bg) 60%);
   color: var(--ink);
-  touch-action: none;
+  touch-action: manipulation;
   overscroll-behavior: none;
   -webkit-user-select: none;
   user-select: none;
@@ -582,6 +582,51 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 
 /* The catalogue scrolls independently: classes, slots and deploy stay reachable. */
 #screenEquip { gap: 5px; padding: 10px 3%; }
+/* 0.3.2: scoped gesture ownership, fixed-size touch targets and compact outcomes. */
+.lab-toggle, .lab-performance { top: 34%; }
+.lab-level { top: calc(34% + 40px); left: 8px; }
+@media (orientation: portrait) and (max-width: 900px) {
+  .lab-toggle, .lab-performance { top: calc(100vw * .19125); }
+  .lab-level { top: calc(100vw * .19125 + 40px); }
+}
+.game-stage canvas, #touchControls { touch-action: none; }
+input, textarea { user-select: text; -webkit-user-select: text; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
+.touch-controls .is-pressed { background: #23574f; color: #fff5b4; border-color: #ffe599; box-shadow: inset 0 0 0 2px #ffe59980; }
+.aim-pad.is-pressed { background: #22504c; border-color: #fff0a8; }
+.touch-controls button { min-width: 44px; }
+@media (orientation: landscape) {
+  .touch-controls { padding-left: max(12px,env(safe-area-inset-left)); padding-right: max(12px,env(safe-area-inset-right)); gap: 16px; }
+  .touch-group--move { gap: 9px; }
+  .touch-controls button:not(.is-pressed), .aim-pad:not(.is-pressed) { background-color: #071521b8; }
+}
+.outcome-screen { gap: 7px; }
+.outcome-screen h2 { margin: 0; font-size: clamp(20px,4vw,30px); }
+.outcome-heading p { margin: 3px 0; }
+.outcome-screen .result-stats { width: min(460px,100%); margin: 0; }
+.outcome-screen .result-stats div { padding: 5px; min-width: 0; }
+.outcome-screen .result-stats b { overflow-wrap: anywhere; font-size: 15px; }
+.outcome-actions { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
+.outcome-actions button { min-height: 44px; margin: 0; }
+.result-rewards { max-width: 100%; min-width: 0; }
+.result-rewards .reward-box { width: 100%; margin: 0; min-width: 0; padding: 9px; }
+#resultUnlock { margin: 7px 0; color: var(--cyan); font-size: 11px; overflow-wrap: anywhere; }
+.outcome-skip { font-size: 9px; color: var(--muted); }
+.outcome-screen.is-active .outcome-heading { animation: outcome-in .22s ease-out both; }
+.outcome-screen.skip-intro .outcome-heading { animation: none; }
+@keyframes outcome-in { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .outcome-screen.is-active .outcome-heading { animation: none; } }
+@media (orientation: landscape) and (max-height: 500px) {
+  #screenResult { display: none; padding: 9px max(16px,env(safe-area-inset-right)) 9px max(16px,env(safe-area-inset-left)); }
+  #screenResult.is-active { display: grid; grid-template-columns: 1fr 1fr; align-content: center; align-items: center; gap: 5px 14px; }
+  #screenResult .outcome-heading { grid-column: 1; }
+  #screenResult .result-stats { grid-column: 1; }
+  #screenResult .result-rewards { grid-column: 2; grid-row: 1 / span 2; }
+  #screenResult .outcome-actions, #screenResult .outcome-skip { grid-column: 1 / -1; }
+  #screenGameover { padding: 8px 16px; gap: 5px; }
+  .outcome-actions button { padding: 6px 12px; min-width: 110px; }
+}
+
 #screenEquip h2 { margin: 0; }
 #screenEquip .eyebrow { margin: 0; }
 #screenEquip .class-grid { margin: 0; }

@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Space Navigation UX</title>
+  <title>ORBIT MAKER — Cinematic Camera</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -37,6 +37,7 @@
         <button id="nextStage" type="button" hidden>次ステージ</button>
       </div>
       <div class="edit-hint" id="editHint"><span></span><b id="editHintText">惑星をドラッグ</b></div>
+      <output id="cameraModeBadge" class="camera-mode-badge" aria-label="現在のカメラモード" aria-live="polite">OVERVIEW</output>
       <div id="flightSpeed" class="flight-speed" hidden><label for="flightRate">航行速度</label><select id="flightRate" aria-label="航行速度"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option><option value="10">10×</option><option value="50">50×</option><option value="100">100×</option></select><output id="effectiveRate" title="直近約0.5秒の実行速度。端末負荷で選択倍率より低くなることがあります。">実効 1×</output></div>
     </section>
 
@@ -65,13 +66,13 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.2</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.3</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
-      <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option></select></label>
+      <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option><option value="cinematic">CINEMATIC / 自動演出</option></select></label>
       <button id="minimapToggle" type="button" aria-pressed="true">ミニマップ ON</button>
-      <p class="settings-note">空白を1本指でドラッグして視点移動。2本指で移動・ピンチ拡大。手動移動後はFIXEDになり、FOLLOWを選ぶと追従を再開します。ズームボタンは追従を維持します。広域ワールドでは発射前にゲートもドラッグできます。広さ変更・体験配置はフリープレイを新しい配置に置き換えます。</p>
+      <p class="settings-note">CINEMATICは飛行状況に応じた自動カメラです。空白を1本指でドラッグ、2本指で移動・ピンチ拡大。手動移動後はFIXEDになり、ここでFOLLOW／CINEMATICを選ぶと自動操作を再開します。ズームボタンはFOLLOWを維持し、CINEMATICを解除します。広域ワールドでは発射前にゲートもドラッグできます。広さ変更・体験配置はフリープレイを新しい配置に置き換えます。</p>
       <div class="controls-toolbar">
         <div class="game-mode"><label for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp"></small></div>
         <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>

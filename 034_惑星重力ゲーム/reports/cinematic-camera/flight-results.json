@@ -1,0 +1,26 @@
+[
+  {
+    "rate": 1,
+    "frames": 1065,
+    "cameraUpdates": 1065,
+    "status": "cleared",
+    "time": 17.749999999999634,
+    "end": {
+      "x": 2143.166953226622,
+      "y": 935.2670788484548
+    },
+    "recordFrames": 357
+  },
+  {
+    "rate": 100,
+    "frames": 11,
+    "cameraUpdates": 11,
+    "status": "cleared",
+    "time": 17.749999999999634,
+    "end": {
+      "x": 2143.166953226622,
+      "y": 935.2670788484548
+    },
+    "recordFrames": 357
+  }
+]

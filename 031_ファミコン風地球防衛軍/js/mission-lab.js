@@ -82,6 +82,7 @@ export class MissionLabRun {
   snapshot(g){return {schemaVersion:1,missionId:this.checkpoint.missionId,areaId:this.checkpoint.areaId,checkpointId:this.checkpoint.id,route:this.checkpoint.route,
     validationMode:this.mode,validationLabel:VALIDATION_MODES[this.mode],coverage:this.checkpoint.areaIndex===0?'FROM_MISSION_START':'CHECKPOINT_ONLY',inputMethod:'MANUAL_OR_QA_NOT_AUTOMATICALLY_CERTIFIED',
     outcome:this.outcome,elapsed:this.elapsed,class:this.startClass,weapons:this.startWeapons,density:this.density,destructionLevel:this.level,startedInvincible:this.startedInvincible,
+    startedWithGameplayQA:!!this.gameplayQA,gameplayQA:!!this.gameplayQA&&!g.lab.invincible&&Object.hasOwn(PLAYER_CLASSES,g.lab.preset)&&g.lab.equipped[0]==='A-01'&&g.lab.equipped[1]==='S-02'&&g.density==='STANDARD',
     areaArrivals:this.arrivals,damageTaken:this.damageTaken,kills:this.kills,weaponDamage:{...this.weaponDamage},remainingHp:this.finalHp??g.player.hp,gameOver:this.gameOver,
     bossStartPhase:this.bossStartPhase??null,bossStartedAt:this.bossStartedAt,bossDefeatedAt:this.bossDefeatedAt,bossDefeatTime:this.bossDefeatedAt===null?null:this.bossDefeatedAt-(this.bossStartedAt??0),
     maxLiveEnemies:this.maxLiveEnemies,performance:this.profile.snapshot(),diagnostics:[...this.warnings],configurationChanges:[...this.changes],

@@ -317,3 +317,4 @@ input[type='range'] { height:30px; }
 .flight-speed label { font-size:9px; }
 .flight-speed select { min-height:44px; width:68px; border:1px solid #35576d; border-radius:6px; background:#0b2538; color:#dcf6ff; font-size:13px; touch-action:manipulation; }
 .flight-speed output { grid-column:1 / -1; font:9px monospace; color:#92b5cb; }
+.camera-mode-badge { position:absolute; right:8px; bottom:59px; padding:2px 4px; border-radius:4px; background:#06101edb; color:#a9d8e5; font:9px monospace; pointer-events:none; }

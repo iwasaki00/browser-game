@@ -108,5 +108,5 @@ test("render-only shake is removed from mouse aim conversion, does not change wo
   const dx=r.run("target.x-game.shots[0].x"),dy=r.run("target.y-game.shots[0].y"),length=Math.hypot(dx,dy);
   near(r.run("game.shots[0].vx/WEAPONS[0].speed"),dx/length);near(r.run("game.shots[0].vy/WEAPONS[0].speed"),dy/length);
   assert.equal(r.run("game.player.x"),r.run("px"));assert.equal(r.run("game.player.y"),r.run("py"));
-  r.run("assetsReady=true;draw()");const restore=r.drawCalls.findIndex(c=>c[0]==="restore"),hud=r.drawCalls.findLastIndex(c=>c[0]==="fillText"&&String(c[1]).startsWith('HP '));assert.ok(hud>restore);
+  r.run("assetsReady=true;draw()");const restore=r.drawCalls.findIndex(c=>c[0]==="restore"),hud=r.drawCalls.findLastIndex(c=>c[0]==="fillText"&&String(c[1])==='HP');assert.ok(hud>restore);
 });

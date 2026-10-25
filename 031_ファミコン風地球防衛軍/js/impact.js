@@ -18,10 +18,13 @@ export const REACTIONS=Object.freeze({
   grenade:{speed:235,lift:185,spin:11,life:.48,color:"#ffe05c"},
   homing:{speed:145,lift:120,spin:6,life:.42,color:"#fff08b"}
 });
+export const FEEDBACK=Object.freeze({targetGap:.055,flashGap:.09,window:.1,maxStarts:12,reducedStarts:6});
+const ARMOR_TYPES=new Set(['beetle','boss','queen','leviathan','barrier','shorecrab','siegebeetle']);
+export const feedbackCategory=(e,base,actual,finish=false)=>finish?'FINISH':actual>base+1e-8?'WEAK POINT':ARMOR_TYPES.has(e.type)?'ARMOR HIT':'HIT';
 const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1",shorecrab:"#b7a9b4",skyray:"#7eacd1",siegebeetle:"#9f8aab",leviathan:"#b5a0c4"};
 const noise=n=>((n*2654435761)>>>0)/4294967296;
 export function createImpactState(){return {clock:0,stop:0,nextStop:0,budgetStart:0,spent:0,shakeUntil:0,nextShake:0,
-  corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0}}
+  corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0,feedbackStart:0,feedbackStarts:0,feedbackDropped:0,feedbackCounts:{HIT:0,'ARMOR HIT':0,'WEAK POINT':0,FINISH:0}}}
 export const reducedImpact=g=>!!g.lab&&g.enemyLimit>100;
 export const impactLevel=g=>DESTRUCTION_LEVELS[normalizeDestructionLevel((g.lab?.settings??g.settings)?.destructionLevel)];
 export function pushImpactEffect(g,f){
@@ -37,10 +40,22 @@ export function pushImpactEffect(g,f){
   if(explosion)for(let i=0;i<g.effects.length;i++)if(g.effects[i].kind!=="explosion"&&g.effects[i].kind!=="weaponBurst"){g.effects[i]=f;return true}
   return false;
 }
-export function hitVisual(g,e,source={}){
+export function hitVisual(g,e,source={},category='HIT',point=null){
+  const a=g.impact;a.feedbackCounts[category]++;
+  if(a.clock-a.feedbackStart>=FEEDBACK.window){a.feedbackStart=a.clock;a.feedbackStarts=0}
+  if(a.clock<(e.nextHitVisual??0)||a.feedbackStarts>=(reducedImpact(g)?FEEDBACK.reducedStarts:FEEDBACK.maxStarts)){a.feedbackDropped++;return false}
+  e.nextHitVisual=a.clock+FEEDBACK.targetGap;a.feedbackStarts++;
+  if(a.clock>=(e.nextHitFlash??0)){e.hitFlash=.055;e.nextHitFlash=a.clock+FEEDBACK.flashGap}
   const type=REACTIONS[source.effectType]?source.effectType:REACTIONS[source.type]?source.type:"bullet",r=REACTIONS[type],length=Math.hypot(source.vx||0,source.vy||0)||1;
-  pushImpactEffect(g,{kind:"hit",type,x:e.x,y:e.y+e.h/2,vx:(source.vx||1)/length,vy:(source.vy||0)/length,
+  return pushImpactEffect(g,{kind:"hit",type,category,x:point?.x??clamp(source.x??e.x,e.x-e.w/2,e.x+e.w/2),y:point?.y??clamp(source.y??e.y+e.h/2,e.y,e.y+e.h),vx:(source.vx||1)/length,vy:(source.vy||0)/length,
     color:r.color,assetIndex:source.assetIndex,seed:e.uid,life:type==="flame"?.18:.12,max:type==="flame"?.18:.12});
+}
+export function drawFeedbackAccent(c,f){
+  if(f.category==='HIT'||!f.category)return;const progress=1-f.life/f.max,x=Math.round(f.x),y=Math.round(f.y);c.save();c.globalAlpha=Math.min(1,f.life/.06);
+  c.fillStyle=f.category==='ARMOR HIT'?'#bfd0d9':f.category==='WEAK POINT'?'#fff1a1':f.color;
+  if(f.category==='ARMOR HIT'){for(const sign of [-1,1])c.fillRect(x+sign*Math.round(3+progress*9),y-Math.round(progress*6),3,2)}
+  else{const r=Math.round((f.category==='FINISH'?7:5)+progress*9);for(const sign of [-1,1]){c.fillRect(x+sign*r-1,y-1,3,2);c.fillRect(x-1,y+sign*r-1,2,3)}}
+  c.restore();
 }
 export function requestHitStop(g,strong=false){
   const a=g.impact;if(a.clock-a.budgetStart>=IMPACT.stopWindow){a.budgetStart=a.clock;a.spent=0}

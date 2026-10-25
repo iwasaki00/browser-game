@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#100c22">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>ガチャ王 / GACHA KING</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23100c22'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='42'%3E♛%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" data-tab="home" aria-label="ホームへ"><span class="mini-crown">♛</span><span>GACHA<br><b>KING</b></span></button>
+      <div class="wallet"><span>COIN</span><strong id="coins">0 G</strong></div>
+      <div class="wallet"><span>FANS</span><strong id="followers">0</strong></div>
+      <button class="icon-btn" id="settings-button" aria-label="設定">⚙</button>
+    </header>
+
+    <main id="main">
+      <section class="screen active" data-screen="home">
+        <div class="hero panel">
+          <p class="eyebrow">ROUND <span id="cycle">1</span> · FIRST CAPSULE</p>
+          <h1>王を、<br><em>引き当てろ。</em></h1>
+          <p>集める。売る。バズらせる。<br>あなただけの王冠を手に入れよう。</p>
+          <button class="primary big" data-tab="gacha">ガチャを回す <span>200 G</span></button>
+        </div>
+        <div class="section-heading"><h2>王への道</h2><span>達成して周回</span></div>
+        <div id="goals" class="goal-grid"></div>
+        <button id="rescue-button" class="rescue hidden">資金が尽きた… 王様ボーナス 600 G を受け取る</button>
+        <div class="panel mini-stats" id="home-stats"></div>
+      </section>
+
+      <section class="screen" data-screen="gacha">
+        <div class="section-heading"><div><p class="eyebrow">MACHINE 01</p><h2>FIRST CAPSULE</h2></div><span>1回 200 G</span></div>
+        <div class="machine panel">
+          <div class="machine-lights"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="machine-window"><div class="capsules"><b></b><b></b><b></b><b></b><b></b><b></b></div><span class="machine-logo">GACHA<br><strong>KING</strong></span></div>
+          <div class="machine-base"><div class="dial">↻</div><button id="draw-button" class="primary big">まわす <span>200 G</span></button></div>
+        </div>
+        <details class="panel rates"><summary>排出確率を表示</summary><div id="rates"></div></details>
+      </section>
+
+      <section class="screen" data-screen="inventory">
+        <div class="section-heading"><div><p class="eyebrow">MY VAULT</p><h2>所持品</h2></div><button class="text-btn" id="book-button">図鑑を見る</button></div>
+        <div id="inventory" class="item-list"></div>
+      </section>
+
+      <section class="screen" data-screen="market">
+        <div class="section-heading"><div><p class="eyebrow">KING'S MARKET</p><h2>市場</h2></div><span>フリマは価格 +45%</span></div>
+        <div class="panel market-info">出品から8秒で自動売却。待つほど少しお得です。</div>
+        <div id="listings" class="item-list"></div>
+      </section>
+
+      <section class="screen" data-screen="social">
+        <div class="section-heading"><div><p class="eyebrow">ROYAL FEED</p><h2>発信</h2></div><span id="post-count">0 POSTS</span></div>
+        <div class="panel profile"><div class="avatar">♛</div><div><strong>@gacha_king</strong><p><b id="profile-followers">0</b> followers</p></div></div>
+        <div id="posts" class="feed"></div>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="メインメニュー">
+      <button class="active" data-tab="home"><i>♛</i><span>ホーム</span></button>
+      <button data-tab="gacha"><i>◉</i><span>ガチャ</span></button>
+      <button data-tab="inventory"><i>▦</i><span>所持品</span></button>
+      <button data-tab="market"><i>◇</i><span>市場</span></button>
+      <button data-tab="social"><i>♡</i><span>発信</span></button>
+    </nav>
+  </div>
+
+  <dialog id="result-dialog" class="modal result-modal">
+    <button class="close" data-close aria-label="スキップ">SKIP ×</button>
+    <div class="reveal"><div class="capsule"><i></i></div><div id="result-card"></div></div>
+  </dialog>
+  <dialog id="book-dialog" class="modal"><button class="close" data-close>閉じる ×</button><p class="eyebrow">COLLECTION BOOK</p><h2>発見済み図鑑</h2><p id="book-progress"></p><div id="book-grid" class="book-grid"></div></dialog>
+  <dialog id="settings-dialog" class="modal small"><button class="close" data-close>閉じる ×</button><p class="eyebrow">SETTINGS</p><h2>設定</h2><label class="toggle"><span>演出を軽減する<small>開封アニメーションを短縮します</small></span><input id="motion-toggle" type="checkbox"><i></i></label><p class="version">GACHA KING v0.1.0</p></dialog>
+  <dialog id="crown-dialog" class="modal small"><div class="crown-celebrate">♛</div><p class="eyebrow">NEW CROWN</p><h2 id="crown-title">王冠獲得！</h2><p>王冠と図鑑を継承して、次の周回へ進みます。</p><button id="crown-confirm" class="primary big">王冠を受け取る</button><button class="secondary" data-close>あとで</button></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

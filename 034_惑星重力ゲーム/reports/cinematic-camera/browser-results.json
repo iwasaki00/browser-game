@@ -1,0 +1,73 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 417
+    },
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "rates": [
+      1,
+      100
+    ],
+    "duration": 17.749999999999634,
+    "end": [
+      17.749999999999634,
+      2143.166953226622,
+      935.2670788484548,
+      1000,
+      3300,
+      1700,
+      1900,
+      2600,
+      700
+    ],
+    "frames": 357,
+    "phases": [
+      "cruise",
+      "planet",
+      "goal",
+      "arrival"
+    ],
+    "fastCameraFrames": 12,
+    "manualOverrides": "tap threshold / pan / pinch / zoom buttons / overview / resume PASS"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 516
+    },
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 693
+    },
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "cameraCost": {
+      "samples": 14,
+      "maxMs": 0.20000004768371582,
+      "meanMs": 0.12857140813555037
+    },
+    "environment": "PC Chrome headless real time; not iPhone"
+  }
+]

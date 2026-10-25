@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 1.0.2 — SPACE NAVIGATION UX
+Version 1.0.3 — CINEMATIC CAMERA
+
+メニュー → カメラでCINEMATICを選ぶと、発射・航行・惑星接近と離脱・ゴール接近・到着に応じて表示位置と倍率を自動調整します。ロケットの進行方向を広めに映し、惑星・ゲートとの位置関係を表示します。右下に現在のカメラモードを表示します。
+
+空白ドラッグ・ピンチ・ズームボタンでFIXEDへ、全体表示でOVERVIEWへ移ります。自動演出へ戻すには、メニューでCINEMATICを選び直してください。CINEMATIC中のRESETは同モードを維持し、発射地点の構図へ戻ります。既存のFIXED／FOLLOW／OVERVIEWの操作は維持しています。
+
+[v1.0.3検証レポート・iPhone確認手順](reports/cinematic-camera/VERIFICATION.md)。関連テスト：`node --test tests/cinematic.test.mjs tests/camera.test.mjs tests/launch.test.mjs`、画面・操作：`node tests/cinematic-ui.mjs`。iPhone実機は未確認です。公開・pushは行っていません。
+
+以下はv1.0.2の実装・検証記録です。
 
 飛行中の航行速度を1／2／5／10／50／100倍から変更できます。物理刻みは1/120秒のまま、処理予算内で順番に実行します。実効倍率も表示します。終了・RESET・新しい発射では1倍へ戻ります。ギャラリーの再生速度とは独立しています。
 
