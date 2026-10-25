@@ -7,6 +7,8 @@ import {SpaceExperience, loadExperience, saveExperience, failureKind} from './sp
 import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
 import {Camera} from './camera.js';
+import {FlightClock} from './flight-clock.js';
+import {Starfield} from './starfield.js';
 import {createFreeWorld,getHugeSample} from './worlds.js';
 import {getHomewardSector,getHomewardDefinition} from './homeward-data.js';
 import {HomewardProgress,homewardDistance,sectorUnlocked} from './homeward-progress.js';
@@ -47,7 +49,10 @@ let simulation = null;
 let recorder=null;
 let trail = [];
 let mode = "editing";
-let accumulator = 0;
+const flightClock = new FlightClock({dt:DEFAULT_PHYSICS.fixedTimeStep});
+const flightRate = document.querySelector('#flightRate');
+function resetFlightRate(){flightClock.reset();lastTime=performance.now();flightRate.value='1';document.querySelector('#flightSpeed').hidden=mode!=='flying';document.querySelector('#effectiveRate').textContent='実効 1×';}
+flightRate.addEventListener('change',()=>{if(mode==='flying')flightClock.setRate(flightRate.value);});
 let physicsStepCount = 0;
 let lastTime = performance.now();
 let gesture = null;
@@ -100,12 +105,7 @@ function loadFreeWorld(next){if(playType!=='free'||mode!=='editing')return;stage
 document.querySelector('#worldSize').addEventListener('change',event=>loadFreeWorld(createFreeWorld(event.target.value)));
 document.querySelector('#hugeSample').addEventListener('change',event=>{if(event.target.value)loadFreeWorld(getHugeSample(event.target.value));event.target.value='';});
 
-const stars = Array.from({ length: 76 }, (_, i) => ({
-  x: (i * 137.5 + 29) % stage.world.width,
-  y: (i * 83.7 + 17) % stage.world.height,
-  radius: i % 9 === 0 ? 1.1 : i % 3 === 0 ? .7 : .42,
-  alpha: .22 + (i % 7) * .08,
-}));
+const starfield = new Starfield();
 
 function resizeCanvas() {
   const bounds = canvas.getBoundingClientRect();
@@ -129,28 +129,15 @@ function drawBackground(time) {
   ctx.fillRect(0, 0, stage.world.width, stage.world.height);
   const light = experience.quality === 'light';
   const viewport={a:camera.toWorld({x:0,y:0}),b:camera.toWorld({x:camera.width,y:camera.height})};
-  for (const [i, star] of stars.entries()) {
-    if(light && i % 2) continue;
+  for (const star of starfield.visible(viewport.a,viewport.b,stage.world,view.scale,light)) {
     ctx.globalAlpha = star.alpha;
-    ctx.fillStyle = "#d9eeff";
+    ctx.fillStyle = star.color;
     ctx.beginPath();
-    const depth = i % 3;
-    const drift = light ? 0 : Math.sin(time*.00008+depth)*depth*1.6;
-    const sx=star.x/375*stage.world.width,sy=star.y/500*stage.world.height;
-    ctx.arc(sx+drift, sy+drift*.5, star.radius/view.scale, 0, Math.PI * 2);
+    ctx.arc(star.x, star.y, star.radius*Math.max(.55,Math.min(1.2,Math.sqrt(view.scale)))/view.scale, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalAlpha = 1;
 
-  ctx.strokeStyle = "rgba(57, 104, 145, .11)";
-  ctx.lineWidth = .65;
-  const spacing=view.scale<.3?250:25;
-  for (let x = Math.max(0,Math.floor(viewport.a.x/spacing)*spacing); x <= Math.min(stage.world.width,viewport.b.x); x += spacing) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, stage.world.height); ctx.stroke();
-  }
-  for (let y = Math.max(0,Math.floor(viewport.a.y/spacing)*spacing); y <= Math.min(stage.world.height,viewport.b.y); y += spacing) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(stage.world.width, y); ctx.stroke();
-  }
 }
 
 function drawGoal(time) {
@@ -203,7 +190,7 @@ function drawPlanet(planet, time) {
     for(let i=0;i<4;i++){ctx.rotate(Math.PI/2);ctx.beginPath();ctx.moveTo(planet.radius+8,-3);ctx.lineTo(planet.radius+14,0);ctx.lineTo(planet.radius+8,3);ctx.stroke();}
     ctx.restore();
   }
-  if (planet.id === selectedPlanetId && (mode === 'editing' || gameMode === 'live')) {
+  if (planet.id === selectedPlanetId) {
     ctx.strokeStyle = '#fff1a6'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(planet.x, planet.y, Math.max(planet.radius+7,9/view.scale), 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
   }
@@ -425,13 +412,14 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   trail = [{ ...simulation.rocket.position }];
   mode = "flying";
   preview.clear();
-  accumulator = 0;
+  resetFlightRate();
   physicsStepCount = 0;
   setEditingControls(false);
   statusText.textContent = "飛行中 — 重力航路を計測しています。";
 }
 
 function showResult(status) {
+  resetFlightRate();
   experience.finish(simulation);
   result.dataset.effect = status === 'cleared' ? 'cleared' : failureKind(simulation);
   finalizeRecording();
@@ -479,6 +467,7 @@ function retry() {
   simulation = null;
   trail = [];
   mode = "editing";
+  resetFlightRate();
   result.hidden = true;
   setEditingControls(true);
   statusText.textContent = "惑星を動かして、軌道をつくれ。";
@@ -509,15 +498,13 @@ function updateOutputs() {
 }
 
 function tick(time) {
-  const frameSeconds = Math.min((time - lastTime) / 1000, .1);
+  const frameSeconds = Math.max(0,(time - lastTime) / 1000);
   lastTime = time;
   renderTutorial();
-  if(gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()){requestAnimationFrame(tick);return;}
-  experience.update(frameSeconds);
+  if(document.hidden||gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()){requestAnimationFrame(tick);return;}
+  experience.update(Math.min(frameSeconds,.1));
   if (mode === "flying") {
-    accumulator += frameSeconds;
-    const dt = DEFAULT_PHYSICS.fixedTimeStep;
-    while (accumulator >= dt && simulation.status === "flying") {
+    flightClock.advance(frameSeconds,dt=>{
       const previousState=simulation;
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
@@ -525,10 +512,11 @@ function tick(time) {
       try{recorder?.capture(simulation);}catch{recorder=null;gallery.notify('飛行記録を中断しました。ゲームは続けられます。');}
       movement+=simulation.planets.reduce((sum,p,i)=>sum+Math.hypot(p.x-previousPlanets[i].x,p.y-previousPlanets[i].y),0);
       if (gameMode === 'live') stage.planets = simulation.planets.map(p=>({...p}));
-      accumulator -= dt;
       physicsStepCount += 1;
       if (physicsStepCount % 3 === 0) {trail.push({ ...simulation.rocket.position });if(trail.length>3600)trail=trail.filter((_,i)=>i===0||i%2===1);}
-    }
+      return simulation.status==='flying';
+    });
+    document.querySelector('#effectiveRate').textContent=flightClock.effective>0?`実効 ${flightClock.effective.toFixed(1)}×`:'実効 計測中';
     if (simulation.status !== "flying") {
       trail.push({ ...simulation.rocket.position });
       mode = simulation.status;
@@ -544,6 +532,7 @@ function cancelGesture() {
   const previous = gesture;
   if(previous?.type === 'planet') delete moveTargets[previous.id];
   gesture = null;
+  camera.endPan();
   aim = null;
   if (previous && canvas.hasPointerCapture(previous.pointerId)) canvas.releasePointerCapture(previous.pointerId);
 }
@@ -576,12 +565,16 @@ canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();return;
   }
   if(cameraActive)return;
-  if ((mode !== 'editing' && !(mode === 'flying' && gameMode === 'live')) || pointers.size !== 1 || event.button !== 0) return;
+  if (pointers.size !== 1) return;
   const point = worldPoint(event);
-  let target = classifyDragTarget(point, stage.launch.position, stage.planets, mode === 'flying' ? 'precision' : launchMode,
+  let target = classifyDragTarget(point, stage.launch.position, stage.planets, mode !== 'editing' ? 'precision' : launchMode,
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
   if(!target&&mode==='editing'&&playType==='free'&&stage.worldPreset&&Math.hypot(point.x-stage.goal.x,point.y-stage.goal.y)<=Math.max(stage.goal.radius,22/view.scale))target={type:'goal'};
-  if (!target) {selectedPlanetId=null;updatePlanetEditor();return;}
+  if (!target) {
+    selectedPlanetId=null;updatePlanetEditor();
+    const screen=screenPoint(event);camera.beginPan(screen);
+    gesture={type:'pan',pointerId:event.pointerId,start:screen,dragging:false};event.preventDefault();return;
+  }
   if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor();if(stage.planets.find(p=>p.id===target.id)?.type==='repulsor')notifyTutorial('select'); }
   gesture = { ...target, pointerId: event.pointerId, point };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
@@ -595,7 +588,14 @@ canvas.addEventListener("pointermove", (event) => {
     if(cameraPointers.size===2){camera.moveGesture([...cameraPointers.values()]);syncCamera();}
     event.preventDefault();return;
   }
-  if (!gesture || gesture.pointerId !== event.pointerId || (mode !== 'editing' && !(mode === 'flying' && gameMode === 'live'))) return;
+  if (!gesture || gesture.pointerId !== event.pointerId) return;
+  if(gesture.type==='pan'){
+    const screen=screenPoint(event);
+    if(Math.hypot(screen.x-gesture.start.x,screen.y-gesture.start.y)>=6)gesture.dragging=true;
+    if(gesture.dragging){camera.movePan(screen);syncCamera();}
+    event.preventDefault();return;
+  }
+  if(mode !== 'editing' && !(mode === 'flying' && gameMode === 'live'))return;
   const point = worldPoint(event);
   gesture.point = point;
   if (gesture.type === 'rocket') {
@@ -637,9 +637,9 @@ for(const type of ['pointerup','pointercancel'])window.addEventListener(type,eve
 window.addEventListener('blur', () => { cancelGesture(); pointers.clear();clearCameraGesture(); });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { cancelGesture(); pointers.clear();clearCameraGesture(); audio.backgrounded(); }
-  else audio.foregrounded();
+  else {lastTime=performance.now();audio.foregrounded();}
 });
-window.addEventListener('pageshow',()=>audio.foregrounded());
+window.addEventListener('pageshow',()=>{lastTime=performance.now();audio.foregrounded();});
 modeButtons.forEach(button => button.addEventListener('click', () => {
   if (mode !== 'editing') return;
   launchMode = saveLaunchMode(storage, button.dataset.launchMode);

@@ -1,8 +1,8 @@
 import {MISSION_AREAS,PLAYER_CLASSES,WEAPON_BY_ID,WORLD} from './data.js?v=0.2.3';
 import {followCamera} from './camera.js?v=0.2.2';
-import {M03} from './mission03.js?v=0.3.0';
+import {M03} from './mission03.js?v=0.3.1';
 import {M02} from './mission02.js?v=0.2.2';
-import {RunProfiler} from './profiler.js?v=0.2.3';
+import {RunProfiler} from './profiler.js?v=0.3.1';
 
 export const VALIDATION_MODES=Object.freeze({A:'地形到達性',B:'戦闘QA',C:'無敵QA',D:'通常プレイ条件'});
 const checkpoint=(missionId,areaIndex,x,y,route='MAIN',boss=false)=>Object.freeze({

@@ -123,3 +123,16 @@ test('profilers distinguish warm-up, insufficient, foreground, hidden, long gap 
   const bad=new FrameProfiler();bad.start(200);for(let n=0;n<8;n++)bad.record(n*1000,999,200);assert.equal(bad.result.averageFps,null);assert.equal(bad.result.status,'INSUFFICIENT');assert.ok(bad.result.excludedInterruptions>=6);
   const live=new LiveProfiler();for(let n=0;n<=90;n++)live.record(n*1000/60,1,2);assert.ok(live.result.fps>59);live.record(4000,999,999);assert.equal(live.result,null);assert.equal(live.count,0);
 });
+
+test('short fragments cannot add up to a valid FPS; hidden reason survives repeated inactive frames',()=>{
+  const p=new RunProfiler({warmupMs:0});let ts=0;
+  for(let segment=0;segment<4;segment++){p.record(ts,1,2);for(let n=0;n<20;n++){ts+=1000/60;p.record(ts,1,2)}ts+=1000;p.record(ts,999,999)}
+  assert.equal(p.samples,0);assert.equal(p.discardedShortSamples,80);assert.equal(p.snapshot().fps,null);assert.equal(p.finish().status,'INSUFFICIENT');assert.equal(p.snapshot().validSegments,0);
+  const paused=new RunProfiler();paused.record(0,1,2);paused.pause('タブ非表示');paused.record(1000,9,9,{},false);assert.equal(paused.reason,'タブ非表示');
+  const r=lab();r.run('for(let i=0;i<=90;i++)liveProfiler.record(i*1000/60,1,2)');r.click('lab-close');r.run('for(let i=0;i<=90;i++)liveProfiler.record(i*1000/60,1,2)');r.click('lab-open');assert.ok(r.run('liveProfiler.lastValid.fps')>59);assert.match(r.get('labMetrics').textContent,/直近の有効区間/);
+});
+
+test('visible but unfocused browser cannot collect foreground samples; reason is exported',()=>{
+  const r=lab();r.run("document.hasFocus=()=>false;startBenchmark('STANDARD');for(let n=0;n<=361;n++)loop(n*1000/60)");
+  const p=r.json('labExport().benchmarks.at(-1).performance');assert.equal(p.samples,0);assert.equal(p.fps,null);assert.equal(p.status,'INSUFFICIENT');assert.match(p.lastInactiveReason,/フォーカス/);assert.match(r.get('qaResult').textContent,/有効サンプル不足/);
+});

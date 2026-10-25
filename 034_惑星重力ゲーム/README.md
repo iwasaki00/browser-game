@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 1.0.1 — HOMEWARD FIRST VOYAGE
+Version 1.0.2 — SPACE NAVIGATION UX
+
+飛行中の航行速度を1／2／5／10／50／100倍から変更できます。物理刻みは1/120秒のまま、処理予算内で順番に実行します。実効倍率も表示します。終了・RESET・新しい発射では1倍へ戻ります。ギャラリーの再生速度とは独立しています。
+
+空白を1本指で6px以上ドラッグすると視点移動します。惑星操作・スリングショット・2本指ピンチは維持。手動移動でFOLLOWを解除し、メニューのFOLLOWで再開します。星空はワールド座標に固定したシード付き領域生成になりました。
+
+[v1.0.2検証レポート・iPhone確認手順](reports/navigation-ux/VERIFICATION.md)。関連テスト：`node --test tests/navigation.test.mjs tests/camera.test.mjs tests/launch.test.mjs`、画面・操作：`node tests/navigation-ui.mjs`。iPhone実機は未確認です。公開・pushは行っていません。
+
+以下はv1.0.1の実装・検証記録です。
 
 HOMEWARD序盤を「01：発射して観察」「02：推力を調整」「03：特殊惑星を読み、角度と推力を調整」の順に改善しました。01は初期設定で到達、02・03は未調整では到達しません。02はANGLE −65°／THRUST 220、03もANGLE −65°／THRUST 220が解答例です。03のブラックホール・恒星配置を見直し、全特殊惑星が解答航路に寄与することを検証しています。
 

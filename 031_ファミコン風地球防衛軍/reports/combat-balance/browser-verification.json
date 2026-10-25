@@ -1,0 +1,144 @@
+{
+  "version": "0.3.1",
+  "layouts": [
+    {
+      "button": {
+        "bottom": 308,
+        "h": 44,
+        "w": 374.5,
+        "x": 428.5,
+        "y": 264
+      },
+      "footer": {
+        "bottom": 381,
+        "h": 73,
+        "w": 826,
+        "x": 9,
+        "y": 308
+      },
+      "header": {
+        "bottom": 58,
+        "h": 49,
+        "w": 826,
+        "x": 9,
+        "y": 9
+      },
+      "horizontalOverflow": 0,
+      "outerOverflow": 0,
+      "phase": {
+        "bottom": 250,
+        "h": 44,
+        "w": 374.5,
+        "x": 428.5,
+        "y": 206
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    },
+    {
+      "button": {
+        "bottom": 278,
+        "h": 44,
+        "w": 342.5,
+        "x": 396.5,
+        "y": 234
+      },
+      "footer": {
+        "bottom": 351,
+        "h": 73,
+        "w": 762,
+        "x": 9,
+        "y": 278
+      },
+      "header": {
+        "bottom": 58,
+        "h": 49,
+        "w": 762,
+        "x": 9,
+        "y": 9
+      },
+      "horizontalOverflow": 0,
+      "outerOverflow": 0,
+      "phase": {
+        "bottom": 220,
+        "h": 44,
+        "w": 342.5,
+        "x": 396.5,
+        "y": 176
+      },
+      "viewport": [
+        780,
+        360
+      ]
+    },
+    {
+      "button": {
+        "bottom": 611.5,
+        "h": 44,
+        "w": 315,
+        "x": 30,
+        "y": 567.5
+      },
+      "footer": {
+        "bottom": 835,
+        "h": 78,
+        "w": 372,
+        "x": 9,
+        "y": 757
+      },
+      "header": {
+        "bottom": 66,
+        "h": 57,
+        "w": 372,
+        "x": 9,
+        "y": 9
+      },
+      "horizontalOverflow": 0,
+      "outerOverflow": 0,
+      "phase": {
+        "bottom": 553.5,
+        "h": 44,
+        "w": 315,
+        "x": 30,
+        "y": 509.5
+      },
+      "viewport": [
+        390,
+        844
+      ]
+    }
+  ],
+  "phaseStarts": [
+    {
+      "phase": "1",
+      "hp": "3000",
+      "mission": "M03",
+      "checkpoint": "M03-A5-BOSS",
+      "cameraMode": "boss"
+    },
+    {
+      "phase": "2",
+      "hp": "1950",
+      "mission": "M03",
+      "checkpoint": "M03-A5-BOSS",
+      "cameraMode": "boss"
+    },
+    {
+      "phase": "3",
+      "hp": "900",
+      "mission": "M03",
+      "checkpoint": "M03-A5-BOSS",
+      "cameraMode": "boss"
+    }
+  ],
+  "rays": {
+    "enemies": "50",
+    "zoom": "0.500",
+    "art": "UNIFIED_01",
+    "render": "320x180"
+  },
+  "console": [],
+  "limits": "Chrome CSS viewport only; iPhone Safari and touch unverified"
+}

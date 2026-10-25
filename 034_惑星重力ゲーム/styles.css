@@ -313,3 +313,7 @@ input[type='range'] { height:30px; }
 .space-frame.tutorial-active .selection-bar { display:none; }
 .voyage-log { position:absolute; bottom:79px; left:8px; right:8px; pointer-events:none; color:#ffe8ab; font-size:11px; text-shadow:0 1px 4px #000; }
 .voyage-log:empty { display:none; }
+.flight-speed { position:absolute; bottom:5px; left:6px; display:grid; grid-template-columns:68px; align-items:center; padding:3px 5px; border-radius:8px; background:#06101eed; color:#c9edff; }
+.flight-speed label { font-size:9px; }
+.flight-speed select { min-height:44px; width:68px; border:1px solid #35576d; border-radius:6px; background:#0b2538; color:#dcf6ff; font-size:13px; touch-action:manipulation; }
+.flight-speed output { grid-column:1 / -1; font:9px monospace; color:#92b5cb; }

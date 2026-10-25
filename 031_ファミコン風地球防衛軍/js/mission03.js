@@ -25,7 +25,7 @@ export const COAST=Object.freeze({waterY:148,rescueY:158,rescueDamage:12,rescueC
   turretRange:360,turretInterval:.7,turretDamage:12,turretShotLimit:12,formationSize:6,
   bossHp:3000,bossWeakMultiplier:1.5,bossWarning:1.25,bossSummonLimit:12});
 // B-03 only: visual warnings and damage share the same locked attack plan.
-export const B03_COMBAT=Object.freeze({warning:COAST.bossWarning,entryGrace:1.5,recovery:2.1,finalRecovery:1.3,
+export const B03_COMBAT=Object.freeze({warning:COAST.bossWarning,entryGrace:1.6,labEntryGrace:1.5,recovery:2.1,finalRecovery:1.3,
   waveLife:5,waveRecovery:5.25,tentacleWidth:42,tentacleTop:120,tentacleLife:.24,tentacleSpacing:76,
   phaseHp:Object.freeze([3000,1950,900]),reactionMargin:.25});
 export const RAY_READABILITY=Object.freeze({diveWarning:.4,columnSpacing:48,rowSpacing:16,groupSpacing:72,groupHeightSpacing:12});
@@ -33,7 +33,7 @@ export const coastalPhase=e=>e.hp>1950?1:e.hp>900?2:3;
 export function resetCoastalBossPhase(e,phase=1){
   const n=[1,2,3].includes(Number(phase))?Number(phase):1;
   Object.assign(e,{hp:B03_COMBAT.phaseHp[n-1],coastPhase:n,timer:0,phase:'move',actionIndex:0,
-    actionWait:B03_COMBAT.entryGrace,warningLeft:0,coastAction:null,attackPlan:null,attackFlash:0,
+    actionWait:B03_COMBAT.labEntryGrace,warningLeft:0,coastAction:null,attackPlan:null,attackFlash:0,
     warnX:0,warnY:0,vx:0,vy:0,hitFlash:0,chargeTime:0});
 }
 export function coastalAttackPlan(g,e){
@@ -92,7 +92,7 @@ export function updateCoastalEnemy(g,e,dt,spawn,effect){
   }else if(e.type==='siegebeetle'){
     if(Math.abs(dx)>230)e.x+=Math.sign(dx)*18*dt;e.y=coastalFloor(g.platforms,e.x,e.w)-e.h;
     if(e.warningLeft>0){e.warningLeft=Math.max(0,e.warningLeft-dt);if(!e.warningLeft&&g.attacks.ranged(g.time)){coastShot(g,e,e.warnX,e.warnY,115,18,'artillery');e.shotCd=3.3}}
-    else if(e.shotCd<=0&&Math.abs(dx)<500&&e.x>=g.camera&&e.x<=g.camera+320/g.battleCamera.zoom){e.warningLeft=1;e.warnX=p.x;e.warnY=p.y+16;effect({kind:'coastWarning',x:e.warnX,y:140,life:1,max:1})}
+    else if(e.shotCd<=0&&Math.abs(dx)<500&&e.x>=g.camera&&e.x<=g.camera+320/g.battleCamera.zoom){e.warningLeft=1;e.warnX=p.x;e.warnY=p.y+16}
   }else if(e.type==='leviathan'){
     e.timer+=dt;e.coastPhase=coastalPhase(e);e.actionWait=(e.actionWait??B03_COMBAT.entryGrace)-dt;
     if(e.warningLeft>0){e.warningLeft=Math.max(0,e.warningLeft-dt);if(!e.warningLeft){

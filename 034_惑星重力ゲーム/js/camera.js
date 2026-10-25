@@ -27,6 +27,13 @@ export class Camera {
     this.center={x:this.anchor.x-((a.x+b.x)/2-this.width/2)/this.scale,y:this.anchor.y-((a.y+b.y)/2-this.height/2)/this.scale};this.clamp();
   }
   endGesture(){this.anchor=null;}
+  beginPan(point){this.panStart={point:{...point},center:{...this.center}};}
+  movePan(point){
+    if(!this.panStart)return;
+    this.mode='fixed';const start=this.panStart;
+    this.center={x:start.center.x-(point.x-start.point.x)/this.scale,y:start.center.y-(point.y-start.point.y)/this.scale};this.clamp();
+  }
+  endPan(){this.panStart=null;}
   setMode(mode,stage){if(mode==='overview')this.fit(stage);else this.mode=mode==='follow'?'follow':'fixed';}
   follow(position){if(this.mode==='follow'){this.center={...position};this.clamp();}}
 }

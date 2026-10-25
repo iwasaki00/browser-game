@@ -145,7 +145,7 @@
           <section id="labPanel-metrics" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-metrics" hidden>
             <fieldset class="lab-card"><legend>実プレイ計測 <span>表示／実行操作</span></legend>
               <label class="lab-check"><input id="labFps" type="checkbox" checked> ゲーム上にFPS・CPU表示</label><output id="labMeasureStatus" role="status"></output><pre id="labMetrics"></pre>
-              <p class="lab-hint">閉じて前景で連続実行。復帰後500msを除外、30サンプル・有効500ms以上でFPS集計。250ms超は中断として除外。</p>
+              <p class="lab-hint">閉じて前景で連続実行。復帰後500msを除外、連続30サンプル・有効500ms以上でFPS集計。短区間を合算せず、250ms超は中断として除外。</p>
               <div class="lab-bench-buttons"><button data-benchmark="LIGHT">BENCH 30</button><button data-benchmark="STANDARD">BENCH 50</button><button data-benchmark="MASSIVE">BENCH 100</button><button data-benchmark="LAB200">BENCH 200</button></div><output id="qaResult" role="status">BENCHはM01実験状態へ初期化し、6秒の自動射撃・敵数補充。</output>
               <details><summary>HELP：計測と中断除外</summary><p>RAF間隔と更新／描画CPUは別計測。非表示・停止・250ms超の中断は有効FPSから除外。表示更新0.5秒。BENCHは音声OFF・実験STANDARD・アサルトで再開始。200体はLAB限定。CPU時間はGPU時間ではありません。</p></details>
             </fieldset>
