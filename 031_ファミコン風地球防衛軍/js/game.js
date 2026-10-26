@@ -1,20 +1,22 @@
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.3.3";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.4.0";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.2.3-C";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
-import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=0.3.3";
-import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.3.3";
-import {FrameProfiler,LiveProfiler,RunProfiler} from "./profiler.js?v=0.3.3";
-import {LAB_CHECKPOINTS,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=0.3.3";
-import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.3.3";
-import {IMPACT,REACTIONS,reducedImpact,impactLevel,createImpactState,pushImpactEffect,hitVisual,feedbackCategory,drawFeedbackAccent,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.3.3";
-import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,moveTunnelEnemy,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.3.3";
-import {M03,COAST,createM03Geometry,createCoastalState,coastalFloor,recoverCoastalPlayer,advanceCoastalFormations,updateCoastalEnemy,updateCoastalDevices,coastalWeakCore,coastalDamage,resetCoastalBossPhase} from './mission03.js?v=0.3.3';
-import {COAST_FILES,loadCoastalArt,drawCoastalEnemy,drawCoastTile,drawCoastalWorld,drawCoastalFX,drawCoastalWarnings} from './coastal-art.js?v=0.3.3';
+import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=0.4.0";
+import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.4.0";
+import {FrameProfiler,LiveProfiler,RunProfiler} from "./profiler.js?v=0.4.0";
+import {LAB_CHECKPOINTS,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=0.4.0";
+import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.4.0";
+import {IMPACT,REACTIONS,reducedImpact,impactLevel,createImpactState,pushImpactEffect,hitVisual,feedbackCategory,drawFeedbackAccent,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.4.0";
+import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,moveTunnelEnemy,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.4.0";
+import {M03,COAST,createM03Geometry,createCoastalState,coastalFloor,recoverCoastalPlayer,advanceCoastalFormations,updateCoastalEnemy,updateCoastalDevices,coastalWeakCore,coastalDamage,resetCoastalBossPhase} from './mission03.js?v=0.4.0';
+import {M04,SKY,createM04Geometry,createSkyState,skySurface,advanceSkyPlatforms,recoverSkyPlayer,resetSkyBossPhase,skyCore,skyTargetOpen,skyDamage,updateSkyEnemy,updateSkyHazards} from './mission04.js?v=0.4.0';
+import {loadSkyArt,drawSkyBackdrop,drawSkyWorld,drawSkyEnemy,drawSkyWarnings,drawSkyFX} from './sky-art.js?v=0.4.0';
+import {COAST_FILES,loadCoastalArt,drawCoastalEnemy,drawCoastTile,drawCoastalWorld,drawCoastalFX,drawCoastalWarnings} from './coastal-art.js?v=0.4.0';
 
-import {CombatAudio,AUDIO_LIMITS} from './combat-audio.js?v=0.3.3';
-import {outcomeData,combatHudText,drawCombatHud,drawBossHud,drawCoreMarker} from './gameplay-ui.js?v=0.3.3';
-import {MobilePlaytest,MOBILE_QA_ITEMS,createMobileQA,setMobileQA,mobileReportText,mobileChecklistText} from './mobile-playtest.js?v=0.3.3';
+import {CombatAudio,AUDIO_LIMITS} from './combat-audio.js?v=0.4.0';
+import {outcomeData,combatHudText,drawCombatHud,drawBossHud,drawCoreMarker} from './gameplay-ui.js?v=0.4.0';
+import {MobilePlaytest,MOBILE_QA_ITEMS,createMobileQA,setMobileQA,mobileReportText,mobileChecklistText} from './mobile-playtest.js?v=0.4.0';
 
 const audioBus=new CombatAudio(()=>{const AC=window.AudioContext||window.webkitAudioContext;return AC?new AC():null});
 const touchPointers=new Map(),pressedControls=new Set();let aimPointer=null,remotePointer=null,viewportOrientation=null;
@@ -51,6 +53,7 @@ const artPreview=DEBUG?new ArtPreview():null;
 // Release art and LAB comparison own independent selection / loading tokens.
 // Both use the same validated, per-resource fallback loader and render adapters.
 const releaseArt=new ArtPreview();
+let skyArt=null;loadSkyArt().then(pack=>skyArt=pack);
 let coastalArt=null;
 loadCoastalArt().then(pack=>coastalArt=pack);
 let previewRenderScale=1,artComparison=false;
@@ -233,6 +236,10 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==='lab-stage-start'){runLabStart();return}
   if(action==='lab-boss-1'){runLabStart('M01');return}
   if(action==='lab-boss-2'){runLabStart('M02');return}
+  if(action==='lab-boss-4'){runLabStart('M04');return}
+  if(action==='lab-sky-platforms'){if(game?.lab){game.lab.stageMission='M04';game.lab.stageArea=2;runLabStart()}return}
+  if(action==='lab-sky-core'){if(game?.lab){game.lab.skyBossPhase=3;runLabStart('M04')}return}
+  if(action==='lab-sky-collapse'){if(game?.lab){game.lab.skyBossPhase=3;if(startLabCheckpoint('M04')){const b=game.enemies.find(e=>e.type==='fortress');damageEnemy(b,b.hp,{type:'rocket'});setLabMessage('LAB崩壊プレビュー / 通常報酬なし')}}return}
   if(action==='lab-boss-3'){runLabStart('M03');return}
   if(action==='lab-coast-turrets'){if(game?.coast){game.coast.turretsEnabled=!game.coast.turretsEnabled;setLabMessage(`対空砲台 ${game.coast.turretsEnabled?'ON':'OFF'}（LABのみ）`)}else if(game?.lab)setLabMessage('M03の指定開始または検証地形を適用してから操作してください。');return}
   if(action==='lab-coast-invasion'){if(game?.lab){changeLabSetting({id:'labTerrain',value:'M03'});game.lab.enemy='shorecrab';game.lab.count=30;spawnLabEnemies();for(const e of game.enemies)e.landingLeft=COAST.landingTime;setLabMessage('海上侵攻30体を再配置。閉じてプレイで上陸を確認。')}return}
@@ -255,7 +262,7 @@ document.querySelector("#soundToggle").addEventListener("click",e=>{const settin
 document.addEventListener("change",e=>{
   if(handleMobileField(e.target))return;
   if(game?.lab&&state==='lab'&&e.target.id==='labTerrain'){
-    if(['M01','M02','M03'].includes(e.target.value)){labTerrainChoice=e.target.value;setLabMessage('地形は保留中。「生成」または「地形だけ適用」で初期化します。');syncLabWorkbench()}return;
+    if(['M01','M02','M03','M04'].includes(e.target.value)){labTerrainChoice=e.target.value;setLabMessage('地形は保留中。「生成」または「地形だけ適用」で初期化します。');syncLabWorkbench()}return;
   }
   if(game?.lab&&state==='lab'&&e.target.id==='labUIPreset'){syncLabWorkbench();return}
   if(['labArtStyle','pauseArtStyle'].includes(e.target.id)){setArtStyle(e.target.value);return}
@@ -268,7 +275,7 @@ document.addEventListener("change",e=>{
 });
 
 function startMission(id=selectedMissionId,labOnly=false){
-  if(!canPlayMission(id,save)&&!(labOnly&&DEBUG&&['M02','M03'].includes(id)))return false;mobilePlaytest?.interrupt('ミッション初期化');
+  if(!canPlayMission(id,save)&&!(labOnly&&DEBUG&&['M02','M03','M04'].includes(id)))return false;mobilePlaytest?.interrupt('ミッション初期化');
   discardMission();view.renderOffset=0;selectedMissionId=id;
   game={missionId:id,time:0,score:0,kills:0,crates:0,weaponRewards:[],camera:0,shake:0,area:-1,areaText:"",areaTimer:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     density:save.settings.enemyDensity,enemyLimit:DENSITY_MODES[save.settings.enemyDensity].limit,liveEnemies:0,liveMobs:0,
@@ -283,6 +290,7 @@ function startMission(id=selectedMissionId,labOnly=false){
     initializeUndergroundObjects();
   }
   if(id==='M03'){game.world=M03.world;game.player.world=game.world;game.areas=M03.areas;game.platforms=createM03Geometry();game.coast=createCoastalState();game.grid=new SpatialGrid(INVASION.gridSize,game.world);game.director=new SpawnDirector(game.density,M03.encounters);game.items=[{x:2220,y:123,type:'crate',alive:true},{x:4950,y:123,type:'crate',alive:true},{x:3600,y:123,type:'heal',alive:true}]}
+  if(id==='M04'){game.world=M04.world;game.player.world=game.world;game.areas=M04.areas;game.platforms=createM04Geometry();game.sky=createSkyState();game.grid=new SpatialGrid(INVASION.gridSize,game.world);game.director=new SpawnDirector(game.density,M04.encounters);game.items=[{x:2500,y:123,type:'crate',alive:true},{x:5500,y:123,type:'crate',alive:true},{x:4010,y:123,type:'heal',alive:true}]}
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
   canvas.setAttribute('aria-label',`ゲーム画面。${id} ${MISSIONS.find(m=>m.id===id).name}を進行中`);
@@ -299,9 +307,9 @@ function initializeUndergroundObjects(){
 
 function spawnEnemy(type,x,y=null){
   if(game.liveEnemies>=game.enemyLimit)return null;
-  if(game.bossStarted&&!['boss','queen','leviathan'].includes(type)&&game.liveMobs>=INVASION.bossMinions[game.density])return null;
+  if(game.bossStarted&&!['boss','queen','leviathan','fortress'].includes(type)&&game.liveMobs>=INVASION.bossMinions[game.density])return null;
   if(game.missionId==='M02'){const pos=validEnemyPosition(game,type,x,y);x=pos.x;y=pos.y}
-  const t=ENEMY_TYPES[type],uid=game.nextEnemyId++,v=variation(uid),baseY=y??(type==='skyray'?40:type==="needle"?45+v*40:type==="spider"||type==='spitter'?34:WORLD.ground-t.h);
+  const t=ENEMY_TYPES[type],uid=game.nextEnemyId++,v=variation(uid),baseY=y??(['interceptor','shielddrone'].includes(type)?52:game.sky?skySurface(game,x)-t.h:type==='skyray'?40:type==="needle"?45+v*40:type==="spider"||type==='spitter'?34:WORLD.ground-t.h);
   if(game.missionId==='M02'&&['worm','crawler'].includes(type))for(const pl of game.platforms)if(pl.active!==false&&x+t.w/2>pl.x&&x-t.w/2<pl.x+pl.w&&baseY+t.h>pl.y&&baseY<pl.y+(pl.h??8))x=clamp(pl.x+pl.w+t.w/2+1,24,game.world.width-24);
   const e={uid,type,x,y:baseY,baseY,w:t.w,h:t.h,hp:t.hp,maxHp:t.hp,dead:false,death:0,phase:"move",timer:v,anim:v*8,attackFlash:0,face:-1,
     speedScale:isMob({type})?1+(v*2-1)*INVASION.speedVariation:1,shotCd:.7+v*1.6,vx:0,vy:0,separateX:0,separateY:0,thinkTime:0,diveCd:v*INVASION.diveCooldown,diveTimer:0,diveOffset:0,active:true};
@@ -309,7 +317,7 @@ function spawnEnemy(type,x,y=null){
   game.enemies.push(e);game.liveEnemies++;if(isMob(e))game.liveMobs++;if(type==="beetle")game.midbossAlive=true;return e;
 }
 function startBoss(){game.bossStarted=true;game.midbossAlive=false;game.director.stopped=true;game.enemies.length=0;game.impact=createImpactState();game.liveEnemies=game.liveMobs=0;game.enemyShots.length=0;
-  if(game.missionId==='M03'){game.coast.hazards.length=game.coast.aaShots.length=0;spawnEnemy('leviathan',M03.bossSpawnX,48);game.areaText='WARNING  B-03 LEVIATHAN'}else if(game.missionId==='M02'){spawnEnemy('queen',M02.bossSpawnX,WORLD.ground-96);game.areaText='WARNING  B-02 ABYSS QUEEN'}else{spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー"}game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
+  if(game.missionId==='M04'){const boss=spawnEnemy('fortress',M04.bossSpawnX,68);resetSkyBossPhase(game,boss,1);game.areaText='WARNING  B-04 SKY FORTRESS CORE'}else if(game.missionId==='M03'){game.coast.hazards.length=game.coast.aaShots.length=0;spawnEnemy('leviathan',M03.bossSpawnX,48);game.areaText='WARNING  B-03 LEVIATHAN'}else if(game.missionId==='M02'){spawnEnemy('queen',M02.bossSpawnX,WORLD.ground-96);game.areaText='WARNING  B-02 ABYSS QUEEN'}else{spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー"}game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
 function spawnBossMinion(boss,index){const p=game.player,side=boss.x>=p.x?1:-1;const x=clamp(boss.x+side*(30+index*25),24,WORLD.width-24);if(Math.abs(x-p.x)>=90)spawnEnemy("crawler",x)}
 function pushEffect(effect){
   pushImpactEffect(game,effect);
@@ -328,26 +336,29 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player,miss
   if(advanceImpact(g,dt)){let write=0;for(const e of g.enemies){if(e.dead)updateDeath(g,e,dt);if(!e.dead||e.death>0)g.enemies[write++]=e}g.enemies.length=write;updateEffects(dt);return}
   g.time+=dt;p.invuln=Math.max(0,p.invuln-dt);p.shotCd=Math.max(0,p.shotCd-dt);p.switchCd=Math.max(0,p.switchCd-dt);p.shootPose=Math.max(0,p.shootPose-dt);g.areaTimer=Math.max(0,g.areaTimer-dt);g.shake=Math.max(0,g.shake-dt*16);
   if(!formalClass())p.hitPose=Math.max(0,p.hitPose-dt);
+  if(g.sky)advanceSkyPlatforms(g,dt);
   if(formalClass()){const grounded=p.onGround;moveClassPlayer(p,input,g.platforms,dt);if(grounded&&!p.onGround&&p.vy<0&&p.classId!=="WING")tone(330,.06)}
   else if(g.lab?.preset==="FLIGHT")moveFlightPlayer(p,input,g.platforms,dt);else{
   const preset=g.lab?PLAYER_PRESETS[g.lab.preset]:PLAYER_PRESETS.STANDARD;
   const move=(input.right?1:0)-(input.left?1:0);p.vx=move*preset.speed;if(move)p.face=move;if(input.jump&&p.onGround){p.vy=-preset.jump;p.onGround=false;tone(330,.06)}p.vy=Math.min(WORLD.maxFall,p.vy+WORLD.gravity*dt);
-  if(g.missionId==='M02'||g.missionId==='M03')movePlayerBody(p,g.platforms,dt,true);else{
+  if(['M02','M03','M04'].includes(g.missionId))movePlayerBody(p,g.platforms,dt,true);else{
   p.x=clamp(p.x+p.vx*dt,8,WORLD.width-25);p.y+=p.vy*dt;
   let floor=WORLD.ground-32;for(const pl of g.platforms){if(p.x+7>pl.x&&p.x-7<pl.x+pl.w&&p.y+32<=pl.y+8&&p.y+32+p.vy*dt>=pl.y)floor=Math.min(floor,pl.y-32)}if(p.y>=floor){p.y=floor;p.vy=0;p.onGround=true}else p.onGround=false;
   }
   }
+  if(g.sky)recoverSkyPlayer(g,dt,hurtPlayer,pushEffect);
   if(g.coast)recoverCoastalPlayer(g,dt,hurtPlayer,pushEffect);
-  if(progression){if(g.missionId==='M01'&&g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=g.missionId==='M03'?clamp(p.x,5480,6350):g.missionId==='M02'?clamp(p.x,M02.bossX,5560):clamp(p.x,4100,4760)}
+  if(progression){if(g.missionId==='M01'&&g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=g.missionId==='M04'?clamp(p.x,6000,7160):g.missionId==='M03'?clamp(p.x,5480,6350):g.missionId==='M02'?clamp(p.x,M02.bossX,5560):clamp(p.x,4100,4760)}
   if(g.lab?.cameraMode==="FIXED")fixedLabCamera(g.battleCamera,p,g.lab.fixedZoom);else updateBattleCamera(g.battleCamera,p,g.enemies,g,dt);syncCameraView();p.anim+=dt*(Math.abs(p.vx)>0?10:4);
   if(input.fire)shoot();
   if(progression){if(combat)g.director.update(dt,g,spawnEnemy,viewBounds(g.camera,view.zoom));
   for(let i=g.area+1;i<g.areas.length;i++)if(p.x>=g.areas[i].x)announceArea(i);
-  if(p.x>(g.missionId==='M03'?M03.bossX:g.missionId==='M02'?M02.bossX:4100)&&!g.bossStarted&&!g.clear){if(missionRun?.mode==='A')finishLabRun('TERRAIN_REACHED');else startBoss()}
+  if(p.x>(g.missionId==='M04'?M04.bossX:g.missionId==='M03'?M03.bossX:g.missionId==='M02'?M02.bossX:4100)&&!g.bossStarted&&!g.clear){if(missionRun?.mode==='A')finishLabRun('TERRAIN_REACHED');else startBoss()}
   }
   if(g.missionId==='M02'&&combat)updateNests(g,dt,spawnEnemy);
   g.grid.rebuild(g.enemies);updateShots(dt);updateExpanded(g,dt,weaponAPI);syncRemoteControl();updateEnemies(dt);updateEnemyShots(dt);updateItems(dt);updateEffects(dt);
   if(g.coast&&combat&&!g.clear&&!p.dead&&(!g.lab?.run||g.lab.run.outcome==='RUNNING'))updateCoastalDevices(g,dt,damageEnemy,hurtPlayer,pushEffect);
+  if(g.sky){updateSkyHazards(g,dt,hurtPlayer,pushEffect);const b=g.enemies.find(e=>e.type==='fortress');canvas.dataset.bossPhase=String(b?.skyPhase??0);canvas.dataset.bossHp=String(b?.hp??0);canvas.dataset.fixedDevices=String(g.sky.parts.filter(e=>!e.dead).length)}
   canvas.dataset.gameState=state;canvas.dataset.playerX=Math.round(p.x);canvas.dataset.playerHp=Math.ceil(p.hp);canvas.dataset.enemies=g.liveEnemies;canvas.dataset.boss=g.bossStarted?"1":"0";canvas.dataset.density=g.density;canvas.dataset.enemyLimit=g.enemyLimit;
   canvas.dataset.playerClass=p.classId;canvas.dataset.flightEnergy=p.energy.toFixed(1);canvas.dataset.missionId=g.missionId;canvas.dataset.area=String(g.area+1);if(g.time>=(g.nextHudStatus??0)){document.querySelector("#combatStatus").textContent=combatHudText(g,activeEquipment());g.nextHudStatus=g.time+.25}if(g.coast){const b=g.enemies.find(e=>e.type==='leviathan'&&!e.dead);canvas.dataset.bossPhase=String(b?.coastPhase??0);canvas.dataset.bossHp=String(b?.hp??0)}
   if(missionRun&&missionRun.outcome==='RUNNING')missionRun.tick(g,input,dt);
@@ -356,13 +367,15 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player,miss
 
 function hitRect(a,b){return a.x-a.w/2<b.x+b.w/2&&a.x+a.w/2>b.x-b.w/2&&a.y-a.h/2<b.y+b.h/2&&a.y+a.h/2>b.y-b.h/2}
 function damageEnemy(e,dmg,source={}){
-  if(e.dead)return;const baseDamage=dmg;if(e.type==='queen')dmg=queenDamage(e,dmg,source);if(e.type==='leviathan')dmg=coastalDamage(e,dmg,source);
+  if(e.dead)return;const baseDamage=dmg;if(game.sky)dmg=skyDamage(game,e,dmg);if(e.type==='queen')dmg=queenDamage(e,dmg,source);if(e.type==='leviathan')dmg=coastalDamage(e,dmg,source);
   if(game.lab?.run?.outcome==='RUNNING'){const id=source.weapon?.id??source.weaponId??WEAPONS[source.assetIndex]?.id??WEAPONS.find(w=>w.type===source.type)?.id;game.lab.run.damage(id,Math.min(Math.max(0,e.hp),Math.max(0,dmg)))}
-  e.hp-=dmg;game.score+=Math.max(1,Math.round(dmg));const category=feedbackCategory(e,baseDamage,dmg,e.hp<=0),core=dmg>baseDamage?(e.type==='queen'?weakCore(e):e.type==='leviathan'?coastalWeakCore(e):null):null;
+  e.hp-=dmg;if(dmg>0)game.score+=Math.max(1,Math.round(dmg));const category=feedbackCategory(e,baseDamage,dmg,e.hp<=0),core=dmg>baseDamage?(e.type==='queen'?weakCore(e):e.type==='leviathan'?coastalWeakCore(e):null):null;
   if(hitVisual(game,e,source,category,core)&&e.hp>0)feedbackSound(category);if(core)e.coreHitUntil=game.impact.clock+.16;
   if(e.hp>0)return;
-  e.dead=true;beginDeath(game,e,source,viewBounds(game.camera,view.zoom));game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;
-  if(game.lab?.run?.outcome==='RUNNING')game.lab.run.kills++;
+  e.dead=true;beginDeath(game,e,source,viewBounds(game.camera,view.zoom));if(!e.fixedDevice){game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;}
+  if(game.lab?.run?.outcome==='RUNNING'&&!e.fixedDevice)game.lab.run.kills++;
+  if(e.fixedDevice){pushEffect({kind:'skyBreak',x:e.x,y:e.y+16,life:.6,max:.6});impactShake(game);return}
+  if(e.type==='fortress'){game.sky.hazards.length=0;game.sky.collapseLeft=SKY.collapseDuration}
   if(e.type==="beetle")game.midbossAlive=false;
   if(e.platform)e.platform.active=false;
   if(e.type==='nest'){pushEffect({kind:'nestBreak',x:e.x,y:e.y+24,life:.65,max:.65});impactShake(game)}
@@ -371,7 +384,7 @@ function damageEnemy(e,dmg,source={}){
   if(isBoss(e)&&(!game.lab||game.lab.run)){
     if(game.lab?.run)game.lab.run.bossDefeatedAt=game.time;else game.score+=Math.max(0,Math.floor(3000-game.time*8));game.enemies.length=0;game.enemies.push(e);game.liveEnemies=game.liveMobs=0;
     game.impact.corpses=1;
-    game.enemyShots.length=0;game.shots.length=0;game.player.invuln=99;scheduleMission(()=>game?.lab?.run?finishLabRun('BOSS_DEFEATED'):completeMission(),900);
+    game.enemyShots.length=0;game.shots.length=0;game.player.invuln=99;scheduleMission(()=>game?.lab?.run?finishLabRun('BOSS_DEFEATED'):completeMission(),e.type==='fortress'?1600:900);
   }else if(Math.random()<.06)game.items.push({x:e.x,y:e.y+e.h/2,type:"heal",alive:true});
   else if(Math.random()<.02)game.items.push({x:e.x,y:e.y+e.h/2,type:"crate",alive:true});
   if(game.time>=(game.nextDeathSound||0)){tone(isBoss(e)||e.type==='beetle'?65:80,isBoss(e)?.22:.12,"sawtooth",.025,isBoss(e)||e.type==='beetle'?'large':'finish');game.nextDeathSound=game.time+.05}
@@ -381,17 +394,17 @@ function explode(s){
   const candidates=game.grid.query(s.x-s.radius-48,s.y-s.radius-32,s.x+s.radius+48,s.y+s.radius+32,game.blastCandidates);
   const source={type:s.type??s.weapon?.type??"rocket",effectType:s.effectType,assetIndex:s.assetIndex,radial:true,x:s.x,y:s.y,radius:s.radius};
   for(let i=0;i<candidates.length;i++){const e=candidates[i];
-    const distance=['M02','M03'].includes(game.missionId)?Math.hypot(s.x-clamp(s.x,e.x-e.w/2,e.x+e.w/2),s.y-clamp(s.y,e.y,e.y+e.h)):Math.hypot(s.x-e.x,s.y-e.y-e.h/2);
+    const distance=['M02','M03','M04'].includes(game.missionId)?Math.hypot(s.x-clamp(s.x,e.x-e.w/2,e.x+e.w/2),s.y-clamp(s.y,e.y,e.y+e.h)):Math.hypot(s.x-e.x,s.y-e.y-e.h/2);
     if(!e.dead&&distance<s.radius){damageEnemy(e,s.damage,source);if(e.dead)s.onKill?.(e)}
   }
   if(s.assetIndex>=8)pushEffect({x:s.x,y:s.y,kind:"weaponBurst",assetIndex:s.assetIndex,life:.35,max:.35,r:s.radius});
   impactShake(game);tone(65,.18,"sawtooth",.04);
 }
 function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;const oldX=s.x,oldY=s.y;s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
-    const terrain=['M02','M03'].includes(game.missionId)?terrainContact(oldX,oldY,s.x,s.y,game.platforms,s.w/2,false,game.world):null;if(terrain){s.x=terrain.x;s.y=terrain.y}
+    const terrain=['M02','M03','M04'].includes(game.missionId)?terrainContact(oldX,oldY,s.x,s.y,game.platforms,s.w/2,false,game.world):null;if(terrain){s.x=terrain.x;s.y=terrain.y}
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
     const candidates=game.grid.query(s.x-s.w/2-(game.missionId==='M03'?96:48),s.y-s.h/2-(game.missionId==='M03'?96:32),s.x+s.w/2+(game.missionId==='M03'?96:48),s.y+s.h/2+(game.missionId==='M03'?96:32),game.shotCandidates);
-    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(['M02','M03'].includes(game.missionId)?segmentEntry(oldX,oldY,s.x,s.y,e.x-e.w/2-s.w/2,e.y-s.h/2,e.x+e.w/2+s.w/2,e.y+e.h+s.h/2):hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
+    for(const e of candidates){if(e.dead||s.dead||(s.rehit[e.uid]??0)>game.time)continue;const box={x:e.x,y:e.y+e.h/2,w:e.w,h:e.h};if(['M02','M03','M04'].includes(game.missionId)?segmentEntry(oldX,oldY,s.x,s.y,e.x-e.w/2-s.w/2,e.y-s.h/2,e.x+e.w/2+s.w/2,e.y+e.h+s.h/2):hitRect({x:s.x,y:s.y,w:s.w,h:s.h},box)){s.rehit[e.uid]=game.time+(s.weapon.rehit??999);damageEnemy(e,s.damage,s);if(s.type==="thunder"){const seen=new Set([e]);let from=e;for(let c=0;c<3;c++){const nearby=game.grid.query(from.x-133,from.y-117,from.x+133,from.y+117,game.chainCandidates);const next=nearestEnemy(nearby,from.x,from.y,85,seen);if(!next)break;seen.add(next);damageEnemy(next,s.damage*.75,{type:"thunder",vx:next.x-from.x,vy:next.y-from.y});pushEffect({x:from.x,y:from.y,x2:next.x,y2:next.y,kind:"lightning",life:.16,max:.16});from=next}}
       if(s.radius){explode(s);s.dead=true}else if(s.pierce>0){s.pierce--}else s.dead=true}}
     if(terrain&&!s.dead){if(s.radius)explode(s);s.dead=true}
   }let write=0;for(const s of game.shots)if(!s.dead&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.shots[write++]=s;game.shots.length=write}
@@ -399,6 +412,7 @@ function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;const
 function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);prepareSeparation(game.enemies,game.grid,game.separationCandidates);game.attacks.begin(game.time,game.enemies,game.enemyShots);if(game.coast)advanceCoastalFormations(game,dt);
   for(const e of game.enemies){e.anim+=dt*7;e.attackFlash=Math.max(0,e.attackFlash-dt);e.hitFlash=Math.max(0,(e.hitFlash||0)-dt);if(e.dead){updateDeath(game,e,dt);continue}const t=ENEMY_TYPES[e.type];e.shotCd-=dt;e.face=p.x>=e.x?1:-1;
     if(game.lab?.run?.mode==='A')continue;
+    if(game.sky&&['interceptor','shielddrone','heavygunner','fortress','skydevice'].includes(e.type)){updateSkyEnemy(game,e,dt,spawnEnemy,pushEffect);if(e.fixedDevice||e.type==='fortress')continue}
     if(game.coast&&['shorecrab','skyray','siegebeetle','leviathan'].includes(e.type))updateCoastalEnemy(game,e,dt,spawnEnemy,pushEffect);
     if(game.missionId==='M02'&&(e.type==='nest'||e.type==='barrier')){e.active=Math.abs(e.x-p.x)<NEST.activationDistance;continue}
     const dx=p.x-e.x,far=Math.abs(dx)>INVASION.farDistance;e.thinkTime+=dt;const think=!far||e.thinkTime>=INVASION.farThinkInterval;if(think)e.thinkTime=0;
@@ -424,7 +438,7 @@ function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0
 function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({kind:e.type==='spitter'||e.type==='queen'?'acid':null,x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:e.type==='spitter'?12:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
 function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.run?.mode==='A'||game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;const before=p.hp;p.hp=Math.max(0,p.hp-amount*scale);if(game.lab?.run?.outcome==='RUNNING')game.lab.run.damageTaken+=before-p.hp;p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
-function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){const x=s.x,y=s.y;s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(['M02','M03'].includes(game.missionId)&&terrainContact(x,y,s.x,s.y,game.platforms,s.kind==='wave'?0:2,false,game.world))s.dead=true;if(!s.dead&&game.coast)for(const t of game.coast.turrets)if(t.hp>0&&Math.abs(s.x-t.x)<16&&s.y>=t.y&&s.y<=148){t.hp=Math.max(0,t.hp-s.damage);s.dead=true;break}if(!s.dead&&hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
+function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){const x=s.x,y=s.y;s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(['M02','M03','M04'].includes(game.missionId)&&terrainContact(x,y,s.x,s.y,game.platforms,s.kind==='wave'?0:2,false,game.world))s.dead=true;if(!s.dead&&game.coast)for(const t of game.coast.turrets)if(t.hp>0&&Math.abs(s.x-t.x)<16&&s.y>=t.y&&s.y<=148){t.hp=Math.max(0,t.hp-s.damage);s.dead=true;break}if(!s.dead&&hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.weaponRewards.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";storeSave()}
 function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
@@ -439,15 +453,15 @@ function renderGameover(){
 for(const id of ['screenResult','screenGameover'])document.querySelector('#'+id).addEventListener('pointerdown',()=>document.querySelector('#'+id).classList.toggle('skip-intro',true));
 function completeMission(){if(!game||game.clear||game.lab)return;game.clear=true;
   const firstClear=!save.clearedMissions.includes(game.missionId),playableBefore=new Set(MISSIONS.filter(m=>canPlayMission(m.id,save)).map(m=>m.id));
-  const reward=['M02','M03'].includes(game.missionId)?pickReward(save.unlocked,Math.random,false):game.missionId==="M01"&&firstClear&&!save.unlocked.includes("L-03")?"L-03":null;
-  if(['M02','M03'].includes(game.missionId)){game.crates++;if(!reward)game.score+=500}
+  const reward=['M02','M03','M04'].includes(game.missionId)?pickReward(save.unlocked,Math.random,false):game.missionId==="M01"&&firstClear&&!save.unlocked.includes("L-03")?"L-03":null;
+  if(['M02','M03','M04'].includes(game.missionId)){game.crates++;if(!reward)game.score+=500}
   if(reward){save.unlocked.push(reward);game.weaponRewards.push(reward)}save=recordMissionClear(save,game.missionId);save.highScore=Math.max(save.highScore,game.score);save.bestTime=save.bestTime===null?game.time:Math.min(save.bestTime,game.time);storeSave();clearArsenal(game);
   const previous=save.missionStats[game.missionId];save.missionStats[game.missionId]={highScore:Math.max(previous?.highScore??0,game.score),bestTime:Math.min(previous?.bestTime??Infinity,game.time)};storeSave();
   const w=reward?weapon(reward):null,d=outcomeData(game);
   document.querySelector('#resultTitle').textContent=`${d.missionId} ${d.missionName}`;
   document.querySelector('#resultClass').textContent=`兵科 ${d.classId}`;
   document.querySelector('#resultStats').innerHTML=statCards([['クリア時間',formatTime(d.time)],['SCORE',d.score],['撃破数',d.kills],['武器箱',game.crates]]);
-  document.querySelector("#rewardBox").innerHTML=w?`<span>${['M02','M03'].includes(game.missionId)?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?['M02','M03'].includes(game.missionId)?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;const opened=MISSIONS.filter(m=>canPlayMission(m.id,save)&&!playableBefore.has(m.id)).map(m=>`${m.id} ${m.name}`);
+  document.querySelector("#rewardBox").innerHTML=w?`<span>${['M02','M03','M04'].includes(game.missionId)?(firstClear?'FIRST CLEAR / WEAPON BOX':'MISSION WEAPON BOX'):'WEAPON UNLOCKED'}</span><strong>${w.id} ${w.name}</strong>`:`<span>ARSENAL ${save.unlocked.length}/${WEAPONS.length}</span><strong>${save.unlocked.length===WEAPONS.length?['M02','M03','M04'].includes(game.missionId)?"全武器取得済み / SCORE +500":"全武器取得済み":"武器箱の解放記録を保存"}</strong>`;const opened=MISSIONS.filter(m=>canPlayMission(m.id,save)&&!playableBefore.has(m.id)).map(m=>`${m.id} ${m.name}`);
   document.querySelector('#resultUnlock').textContent=opened.length?`NEXT MISSION OPEN / ${opened.join('・')}`:'次のミッション解放：なし';
   document.querySelector('#resultWeapons').textContent=game.weaponRewards.length?`新規武器：${game.weaponRewards.join(' / ')}`:'新規武器：なし';
   game.resultSummary={...d,reward:reward??null,newWeapons:[...game.weaponRewards],openedMissions:opened};
@@ -483,11 +497,12 @@ function draw(){
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
   activeArt()?.prepare(view.zoom);
-  drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);if(g.coast)drawCoastalWarnings(ctx,g);drawShots(g);drawPlayer(g.player);drawEffects(g);
+  drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);if(g.coast)drawCoastalWarnings(ctx,g);if(g.sky)drawSkyWarnings(ctx,g);drawShots(g);drawPlayer(g.player);drawEffects(g);
   ctx.restore();drawHud(g);drawImpactHud(g);
 }
 function drawBackdrop(g){
   const bounds=viewBounds(g.camera,view.zoom),start=g.camera-(g.camera*.18%320),study=activeStudy();
+  if(g.sky){drawSkyBackdrop(ctx,skyArt,g,bounds);return}
   if(g.missionId==='M03'){ctx.fillStyle='#091e30';ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);for(let x=start-320;x<bounds.right+320;x+=320)if(coastalArt?.coast)ctx.drawImage(coastalArt.coast,0,0,640,360,x,0,320,180);return}
   // The zoom reveals sky above the original artwork. Fill it and repeat the city horizontally.
   ctx.fillStyle="#040a16";ctx.fillRect(bounds.left-10,bounds.top-10,view.width+20,bounds.bottom-bounds.top+20);
@@ -496,6 +511,7 @@ function drawBackdrop(g){
 }
 function drawWorld(g){
   const bounds=viewBounds(g.camera,view.zoom),study=activeStudy();
+  if(g.sky){drawSkyWorld(ctx,skyArt,g,bounds);return}
   if(g.missionId==='M03'){drawCoastalWorld(ctx,coastalArt,g,bounds);return}
   if(g.missionId==='M02'){drawUnderground(g,bounds);return}
   ctx.fillStyle="#0b1825";ctx.fillRect(bounds.left-10,WORLD.ground,view.width+20,bounds.bottom-WORLD.ground+10);
@@ -536,7 +552,8 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
     }
     if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
     const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
-    if(drawCoastalEnemy(ctx,coastalArt,e,localX,localY,activeArt()?.far)){}
+    if(drawSkyEnemy(ctx,skyArt,e,localX,localY,activeArt()?.far)){}
+    else if(drawCoastalEnemy(ctx,coastalArt,e,localX,localY,activeArt()?.far)){}
     else if(drawStudyEnemy(ctx,activeStudy(),e,localX,localY)){}
     else if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,frame,localX,localY);
     else if(e.type==="boss")ctx.drawImage(images.boss,frame*96,0,96,64,localX-48,Math.round(localY),96,64);else{const t=ENEMY_TYPES[e.type],size=e.type==="beetle"?48:32;ctx.drawImage(images.enemies,frame*48,t.row*48,48,48,localX-size/2,Math.round(localY+e.h-size),size,size)}
@@ -550,6 +567,7 @@ function drawUndergroundEnemy(e,frame,x,y){
 function drawDeathGhost(e,x,y,angle,alpha,full){
   ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y+e.h/2));ctx.rotate(angle);
   if(!full){ctx.fillStyle=e.deathColor;ctx.fillRect(-3,0,6,2)}
+  else if(drawSkyEnemy(ctx,skyArt,e,0,-e.h/2,activeArt()?.far)){}
   else if(drawCoastalEnemy(ctx,coastalArt,e,0,-e.h/2,activeArt()?.far)){}
   else if((activeStudy()?._u?.[e.type]||activeStudy()?._b?.[e.type])&&drawStudyEnemy(ctx,activeStudy(),e,0,-e.h/2)){}
   else if(['worm','spitter','nest','queen','barrier'].includes(e.type))drawUndergroundEnemy(e,3,0,-e.h/2);
@@ -562,6 +580,7 @@ function drawShots(g){
   drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom),study?{projectile:(c,s,x,y,size)=>drawStudyProjectile(c,study,s.weapon.id,x,y,size,size),installation:(c,i)=>(study._u?.icons||i.weapon.id==='D-19')&&drawStudyIcon(c,study,i.weapon.id,Math.round(i.x)-12,i.y-(study._u?.icons&&i.weapon.type==='mine'?21:22.5),24,24),storm:(c,j)=>drawUnifiedSpecial(c,study,j.weapon.id,(g.time%1),j.x,j.y-48,64,32),trail:(c,s)=>drawUnifiedTrail(c,study,s)}:null);
   for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);if(study){ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(s.vy,s.vx));const drawn=drawStudyProjectile(ctx,study,s.weapon.id,-8,-8);ctx.restore();if(drawn)continue}ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
   for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;
+    if(s.kind==='skyOrb'&&skyArt?.skyOrb){ctx.drawImage(skyArt.skyOrb,Math.floor(g.time*12)%8*64,0,64,64,s.x-6,s.y-6,12,12);continue}
     if(['artillery','coastOrb'].includes(s.kind)&&coastalArt?.coastAA){ctx.drawImage(coastalArt.coastAA,Math.floor(g.time*12)%4*32,0,32,32,Math.round(s.x)-s.w/2,Math.round(s.y)-s.h/2,s.w,s.h);continue}
     if(s.kind==='acid'){if(!drawUnifiedEnvironmentalEffect(ctx,study,'acid',g.time*2%1,s.x,s.y,16,16))ctx.drawImage(images.acid,Math.floor(g.time*8)%4*16,0,16,16,s.x-8,s.y-8,16,16)}
     else if(s.kind==='wave'){if(!drawUnifiedEnvironmentalEffect(ctx,study,'wave',g.time*2%1,s.x,s.y-6,32,24))ctx.drawImage(images.wave,Math.floor(g.time*8)%4*32,0,32,24,s.x-16,s.y-18,32,24)}
@@ -570,6 +589,7 @@ function drawShots(g){
 }
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
 function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
+    if(drawSkyFX(ctx,skyArt,f,1-a))continue;
     if(drawCoastalFX(ctx,coastalArt,f,1-a))continue;
     if(f.kind==="explosion"){
       const scale=f.visualScale||1,fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6)*scale,radius=(f.r||24)*(.3+(1-a)*1.3)*scale;
@@ -606,7 +626,7 @@ function drawImpactHud(g){
 }
 function drawHud(g){
   drawCombatHud(ctx,g,activeEquipment(),weapon,(w,x,y,size)=>{if(!drawStudyIcon(ctx,activeStudy(),w.id,x,y,size,size))ctx.drawImage(images.weapons,w.assetIndex*32,0,32,32,x,y,size,size)},formatTime(g.time).slice(0,5));
-  const boss=g.enemies.find(e=>isBoss(e)&&!e.dead),core=boss?.type==='queen'?weakCore(boss):boss?.type==='leviathan'?coastalWeakCore(boss):null;
+  const boss=g.enemies.find(e=>isBoss(e)&&!e.dead),core=boss?.type==='fortress'?skyCore(boss):boss?.type==='queen'?weakCore(boss):boss?.type==='leviathan'?coastalWeakCore(boss):null;
   drawBossHud(ctx,boss,core);if(core){const point=worldToScreen(core,g.camera,view.zoom);point.x+=view.renderOffset;point.y+=view.renderOffset;drawCoreMarker(ctx,point,core,view.zoom,(boss.coreHitUntil??0)-g.impact.clock)}
   if(g.areaTimer>0){ctx.save();ctx.fillStyle='#020611c9';ctx.fillRect(51,77,218,17);ctx.fillStyle=g.bossStarted?'#ffab9d':'#ffe59b';ctx.font='bold 8px monospace';ctx.textAlign='center';ctx.fillText(g.areaText,160,89);ctx.restore()}
 }
@@ -665,16 +685,17 @@ function startLabCheckpoint(bossMission=null,checkpointId=null){
   let mode;try{if(!cp)throw new Error('開始地点を選択してください');mode=validationClass(previous.validationMode,previous,save);if(cp.boss.state==='active'&&mode==='A')throw new Error('ボス戦はB / C / Dを選択してください')}catch(error){document.querySelector('#labStageStatus').textContent=error.message;return false}
   const settings={...previous.settings},equipped=[...previous.equipped],preserved={...previous,settings,equipped};delete preserved.run;delete preserved.benchmarkPerformance;
   startMission(cp.missionId,true);game.lab={...createLabState(equipped,settings),...preserved,terrain:cp.missionId,stageMission:cp.missionId,stageArea:cp.areaIndex,cameraMode:cp.camera.mode};
-  const g=game;g.density=previous.stageDensity;g.enemyLimit=DENSITY_MODES[g.density].limit;g.director=cp.missionId==='M03'?new SpawnDirector(g.density,M03.encounters):cp.missionId==='M02'?new SpawnDirector(g.density,M02.encounters):new SpawnDirector(g.density);
+  const g=game;g.density=previous.stageDensity;g.enemyLimit=DENSITY_MODES[g.density].limit;g.director=cp.missionId==='M04'?new SpawnDirector(g.density,M04.encounters):cp.missionId==='M03'?new SpawnDirector(g.density,M03.encounters):cp.missionId==='M02'?new SpawnDirector(g.density,M02.encounters):new SpawnDirector(g.density);
   g.director.progress=cp.x;g.director.midbossSpawned=cp.progression.midbossCleared;g.director.stopped=mode==='A';
   for(const entry of g.director.entries)if(entry.definition.x<cp.progression.completedBeforeX||entry.definition.midbossOnly&&cp.progression.midbossCleared){entry.done=true;entry.spawned=entry.total;entry.wait=0}
   let write=0;for(const e of g.enemies){const remove=e.x<cp.nests.destroyedBeforeX||mode==='A'&&e.type!=='barrier';if(remove){if(e.platform)e.platform.active=false}else g.enemies[write++]=e}g.enemies.length=write;g.liveEnemies=g.enemies.length;g.liveMobs=g.enemies.filter(isMob).length;
   g.items=g.items.filter(it=>it.x>=cp.x);configureLabPlayer();Object.assign(g.player,{x:cp.x,y:cp.y,vx:0,vy:0,onGround:true,dead:false,invuln:0,shotCd:0,switchCd:0,face:1});
   g.area=cp.areaIndex;g.time=g.score=g.kills=g.crates=0;g.areaText=`${mode} QA / ${cp.missionId} ${cp.areaId} ${cp.route}`;g.areaTimer=3;
   if(cp.boss.state==='active'){startBoss();for(const e of g.enemies)if(isBoss(e))Object.assign(e,{hp:e.maxHp,timer:0,phase:'move',actionIndex:0,actionWait:1.5,chargeTime:0,vx:0,vy:0})}
+  if(g.sky){g.sky.safeX=cp.x;g.sky.safeY=cp.y;if(cp.boss.state==='active'){const boss=g.enemies.find(e=>e.type==='fortress');resetSkyBossPhase(g,boss,previous.skyBossPhase??1)}}
   if(g.coast){g.coast.safeX=cp.x;g.coast.safeY=cp.y;if(cp.boss.state==='active'){const boss=g.enemies.find(e=>e.type==='leviathan');if(boss)resetCoastalBossPhase(boss,previous.bossPhase)}}
   g.battleCamera=createBattleCamera(g.player);g.battleCamera.x=cp.camera.x;g.battleCamera.zoom=g.battleCamera.targetZoom=cp.camera.zoom;if(g.bossStarted)updateBattleCamera(g.battleCamera,g.player,g.enemies,g,1);
-  g.lab.run=new MissionLabRun(g,cp,mode);g.lab.run.gameplayQA=!!g.lab.gameplayQA;g.lab.run.bossStartPhase=cp.missionId==='M03'&&cp.boss.state==='active'?g.lab.bossPhase:null;g.grid.rebuild(g.enemies);acc=0;resetInput();liveProfiler.reset();syncCameraView();syncLabUI();
+  g.lab.run=new MissionLabRun(g,cp,mode);g.lab.run.gameplayQA=!!g.lab.gameplayQA;g.lab.run.bossStartPhase=cp.boss.state==='active'?(cp.missionId==='M04'?g.lab.skyBossPhase??1:cp.missionId==='M03'?g.lab.bossPhase:null):null;g.grid.rebuild(g.enemies);acc=0;resetInput();liveProfiler.reset();syncCameraView();syncLabUI();
   canvas.dataset.checkpoint=cp.id;canvas.dataset.validationMode=mode;document.querySelector('#labStageStatus').textContent=`${mode} ${VALIDATION_MODES[mode]} / ${cp.id} / NO SAVE`;
   show('play');canvas.focus();return true;
 }
@@ -722,13 +743,13 @@ function syncLabUI(){
   if(!game?.lab)return;const lab=game.lab;
   for(let slot=0;slot<2;slot++){const button=document.querySelector(`#labWeaponSlot${slot+1}`),w=weapon(lab.equipped[slot]);button.textContent=`SLOT ${slot+1}: ${w.id} ${w.name}`;button.setAttribute("aria-expanded",String(labWeaponPickerOpen&&labEditingSlot===slot))}
   syncLabStageOptions();
-  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labTerrain:labTerrainChoice??lab.terrain,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom),labStageMission:lab.stageMission,labStageArea:String(lab.stageArea),labStageRoute:lab.stageRoute,labValidation:lab.validationMode,labStageDensity:lab.stageDensity,labBossPhase:String(lab.bossPhase)};
+  const values={labSlot:String(game.player.weaponSlot),labPreset:lab.preset,labTerrain:labTerrainChoice??lab.terrain,labEnemy:lab.enemy,labCount:String(lab.count),labPlacement:lab.placement,labCamera:lab.cameraMode,labZoom:String(lab.fixedZoom),labStageMission:lab.stageMission,labStageArea:String(lab.stageArea),labStageRoute:lab.stageRoute,labValidation:lab.validationMode,labStageDensity:lab.stageDensity,labSkyPhase:String(lab.skyBossPhase??1),labBossPhase:String(lab.bossPhase)};
   for(const [id,value] of Object.entries(values))document.querySelector(`#${id}`).value=value;
   document.querySelector("#labInvincible").checked=lab.invincible;document.querySelector("#labFps").checked=lab.showFps;
   document.querySelector("#labDestruction").value=String(normalizeDestructionLevel(lab.settings.destructionLevel));document.querySelector("#labShake").checked=lab.settings.shake;
   document.querySelector("#labLevelBadge").textContent=`${lab.run?`${lab.run.mode} QA · `:''}LEVEL ${impactLevel(game).id} · ${impactLevel(game).name}`;
   document.querySelector("#labZoom").disabled=lab.cameraMode!=="FIXED";
-  document.querySelector("#labCount").disabled=['beetle','boss','queen','leviathan','nest'].includes(lab.enemy);
+  document.querySelector("#labCount").disabled=['beetle','boss','queen','leviathan','fortress','nest'].includes(lab.enemy);
   document.querySelector("#labBlast").disabled=!["rocket","grenade"].includes(weapon(activeEquipment()[game.player.weaponSlot]).type);
   document.querySelector("#labZoomValue").textContent=`${view.zoom.toFixed(2)}× / FIXED ${lab.fixedZoom.toFixed(2)}×`;
   renderLabReport();syncLabWorkbench();
@@ -791,7 +812,7 @@ function handleLabKey(e){
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
 }
 function syncLabStageOptions(){
-  const lab=game.lab,select=document.querySelector('#labStageArea');if(select.dataset.mission!==lab.stageMission){select.replaceChildren();const areas=lab.stageMission==='M03'?M03.areas:lab.stageMission==='M02'?M02.areas:MISSION_AREAS;areas.forEach((a,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=`AREA ${String(i+1).padStart(2,'0')} ${a.name}`;select.append(option)});select.dataset.mission=lab.stageMission}
+  const lab=game.lab,select=document.querySelector('#labStageArea');if(select.dataset.mission!==lab.stageMission){select.replaceChildren();const areas=lab.stageMission==='M04'?M04.areas:lab.stageMission==='M03'?M03.areas:lab.stageMission==='M02'?M02.areas:MISSION_AREAS;areas.forEach((a,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=`AREA ${String(i+1).padStart(2,'0')} ${a.name}`;select.append(option)});select.dataset.mission=lab.stageMission}
   document.querySelector('#labStageRoute').disabled=lab.stageMission!=='M02'||lab.stageArea!==2;
 }
 const weaponSearchKey=text=>String(text).normalize("NFKC").toLowerCase().replace(/[\s-]/g,"");
@@ -847,13 +868,14 @@ function closeLabPanel(){if(!game?.lab||state!=="lab")return;resetInput();acc=0;
 function changeLabSetting(target){
   const lab=game?.lab;if(!lab||state!=="lab")return;
   const value=target.value;
+  if(target.id==='labSkyPhase'&&['1','2','3'].includes(value))lab.skyBossPhase=Number(value);
   if(target.id==='labBossPhase'&&['1','2','3'].includes(value))lab.bossPhase=Number(value);
-  if(target.id==='labStageMission'&&['M01','M02','M03'].includes(value))lab.stageMission=value;
+  if(target.id==='labStageMission'&&['M01','M02','M03','M04'].includes(value))lab.stageMission=value;
   if(target.id==='labStageArea'&&Number.isInteger(Number(value))&&Number(value)>=0&&Number(value)<5)lab.stageArea=Number(value);
   if(target.id==='labStageRoute'&&['LOWER','UPPER'].includes(value))lab.stageRoute=value;
   if(target.id==='labValidation'&&Object.hasOwn(VALIDATION_MODES,value)){lab.validationMode=value;if(value!=='A')lab.invincible=value==='C'}
   if(target.id==='labStageDensity'&&Object.hasOwn(DENSITY_MODES,value))lab.stageDensity=value;
-  if(target.id==='labTerrain'&&['M01','M02','M03'].includes(value)){
+  if(target.id==='labTerrain'&&['M01','M02','M03','M04'].includes(value)){
     const previous={...lab,settings:{...lab.settings},equipped:[...lab.equipped]};delete previous.run;delete previous.benchmarkPerformance;startLab(true,value);Object.assign(game.lab,previous,{terrain:value});configureLabPlayer();syncLabUI();return;
   }
   if(target.id==="labWeapon1"||target.id==="labWeapon2"){if(weapon(value)){lab.equipped[target.id==="labWeapon1"?0:1]=value;game.player.shotCd=game.player.switchCd=0}}
@@ -876,6 +898,7 @@ function changeLabSetting(target){
 function clearLabEnemies(){
   if(!game?.lab)return;if(game.lab.run){archiveLabRun();delete game.lab.run;game.clear=false;game.director.stopped=true}game.enemies.length=game.shots.length=game.enemyShots.length=game.effects.length=game.items.length=0;
   game.liveEnemies=game.liveMobs=0;game.bossStarted=game.midbossAlive=false;game.attacks=new AttackDirector();game.grid.rebuild(game.enemies);
+  if(game.sky)game.sky=createSkyState();
   if(game.coast)game.coast=createCoastalState();game.impact=createImpactState();game.shake=0;clearArsenal(game);syncRemoteControl();
 }
 function labTestShot(){
@@ -896,17 +919,18 @@ function labBlast(){
 }
 function spawnLabEnemies(){
   if(!game?.lab)return;
+  if(['interceptor','shielddrone','heavygunner','fortress'].includes(game.lab.enemy)&&game.lab.terrain!=='M04')changeLabSetting({id:'labTerrain',value:'M04'});
   if(['shorecrab','skyray','siegebeetle','leviathan'].includes(game.lab.enemy)&&game.lab.terrain!=='M03')changeLabSetting({id:'labTerrain',value:'M03'});
   if(['nest','queen'].includes(game.lab.enemy)&&game.lab.terrain!=='M02')changeLabSetting({id:'labTerrain',value:'M02'});
   const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
   if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);
-  configureLabPlayer();game.player.x=lab.enemy==='leviathan'?5500:lab.enemy==='queen'?M02.bossX:lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
+  configureLabPlayer();game.player.x=lab.enemy==='fortress'?6090:lab.enemy==='leviathan'?5500:lab.enemy==='queen'?M02.bossX:lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
   game.nextEnemyId=1;game.time=game.kills=game.score=game.crates=0;game.player.shotCd=game.player.switchCd=0;resetInput();
-  const leader=['boss','beetle','queen','leviathan','nest'].includes(lab.enemy),count=leader?1:lab.count;
+  const leader=['boss','beetle','queen','leviathan','fortress','nest'].includes(lab.enemy),count=leader?1:lab.count;
   game.area=0;game.areaTimer=0;game.areaText='';delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode;if(game.coast){game.coast.safeX=game.player.x;game.coast.safeY=game.player.y}
-  for(let i=0;i<count;i++){const pos=lab.enemy==='leviathan'?{x:M03.bossSpawnX,y:48}:lab.enemy==='queen'?{x:M02.bossSpawnX,y:52}:lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}
-  game.bossStarted=lab.enemy==="boss"||lab.enemy==='queen'||lab.enemy==='leviathan';game.battleCamera=createBattleCamera(game.player);
+  for(let i=0;i<count;i++){const pos=lab.enemy==='fortress'?{x:M04.bossSpawnX,y:68}:lab.enemy==='leviathan'?{x:M03.bossSpawnX,y:48}:lab.enemy==='queen'?{x:M02.bossSpawnX,y:52}:lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}
+  game.bossStarted=lab.enemy==="boss"||lab.enemy==='queen'||lab.enemy==='leviathan'||lab.enemy==='fortress';if(lab.enemy==='fortress')resetSkyBossPhase(game,game.enemies.find(e=>e.type==='fortress'),lab.skyBossPhase??1);game.battleCamera=createBattleCamera(game.player);
   if(lab.cameraMode==="FIXED")fixedLabCamera(game.battleCamera,game.player,lab.fixedZoom);else updateBattleCamera(game.battleCamera,game.player,game.enemies,game,1);
   syncCameraView();syncLabUI();document.querySelector("#labSpawnResult").textContent=`${game.liveEnemies}体を再配置（プレイヤーも開始位置へ復帰）`;
 }
@@ -919,7 +943,7 @@ function startMobileMeasurement(){
   const scenario=document.querySelector('#mobileScenario').value||'CURRENT';
   if(!['CURRENT','50','100','200'].includes(scenario))return false;
   if(scenario!=='CURRENT'){
-    const lab=game.lab;lab.enemy=lab.terrain==='M03'?'shorecrab':lab.terrain==='M02'?'worm':'crawler';lab.count=Number(scenario);spawnLabEnemies();
+    const lab=game.lab;lab.enemy=lab.terrain==='M04'?'interceptor':lab.terrain==='M03'?'shorecrab':lab.terrain==='M02'?'worm':'crawler';lab.count=Number(scenario);spawnLabEnemies();
   }
   const p=game.player;
   const result=mobilePlaytest.start({version:VERSION,environment:mobileEnvironment,missionId:game.missionId,area:Math.max(1,game.area+1),playerClass:game.lab.preset,

@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "currentSector": "homeward-08",
+  "cleared": [
+    "homeward-01",
+    "homeward-02",
+    "homeward-03",
+    "homeward-04",
+    "homeward-05",
+    "homeward-06",
+    "homeward-07",
+    "homeward-08"
+  ],
+  "openingSeen": true,
+  "active": true,
+  "eventsSeen": [
+    "homeward-03:enter",
+    "homeward-04:enter",
+    "homeward-04:arrival",
+    "homeward-05:enter",
+    "homeward-05:arrival",
+    "homeward-06:enter",
+    "homeward-06:arrival",
+    "homeward-07:enter",
+    "homeward-07:arrival",
+    "homeward-08:enter",
+    "homeward-08:arrival"
+  ],
+  "tutorial": {
+    "homeward-01": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-02": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-03": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-04": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": 0,
+      "speed": 170
+    },
+    "homeward-05": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": -5,
+      "speed": 170
+    },
+    "homeward-06": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": 0,
+      "speed": 170
+    },
+    "homeward-07": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": 0,
+      "speed": 170
+    },
+    "homeward-08": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": 1,
+      "speed": 170
+    }
+  },
+  "journal": {
+    "homeward-04": {
+      "departure": "出航：破片の流れを観測し、隙間へ向かう。",
+      "encounter": "遭遇：移動する隕石群。接触は船体を損なう。",
+      "encounters": [
+        "homeward-04-meteor"
+      ],
+      "discovery": "発見：破片の組成から、古い航路標識の進行方向を復元した。",
+      "lastResult": "clear",
+      "elapsed": 4.275000000000002,
+      "flightToken": "7b22eb40-1950-4bff-a30a-df01a71c56af",
+      "flightId": "7b22eb40-1950-4bff-a30a-df01a71c56af",
+      "arrival": "到着04：破片の海を突破。地球へ向かう標識を再捕捉した。",
+      "clearFlightId": "7b22eb40-1950-4bff-a30a-df01a71c56af"
+    },
+    "homeward-05": {
+      "departure": "出航：彗星の尾を航路へ重ねる。",
+      "encounter": "遭遇：蒼い尾は加速域。本体への接触は危険。",
+      "encounters": [
+        "homeward-05-comet"
+      ],
+      "discovery": "発見：尾の粒子に、地球と同じ水素の比率。故郷へ続く流れがある。",
+      "lastResult": "clear",
+      "elapsed": 4.300000000000003,
+      "flightToken": "ac26d85d-26d8-4106-a469-e0e180c47548",
+      "flightId": "ac26d85d-26d8-4106-a469-e0e180c47548",
+      "arrival": "到着05：彗星の加速でゲートへ。地球へ続く流れの座標を記録した。",
+      "clearFlightId": "ac26d85d-26d8-4106-a469-e0e180c47548"
+    },
+    "homeward-06": {
+      "departure": "出航：沈黙する灯台の受信圏へ。",
+      "encounter": "遭遇：ステーション。100航行単位以内で情報を受信できる。",
+      "encounters": [
+        "homeward-06-station"
+      ],
+      "lastResult": "clear",
+      "elapsed": 5.6500000000000705,
+      "flightToken": "cb9d9a5f-9353-47be-b7a9-d6a951ed5623",
+      "flightId": "cb9d9a5f-9353-47be-b7a9-d6a951ed5623",
+      "discovery": "発見：灯台から帰還信号の中継鍵を取得。次の航路を解放できる。",
+      "arrival": "到着06：中継鍵を認証。地球の時刻信号が、隣の宙域へ道を開いた。",
+      "clearFlightId": "cb9d9a5f-9353-47be-b7a9-d6a951ed5623"
+    },
+    "homeward-07": {
+      "choice": "avoid",
+      "choiceLog": "回避を選択。接触を避けて帰還を優先する。",
+      "choiceHistory": [
+        {
+          "choice": "pursue",
+          "text": "追跡を選択。遠回りして航跡を観測する。",
+          "at": 1793041174038
+        },
+        {
+          "choice": "avoid",
+          "text": "回避を選択。接触を避けて帰還を優先する。",
+          "at": 1793041174112
+        }
+      ],
+      "departure": "出航：未知の航跡との距離を測る。",
+      "encounter": "遭遇：周回するUFO。接触を避け、140航行単位以内で動きを観測する。",
+      "encounters": [
+        "homeward-07-ufo"
+      ],
+      "discovery": "発見：動体は地球の信号を避けていない。誰かも同じ方向を見ている。",
+      "lastResult": "clear",
+      "elapsed": 5.508333333333397,
+      "flightToken": "34459d00-9b6c-4862-9c06-08bbf6c70b0e",
+      "flightId": "34459d00-9b6c-4862-9c06-08bbf6c70b0e",
+      "arrival": "到着07：動体との距離を保って通過。選んだ航路を航海日誌へ記録した。",
+      "clearFlightId": "34459d00-9b6c-4862-9c06-08bbf6c70b0e"
+    },
+    "homeward-08": {
+      "departure": "出航：歪んだ重力場を、帰還への曲線に変える。",
+      "encounter": "遭遇：未知の物体。紫の領域内では引力が働き、本体に触れると失敗する。",
+      "encounters": [
+        "homeward-08-unknown"
+      ],
+      "discovery": "発見：異常重力は信号の鏡だった。地球の位置を絞る新たな基準点を得た。",
+      "lastResult": "clear",
+      "elapsed": 4.7916666666666945,
+      "flightToken": "8819993e-b5c1-4e6e-9000-d4ccce6268d5",
+      "flightId": "8819993e-b5c1-4e6e-9000-d4ccce6268d5",
+      "arrival": "到着08：歪みを抜け、新しい宙域へ。まだ帰れない。それでも、故郷の位置は確かになった。",
+      "clearFlightId": "8819993e-b5c1-4e6e-9000-d4ccce6268d5"
+    }
+  },
+  "choices": {
+    "homeward-07": "avoid"
+  }
+}

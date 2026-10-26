@@ -1,11 +1,13 @@
 import { GOALS, ITEMS, MACHINE, RARITIES, VERSION, itemById } from "./data.js";
 import { createGame } from "./game-state.js";
+import { createGachaExperience } from "./experience.js";
 
 const game = createGame();
 game.load();
 let activeTab = "home";
 let crownType = null;
 let toastTimer;
+let experience;
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const fmt = (number) => new Intl.NumberFormat("ja-JP").format(Math.round(number));
@@ -25,7 +27,12 @@ function showToast(message) {
 }
 
 function showTab(tab) {
+  if (experience?.busy) return;
+  experience?.cancelTurn();
   activeTab = tab;
+  const machineTab = tab === "home" || tab === "gacha";
+  if (machineTab) $(`#${tab}-machine-mount`).append($("#gacha-machine"));
+  $("#machine-actions").hidden = !machineTab;
   $$(".screen").forEach((screen) => screen.classList.toggle("active", screen.dataset.screen === tab));
   $$(".tabbar button").forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -104,23 +111,36 @@ function render() {
   $("#coins").textContent = `${fmt(state.coins)} G`;
   $("#followers").textContent = fmt(state.followers);
   $("#cycle").textContent = state.cycle;
-  $("#draw-button").disabled = state.coins < MACHINE.cost;
   document.body.classList.toggle("reduced-motion", state.settings.reducedMotion);
   $("#motion-toggle").checked = state.settings.reducedMotion;
+  $("#mute-toggle").checked = state.settings.muted;
+  $("#play-mode").value = state.settings.playMode;
   renderGoals(state);
   renderInventory(state);
   renderListings(state);
   renderPosts(state);
-  $("#home-stats").innerHTML = `<div><strong>${state.discovered.length}/${ITEMS.length}</strong><span>図鑑</span></div><div><strong>${state.stats.draws}</strong><span>ガチャ</span></div><div><strong>${state.stats.sales}</strong><span>売却</span></div><div><strong>${Object.values(state.crowns).reduce((a, b) => a + b, 0)}</strong><span>王冠</span></div>`;
+  $("#home-stats").innerHTML = `<span>図鑑 <b>${state.discovered.length}/${ITEMS.length}</b></span><span>♛ <b>${Object.values(state.crowns).reduce((a, b) => a + b, 0)}</b></span><span>${state.stats.draws}回まわした</span>`;
   const rescueNeeded = state.coins < MACHINE.cost && !state.inventory.length && !state.listings.length;
   $("#rescue-button").classList.toggle("hidden", !rescueNeeded);
+  $("#funds-help").classList.toggle("hidden", state.coins >= MACHINE.cost || rescueNeeded);
+  experience?.sync();
 }
 
-function showResult(item, isNew, collectionBonus = 0) {
+function showResult(pending, sound = true) {
+  const item = itemById(pending.itemId);
+  const { isNew, collectionBonus } = pending;
+  const state = game.getState();
+  const owned = state.inventory.find((entry) => entry.uid === pending.uid);
+  const posted = owned?.posted || state.posts.some((post) => post.sourceUid === pending.uid);
+  const rarityGain = [0, 3, 10, 24, 55][Object.keys(RARITIES).indexOf(item.rarity)];
+  const followers = Math.round(8 + item.value / 40 + rarityGain);
   const dialog = $("#result-dialog");
-  dialog.className = `modal result-modal rarity-${item.rarity}`;
-  $("#result-card").innerHTML = `<div style="${rarityStyle(item)}"><span class="result-status ${isNew ? "new" : "owned"}">${isNew ? "NEW" : "所持済み"}</span>${collectionBonus ? `<span class="collection-bonus">周回初GET +${fmt(collectionBonus)} G</span>` : ""}<div class="item-art result-art">${imageMarkup(item, item.name, true)}</div><p class="rarity">${rarityText(item)}</p><h2>${item.name}</h2><p>${item.flavor}</p><button id="result-continue" class="primary big">所持品を見る <span>GET!</span></button></div>`;
-  dialog.showModal();
+  dialog.className = `modal result-modal revealed rarity-${item.rarity} ${isNew ? "new-find" : "duplicate-find"}`;
+  $("#result-card").hidden = false;
+  $("#result-card").innerHTML = `<div style="${rarityStyle(item)}"><div class="result-badges"><span class="result-status ${isNew ? "new" : "owned"}">${isNew ? "NEW · はじめまして！" : "所持済み"}</span>${collectionBonus ? `<span class="collection-bonus">周回初GET +${fmt(collectionBonus)} G</span>` : ""}</div><div class="item-art result-art">${imageMarkup(item, item.name, true)}</div><p class="rarity">${rarityText(item)}</p><h2>${item.name}</h2><p class="result-flavor">${item.flavor}</p><div class="result-facts"><span>図鑑 <b>${state.discovered.length} / ${ITEMS.length}</b></span><span>即売り <b>${fmt(item.value)} G</b></span><span>フリマ <b>${fmt(item.value * 1.45)} G</b></span></div><p class="social-potential">♡ ${RARITIES[item.rarity].stars >= 4 ? "注目まちがいなし！" : "今日のへんてこをシェア"} 投稿で +${followers}人</p><button id="result-again" class="primary big" ${state.coins < MACHINE.cost ? "disabled" : ""}>もう1回回す <span>200 G ↻</span></button><div class="result-actions"><button id="result-sell" ${owned ? "" : "disabled"}>${owned ? `即売り ${fmt(item.value)} G` : "売却済み"}</button><button id="result-post" ${owned && !posted ? "" : "disabled"}>${posted ? "投稿済み ✓" : owned ? "SNS投稿" : "投稿できません"}</button></div><button id="result-keep" class="keep-button">${owned ? "保管して戻る" : "筐体へ戻る"}</button><small class="autosave-note">獲得品は自動保存されました</small></div>`;
+  if (!dialog.open) dialog.showModal();
+  if (sound) experience?.reward(RARITIES[item.rarity].stars);
+  $("#result-again").focus({ preventScroll: true });
 }
 
 document.addEventListener("error", (event) => {
@@ -132,15 +152,23 @@ document.addEventListener("click", (event) => {
   if (!button) return;
   if (button.dataset.tab) return showTab(button.dataset.tab);
   if (button.hasAttribute("data-close")) return button.closest("dialog")?.close();
-  if (button.hasAttribute("data-skip")) return $("#result-dialog").classList.add("skipped");
+  if (button.hasAttribute("data-skip")) return experience.open({ skip: true });
   if (button.dataset.detail) { renderItemDetail(button.dataset.detail); return $("#item-dialog").showModal(); }
-  if (button.id === "result-continue") { $("#result-dialog").close(); return showTab("inventory"); }
-  if (button.id === "draw-button") {
-    const result = game.draw();
-    if (!result.ok) return showToast("コインが足りません");
-    showResult(result.item, result.isNew, result.collectionBonus);
-    return render();
+  if (button.id === "result-keep") return experience.finish();
+  if (button.id === "result-again") {
+    if (!game.getState().pendingDraw?.revealed || !$("#result-dialog").open) return;
+    experience.finish();
+    return experience.tapTurn();
   }
+  if (button.id === "result-sell" || button.id === "result-post") {
+    const pending = game.getState().pendingDraw;
+    if (!pending?.revealed) return;
+    const result = button.id === "result-sell" ? game.quickSell(pending.uid) : game.postItem(pending.uid);
+    if (result.ok) showToast(button.id === "result-sell" ? `${fmt(result.amount)} G で即売りしました` : `フォロワー +${result.followers}人！`);
+    return showResult(pending, false);
+  }
+  if (button.id === "draw-button") return experience.tapTurn();
+  if (button.id === "dispense-skip") return experience.open({ skip: true });
   if (button.dataset.sell) {
     const dialog = button.closest("dialog");
     const result = game.quickSell(button.dataset.sell);
@@ -163,6 +191,7 @@ document.addEventListener("click", (event) => {
   }
   if (button.dataset.crown) {
     crownType = button.dataset.crown;
+    $("#goals-dialog").close();
     $("#crown-title").textContent = `${GOALS[crownType].name}の王冠！`;
     return $("#crown-dialog").showModal();
   }
@@ -176,12 +205,18 @@ document.addEventListener("click", (event) => {
   }
   if (button.id === "rescue-button") { if (game.rescue().ok) showToast("王様支援 600 G（資金王の判定外）"); return render(); }
   if (button.id === "book-button") { renderBook(game.getState()); return $("#book-dialog").showModal(); }
-  if (button.id === "settings-button") return $("#settings-dialog").showModal();
+  if (button.id === "settings-button" || button.id === "mode-button") { experience.cancelTurn(); return $("#settings-dialog").showModal(); }
+  if (button.id === "goals-button" || button.hasAttribute("data-open-goals")) { experience.cancelTurn(); return $("#goals-dialog").showModal(); }
 });
 
 $("#motion-toggle").addEventListener("change", (event) => game.setReducedMotion(event.target.checked));
+$("#mute-toggle").addEventListener("change", (event) => game.setMuted(event.target.checked));
+$("#play-mode").addEventListener("change", (event) => game.setPlayMode(event.target.value));
+$("#machine-samples").innerHTML = [ITEMS[0], ITEMS[6], ITEMS[11]].map((item) => `<span class="item-art" style="${rarityStyle(item)}">${imageMarkup(item, item.name, true)}</span>`).join("");
 $("#rates").innerHTML = MACHINE.rates.map(([id, rate]) => `<div class="rate-row"><b style="color:${RARITIES[id].color}">${RARITIES[id].label}</b><i style="max-width:${rate * 2}px;background:${RARITIES[id].color}"></i><span>${rate}%</span></div>`).join("");
 $(".version").textContent = `GACHA KING v${VERSION}`;
+experience = createGachaExperience({ game, showResult, notify: showToast });
 game.subscribe(render);
 setInterval(() => { if (activeTab === "market") render(); else game.settleListings(); }, 1000);
 render();
+experience.restore();

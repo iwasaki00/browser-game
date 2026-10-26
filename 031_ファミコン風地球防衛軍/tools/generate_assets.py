@@ -576,7 +576,14 @@ def main():
     parser.add_argument("--art-readability-only", action="store_true", help="Generate isolated Study 01-B readability art only")
     parser.add_argument("--art-unified-only", action="store_true", help="Generate isolated UNIFIED 01 art only; preserve all earlier sets")
     parser.add_argument("--coastal-only", action="store_true", help="Generate only M03 COASTAL 01 assets; preserve all earlier PNGs")
+    parser.add_argument("--sky-only", action="store_true", help="Generate isolated M04 SKY 01 assets only")
     args=parser.parse_args()
+    if args.sky_only:
+        if any(value for key,value in vars(args).items() if key!="sky_only"):
+            parser.error("--sky-only cannot be combined with other generation flags")
+        from sky_assets import generate
+        generate(ROOT)
+        return
     if args.coastal_only:
         if any(value for key,value in vars(args).items() if key!='coastal_only'):
             parser.error("--coastal-only cannot be combined with other generation flags")

@@ -1,4 +1,4 @@
-export const VERSION = "0.3.3";
+export const VERSION = "0.4.0";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -75,7 +75,8 @@ export const MISSIONS = Object.freeze([
   {id:"M01",name:"市街地防衛線",description:"侵攻群を突破し、巣の中心を破壊せよ",implemented:true},
   {id:"M02",name:"地下侵攻作戦",description:"配管と上下分岐を突破し、アビス・クイーンを撃破せよ",implemented:true},
   {id:"M03",name:"沿岸防衛戦",description:"港湾を守り、海洋侵略生物リヴァイアサンを撃破せよ",implemented:true},
-  {id:"M04",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
+  {id:"M04",name:"天空要塞迎撃戦",description:"輸送足場と防衛線を突破し、天空要塞中枢を破壊せよ",implemented:true},
+  {id:"M05",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
 ]);
 
 const validMissionId = id => typeof id==="string" && /^M\d{2,}$/.test(id) && Number(id.slice(1))>0 && Number.isSafeInteger(Number(id.slice(1)));
@@ -141,7 +142,12 @@ export const ENEMY_TYPES = {
   shorecrab:{id:"E-07",name:"ショアクラブ",hp:70,speed:36,damage:12,score:220,w:40,h:24},
   skyray:{id:"E-08",name:"スカイレイ",hp:45,speed:48,damage:10,score:260,w:40,h:24},
   siegebeetle:{id:"E-09",name:"シージビートル",hp:180,speed:18,damage:18,score:900,w:48,h:40},
-  leviathan:{id:"B-03",name:"リヴァイアサン",hp:3000,speed:0,damage:25,score:24000,w:160,h:96}
+  leviathan:{id:"B-03",name:"リヴァイアサン",hp:3000,speed:0,damage:25,score:24000,w:160,h:96},
+  interceptor:{id:"E-10",name:"インターセプター",hp:60,speed:70,damage:12,score:300,w:36,h:22},
+  shielddrone:{id:"E-11",name:"シールドドローン",hp:85,speed:30,damage:8,score:450,w:32,h:28},
+  heavygunner:{id:"E-12",name:"ヘビーガンナー",hp:220,speed:0,damage:18,score:1000,w:40,h:36},
+  fortress:{id:"B-04",name:"SKY FORTRESS CORE",hp:3200,speed:0,damage:0,score:30000,w:64,h:64},
+  skydevice:{id:"O-04",name:"要塞防衛装置",hp:220,speed:0,damage:0,score:0,w:28,h:32}
 };
 
 export const MISSION_AREAS = [

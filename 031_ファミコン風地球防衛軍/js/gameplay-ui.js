@@ -20,7 +20,7 @@ export function drawCombatHud(c,g,equipped,weapon,icon,timeLabel){
   c.restore();
 }
 export function drawBossHud(c,boss,core){
-  if(!boss)return;const id=boss.type==='boss'?'B-01':boss.type==='queen'?'B-02':'B-03';c.save();c.fillStyle='#071322e8';c.fillRect(119,39,197,17);c.font='7px monospace';c.fillStyle='#f0e2bb';c.fillText(`${id} ${core?(core.open?'CORE OPEN':'CORE CLOSED'):'ARMOR'}`,123,46);c.textAlign='right';c.fillText(`${Math.ceil(Math.max(0,boss.hp))}/${boss.maxHp}`,312,46);c.fillStyle='#3b2334';c.fillRect(123,49,189,4);c.fillStyle=core?.open?'#ffb37c':'#ee6e8e';c.fillRect(123,49,189*clamp(boss.hp/boss.maxHp,0,1),4);c.restore();
+  if(!boss)return;const id=boss.type==='boss'?'B-01':boss.type==='queen'?'B-02':boss.type==='fortress'?'B-04 P'+boss.skyPhase:'B-03';c.save();c.fillStyle='#071322e8';c.fillRect(119,39,197,17);c.font='7px monospace';c.fillStyle='#f0e2bb';c.fillText(`${id} ${core?(core.open?'CORE OPEN':'CORE CLOSED'):'ARMOR'}`,123,46);c.textAlign='right';c.fillText(`${Math.ceil(Math.max(0,boss.hp))}/${boss.maxHp}`,312,46);c.fillStyle='#3b2334';c.fillRect(123,49,189,4);c.fillStyle=core?.open?'#ffb37c':'#ee6e8e';c.fillRect(123,49,189*clamp(boss.hp/boss.maxHp,0,1),4);c.restore();
 }
 export function drawCoreMarker(c,point,core,zoom,flash=0){
   if(point.x<8||point.x>312||point.y<40||point.y>170)return;const r=clamp(core.r*zoom,7,18),x=Math.round(point.x),y=Math.round(point.y);c.save();c.lineWidth=1;c.strokeStyle=flash>0?'#fff8d3':core.open?'#ffd37e':'#8498a6';c.globalAlpha=core.open?1:.65;

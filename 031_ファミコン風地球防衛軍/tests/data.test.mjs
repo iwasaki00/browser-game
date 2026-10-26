@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {VERSION,BATTLE_CAMERA,MISSIONS,WEAPONS,ENEMY_TYPES,sanitizeSave,pickReward,DEFAULT_SAVE,visibleWorldWidth,recordMissionClear,canPlayMission,missionStatus} from "../js/data.js";
 
 test("dynamic camera has bounded zoom and a 0.50 idle view",()=>{
-  assert.equal(VERSION,"0.3.3");
+  assert.equal(VERSION,"0.4.0");
   assert.equal(BATTLE_CAMERA.minZoom,.35);assert.equal(BATTLE_CAMERA.maxZoom,.85);assert.equal(BATTLE_CAMERA.idleZoom,.50);
   assert.ok(Math.abs(visibleWorldWidth(BATTLE_CAMERA.minZoom)-914.285714)<.00001);
   assert.equal(visibleWorldWidth(BATTLE_CAMERA.idleZoom),640);
@@ -15,7 +15,7 @@ test("v1 save migration retains weapons, scores, settings and M01 clear",()=>{
   assert.deepEqual(s.equipped,["L-03","R-04"]);assert.ok(s.unlocked.includes("L-03"));assert.equal(s.highScore,12345);assert.equal(s.bestTime,95);assert.equal(s.settings.sound,false);
   assert.equal(missionStatus(MISSIONS[0],s),"CLEAR");assert.equal(canPlayMission("M01",s),true);
   assert.equal(missionStatus(MISSIONS[1],s),"OPEN");assert.equal(canPlayMission("M02",s),true);
-  assert.equal(missionStatus(MISSIONS[2],s),"LOCKED");assert.equal(canPlayMission("M03",s),false);assert.equal(missionStatus(MISSIONS[3],s),"COMING SOON");
+  assert.equal(missionStatus(MISSIONS[2],s),"LOCKED");assert.equal(canPlayMission("M03",s),false);assert.equal(missionStatus(MISSIONS[3],s),"LOCKED");assert.equal(missionStatus(MISSIONS[4],s),"COMING SOON");
   assert.equal(canPlayMission("M99",s),false);
 });
 

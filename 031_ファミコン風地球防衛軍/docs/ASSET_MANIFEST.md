@@ -1,4 +1,8 @@
 # Asset Manifest
+## SKY 01 / M04（0.4.0）
+
+`assets/sky-01/catalog.json`に19PNGの寸法・セル・SHA-256を記録。背景4、16セル地形アトラス1、E-10/E-11/E-12/B-04/固定装置の通常・遠距離アトラス10、FX4。Python/Pillowの固定seed4007200で `py -3 tools/generate_assets.py --sky-only`。既存PNGは上書きしない。ソース2px=1ワールドpx、nearest-neighbor、透過は0/255。コア中心アンカーは(80,64)、世界座標(6650,100)。[M04素材仕様](MISSION_04.md#素材と再生成)。
+
 
 ## COASTAL 01 / 0.3.0（M03・UNIFIED 01準拠）
 

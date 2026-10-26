@@ -302,6 +302,13 @@ input[type='range'] { height:30px; }
 .settings-dialog .homeward-primary { width:100%; background:#164f50; border-color:#70d5c8; font-weight:700; }
 .homeward-save-notice { color:#ffc68c; font-size:12px; line-height:1.6; }
 .homeward-save-notice:empty { display:none; }
+.homeward-choices { display:grid; gap:8px; margin:12px 0; }
+.homeward-choices[hidden] { display:none; }
+.homeward-choices button { white-space:normal; line-height:1.5; }
+.homeward-choices button[aria-pressed='true'] { border-color:#9ef1c9; background:#164d48; }
+#homewardJournal article { border-top:1px solid #335366; padding:8px 0; }
+#homewardJournal p { font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+#homewardJournal button { width:100%; white-space:normal; margin:4px 0; }
 .homeward-coach { position:absolute; top:25px; left:7px; right:85px; max-height:calc(100% - 100px); overflow-y:auto; overscroll-behavior:contain; touch-action:pan-y; padding:6px 8px; border:1px solid #a5b875; border-radius:9px; background:#0b2134f2; color:#dcecf8; z-index:1; }
 .homeward-coach header { display:flex; align-items:center; justify-content:space-between; gap:4px; }
 .homeward-coach strong { font-size:10px; color:#ffe6a1; }

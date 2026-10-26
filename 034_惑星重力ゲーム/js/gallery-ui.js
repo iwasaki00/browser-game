@@ -43,7 +43,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
   $('#galleryNotice').textContent=message;$('#galleryMessage').textContent=message;
   clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>{$('#galleryNotice').textContent='';},message==='軌道を保存しました。'?2500:8000);
  }
- async function save(flight){try{await store.save(flight);notify('軌道を保存しました。');}catch(error){notify(galleryErrorMessage(error));}}
+ async function save(flight){try{await store.save(flight);notify('軌道を保存しました。');return true;}catch(error){notify(galleryErrorMessage(error));return false;}}
  function clearGesture(){pan=null;multi=false;cameraPointers.clear();replay?.camera.endPan();replay?.camera.endGesture();}
  function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;replay?.pause();clearGesture();}
  function resize(){
@@ -118,5 +118,13 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
  const endPointer=event=>{cameraPointers.delete(event.pointerId);if(pan?.id===event.pointerId){pan=null;replay?.camera.endPan();}if(multi){if(cameraPointers.size===2)replay?.camera.beginGesture([...cameraPointers.values()]);else replay?.camera.endGesture();if(!cameraPointers.size)multi=false;}};
  for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,endPointer);
  window.addEventListener('blur',clearGesture);
- return {save,notify,isOpen:()=>Boolean(dialog.open)};
+ async function openRecord(id){
+  if(!canOpen())return false;
+  try{
+   const row=(await store.list()).find(row=>row.id===id);
+   if(!row){notify('参照先の航行記録がありません。自動整理・個別削除された記録は再生できません。');return false;}
+   onOpen();if(!dialog.open)dialog.showModal();$('#galleryDefaultCamera').value='cinematic';play(row);return true;
+  }catch(error){notify(galleryErrorMessage(error));return false;}
+ }
+ return {save,notify,openRecord,isOpen:()=>Boolean(dialog.open)};
 }

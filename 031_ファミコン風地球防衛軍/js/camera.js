@@ -51,11 +51,11 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   const playerY=player.y+(player.h||27)/2;
   for(let i=0;i<enemies.length;i++){
     const enemy=enemies[i];
-    if(enemy.dead||enemy.active===false||enemy.spawned===false||enemy.hp<=0)continue;
+    if(enemy.fixedDevice||enemy.dead||enemy.active===false||enemy.spawned===false||enemy.hp<=0)continue;
     const dx=enemy.x-player.x,dy=enemy.y+(enemy.h||0)/2-playerY;
     const distance=Math.hypot(dx,dy);
-    if(distance>c.evaluationDistance)continue;
-    if(enemy.type==="boss"||enemy.type==="queen"||enemy.type==='leviathan'){
+    if(distance>c.evaluationDistance&&!(enemy.type==='fortress'&&battle.bossStarted))continue;
+    if(enemy.type==="boss"||enemy.type==="queen"||enemy.type==='leviathan'||enemy.type==='fortress'){
       if(battle.bossStarted)boss=enemy;
       continue;
     }
@@ -91,8 +91,9 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   const leader=boss||midboss;
   if(leader){
     const padding=boss?c.bossPadding:c.midbossPadding;
-    left=Math.min(player.x-14,leader.x-(leader.w||88)/2);
-    right=Math.max(player.x+14,leader.x+(leader.w||88)/2);
+    let focus=leader;if(leader.type==='fortress'&&leader.skyPhase<3){let best=Infinity;for(const part of leader.activeParts??[])if(!part.dead&&part.partKind===(leader.skyPhase===1?'turret':'generator')){const d=Math.abs(part.x-player.x);if(d<best){best=d;focus=part}}}
+    left=Math.min(player.x-14,focus.x-(focus.w||88)/2);
+    right=Math.max(player.x+14,focus.x+(focus.w||88)/2);
     raw=clamp(VIEW.canvasWidth/(right-left+padding*2),boss?c.bossMinZoom:c.minZoom,boss?c.bossMaxZoom:c.midbossMaxZoom);
     focusX=(left+right)/2;mode=boss?"boss":"midboss";
   }

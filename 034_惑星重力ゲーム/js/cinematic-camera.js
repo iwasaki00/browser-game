@@ -1,3 +1,4 @@
+import {encounterPosition,encounterExtent} from './encounters.js';
 // Presentation only. Reads snapshots; never integrates or changes a simulation.
 export const CINEMATIC = Object.freeze({
   launchSeconds:.8, launchZoom:1.15, cruiseZoom:1.05, arrivalZoom:1.35,
@@ -16,7 +17,7 @@ export class CinematicCamera {
     const config=CINEMATIC,rocket=state.rocket.position,velocity=state.rocket.velocity;
     const speed=Math.hypot(velocity.x,velocity.y),factor=clamp(Math.sqrt(Math.max(state.world.width/375,state.world.height/500)),1,Math.sqrt(10));
     const planetRange=p=>Math.max(config.planetDistance*factor,extent(p)*4);
-    const planets=state.planets??[];
+    const planets=[...(state.planets??[]),...(state.encounters??[]).map(e=>({...encounterPosition(e,state.elapsed),id:e.id,radius:encounterExtent(e)}))];
     let planet=planets.find(p=>p.id===this.planetId);
     if(planet&&distance(rocket,planet)>planetRange(planet)*config.exitRatio)planet=null;
     if(!planet)planet=planets.filter(p=>distance(rocket,p)<=planetRange(p)).sort((a,b)=>distance(rocket,a)/planetRange(a)-distance(rocket,b)/planetRange(b)||String(a.id).localeCompare(String(b.id)))[0];

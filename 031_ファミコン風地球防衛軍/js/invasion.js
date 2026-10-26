@@ -1,6 +1,6 @@
 import {WORLD,ENEMY_TYPES,DENSITY_MODES,INVASION,SPAWN_PATTERNS,M01_ENCOUNTERS,clamp} from "./data.js";
 
-export const isMob = e => !["boss","beetle","queen","leviathan","nest","barrier"].includes(e.type);
+export const isMob = e => !["boss","beetle","queen","leviathan","fortress","skydevice","nest","barrier"].includes(e.type);
 export const variation = uid => ((uid*2654435761)>>>0)/4294967296;
 
 export class SpatialGrid {
@@ -74,7 +74,7 @@ export class SpawnDirector {
     const x=clamp(desired,24,(game.world??WORLD).width-24);
     if(Math.abs(x-p.x)<INVASION.minSpawnDistance)return null;
     const type=d.enemy??pattern.enemy;
-    const y=type==="skyray"?36+(ordinal%3)*12:type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
+    const y=["interceptor","shielddrone"].includes(type)?48+(ordinal%4)*12:type==="skyray"?36+(ordinal%3)*12:type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
     return {x,y};
   }
 }

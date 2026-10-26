@@ -19,6 +19,18 @@ export const TUTORIAL_STEPS={
   {id:'observe',target:'planet',text:'反発と引力の間を航行中。危険領域を避けてゲートへ。'},
  ],
 };
+for(const [number,target,text]of [
+ ['04','thrust','THRUSTで隕石群と交差する時刻を変えよう。'],
+ ['05','angle','ANGLEを変え、蒼い尾に重なる航路を探そう。'],
+ ['06','angle','灯台へ接近してから、ゲートへ向かおう。'],
+ ['07','angle','追跡／回避のヒントを参考に、動体との接触を避けよう。'],
+ ['08','thrust','推力を変え、異常重力で下へ曲がる航路を探そう。'],
+])TUTORIAL_STEPS[`homeward-${number}`]=[
+ {id:target,target,text},
+ {id:'preview',target:'preview',text:'予測で接触と出口を確認。到着予測とは別に、各セクターの遭遇条件も必要です。',manual:true},
+ {id:'launch',target:'launch',text:'調整した航路で発射しよう。失敗したらヒントを見て再挑戦。'},
+ {id:'observe',target:'preview',text:'航行中。発見は日誌へ記録されます。速度倍率やカメラも利用できます。'},
+];
 export function tutorialEntry(state,id){
  const steps=TUTORIAL_STEPS[id];if(!steps)return null;
  const raw=state.tutorial?.[id]??{},status=raw.status==='skipped'?'skipped':state.cleared.includes(id)||raw.status==='completed'?'completed':'active';

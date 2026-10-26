@@ -11,12 +11,13 @@ export function createInitialState(legacy = {}) {
     inventory: [],
     listings: [],
     posts: [],
+    pendingDraw: null,
     discovered: [...new Set(legacy.discovered || [])],
     runCollected: [...new Set(legacy.runCollected || [])],
     supportReceived: Math.max(0, Number(legacy.supportReceived) || 0),
     crowns: { money: 0, collection: 0, popularity: 0, ...(legacy.crowns || {}) },
     cycle: Math.max(1, legacy.cycle || 1),
-    settings: { reducedMotion: false, ...(legacy.settings || {}) },
+    settings: { reducedMotion: false, muted: false, playMode: "normal", ...(legacy.settings || {}) },
     stats: { draws: 0, sales: 0, posts: 0, rescues: 0 },
     nextId: 1,
     updatedAt: Date.now()
@@ -43,6 +44,12 @@ function normalizeState(raw) {
   state.listings = Array.isArray(state.listings) ? state.listings.filter((entry) => itemById(entry.itemId)) : [];
   state.posts = Array.isArray(state.posts) ? state.posts : [];
   state.stats = { ...base.stats, ...(state.stats || {}) };
+  state.settings = { ...base.settings, ...(raw.settings || {}) };
+  if (!["normal", "careful", "quick"].includes(state.settings.playMode)) state.settings.playMode = "normal";
+  state.pendingDraw = raw.pendingDraw && itemById(raw.pendingDraw.itemId)
+    && (state.inventory.some((owned) => owned.uid === raw.pendingDraw.uid)
+      || state.posts.some((post) => post.sourceUid === raw.pendingDraw.uid))
+    ? { ...raw.pendingDraw, revealed: Boolean(raw.pendingDraw.revealed) } : null;
   const currentCycleIds = [...state.inventory, ...state.listings, ...state.posts].map((entry) => entry.itemId).filter((id) => itemById(id));
   state.runCollected = Array.isArray(raw.runCollected)
     ? [...new Set(raw.runCollected.filter((id) => itemById(id)))]
@@ -80,7 +87,8 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
   function getState() { return clone(state); }
   function subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); }
 
-  function draw() {
+  function draw({ recordPending = false } = {}) {
+    if (state.pendingDraw) return { ok: false, reason: "pending" };
     if (state.coins < MACHINE.cost) return { ok: false, reason: "funds" };
     state.coins -= MACHINE.cost;
     const roll = Math.min(0.999999999, Math.max(0, rng())) * 10000;
@@ -97,6 +105,10 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
       state.supportReceived += FIRST_COLLECTION_BONUS;
     }
     state.stats.draws += 1;
+    if (recordPending) state.pendingDraw = {
+      uid: owned.uid, itemId: item.id, isNew,
+      collectionBonus: isFirstThisCycle ? FIRST_COLLECTION_BONUS : 0, revealed: false
+    };
     emit();
     return { ok: true, item: clone(item), owned: clone(owned), isNew, collectionBonus: isFirstThisCycle ? FIRST_COLLECTION_BONUS : 0 };
   }
@@ -196,5 +208,21 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
 
   function setReducedMotion(value) { state.settings.reducedMotion = Boolean(value); emit(); }
 
-  return { load, save, getState, subscribe, draw, quickSell, listItem, settleListings, postItem, achievements, collectionCount, moneyProgress, claimCrown, rescue, setReducedMotion };
+  function setPlayMode(mode) {
+    if (!["normal", "careful", "quick"].includes(mode)) return;
+    state.settings.playMode = mode; emit();
+  }
+
+  function setMuted(value) { state.settings.muted = Boolean(value); emit(); }
+  function beginDraw() { return draw({ recordPending: true }); }
+  function revealPendingDraw() {
+    if (!state.pendingDraw || state.pendingDraw.revealed) return false;
+    state.pendingDraw.revealed = true; emit(); return true;
+  }
+  function finishPendingDraw() {
+    if (!state.pendingDraw) return;
+    state.pendingDraw = null; emit();
+  }
+
+  return { load, save, getState, subscribe, draw, beginDraw, revealPendingDraw, finishPendingDraw, quickSell, listItem, settleListings, postItem, achievements, collectionCount, moneyProgress, claimCrown, rescue, setReducedMotion, setPlayMode, setMuted };
 }

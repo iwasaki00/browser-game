@@ -15,6 +15,8 @@ import {FlightClock} from './flight-clock.js';
 import {Starfield} from './starfield.js';
 import {createFreeWorld,getHugeSample} from './worlds.js';
 import {getHomewardSector,getHomewardDefinition} from './homeward-data.js';
+import {newMission,observeMission,missionSatisfied,MISSION_HINT} from './homeward-mission.js';
+let missionEvidence=newMission(),flightChoice=null;
 import {HomewardProgress,homewardDistance,sectorUnlocked} from './homeward-progress.js';
 import {createHomewardUI} from './homeward-ui.js';
 import {TUTORIAL_STEPS,tutorialEntry,tutorialTransition} from './homeward-tutorial.js';
@@ -344,7 +346,8 @@ function draw(time) {
   drawMinimap(rocket.position);
   const log=playType==='homeward'&&mode==='flying'&&simulation.elapsed<3?getHomewardDefinition(stage.id).departure:'';
   if(document.querySelector('#voyageLog').textContent!==log)document.querySelector('#voyageLog').textContent=log;
-  const event=simulation?.encounterEvents?.at(-1),encounterLog=event?(event.type==='station'?'発見：宇宙ステーション。航路情報を記録しました。':'未知の物体が反応。重力異常を観測しました。'):'';
+  const event=simulation?.encounterEvents?.at(-1),sectorLog=playType==='homeward'&&simulation&&stage.mission&&missionEvidence.encounters.length?getHomewardDefinition(stage.id):null;
+  const encounterLog=sectorLog?(missionSatisfied(stage,missionEvidence,flightChoice)?sectorLog.discovery:sectorLog.encounterLog):event?(event.type==='station'?'発見：宇宙ステーション。航路情報を記録しました。':'未知の物体が反応。重力異常を観測しました。'):'';
   if(document.querySelector('#encounterLog').textContent!==encounterLog)document.querySelector('#encounterLog').textContent=encounterLog;
 }
 
@@ -409,12 +412,14 @@ function setEditingControls(enabled) {
 
 function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
   if (mode !== "editing") return;
+  if(playType==='homeward'&&getHomewardDefinition(stage.id).choices&&!homewardProgress.state.choices[stage.id]){homewardUI.briefing(stage.id);statusText.textContent='出航前に追跡／回避を選択してください。';return;}
   if(!launchAllowed(stage,velocity,launchMode)){statusText.textContent='角度・推力が発射条件外です。メニュー内のステージ条件を確認してください。';return;}
   cancelGesture();
   launchSnapshot = structuredClone(stage);
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  missionEvidence=newMission();flightChoice=playType==='homeward'?homewardProgress.state.choices[stage.id]??null:null;
   cinematic.reset();
   notifyTutorial('launch');
   experience.launch(simulation);
@@ -429,22 +434,26 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
 }
 
 function showResult(status) {
+  const missionFailed=playType==='homeward'&&status==='cleared'&&!missionSatisfied(stage,missionEvidence,flightChoice);
+  if(missionFailed)status='incomplete';
   resetFlightRate();
   experience.finish(simulation);
   result.dataset.effect = status === 'cleared' ? 'cleared' : failureKind(simulation);
-  finalizeRecording();
+  finalizeRecording(missionFailed?'mission-incomplete':undefined);
   document.querySelector('#openGallery').disabled=false;
   const messages = {
     crashed: ["MISSION FAILED", "惑星に衝突"],
     escaped: ["MISSION FAILED", "航行エリアを逸脱"],
     timeout: ["MISSION FAILED", "飛行時間を超過"],
     cleared: ["CLEAR", "ゲート到達！"],
+    incomplete: ["MISSION FAILED", "遭遇条件が未達成"],
   };
   const [label, reason] = messages[status];
   resultLabel.textContent = label;
   const hazardReason=simulation?.reason==='absorbed'?'ブラックホールに吸収':simulation?.reason==='overheated'?'恒星の熱領域へ侵入':null;
   const encounterReason={'encounter-meteor':'隕石に接触','encounter-comet':'彗星本体に接触','encounter-ufo':'UFOに接触','encounter-unknown':'未知の物体に接触'}[simulation?.reason];
   resultReason.textContent = encounterReason??hazardReason??reason;
+  if(missionFailed)resultReason.textContent=MISSION_HINT;
   result.classList.toggle("success", status === "cleared");
   result.hidden = false;
   document.querySelector('#clearStars').textContent='';
@@ -456,7 +465,7 @@ function showResult(status) {
     document.querySelector('#nextStage').hidden=CHALLENGES.findIndex(s=>s.id===challengeId)===CHALLENGES.length-1;
   }
   if(status==='cleared'&&playType==='homeward'){
-    homewardProgress.clear(stage.id);
+    homewardProgress.clear(stage.id,missionEvidence);
     const sector=getHomewardDefinition(stage.id);
     resultReason.textContent=sector.arrival;
     document.querySelector('#nextStage').textContent=sector.next?'次のセクターへ':'宇宙マップへ';
@@ -520,6 +529,13 @@ function tick(time) {
       const previousState=simulation;
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      if(playType==='homeward'){
+        const old=missionEvidence;missionEvidence=observeMission(old,previousState,simulation);
+        if(stage.mission&&(old.encounters.length!==missionEvidence.encounters.length||!missionSatisfied(stage,old,flightChoice)&&missionSatisfied(stage,missionEvidence,flightChoice))){
+          const definition=getHomewardDefinition(stage.id);
+          homewardProgress.log(stage.id,{departure:definition.departure,encounter:definition.encounterLog,encounters:missionEvidence.encounters,...(missionSatisfied(stage,missionEvidence,flightChoice)?{discovery:definition.discovery}:{})});
+        }
+      }
       experience.observe(previousState,simulation);
       try{recorder?.capture(simulation);}catch{recorder=null;gallery.notify('飛行記録を中断しました。ゲームは続けられます。');}
       movement+=simulation.planets.reduce((sum,p,i)=>sum+Math.hypot(p.x-previousPlanets[i].x,p.y-previousPlanets[i].y),0);
@@ -704,6 +720,7 @@ function updatePlanetEditor() {
   document.querySelector('#openPlanetSettings').disabled=mode!=='editing';
   document.querySelector('#openPlanetSettings').textContent=addPlanetButton.disabled?'＋惑星（制限）':'＋惑星';
   document.querySelector('#challengeConditions').textContent=stage.rules?.fixedPlanets?`種類・個数固定／各惑星は初期位置から±12まで。ANGLE ${stage.launchConditions.precisionAngleRange.join('〜')}°／THRUST ${stage.launchConditions.speedRange.join('〜')}`:'';
+  if(stage.mission){document.querySelector('#challengeConditions').textContent=`${stage.description}。惑星・遭遇対象は固定。ANGLE ${stage.launch.angleRange.join('〜')}°、THRUST 120〜220。詳細はHOMEWARDの攻略ヒントへ。`;document.querySelector('#addReason').textContent='この宙域は配置固定です。ANGLE・THRUSTを調整してください。';}
   document.querySelector('#planetSelection').textContent = planet ? `選択 ${stage.planets.indexOf(planet)+1} / ${stage.planets.length} · ${PLANET_TYPES[planet.type??'earth'].name}` : `惑星 ${stage.planets.length} / 3`;
 }
 addPlanetButton.addEventListener('click', () => {
@@ -851,7 +868,7 @@ updateMode();
 resizeCanvas();
 requestAnimationFrame(tick);
 const gallery=createGallery({canOpen:()=>mode!=='flying',onOpen:cancelGesture});
-const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
+const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onRecord:id=>{homewardUI.close();void gallery.openRecord(id);},onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
 function notifyTutorial(event){
   if(playType!=='homeward')return;
   const old=tutorialEntry(homewardProgress.state,stage.id),values={angleDeg:Number(angleInput.value),speed:Number(speedInput.value)};
@@ -916,7 +933,12 @@ if(homewardProgress.state.active&&homewardProgress.state.openingSeen){
 function finalizeRecording(reason){
   if(!recorder||!simulation)return;
   const current=recorder;recorder=null;
-  try{const record=current.finish(simulation,reason);if(record)void gallery.save(record);}catch{gallery.notify('飛行記録を保存できませんでした。ゲームは続けられます。');}
+  const homewardId=playType==='homeward'?stage.id:null,state=simulation,evidence=structuredClone(missionEvidence),choice=flightChoice;
+  try{
+    const record=current.finish(reason==='mission-incomplete'?{...state,status:'mission-incomplete'}:state,reason);
+    if(homewardId)homewardProgress.recordFlight(homewardId,state,evidence,choice,null,record?.id);
+    if(record)void gallery.save(record).then(saved=>{if(saved&&homewardId)homewardProgress.attachFlight(homewardId,record.id,state.status==='cleared'&&missionSatisfied(getHomewardSector(homewardId),evidence,choice));});
+  }catch{gallery.notify('飛行記録を保存できませんでした。ゲームは続けられます。');}
 }
 
 function encounterSettings(){return {speed:Number(document.querySelector('#encounterSpeed').value),count:Number(document.querySelector('#encounterCount').value),strength:Number(document.querySelector('#encounterStrength').value),tailMode:document.querySelector('#encounterTailMode').value};}

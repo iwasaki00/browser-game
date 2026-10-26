@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "check": "node --check js/data.js && node --check js/game-state.js && node --check js/app.js && node --check scripts/simulate-balance.mjs",
+    "check": "node --check js/data.js && node --check js/game-state.js && node --check js/app.js && node --check js/handle.js && node --check js/audio.js && node --check js/experience.js && node --check scripts/simulate-balance.mjs",
     "simulate": "node scripts/simulate-balance.mjs"
   }
 }

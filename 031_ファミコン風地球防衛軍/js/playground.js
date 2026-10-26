@@ -5,13 +5,13 @@ export const PLAYER_PRESETS=Object.freeze({
   STANDARD:{...PLAYER_CLASSES.RANGER}, SPEED:{...PLAYER_CLASSES.SCOUT,jump:220},
   HEAVY:{...PLAYER_CLASSES.GUARDIAN,jump:176}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
 });
-export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen","E-07":"shorecrab","E-08":"skyray","E-09":"siegebeetle","B-03":"leviathan"});
+export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen","E-07":"shorecrab","E-08":"skyray","E-09":"siegebeetle","B-03":"leviathan","E-10":"interceptor","E-11":"shielddrone","E-12":"heavygunner","B-04":"fortress"});
 export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);
 export function createLabState(equipped,settings){return {
   equipped:[...equipped],settings:{...settings},invincible:true,preset:"STANDARD",
   enemy:"crawler",count:30,placement:"dense",cameraMode:"AUTO",fixedZoom:.5,showFps:true,
   // Reposition always starts from this anchor, not the player's later position.
-  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD',bossPhase:1
+  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD',skyBossPhase:1,bossPhase:1
 }}
 
 export function landLabPlayer(p,platforms){
@@ -34,12 +34,12 @@ export function fixedLabCamera(camera,p,zoom){
 
 // Reuse SpawnDirector's safe position calculation; lab only overrides the formation envelope.
 export function labSpawnPosition(director,type,index,count,placement,game){
-  const p=game.player,direction=p.x>WORLD.width-1200?-1:1;
+  const p=game.player,direction=p.x>(game.world??WORLD).width-1200?-1:1;
   const bounds={left:p.x-180,right:p.x+180};
   const original=game.battleCamera.direction;game.battleCamera.direction=direction;
   const safe=director.position({pattern:"SWARM",enemy:type},index,game,bounds);
   game.battleCamera.direction=original;if(!safe)return null;
   const offset=placement==="dense"?(index%10)*7+Math.floor(index/10)*2:index*8;
-  const x=clamp(p.x+direction*(220+offset),24,WORLD.width-48);
+  const x=clamp(p.x+direction*(220+offset),24,(game.world??WORLD).width-48);
   return {x,y:type==="needle"?(placement==="dense"?48+(index%5)*5:20+(index%9)*9):safe.y};
 }

@@ -9,11 +9,11 @@ const lab=()=>{const r=runtime(structuredClone(DEFAULT_SAVE),{debug:true,recordD
 const start=(r,mission='M01',area=0,route='LOWER')=>{if(r.run('state')==='play')r.click('lab-open');r.change('labStageMission',mission);r.change('labStageArea',String(area));r.change('labStageRoute',route);r.click('lab-stage-start')};
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-6,`${a} != ${b}`);
 
-test('19 explicit checkpoints contain restore metadata; missing checkpoints fail safely',()=>{
-  assert.equal(LAB_CHECKPOINTS.length,19);assert.equal(new Set(LAB_CHECKPOINTS.map(c=>c.id)).size,19);
+test('25 explicit checkpoints contain restore metadata; missing checkpoints fail safely',()=>{
+  assert.equal(LAB_CHECKPOINTS.length,25);assert.equal(new Set(LAB_CHECKPOINTS.map(c=>c.id)).size,25);
   for(const c of LAB_CHECKPOINTS)for(const key of ['missionId','areaId','x','y','route','safety','progression','enemies','midboss','boss','nests','camera','events'])assert.ok(key in c,key);
   assert.equal(findCheckpoint('M02',2,'UPPER').y,40);assert.equal(findCheckpoint('M02',2,'LOWER').y,116);
-  assert.equal(findCheckpoint('M04',0),undefined);
+  assert.equal(findCheckpoint('M05',0),undefined);
 });
 
 for(const cp of LAB_CHECKPOINTS.filter(c=>c.boss.state!=='active'))test(`${cp.id}: safe start and deterministic restart clear all residual combat state`,()=>{

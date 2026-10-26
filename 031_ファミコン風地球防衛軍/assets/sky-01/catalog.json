@@ -1,0 +1,335 @@
+{
+  "version": "0.4.0",
+  "seed": 4007200,
+  "sampling": "nearest",
+  "sourceScale": 2,
+  "assets": [
+    {
+      "path": "backgrounds/layer-0.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "131741eaf34bf26f8f0c3174a54c4bc4b015db15f9fe2a19440e138914182a23"
+    },
+    {
+      "path": "backgrounds/layer-1.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "208795899bf5d60777df92aab18050b6ad8b7406298db16756ade4647ae7d54f"
+    },
+    {
+      "path": "backgrounds/layer-2.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "d20be1538fb5315dbc1d1e18373f4f18f43ea2efa03b86526c33df5cd5beb1d2"
+    },
+    {
+      "path": "backgrounds/sky.png",
+      "size": [
+        640,
+        360
+      ],
+      "sha256": "9b5717dc00fee9bd1d22ba561ad320caf1ef375be9628d4cacc377d4013fb8e1"
+    },
+    {
+      "path": "tiles/sky.png",
+      "size": [
+        256,
+        64
+      ],
+      "sha256": "aa61bc0bb4a6ad95923923eda04cd020f6e4409d1b47bb6c6380751a0dccdcde",
+      "cell": [
+        32,
+        32
+      ],
+      "frames": 16
+    },
+    {
+      "path": "sprites/interceptor.png",
+      "size": [
+        576,
+        44
+      ],
+      "sha256": "b51a30c6db92ef0bc43a5ede5fce6458e8842a2cbc0acefcb28bc7c27ccdabfa",
+      "cell": [
+        72,
+        44
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "far/interceptor.png",
+      "size": [
+        576,
+        44
+      ],
+      "sha256": "c23fd119e65845194d0e3cde409afcf9505c30773a5a21ba87d24899cb452084",
+      "cell": [
+        72,
+        44
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "sprites/shielddrone.png",
+      "size": [
+        512,
+        56
+      ],
+      "sha256": "2db608089fe2e12640308ed22602d4626a6af07b7fe316313c97c725d0cd50c6",
+      "cell": [
+        64,
+        56
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "far/shielddrone.png",
+      "size": [
+        512,
+        56
+      ],
+      "sha256": "bd5f016f46caa57f4069d606ed122bc2658a05155163efce96a70e3fbbb9e097",
+      "cell": [
+        64,
+        56
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "sprites/heavygunner.png",
+      "size": [
+        640,
+        72
+      ],
+      "sha256": "3334330d37282ef57e3f6e28a52fcfd09c6fb60a838a5325419c52f4db1e249d",
+      "cell": [
+        80,
+        72
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "far/heavygunner.png",
+      "size": [
+        640,
+        72
+      ],
+      "sha256": "f3bc687da0dd75292e06a7386224a4ed1caa18d2c1edb0267e000c113f846d4a",
+      "cell": [
+        80,
+        72
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "sprites/fortress.png",
+      "size": [
+        2560,
+        192
+      ],
+      "sha256": "735f7be01b2ba51ebf84601ae2e0d0b1a3941bb2b60b7f790544e9b426599042",
+      "cell": [
+        320,
+        192
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "far/fortress.png",
+      "size": [
+        2560,
+        192
+      ],
+      "sha256": "fe865118a5cc5635e8458b1a750f74c0bd25e937b6b130915b25d721574bb73f",
+      "cell": [
+        320,
+        192
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "sprites/skydevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "sha256": "52608486c58709db3ae22f76691bfe9555f73a3afc84dedd4d211d43d4a7aaca",
+      "cell": [
+        56,
+        64
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "far/skydevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "sha256": "e4ea6209f9a501a4267798a61dda0c60541dacfcf7bdc3baa8c9e12a61bc5421",
+      "cell": [
+        56,
+        64
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ]
+    },
+    {
+      "path": "effects/warning.png",
+      "size": [
+        512,
+        64
+      ],
+      "sha256": "54cfd0900a987cebc03ec65e5f7496613601596f350f799bb090e57e9e65e1a4",
+      "cell": [
+        64,
+        64
+      ],
+      "frames": 8
+    },
+    {
+      "path": "effects/shot.png",
+      "size": [
+        512,
+        64
+      ],
+      "sha256": "8f52b02d14a1f7efb16a755cbb82345c7cc41bc5c41614d4df63d1104707cc92",
+      "cell": [
+        64,
+        64
+      ],
+      "frames": 8
+    },
+    {
+      "path": "effects/break.png",
+      "size": [
+        512,
+        64
+      ],
+      "sha256": "12f929b38e6a1314090df7dd6c0c3606dce42b4a7312f5139a17d8e96b8a7702",
+      "cell": [
+        64,
+        64
+      ],
+      "frames": 8
+    },
+    {
+      "path": "effects/shield.png",
+      "size": [
+        512,
+        64
+      ],
+      "sha256": "8f52b02d14a1f7efb16a755cbb82345c7cc41bc5c41614d4df63d1104707cc92",
+      "cell": [
+        64,
+        64
+      ],
+      "frames": 8
+    }
+  ]
+}

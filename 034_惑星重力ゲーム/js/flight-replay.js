@@ -21,7 +21,7 @@ export function replaySnapshot(record,time){
   const velocity=dt>0?{x:finite((b[1]-a[1])/dt),y:finite((b[2]-a[2])/dt)}:{x:finite(fallback.x),y:finite(fallback.y)};
   return {status:frame.time>=record.duration?(record.result==='clear'?'cleared':'ended'):'flying',elapsed:frame.time,
     world:{...record.world},goal:{...record.goal},rocket:{position:{...frame.rocket},velocity,radius:record.rocketRadius??6},
-    planets:frame.planets.map((p,i)=>({...p,x:finite(p.x,finite(record.planets[i].x)),y:finite(p.y,finite(record.planets[i].y))})),frame};
+    planets:frame.planets.map((p,i)=>({...p,x:finite(p.x,finite(record.planets[i].x)),y:finite(p.y,finite(record.planets[i].y))})),...(record.encounters?.length?{encounters:record.encounters}:{}),frame};
 }
 
 export class FlightReplay {

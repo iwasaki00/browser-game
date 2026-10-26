@@ -8,6 +8,7 @@
   <title>ガチャ王 / GACHA KING</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23100c22'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='42'%3E♛%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./gacha.css">
 </head>
 <body>
   <div class="app-shell">
@@ -20,27 +21,42 @@
 
     <main id="main">
       <section class="screen active" data-screen="home">
-        <div class="hero panel">
-          <p class="eyebrow">ROUND <span id="cycle">1</span> · FIRST CAPSULE</p>
-          <h1>王を、<br><em>引き当てろ。</em></h1>
-          <p>集める。売る。バズらせる。<br>あなただけの王冠を手に入れよう。</p>
-          <button class="primary big" data-tab="gacha">ガチャを回す <span>200 G</span></button>
+        <div class="arcade-heading"><div><p class="eyebrow">ROUND <span id="cycle">1</span> · CAPSULE TOY</p><h1>今日は、誰に会える？</h1></div><button class="crown-link" id="goals-button">♛ 王への道</button></div>
+        <div id="home-machine-mount">
+          <div id="gacha-machine" class="toy-machine" data-phase="idle">
+            <div class="machine-sign"><span>へんてこ生物図鑑</span><b>GACHA <em>KING</em></b><small>HENTEKO FRIENDS · VOL.01</small></div>
+            <div class="toy-dome">
+              <div class="dome-glint" aria-hidden="true"></div>
+              <div class="toy-capsules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="series-card"><span class="series-sticker">全12種</span><p>へんてこ、あつまれ。</p><div id="machine-samples" class="machine-samples"></div><small>どの子が出るかは、おたのしみ。</small></div>
+            </div>
+            <div class="machine-rim"><span>FIRST CAPSULE</span><b>1回 <strong>200</strong> G</b></div>
+            <div class="toy-controls">
+              <div class="coin-unit"><div class="coin-token" aria-hidden="true">G</div><div class="coin-slot" aria-hidden="true"></div><small>COIN IN</small><span>200 G</span></div>
+              <div class="handle-unit"><div class="handle-guide" aria-hidden="true">↻</div><button id="handle" class="toy-handle" aria-label="ハンドルを時計回りに回す。キーボードではEnterで回す" aria-describedby="machine-hint"><span class="handle-rotor"><i></i><b>♛</b></span></button><small>時計回りに回してね</small></div>
+              <div class="machine-seal" aria-hidden="true"><span>♛</span><small>KING<br>QUALITY</small></div>
+            </div>
+            <div class="toy-chute"><span>カプセル とりだしぐち</span><div class="chute-window"><div class="travel-capsule" aria-hidden="true"><i></i></div><div class="chute-flap"></div></div></div>
+            <div class="machine-feet" aria-hidden="true"><i></i><i></i></div>
+          </div>
         </div>
-        <div class="section-heading"><h2>王への道</h2><span>達成して周回</span></div>
-        <div id="goals" class="goal-grid"></div>
-        <button id="rescue-button" class="rescue hidden">資金が尽きた… 王様支援 600 G を受け取る（資金王の判定外）</button>
-        <div class="panel mini-stats" id="home-stats"></div>
+        <div id="home-stats" class="pocket-stats"></div>
       </section>
 
       <section class="screen" data-screen="gacha">
-        <div class="section-heading"><div><p class="eyebrow">MACHINE 01</p><h2>FIRST CAPSULE</h2></div><span>1回 200 G</span></div>
-        <div class="machine panel">
-          <div class="machine-lights"><i></i><i></i><i></i><i></i><i></i></div>
-          <div class="machine-window"><div class="capsules"><b></b><b></b><b></b><b></b><b></b><b></b></div><span class="machine-logo">GACHA<br><strong>KING</strong></span></div>
-          <div class="machine-base"><div class="dial">↻</div><button id="draw-button" class="primary big">まわす <span>200 G</span></button></div>
-        </div>
-        <details class="panel rates"><summary>排出確率を表示</summary><div id="rates"></div></details>
+        <div class="arcade-heading"><div><p class="eyebrow">MACHINE 01</p><h2>FIRST CAPSULE</h2></div><button class="text-btn" data-open-goals>♛ 王への道</button></div>
+        <div id="gacha-machine-mount"></div>
       </section>
+
+      <div id="machine-actions" class="machine-actions">
+        <p id="machine-hint" role="status" aria-live="polite">ハンドルを時計回りにぐるっと回そう</p>
+        <button id="draw-button" class="primary big">タップで回す <span>200 G</span></button>
+        <button id="dispense-skip" class="secondary" hidden>排出演出をスキップ »</button>
+        <div class="machine-options"><span id="mode-label">通常モード</span><button class="text-btn" id="mode-button">操作モードを変更</button></div>
+        <button id="rescue-button" class="rescue hidden">王様支援 600 G を受け取る（資金王の判定外）</button>
+        <button id="funds-help" class="secondary hidden" data-tab="inventory">所持品を売って、もう一度</button>
+        <details class="panel rates"><summary>排出確率を表示</summary><div id="rates"></div></details>
+      </div>
 
       <section class="screen" data-screen="inventory">
         <div class="section-heading"><div><p class="eyebrow">MY VAULT</p><h2>所持品</h2></div><button class="text-btn" id="book-button">図鑑を見る</button></div>
@@ -72,11 +88,13 @@
   <dialog id="result-dialog" class="modal result-modal">
     <button class="close" data-skip aria-label="開封演出をスキップ">SKIP »</button>
     <div class="result-aura" aria-hidden="true"></div>
-    <div class="reveal"><div class="capsule"><i></i></div><div id="result-card"></div></div>
+    <div id="capsule-stage" class="capsule-stage"><p class="eyebrow">YOUR CAPSULE</p><h2>何が入っているかな？</h2><button id="open-capsule" class="opening-capsule" aria-label="カプセルを開く"><span class="capsule-top"></span><span class="capsule-bottom"></span><i>♛</i></button><p id="open-hint">タップ、または上にスワイプして開封</p></div>
+    <div id="result-card" hidden></div>
   </dialog>
   <dialog id="book-dialog" class="modal"><button class="close" data-close>閉じる ×</button><p class="eyebrow">COLLECTION BOOK</p><h2>発見済み図鑑</h2><p id="book-progress"></p><div id="book-grid" class="book-grid"></div></dialog>
   <dialog id="item-dialog" class="modal item-modal"><button class="close" data-close>閉じる ×</button><div id="item-detail"></div></dialog>
-  <dialog id="settings-dialog" class="modal small"><button class="close" data-close>閉じる ×</button><p class="eyebrow">SETTINGS</p><h2>設定</h2><label class="toggle"><span>演出を軽減する<small>開封アニメーションを短縮します</small></span><input id="motion-toggle" type="checkbox"><i></i></label><p class="version">GACHA KING v0.1.2</p></dialog>
+  <dialog id="goals-dialog" class="modal"><button class="close" data-close>閉じる ×</button><p class="eyebrow">ROAD TO THE CROWN</p><h2>王への道</h2><p class="goals-intro">売って資金王。集めてコレクション王。投稿して人気王。</p><div id="goals" class="goal-grid"></div><p class="goals-intro">王冠を受け取ると、王冠・図鑑・設定を継承して次の周回へ。</p></dialog>
+  <dialog id="settings-dialog" class="modal small"><button class="close" data-close>閉じる ×</button><p class="eyebrow">SETTINGS</p><h2>遊び方とサウンド</h2><label class="mode-select">操作モード<select id="play-mode"><option value="normal">通常：ハンドル＋自動開封</option><option value="careful">じっくり：ハンドル＋手動開封</option><option value="quick">サクサク：タップ＋短縮演出</option></select></label><p class="settings-note">どのモードでも「タップで回す」が使えます。</p><label class="toggle"><span>演出を軽減する<small>移動や光の演出を抑えます</small></span><input id="motion-toggle" type="checkbox"><i></i></label><label class="toggle"><span>サウンドをミュート<small>小さな機械音・開封音を消します</small></span><input id="mute-toggle" type="checkbox"><i></i></label><p class="version">GACHA KING v0.1.2</p></dialog>
   <dialog id="crown-dialog" class="modal small"><div class="crown-celebrate">♛</div><p class="eyebrow">NEW CROWN</p><h2 id="crown-title">王冠獲得！</h2><p>王冠と図鑑を継承して、次の周回へ進みます。</p><button id="crown-confirm" class="primary big">王冠を受け取る</button><button class="secondary" data-close>あとで</button></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="./js/app.js"></script>

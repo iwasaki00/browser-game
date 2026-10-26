@@ -6,7 +6,7 @@ import {HomewardProgress,HOMEWARD_KEY,homewardDistance} from '../js/homeward-pro
 import {TUTORIAL_STEPS,tutorialEntry,tutorialTransition} from '../js/homeward-tutorial.js';
 import {simulateTrajectory,createSimulation,stepSimulation} from '../js/physics.js';
 const dir=new URL('../reports/first-voyage/',import.meta.url);mkdirSync(dir,{recursive:true});const rows=[];
-for(const def of HOMEWARD_SECTORS)test(`${def.id}: 初期難易度と解答・近接余裕・調整許容範囲`,()=>{
+for(const def of HOMEWARD_SECTORS.slice(0,3))test(`${def.id}: 初期難易度と解答・近接余裕・調整許容範囲`,()=>{
  const s=getHomewardSector(def.id),initial=simulateTrajectory(s),answer=simulateTrajectory(s,s.solution);
  assert.equal(answer.state.status,'cleared');if(def.number==='01')assert.equal(initial.state.status,'cleared');else assert.notEqual(initial.state.status,'cleared');
  const closest=s.planets.map(p=>({type:p.type,clearance:Math.min(...answer.points.map(q=>Math.hypot(p.x-q.x,p.y-q.y)-Math.max(p.collisionRadius??p.radius,...(p.hazards??[]).map(h=>h.radius))-s.rocketRadius))}));
@@ -27,10 +27,10 @@ test('チュートリアルは順に進み、発射観察・再試行・スキ�
  const restored=new HomewardProgress(storage);assert.deepEqual(restored.state,p.state);update('restore');assert.equal(tutorialEntry(p.state,'homeward-03').step,4);update('retry');assert.equal(tutorialEntry(p.state,'homeward-03').step,0);update('skip');update('angle',{angleDeg:-66});assert.equal(tutorialEntry(p.state,'homeward-03').status,'skipped');assert.equal(new HomewardProgress(storage).state.tutorial['homeward-03'].status,'skipped');
 });
 test('旧v1の02・03クリア済み進行と既読を保持。起動だけでは書き換えない',()=>{
- const legacy={version:1,currentSector:'homeward-03',cleared:HOMEWARD_SECTORS.map(s=>s.id),openingSeen:true,active:true,eventsSeen:['homeward-02:arrival','homeward-03:arrival']};let raw=JSON.stringify(legacy),writes=0;
+ const legacy={version:1,currentSector:'homeward-03',cleared:HOMEWARD_SECTORS.slice(0,3).map(s=>s.id),openingSeen:true,active:true,eventsSeen:['homeward-02:arrival','homeward-03:arrival']};let raw=JSON.stringify(legacy),writes=0;
  const p=new HomewardProgress({getItem:()=>raw,setItem:(k,v)=>{assert.equal(k,HOMEWARD_KEY);raw=v;writes++;}});
  assert.equal(writes,0);assert.deepEqual(p.state.cleared,legacy.cleared);assert.deepEqual(p.state.eventsSeen,legacy.eventsSeen);assert.equal(homewardDistance(p.state).remaining,58600);
- for(const s of HOMEWARD_SECTORS)assert.equal(tutorialEntry(p.state,s.id).status,'completed');p.enter('homeward-03');assert.deepEqual(JSON.parse(raw).cleared,legacy.cleared);
+ for(const s of HOMEWARD_SECTORS.slice(0,3))assert.equal(tutorialEntry(p.state,s.id).status,'completed');p.enter('homeward-03');assert.deepEqual(JSON.parse(raw).cleared,legacy.cleared);
 });
 test('ガイドと設定の状態遷移は物理ステージを変更しない',()=>{
  const s=getHomewardSector('homeward-02'),before=structuredClone(s),entry={status:'active',step:0};const changed=tutorialTransition(entry,s.id,'thrust',{angleDeg:-65,speed:220},s.launch);assert.equal(changed.step,1);assert.deepEqual(s,before);assert.deepEqual(entry,{status:'active',step:0});assert.equal(TUTORIAL_STEPS[s.id][changed.step].manual,true);

@@ -1,5 +1,7 @@
 import {getStage} from './stages.js';
 import {configurePlanet} from './planets.js';
+import {createEncounter} from './encounters.js';
+import {LOST_SECTORS} from './lost-sectors.js';
 
 export const HOMEWARD={
  id:'homeward',title:'HOMEWARD / 帰還航路',ship:'ヒナギ',totalDistance:64000,
@@ -20,22 +22,33 @@ export const HOMEWARD_SECTORS=[
   departure:'出航：二つの重力潮をつなぐ。',
   initial:{angleDeg:-65,speed:200},hint:'角度はそのまま、THRUSTを200から増やして予測を確認。解答例：ANGLE −65°、THRUST 220（218でも到達）。',
   planets:[[910,3200,'dense'],[1500,2700,'dense'],[2100,900,'gas']],goal:{x:3051,y:1615}},
- {id:'homeward-03',number:'03',name:'青い残響',theme:'反発と強い引力の境界を読む',distance:2400,map:{x:60,y:46},next:null,
+ {id:'homeward-03',number:'03',name:'青い残響',theme:'反発と強い引力の境界を読む',distance:2400,map:{x:60,y:46},next:'homeward-04',
   enter:'航行ログ03：反発する星、暗い吸収域、恒星の熱。押し返す力と引く力を読み、角度と推力を整えよう。',
   arrival:'発見03：故郷の時刻信号を受信。地球はまだ先。それでも、帰る方向はもう失われていない。',
   departure:'出航：反発と引力の境界を抜ける。',
   initial:{angleDeg:-60,speed:200},angleRange:[-75,-50],hint:'紫は反発、暗い星は吸収、橙の外周は熱。解答例：ANGLE −65°、THRUST 220。反発で吸収域を避け、二つの引力で出口へ曲がります。',
   planets:[[1000,3200,'repulsor'],[1250,2300,'blackhole'],[1500,2000,'star']],goal:{x:2731,y:1245,radius:80}},
+ ...LOST_SECTORS,
 ];
 export function getHomewardDefinition(id){return HOMEWARD_SECTORS.find(s=>s.id===id);}
 export function getHomewardSector(id){
  const data=getHomewardDefinition(id);if(!data)throw Error('Unknown HOMEWARD sector');
  const base=getStage(),planets=data.planets.map(([x,y,type],i)=>configurePlanet({id:`homeward-planet-${i+1}`,x,y},type,'medium'));
- return {...base,id:data.id,name:`HOMEWARD ${data.number} / ${data.name}`,description:data.theme,
+ const legacy={...base,id:data.id,name:`HOMEWARD ${data.number} / ${data.name}`,description:data.theme,
   world:{width:3750,height:5000},worldPreset:'huge',flightLimits:{maxFlightTime:180},previewSeconds:120,
   launch:{...base.launch,position:{x:250,y:4500},...data.initial,angleRange:[...(data.angleRange??[-180,180])]},
   planets,goal:{id:'sector-exit',radius:60,...data.goal},
   rules:{minPlanets:3,maxPlanets:3,types:[...new Set(planets.map(p=>p.type))],sizes:['medium'],placement:{left:0,top:0,right:3750,bottom:5000}},
   solution:{angleDeg:-65,speed:220,planets:structuredClone(planets)},
+ };
+ if(!data.encounter)return legacy;
+ const {type,x,y,...settings}=data.encounter;
+ const encounter={...createEncounter(type,`${data.id}-${type}`,x,y,{...settings,fixed:true}),...settings};
+ const world={width:1500,height:1500},angleRange=data.angleRange??[-20,20];
+ return {...legacy,world,worldPreset:'large',flightLimits:{maxFlightTime:data.timeLimit??9},previewSeconds:data.timeLimit??9,
+  launch:{...base.launch,position:{x:120,y:1100},...data.initial,angleRange:[...angleRange]},
+  encounters:[encounter],rules:{minPlanets:0,maxPlanets:0,types:[],sizes:['medium'],fixedPlanets:[],placement:{left:0,top:0,right:1500,bottom:1500}},
+  launchConditions:{precisionAngleRange:[...angleRange],slingshotAngleRange:[...angleRange],speedRange:[120,220]},
+  solution:{...data.answer,planets:[]},mission:{kind:type,id:encounter.id},
  };
 }

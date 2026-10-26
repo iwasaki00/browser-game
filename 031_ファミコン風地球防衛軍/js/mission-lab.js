@@ -1,5 +1,6 @@
 import {MISSION_AREAS,PLAYER_CLASSES,WEAPON_BY_ID,WORLD} from './data.js?v=0.2.3';
 import {followCamera} from './camera.js?v=0.2.2';
+import {M04} from './mission04.js?v=0.4.0';
 import {M03} from './mission03.js?v=0.3.1';
 import {M02} from './mission02.js?v=0.2.2';
 import {RunProfiler} from './profiler.js?v=0.3.1';
@@ -7,19 +8,20 @@ import {RunProfiler} from './profiler.js?v=0.3.1';
 export const VALIDATION_MODES=Object.freeze({A:'地形到達性',B:'戦闘QA',C:'無敵QA',D:'通常プレイ条件'});
 const checkpoint=(missionId,areaIndex,x,y,route='MAIN',boss=false)=>Object.freeze({
   id:`${missionId}-A${areaIndex+1}-${boss?'BOSS':route}`,missionId,areaId:`AREA ${String(areaIndex+1).padStart(2,'0')}`,areaIndex,
-  name:(missionId==='M03'?M03.areas:missionId==='M02'?M02.areas:MISSION_AREAS)[areaIndex].name,x,y,route,
+  name:(missionId==='M04'?M04.areas:missionId==='M03'?M03.areas:missionId==='M02'?M02.areas:MISSION_AREAS)[areaIndex].name,x,y,route,
   safety:{clearance:72,bodyWidth:14,bodyHeight:32},
-  progression:{areaIndex,completedBeforeX:(missionId==='M03'?M03.areas:missionId==='M02'?M02.areas:MISSION_AREAS)[areaIndex].x,midbossCleared:missionId==='M01'&&areaIndex>=3},
+  progression:{areaIndex,completedBeforeX:(missionId==='M04'?M04.areas:missionId==='M03'?M03.areas:missionId==='M02'?M02.areas:MISSION_AREAS)[areaIndex].x,midbossCleared:missionId==='M01'&&areaIndex>=3},
   enemies:{restore:'remaining-area-encounters',clearPrevious:true},
   midboss:{state:missionId==='M01'&&areaIndex===2?'pending':'not-active'},
-  boss:{state:boss?'active':'pending',type:missionId==='M03'?'leviathan':missionId==='M01'?'boss':'queen'},
+  boss:{state:boss?'active':'pending',type:missionId==='M04'?'fortress':missionId==='M03'?'leviathan':missionId==='M01'?'boss':'queen'},
   nests:{state:missionId==='M02'?'restore-ahead':'none',destroyedBeforeX:x-72},
-  camera:{mode:'AUTO',zoom:.5,direction:1,x:followCamera(x,.5,1,missionId==='M03'?M03.world:missionId==='M02'?M02.world:WORLD),anchorY:y+16},events:{clear:false,requiredNests:[],previousTimers:'cancel'}
+  camera:{mode:'AUTO',zoom:.5,direction:1,x:followCamera(x,.5,1,missionId==='M04'?M04.world:missionId==='M03'?M03.world:missionId==='M02'?M02.world:WORLD),anchorY:y+16},events:{clear:false,requiredNests:[],previousTimers:'cancel'}
 });
 export const LAB_CHECKPOINTS=Object.freeze([
   checkpoint('M01',0,64,116),checkpoint('M01',1,940,116),checkpoint('M01',2,1920,116),checkpoint('M01',3,2920,116),checkpoint('M01',4,3980,116),
   checkpoint('M02',0,64,116),checkpoint('M02',1,940,116),checkpoint('M02',2,2220,116,'LOWER'),checkpoint('M02',2,2220,40,'UPPER'),checkpoint('M02',3,3340,116),checkpoint('M02',4,4540,116),
   checkpoint('M03',0,64,116),checkpoint('M03',1,1140,116),checkpoint('M03',2,2340,116),checkpoint('M03',3,3740,116),checkpoint('M03',4,5160,116),checkpoint('M03',4,5500,116,'MAIN',true),
+  checkpoint('M04',0,64,116),checkpoint('M04',1,1240,116),checkpoint('M04',2,2640,116),checkpoint('M04',3,4140,116),checkpoint('M04',4,5640,116),checkpoint('M04',4,6090,116,'MAIN',true),
   checkpoint('M01',4,4160,116,'MAIN',true),checkpoint('M02',4,4800,116,'MAIN',true)
 ]);
 export function findCheckpoint(mission,area,route='LOWER',boss=false){return LAB_CHECKPOINTS.find(c=>c.missionId===mission&&c.areaIndex===Number(area)&&(c.boss.state==='active')===boss&&(mission!=='M02'||Number(area)!==2||c.route===route))}
@@ -67,7 +69,7 @@ export class MissionLabRun {
     }
     this.held('OBSTACLE_STALL',!!intent&&still&&!!contact&&!p.dead,span,3,g,{input:{left:input.left,right:input.right,jump:input.jump,up:input.up},onGround:p.onGround,onPlatform,velocity:{x:p.vx,y:p.vy},terrain:contact&&{x:contact.x,y:contact.y,w:contact.w,h:contact.h??8}});
     this.held('PLATFORM_EXIT_STALL',!!intent&&still&&!!contact&&onPlatform,span,3,g,{jump:input.jump,flight:input.up});
-    const threshold=g.missionId==='M03'?M03.bossX:g.missionId==='M02'?M02.bossX:4100;
+    const threshold=g.missionId==='M04'?M04.bossX:g.missionId==='M03'?M03.bossX:g.missionId==='M02'?M02.bossX:4100;
     this.held('BOSS_EVENT_MISSING',this.mode!=='A'&&p.x>threshold+8&&!g.bossStarted&&!g.clear,span,1,g,{bossStarted:g.bossStarted,area:g.area});
     const leader=g.director.entries.some(e=>e.definition.enemy==='beetle'&&e.active&&!e.done);
     this.held('SPAWN_CAP_EVENT_STALL',leader&&!g.midbossAlive&&g.liveEnemies>=g.enemyLimit&&!g.clear,span,3,g,{enemies:g.liveEnemies,limit:g.enemyLimit});

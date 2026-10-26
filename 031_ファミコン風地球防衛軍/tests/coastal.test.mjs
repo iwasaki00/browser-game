@@ -14,8 +14,8 @@ const route=`const p=game.player;input.right=true;input.left=false;
   const gap=M03.gaps.some(b=>p.x>=b.x-20&&p.x<b.x+b.w+7);
   input.jump=p.onGround&&(obstacle||gap);input.up=p.classId==='WING'&&(obstacle||gap);input.hover=false;input.special=false;`;
 
-test('old M02 clears unlock real M03; GAME OVER/retry keeps progress and M04 is unimplemented',()=>{
-  const old=sanitizeSave({version:1,cleared:['M01','M02'],unlocked:['R-04'],equipped:['A-01','R-04']});assert.ok(canPlayMission('M03',old));assert.equal(missionStatus(MISSIONS[3],old),'COMING SOON');assert.equal(canPlayMission('M04',old),false);
+test('old M02 clears unlock real M03; GAME OVER/retry keeps progress and M04 remains locked until M03 clears',()=>{
+  const old=sanitizeSave({version:1,cleared:['M01','M02'],unlocked:['R-04'],equipped:['A-01','R-04']});assert.ok(canPlayMission('M03',old));assert.equal(missionStatus(MISSIONS[3],old),'LOCKED');assert.equal(canPlayMission('M04',old),false);
   const r=runtime(old),saved=r.storage.get(SAVE_KEY);r.run("startMission('M03');game.player.hp=0;update(1/60)");r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M03');assert.equal(r.storage.get(SAVE_KEY),saved);assert.equal(r.run("startMission('M04')"),false);
 });
 

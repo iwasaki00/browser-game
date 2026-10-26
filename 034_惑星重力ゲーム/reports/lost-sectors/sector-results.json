@@ -1,0 +1,187 @@
+[
+  {
+    "sector": "homeward-04",
+    "name": "砕けた星の海",
+    "initial": {
+      "angleDeg": 0,
+      "speed": 170,
+      "status": "crashed",
+      "reason": "encounter-meteor",
+      "time": 2.6833333333333265
+    },
+    "solution": {
+      "angleDeg": 0,
+      "speed": 220,
+      "planets": [],
+      "status": "cleared",
+      "time": 4.275000000000002,
+      "end": {
+        "x": 1060,
+        "y": 1100
+      }
+    },
+    "evidence": {
+      "encounters": [
+        "homeward-04-meteor"
+      ],
+      "cometBoostSeconds": 0,
+      "anomalyImpulse": 0,
+      "station": false,
+      "ufo": false
+    },
+    "steps": 513,
+    "preview": "exact terminal state",
+    "rate100": "exact state and evidence",
+    "live": "exact state",
+    "slingshot": "clear (<1e-7 world-unit difference)",
+    "cinematic": "record unchanged"
+  },
+  {
+    "sector": "homeward-05",
+    "name": "蒼い彗星",
+    "initial": {
+      "angleDeg": -5,
+      "speed": 170,
+      "status": "timeout",
+      "reason": "timeout",
+      "time": 5.000000000000038
+    },
+    "solution": {
+      "angleDeg": 0,
+      "speed": 200,
+      "planets": [],
+      "status": "cleared",
+      "time": 4.300000000000003,
+      "end": {
+        "x": 1265,
+        "y": 1100
+      }
+    },
+    "evidence": {
+      "encounters": [
+        "homeward-05-comet"
+      ],
+      "cometBoostSeconds": 0.8540388201654169,
+      "anomalyImpulse": 0,
+      "station": false,
+      "ufo": false
+    },
+    "steps": 516,
+    "preview": "exact terminal state",
+    "rate100": "exact state and evidence",
+    "live": "exact state",
+    "slingshot": "clear (<1e-7 world-unit difference)",
+    "cinematic": "record unchanged"
+  },
+  {
+    "sector": "homeward-06",
+    "name": "沈黙する灯台",
+    "initial": {
+      "angleDeg": 0,
+      "speed": 170,
+      "status": "escaped",
+      "reason": "escaped",
+      "time": 8.333333333333501
+    },
+    "solution": {
+      "angleDeg": -13,
+      "speed": 170,
+      "planets": [],
+      "status": "cleared",
+      "time": 5.6500000000000705,
+      "end": {
+        "x": 1055.1867220047493,
+        "y": 884.0951331260881
+      }
+    },
+    "evidence": {
+      "encounters": [
+        "homeward-06-station"
+      ],
+      "cometBoostSeconds": 0,
+      "anomalyImpulse": 0,
+      "station": true,
+      "ufo": false
+    },
+    "steps": 678,
+    "preview": "exact terminal state",
+    "rate100": "exact state and evidence",
+    "live": "exact state",
+    "slingshot": "clear (<1e-7 world-unit difference)",
+    "cinematic": "record unchanged"
+  },
+  {
+    "sector": "homeward-07",
+    "name": "誰かがいる",
+    "initial": {
+      "angleDeg": 0,
+      "speed": 170,
+      "status": "crashed",
+      "reason": "encounter-ufo",
+      "time": 2.4916666666666605
+    },
+    "solution": {
+      "angleDeg": -2,
+      "speed": 200,
+      "planets": [],
+      "status": "cleared",
+      "time": 4.683333333333356,
+      "end": {
+        "x": 1055.7599297390752,
+        "y": 1067.3225431939934
+      }
+    },
+    "evidence": {
+      "encounters": [
+        "homeward-07-ufo"
+      ],
+      "cometBoostSeconds": 0,
+      "anomalyImpulse": 0,
+      "station": false,
+      "ufo": true
+    },
+    "steps": 562,
+    "preview": "exact terminal state",
+    "rate100": "exact state and evidence",
+    "live": "exact state",
+    "slingshot": "clear (<1e-7 world-unit difference)",
+    "cinematic": "record unchanged"
+  },
+  {
+    "sector": "homeward-08",
+    "name": "帰れない航路",
+    "initial": {
+      "angleDeg": 1,
+      "speed": 170,
+      "status": "escaped",
+      "reason": "escaped",
+      "time": 8.350000000000167
+    },
+    "solution": {
+      "angleDeg": 0,
+      "speed": 200,
+      "planets": [],
+      "status": "cleared",
+      "time": 4.7916666666666945,
+      "end": {
+        "x": 1081.5460158754267,
+        "y": 1148.0229189728882
+      }
+    },
+    "evidence": {
+      "encounters": [
+        "homeward-08-unknown"
+      ],
+      "cometBoostSeconds": 0,
+      "anomalyImpulse": 23.299603507586507,
+      "station": false,
+      "ufo": false
+    },
+    "steps": 575,
+    "preview": "exact terminal state",
+    "rate100": "exact state and evidence",
+    "live": "exact state",
+    "slingshot": "clear (<1e-7 world-unit difference)",
+    "cinematic": "record unchanged"
+  }
+]
