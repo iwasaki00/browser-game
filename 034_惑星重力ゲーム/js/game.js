@@ -587,7 +587,7 @@ canvas.addEventListener("pointerdown", (event) => {
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
   if(!target&&mode==='editing'&&playType==='free'&&stage.worldPreset&&Math.hypot(point.x-stage.goal.x,point.y-stage.goal.y)<=Math.max(stage.goal.radius,22/view.scale))target={type:'goal'};
   if(!target&&playType==='free'){
-    const e=(stage.encounters??[]).find(e=>encounterBodies(e,simulation?.elapsed??0).some(p=>Math.hypot(point.x-p.x,point.y-p.y)<=Math.max(p.radius+8,22/view.scale)));
+    const e=(stage.encounters??[]).map(e=>({e,d:Math.min(...encounterBodies(e,simulation?.elapsed??0).map(p=>Math.hypot(point.x-p.x,point.y-p.y)))})).filter(hit=>hit.d<=Math.max(hit.e.radius+8,22/view.scale)).sort((a,b)=>a.d-b.d)[0]?.e;
     if(e)target={type:'encounter',id:e.id,offset:{x:point.x-e.x,y:point.y-e.y}};
   }
   if (!target) {
@@ -948,6 +948,7 @@ document.querySelector('#applyEncounter').addEventListener('click',()=>{
  const e=stage.encounters?.find(e=>e.id===selectedEncounterId);
  if(playType!=='free'||mode!=='editing'||!e||e.fixed||document.querySelector('#encounterType').value!==e.type)return;
  const candidate=createEncounter(e.type,e.id,e.x,e.y,encounterSettings());
+ if(e.route)candidate.route=structuredClone(e.route);
  if(!encounterPlacementAllowed(candidate,stage)){document.querySelector('#encounterReason').textContent='設定後の大きさでは配置できません。数量を減らすか移動してください。';return;}
  Object.assign(e,candidate);settingsUI.closeAll();updatePlanetEditor();
 });

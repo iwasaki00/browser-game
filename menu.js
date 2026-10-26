@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "035",
+      title: "ガチャ王 / GACHA KING",
+      genre: "Collection / Simulation",
+      description: "12種類のへんてこ生物を集め、即売り・架空フリマ・SNS投稿を使い分けて、資金王・コレクション王・人気王を目指す周回型ガチャゲーム。",
+      href: "./035_gacha-king/index.html",
+      icon: "./035_gacha-king/assets/items/henteko-vol01/hk01_012.png",
+      alt: "大きな王冠と巻き角を持つ、おうかんぽよのガチャ王アイコン",
+      cta: "ガチャを回す",
+      ariaLabel: "ガチャ王を遊ぶ"
+    },
+    {
       number: "034",
       title: "ORBIT MAKER",
       genre: "Physics / Puzzle",

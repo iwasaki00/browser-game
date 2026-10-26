@@ -76,3 +76,13 @@ test('ギミックなしは旧エンジンと完全一致：Stage01〜20、HOMEW
   while(a.status==='flying'){a=baseline.stepSimulation(a,1/120);b=stepSimulation(b,1/120);}assert.deepEqual(b,a,s.id);
  }
 });
+test('ギミック併用時も移動惑星の連続衝突を維持',()=>{
+ const s=setup('station');s.planets=[{id:'moving',x:700,y:875,radius:16,mass:0}];
+ const state=createSimulation(s,{velocity:{x:0,y:0}});state.rocket.position={x:700,y:900};
+ const r=stepLiveFlight(state,{moving:{x:700,y:925}},s,'live',1/120,6000);assert.equal(r.status,'crashed');assert.equal(r.target,'moving');
+});
+test('惑星操作と未知物体の併用でも1倍/100倍で終端一致',()=>{
+ const s=getEncounterSample('unknown');s.planets=[{id:'moving',x:650,y:700,radius:22,mass:1800}];const results=[];
+ for(const rate of [1,100]){const clock=new FlightClock({now:()=>0});clock.setRate(rate);let state=createSimulation(s);while(state.status==='flying')clock.advance(1/60,dt=>{state=stepLiveFlight(state,{moving:{x:730,y:740}},s,'live',dt);return state.status==='flying';});results.push(state);}
+ assert.deepEqual(results[0],results[1]);
+});

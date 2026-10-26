@@ -24,10 +24,11 @@ try{
    await panel();await page.locator('#encounterType').selectOption(type);if(type==='meteor')await page.locator('#encounterCount').fill('12');if(type==='comet')await page.locator('#encounterTailMode').selectOption('brake');await page.locator('#addEncounter').click();await page.clock.runFor(50);
    assert.equal(await page.locator('#encounterSelectionBar').isVisible(),true);
    const a=await world(65,65),b=await world(135,135);await page.mouse.move(a.x,a.y);await page.mouse.down();await page.mouse.move(b.x,b.y,{steps:4});await page.mouse.up();
+   if(type==='meteor'){await panel();await page.locator('#encounterCount').fill('3');await page.locator('#encounterSpeed').fill('80');await page.locator('#applyEncounter').click();}
    await page.locator('#launchButton').click();await page.locator('#flightRate').selectOption('100');await page.clock.runFor(1200);
    assert.equal(await page.locator('#resultLabel').textContent(),'CLEAR');
    const record=(await rows())[0];assert.equal(record.encounters.length,2);const added=record.encounters.find(e=>e.id.startsWith('encounter-'));assert.ok(Math.hypot(added.x-135,added.y-135)<.01,JSON.stringify(added));
-   if(type==='comet')assert.equal(added.tailMode,'brake');if(type==='meteor')assert.equal(added.count,12);if(type==='station')assert.match(await page.locator('#encounterLog').textContent(),/ステーション/);
+   if(type==='comet')assert.equal(added.tailMode,'brake');if(type==='meteor'){assert.equal(added.count,3);assert.equal(added.speed,80);}if(type==='station')assert.match(await page.locator('#encounterLog').textContent(),/ステーション/);
    await page.locator('#resetButton').click();await page.locator('#deleteEncounter').click();assert.equal(await page.locator('#encounterSelectionBar').isVisible(),false);
    await panel();assert.match(await page.locator('#encounterReason').textContent(),/配置 1 \/ 6/);await page.locator('#closeEncounterSettings').click();
    if(width===375){await page.clock.runFor(500);await page.screenshot({path:fileURLToPath(new URL(`${type}-375x667.png`,dir))});}

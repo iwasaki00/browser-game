@@ -42,11 +42,11 @@ export class MobilePlaytest {
     const fullSeconds=Math.min(this.seconds.length,Math.floor((r.durationMs+1e-6)/1000));let minimum=null;
     for(let i=0;i<fullSeconds;i++)minimum=minimum===null?this.seconds[i]:Math.min(minimum,this.seconds[i]);
     return {id:r.id,startedAt:r.startedAt,metadata:JSON.parse(JSON.stringify(r.metadata)),status:r.status,statusLabel:MOBILE_STATUS[r.status],reason:r.reason,
-      valid:r.status==='COMPLETE',targetDurationMs:MOBILE_TEST.durationMs,acceptedDurationMs:r.durationMs,remainingMs:Math.max(0,MOBILE_TEST.durationMs-r.durationMs),samples:r.samples,
+      valid:r.status==='COMPLETE'&&r.samples>0&&r.durationMs>=MOBILE_TEST.durationMs-1e-6&&r.interruptions===0,targetDurationMs:MOBILE_TEST.durationMs,acceptedDurationMs:r.durationMs,remainingMs:Math.max(0,MOBILE_TEST.durationMs-r.durationMs),samples:r.samples,
       observedRafFps:r.samples?1000*r.samples/r.durationMs:null,minimumOneSecondFps:minimum,fullSecondWindows:fullSeconds,
       p50FrameMs:this.percentile(.5),p95FrameMs:this.percentile(.95),p99FrameMs:this.percentile(.99),maxFrameMs:r.samples?r.maxFrameMs:null,
       updateCpuMs:r.samples?r.updateMs/r.samples:null,drawCpuMs:r.samples?r.drawMs/r.samples:null,maxEnemies:r.maxEnemies,maxShots:r.maxShots,maxEffects:r.maxEffects,
-      interruptions:r.interruptions,warmupFrames:r.warmupFrames,warmupMs:MOBILE_TEST.warmupMs,unclassifiedGapMs:r.unclassifiedGapMs,histogramResolutionMs:MOBILE_TEST.histogramStepMs,
+      interruptions:r.interruptions,warmupFrames:r.warmupFrames,warmupMs:MOBILE_TEST.warmupMs,actualWarmupMs:r.recordStart===null?null:r.recordStart-r.warmupStart,unclassifiedGapMs:r.unclassifiedGapMs,histogramResolutionMs:MOBILE_TEST.histogramStepMs,
       normalProgressSaved:false,normalClearCertified:false};
   }
   finish(status,reason){if(!this.active)return;this.run.status=status;this.run.reason=reason;this.history.push(this.snapshot());if(this.history.length>MOBILE_TEST.historyLimit)this.history.shift()}
