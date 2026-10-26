@@ -622,7 +622,8 @@ function loop(ts){
     const counts={enemies:game.liveEnemies,shots:game.shots.length+game.enemyShots.length,effects:game.effects.length+game.impact.particles.length},active=frameActive;
     if(mobilePlaytest?.active){
       const was=mobilePlaytest.run.status;
-      mobilePlaytest.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active&&state==='play'&&!game.player.dead&&!game.clear,game.player.dead?'GAME OVER':game.clear?'ミッション／QA終了':frameReason);
+      const endFocused=document.hasFocus?.()??true;
+      mobilePlaytest.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active&&!document.hidden&&endFocused&&state==='play'&&!game.player.dead&&!game.clear,game.player.dead?'GAME OVER':game.clear?'ミッション／QA終了':document.hidden?'タブ非表示':!endFocused?'フォーカス喪失':frameReason);
       if(ts>=mobilePublishAt||mobilePlaytest.run.status!==was){mobilePublishAt=ts+500;syncMobileUI()}
     }
     if(game.lab.run?.outcome==='RUNNING')game.lab.run.profile.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active,frameReason);
@@ -943,19 +944,19 @@ function syncMobileUI(){
   const badge=document.querySelector('#mobileMeasureBadge');if(!DEBUG){badge.hidden=true;return}
   const current=mobilePlaytest.snapshot(),inLab=!!game?.lab;
   badge.hidden=!inLab||state!=='play'||!current;
-  if(current){const remaining=Math.ceil(current.remainingMs/1000);badge.textContent=current.status==='RECORDING'?`実機計測 あと${remaining}秒`:current.status==='WARMUP'?'実機計測 準備1秒':`${current.statusLabel} → LABで確認`}
+  if(current){const remaining=Math.ceil(current.remainingMs/1000);badge.textContent=current.status==='RECORDING'?`実機計測 あと${remaining}秒`:current.status==='WARMUP'?'実機計測 準備1秒':current.status==='ARMED'?'実機計測 ゲーム更新待ち':`${current.statusLabel} → LABで確認`}
   if(!inLab)return;
   document.querySelector('#mobileMeasureStatus').textContent=current?`${current.statusLabel} / あと${Math.ceil(current.remainingMs/1000)}秒 / ${current.samples}フレーム / ${current.reason}`:'未計測：条件を設定し「30秒計測開始」を押してください。';
   const rows=[...mobilePlaytest.history];if(current&&!rows.some(r=>r.id===current.id))rows.push(current);const visible=rows.slice(-8),select=document.querySelector('#mobileResult');
   const signature=visible.map(r=>`${r.id}:${r.status}`).join(',');
-  if(select.dataset.results!==signature){select.replaceChildren();for(const r of visible){const option=document.createElement('option');option.value=String(r.id);option.textContent=`#${r.id} ${r.metadata.missionId} / ${r.statusLabel}`;select.append(option)}select.dataset.results=signature}
+  if(select.dataset.results!==signature){select.replaceChildren();if(!visible.length){const option=document.createElement('option');option.value='';option.textContent='未計測';select.append(option)}for(const r of visible){const option=document.createElement('option');option.value=String(r.id);option.textContent=`#${r.id} ${r.metadata.missionId} / ${r.statusLabel}`;select.append(option)}select.dataset.results=signature}
   select.disabled=visible.length===0;if(!visible.some(r=>r.id===mobileSelectedId))mobileSelectedId=visible.at(-1)?.id??null;select.value=mobileSelectedId===null?'':String(mobileSelectedId);
   const r=selectedMobileResult(),fmt=(n,d=1)=>Number.isFinite(n)?n.toFixed(d):'未計測';
   document.querySelector('#mobileResultSummary').textContent=r?`${r.statusLabel}（${r.valid?'有効':'未完了／部分記録'}） / ${r.reason}\n${r.metadata.missionId} AREA${r.metadata.area} / ${r.metadata.playerClass} / ${r.metadata.weapons.join(' + ')}\n有効${fmt(r.acceptedDurationMs/1000,3)}秒 / ${r.samples}フレーム / 中断${r.interruptions}\n観測RAF FPS ${fmt(r.observedRafFps)} / 最低1秒 ${fmt(r.minimumOneSecondFps)}\nP50 ${fmt(r.p50FrameMs,2)} / P95 ${fmt(r.p95FrameMs,2)} / P99 ${fmt(r.p99FrameMs,2)}ms\nCPU 更新${fmt(r.updateCpuMs,2)} / 描画${fmt(r.drawCpuMs,2)}ms\n最大 敵${r.maxEnemies} / 弾${r.maxShots} / FX${r.maxEffects}`:'未計測の値は推定しません。';
 }
 async function copyMobileResult(action){
   if(!DEBUG||!game?.lab||state!=='lab'||labWeaponPickerOpen)return false;
-  const text=action==='mobile-json'?JSON.stringify(mobileExport(),null,2):action==='mobile-qa-copy'?mobileChecklistText(mobileQA,mobileEnvironment,mobileMemo):mobileReportText(selectedMobileResult(),mobileMemo);
+  const text=action==='mobile-json'?JSON.stringify(mobileExport(),null,2):action==='mobile-qa-copy'?mobileChecklistText(mobileQA,mobileEnvironment,mobileMemo,VERSION):mobileReportText(selectedMobileResult(),mobileMemo);
   const output=document.querySelector('#mobileCopyText'),status=document.querySelector('#mobileCopyStatus');output.value=text;
   try{if(!navigator.clipboard?.writeText)throw new Error('unavailable');await navigator.clipboard.writeText(text);status.textContent='コピーしました。通常セーブには保存していません。';return true}
   catch{document.querySelector('#mobileCopyBox').open=true;output.focus();output.select?.();status.textContent='自動コピーできません。下のテキストを長押し・選択して手動コピーしてください。';return false}

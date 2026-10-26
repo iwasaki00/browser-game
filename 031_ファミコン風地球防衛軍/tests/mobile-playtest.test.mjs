@@ -34,6 +34,11 @@ test('unsignalled gap over 2s is retained as ambiguous, invalidates instead of h
   const p=ready();p.record(1020,1,1,counts);p.record(4021,1,1,counts);const s=p.snapshot();assert.equal(s.status,'INVALID');assert.equal(s.valid,false);assert.equal(s.unclassifiedGapMs,3001);assert.equal(s.interruptions,1);assert.equal(s.samples,1);assert.match(s.reason,/判別不能/);
   p.record(4031,1,1,counts);assert.equal(p.snapshot().samples,1);assert.equal(p.history.length,1);p.start(metadata);assert.equal(p.snapshot().samples,0);
 });
+test('CPU-accounted long foreground frames stay in RAF/percentiles; prior callback CPU, not the following CPU, explains the delay',()=>{
+  const p=ready();p.record(1010,2500,0,counts);p.record(3510,1,1,counts);let s=p.snapshot();assert.equal(s.status,'RECORDING');assert.equal(s.samples,2);assert.equal(s.maxFrameMs,2500);assert.equal(s.p99FrameMs,2500);assert.equal(s.cpuAccountedLongFrames,1);assert.equal(s.minimumOneSecondFps,0);
+  for(let t=3520;t<=31000;t+=10)p.record(t,1,1,counts);s=p.snapshot();assert.equal(s.valid,true);assert.ok(s.updateCpuMs>1);
+  const ambiguous=ready();ambiguous.record(1010,1,1,counts);ambiguous.record(3510,2500,0,counts);assert.equal(ambiguous.snapshot().status,'INVALID');assert.equal(ambiguous.snapshot().unclassifiedGapMs,2500);
+});
 for(const reason of ['タブ非表示','ポーズ','LAB表示','フォーカス喪失','GAME OVER','画面回転'])test(`${reason}: terminate the continuous run once, preserve partial values, a new test must warm up again`,()=>{
   const p=ready();p.record(1010,1,2,counts);p.record(1020,1,2,counts,false,reason);assert.equal(p.snapshot().status,'INTERRUPTED');assert.equal(p.snapshot().reason,reason);assert.equal(p.snapshot().samples,1);assert.equal(p.snapshot().interruptions,1);
   p.interrupt('second');p.record(1030,0,0,counts);assert.equal(p.history.length,1);p.start(metadata);p.record(90000,0,0,counts);assert.equal(p.snapshot().status,'WARMUP');assert.equal(p.snapshot().samples,0);
@@ -50,7 +55,7 @@ test('Japanese performance text contains actual metadata and values, unknowns re
 });
 test('LAB current-scene start preserves gameplay, closes panel, 30s completes without stopping the game or writing save',()=>{
   const r=lab(),saved=r.storage.get(SAVE_KEY);r.run("game.player.x=1050;game.time=15;game.score=111;const before=JSON.stringify(game)");r.input('mobileEnvironment','手動記録');r.click('mobile-start');assert.equal(r.run('state'),'play');assert.equal(r.run('JSON.stringify(game)'),r.run('before'));assert.equal(r.run('mobilePlaytest.snapshot().status'),'ARMED');
-  r.run('loop(1000);loop(2000);for(let i=1;i<=1800;i++)loop(2000+i*1000/60)');assert.equal(r.run('mobilePlaytest.snapshot().valid'),true);assert.equal(r.run('state'),'play');assert.equal(r.storage.get(SAVE_KEY),saved);
+  r.run('loop(1000);loop(2000);for(let i=1;i<=1800;i++)loop(2000+i*1000/60)');assert.equal(r.run('mobilePlaytest.snapshot().valid'),true);assert.match(r.get('mobileMeasureBadge').textContent,/計測完了/);assert.equal(r.run('state'),'play');assert.equal(r.storage.get(SAVE_KEY),saved);
   r.click('lab-open');assert.equal(r.run('mobilePlaytest.snapshot().valid'),true);assert.match(r.get('mobileMeasureStatus').textContent,/計測完了/);assert.equal(r.run('mobilePlaytest.history.length'),1);
 });
 for(const n of [50,100,200])test(`explicit ${n}-enemy scenario generates only on start, preserves class/weapons/settings and remains LAB-only`,()=>{

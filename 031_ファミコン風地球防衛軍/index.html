@@ -150,7 +150,7 @@
               <p class="lab-hint">兵科・武器・エリア・描画は他タブで設定。敵数指定時のみ、生成操作と同じく位置・HP・敵・弾・FX・時間を初期化します。選ぶだけでは変更しません。</p>
               <div class="lab-action-stack"><button class="lab-primary" data-action="mobile-start">30秒計測開始 → プレイ</button><button data-action="mobile-restart">再計測（新しい30秒）</button></div>
               <output id="mobileMeasureStatus" role="status" aria-live="polite">未計測</output>
-              <details><summary>HELP：30秒計測と従来BENCHの違い</summary><p>ゲーム再開後1秒を準備として除外します。途中でLAB・ポーズ・非表示になったら終了し、継ぎ足しません。通常の重いRAF間隔も記録。2秒超は停止か高負荷か判別できないため、長さを残して無効とします。数値は観測RAF FPSで、GPUや表示完了ではありません。</p></details>
+              <details><summary>HELP：30秒計測と従来BENCHの違い</summary><p>ゲーム再開後1秒を準備として除外します。途中でLAB・ポーズ・非表示になったら終了し、継ぎ足しません。通常の重いRAF間隔も記録。2秒超でも直前CPU時間が75%以上を説明できれば集計し、それ以外は長さを残して判別不能・無効とします。数値は観測RAF FPSで、GPUや表示完了ではありません。</p></details>
             </fieldset>
             <fieldset class="lab-card"><legend>実機の結果・受入チェック</legend>
               <label>結果一覧（直近8件）<select id="mobileResult"><option value="">未計測</option></select></label><pre id="mobileResultSummary">未計測の値は推定しません。</pre>
