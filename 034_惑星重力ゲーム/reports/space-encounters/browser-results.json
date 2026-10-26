@@ -1,0 +1,59 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 417
+    },
+    "types": 1,
+    "addMoveDelete": true,
+    "preview": true,
+    "speed100": true,
+    "replay": true,
+    "classicRestriction": true,
+    "oldRecordsAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 516
+    },
+    "types": 5,
+    "addMoveDelete": true,
+    "preview": true,
+    "speed100": true,
+    "replay": true,
+    "classicRestriction": true,
+    "oldRecordsAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 693
+    },
+    "types": 1,
+    "addMoveDelete": true,
+    "preview": true,
+    "speed100": true,
+    "replay": true,
+    "classicRestriction": true,
+    "oldRecordsAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  }
+]
