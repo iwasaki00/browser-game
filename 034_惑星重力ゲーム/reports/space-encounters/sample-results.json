@@ -1,0 +1,89 @@
+[
+  {
+    "sample": "METEOR FIELD",
+    "status": "cleared",
+    "time": 4.708333333333357,
+    "end": {
+      "x": 920,
+      "y": 1100
+    },
+    "velocity": {
+      "x": 170,
+      "y": 0
+    },
+    "events": [],
+    "frames": 284
+  },
+  {
+    "sample": "COMET RIDER",
+    "status": "cleared",
+    "time": 3.741666666666656,
+    "end": {
+      "x": 920,
+      "y": 1100
+    },
+    "velocity": {
+      "x": 234.0973759880151,
+      "y": 0
+    },
+    "events": [],
+    "frames": 226
+  },
+  {
+    "sample": "UNKNOWN SIGNAL",
+    "status": "cleared",
+    "time": 4.708333333333357,
+    "end": {
+      "x": 920.0636446234371,
+      "y": 1102.5219856672115
+    },
+    "velocity": {
+      "x": 169.99557746791913,
+      "y": 1.2262259172225956
+    },
+    "events": [
+      {
+        "id": "sample-unknown",
+        "type": "unknown",
+        "time": 1.8583333333333292
+      }
+    ],
+    "frames": 284
+  },
+  {
+    "sample": "UFO ENCOUNTER",
+    "status": "cleared",
+    "time": 4.708333333333357,
+    "end": {
+      "x": 920,
+      "y": 1100
+    },
+    "velocity": {
+      "x": 170,
+      "y": 0
+    },
+    "events": [],
+    "frames": 284
+  },
+  {
+    "sample": "DEEP SPACE STATION",
+    "status": "cleared",
+    "time": 4.708333333333357,
+    "end": {
+      "x": 920,
+      "y": 1100
+    },
+    "velocity": {
+      "x": 170,
+      "y": 0
+    },
+    "events": [
+      {
+        "id": "sample-station",
+        "type": "station",
+        "time": 2.233333333333328
+      }
+    ],
+    "frames": 284
+  }
+]

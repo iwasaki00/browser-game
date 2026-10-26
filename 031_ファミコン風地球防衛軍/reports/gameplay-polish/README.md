@@ -12,7 +12,7 @@
 | 同時入力 | Node実ランタイムで複数pointerId、同一キー2所有者、移動＋ジャンプ＋射撃、FLY/HOLD、DASH、マイン長押し、cancel／lostcapture／回転解除を確認。実機の複数指入力は未確認 |
 | 通常攻略QA | Chromeで第5プリセットを明示適用。SCOUT HP75、A-01/S-02、QA:B、次回STANDARD、現在の自由配置MASSIVE200を維持するサマリー。Nodeで開始後の通常被ダメージ・NO SAVEを確認 |
 | 爆発・撃破 | Chromeで50体密集へR-04爆発プレビュー、MASS KILL×23・爆発・吹っ飛び・残り27体を確認。全50体撃破とは扱わない |
-| GAME OVER | 上記LABで無敵OFF、敵攻撃を受けて到達。DOM上でM01／RANGER／AREA01侵略開始／00:13.03／撃破23／SCORE3335／再挑戦等を確認。撮影はタイムアウトし画像なし。最終追加したQA/NO SAVE見出しはNodeで確認 |
+| GAME OVER | 上記LABで無敵OFF、敵攻撃を受けて到達。DOMと保存画像でM01／RANGER／AREA01侵略開始／00:13.03／撃破23／SCORE3335／再挑戦等を確認。画像保存後の追加表示がタイムアウトした。最終追加したQA/NO SAVE見出しはNodeで確認 |
 | 通常結果 | M01/M02/M03、クリア報酬・新規武器・M02解放表示・二重保存防止・GAME OVER／再挑戦をNode実ランタイムで確認。通常のボス撃破から結果までの人手ブラウザ通しは未確認 |
 | 音声 | Web Audioのユーザー操作開始、resume、拒否、上限、後始末、ミュート・音量継承をモック単体テスト。Chrome操作中の例外なし。聴感・Safariの再開は未確認 |
 
@@ -24,6 +24,7 @@
 - [SCOUT／667×375](scout-667x375.jpg)
 - [通常攻略QAプリセット／844×390](gameplay-qa-preset-844x390.jpg)
 - [50体配置へロケット、23体撃破の瞬間](rocket-50-finish-844x390.jpg)
+- [無敵OFFのLABで到達したGAME OVER](gameover-qa-844x390.jpg)：最終追加したQA/NO SAVE見出しより前の撮影。
 - [BENCH200・有効サンプル不足](bench-200-844x390.jpg)
 - [修正前のB-03／RANGER比較用](b03-qa-844x390.jpg)：計測表示がボスHPを覆っていたため、この配置は不採用。現行は上記WING画像の位置。
 
@@ -35,7 +36,7 @@ BENCH200を**1回だけ**実行。結果：INSUFFICIENT、有効0、連続有効
 
 過去と同じ前景継続サンプル不足だったため、50/100のブラウザ再測定や200の再試行は行わなかった。通常プレイ中のライブ表示も有効0で、中断回数が増えていた。**ブラウザ・iPhoneの50/100/200体の性能優劣は未評価**。
 
-後半にInput.dispatchMouseEventとPage.captureScreenshotのタイムアウトも発生。最初の入力失敗後にDOMを取り直すとGAME OVERだったため、その状態を確認して追加撮影は打ち切った。失敗画像を取得済みとは扱わない。通常M01、WING4サイズ、ロケット撃破までのブラウザ警告／エラーログは0件。
+後半にInput.dispatchMouseEventとPage.captureScreenshotのタイムアウトも発生。最初の入力失敗後にDOMを取り直すとGAME OVERだったため、その状態を確認して追加撮影は打ち切った。保存済み画像を後から開くと最初のGAME OVER撮影は成功し、続く表示用の2回目の取得が失敗していた。未取得画像を成功扱いにせず、実在する画像のみ掲載した。通常M01、WING4サイズ、ロケット撃破までのブラウザ警告／エラーログは0件。終了時のviewport解除もブラウザ応答待ちでタイムアウトしたため、検証ブラウザのサイズ解除・タブ終了は未確認。
 
 ## Node CPU参考値（実描画・実音声なし、FPSではない）
 
@@ -63,7 +64,21 @@ BENCH200を**1回だけ**実行。結果：INSUFFICIENT、有効0、連続有効
 
 ## 関連テストと保護
 
-新規`tests/gameplay-polish.test.mjs`22件。既存のimpact/destruction/playground/LAB UI・武器リスト・ボス予兆・アート正式採用・data・weapons・classes・runtime・mission-labを影響範囲として実行する。最終集計は完了報告を参照。
+新規`tests/gameplay-polish.test.mjs`22件を含む**関連237件すべて成功**。既存のimpact/destruction/playground/LAB UI・武器リスト・ボス予兆・アート正式採用・data・weapons・classes・runtime・mission-labを影響範囲として実行した。無関係な素材生成・全画面GUI・全件回帰テストは実施しない。
+
+実行コマンド：
+
+```text
+node --test tests/gameplay-polish.test.mjs tests/impact.test.mjs tests/destruction.test.mjs tests/playground.test.mjs tests/lab-ui.test.mjs tests/boss-polish.test.mjs tests/art-release.test.mjs tests/data.test.mjs tests/weapons.test.mjs tests/classes.test.mjs tests/runtime.test.mjs tests/mission-lab.test.mjs tests/lab-weapon-picker.test.mjs
+node tools/benchmark-impact.mjs
+```
+
+## 作成・変更ファイル
+
+- ゲーム：`index.html`、`styles.css`、`js/game.js`、`js/impact.js`、`js/mission-lab.js`、新規`js/gameplay-ui.js`、新規`js/combat-audio.js`。
+- バージョン：`js/data.js`（VERSIONのみ）、`package.json`。
+- 関連テスト：新規`tests/gameplay-polish.test.mjs`、`tests/helpers/runtime.mjs`、`tests/destruction.test.mjs`、`tests/runtime.test.mjs`、`tests/data.test.mjs`、`tests/lab-ui.test.mjs`。
+- 文書：`README.md`、`docs/GAME_SPEC.md`、`docs/TEST_LAB_UI.md`、新規`docs/GAMEPLAY_POLISH.md`、本レポートと比較画像12枚。
 
 HUD再配置に合わせ、旧「HP文字は全restoreの後」というテストを、**実際のHP描画時のscaleが1**の検証に修正。既存runtimeテストに残っていた「M03未実装」を、M03はM02未クリア時LOCKED／M04はCOMING SOONへ更新。ゲーム仕様をテストに合わせて巻き戻してはいない。
 

@@ -1,5 +1,6 @@
 import {GalleryStore,galleryErrorMessage} from './gallery-store.js';
 import {FlightReplay,replaySnapshot} from './flight-replay.js';
+import {drawEncounters} from './encounter-render.js';
 import {createOrbitShareUI}from'./orbit-share-ui.js';
 
 export function drawReplay(canvas,record,time,full=false,view=null){
@@ -28,6 +29,7 @@ export function drawReplay(canvas,record,time,full=false,view=null){
   if(p.effect==='absorption'||p.effect==='repulsion'){ctx.strokeStyle=p.render?.glow??'#ba9aff';ctx.beginPath();ctx.ellipse(p.x,p.y,p.radius+8,p.radius*.7,-.3,0,Math.PI*2);ctx.stroke();}
  }
  const a=record.frames[Math.max(0,frame.index-1)],b=record.frames[Math.min(record.frames.length-1,frame.index+1)];
+ if(record.encounters?.length)drawEncounters(ctx,record.encounters,frame.time,frame.rocket,camera?scale:scale/(canvas.width/(canvas.clientWidth||canvas.width)),null,camera);
  ctx.save();ctx.translate(frame.rocket.x,frame.rocket.y);ctx.rotate(camera?Math.atan2(snapshot.rocket.velocity.y,snapshot.rocket.velocity.x):Math.atan2(b[2]-a[2],b[1]-a[1]));if(camera){const size=Math.max(1,.7/scale);ctx.scale(size,size);}ctx.fillStyle='#fff';
  ctx.beginPath();ctx.moveTo(9,0);ctx.lineTo(-6,-5);ctx.lineTo(-4,0);ctx.lineTo(-6,5);ctx.closePath();ctx.fill();ctx.restore();ctx.restore();
 }
@@ -57,6 +59,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
   $('#replayResult').textContent=replay.time>=record.duration&&replay.phase!=='intro'?(record.result==='clear'?'CLEAR':'FAIL'):'';
   $('#replayPosition').value=String(replay.time);$('#replayCamera').value=replay.mode;
   $('#replayPhase').textContent=replay.phase==='intro'?'出航準備':replay.phase==='outro'?'航行終了':replay.mode.toUpperCase();
+  const event=replay.snapshot.frame.encounterEvents?.at(-1);$('#replayEncounterLog').textContent=event?(event.type==='station'?'発見：宇宙ステーションを記録':'重力異常の反応を観測'):'';
  }
  function tick(now){
   if(!dialog.open||!replay){raf=null;return;}
@@ -65,7 +68,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
  }
  function schedule(){if(raf===null&&replay?.playing){last=performance.now();raf=requestAnimationFrame(tick);}}
  function play(row){stop();art.dispose();record=row;replay=new FlightReplay(row);full=false;$('#replayFull').setAttribute('aria-pressed','false');$('#replaySpeed').value='1';$('#replayPosition').max=String(row.duration);listView.hidden=true;player.hidden=false;
-  $('#replayTitle').textContent=row.stageName;replay.setMode($('#replayCamera').value);replay.restart();paint();schedule();
+  $('#replayTitle').textContent=row.stageName;replay.setMode($('#galleryDefaultCamera').value);replay.restart();paint();schedule();
  }
  async function refresh(){
   try{
@@ -90,7 +93,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
  $('#replayPlay').addEventListener('click',()=>{if(!replay)return;replay.toggle();paint();schedule();});
  $('#replayRestart').addEventListener('click',()=>{clearGesture();replay?.restart();paint();schedule();});
  $('#replaySpeed').addEventListener('change',event=>{replay?.setSpeed(Number(event.target.value));});
- $('#replayCamera').addEventListener('change',event=>{clearGesture();replay?.setMode(event.target.value);paint();schedule();});
+ $('#replayCamera').addEventListener('change',event=>{clearGesture();replay?.setMode(event.target.value);$('#galleryDefaultCamera').value=event.target.value;paint();schedule();});
  $('#replayPosition').addEventListener('input',event=>{stop();replay?.seek(Number(event.target.value));paint();});
  $('#replayFull').addEventListener('click',()=>{full=!full;$('#replayFull').setAttribute('aria-pressed',String(full));paint();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();paint();}});

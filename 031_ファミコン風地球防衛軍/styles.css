@@ -470,6 +470,12 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 #screenLab .lab-quick { margin-top: 10px; padding: 0 10px; }
 #screenLab .lab-quick summary { min-height: 44px; }
 .lab-bench-buttons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin: 8px 0; }
+.mobile-measure-badge { position: absolute; z-index: 26; bottom: 94px; left: 50%; transform: translateX(-50%); max-width: calc(100% - 24px); padding: 5px 8px; background: #041320e8; border: 1px solid var(--cyan); color: var(--yellow); font: 11px/1.4 monospace; pointer-events: none; text-align: center; }
+#screenLab input[type="text"], #screenLab textarea { width: 100%; min-width: 0; max-width: 100%; min-height: 44px; padding: 6px; color: var(--ink); background: #0b2230; border: 1px solid var(--line); font: 16px/1.5 "Yu Gothic UI",sans-serif; touch-action: auto; user-select: text; }
+#screenLab #mobileQAList { display: grid; gap: 8px; }
+#screenLab .mobile-qa-row { min-width: 0; padding: 6px; border: 1px solid var(--line); }
+#screenLab .mobile-qa-row label { margin-bottom: 4px; }
+@media (orientation: portrait) and (max-width: 900px) { .mobile-measure-badge { top: calc(100vw * .5625 + 12px); bottom: auto; } }
 .lab-footer { padding: 5px 10px 8px; background: #0a1e2c; border-top: 1px solid var(--line); }
 #screenLab .lab-footer > div { display: flex; gap: 8px; }
 #screenLab .lab-footer button { flex: 1; }

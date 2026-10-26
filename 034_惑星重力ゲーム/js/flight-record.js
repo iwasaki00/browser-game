@@ -1,9 +1,10 @@
+import {encounterBodies,encounterPosition,ENCOUNTER_VERSION} from './encounters.js';
 export const RECORD_VERSION=1;
 export function createFlightRecorder(stage,state,metadata={},now=Date.now()){
  const frames=[];
  const record={version:RECORD_VERSION,id:globalThis.crypto?.randomUUID?.()??`flight-${now}-${Math.random().toString(36).slice(2)}`,createdAt:now,favorite:false,
   stageId:stage.id,stageName:stage.name,world:{...stage.world},goal:{...stage.goal},rocketRadius:state.rocket.radius,
-  planets:structuredClone(state.planets),launch:{position:{...state.rocket.position},velocity:{...state.rocket.velocity},angleDeg:Math.atan2(state.rocket.velocity.y,state.rocket.velocity.x)*180/Math.PI,speed:Math.hypot(state.rocket.velocity.x,state.rocket.velocity.y)},...metadata,frames};
+  planets:structuredClone(state.planets),launch:{position:{...state.rocket.position},velocity:{...state.rocket.velocity},angleDeg:Math.atan2(state.rocket.velocity.y,state.rocket.velocity.x)*180/Math.PI,speed:Math.hypot(state.rocket.velocity.x,state.rocket.velocity.y)},...(state.encounters?.length?{encounterVersion:ENCOUNTER_VERSION,encounters:structuredClone(state.encounters)}:{}),...metadata,frames};
  let ended=false;
  let sampleEvery=Math.max(1,Math.ceil((stage.flightLimits?.maxFlightTime??12)*120/3600)),step=0;
  let lastObserved=null;
@@ -28,7 +29,7 @@ export function createFlightRecorder(stage,state,metadata={},now=Date.now()){
  capture(state);
  return {capture,finish(state,reason){
   if(ended)return null;capture(state,true);ended=true;
-  return {...record,duration:state.elapsed,result:state.status==='cleared'?'clear':'fail',reason:reason??state.reason??state.status};
+  return {...record,duration:state.elapsed,result:state.status==='cleared'?'clear':'fail',reason:reason??state.reason??state.status,...(state.encounters?.length?{encounterEvents:structuredClone(state.encounterEvents??[])}:{})};
  }};
 }
 
@@ -40,7 +41,7 @@ export function replayFrame(record,time){
  const a=frames[lo],b=frames[Math.min(lo+1,frames.length-1)];
  const mix=b[0]===a[0]?0:(t-a[0])/(b[0]-a[0]);
  const value=i=>a[i]+(b[i]-a[i])*mix;
- return {time:t,index:lo,rocket:{x:value(1),y:value(2)},planets:record.planets.map((p,i)=>({...p,x:value(3+i*2),y:value(4+i*2)}))};
+ return {time:t,index:lo,rocket:{x:value(1),y:value(2)},planets:record.planets.map((p,i)=>({...p,x:value(3+i*2),y:value(4+i*2)})),...(record.encounters?.length?{encounterStates:record.encounters.map(e=>({id:e.id,type:e.type,position:encounterPosition(e,t),bodies:encounterBodies(e,t)})),encounterEvents:(record.encounterEvents??[]).filter(e=>e.time<=t)}:{})};
 }
 export class ReplayClock{
  constructor(record){this.record=record;this.time=0;this.speed=1;this.playing=false;}

@@ -14,6 +14,7 @@ import {COAST_FILES,loadCoastalArt,drawCoastalEnemy,drawCoastTile,drawCoastalWor
 
 import {CombatAudio,AUDIO_LIMITS} from './combat-audio.js?v=0.3.2';
 import {outcomeData,combatHudText,drawCombatHud,drawBossHud,drawCoreMarker} from './gameplay-ui.js?v=0.3.2';
+import {MobilePlaytest,MOBILE_QA_ITEMS,createMobileQA,setMobileQA,mobileReportText,mobileChecklistText} from './mobile-playtest.js?v=0.3.3';
 
 const audioBus=new CombatAudio(()=>{const AC=window.AudioContext||window.webkitAudioContext;return AC?new AC():null});
 const touchPointers=new Map(),pressedControls=new Set();let aimPointer=null,remotePointer=null,viewportOrientation=null;
@@ -44,6 +45,8 @@ const weaponAPI={damage:damageEnemy,blast:explode,effect:pushEffect};
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
 const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
+const mobilePlaytest=DEBUG?new MobilePlaytest():null,mobileQA=DEBUG?createMobileQA():null;
+let mobileSelectedId=null,mobileEnvironment='',mobileMemo='',mobilePublishAt=0;
 const artPreview=DEBUG?new ArtPreview():null;
 // Release art and LAB comparison own independent selection / loading tokens.
 // Both use the same validated, per-resource fallback loader and render adapters.
@@ -207,6 +210,8 @@ aimPad.addEventListener('pointermove',e=>{if(e.pointerId===aimPointer)touchAim(e
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])aimPad.addEventListener(ev,e=>{if(e.pointerId!==aimPointer)return;aimPointer=null;input.fire=false;setPressed(aimPad,false)});
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");if(!a)return;initAudio();tone(620,.05);const action=a.dataset.action;
+  if(action==='mobile-start'||action==='mobile-restart'){startMobileMeasurement();return}
+  if(action==='mobile-copy'||action==='mobile-json'||action==='mobile-qa-copy'){copyMobileResult(action);return}
   if(labWeaponPickerOpen)return;
   if(action==='lab-tab'){switchLabTab(a.dataset.labTab);return}
   if(action==='lab-boss-tab'){switchLabTab('stage',true);return}
@@ -248,6 +253,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound){initAudio();tone(700,.06)}else audioBus.stop()});
 document.addEventListener("change",e=>{
+  if(handleMobileField(e.target))return;
   if(game?.lab&&state==='lab'&&e.target.id==='labTerrain'){
     if(['M01','M02','M03'].includes(e.target.value)){labTerrainChoice=e.target.value;setLabMessage('地形は保留中。「生成」または「地形だけ適用」で初期化します。');syncLabWorkbench()}return;
   }
@@ -614,6 +620,11 @@ function loop(ts){
   if(game?.lab){
     sampleCombatResources(game);
     const counts={enemies:game.liveEnemies,shots:game.shots.length+game.enemyShots.length,effects:game.effects.length+game.impact.particles.length},active=frameActive;
+    if(mobilePlaytest?.active){
+      const was=mobilePlaytest.run.status;
+      mobilePlaytest.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active&&state==='play'&&!game.player.dead&&!game.clear,game.player.dead?'GAME OVER':game.clear?'ミッション／QA終了':frameReason);
+      if(ts>=mobilePublishAt||mobilePlaytest.run.status!==was){mobilePublishAt=ts+500;syncMobileUI()}
+    }
     if(game.lab.run?.outcome==='RUNNING')game.lab.run.profile.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active,frameReason);
     if(profiler?.running)game.lab.benchmarkPerformance?.record(ts,updateEnd-begin,drawEnd-updateEnd,counts,active,frameReason);
   }
@@ -646,7 +657,7 @@ function archiveLabRun(){
   const run=game?.lab?.run;if(!run||run.archived)return;
   if(run.outcome==='RUNNING')run.outcome='ABORTED';run.archived=true;labRunHistory.push(run.snapshot(game));if(labRunHistory.length>20)labRunHistory.shift();
 }
-function pauseLabMeasurement(reason=document.hidden?'タブ非表示':'LAB・ポーズ操作'){liveProfiler?.pause(reason);game?.lab?.run?.profile.pause(reason);game?.lab?.benchmarkPerformance?.pause(reason)}
+function pauseLabMeasurement(reason=document.hidden?'タブ非表示':'LAB・ポーズ操作'){mobilePlaytest?.interrupt(reason);liveProfiler?.pause(reason);game?.lab?.run?.profile.pause(reason);game?.lab?.benchmarkPerformance?.pause(reason)}
 function startLabCheckpoint(bossMission=null,checkpointId=null){
   if(!DEBUG||!game?.lab||!['lab','gameover'].includes(state))return false;
   const previous=game.lab,cp=checkpointId?LAB_CHECKPOINTS.find(c=>c.id===checkpointId):findCheckpoint(bossMission??previous.stageMission,bossMission?4:previous.stageArea,previous.stageRoute,!!bossMission);
@@ -695,6 +706,7 @@ function startLab(openPanel=true,terrain='M01'){
   if(openPanel)openLabPanel();return true;
 }
 function syncLabUI(){
+  syncMobileUI();
   syncClassControls();
   applyPreviewResolution();document.querySelector('#pauseArtControls').hidden=!DEBUG||!game?.lab;
   if(artPreview)for(const prefix of ['lab','pause']){

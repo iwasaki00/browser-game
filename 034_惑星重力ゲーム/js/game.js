@@ -8,6 +8,9 @@ import {SpaceAudio} from './space-audio.js';
 import {createSettingsUI} from './settings-ui.js';
 import {Camera} from './camera.js';
 import {CinematicCamera} from './cinematic-camera.js';
+import {ENCOUNTER_TYPES,MAX_ENCOUNTERS,createEncounter,addEncounter,encounterBodies,encounterPlacementAllowed} from './encounters.js';
+import {getEncounterSample} from './encounter-samples.js';
+import {drawEncounters} from './encounter-render.js';
 import {FlightClock} from './flight-clock.js';
 import {Starfield} from './starfield.js';
 import {createFreeWorld,getHugeSample} from './worlds.js';
@@ -42,6 +45,7 @@ const editHint = document.querySelector("#editHint");
 const initialStage = getStage();
 let stage = getStage();
 let selectedPlanetId = null;
+let selectedEncounterId=null;
 const planetType = document.querySelector('#planetType');
 const planetSize = document.querySelector('#planetSize');
 const addPlanetButton = document.querySelector('#addPlanet');
@@ -300,6 +304,7 @@ function draw(time) {
   drawGoal(time);
   drawTrail();
   for (const planet of stage.planets){const p=camera.toScreen(planet),r=planetExtent(planet)*1.8*view.scale;if(p.x+r>=0&&p.y+r>=0&&p.x-r<=camera.width&&p.y-r<=camera.height)drawPlanet(planet,time);}
+  if(stage.encounters?.length)drawEncounters(ctx,stage.encounters,simulation?.elapsed??0,simulation?.rocket.position??stage.launch.position,view.scale,selectedEncounterId,camera);
   if (mode === 'flying' && gameMode === 'live') for(const planet of stage.planets) {
     const target=moveTargets[planet.id];if(!target)continue;
     ctx.strokeStyle='#ffdb80';ctx.lineWidth=1;ctx.setLineDash([3,4]);
@@ -339,13 +344,15 @@ function draw(time) {
   drawMinimap(rocket.position);
   const log=playType==='homeward'&&mode==='flying'&&simulation.elapsed<3?getHomewardDefinition(stage.id).departure:'';
   if(document.querySelector('#voyageLog').textContent!==log)document.querySelector('#voyageLog').textContent=log;
+  const event=simulation?.encounterEvents?.at(-1),encounterLog=event?(event.type==='station'?'発見：宇宙ステーション。航路情報を記録しました。':'未知の物体が反応。重力異常を観測しました。'):'';
+  if(document.querySelector('#encounterLog').textContent!==encounterLog)document.querySelector('#encounterLog').textContent=encounterLog;
 }
 
 function drawMinimap(rocket){
  const map=document.querySelector('#minimap');map.hidden=!showMinimap||!stage.worldPreset;if(map.hidden)return;
  const c=map.getContext('2d'),w=map.width,h=map.height,s=Math.min((w-8)/stage.world.width,(h-8)/stage.world.height),ox=(w-stage.world.width*s)/2,oy=(h-stage.world.height*s)/2;
  c.clearRect(0,0,w,h);c.fillStyle='#061122e8';c.fillRect(0,0,w,h);c.strokeStyle='#526a87';c.strokeRect(ox,oy,stage.world.width*s,stage.world.height*s);
- for(const [p,color,r]of [...stage.planets.map(p=>[p,p.render?.glow??p.color,2]),[stage.goal,'#72ffb3',3],[rocket,'#fff4c4',2]]){c.fillStyle=color;c.beginPath();c.arc(ox+p.x*s,oy+p.y*s,r,0,Math.PI*2);c.fill();}
+ for(const [p,color,r]of [...stage.planets.map(p=>[p,p.render?.glow??p.color,2]),...(stage.encounters??[]).map(e=>[encounterBodies(e,simulation?.elapsed??0)[0],ENCOUNTER_TYPES[e.type].color,2]),[stage.goal,'#72ffb3',3],[rocket,'#fff4c4',2]]){c.fillStyle=color;c.beginPath();c.arc(ox+p.x*s,oy+p.y*s,r,0,Math.PI*2);c.fill();}
  const a=camera.toWorld({x:0,y:0}),b=camera.toWorld({x:camera.width,y:camera.height});c.strokeStyle='#7bdcff';c.strokeRect(ox+Math.max(0,a.x)*s,oy+Math.max(0,a.y)*s,(Math.min(stage.world.width,b.x)-Math.max(0,a.x))*s,(Math.min(stage.world.height,b.y)-Math.max(0,a.y))*s);
 }
 
@@ -436,7 +443,8 @@ function showResult(status) {
   const [label, reason] = messages[status];
   resultLabel.textContent = label;
   const hazardReason=simulation?.reason==='absorbed'?'ブラックホールに吸収':simulation?.reason==='overheated'?'恒星の熱領域へ侵入':null;
-  resultReason.textContent = hazardReason??reason;
+  const encounterReason={'encounter-meteor':'隕石に接触','encounter-comet':'彗星本体に接触','encounter-ufo':'UFOに接触','encounter-unknown':'未知の物体に接触'}[simulation?.reason];
+  resultReason.textContent = encounterReason??hazardReason??reason;
   result.classList.toggle("success", status === "cleared");
   result.hidden = false;
   document.querySelector('#clearStars').textContent='';
@@ -578,12 +586,21 @@ canvas.addEventListener("pointerdown", (event) => {
   let target = classifyDragTarget(point, stage.launch.position, stage.planets, mode !== 'editing' ? 'precision' : launchMode,
     { rocketTouchRadius: Math.max(28,22/view.scale), minimumPlanetTouchRadius: 22/view.scale });
   if(!target&&mode==='editing'&&playType==='free'&&stage.worldPreset&&Math.hypot(point.x-stage.goal.x,point.y-stage.goal.y)<=Math.max(stage.goal.radius,22/view.scale))target={type:'goal'};
+  if(!target&&playType==='free'){
+    const e=(stage.encounters??[]).find(e=>encounterBodies(e,simulation?.elapsed??0).some(p=>Math.hypot(point.x-p.x,point.y-p.y)<=Math.max(p.radius+8,22/view.scale)));
+    if(e)target={type:'encounter',id:e.id,offset:{x:point.x-e.x,y:point.y-e.y}};
+  }
   if (!target) {
-    selectedPlanetId=null;updatePlanetEditor();
+    selectedPlanetId=null;selectedEncounterId=null;updatePlanetEditor();
     const screen=screenPoint(event);camera.beginPan(screen);
     gesture={type:'pan',pointerId:event.pointerId,start:screen,dragging:false};event.preventDefault();return;
   }
-  if (target.type === 'planet') { selectedPlanetId = target.id; updatePlanetEditor();if(stage.planets.find(p=>p.id===target.id)?.type==='repulsor')notifyTutorial('select'); }
+  if (target.type === 'planet') { selectedEncounterId=null;selectedPlanetId = target.id; updatePlanetEditor();if(stage.planets.find(p=>p.id===target.id)?.type==='repulsor')notifyTutorial('select'); }
+  if(target.type==='encounter'){
+    selectedEncounterId=target.id;selectedPlanetId=null;const e=stage.encounters.find(e=>e.id===target.id);
+    for(const [id,value]of [['encounterType',e.type],['encounterSpeed',e.speed],['encounterCount',e.count],['encounterStrength',e.strength],['encounterTailMode',e.tailMode]])document.querySelector('#'+id).value=String(value);
+    updatePlanetEditor();
+  }
   gesture = { ...target, pointerId: event.pointerId, point };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
   canvas.setPointerCapture(event.pointerId);
@@ -606,6 +623,11 @@ canvas.addEventListener("pointermove", (event) => {
   if(mode !== 'editing' && !(mode === 'flying' && gameMode === 'live'))return;
   const point = worldPoint(event);
   gesture.point = point;
+  if(gesture.type==='encounter'){
+    const e=stage.encounters?.find(e=>e.id===gesture.id);
+    if(mode==='editing'&&playType==='free'&&e&&!e.fixed){const candidate={...e,x:point.x-gesture.offset.x,y:point.y-gesture.offset.y};if(encounterPlacementAllowed(candidate,stage))Object.assign(e,candidate);}
+    event.preventDefault();return;
+  }
   if (gesture.type === 'rocket') {
     aim = slingshotLaunch(stage.launch.position, point);
   } else if(gesture.type==='goal'){
@@ -662,6 +684,7 @@ retryButton.addEventListener("click",()=>{retry();notifyTutorial('retry');});
 new ResizeObserver(resizeCanvas).observe(frame);
 
 function updatePlanetEditor() {
+  updateEncounterControls();
   const planet = stage.planets.find(p=>p.id===selectedPlanetId);
   const fixed=Boolean(stage.rules?.fixedPlanets);
   planetType.disabled = planetSize.disabled = mode !== 'editing'||fixed;
@@ -895,3 +918,45 @@ function finalizeRecording(reason){
   const current=recorder;recorder=null;
   try{const record=current.finish(simulation,reason);if(record)void gallery.save(record);}catch{gallery.notify('飛行記録を保存できませんでした。ゲームは続けられます。');}
 }
+
+function encounterSettings(){return {speed:Number(document.querySelector('#encounterSpeed').value),count:Number(document.querySelector('#encounterCount').value),strength:Number(document.querySelector('#encounterStrength').value),tailMode:document.querySelector('#encounterTailMode').value};}
+function updateEncounterControls(){
+ const editable=playType==='free'&&mode==='editing',type=document.querySelector('#encounterType').value||'meteor';
+ const e=stage.encounters?.find(e=>e.id===selectedEncounterId),fixed=Boolean(e?.fixed);
+ document.querySelector('#openEncounterSettings').disabled=!editable;
+ document.querySelector('#addEncounter').disabled=!editable||(stage.encounters?.length??0)>=MAX_ENCOUNTERS;
+ document.querySelector('#applyEncounter').disabled=!editable||!e||fixed||e.type!==type;
+ document.querySelector('#deleteEncounter').disabled=!editable||!e||fixed;
+ document.querySelector('#encounterSelectionBar').hidden=!e;
+ document.querySelector('#encounterSelected').textContent=e?`${ENCOUNTER_TYPES[e.type].name}${fixed?'（固定）':''}`:'';
+ document.querySelector('#encounterFeature').textContent=ENCOUNTER_TYPES[type]?.description??'';
+ document.querySelector('#encounterReason').textContent=!editable?'FREE SPACEの発射前のみ編集できます。':fixed?'選択中の物体は固定です。':`配置 ${stage.encounters?.length??0} / ${MAX_ENCOUNTERS}。追加後は盤面で選択・移動・削除できます。`;
+ document.querySelector('#encounterCount').disabled=type!=='meteor';
+ document.querySelector('#encounterSpeed').disabled=['unknown','station'].includes(type);
+ document.querySelector('#encounterStrength').disabled=!['unknown','comet'].includes(type);
+ document.querySelector('#encounterTailMode').disabled=type!=='comet';
+ document.querySelector('#encounterSample').disabled=!editable;
+}
+document.querySelector('#encounterType').addEventListener('change',updateEncounterControls);
+document.querySelector('#addEncounter').addEventListener('click',()=>{
+ if(playType!=='free'||mode!=='editing')return;
+ const e=addEncounter(stage,document.querySelector('#encounterType').value,encounterSettings());
+ if(!e){document.querySelector('#encounterReason').textContent='上限または空き領域がなく、追加できません。';return;}
+ selectedEncounterId=e.id;selectedPlanetId=null;settingsUI.closeAll();updatePlanetEditor();
+});
+document.querySelector('#applyEncounter').addEventListener('click',()=>{
+ const e=stage.encounters?.find(e=>e.id===selectedEncounterId);
+ if(playType!=='free'||mode!=='editing'||!e||e.fixed||document.querySelector('#encounterType').value!==e.type)return;
+ const candidate=createEncounter(e.type,e.id,e.x,e.y,encounterSettings());
+ if(!encounterPlacementAllowed(candidate,stage)){document.querySelector('#encounterReason').textContent='設定後の大きさでは配置できません。数量を減らすか移動してください。';return;}
+ Object.assign(e,candidate);settingsUI.closeAll();updatePlanetEditor();
+});
+document.querySelector('#deleteEncounter').addEventListener('click',()=>{
+ const e=stage.encounters?.find(e=>e.id===selectedEncounterId);
+ if(playType!=='free'||mode!=='editing'||!e||e.fixed)return;
+ stage.encounters=stage.encounters.filter(e=>e.id!==selectedEncounterId);selectedEncounterId=null;updatePlanetEditor();
+});
+document.querySelector('#encounterSample').addEventListener('change',event=>{
+ if(playType!=='free'||mode!=='editing'||!event.target.value)return;
+ selectedEncounterId=null;loadFreeWorld(getEncounterSample(event.target.value));event.target.value='';
+});

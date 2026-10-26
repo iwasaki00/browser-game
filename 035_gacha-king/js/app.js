@@ -33,12 +33,13 @@ function showTab(tab) {
 }
 
 function renderGoals(state) {
-  const current = { money: state.coins, collection: game.collectionCount(), popularity: state.followers };
+  const current = { money: game.moneyProgress(), collection: game.collectionCount(), popularity: state.followers };
   const achieved = game.achievements();
   $("#goals").innerHTML = Object.entries(GOALS).map(([key, goal]) => `
     <article class="panel goal ${achieved[key] ? "complete" : ""}">
       <span class="crowns">♛ ${state.crowns[key]}</span><div class="goal-icon">${goal.icon}</div><h3>${goal.name}</h3>
-      <p>${fmt(current[key])} / ${fmt(goal.target)} ${goal.unit}</p><div class="progress"><i style="width:${Math.min(100, current[key] / goal.target * 100)}%"></i></div>
+      <p>${key === "money" ? "有効 " : ""}${fmt(current[key])} / ${fmt(goal.target)} ${goal.unit}</p><div class="progress"><i style="width:${Math.min(100, current[key] / goal.target * 100)}%"></i></div>
+      ${key === "money" && state.supportReceived ? `<small class="goal-support">支援 ${fmt(state.supportReceived)} Gは判定外</small>` : ""}
       ${achieved[key] ? `<button class="claim" data-crown="${key}">達成！</button>` : ""}
     </article>`).join("");
 }
@@ -52,7 +53,7 @@ function renderInventory(state) {
   state.inventory.forEach((owned) => counts.set(owned.itemId, (counts.get(owned.itemId) || 0) + 1));
   $("#inventory").innerHTML = ITEMS.filter((item) => counts.has(item.id)).map((item) => `
     <button class="panel item-tile" data-detail="${item.id}" style="${rarityStyle(item)}">
-      <span class="item-art">${imageMarkup(item)}</span><span class="item-tile-copy"><small class="rarity">${rarityText(item)}</small><strong>${item.name}</strong><em>所持 ${counts.get(item.id)}</em></span>
+      <span class="item-art">${imageMarkup(item, item.name, true)}</span><span class="item-tile-copy"><small class="rarity">${rarityText(item)}</small><strong>${item.name}</strong><em>所持 ${counts.get(item.id)}</em></span>
     </button>`).join("");
 }
 
@@ -76,7 +77,7 @@ function renderListings(state) {
   $("#listings").innerHTML = state.listings.length ? state.listings.map((listing) => {
     const item = itemById(listing.itemId);
     const left = Math.max(0, Math.ceil((listing.completesAt - now) / 1000));
-    return `<article class="panel item-card market-card" style="${rarityStyle(item)}"><div class="item-art">${imageMarkup(item)}</div><div><span class="rarity">出品中 · ${RARITIES[item.rarity].label}</span><h3>${item.name}</h3><p class="timer">${left ? `あと ${left} 秒` : "まもなく成約"}</p><p>成約価格 ${fmt(listing.price)} G</p></div></article>`;
+    return `<article class="panel item-card market-card" style="${rarityStyle(item)}"><div class="item-art">${imageMarkup(item, item.name, true)}</div><div><span class="rarity">出品中 · ${RARITIES[item.rarity].label}</span><h3>${item.name}</h3><p class="timer">${left ? `あと ${left} 秒` : "まもなく成約"}</p><p>成約価格 ${fmt(listing.price)} G</p></div></article>`;
   }).join("") : `<div class="panel empty"><strong>出品はありません</strong>所持品の詳細画面からフリマへ出品できます。</div>`;
 }
 
@@ -85,7 +86,7 @@ function renderPosts(state) {
   $("#profile-followers").textContent = fmt(state.followers);
   $("#posts").innerHTML = state.posts.length ? state.posts.map((post) => {
     const item = itemById(post.itemId);
-    return `<article class="panel post" style="${rarityStyle(item)}"><div class="post-head"><div class="avatar">♛</div><div><strong>@gacha_king</strong><br><span>ROUND ${state.cycle} · ${new Date(post.createdAt).toLocaleDateString("ja-JP")}</span></div></div><div class="post-content"><div class="item-art">${imageMarkup(item)}</div><div><span class="rarity">${RARITIES[item.rarity].label}</span><h3>${item.name}をゲット！</h3><p>#ガチャ王 #${item.name}</p></div></div><div class="post-stats">♡ +${post.followers} new followers</div></article>`;
+    return `<article class="panel post" style="${rarityStyle(item)}"><div class="post-head"><div class="avatar">♛</div><div><strong>@gacha_king</strong><br><span>ROUND ${state.cycle} · ${new Date(post.createdAt).toLocaleDateString("ja-JP")}</span></div></div><div class="post-content"><div class="item-art">${imageMarkup(item, item.name, true)}</div><div><span class="rarity">${RARITIES[item.rarity].label}</span><h3>${item.name}をゲット！</h3><p>#ガチャ王 #${item.name}</p></div></div><div class="post-stats">♡ +${post.followers} new followers</div></article>`;
   }).join("") : `<div class="panel empty"><strong>まだ投稿がありません</strong>所持品の詳細画面から自慢の一品を投稿しよう。</div>`;
 }
 
@@ -93,7 +94,7 @@ function renderBook(state) {
   $("#book-progress").textContent = `${state.discovered.length} / ${ITEMS.length} 発見 · 周回後も継承`;
   $("#book-grid").innerHTML = ITEMS.map((item) => {
     const found = state.discovered.includes(item.id);
-    return `<div class="book-item ${found ? "" : "locked"}" style="${rarityStyle(item)}"><div class="item-art">${imageMarkup(item, found ? item.name : "未発見アイテム")}</div><p>${found ? item.name : "？？？"}</p></div>`;
+    return `<div class="book-item ${found ? "" : "locked"}" style="${rarityStyle(item)}"><div class="item-art">${imageMarkup(item, found ? item.name : "未発見アイテム", true)}</div><p>${found ? item.name : "？？？"}</p></div>`;
   }).join("");
 }
 
@@ -110,16 +111,15 @@ function render() {
   renderInventory(state);
   renderListings(state);
   renderPosts(state);
-  renderBook(state);
   $("#home-stats").innerHTML = `<div><strong>${state.discovered.length}/${ITEMS.length}</strong><span>図鑑</span></div><div><strong>${state.stats.draws}</strong><span>ガチャ</span></div><div><strong>${state.stats.sales}</strong><span>売却</span></div><div><strong>${Object.values(state.crowns).reduce((a, b) => a + b, 0)}</strong><span>王冠</span></div>`;
   const rescueNeeded = state.coins < MACHINE.cost && !state.inventory.length && !state.listings.length;
   $("#rescue-button").classList.toggle("hidden", !rescueNeeded);
 }
 
-function showResult(item, isNew) {
+function showResult(item, isNew, collectionBonus = 0) {
   const dialog = $("#result-dialog");
   dialog.className = `modal result-modal rarity-${item.rarity}`;
-  $("#result-card").innerHTML = `<div style="${rarityStyle(item)}"><span class="result-status ${isNew ? "new" : "owned"}">${isNew ? "NEW" : "所持済み"}</span><div class="item-art result-art">${imageMarkup(item, item.name, true)}</div><p class="rarity">${rarityText(item)}</p><h2>${item.name}</h2><p>${item.flavor}</p><button id="result-continue" class="primary big">所持品を見る <span>GET!</span></button></div>`;
+  $("#result-card").innerHTML = `<div style="${rarityStyle(item)}"><span class="result-status ${isNew ? "new" : "owned"}">${isNew ? "NEW" : "所持済み"}</span>${collectionBonus ? `<span class="collection-bonus">周回初GET +${fmt(collectionBonus)} G</span>` : ""}<div class="item-art result-art">${imageMarkup(item, item.name, true)}</div><p class="rarity">${rarityText(item)}</p><h2>${item.name}</h2><p>${item.flavor}</p><button id="result-continue" class="primary big">所持品を見る <span>GET!</span></button></div>`;
   dialog.showModal();
 }
 
@@ -138,7 +138,7 @@ document.addEventListener("click", (event) => {
   if (button.id === "draw-button") {
     const result = game.draw();
     if (!result.ok) return showToast("コインが足りません");
-    showResult(result.item, result.isNew);
+    showResult(result.item, result.isNew, result.collectionBonus);
     return render();
   }
   if (button.dataset.sell) {
@@ -174,8 +174,8 @@ document.addEventListener("click", (event) => {
     showToast(`${name}を獲得。新しい周回へ！`);
     return showTab("home");
   }
-  if (button.id === "rescue-button") { if (game.rescue().ok) showToast("王様ボーナス 600 G！"); return render(); }
-  if (button.id === "book-button") return $("#book-dialog").showModal();
+  if (button.id === "rescue-button") { if (game.rescue().ok) showToast("王様支援 600 G（資金王の判定外）"); return render(); }
+  if (button.id === "book-button") { renderBook(game.getState()); return $("#book-dialog").showModal(); }
   if (button.id === "settings-button") return $("#settings-dialog").showModal();
 });
 

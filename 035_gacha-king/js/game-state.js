@@ -1,7 +1,7 @@
-import { GOALS, ITEMS, MACHINE, VERSION, itemById } from "./data.js";
+import { FIRST_COLLECTION_BONUS, GOALS, ITEMS, MACHINE, VERSION, itemById } from "./data.js";
 
 export const SAVE_KEY = "gacha-king-save-v1";
-const COMPATIBLE_VERSIONS = new Set(["0.1.0", VERSION]);
+const COMPATIBLE_VERSIONS = new Set(["0.1.0", "0.1.1", VERSION]);
 
 export function createInitialState(legacy = {}) {
   return {
@@ -12,6 +12,8 @@ export function createInitialState(legacy = {}) {
     listings: [],
     posts: [],
     discovered: [...new Set(legacy.discovered || [])],
+    runCollected: [...new Set(legacy.runCollected || [])],
+    supportReceived: Math.max(0, Number(legacy.supportReceived) || 0),
     crowns: { money: 0, collection: 0, popularity: 0, ...(legacy.crowns || {}) },
     cycle: Math.max(1, legacy.cycle || 1),
     settings: { reducedMotion: false, ...(legacy.settings || {}) },
@@ -41,6 +43,13 @@ function normalizeState(raw) {
   state.listings = Array.isArray(state.listings) ? state.listings.filter((entry) => itemById(entry.itemId)) : [];
   state.posts = Array.isArray(state.posts) ? state.posts : [];
   state.stats = { ...base.stats, ...(state.stats || {}) };
+  const currentCycleIds = [...state.inventory, ...state.listings, ...state.posts].map((entry) => entry.itemId).filter((id) => itemById(id));
+  state.runCollected = Array.isArray(raw.runCollected)
+    ? [...new Set(raw.runCollected.filter((id) => itemById(id)))]
+    : [...new Set(currentCycleIds)];
+  state.supportReceived = Number.isFinite(Number(raw.supportReceived))
+    ? Math.max(0, Number(raw.supportReceived))
+    : state.stats.rescues * 600;
   state.nextId = Math.max(1, Number(state.nextId) || 1);
   return state;
 }
@@ -78,12 +87,18 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
     let cursor = 0;
     const item = ITEMS.find((candidate) => (cursor += candidate.weight) > roll) || ITEMS.at(-1);
     const isNew = !state.discovered.includes(item.id);
+    const isFirstThisCycle = !state.runCollected.includes(item.id);
     const owned = { uid: `i${state.nextId++}`, itemId: item.id, acquiredAt: now(), posted: false };
     state.inventory.unshift(owned);
     if (!state.discovered.includes(item.id)) state.discovered.push(item.id);
+    if (isFirstThisCycle) {
+      state.runCollected.push(item.id);
+      state.coins += FIRST_COLLECTION_BONUS;
+      state.supportReceived += FIRST_COLLECTION_BONUS;
+    }
     state.stats.draws += 1;
     emit();
-    return { ok: true, item: clone(item), owned: clone(owned), isNew };
+    return { ok: true, item: clone(item), owned: clone(owned), isNew, collectionBonus: isFirstThisCycle ? FIRST_COLLECTION_BONUS : 0 };
   }
 
   function findOwned(uid) { return state.inventory.find((entry) => entry.uid === uid); }
@@ -148,9 +163,10 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
   }
 
   function collectionCount() { return new Set(state.inventory.map((entry) => entry.itemId)).size; }
+  function moneyProgress() { return Math.max(0, state.coins - state.supportReceived); }
   function achievements() {
     return {
-      money: state.coins >= GOALS.money.target,
+      money: moneyProgress() >= GOALS.money.target,
       collection: collectionCount() >= GOALS.collection.target,
       popularity: state.followers >= GOALS.popularity.target
     };
@@ -172,6 +188,7 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
   function rescue() {
     if (state.coins >= MACHINE.cost || state.inventory.length || state.listings.length) return { ok: false, reason: "not-needed" };
     state.coins += 600;
+    state.supportReceived += 600;
     state.stats.rescues += 1;
     emit();
     return { ok: true, amount: 600 };
@@ -179,5 +196,5 @@ export function createGame({ storage = globalThis.localStorage, rng = Math.rando
 
   function setReducedMotion(value) { state.settings.reducedMotion = Boolean(value); emit(); }
 
-  return { load, save, getState, subscribe, draw, quickSell, listItem, settleListings, postItem, achievements, collectionCount, claimCrown, rescue, setReducedMotion };
+  return { load, save, getState, subscribe, draw, quickSell, listItem, settleListings, postItem, achievements, collectionCount, moneyProgress, claimCrown, rescue, setReducedMotion };
 }

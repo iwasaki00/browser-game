@@ -28,7 +28,7 @@
         </div>
         <div class="section-heading"><h2>王への道</h2><span>達成して周回</span></div>
         <div id="goals" class="goal-grid"></div>
-        <button id="rescue-button" class="rescue hidden">資金が尽きた… 王様ボーナス 600 G を受け取る</button>
+        <button id="rescue-button" class="rescue hidden">資金が尽きた… 王様支援 600 G を受け取る（資金王の判定外）</button>
         <div class="panel mini-stats" id="home-stats"></div>
       </section>
 
@@ -76,7 +76,7 @@
   </dialog>
   <dialog id="book-dialog" class="modal"><button class="close" data-close>閉じる ×</button><p class="eyebrow">COLLECTION BOOK</p><h2>発見済み図鑑</h2><p id="book-progress"></p><div id="book-grid" class="book-grid"></div></dialog>
   <dialog id="item-dialog" class="modal item-modal"><button class="close" data-close>閉じる ×</button><div id="item-detail"></div></dialog>
-  <dialog id="settings-dialog" class="modal small"><button class="close" data-close>閉じる ×</button><p class="eyebrow">SETTINGS</p><h2>設定</h2><label class="toggle"><span>演出を軽減する<small>開封アニメーションを短縮します</small></span><input id="motion-toggle" type="checkbox"><i></i></label><p class="version">GACHA KING v0.1.1</p></dialog>
+  <dialog id="settings-dialog" class="modal small"><button class="close" data-close>閉じる ×</button><p class="eyebrow">SETTINGS</p><h2>設定</h2><label class="toggle"><span>演出を軽減する<small>開封アニメーションを短縮します</small></span><input id="motion-toggle" type="checkbox"><i></i></label><p class="version">GACHA KING v0.1.2</p></dialog>
   <dialog id="crown-dialog" class="modal small"><div class="crown-celebrate">♛</div><p class="eyebrow">NEW CROWN</p><h2 id="crown-title">王冠獲得！</h2><p>王冠と図鑑を継承して、次の周回へ進みます。</p><button id="crown-confirm" class="primary big">王冠を受け取る</button><button class="secondary" data-close>あとで</button></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="./js/app.js"></script>

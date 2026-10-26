@@ -40,7 +40,8 @@ export function movePlanets(planets,targets,stage,dt,maxSpeed=LIVE_GRAVITY.maxSp
 export function stepLiveFlight(state,targets,stage,gameMode,dt=DEFAULT_PHYSICS.fixedTimeStep,maxSpeed=LIVE_GRAVITY.maxSpeed) {
   if(gameMode!=='live'||state.status!=='flying')return stepSimulation(state,dt);
   const planets=movePlanets(state.planets,targets,stage,dt,maxSpeed);
-  let next=stepSimulation({...state,planets},dt);
+  let next=stepSimulation({...state,planets},dt,state.encounters?.length?{previousPlanets:state.planets}:{});
+  if(state.encounters?.length)return next;
   const goalTime=segmentCircleHit(state.rocket.position,next.rocket.position,state.goal);
   let first=null;
   for(let i=0;i<planets.length;i++) {

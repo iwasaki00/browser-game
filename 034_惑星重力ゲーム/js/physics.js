@@ -1,3 +1,4 @@
+import {encounterBodies,encounterCuts,encounterGravity,tailExposure,cometAcceleration} from './encounters.js';
 export const DEFAULT_PHYSICS = Object.freeze({
   gravitationalConstant: 120,
   softening: 10,
@@ -109,11 +110,13 @@ export function createSimulation(stage, launch = {}) {
     goal: { ...stage.goal },
     world: { ...stage.world },
     ...(stage.flightLimits?{flightLimits:{...stage.flightLimits}}:{}),
+    ...(stage.encounters?.length?{encounters:structuredClone(stage.encounters),encounterEvents:[]}:{}),
   };
 }
 
 export function stepSimulation(state, dt, options = {}) {
   if (state.status !== "flying") return state;
+  if(state.encounters?.length)return stepEncounterFlight(state,dt,options);
 
   const previous = state.rocket.position;
   const rocket = velocityVerletStep(state.rocket, state.planets, dt, options);
@@ -139,6 +142,53 @@ export function stepSimulation(state, dt, options = {}) {
     elapsed,
     status: outside ? "escaped" : timedOut ? "timeout" : "flying",
   };
+}
+
+// Optional encounter path. The planet-only Verlet implementation above remains
+// byte-for-byte unchanged, and is still used for all legacy stages.
+function stepEncounterFlight(state,dt,options){
+ const objects=state.encounters,t0=state.elapsed,t1=t0+dt,body=state.rocket,start=body.position;
+ const acceleration=(position,time)=>{const a=gravitationalAcceleration(position,state.planets,options),b=encounterGravity(position,objects,time);return {x:a.x+b.x,y:a.y+b.y};};
+ const initial=acceleration(start,t0);
+ const predicted={x:start.x+body.velocity.x*dt+.5*initial.x*dt*dt,y:start.y+body.velocity.y*dt+.5*initial.y*dt*dt};
+ const tails=objects.filter(e=>e.type==='comet').sort((a,b)=>a.id.localeCompare(b.id)).map(e=>({e,f:tailExposure(e,start,predicted,t0,t1)}));
+ const a0={...initial};for(const {e,f}of tails){const a=cometAcceleration(e,body.velocity,f);a0.x+=a.x;a0.y+=a.y;}
+ const position={x:start.x+body.velocity.x*dt+.5*a0.x*dt*dt,y:start.y+body.velocity.y*dt+.5*a0.y*dt*dt};
+ const a1=acceleration(position,t1),estimate={x:body.velocity.x+a0.x*dt,y:body.velocity.y+a0.y*dt};
+ for(const {e,f}of tails){const a=cometAcceleration(e,estimate,f);a1.x+=a.x;a1.y+=a.y;}
+ const velocity={x:body.velocity.x+.5*(a0.x+a1.x)*dt,y:body.velocity.y+.5*(a0.y+a1.y)*dt};
+ let contact=earliestContact(start,position,state.planets,state.goal,body.radius);
+ if(options.previousPlanets){
+  const goalHit=segmentCircleHit(start,position,state.goal);contact=goalHit===null?null:{t:goalHit,status:'cleared',target:state.goal.id};
+  for(const p of state.planets){const old=options.previousPlanets.find(q=>q.id===p.id)??p;for(const zone of planetContactZones(p)){
+   const hit=segmentCircleHit({x:start.x-old.x,y:start.y-old.y},{x:position.x-p.x,y:position.y-p.y},{x:0,y:0,radius:zone.radius+body.radius});
+   if(hit!==null&&(!contact||hit<=contact.t))contact={t:hit,status:'crashed',target:p.id,...(zone.reason?{reason:zone.reason}:{})};
+  }}
+ }
+ const triggers=[];
+ const lerp=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
+ for(const e of objects){
+  const cuts=encounterCuts(e,t0,t1);
+  for(let k=0;k<cuts.length-1;k++){
+   const lo=(cuts[k]-t0)/dt,hi=(cuts[k+1]-t0)/dt,from=lerp(start,position,lo),to=lerp(start,position,hi);
+   const before=encounterBodies(e,cuts[k]),after=encounterBodies(e,cuts[k+1]);
+   for(let i=0;i<before.length;i++){
+    const a={x:from.x-before[i].x,y:from.y-before[i].y},b={x:to.x-after[i].x,y:to.y-after[i].y};
+    if(e.type!=='station'){
+     const hit=segmentCircleHit(a,b,{x:0,y:0,radius:e.radius+body.radius});
+     if(hit!==null){const t=lo+(hi-lo)*hit;if(!contact||t<=contact.t)contact={t,status:'crashed',target:e.id,reason:`encounter-${e.type}`};}
+    }
+    if(['station','unknown'].includes(e.type)&&!state.encounterEvents.some(event=>event.id===e.id)){
+     const hit=segmentCircleHit(a,b,{x:0,y:0,radius:e.reactionRadius});
+     if(hit!==null)triggers.push({id:e.id,type:e.type,fraction:lo+(hi-lo)*hit,time:t1});
+    }
+   }
+  }
+ }
+ const encounterEvents=[...state.encounterEvents];for(const event of triggers.sort((a,b)=>a.fraction-b.fraction||a.id.localeCompare(b.id)))if(event.fraction<=(contact?.t??1)&&!encounterEvents.some(old=>old.id===event.id)){const {fraction,...saved}=event;encounterEvents.push(saved);}
+ const margin=options.boundsMargin??DEFAULT_PHYSICS.boundsMargin,outside=position.x<-margin||position.x>state.world.width+margin||position.y<-margin||position.y>state.world.height+margin;
+ const timedOut=t1>=(options.maxFlightTime??state.flightLimits?.maxFlightTime??DEFAULT_PHYSICS.maxFlightTime);
+ return {...state,elapsed:t1,encounterEvents,rocket:{...body,position:contact?lerp(start,position,contact.t):position,velocity},status:contact?.status??(outside?'escaped':timedOut?'timeout':'flying'),...(contact?{target:contact.target,...(contact.reason?{reason:contact.reason}:{})}:{})};
 }
 
 export function simulateTrajectory(stage, launch = {}, options = {}) {

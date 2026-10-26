@@ -23,7 +23,8 @@ try{
   // Generate a fresh failed flight through the existing game, not the replay.
   await page.locator('#launchButton').click();await page.clock.runFor(1600);assert.equal(await page.locator('#result').isVisible(),true);
   const before=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return {records:await new GalleryStore().list(),homeward:localStorage.getItem('orbit-maker.homeward.v1'),classic:localStorage.getItem('orbit-maker.stage-progress.v1')};});assert.equal(before.records.length,2);
-  await page.locator('#openMenuSettings').click();await page.locator('#openGallery').click();await page.locator('.gallery-record').filter({hasText:'旧記録 HOMEWARD01'}).click();
+  await page.locator('#openMenuSettings').click();await page.locator('#openGallery').click();await page.locator('#galleryDefaultCamera').selectOption('cinematic');await page.locator('.gallery-record').filter({hasText:'旧記録 HOMEWARD01'}).click();
+  assert.equal(await page.locator('#replayCamera').inputValue(),'cinematic');assert.equal(await page.locator('#replayPhase').textContent(),'出航準備');
   await page.locator('#replayPlay').click();const paused=await page.locator('#replayTime').textContent();await page.clock.runFor(200);assert.equal(await page.locator('#replayTime').textContent(),paused);
   await page.locator('#replayCamera').selectOption('cinematic');await page.locator('#replayRestart').click();await page.clock.runFor(250);
   assert.equal(await page.locator('#replayPhase').textContent(),'出航準備');assert.equal(await page.evaluate(()=>activeReplay.time),0);
@@ -47,14 +48,21 @@ try{
    await page.locator('#replayOverview').click();assert.equal(await page.locator('#replayCamera').inputValue(),'overview');
    await page.locator('#replayCamera').selectOption('cinematic');
    for(const speed of [.5,1,2,4]){
-    await seek(5);await page.locator('#replaySpeed').selectOption(String(speed));await page.locator('#replayPlay').click();await page.clock.runFor(500);await page.locator('#replayPlay').click();
-    const time=await page.evaluate(()=>activeReplay.time);assert.ok(Math.abs(time-(5+.5*speed))<.15,`${speed}: ${time}`);
+    await seek(5);await page.locator('#replaySpeed').selectOption(String(speed));await page.locator('#replayPlay').click();
+    const start=await page.evaluate(()=>({time:activeReplay.time,now:performance.now()}));await page.clock.runFor(500);
+    const end=await page.evaluate(()=>({time:activeReplay.time,now:performance.now()}));await page.locator('#replayPlay').click();
+    assert.ok(Math.abs((end.time-start.time)/speed-(end.now-start.now)/1000)<.08,`${speed}: ${JSON.stringify({start,end})}`);
    }
    await page.locator('#replayFull').click();assert.equal(await page.locator('#replayFull').getAttribute('aria-pressed'),'true');
   }
   await page.locator('#replaySpeed').selectOption('4');await seek(old.duration-.1);await page.locator('#replayPlay').click();await page.clock.runFor(1200);
   assert.equal(await page.locator('#replayResult').textContent(),'CLEAR');assert.equal(await page.evaluate(()=>activeReplay.phase),'ended');
   await page.locator('#replayBack').click();await page.locator('.gallery-record').filter({hasNotText:'旧記録 HOMEWARD01'}).click();await page.locator('#replayCamera').selectOption('cinematic');await page.locator('#replayRestart').click();await page.clock.runFor(3000);assert.equal(await page.locator('#replayResult').textContent(),'FAIL');
+  if(width===375){
+   const time=await page.evaluate(()=>activeReplay.time);await page.locator('#openArt').click();
+   await page.waitForFunction(()=>document.querySelector('#artPreview').src.startsWith('blob:'));
+   await page.locator('#artBack').click();assert.equal(await page.evaluate(()=>activeReplay.time),time);assert.equal(await page.locator('#galleryPlayer').isVisible(),true);
+  }
   await page.locator('#closeGallery').click();await page.reload();await page.clock.runFor(50);
   const after=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return {records:await new GalleryStore().list(),homeward:localStorage.getItem('orbit-maker.homeward.v1'),classic:localStorage.getItem('orbit-maker.stage-progress.v1')};});assert.deepEqual(after,before);
   assert.deepEqual(errors,[]);results.push({width,height,board,oldAndNewReplay:true,pauseResume:true,seek:true,modeSwitch:true,clearAndFail:true,indexedDbAndProgressUnchanged:true,errors,status:'PASS'});await context.close();

@@ -1,10 +1,11 @@
 {
   "name": "gacha-king",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "check": "node --check js/data.js && node --check js/game-state.js && node --check js/app.js"
+    "check": "node --check js/data.js && node --check js/game-state.js && node --check js/app.js && node --check scripts/simulate-balance.mjs",
+    "simulate": "node scripts/simulate-balance.mjs"
   }
 }

@@ -1,0 +1,56 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 13,
+      "y": 130,
+      "width": 294,
+      "height": 288
+    },
+    "oldAndNewReplay": true,
+    "pauseResume": true,
+    "seek": true,
+    "modeSwitch": true,
+    "clearAndFail": true,
+    "indexedDbAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 13,
+      "y": 130,
+      "width": 349,
+      "height": 387
+    },
+    "oldAndNewReplay": true,
+    "pauseResume": true,
+    "seek": true,
+    "modeSwitch": true,
+    "clearAndFail": true,
+    "indexedDbAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 13,
+      "y": 130,
+      "width": 364,
+      "height": 564
+    },
+    "oldAndNewReplay": true,
+    "pauseResume": true,
+    "seek": true,
+    "modeSwitch": true,
+    "clearAndFail": true,
+    "indexedDbAndProgressUnchanged": true,
+    "errors": [],
+    "status": "PASS"
+  }
+]

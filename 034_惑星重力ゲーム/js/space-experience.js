@@ -18,6 +18,7 @@ function segmentDistance(a, b) {
   return Math.hypot(a.x+dx*t, a.y+dy*t);
 }
 export function failureKind(state) {
+  if(state.status==='crashed'&&state.reason?.startsWith('encounter-'))return 'collision';
   return state.status === 'crashed' ? (state.reason ?? 'collision') : state.status;
 }
 export const EVENT_STYLE = Object.freeze({

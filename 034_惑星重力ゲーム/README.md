@@ -1,6 +1,14 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 1.0.3 — CINEMATIC CAMERA
+Version 1.0.4 — CINEMATIC FLIGHT REPLAY
+
+ギャラリーの一覧で「通常再生／FOLLOW／CINEMATIC／OVERVIEW」を選んでから記録を開けます。再生中・一時停止中も映像左上から切替可能。CINEMATICは出航前の待機、発射、航行、惑星接近・離脱、ゴール接近、到着後の余韻に対応します。
+
+再生速度は従来の0.5／1／2／4倍。位置スライダーを操作すると一時停止し、保存座標の指定時刻へ移動します。映像をドラッグ・ピンチ、または＋／−で手動カメラへ切り替えられ、カメラ選択から自動へ戻せます。記録を再計算・書換えせず、既存v1データをそのまま使用します。
+
+[v1.0.4検証レポート・iPhone確認手順](reports/flight-replay/VERIFICATION.md)。関連テスト：`node --test tests/flight-replay.test.mjs tests/gallery.test.mjs tests/launch.test.mjs`、画面・操作：`node tests/flight-replay-ui.mjs`。iPhone実機は未確認です。公開・pushは行っていません。
+
+以下はv1.0.3の実装・検証記録です。
 
 メニュー → カメラでCINEMATICを選ぶと、発射・航行・惑星接近と離脱・ゴール接近・到着に応じて表示位置と倍率を自動調整します。ロケットの進行方向を広めに映し、惑星・ゲートとの位置関係を表示します。右下に現在のカメラモードを表示します。
 

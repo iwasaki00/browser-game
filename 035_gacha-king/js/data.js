@@ -1,5 +1,6 @@
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 export const ASSET_SERIES = "henteko-vol01";
+export const FIRST_COLLECTION_BONUS = 150;
 const ASSET_BASE = `./assets/items/${ASSET_SERIES}/`;
 
 export const RARITIES = {
@@ -38,7 +39,7 @@ export const MACHINE = {
 export const GOALS = {
   money: { name: "資金王", icon: "¥", target: 3000, unit: "G" },
   collection: { name: "コレクション王", icon: "◇", target: 8, unit: "種" },
-  popularity: { name: "人気王", icon: "♡", target: 120, unit: "人" }
+  popularity: { name: "人気王", icon: "♡", target: 300, unit: "人" }
 };
 
 export const itemById = (id) => ITEMS.find((item) => item.id === id);

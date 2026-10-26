@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createGame, createInitialState, SAVE_KEY } from "../js/game-state.js";
-import { GOALS, ITEMS, MACHINE, VERSION } from "../js/data.js";
+import { FIRST_COLLECTION_BONUS, GOALS, ITEMS, MACHINE, VERSION } from "../js/data.js";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 
@@ -24,7 +24,19 @@ test("固定乱数で全レア度の境界を抽選できる", () => {
   const { game } = makeGame({ rolls });
   const rarities = rolls.map(() => game.draw().item.rarity);
   assert.deepEqual(rarities, ["common", "rare", "epic", "legendary", "mythic"]);
-  assert.equal(game.getState().coins, 0);
+  assert.equal(game.getState().coins, FIRST_COLLECTION_BONUS * rolls.length);
+});
+
+test("周回内で種類ごとの初回入手ボーナスを一度だけ付与する", () => {
+  const { game } = makeGame({ rolls: [0, 0] });
+  const first = game.draw();
+  const duplicate = game.draw();
+  const state = game.getState();
+  assert.equal(first.collectionBonus, FIRST_COLLECTION_BONUS);
+  assert.equal(duplicate.collectionBonus, 0);
+  assert.equal(state.coins, 1000 - MACHINE.cost * 2 + FIRST_COLLECTION_BONUS);
+  assert.equal(state.supportReceived, FIRST_COLLECTION_BONUS);
+  assert.deepEqual(state.runCollected, [ITEMS[0].id]);
 });
 
 test("即売りは所持品を除き資金を増加する", () => {
@@ -37,15 +49,18 @@ test("即売りは所持品を除き資金を増加する", () => {
 
 test("フリマは待機後に割増価格で成約する", () => {
   const ctx = makeGame(); const drawn = ctx.game.draw(); const listed = ctx.game.listItem(drawn.owned.uid);
-  assert.equal(ctx.game.getState().coins, 800);
+  assert.equal(listed.listing.price, Math.round(drawn.item.value * 1.45));
+  assert.equal(ctx.game.getState().coins, 1000 - MACHINE.cost + FIRST_COLLECTION_BONUS);
   ctx.advance(8000); ctx.game.settleListings();
   assert.equal(ctx.game.getState().listings.length, 0);
-  assert.equal(ctx.game.getState().coins, 800 + listed.listing.price);
+  assert.equal(ctx.game.getState().coins, 1000 - MACHINE.cost + FIRST_COLLECTION_BONUS + listed.listing.price);
 });
 
 test("同じ所持アイテムのSNS重複投稿を拒否し履歴は売却後も残る", () => {
   const { game } = makeGame(); const drawn = game.draw();
-  assert.equal(game.postItem(drawn.owned.uid).ok, true);
+  const beforeCoins = game.getState().coins;
+  assert.deepEqual(game.postItem(drawn.owned.uid), { ok: true, followers: 11 });
+  assert.equal(game.getState().coins, beforeCoins);
   assert.equal(game.postItem(drawn.owned.uid).reason, "duplicate");
   game.quickSell(drawn.owned.uid);
   assert.equal(game.getState().posts.length, 1);
@@ -62,22 +77,23 @@ test("3種類の王冠達成判定を行う", () => {
   const { game } = makeGame({ rolls: uniqueRolls, storage });
   for (let i = 0; i < GOALS.collection.target; i++) game.draw();
   assert.equal(game.achievements().collection, true);
-  const raw = game.getState(); raw.coins = GOALS.money.target; raw.followers = GOALS.popularity.target;
+  const raw = game.getState(); raw.coins = GOALS.money.target + raw.supportReceived; raw.followers = GOALS.popularity.target;
   const achievedStorage = memoryStorage({ [SAVE_KEY]: JSON.stringify(raw) }); const loaded = createGame({ storage: achievedStorage }); loaded.load();
   assert.deepEqual(loaded.achievements(), { money: true, collection: true, popularity: true });
 });
 
 test("セーブ・ロードと周回で王冠・図鑑・設定を継承する", () => {
   const { game, storage } = makeGame(); game.draw(); game.setReducedMotion(true);
-  const raw = game.getState(); raw.coins = GOALS.money.target; storage.setItem(SAVE_KEY, JSON.stringify(raw));
+  const raw = game.getState(); raw.coins = GOALS.money.target + raw.supportReceived; storage.setItem(SAVE_KEY, JSON.stringify(raw));
   const loaded = createGame({ storage, now: () => 2000 }); loaded.load();
   assert.equal(loaded.claimCrown("money").ok, true);
   const next = loaded.getState();
   assert.equal(next.cycle, 2); assert.equal(next.crowns.money, 1); assert.equal(next.discovered.length, 1);
   assert.equal(next.settings.reducedMotion, true); assert.equal(next.inventory.length, 0); assert.equal(next.coins, 1000);
+  assert.deepEqual(next.runCollected, []); assert.equal(next.supportReceived, 0);
 });
 
-test("Version 0.1.0セーブを初期化せず0.1.1へ移行する", () => {
+test("Version 0.1.0セーブを初期化せず0.1.2へ移行する", () => {
   const legacy = createInitialState();
   legacy.version = "0.1.0";
   legacy.coins = 4321;
@@ -85,6 +101,8 @@ test("Version 0.1.0セーブを初期化せず0.1.1へ移行する", () => {
   legacy.discovered = [ITEMS[0].id, ITEMS[8].id];
   legacy.inventory = [{ uid: "i44", itemId: ITEMS[8].id, acquiredAt: 100, posted: false }];
   legacy.crowns = { money: 2, collection: 1, popularity: 3 };
+  delete legacy.runCollected;
+  delete legacy.supportReceived;
   const storage = memoryStorage({ [SAVE_KEY]: JSON.stringify(legacy) });
   const migrated = createGame({ storage });
   migrated.load();
@@ -95,6 +113,27 @@ test("Version 0.1.0セーブを初期化せず0.1.1へ移行する", () => {
   assert.deepEqual(state.discovered, legacy.discovered);
   assert.deepEqual(state.inventory, legacy.inventory);
   assert.deepEqual(state.crowns, legacy.crowns);
+  assert.deepEqual(state.runCollected, [ITEMS[8].id]);
+  assert.equal(state.supportReceived, 0);
+});
+
+test("Version 0.1.1セーブの所持品・投稿・救済履歴を維持して移行する", () => {
+  const legacy = createInitialState();
+  legacy.version = "0.1.1";
+  legacy.inventory = [{ uid: "i10", itemId: ITEMS[1].id, acquiredAt: 100, posted: true }];
+  legacy.posts = [{ uid: "p11", sourceUid: "i10", itemId: ITEMS[1].id, followers: 11, createdAt: 101 }];
+  legacy.stats.rescues = 2;
+  delete legacy.runCollected;
+  delete legacy.supportReceived;
+  const storage = memoryStorage({ [SAVE_KEY]: JSON.stringify(legacy) });
+  const migrated = createGame({ storage });
+  migrated.load();
+  const state = migrated.getState();
+  assert.equal(state.version, VERSION);
+  assert.deepEqual(state.inventory, legacy.inventory);
+  assert.deepEqual(state.posts, legacy.posts);
+  assert.deepEqual(state.runCollected, [ITEMS[1].id]);
+  assert.equal(state.supportReceived, 1200);
 });
 
 test("正式画像12種と既存IDの対応が一意で、PNGは512×512", () => {
@@ -120,6 +159,11 @@ test("正式画像12種と既存IDの対応が一意で、PNGは512×512", () =>
 });
 
 test("0.1.0の価格・weight・レア度別排出率を維持する", () => {
+  assert.equal(createInitialState().coins, 1000);
+  assert.equal(MACHINE.cost, 200);
+  assert.deepEqual(Object.fromEntries(Object.entries(GOALS).map(([key, goal]) => [key, goal.target])), {
+    money: 3000, collection: 8, popularity: 300
+  });
   assert.deepEqual(ITEMS.map(({ rarity, weight, value }) => [rarity, weight, value]), [
     ["common", 1500, 100], ["common", 1500, 110], ["common", 1500, 120],
     ["rare", 1000, 220], ["rare", 1000, 240], ["rare", 1000, 260],
@@ -147,5 +191,22 @@ test("資金・所持品・出品がない時だけ救済を受け取れる", ()
   const state = game.getState(); state.coins = 0; const storage = memoryStorage({ [SAVE_KEY]: JSON.stringify(state) });
   const stranded = createGame({ storage }); stranded.load();
   assert.deepEqual(stranded.rescue(), { ok: true, amount: 600 });
+  assert.equal(stranded.moneyProgress(), 0);
+  assert.equal(stranded.achievements().money, false);
   assert.equal(stranded.rescue().reason, "not-needed");
+});
+
+test("支援金を資金王の進捗から除外する", () => {
+  const state = createInitialState();
+  state.coins = GOALS.money.target;
+  state.supportReceived = 600;
+  const storage = memoryStorage({ [SAVE_KEY]: JSON.stringify(state) });
+  const game = createGame({ storage });
+  game.load();
+  assert.equal(game.moneyProgress(), GOALS.money.target - 600);
+  assert.equal(game.achievements().money, false);
+  state.coins = GOALS.money.target + state.supportReceived;
+  storage.setItem(SAVE_KEY, JSON.stringify(state));
+  game.load();
+  assert.equal(game.achievements().money, true);
 });

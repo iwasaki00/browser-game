@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Cinematic Flight Replay</title>
+  <title>ORBIT MAKER — Space Encounters</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -38,6 +38,8 @@
       </div>
       <div class="edit-hint" id="editHint"><span></span><b id="editHintText">惑星をドラッグ</b></div>
       <output id="cameraModeBadge" class="camera-mode-badge" aria-label="現在のカメラモード" aria-live="polite">OVERVIEW</output>
+      <output id="encounterLog" class="encounter-log" role="status"></output>
+      <div id="encounterSelectionBar" class="selection-bar" hidden><output id="encounterSelected"></output><button id="deleteEncounter" type="button">物体を削除</button></div>
       <div id="flightSpeed" class="flight-speed" hidden><label for="flightRate">航行速度</label><select id="flightRate" aria-label="航行速度"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option><option value="10">10×</option><option value="50">50×</option><option value="100">100×</option></select><output id="effectiveRate" title="直近約0.5秒の実行速度。端末負荷で選択倍率より低くなることがあります。">実効 1×</output></div>
     </section>
 
@@ -66,7 +68,7 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.0.4</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.1.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
@@ -76,6 +78,7 @@
       <div class="controls-toolbar">
         <div class="game-mode"><label for="gameMode">ゲームモード</label><select id="gameMode" aria-describedby="gameModeHelp"><option value="design">軌道設計</option><option value="live">重力操作</option></select><small id="gameModeHelp"></small></div>
         <button id="openDisplaySettings" type="button" aria-haspopup="dialog" aria-controls="displayPanel">表示・音</button>
+        <button id="openEncounterSettings" type="button" aria-haspopup="dialog" aria-controls="encounterPanel">宇宙ギミック</button>
 
       </div>
       <div class="launch-mode" role="group" aria-label="発射方式">
@@ -139,14 +142,22 @@
     <div id="stageList"></div>
     <button id="freePlay" type="button">フリープレイ</button>
   </dialog>
+  <dialog id="encounterPanel" class="settings-dialog" aria-labelledby="encounterTitle"><header><div><small>FREE SPACE LAB</small><h2 id="encounterTitle">宇宙ギミック</h2></div><button id="closeEncounterSettings" type="button">閉じる</button></header><div class="settings-content">
+    <label class="world-option">種類<select id="encounterType"><option value="meteor">隕石群</option><option value="comet">彗星</option><option value="unknown">未知の物体</option><option value="ufo">UFO</option><option value="station">宇宙ステーション</option></select></label>
+    <p id="encounterFeature" class="settings-note"></p><div class="encounter-fields"><label>速度（0〜160）<input id="encounterSpeed" type="number" min="0" max="160" value="40"></label><label>隕石数（1〜12）<input id="encounterCount" type="number" min="1" max="12" value="5"></label><label>効果強度（0〜120）<input id="encounterStrength" type="number" min="0" max="120" value="60"></label><label>彗星の尾<select id="encounterTailMode"><option value="boost">加速</option><option value="brake">減速</option></select></label></div>
+    <p id="encounterReason" class="settings-note" role="status"></p><div class="encounter-actions"><button id="addEncounter" type="button">追加</button><button id="applyEncounter" type="button">選択に設定を適用</button></div>
+    <label class="world-option">体験配置（現在のFREE SPACEを置換）<select id="encounterSample"><option value="">選択してください</option><option value="meteor">METEOR FIELD</option><option value="comet">COMET RIDER</option><option value="unknown">UNKNOWN SIGNAL</option><option value="ufo">UFO ENCOUNTER</option><option value="station">DEEP SPACE STATION</option></select></label>
+    <p class="settings-note">物体は発射前にドラッグで移動できます。飛行中は設定を固定します。尾・重力異常の帯は見た目だけでなく航路に影響します。</p>
+  </div></dialog>
   <p id="galleryNotice" role="status" aria-live="polite"></p>
   <dialog id="galleryDialog" aria-labelledby="galleryTitle">
     <header><h2 id="galleryTitle">軌道ギャラリー</h2><button id="closeGallery" type="button">閉じる</button></header>
     <p id="galleryMessage" role="status"></p>
-    <section id="galleryListView"><p id="galleryCount"></p><div id="galleryList"></div></section>
+    <section id="galleryListView"><p id="galleryCount"></p><label class="gallery-camera-choice">再生カメラ<select id="galleryDefaultCamera"><option value="normal">通常再生</option><option value="follow">FOLLOW</option><option value="cinematic">CINEMATIC</option><option value="overview">OVERVIEW</option></select></label><div id="galleryList"></div></section>
     <section id="galleryPlayer" hidden>
       <div class="replay-heading"><button id="replayBack" type="button">一覧へ</button><strong id="replayTitle"></strong><button id="openArt" type="button">画像作成</button></div>
       <div class="replay-board"><canvas id="replayCanvas" width="750" height="1000" aria-label="保存した飛行の再生。ドラッグで視点移動、ピンチで拡大縮小"></canvas><label class="replay-camera"><select id="replayCamera" aria-label="再生カメラ"><option value="normal">通常再生</option><option value="follow">FOLLOW</option><option value="cinematic">CINEMATIC</option><option value="overview">OVERVIEW</option><option value="manual" disabled>手動カメラ</option></select></label><output id="replayPhase" class="replay-phase"></output><div class="replay-zoom"><button id="replayZoomOut" type="button" aria-label="再生映像を縮小">−</button><button id="replayZoomIn" type="button" aria-label="再生映像を拡大">＋</button><button id="replayOverview" type="button">全体</button></div><strong id="replayResult" aria-live="polite"></strong></div>
+      <output id="replayEncounterLog" class="replay-encounter-log" role="status"></output>
       <div class="replay-seek"><output id="replayTime"></output><input id="replayPosition" type="range" min="0" max="1" step="0.01" value="0" aria-label="再生位置。変更すると一時停止"></div>
       <div class="replay-controls"><button id="replayPlay" type="button">再生</button><button id="replayRestart" type="button">最初から</button><label>再生速度 <select id="replaySpeed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label><button id="replayFull" type="button" aria-pressed="false">軌道全体</button></div>
     </section>

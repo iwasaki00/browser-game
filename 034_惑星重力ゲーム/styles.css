@@ -319,10 +319,20 @@ input[type='range'] { height:30px; }
 .flight-speed output { grid-column:1 / -1; font:9px monospace; color:#92b5cb; }
 .camera-mode-badge { position:absolute; right:8px; bottom:59px; padding:2px 4px; border-radius:4px; background:#06101edb; color:#a9d8e5; font:9px monospace; pointer-events:none; }
 .replay-camera { position:absolute; top:5px; left:5px; }
-#galleryDialog .replay-camera select { max-width:148px; font-size:12px; background:#0c2335e8; }
+#galleryDialog .replay-camera select { max-width:148px; font-size:16px; background:#0c2335e8; }
 .replay-phase { position:absolute; top:57px; left:10px; color:#a7dae9; font:10px monospace; pointer-events:none; text-shadow:0 1px 3px #000; }
 .replay-zoom { position:absolute; bottom:5px; right:5px; display:flex; gap:3px; }
 #galleryDialog .replay-zoom button { min-width:44px; padding:4px 7px; background:#0c2335e8; }
 .replay-seek { display:flex; align-items:center; gap:8px; min-height:36px; }
 .replay-seek output { flex:0 0 auto; font-variant-numeric:tabular-nums; }
 .replay-seek input { flex:1; min-width:0; height:36px; margin:0; touch-action:pan-x; }
+.gallery-camera-choice { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:12px; }
+.encounter-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.encounter-fields label { display:flex; flex-direction:column; gap:5px; font-size:11px; min-width:0; }
+.settings-dialog .encounter-fields input { min-width:0; width:100%; min-height:44px; font-size:16px; border:1px solid #35576d; border-radius:6px; background:#0b2538; color:#e4f6ff; padding:5px; }
+.encounter-actions { display:flex; gap:8px; margin-bottom:14px; }
+.encounter-log { position:absolute; bottom:99px; left:8px; right:8px; color:#ffdfa4; font-size:11px; text-shadow:0 1px 3px #000; pointer-events:none; }
+.encounter-log:empty,.replay-encounter-log:empty { display:none; }
+.replay-encounter-log { color:#ffdfa4; font-size:10px; }
+#encounterSelectionBar { pointer-events:none; }
+#encounterSelectionBar button { pointer-events:auto; }
