@@ -1,14 +1,15 @@
-import {WORLD,clamp} from './data.js?v=0.4.0';
+import {WORLD,VIEW,BATTLE_CAMERA,clamp} from './data.js?v=0.4.0';
 import {movePlayerBody} from './player.js?v=0.2.2';
 import {createImpactState} from './impact.js?v=0.4.0';
 import {AttackDirector} from './invasion.js?v=0.4.0';
+import {createBattleCamera,evaluateBattleCamera} from './camera.js?v=0.4.0';
 
 // M04-only world, state and attack plans. Fixed devices are targetable entities,
 // but are not members of the invasion population or reward/drop population.
 export const SKY=Object.freeze({shieldRadius:120,shieldScale:.7,warning:1.25,recovery:1.8,
   summonLimit:10,shotLimit:48,hazardLimit:6,rescueY:205,rescueDamage:12,coreHp:3200,
   turretHp:160,generatorHp:220,phaseGrace:1.6,collapseDuration:1.5});
-export const M04=Object.freeze({id:'M04',world:{...WORLD,width:7200,ground:260},bossX:6000,bossSpawnX:6650,
+export const M04=Object.freeze({id:'M04',world:{...WORLD,width:7200,ground:260},bossX:6180,bossSpawnX:6650,
   areas:[{x:0,name:'高層市街地'},{x:1200,name:'対空防衛線'},{x:2600,name:'輸送プラットフォーム'},{x:4100,name:'要塞外殻'},{x:5600,name:'空中要塞中枢'}],
   platforms:[{x:0,y:148,w:2960,h:112,solid:true,kind:'roof'},
     {x:2960,y:172,w:160,h:88,solid:true,kind:'recovery'},
@@ -68,12 +69,22 @@ export function resetSkyBossPhase(g,boss,phase=1){
   g.arsenal.installations.length=g.arsenal.jobs.length=g.arsenal.pending.length=0;
   g.sky=createSkyState();g.sky.safeX=g.player.x;g.sky.safeY=g.player.y;
   Object.assign(boss,{dead:false,death:0,hp:SKY.coreHp,maxHp:SKY.coreHp,skyPhase:n,timer:0,warningLeft:0,attackPlan:null,actionWait:SKY.phaseGrace,actionIndex:0,hitFlash:0,vx:0,vy:0,active:true});
-  for(const [kind,x] of [['turret',6220],['turret',7000],['generator',6360],['generator',6860]]){
+  for(const [kind,x] of [['turret',6320],['turret',6920],['generator',6360],['generator',6860]]){
     const hp=kind==='turret'?SKY.turretHp:SKY.generatorHp;
     const part={uid:g.nextEnemyId++,type:'skydevice',fixedDevice:true,partKind:kind,x,y:116,w:28,h:32,hp,maxHp:hp,dead:kind==='turret'?n>1:n>2,death:0,anim:0,face:1,shotCd:0,active:true};
     g.sky.parts.push(part);g.enemies.push(part);
   }
   boss.activeParts=g.sky.parts;g.bossStarted=true;
+}
+// Only on entry/restart: frame every critical part immediately, without changing
+// the camera's shared limits, smoothing during play, or player-safe margin.
+export function frameSkyBoss(g){
+  const c=g.battleCamera??(g.battleCamera=createBattleCamera(g.player));
+  evaluateBattleCamera(c,g.player,g.enemies,g,1);
+  c.zoom=c.targetZoom=c.candidateZoom=c.rawZoom;c.stableTime=1;
+  const w=VIEW.canvasWidth/c.zoom,margin=BATTLE_CAMERA.playerMargin;
+  c.x=clamp(clamp(c.focusX-w/2,g.player.x-(VIEW.canvasWidth-margin)/c.zoom,g.player.x-margin/c.zoom),0,g.world.width-w);
+  g.camera=c.x;
 }
 export const skyCore=b=>({x:b.x,y:b.y+b.h/2,r:23,open:!b.dead&&b.skyPhase===3});
 export function skyTargetOpen(g,e){return e.type==='fortress'?e.skyPhase===3:!e.fixedDevice||g.enemies.find(b=>b.type==='fortress'&&!b.dead)?.skyPhase===(e.partKind==='turret'?1:2)}

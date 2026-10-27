@@ -10,7 +10,7 @@ import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveF
 import {IMPACT,REACTIONS,reducedImpact,impactLevel,createImpactState,pushImpactEffect,hitVisual,feedbackCategory,drawFeedbackAccent,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.4.0";
 import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,moveTunnelEnemy,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.4.0";
 import {M03,COAST,createM03Geometry,createCoastalState,coastalFloor,recoverCoastalPlayer,advanceCoastalFormations,updateCoastalEnemy,updateCoastalDevices,coastalWeakCore,coastalDamage,resetCoastalBossPhase} from './mission03.js?v=0.4.0';
-import {M04,SKY,createM04Geometry,createSkyState,skySurface,advanceSkyPlatforms,recoverSkyPlayer,resetSkyBossPhase,skyCore,skyTargetOpen,skyDamage,updateSkyEnemy,updateSkyHazards} from './mission04.js?v=0.4.0';
+import {M04,SKY,createM04Geometry,createSkyState,skySurface,advanceSkyPlatforms,recoverSkyPlayer,resetSkyBossPhase,frameSkyBoss,skyCore,skyTargetOpen,skyDamage,updateSkyEnemy,updateSkyHazards} from './mission04.js?v=0.4.0';
 import {loadSkyArt,drawSkyBackdrop,drawSkyWorld,drawSkyEnemy,drawSkyWarnings,drawSkyFX} from './sky-art.js?v=0.4.0';
 import {COAST_FILES,loadCoastalArt,drawCoastalEnemy,drawCoastTile,drawCoastalWorld,drawCoastalFX,drawCoastalWarnings} from './coastal-art.js?v=0.4.0';
 
@@ -317,7 +317,7 @@ function spawnEnemy(type,x,y=null){
   game.enemies.push(e);game.liveEnemies++;if(isMob(e))game.liveMobs++;if(type==="beetle")game.midbossAlive=true;return e;
 }
 function startBoss(){game.bossStarted=true;game.midbossAlive=false;game.director.stopped=true;game.enemies.length=0;game.impact=createImpactState();game.liveEnemies=game.liveMobs=0;game.enemyShots.length=0;
-  if(game.missionId==='M04'){const boss=spawnEnemy('fortress',M04.bossSpawnX,68);resetSkyBossPhase(game,boss,1);game.areaText='WARNING  B-04 SKY FORTRESS CORE'}else if(game.missionId==='M03'){game.coast.hazards.length=game.coast.aaShots.length=0;spawnEnemy('leviathan',M03.bossSpawnX,48);game.areaText='WARNING  B-03 LEVIATHAN'}else if(game.missionId==='M02'){spawnEnemy('queen',M02.bossSpawnX,WORLD.ground-96);game.areaText='WARNING  B-02 ABYSS QUEEN'}else{spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー"}game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
+  if(game.missionId==='M04'){const boss=spawnEnemy('fortress',M04.bossSpawnX,68);resetSkyBossPhase(game,boss,1);game.areaText='WARNING  B-04 SKY FORTRESS CORE'}else if(game.missionId==='M03'){game.coast.hazards.length=game.coast.aaShots.length=0;spawnEnemy('leviathan',M03.bossSpawnX,48);game.areaText='WARNING  B-03 LEVIATHAN'}else if(game.missionId==='M02'){spawnEnemy('queen',M02.bossSpawnX,WORLD.ground-96);game.areaText='WARNING  B-02 ABYSS QUEEN'}else{spawnEnemy("boss",4420,WORLD.ground-58);game.areaText="WARNING  B-01 マザークロウラー"}if(game.sky){frameSkyBoss(game);syncCameraView()}game.areaTimer=3;tone(90,.6,"sawtooth",.04)}
 function spawnBossMinion(boss,index){const p=game.player,side=boss.x>=p.x?1:-1;const x=clamp(boss.x+side*(30+index*25),24,WORLD.width-24);if(Math.abs(x-p.x)>=90)spawnEnemy("crawler",x)}
 function pushEffect(effect){
   pushImpactEffect(game,effect);
@@ -348,7 +348,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player,miss
   }
   if(g.sky)recoverSkyPlayer(g,dt,hurtPlayer,pushEffect);
   if(g.coast)recoverCoastalPlayer(g,dt,hurtPlayer,pushEffect);
-  if(progression){if(g.missionId==='M01'&&g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=g.missionId==='M04'?clamp(p.x,6000,7160):g.missionId==='M03'?clamp(p.x,5480,6350):g.missionId==='M02'?clamp(p.x,M02.bossX,5560):clamp(p.x,4100,4760)}
+  if(progression){if(g.missionId==='M01'&&g.midbossAlive&&p.x>2150)p.x=2150;if(g.bossStarted)p.x=g.missionId==='M04'?clamp(p.x,M04.bossX,7050):g.missionId==='M03'?clamp(p.x,5480,6350):g.missionId==='M02'?clamp(p.x,M02.bossX,5560):clamp(p.x,4100,4760)}
   if(g.lab?.cameraMode==="FIXED")fixedLabCamera(g.battleCamera,p,g.lab.fixedZoom);else updateBattleCamera(g.battleCamera,p,g.enemies,g,dt);syncCameraView();p.anim+=dt*(Math.abs(p.vx)>0?10:4);
   if(input.fire)shoot();
   if(progression){if(combat)g.director.update(dt,g,spawnEnemy,viewBounds(g.camera,view.zoom));
@@ -694,7 +694,7 @@ function startLabCheckpoint(bossMission=null,checkpointId=null){
   if(cp.boss.state==='active'){startBoss();for(const e of g.enemies)if(isBoss(e))Object.assign(e,{hp:e.maxHp,timer:0,phase:'move',actionIndex:0,actionWait:1.5,chargeTime:0,vx:0,vy:0})}
   if(g.sky){g.sky.safeX=cp.x;g.sky.safeY=cp.y;if(cp.boss.state==='active'){const boss=g.enemies.find(e=>e.type==='fortress');resetSkyBossPhase(g,boss,previous.skyBossPhase??1)}}
   if(g.coast){g.coast.safeX=cp.x;g.coast.safeY=cp.y;if(cp.boss.state==='active'){const boss=g.enemies.find(e=>e.type==='leviathan');if(boss)resetCoastalBossPhase(boss,previous.bossPhase)}}
-  g.battleCamera=createBattleCamera(g.player);g.battleCamera.x=cp.camera.x;g.battleCamera.zoom=g.battleCamera.targetZoom=cp.camera.zoom;if(g.bossStarted)updateBattleCamera(g.battleCamera,g.player,g.enemies,g,1);
+  g.battleCamera=createBattleCamera(g.player);g.battleCamera.x=cp.camera.x;g.battleCamera.zoom=g.battleCamera.targetZoom=cp.camera.zoom;if(g.bossStarted)updateBattleCamera(g.battleCamera,g.player,g.enemies,g,1);if(g.sky&&g.bossStarted)frameSkyBoss(g);
   g.lab.run=new MissionLabRun(g,cp,mode);g.lab.run.gameplayQA=!!g.lab.gameplayQA;g.lab.run.bossStartPhase=cp.boss.state==='active'?(cp.missionId==='M04'?g.lab.skyBossPhase??1:cp.missionId==='M03'?g.lab.bossPhase:null):null;g.grid.rebuild(g.enemies);acc=0;resetInput();liveProfiler.reset();syncCameraView();syncLabUI();
   canvas.dataset.checkpoint=cp.id;canvas.dataset.validationMode=mode;document.querySelector('#labStageStatus').textContent=`${mode} ${VALIDATION_MODES[mode]} / ${cp.id} / NO SAVE`;
   show('play');canvas.focus();return true;
@@ -925,14 +925,14 @@ function spawnLabEnemies(){
   const lab=game.lab;clearLabEnemies();
   for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;
   if(profiler)profiler.running=false;game.density="MASSIVE";game.enemyLimit=Math.max(100,lab.count);
-  configureLabPlayer();game.player.x=lab.enemy==='fortress'?6090:lab.enemy==='leviathan'?5500:lab.enemy==='queen'?M02.bossX:lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
+  configureLabPlayer();game.player.x=lab.enemy==='fortress'?6200:lab.enemy==='leviathan'?5500:lab.enemy==='queen'?M02.bossX:lab.enemy==="boss"?4100:lab.anchorX;game.player.y=lab.anchorY;game.player.dead=false;game.player.invuln=0;game.player.onGround=true;
   game.nextEnemyId=1;game.time=game.kills=game.score=game.crates=0;game.player.shotCd=game.player.switchCd=0;resetInput();
   const leader=['boss','beetle','queen','leviathan','fortress','nest'].includes(lab.enemy),count=leader?1:lab.count;
   game.area=0;game.areaTimer=0;game.areaText='';delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode;if(game.coast){game.coast.safeX=game.player.x;game.coast.safeY=game.player.y}
   for(let i=0;i<count;i++){const pos=lab.enemy==='fortress'?{x:M04.bossSpawnX,y:68}:lab.enemy==='leviathan'?{x:M03.bossSpawnX,y:48}:lab.enemy==='queen'?{x:M02.bossSpawnX,y:52}:lab.enemy==="boss"?{x:4420,y:WORLD.ground-58}:labSpawnPosition(game.director,lab.enemy,i,count,lab.placement,game);if(pos)spawnEnemy(lab.enemy,pos.x,pos.y)}
   game.bossStarted=lab.enemy==="boss"||lab.enemy==='queen'||lab.enemy==='leviathan'||lab.enemy==='fortress';if(lab.enemy==='fortress')resetSkyBossPhase(game,game.enemies.find(e=>e.type==='fortress'),lab.skyBossPhase??1);game.battleCamera=createBattleCamera(game.player);
   if(lab.cameraMode==="FIXED")fixedLabCamera(game.battleCamera,game.player,lab.fixedZoom);else updateBattleCamera(game.battleCamera,game.player,game.enemies,game,1);
-  syncCameraView();syncLabUI();document.querySelector("#labSpawnResult").textContent=`${game.liveEnemies}体を再配置（プレイヤーも開始位置へ復帰）`;
+  if(game.sky&&game.bossStarted)frameSkyBoss(game);syncCameraView();syncLabUI();document.querySelector("#labSpawnResult").textContent=`${game.liveEnemies}体を再配置（プレイヤーも開始位置へ復帰）`;
 }
 function mobileExport(){return mobilePlaytest?{current:mobilePlaytest.snapshot(),results:[...mobilePlaytest.history],qa:JSON.parse(JSON.stringify(mobileQA)),environment:mobileEnvironment,memo:mobileMemo,normalProgressSaved:false}:null}
 function selectedMobileResult(){return mobilePlaytest?.result(mobileSelectedId)??mobilePlaytest?.snapshot()??null}

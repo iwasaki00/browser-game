@@ -25,6 +25,14 @@ Pointer Eventsとpointer captureでハンドルの角度を追跡する。時計
 - 状態: 同時保存、未表示中の追加購入拒否、再読み込み復元、資金不足、NEW判定、10回連続の投稿・売却と図鑑整合、旧セーブ・設定周回継承、音声APIなし
 - PC Chrome: 390px縦画面、10回連続の開封・投稿・即売り・再抽選、手動上スワイプ開封、未開封／開封済みの再読み込み復元
 
+既存ロジック14件と追加15件（角度・保存10件、演出制御5件）が成功。追加検証は `node --test tests/gacha-experience.test.js tests/experience-controller.test.js` で実行する。タイマーは仮想時刻で進める。`npm run check` の全モジュール構文検証も成功した。
+
+PC Chromeでハンドル途中離し時の非課金、サクサクモード、専用画面からの王冠獲得・周回も確認した。320px幅で横はみ出しなし、確認タブのコンソールエラーなし。タッチの回転確定は自動テストで検証し、iPhone実機の指による操作は下記のとおり未確認。
+
+表示記録: [筐体（390px）](previews/machine-390.jpg)、[開封結果（390px）](previews/result-390.jpg)。
+
+変更ファイル: `index.html`、`gacha.css`、`js/app.js`、`js/game-state.js`、`js/handle.js`、`js/experience.js`、`js/audio.js`、`package.json`、追加テスト2ファイル、`README.md`、この記録と表示画像。既存の正式画像ファイルに変更はない。
+
 iPhone Safari実機のタッチ追従、音、回転、快適さは未確認。READMEの受入項目に記録し、実機での感想を最終受入条件としている。
 
 ## 次の改善候補

@@ -91,9 +91,9 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   const leader=boss||midboss;
   if(leader){
     const padding=boss?c.bossPadding:c.midbossPadding;
-    let focus=leader;if(leader.type==='fortress'&&leader.skyPhase<3){let best=Infinity;for(const part of leader.activeParts??[])if(!part.dead&&part.partKind===(leader.skyPhase===1?'turret':'generator')){const d=Math.abs(part.x-player.x);if(d<best){best=d;focus=part}}}
+    let focus=leader;
     left=Math.min(player.x-14,focus.x-(focus.w||88)/2);
-    right=Math.max(player.x+14,focus.x+(focus.w||88)/2);
+    right=Math.max(player.x+14,focus.x+(focus.w||88)/2);if(leader.type==='fortress'&&leader.skyPhase<3)for(const part of leader.activeParts??[])if(!part.dead&&part.partKind===(leader.skyPhase===1?'turret':'generator')){left=Math.min(left,part.x-part.w/2);right=Math.max(right,part.x+part.w/2)}
     raw=clamp(VIEW.canvasWidth/(right-left+padding*2),boss?c.bossMinZoom:c.minZoom,boss?c.bossMaxZoom:c.midbossMaxZoom);
     focusX=(left+right)/2;mode=boss?"boss":"midboss";
   }
