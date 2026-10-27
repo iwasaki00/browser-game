@@ -47,7 +47,8 @@ function normalizeState(raw) {
   state.settings = { ...base.settings, ...(raw.settings || {}) };
   if (!["normal", "careful", "quick"].includes(state.settings.playMode)) state.settings.playMode = "normal";
   state.pendingDraw = raw.pendingDraw && itemById(raw.pendingDraw.itemId)
-    && (state.inventory.some((owned) => owned.uid === raw.pendingDraw.uid)
+    && typeof raw.pendingDraw.uid === "string"
+    && (raw.pendingDraw.revealed || state.inventory.some((owned) => owned.uid === raw.pendingDraw.uid)
       || state.posts.some((post) => post.sourceUid === raw.pendingDraw.uid))
     ? { ...raw.pendingDraw, revealed: Boolean(raw.pendingDraw.revealed) } : null;
   const currentCycleIds = [...state.inventory, ...state.listings, ...state.posts].map((entry) => entry.itemId).filter((id) => itemById(id));

@@ -1,5 +1,7 @@
 import {WORLD,clamp} from './data.js?v=0.4.0';
 import {movePlayerBody} from './player.js?v=0.2.2';
+import {createImpactState} from './impact.js?v=0.4.0';
+import {AttackDirector} from './invasion.js?v=0.4.0';
 
 // M04-only world, state and attack plans. Fixed devices are targetable entities,
 // but are not members of the invasion population or reward/drop population.
@@ -62,6 +64,7 @@ export function resetSkyBossPhase(g,boss,phase=1){
   // Remove every previous boss part, summon, projectile and pending weapon job.
   g.enemies.length=0;g.enemies.push(boss);g.liveEnemies=1;g.liveMobs=0;
   g.shots.length=g.enemyShots.length=g.effects.length=0;
+  g.impact=createImpactState();g.shake=0;g.clear=false;g.attacks=new AttackDirector();
   g.arsenal.installations.length=g.arsenal.jobs.length=g.arsenal.pending.length=0;
   g.sky=createSkyState();g.sky.safeX=g.player.x;g.sky.safeY=g.player.y;
   Object.assign(boss,{dead:false,death:0,hp:SKY.coreHp,maxHp:SKY.coreHp,skyPhase:n,timer:0,warningLeft:0,attackPlan:null,actionWait:SKY.phaseGrace,actionIndex:0,hitFlash:0,vx:0,vy:0,active:true});

@@ -35,6 +35,7 @@ export function createGachaExperience({ game, showResult, notify }) {
   }
   function sync() {
     const state = game.getState();
+    machine.dataset.mode = state.settings.playMode;
     const busy = phase !== "idle" && phase !== "turning";
     handle.disabled = busy || state.coins < MACHINE.cost;
     $("#draw-button").disabled = phase !== "idle" || state.coins < MACHINE.cost;

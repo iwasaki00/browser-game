@@ -110,6 +110,21 @@ test("資金不足では未表示結果も料金変動も発生しない", () =>
   assert.equal(game.getState().inventory.length, 0);
 });
 
+test("結果画面で未投稿のまま売却して再読み込みしても売却済み結果を復元する", () => {
+  const { game, storage } = setup();
+  const result = game.beginDraw();
+  game.revealPendingDraw(); game.quickSell(result.owned.uid);
+  const before = game.getState();
+  const restored = createGame({ storage }); restored.load();
+  assert.equal(restored.getState().pendingDraw.uid, result.owned.uid);
+  assert.equal(restored.getState().pendingDraw.revealed, true);
+  assert.equal(restored.getState().coins, before.coins);
+  assert.equal(restored.getState().inventory.length, 0);
+  assert.equal(restored.quickSell(result.owned.uid).reason, "missing");
+  restored.finishPendingDraw();
+  assert.equal(restored.beginDraw().ok, true);
+});
+
 test("旧0.1.2セーブに操作設定を補完し、設定と王冠を周回継承する", () => {
   const raw = createInitialState();
   delete raw.pendingDraw;

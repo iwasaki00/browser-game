@@ -116,3 +116,17 @@ test("画面離脱で自動演出を止め、復帰時に同じカプセルを�
   ctx.experience.open(); ctx.tick(320);
   assert.equal(ctx.results.length, 1);
 });
+
+test("サクサクと演出軽減は短縮し、手動モードの開封判断は維持する", (t) => {
+  const ctx = fixture(t, "quick");
+  ctx.experience.tapTurn(); ctx.tick(70); ctx.tick(300); ctx.tick(180); ctx.tick(120);
+  assert.equal(ctx.results.length, 1);
+  ctx.experience.finish();
+  ctx.game.setPlayMode("careful"); ctx.game.setReducedMotion(true);
+  ctx.experience.tapTurn(); ctx.tick(70); ctx.tick(300); ctx.tick(5000);
+  assert.equal(ctx.results.length, 1);
+  ctx.experience.finish(); // Unopened results cannot be silently dismissed.
+  assert.notEqual(ctx.game.getState().pendingDraw, null);
+  ctx.experience.open(); ctx.tick(0);
+  assert.equal(ctx.results.length, 2);
+});
