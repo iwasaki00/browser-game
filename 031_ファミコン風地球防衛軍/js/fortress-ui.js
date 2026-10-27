@@ -47,9 +47,9 @@ export function drawFortressHud(c,g,zoom,offset=0){
     if(counts.shields<limit&&skyShieldSource(g,e,g.sky.shieldSources)){shield(c,p.x+7,p.y-3,'#95dfc4');counts.shields++}
   }
   for(const b of g.platforms){if(!b.moving)continue;const p=worldToScreen({x:b.x+b.w/2,y:b.y},g.camera,zoom);
-    if(p.x<24||p.x>296||p.y<90||p.y>150)continue;
+    if(p.x+b.w*zoom/2<0||p.x-b.w*zoom/2>320||p.y<90||p.y>150)continue;
     const m=skyPlatformMotion(b,g.time),turn=m.turnLeft<=F.turnWarning;c.fillStyle=turn?'#ffd18b':'#b9e3d4';c.font='7px monospace';
-    c.fillText((m.direction>0?'→':'←')+(turn?' 折返し':''),p.x-(turn?18:4),p.y-7);counts.platforms++;
+    c.fillText((m.direction>0?'→':'←')+(turn?' 折返し':''),clamp(p.x,24,296)-(turn?18:4),p.y-7);counts.platforms++;
   }
   if(g.sky.rescuePending){c.font='7px monospace';c.fillStyle='#ffda9e';c.fillText('安全な復帰地点を確認中',90,73)}
   c.restore();return counts;

@@ -54,11 +54,17 @@ test('Phase2 real summon plus escape and retry retain ordinary GUARDIAN stats',(
   assert.ok(r.run("game.enemies.some(e=>e.type==='shielddrone'&&!e.dead)"));assert.equal(r.run('game.player.hp'),200);assert.equal(r.run('game.player.maxHp'),200);
   r.click('lab-open');r.click('lab-boss-4');assert.equal(r.run('game.player.hp'),200);assert.equal(r.run('game.sky.guideUntil'),2.5);
 });
-test('moving-platform direction, turnaround notice and boarding strip do not change movement',()=>{
+for(const id of Object.keys(PLAYER_CLASSES))test(id+' moving-platform direction, turnaround notice, hit recovery and boarding strip preserve movement',()=>{
   const b={baseX:2890,travel:250,speed:44};const m=skyPlatformMotion(b,250/44-.2);assert.equal(m.direction,1);assert.ok(m.turnLeft<F.turnWarning);assert.equal(skyPlatformMotion(b,250/44+.2).direction,-1);
-  const r=setup(1,'GUARDIAN','A-01',false);r.click('lab-open');r.click('lab-sky-platforms');r.run("game.director.stopped=true;var deck=game.platforms.find(b=>b.moving);Object.assign(game.player,{x:deck.x+45,y:deck.y-32,onGround:true});hurtPlayer(12,game.player.x+20);for(let i=0;i<150;i++)update(1/60)");
-  assert.equal(r.run('game.player.hp'),191);assert.ok(r.run('game.player.onGround'));assert.ok(r.run('Number.isFinite(game.player.x+game.player.y)'));
+  const r=setup(1,id,'A-01',false);r.click('lab-open');r.click('lab-sky-platforms');r.run("game.director.stopped=true;var deck=game.platforms.find(b=>b.moving);Object.assign(game.player,{x:deck.x+45,y:deck.y-32,onGround:true});hurtPlayer(12,game.player.x+20);for(let i=0;i<150;i++)update(1/60)");
+  assert.equal(r.run('game.player.hp'),PLAYER_CLASSES[id].hp-(id==='GUARDIAN'?9:12));assert.ok(r.run('game.player.onGround'));assert.ok(r.run('Number.isFinite(game.player.x+game.player.y)'));
 });
+test('partly visible transport keeps a bounded direction marker at the viewport edge',()=>{
+  const r=setup();r.click('lab-open');r.click('lab-sky-platforms');
+  r.run("var deck=game.platforms.find(b=>b.moving);game.camera=deck.x+deck.w/2-314/.5;var marks=drawFortressHud(ctx,game,.5)");
+  assert.ok(r.run('marks.platforms')>=1);
+});
+
 test('rescue avoids an enemy-occupied saved anchor and solid terrain without moving enemies',()=>{
   const r=setup(1,'GUARDIAN','A-01',false);r.click('lab-open');r.click('lab-sky-platforms');r.run("game.director.stopped=true;var e=spawnEnemy('heavygunner',2700);game.sky.safeX=2700;game.sky.safeY=116;Object.assign(game.player,{x:2700,y:220,onGround:false,invuln:0});var ex=e.x;update(1/60)");
   assert.equal(r.run('game.sky.rescues'),1);assert.notEqual(r.run('game.player.x'),2700);assert.equal(r.run('e.x'),r.run('ex'));assert.ok(r.run('Math.abs(game.player.x-e.x)>e.w/2+7'));assert.equal(r.run('game.sky.rescuePending'),false);
