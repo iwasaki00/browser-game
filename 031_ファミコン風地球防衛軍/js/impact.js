@@ -24,7 +24,7 @@ export const feedbackCategory=(e,base,actual,finish=false)=>finish?'FINISH':actu
 const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1",shorecrab:"#b7a9b4",skyray:"#7eacd1",siegebeetle:"#9f8aab",leviathan:"#b5a0c4",interceptor:"#98bdd3",shielddrone:"#8ec9ad",heavygunner:"#bc9d80",fortress:"#9caac0",skydevice:"#e8bc7c"};
 const noise=n=>((n*2654435761)>>>0)/4294967296;
 export function createImpactState(){return {clock:0,stop:0,nextStop:0,budgetStart:0,spent:0,shakeUntil:0,nextShake:0,
-  corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0,feedbackStart:0,feedbackStarts:0,feedbackDropped:0,feedbackCounts:{HIT:0,'ARMOR HIT':0,'WEAK POINT':0,FINISH:0}}}
+  corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0,feedbackStart:0,feedbackStarts:0,feedbackDropped:0,feedbackCounts:{HIT:0,'ARMOR HIT':0,'WEAK POINT':0,'SHIELD HIT':0,FINISH:0}}}
 export const reducedImpact=g=>!!g.lab&&g.enemyLimit>100;
 export const impactLevel=g=>DESTRUCTION_LEVELS[normalizeDestructionLevel((g.lab?.settings??g.settings)?.destructionLevel)];
 export function pushImpactEffect(g,f){
@@ -53,7 +53,8 @@ export function hitVisual(g,e,source={},category='HIT',point=null){
 export function drawFeedbackAccent(c,f){
   if(f.category==='HIT'||!f.category)return;const progress=1-f.life/f.max,x=Math.round(f.x),y=Math.round(f.y);c.save();c.globalAlpha=Math.min(1,f.life/.06);
   c.fillStyle=f.category==='ARMOR HIT'?'#bfd0d9':f.category==='WEAK POINT'?'#fff1a1':f.color;
-  if(f.category==='ARMOR HIT'){for(const sign of [-1,1])c.fillRect(x+sign*Math.round(3+progress*9),y-Math.round(progress*6),3,2)}
+  if(f.category==='SHIELD HIT'){c.strokeStyle='#95dfc4';c.lineWidth=1;c.strokeRect(x-4,y-5,8,7);c.beginPath();c.moveTo(x-4,y+2);c.lineTo(x,y+6);c.lineTo(x+4,y+2);c.stroke()}
+  else if(f.category==='ARMOR HIT'){for(const sign of [-1,1])c.fillRect(x+sign*Math.round(3+progress*9),y-Math.round(progress*6),3,2)}
   else{const r=Math.round((f.category==='FINISH'?7:5)+progress*9);for(const sign of [-1,1]){c.fillRect(x+sign*r-1,y-1,3,2);c.fillRect(x-1,y+sign*r-1,2,3)}}
   c.restore();
 }

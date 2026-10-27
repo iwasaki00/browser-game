@@ -31,6 +31,11 @@ for(const [number,target,text]of [
  {id:'launch',target:'launch',text:'調整した航路で発射しよう。失敗したらヒントを見て再挑戦。'},
  {id:'observe',target:'preview',text:'航行中。発見は日誌へ記録されます。速度倍率やカメラも利用できます。'},
 ];
+TUTORIAL_STEPS['homeward-09']=[
+ {id:'preview',target:'preview',text:'「目的地」から行き先を選び、ANGLE・THRUSTで航路を調整。予測を確認して次へ。',manual:true},
+ {id:'launch',target:'launch',text:'発射して選んだ目的地へ。寄り道をせず帰還ゲートに向かっても構いません。'},
+ {id:'observe',target:'preview',text:'「目的地」から飛行中も目標を変更できます。寄港したら次の行き先を選び、再発射できます。'},
+];
 export function tutorialEntry(state,id){
  const steps=TUTORIAL_STEPS[id];if(!steps)return null;
  const raw=state.tutorial?.[id]??{},status=raw.status==='skipped'?'skipped':state.cleared.includes(id)||raw.status==='completed'?'completed':'active';

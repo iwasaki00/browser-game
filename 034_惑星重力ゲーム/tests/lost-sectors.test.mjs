@@ -24,7 +24,7 @@ function run(stage,launch=stage.solution,{rate=1,mode='design'}={}){
  while(state.status==='flying')clock.advance(1/60,dt=>{const previous=state;state=stepLiveFlight(state,{},stage,mode,dt);evidence=observeMission(evidence,previous,state);rec.capture(state);steps++;assert.ok(steps<23000);return state.status==='flying';});
  return {state,evidence,steps,record:rec.finish(state)};
 }
-for(const definition of HOMEWARD_SECTORS.slice(3))test(`${definition.id}: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生`,()=>{
+for(const definition of HOMEWARD_SECTORS.slice(3,8))test(`${definition.id}: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生`,()=>{
  const s=getHomewardSector(definition.id),before=structuredClone(s),choice=definition.choices?'pursue':undefined;
  for(const field of ['enter','departure','encounterLog','discovery','arrival','hint'])assert.ok(definition[field]);
  assert.equal(definition.next,HOMEWARD_SECTORS[Number(definition.number)]?.id??null);
@@ -62,7 +62,7 @@ test('追跡・回避の別解、距離増加、日誌、順次解放、保存�
  for(const choice of ['pursue','avoid']){
   const original={version:1,currentSector:'homeward-03',cleared:['homeward-01','homeward-02','homeward-03'],openingSeen:true,active:true,eventsSeen:['homeward-01:enter'],tutorial:{'homeward-03':{status:'completed',step:5}},futureExtension:{keep:true}};
   const storage=memory([[HOMEWARD_KEY,JSON.stringify(original)],['classic','stars'],['audio','on']]),raw=storage.getItem(HOMEWARD_KEY),p=new HomewardProgress(storage);assert.equal(storage.getItem(HOMEWARD_KEY),raw);assert.deepEqual(p.state.cleared,original.cleared);assert.deepEqual(homewardDistance(p.state),{travelled:5400,remaining:58600,percent:8.4375});assert.equal(sectorUnlocked(p.state,'homeward-04'),true);
-  for(const def of HOMEWARD_SECTORS.slice(3)){
+  for(const def of HOMEWARD_SECTORS.slice(3,8)){
    assert.ok(p.enter(def.id));assert.equal(p.enter(HOMEWARD_SECTORS[Number(def.number)]?.id??'bad'),false);
    const s=getHomewardSector(def.id);let answer=s.solution;
    if(def.choices){const before=homewardDistance(p.state).remaining;assert.ok(p.choose(def.id,choice));assert.equal(homewardDistance(p.state).remaining-before,choice==='pursue'?600:0);p.choose(def.id,choice);assert.equal(homewardDistance(p.state).remaining-before,choice==='pursue'?600:0);answer=def.choices.find(c=>c.id===choice).answer??answer;}
@@ -74,7 +74,7 @@ test('追跡・回避の別解、距離増加、日誌、順次解放、保存�
  }
 });
 test('新ガイドの段階進行・スキップ・復元とRESET時の初期配置',()=>{
- for(const def of HOMEWARD_SECTORS.slice(3)){
+ for(const def of HOMEWARD_SECTORS.slice(3,8)){
   const s=getHomewardSector(def.id),steps=TUTORIAL_STEPS[def.id],entry=tutorialEntry({cleared:[],tutorial:{}},def.id);
   const input=steps[0].id,next=tutorialTransition(entry,def.id,input,{angleDeg:def.initial.angleDeg+1,speed:220},def.initial);assert.equal(next.step,1);
   const launch=tutorialTransition(next,def.id,'next');assert.equal(launch.step,2);assert.equal(tutorialTransition(launch,def.id,'launch').step,3);assert.equal(tutorialTransition(entry,def.id,'skip').status,'skipped');

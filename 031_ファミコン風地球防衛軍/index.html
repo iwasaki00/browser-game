@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.4.0">
+  <link rel="stylesheet" href="styles.css?v=0.4.1">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.4.0</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.4.1</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -99,7 +99,7 @@
             </div><output id="labStageStatus" role="status">候補を選び、下の「選択地点から開始」を押してください。</output></fieldset>
             <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button>
               <label>B-03開始Phase（開始時に適用）<select id="labBossPhase"><option value="1">Phase 1 / HP100〜65%</option><option value="2">Phase 2 / HP65〜30%</option><option value="3">Phase 3 / HP30%以下</option></select></label>
-              <button data-action="lab-boss-3">B-03をこのPhaseから開始</button><label>B-04開始Phase（開始時に適用）<select id="labSkyPhase"><option value="1">Phase 1 / 外部砲台</option><option value="2">Phase 2 / シールド発生装置</option><option value="3">Phase 3 / コア露出</option></select></label><button data-action="lab-boss-4">B-04をこのPhaseから開始</button></div>
+              <button data-action="lab-boss-3">B-03をこのPhaseから開始</button><label>B-04開始Phase（開始時に適用）<select id="labSkyPhase"><option value="1">Phase 1 / 外部砲台</option><option value="2">Phase 2 / シールド発生装置</option><option value="3">Phase 3 / コア露出</option></select></label><button data-action="lab-boss-4">B-04をこのPhaseから開始</button><details><summary>M04：初期武器・通常条件のQA</summary><p>設定だけ適用。無敵OFF・正式HP・A-01/S-02。STANDARDは次の開始時に適用。「B-04開始」か「選択地点から開始」で敵・タイマー等を初期化。途中QAは通常クリアではありません。</p><button data-action="lab-fortress-starter">M04 初期武器QAを設定</button><button data-action="lab-fortress-guardian">GUARDIAN 通常条件QAを設定</button></details></div>
               <p class="lab-hint">開始すると敵・弾・FX・設置物・時間・スコア・位置を初期化します。</p>
               <details><summary>HELP：QA区分・開始条件</summary><p>A〜Cは通常攻略Dの成功ではありません。B/Dの選択は無敵OFF、CはONへ即時連動します。Dは正式兵科・解放済み武器2枠・無敵OFFが必要。ボス直接開始はB/C/D。兵科・武器・LAB演出設定は維持、通常報酬なし。</p></details>
             </fieldset>
@@ -170,7 +170,7 @@
               <details><summary>管理：初期化・LAB終了</summary><p>現在のテストを破棄します。通常セーブは保持します。</p><div class="lab-action-stack"><button data-action="lab-reset">テスト状態を初期化</button><button data-action="lab-exit">LAB終了 → TITLE</button></div></details>
             </fieldset>
           </section>
-          <details id="labQuickSetup" class="lab-card lab-quick"><summary>クイック設定（選ぶだけでは変更しません）</summary><label>プリセット<select id="labUIPreset"><option value="art">アート比較</option><option value="boss">ボス戦テスト</option><option value="mass">大量敵テスト</option><option value="normal">通常攻略確認</option><option value="gameplay">通常攻略QA（初期武器・無敵なし）</option></select></label><p id="labUIPresetDescription"></p><button data-action="lab-preset-apply">表示された設定を適用（再開始なし）</button></details>
+          <details id="labQuickSetup" class="lab-card lab-quick"><summary>クイック設定（選ぶだけでは変更しません）</summary><label>プリセット<select id="labUIPreset"><option value="art">アート比較</option><option value="boss">ボス戦テスト</option><option value="mass">大量敵テスト</option><option value="normal">通常攻略確認</option><option value="gameplay">通常攻略QA（初期武器・無敵なし）</option><option value="fortressStarter">M04 初期武器QA</option><option value="fortressGuardian">M04 GUARDIAN 通常条件QA</option></select></label><p id="labUIPresetDescription"></p><button data-action="lab-preset-apply">表示された設定を適用（再開始なし）</button></details>
         </div>
         <footer class="lab-footer"><output id="labNotice" role="status" aria-live="polite">設定を選んでください。</output><div><button id="labStartButton" class="lab-primary" data-action="lab-stage-start">選択地点から開始</button><button id="labFooterClose" data-action="lab-close">閉じてプレイ</button></div></footer>
       </section>
@@ -206,6 +206,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.4.0"></script>
+  <script type="module" src="js/game.js?v=0.4.1"></script>
 </body>
 </html>

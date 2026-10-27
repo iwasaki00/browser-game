@@ -1,0 +1,229 @@
+[
+  {
+    "route": "A",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "gate",
+        "angleDeg": -59,
+        "speed": 220,
+        "time": 20.324999999999488,
+        "distance": 4556.129626864199,
+        "steps": 2439,
+        "end": {
+          "x": 2894.8521578900413,
+          "y": 799.8674107084536
+        },
+        "nextLaunch": {
+          "x": 2900,
+          "y": 860
+        }
+      }
+    ],
+    "totalTime": 20.324999999999488,
+    "totalDistance": 4556.129626864199,
+    "visited": [
+      "gate"
+    ],
+    "rewards": [
+      "next-region"
+    ],
+    "status": "PASS",
+    "preview": "exact state",
+    "rate100": "exact state and step count"
+  },
+  {
+    "route": "B",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "rescue",
+        "angleDeg": -65,
+        "speed": 220,
+        "time": 6.100000000000093,
+        "distance": 1449.6014293996027,
+        "steps": 732,
+        "end": {
+          "x": 872.4522368688597,
+          "y": 3190.9182091028556
+        },
+        "nextLaunch": {
+          "x": 900,
+          "y": 3260
+        }
+      },
+      {
+        "from": "rescue",
+        "target": "gate",
+        "angleDeg": -52,
+        "speed": 220,
+        "time": 14.724999999999804,
+        "distance": 3153.242789514023,
+        "steps": 1767,
+        "end": {
+          "x": 2848.9453559597546,
+          "y": 785.9850180085102
+        },
+        "nextLaunch": {
+          "x": 2900,
+          "y": 860
+        }
+      }
+    ],
+    "totalTime": 20.824999999999896,
+    "totalDistance": 4602.844218913626,
+    "visited": [
+      "rescue",
+      "gate"
+    ],
+    "rewards": [
+      "route-charts",
+      "next-region"
+    ],
+    "status": "PASS",
+    "preview": "exact state",
+    "rate100": "exact state and step count"
+  },
+  {
+    "route": "C",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "planet",
+        "angleDeg": -32,
+        "speed": 220,
+        "time": 14.499999999999817,
+        "distance": 3205.324779523592,
+        "steps": 1740,
+        "end": {
+          "x": 2912.679037162241,
+          "y": 2716.8958104001044
+        },
+        "nextLaunch": {
+          "x": 3000,
+          "y": 2810
+        }
+      },
+      {
+        "from": "planet",
+        "target": "gate",
+        "angleDeg": -93,
+        "speed": 220,
+        "time": 9.200000000000118,
+        "distance": 2028.7329119010342,
+        "steps": 1104,
+        "end": {
+          "x": 2957.3486666081294,
+          "y": 781.9214894778507
+        },
+        "nextLaunch": {
+          "x": 2900,
+          "y": 860
+        }
+      }
+    ],
+    "totalTime": 23.699999999999935,
+    "totalDistance": 5234.057691424627,
+    "visited": [
+      "planet",
+      "gate"
+    ],
+    "rewards": [
+      "navigation-tech",
+      "next-region"
+    ],
+    "status": "PASS",
+    "preview": "exact state",
+    "rate100": "exact state and step count"
+  },
+  {
+    "route": "D",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "rescue",
+        "angleDeg": -65,
+        "speed": 220,
+        "time": 6.100000000000093,
+        "distance": 1449.6014293996027,
+        "steps": 732,
+        "end": {
+          "x": 872.4522368688597,
+          "y": 3190.9182091028556
+        },
+        "nextLaunch": {
+          "x": 900,
+          "y": 3260
+        }
+      },
+      {
+        "from": "rescue",
+        "target": "planet",
+        "angleDeg": -19,
+        "speed": 220,
+        "time": 10.083333333333401,
+        "distance": 2139.5418966545,
+        "steps": 1210,
+        "end": {
+          "x": 2979.129428746407,
+          "y": 2758.001940980469
+        },
+        "nextLaunch": {
+          "x": 3000,
+          "y": 2810
+        }
+      },
+      {
+        "from": "planet",
+        "target": "station",
+        "angleDeg": -77,
+        "speed": 220,
+        "time": 7.5333333333334975,
+        "distance": 1659.4839363197568,
+        "steps": 904,
+        "end": {
+          "x": 3401.953783311881,
+          "y": 1199.9809118320602
+        },
+        "nextLaunch": {
+          "x": 3400,
+          "y": 1260
+        }
+      },
+      {
+        "from": "station",
+        "target": "gate",
+        "angleDeg": -132,
+        "speed": 220,
+        "time": 2.9583333333333255,
+        "distance": 650.8242614579729,
+        "steps": 355,
+        "end": {
+          "x": 2963.5918434853515,
+          "y": 777.1756272545583
+        },
+        "nextLaunch": {
+          "x": 2900,
+          "y": 860
+        }
+      }
+    ],
+    "totalTime": 26.675000000000317,
+    "totalDistance": 5899.451523831833,
+    "visited": [
+      "rescue",
+      "planet",
+      "station",
+      "gate"
+    ],
+    "rewards": [
+      "route-charts",
+      "navigation-tech",
+      "station-intel",
+      "next-region"
+    ],
+    "status": "PASS",
+    "preview": "exact state",
+    "rate100": "exact state and step count"
+  }
+]

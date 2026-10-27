@@ -17,6 +17,7 @@ export function drawReplay(canvas,record,time,full=false,view=null){
  }
  ctx.globalAlpha=1;
  const goal=record.goal;ctx.strokeStyle='#70f6b3';ctx.lineWidth=camera?1.5/scale:2;ctx.beginPath();ctx.arc(goal.x,goal.y,camera?Math.max(goal.radius,5/scale):goal.radius,0,Math.PI*2);ctx.stroke();
+ for(const d of record.destinations??[]){if(d.id===goal.id)continue;ctx.strokeStyle=d.color;ctx.lineWidth=camera?1/scale:2;ctx.beginPath();ctx.arc(d.x,d.y,Math.max(d.radius,5/scale),0,Math.PI*2);ctx.stroke();}
  if(camera){const first=record.frames[0];ctx.fillStyle='#ffce8b';ctx.beginPath();ctx.arc(first[1],first[2],3/scale,0,Math.PI*2);ctx.fill();}
  ctx.strokeStyle=record.result==='clear'?'#7be7be':'#72d8ff';ctx.lineWidth=camera?1.5/scale:1.8;
  ctx.beginPath();ctx.moveTo(record.frames[0][1],record.frames[0][2]);
@@ -34,7 +35,7 @@ export function drawReplay(canvas,record,time,full=false,view=null){
  ctx.beginPath();ctx.moveTo(9,0);ctx.lineTo(-6,-5);ctx.lineTo(-4,0);ctx.lineTo(-6,5);ctx.closePath();ctx.fill();ctx.restore();ctx.restore();
 }
 
-export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryStore()}={}){
+export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryStore(),archive=null}={}){
  const $=s=>document.querySelector(s),dialog=$('#galleryDialog'),list=$('#galleryList'),player=$('#galleryPlayer'),listView=$('#galleryListView');
  let replay=null,record=null,full=false,raf=null,last=0,noticeTimer=null;
  const canvas=$('#replayCanvas'),cameraPointers=new Map();let pan=null,multi=false;
@@ -121,7 +122,8 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
  async function openRecord(id){
   if(!canOpen())return false;
   try{
-   const row=(await store.list()).find(row=>row.id===id);
+   let row=null;if(archive)try{row=await archive.find(id);}catch{/* Try the ordinary gallery when the archive cannot be read. */}
+   row??=(await store.list()).find(row=>row.id===id);
    if(!row){notify('参照先の航行記録がありません。自動整理・個別削除された記録は再生できません。');return false;}
    onOpen();if(!dialog.open)dialog.showModal();$('#galleryDefaultCamera').value='cinematic';play(row);return true;
   }catch(error){notify(galleryErrorMessage(error));return false;}

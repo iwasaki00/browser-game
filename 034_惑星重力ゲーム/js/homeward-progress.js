@@ -2,12 +2,14 @@ import {HOMEWARD,HOMEWARD_SECTORS,getHomewardDefinition} from './homeward-data.j
 import {tutorialEntry,tutorialTransition} from './homeward-tutorial.js';
 import {getHomewardSector} from './homeward-data.js';
 import {missionSatisfied} from './homeward-mission.js';
+import {newVoyage,normalizeVoyage,destination,dockVoyage} from './open-voyage.js';
 export const HOMEWARD_KEY='orbit-maker.homeward.v1';
 export const newHomeward=()=>({version:1,currentSector:'homeward-01',cleared:[],openingSeen:false,eventsSeen:[],active:false,tutorial:{},journal:{},choices:{}});
 export function sectorUnlocked(state,id){const i=HOMEWARD_SECTORS.findIndex(s=>s.id===id);return i===0||i>0&&state.cleared.includes(HOMEWARD_SECTORS[i-1].id);}
-export function homewardDistance(state){const detour=state.choices?.['homeward-07']==='pursue'?600:0;const travelled=HOMEWARD_SECTORS.filter(s=>state.cleared.includes(s.id)).reduce((n,s)=>n+s.distance,0)-detour;return {travelled,remaining:HOMEWARD.totalDistance-travelled,percent:Math.max(0,travelled/HOMEWARD.totalDistance*100)};}
+export function homewardDistance(state){const detour=state.choices?.['homeward-07']==='pursue'?600:0;const bonus=state.voyage?.rewards?.includes('navigation-tech')?900:0;const travelled=HOMEWARD_SECTORS.filter(s=>state.cleared.includes(s.id)).reduce((n,s)=>n+s.distance,0)-detour+bonus;return {travelled,remaining:HOMEWARD.totalDistance-travelled,percent:Math.max(0,travelled/HOMEWARD.totalDistance*100)};}
 export class HomewardProgress {
  constructor(storage){
+  this.dockedFlights=new WeakSet();
   this.storage=storage;this.state=newHomeward();this.writable=true;this.notice='';
   try{
    const raw=storage?.getItem(HOMEWARD_KEY);if(!raw)return;const data=JSON.parse(raw);
@@ -16,6 +18,7 @@ export class HomewardProgress {
    this.state={...data,...newHomeward(),cleared,openingSeen:data.openingSeen===true,eventsSeen:Array.isArray(data.eventsSeen)?data.eventsSeen.filter(e=>typeof e==='string'):[],active:data.active===true,
     journal:data.journal&&typeof data.journal==='object'&&!Array.isArray(data.journal)?data.journal:{},choices:data.choices&&typeof data.choices==='object'&&!Array.isArray(data.choices)?data.choices:{}};
    this.state.currentSector=getHomewardDefinition(data.currentSector)&&sectorUnlocked(this.state,data.currentSector)?data.currentSector:HOMEWARD_SECTORS.find(s=>!cleared.includes(s.id))?.id??HOMEWARD_SECTORS.at(-1).id;
+   if(data.voyage)this.state.voyage=normalizeVoyage(data.voyage);
    const source={cleared,tutorial:data.tutorial&&typeof data.tutorial==='object'?data.tutorial:{}};
    this.state.tutorial=Object.fromEntries(HOMEWARD_SECTORS.filter(s=>source.tutorial[s.id]||cleared.includes(s.id)).map(s=>[s.id,tutorialEntry(source,s.id)]));
   }catch{this.writable=false;this.notice='HOMEWARDの保存情報を読み込めません。元のデータを保護し、今回は一時プレイになります。';}
@@ -28,7 +31,17 @@ export class HomewardProgress {
  }
  start(){this.commit({openingSeen:true,active:true});}
  enter(id){if(!this.state.openingSeen||!sectorUnlocked(this.state,id))return false;this.commit({currentSector:id,active:true});return true;}
- clear(id,evidence){if(!this.state.active||!this.state.openingSeen||id!==this.state.currentSector||!sectorUnlocked(this.state,id)||!missionSatisfied(getHomewardSector(id),evidence,this.state.choices[id]))return false;this.commit({cleared:[...new Set([...this.state.cleared,id])],eventsSeen:[...new Set([...this.state.eventsSeen,`${id}:arrival`])],tutorial:{...this.state.tutorial,[id]:tutorialTransition(tutorialEntry(this.state,id),id,'clear')}});return true;}
+ clear(id,evidence){if(id==='homeward-09'&&!this.state.voyage?.completed)return false;if(!this.state.active||!this.state.openingSeen||id!==this.state.currentSector||!sectorUnlocked(this.state,id)||!missionSatisfied(getHomewardSector(id),evidence,this.state.choices[id]))return false;this.commit({cleared:[...new Set([...this.state.cleared,id])],eventsSeen:[...new Set([...this.state.eventsSeen,`${id}:arrival`])],tutorial:{...this.state.tutorial,[id]:tutorialTransition(tutorialEntry(this.state,id),id,'clear')}});return true;}
+ selectDestination(id){if(this.state.currentSector!=='homeward-09'||!sectorUnlocked(this.state,'homeward-09')||!destination(id))return false;this.commit({voyage:{...normalizeVoyage(this.state.voyage),selected:id}});return true;}
+ dock(state){
+  if(!this.state.active||!this.state.openingSeen||this.state.currentSector!=='homeward-09'||!sectorUnlocked(this.state,'homeward-09')||this.dockedFlights.has(state))return false;
+  const voyage=dockVoyage(this.state.voyage??newVoyage(),state);if(!voyage)return false;
+  this.dockedFlights.add(state);
+  this.commit({voyage});const d=destination(voyage.checkpoint);
+  this.log('homeward-09',{departure:'出航：選んだ目的地へ。',discovery:d.log,discoveries: [...voyage.discoveries],arrival:`寄港：${d.name}`,visited: [...voyage.visited]});
+  if(d.id==='gate')this.clear('homeward-09');return true;
+ }
+ attachDock(id,reference){const voyage=normalizeVoyage(this.state.voyage);if(!destination(id)||voyage.records[id])return;this.commit({voyage:{...voyage,records:{...voyage.records,[id]:reference}}});}
  choose(id,choice){
   const definition=getHomewardDefinition(id),option=definition?.choices?.find(c=>c.id===choice);
   if(!option||this.state.currentSector!==id||!sectorUnlocked(this.state,id))return false;

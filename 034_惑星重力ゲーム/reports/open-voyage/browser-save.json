@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "openingSeen": true,
+  "active": true,
+  "currentSector": "homeward-09",
+  "cleared": [
+    "homeward-01",
+    "homeward-02",
+    "homeward-03",
+    "homeward-04",
+    "homeward-05",
+    "homeward-06",
+    "homeward-07",
+    "homeward-08",
+    "homeward-09"
+  ],
+  "eventsSeen": [
+    "homeward-09:enter",
+    "homeward-09:arrival"
+  ],
+  "journal": {
+    "homeward-01": {
+      "clearFlightId": "legacy-present",
+      "importantFlightId": "legacy-present"
+    },
+    "homeward-02": {
+      "clearFlightId": "already-deleted"
+    },
+    "homeward-09": {
+      "flightToken": "7d5c77cc-4d02-4ddb-b3e9-72612cb85dc2",
+      "departure": "出航：選んだ目的地へ。",
+      "discovery": "漂流船の乗員を救助。残された観測記録から、星域の航路を解読した。",
+      "discoveries": [
+        "参考航路の表示を解放",
+        "帰還経路の短縮 −900",
+        "次の宙域向けの航行情報",
+        "次の宙域への通行情報"
+      ],
+      "arrival": "寄港：救難信号",
+      "visited": [
+        "rescue",
+        "planet",
+        "station",
+        "gate"
+      ],
+      "flightId": "7d5c77cc-4d02-4ddb-b3e9-72612cb85dc2",
+      "importantFlightId": "2d4bcf1d-658d-49a5-815b-c9fb28237107",
+      "clearFlightId": "2d4bcf1d-658d-49a5-815b-c9fb28237107"
+    }
+  },
+  "oldExtension": {
+    "keep": true
+  },
+  "tutorial": {
+    "homeward-01": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-02": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-03": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-04": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-05": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-06": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-07": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-08": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-09": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": -55,
+      "speed": 200
+    }
+  },
+  "choices": {},
+  "voyage": {
+    "checkpoint": "rescue",
+    "selected": "rescue",
+    "visited": [
+      "rescue",
+      "planet",
+      "station",
+      "gate"
+    ],
+    "discoveries": [
+      "参考航路の表示を解放",
+      "帰還経路の短縮 −900",
+      "次の宙域向けの航行情報",
+      "次の宙域への通行情報"
+    ],
+    "rewards": [
+      "route-charts",
+      "navigation-tech",
+      "station-intel",
+      "next-region"
+    ],
+    "completed": true,
+    "elapsed": 39.83333333333354,
+    "planets": [
+      {
+        "id": "voyage-planet-1",
+        "x": 1100,
+        "y": 3400,
+        "type": "earth",
+        "size": "medium",
+        "radius": 38,
+        "mass": 5200,
+        "color": "#6fd3ff"
+      },
+      {
+        "id": "voyage-planet-2",
+        "x": 1900,
+        "y": 1500,
+        "type": "gas",
+        "size": "medium",
+        "radius": 48,
+        "mass": 8000,
+        "color": "#e9b677"
+      },
+      {
+        "id": "voyage-planet-3",
+        "x": 2700,
+        "y": 2350,
+        "type": "repulsor",
+        "size": "medium",
+        "radius": 28,
+        "mass": 3600,
+        "color": "#9880ff",
+        "gravityMultiplier": 1,
+        "gravityDirection": -1,
+        "collisionRadius": 28,
+        "hazards": [],
+        "effect": "repulsion",
+        "render": {
+          "style": "repulsor",
+          "glow": "#9b82ff"
+        }
+      }
+    ],
+    "records": {
+      "rescue": "c56da8b6-8b61-46b8-a5be-cdef21dddee4",
+      "planet": "5e112a22-9808-47f7-bb8e-fccda0742bce",
+      "station": "73cab65d-97ae-4ef9-bea1-04ac77d10884",
+      "gate": "2d4bcf1d-658d-49a5-815b-c9fb28237107"
+    },
+    "launchPosition": {
+      "x": 900,
+      "y": 3260
+    }
+  }
+}

@@ -302,6 +302,13 @@ input[type='range'] { height:30px; }
 .settings-dialog .homeward-primary { width:100%; background:#164f50; border-color:#70d5c8; font-weight:700; }
 .homeward-save-notice { color:#ffc68c; font-size:12px; line-height:1.6; }
 .homeward-save-notice:empty { display:none; }
+.destination-control { position:absolute; left:8px; top:5px; z-index:2; max-width:calc(100% - 100px); min-height:32px; padding:4px 8px; border:1px solid #639eaa; border-radius:7px; background:#0b2539ed; color:#c8fff0; font-size:10px; touch-action:manipulation; }
+.destination-control[hidden] { display:none; }
+.open-voyage .homeward-coach { top:44px; }
+#voyageMap { display:block; width:100%; height:230px; background:#071422; border:1px solid #365567; border-radius:8px; }
+#voyageDestinations { display:grid; gap:8px; margin-top:10px; }
+#voyageDestinations button { text-align:left; white-space:normal; line-height:1.6; }
+#voyageDestinations button[aria-pressed='true'] { border-color:#99f1b7; background:#164b43; }
 .homeward-choices { display:grid; gap:8px; margin:12px 0; }
 .homeward-choices[hidden] { display:none; }
 .homeward-choices button { white-space:normal; line-height:1.5; }

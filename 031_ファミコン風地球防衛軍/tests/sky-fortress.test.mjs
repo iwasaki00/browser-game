@@ -94,3 +94,13 @@ test('SCOUT dash cannot tunnel through M04 defense blocks; genuine placement rid
   const r=lab();start(r,0,'A','SCOUT');r.run("game.player.x=570;input.right=true;input.special=true;for(let i=0;i<20;i++)update(1/60)");assert.ok(r.run('game.player.x')<=597);
   r.click('lab-open');start(r,2);r.run("const deck=game.platforms.find(p=>p.moving);game.player.x=deck.x+35;game.player.y=deck.y-32;game.player.onGround=true;game.lab.equipped[0]='D-19';game.player.weaponSlot=0;game.player.shotCd=0;shoot();const at=game.arsenal.installations[0].x-deck.x;for(let i=0;i<120;i++)update(1/60)");assert.ok(Math.abs(r.run('game.arsenal.installations[0].x-deck.x-at'))<1e-6);
 });
+
+test('B04 all critical parts and player stay visible at arena extremes; other cameras keep their limits',()=>{
+  const r=lab();r.click('lab-boss-4');
+  for(const phase of [1,2,3])for(const x of [6200,6400,6650,7050]){
+    r.run("game.player.x="+x+";resetSkyBossPhase(game,game.enemies[0],"+phase+");frameSkyBoss(game);var targets=game.sky.parts.filter(e=>!e.dead&&skyTargetOpen(game,e));targets.push(game.enemies[0]);var bad=targets.some(e=>e.x-e.w/2<game.battleCamera.x-.01||e.x+e.w/2>game.battleCamera.x+320/game.battleCamera.zoom+.01)");
+    assert.equal(r.run('bad'),false,phase+' at '+x);assert.ok(r.run('game.battleCamera.zoom')>=.35);assert.ok(r.run('game.battleCamera.zoom')<=.85);
+  }
+  r.run("game.player.x=6200;resetSkyBossPhase(game,game.enemies[0],1);frameSkyBoss(game);var hidden=false;for(let i=0;i<1400;i++){game.player.x=Math.min(7050,game.player.x+360/60);updateBattleCamera(game.battleCamera,game.player,game.enemies,game,1/60);for(const e of game.sky.parts)if(!e.dead&&(e.x-e.w/2<game.battleCamera.x-.01||e.x+e.w/2>game.battleCamera.x+320/game.battleCamera.zoom+.01))hidden=true}");
+  assert.equal(r.run('hidden'),false);
+});

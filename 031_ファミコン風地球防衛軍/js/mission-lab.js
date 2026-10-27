@@ -1,6 +1,6 @@
 import {MISSION_AREAS,PLAYER_CLASSES,WEAPON_BY_ID,WORLD} from './data.js?v=0.2.3';
 import {followCamera} from './camera.js?v=0.2.2';
-import {M04} from './mission04.js?v=0.4.0';
+import {M04} from './mission04.js?v=0.4.1';
 import {M03} from './mission03.js?v=0.3.1';
 import {M02} from './mission02.js?v=0.2.2';
 import {RunProfiler} from './profiler.js?v=0.3.1';
@@ -21,7 +21,7 @@ export const LAB_CHECKPOINTS=Object.freeze([
   checkpoint('M01',0,64,116),checkpoint('M01',1,940,116),checkpoint('M01',2,1920,116),checkpoint('M01',3,2920,116),checkpoint('M01',4,3980,116),
   checkpoint('M02',0,64,116),checkpoint('M02',1,940,116),checkpoint('M02',2,2220,116,'LOWER'),checkpoint('M02',2,2220,40,'UPPER'),checkpoint('M02',3,3340,116),checkpoint('M02',4,4540,116),
   checkpoint('M03',0,64,116),checkpoint('M03',1,1140,116),checkpoint('M03',2,2340,116),checkpoint('M03',3,3740,116),checkpoint('M03',4,5160,116),checkpoint('M03',4,5500,116,'MAIN',true),
-  checkpoint('M04',0,64,116),checkpoint('M04',1,1240,116),checkpoint('M04',2,2640,116),checkpoint('M04',3,4140,116),checkpoint('M04',4,5640,116),checkpoint('M04',4,6200,116,'MAIN',true),
+  checkpoint('M04',0,64,116),checkpoint('M04',1,1240,116),checkpoint('M04',2,2640,116),checkpoint('M04',3,4140,116),checkpoint('M04',4,5640,116),checkpoint('M04',4,6220,116,'MAIN',true),
   checkpoint('M01',4,4160,116,'MAIN',true),checkpoint('M02',4,4800,116,'MAIN',true)
 ]);
 export function findCheckpoint(mission,area,route='LOWER',boss=false){return LAB_CHECKPOINTS.find(c=>c.missionId===mission&&c.areaIndex===Number(area)&&(c.boss.state==='active')===boss&&(mission!=='M02'||Number(area)!==2||c.route===route))}

@@ -1,15 +1,22 @@
-import {WORLD,VIEW,BATTLE_CAMERA,clamp} from './data.js?v=0.4.0';
+import {WORLD,VIEW,BATTLE_CAMERA,clamp} from './data.js?v=0.4.1';
 import {movePlayerBody} from './player.js?v=0.2.2';
-import {createImpactState} from './impact.js?v=0.4.0';
-import {AttackDirector} from './invasion.js?v=0.4.0';
-import {createBattleCamera,evaluateBattleCamera} from './camera.js?v=0.4.0';
+import {createImpactState} from './impact.js?v=0.4.1';
+import {AttackDirector} from './invasion.js?v=0.4.1';
+import {createBattleCamera,evaluateBattleCamera} from './camera.js?v=0.4.1';
 
 // M04-only world, state and attack plans. Fixed devices are targetable entities,
 // but are not members of the invasion population or reward/drop population.
 export const SKY=Object.freeze({shieldRadius:120,shieldScale:.7,warning:1.25,recovery:1.8,
   summonLimit:10,shotLimit:48,hazardLimit:6,rescueY:205,rescueDamage:12,coreHp:3200,
-  turretHp:160,generatorHp:220,phaseGrace:1.6,collapseDuration:1.5});
-export const M04=Object.freeze({id:'M04',world:{...WORLD,width:7200,ground:260},bossX:6180,bossSpawnX:6650,
+  turretHp:160,generatorHp:220,phaseGrace:1.6,collapseDuration:1.5,armoredCameraMaxZoom:.35});
+export const FORTRESS_GUIDANCE=Object.freeze({intro:2.5,blockedHit:.45,turnWarning:.6,shieldRelease:.5,
+  targetMarkers:3,shieldMarkers:12,reducedShieldMarkers:8,sourceMarkers:4,rescueStep:24});
+export const SKY_PHASES=Object.freeze({
+  1:{text:'外部砲台を破壊せよ',lines:['外部砲台を破壊せよ','中央コアは防御中'],short:'外部砲台を破壊'},
+  2:{text:'左右のシールド発生装置を破壊せよ',lines:['左右のシールド発生装置を','破壊せよ'],short:'左右装置を破壊'},
+  3:{text:'中央コアを攻撃せよ',lines:['中央コアを攻撃せよ','SHIELD DOWN'],short:'中央コアを攻撃'}
+});
+export const M04=Object.freeze({id:'M04',world:{...WORLD,width:7200,ground:260},bossX:6200,bossSpawnX:6650,
   areas:[{x:0,name:'高層市街地'},{x:1200,name:'対空防衛線'},{x:2600,name:'輸送プラットフォーム'},{x:4100,name:'要塞外殻'},{x:5600,name:'空中要塞中枢'}],
   platforms:[{x:0,y:148,w:2960,h:112,solid:true,kind:'roof'},
     {x:2960,y:172,w:160,h:88,solid:true,kind:'recovery'},
@@ -35,13 +42,30 @@ export const M04=Object.freeze({id:'M04',world:{...WORLD,width:7200,ground:260},
     {id:'s5-escort',x:5620,until:5980,pattern:'WAVE',enemy:'interceptor',count:8,batch:2,interval:1}]
 });
 export const createM04Geometry=()=>[...M04.platforms.map(p=>({...p})),...M04.movers.map(p=>({...p,baseX:p.x,moving:true,solid:true,kind:'transport',active:true}))];
-export const createSkyState=()=>({safeX:64,safeY:116,rescues:0,rescueWait:0,parts:[],hazards:[],collapseLeft:0,collapseTick:0,collapseDone:false});
+export const createSkyState=()=>({safeX:64,safeY:116,rescues:0,rescueWait:0,rescuePending:false,lastRescue:null,
+  guideUntil:0,shieldSources:[],parts:[],hazards:[],collapseLeft:0,collapseTick:0,collapseDone:false});
+export function skyPlatformMotion(b,time){
+  const cycle=b.travel*2,at=(time*b.speed)%cycle;
+  return {x:b.baseX+(at<=b.travel?at:cycle-at),direction:at<b.travel?1:-1,turnLeft:(at<b.travel?b.travel-at:cycle-at)/b.speed};
+}
+export function skyDeviceState(g,e){
+  return e.dead?'破壊済':skyTargetOpen(g,e)?'攻撃可':'防御中';
+}
+export function skyShieldSource(g,e,sources=g.enemies){
+  if(e.dead||e.fixedDevice||e.type==='fortress')return null;
+  for(const d of sources)if(d!==e&&!d.dead&&d.type==='shielddrone'&&Math.hypot(d.x-e.x,d.y-e.y)<SKY.shieldRadius)return d;
+  return null;
+}
+export function refreshSkyVisuals(g){
+  const sources=g.sky.shieldSources;sources.length=0;
+  for(const e of g.enemies)if(!e.dead&&e.type==='shielddrone')sources.push(e);
+}
 export function skySurface(g,x){let y=g.world.ground;for(const b of g.platforms)if(b.active!==false&&x>b.x&&x<b.x+b.w)y=Math.min(y,b.y);return y}
 export function advanceSkyPlatforms(g,dt){
   const p=g.player;
   for(const b of g.platforms){if(!b.moving)continue;
     const oldX=b.x,oldY=b.y,supported=p.onGround&&Math.abs(p.y+32-oldY)<.05&&p.x+7>oldX&&p.x-7<oldX+b.w;
-    const cycle=b.travel*2,at=(g.time*b.speed)%cycle;b.x=b.baseX+(at<=b.travel?at:cycle-at);
+    b.x=skyPlatformMotion(b,g.time).x;
     const dx=b.x-oldX;
     if(supported&&!p.dead){const vx=p.vx,vy=p.vy;b.active=false;p.vx=dx/dt;p.vy=0;movePlayerBody(p,g.platforms,dt,true);b.active=true;p.vx=vx;p.vy=vy;p.onGround=Math.abs(p.y+32-b.y)<.05&&p.x+7>b.x&&p.x-7<b.x+b.w}
     // A moving leading edge must not enter an airborne/grounded non-rider.
@@ -56,9 +80,26 @@ export function advanceSkyPlatforms(g,dt){
 export function recoverSkyPlayer(g,dt,hurt,effect){
   const s=g.sky,p=g.player;s.rescueWait=Math.max(0,s.rescueWait-dt);
   if(p.onGround&&g.platforms.some(b=>!b.moving&&b.active!==false&&p.x-8>=b.x&&p.x+8<=b.x+b.w&&Math.abs(p.y+32-b.y)<.1)&&p.y<150){s.safeX=p.x;s.safeY=p.y}
-  if(p.y<=SKY.rescueY||p.dead)return false;
-  Object.assign(p,{x:s.safeX,y:s.safeY,vx:0,vy:0,onGround:true});s.rescues++;
+  if(p.y<=SKY.rescueY||p.dead){s.rescuePending=false;return false}
+  const anchor=findSkyRescue(g,s.safeX);
+  if(!anchor){s.rescuePending=true;p.vx=p.vy=0;return false}
+  s.lastRescue={requestedX:s.safeX,x:anchor.x,y:anchor.y};s.rescuePending=false;
+  Object.assign(p,{x:anchor.x,y:anchor.y,vx:0,vy:0,onGround:true});s.rescues++;
   if(!s.rescueWait){hurt(SKY.rescueDamage,p.x-1);s.rescueWait=1.2}effect({kind:'skyBreak',x:p.x,y:p.y+16,life:.3,max:.3});return true;
+}
+export function findSkyRescue(g,requestedX){
+  const min=g.bossStarted?M04.bossX:12,max=g.bossStarted?7050:g.world.width-25;
+  const origin=clamp(requestedX,min,max),steps=Math.ceil((max-min)/FORTRESS_GUIDANCE.rescueStep);
+  for(let n=0;n<=steps;n++)for(const side of n?[-1,1]:[1]){
+    const x=origin+n*side*FORTRESS_GUIDANCE.rescueStep;if(x<min||x>max)continue;
+    let floor=g.world.ground;
+    for(const b of g.platforms)if(!b.moving&&b.active!==false&&x-8>=b.x&&x+8<=b.x+b.w)floor=Math.min(floor,b.y);
+    const y=floor-32;if(y>150)continue;
+    if(g.platforms.some(b=>b.active!==false&&x+7>b.x&&x-7<b.x+b.w&&y+32>b.y+.01&&y<b.y+(b.h??8)-.01))continue;
+    if(g.enemies.some(e=>!e.dead&&Math.abs(x-e.x)<e.w/2+15&&y+32>e.y-8&&y<e.y+e.h+8))continue;
+    return {x,y};
+  }
+  return null;
 }
 export function resetSkyBossPhase(g,boss,phase=1){
   const n=clamp(Math.floor(Number(phase)||1),1,3);
@@ -68,8 +109,9 @@ export function resetSkyBossPhase(g,boss,phase=1){
   g.impact=createImpactState();g.shake=0;g.clear=false;g.attacks=new AttackDirector();
   g.arsenal.installations.length=g.arsenal.jobs.length=g.arsenal.pending.length=0;
   g.sky=createSkyState();g.sky.safeX=g.player.x;g.sky.safeY=g.player.y;
-  Object.assign(boss,{dead:false,death:0,hp:SKY.coreHp,maxHp:SKY.coreHp,skyPhase:n,timer:0,warningLeft:0,attackPlan:null,actionWait:SKY.phaseGrace,actionIndex:0,hitFlash:0,vx:0,vy:0,active:true});
-  for(const [kind,x] of [['turret',6320],['turret',6920],['generator',6360],['generator',6860]]){
+  Object.assign(boss,{dead:false,death:0,hp:SKY.coreHp,maxHp:SKY.coreHp,skyPhase:n,cameraMaxZoom:n<3?SKY.armoredCameraMaxZoom:BATTLE_CAMERA.bossMaxZoom,timer:0,warningLeft:0,attackPlan:null,actionWait:SKY.phaseGrace,actionIndex:0,hitFlash:0,shieldedUntil:0,vx:0,vy:0,active:true});
+  g.sky.guideUntil=g.time+FORTRESS_GUIDANCE.intro;
+  for(const [kind,x] of [['turret',6320],['turret',6940],['generator',6360],['generator',6860]]){
     const hp=kind==='turret'?SKY.turretHp:SKY.generatorHp;
     const part={uid:g.nextEnemyId++,type:'skydevice',fixedDevice:true,partKind:kind,x,y:116,w:28,h:32,hp,maxHp:hp,dead:kind==='turret'?n>1:n>2,death:0,anim:0,face:1,shotCd:0,active:true};
     g.sky.parts.push(part);g.enemies.push(part);
@@ -90,7 +132,7 @@ export const skyCore=b=>({x:b.x,y:b.y+b.h/2,r:23,open:!b.dead&&b.skyPhase===3});
 export function skyTargetOpen(g,e){return e.type==='fortress'?e.skyPhase===3:!e.fixedDevice||g.enemies.find(b=>b.type==='fortress'&&!b.dead)?.skyPhase===(e.partKind==='turret'?1:2)}
 export function skyDamage(g,e,damage){
   if((e.type==='fortress'||e.fixedDevice)&&!skyTargetOpen(g,e))return 0;
-  if(!e.fixedDevice&&e.type!=='fortress')for(const d of g.enemies)if(d!==e&&!d.dead&&d.type==='shielddrone'&&Math.hypot(d.x-e.x,d.y-e.y)<SKY.shieldRadius)return damage*SKY.shieldScale;
+  if(skyShieldSource(g,e))return damage*SKY.shieldScale;
   return damage;
 }
 export function skyAttackPlan(g,b){
@@ -119,7 +161,7 @@ export function updateSkyEnemy(g,e,dt,spawn,effect){
   }else if(e.type==='fortress'){
     e.timer+=dt;
     const pending=g.sky.parts.some(d=>!d.dead&&d.partKind===(e.skyPhase===1?'turret':'generator'));
-    if(e.skyPhase<3&&!pending){e.skyPhase++;e.warningLeft=0;e.attackPlan=null;e.actionWait=SKY.phaseGrace;g.sky.hazards.length=0;g.enemyShots.length=0;effect({kind:'skyBreak',x:e.x,y:100,life:.7,max:.7});g.areaText=e.skyPhase===3?'SHIELD DOWN / CORE OPEN':'DESTROY SHIELD GENERATORS';g.areaTimer=2}
+    if(e.skyPhase<3&&!pending){e.skyPhase++;e.shieldedUntil=0;e.cameraMaxZoom=e.skyPhase<3?SKY.armoredCameraMaxZoom:BATTLE_CAMERA.bossMaxZoom;e.warningLeft=0;e.attackPlan=null;e.actionWait=SKY.phaseGrace;g.sky.guideUntil=g.time+FORTRESS_GUIDANCE.intro;g.sky.hazards.length=0;g.enemyShots.length=0;effect({kind:'skyBreak',x:e.x,y:100,life:.7,max:.7});g.areaText=SKY_PHASES[e.skyPhase].text;g.areaTimer=0}
     e.actionWait-=dt;
     if(e.warningLeft>0){e.warningLeft=Math.max(0,e.warningLeft-dt);if(!e.warningLeft){const plan=e.attackPlan;effect({kind:'skyFire',x:plan.originX,y:plan.originY,life:.18,max:.18});for(const z of plan.zones)if(g.sky.hazards.length<SKY.hazardLimit)g.sky.hazards.push({...z,damage:plan.damage,life:.25,hit:false});e.attackPlan=null;e.actionWait=SKY.recovery;
       if(e.skyPhase>=2&&e.actionIndex%2===0&&g.liveMobs<SKY.summonLimit){const x=clamp(p.x+(p.x<6650?240:-240),6050,7140);spawn(e.skyPhase===2?'shielddrone':'interceptor',x,56)}

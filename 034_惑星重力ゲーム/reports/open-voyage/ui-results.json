@@ -1,0 +1,87 @@
+[
+  {
+    "planetDrag": "PASS, x1100→1300",
+    "oneFingerPan": "FIXED then OVERVIEW",
+    "reset": "last checkpoint preserved"
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 417
+    },
+    "panel": {
+      "x": 12,
+      "y": 12,
+      "width": 296,
+      "height": 544
+    },
+    "scroll": {
+      "height": 568,
+      "width": 320
+    },
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED",
+    "errors": []
+  },
+  {
+    "fullFlow": "PASS",
+    "route": "D",
+    "migration": "existing record copied; deleted record not fabricated",
+    "automaticLimit": 20,
+    "protectedSlots": 6,
+    "serializedArchiveBytes": 100679,
+    "archiveAfterEviction": "unchanged",
+    "quotaFailure": "notified; gameplay continued; protected data unchanged",
+    "classic": "unchanged"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 516
+    },
+    "panel": {
+      "x": 12,
+      "y": 12,
+      "width": 351,
+      "height": 643
+    },
+    "scroll": {
+      "height": 667,
+      "width": 375
+    },
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 693
+    },
+    "panel": {
+      "x": 12,
+      "y": 12,
+      "width": 366,
+      "height": 820
+    },
+    "scroll": {
+      "height": 844,
+      "width": 390
+    },
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED",
+    "errors": []
+  }
+]
