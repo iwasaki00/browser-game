@@ -57,7 +57,7 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
   const scope=vm.createContext(sandbox);vm.runInContext(source,scope);vm.runInContext("save.settings.sound=false",scope);
   const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
   return {run,json,storage,timers,drawCalls,get,rafCount:()=>rafCount,
-    click(action,mission,playerClass,slot){const target={dataset:{action,mission,playerClass,slot},closest(){return this}};for(const fn of listeners.get("click")||[])fn({target})},
+    click(action,mission,playerClass,slot,extra={}){const target={dataset:{action,mission,playerClass,slot,...extra},closest(){return this}};for(const fn of listeners.get("click")||[])fn({target})},
     density(value){for(const fn of listeners.get("change")||[])fn({target:{id:"densitySelect",value}})},
     change(id,value,checked){for(const fn of listeners.get("change")||[])fn({target:{id,value,checked}})},
     input(id,value){get(id).value=value;for(const fn of get(id).listeners.input||[])fn({target:get(id)});for(const fn of listeners.get('input')||[])fn({target:get(id)})},

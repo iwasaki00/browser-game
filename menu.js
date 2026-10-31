@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "036",
+      title: "お宝回収屋 — THE FINDERS",
+      genre: "Exploration / Incremental",
+      description: "砂浜を素手で掘り、お宝を回収。スコップ・熊手・砂ふるいを組み合わせ、小さな回収屋の仕事を効率化しよう。",
+      href: "./036_お宝回収屋/dist/index.html",
+      icon: "./036_お宝回収屋/icon.svg",
+      alt: "砂の中に光るお宝のアイコン",
+      cta: "砂浜を探索する",
+      ariaLabel: "お宝回収屋を遊ぶ"
+    },
+    {
       number: "035",
       title: "ガチャ王 / GACHA KING",
       genre: "Collection / Simulation",

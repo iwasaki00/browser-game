@@ -1,0 +1,47 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "layout": "PASS",
+    "pointerDig": "PASS",
+    "saveRestore": "PASS",
+    "shop": "PASS",
+    "collection": "PASS",
+    "equipment": "PASS",
+    "newPlot": "PASS",
+    "jackpotUI": "PASS",
+    "IDBFallback": "PASS",
+    "pointerCancel": "PASS",
+    "pageErrors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "layout": "PASS",
+    "pointerDig": "PASS",
+    "saveRestore": "PASS",
+    "shop": "PASS",
+    "collection": "PASS",
+    "equipment": "PASS",
+    "newPlot": "PASS",
+    "jackpotUI": "PASS",
+    "IDBFallback": "PASS",
+    "pointerCancel": "PASS",
+    "pageErrors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "layout": "PASS",
+    "pointerDig": "PASS",
+    "saveRestore": "PASS",
+    "shop": "PASS",
+    "collection": "PASS",
+    "equipment": "PASS",
+    "newPlot": "PASS",
+    "jackpotUI": "PASS",
+    "IDBFallback": "PASS",
+    "pointerCancel": "PASS",
+    "pageErrors": []
+  }
+]

@@ -25,10 +25,10 @@ input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;
 
 test('legacy M06 save unlocks M07, M08 disabled, seven campaign denominator and fixed thirty achievements',()=>{
  const s=sanitizeSave({...seed(),selectedClass:'GUARDIAN',unlocked:['A-01','S-02','R-04'],missionStats:{M06:{highScore:777,bestTime:300,kills:12}}});
- assert.ok(canPlayMission('M07',s));assert.equal(missionStatus(MISSIONS.find(m=>m.id==='M08'),s),'COMING SOON');assert.equal(s.missionStats.M06.kills,12);
+ assert.ok(canPlayMission('M07',s));assert.equal(missionStatus(MISSIONS.find(m=>m.id==='M08'),s),'LOCKED');assert.equal(s.missionStats.M06.kills,12);
  const r=runtime(s);r.run("startMission('M07');update(1/60)");assert.equal(r.run('game.mothership.devices.length'),5);assert.equal(r.run("startMission('M08')"),false);
  r.run('game.player.hp=0;update(1/60)');r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M07');assert.equal(r.run("canPlayMission('M07',save)"),true);assert.deepEqual(r.json('save.clearedMissions'),s.clearedMissions);
- assert.equal(MISSIONS.filter(m=>m.implemented).length,7);
+ assert.equal(MISSIONS.filter(m=>m.implemented).length,8);
  const master=readFileSync(new URL('../js/achievement-master.js',import.meta.url),'utf8');assert.match(master,/M01.*M02.*M03.*M04.*M05.*M06/);assert.doesNotMatch(master,/M07/);
 });
 for(let area=0;area<5;area++)test('M07 AREA '+(area+1)+' restore twice, no stale encounters or saves',()=>{
@@ -63,7 +63,7 @@ test('phase destination safe, warning immunity, recovery vulnerable; titan charg
  r.run("var t=spawnEnemy('assaulttitan',4620);t.y=100;t.dashLeft=.4;t.vx=140;for(let i=0;i<30;i++)updateMothershipEnemy(game,t,1/60,spawnEnemy,pushEffect)");assert.ok(r.run('t.x+t.w/2<=4700'));
 });
 test('normal M07 result/rewards/stats save before skippable teaser; retry stays unlocked, LAB clear never rewards',()=>{
- const r=runtime(seed());r.run("startMission('M07');game.player.x=7800;startBoss();for(const d of game.mothership.devices)damageEnemy(d,999);damageEnemy(game.enemies[0],9999)");r.flush();r.flush();const s=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(s.clearedMissions.includes('M07'));assert.ok(s.missionStats.M07.highScore>0);assert.ok(s.campaignStats.classes.RANGER.missions.M07);assert.ok(s.campaignStats.firstRewards.M07);assert.equal(r.get('mothershipStory').hidden,false);r.click('mothership-story-skip');assert.equal(r.get('mothershipStory').hidden,true);assert.equal(r.run('state'),'result');assert.equal(r.run("canPlayMission('M08',save)"),false);
+ const r=runtime(seed());r.run("startMission('M07');game.player.x=7800;startBoss();for(const d of game.mothership.devices)damageEnemy(d,999);damageEnemy(game.enemies[0],9999)");r.flush();r.flush();const s=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(s.clearedMissions.includes('M07'));assert.ok(s.missionStats.M07.highScore>0);assert.ok(s.campaignStats.classes.RANGER.missions.M07);assert.ok(s.campaignStats.firstRewards.M07);assert.equal(r.get('mothershipStory').hidden,false);r.click('mothership-story-skip');assert.equal(r.get('mothershipStory').hidden,true);assert.equal(r.run('state'),'result');assert.equal(r.run("canPlayMission('M08',save)"),true);
  const q=lab(),saved=q.storage.get(SAVE_KEY);q.click('lab-mothership-collapse');q.flush();assert.equal(q.storage.get(SAVE_KEY),saved);assert.equal(q.run('game.lab.run.outcome'),'BOSS_DEFEATED');
 });
 test('minimal M01-M06 start/boss protection, M07 all twenty weapons and draw fallback/load',async()=>{

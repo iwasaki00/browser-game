@@ -24,7 +24,7 @@ const point=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=po
 input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;`;
 
 test('legacy M05 clear unlocks M06 with old records intact; M07 cannot run; death retry is monotonic',()=>{
- const s=sanitizeSave({...seed(),version:1,unlocked:['A-01','S-02','R-04'],selectedClass:'GUARDIAN',missionStats:{M05:{highScore:555,bestTime:250,kills:34}}});assert.ok(canPlayMission('M06',s));assert.equal(missionStatus(MISSIONS.find(m=>m.id==='M08'),s),'COMING SOON');assert.equal(s.missionStats.M05.kills,34);
+ const s=sanitizeSave({...seed(),version:1,unlocked:['A-01','S-02','R-04'],selectedClass:'GUARDIAN',missionStats:{M05:{highScore:555,bestTime:250,kills:34}}});assert.ok(canPlayMission('M06',s));assert.equal(missionStatus(MISSIONS.find(m=>m.id==='M08'),s),'LOCKED');assert.equal(s.missionStats.M05.kills,34);
  const r=runtime(s);r.run("startMission('M06');game.player.hp=0;update(1/60)");r.flush();const before=r.storage.get(SAVE_KEY);r.click('retry');assert.equal(r.run('game.missionId'),'M06');assert.deepEqual(JSON.parse(r.storage.get(SAVE_KEY)).unlockedMissions,JSON.parse(before).unlockedMissions);assert.deepEqual(JSON.parse(r.storage.get(SAVE_KEY)).clearedMissions,JSON.parse(before).clearedMissions);assert.equal(r.run("startMission('M07')"),false);
 });
 for(let area=0;area<5;area++)test('M06 AREA '+(area+1)+' explicit restore and repeated initialization',()=>{

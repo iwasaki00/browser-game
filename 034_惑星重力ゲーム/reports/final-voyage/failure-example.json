@@ -1,0 +1,14 @@
+{
+  "input": {
+    "angleDeg": -165.96,
+    "speed": 220
+  },
+  "result": "crashed",
+  "reason": "encounter-unknown",
+  "time": 12.924999999999907,
+  "end": {
+    "x": 5023.978949004198,
+    "y": 6001.00498987761
+  },
+  "ending": null
+}

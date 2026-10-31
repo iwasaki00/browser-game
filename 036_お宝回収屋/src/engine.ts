@@ -1,4 +1,4 @@
-﻿import {CONFIG,income,treasure,tool,tools,weights,combinations} from './data';
+import {CONFIG,income,treasure,tool,tools,weights,combinations} from './data';
 export interface Find {uid:string;id:string;x:number;y:number;quality:number;state:'buried'|'batch'|'stored'|'paid';tool:string;}
 export interface Plot {id:string;seed:number;mask:number[];items:Find[];}
 export interface Batch {id:string;plotId:string;items:string[];processed:boolean;cells:number;}
@@ -8,7 +8,7 @@ export function generate(seed:number,tutorial=false,noJackpot=false):Plot {
  const r=rng(seed),items:Find[]=[];const count=10+Math.floor(r()*5);
  const groups:Record<string,string[]>={C:['B001','B002','B003','B004'],U:['B005','B007'],R:['B009'],SR:['B011'],J:noJackpot?[]:['B012']};
  for(let i=0;i<count;i++) {let id:string; if(tutorial&&i<6)id=['B004','B003','B004','B003','B001','B002'][i];else {const options=Object.keys(groups).filter(k=>groups[k].length);let n=r()*options.reduce((s,k)=>s+weights[k],0);let k=options[0];for(const key of options){n-=weights[key];if(n<0){k=key;break;}}id=groups[k][Math.floor(r()*groups[k].length)];}
- const x=tutorial&&i<6?30+i*60:15+Math.floor(r()*33)*10;const y=tutorial&&i<6?25+(i%2)*20:(i<6?25+Math.floor(r()*4)*10:25+Math.floor(r()*24)*10);
+ const x=tutorial&&i<6?30+i*60:15+Math.floor(r()*33)*10;const y=tutorial&&i<6?(i===0?20:25+(i%2)*20):(i<6?25+Math.floor(r()*4)*10:25+Math.floor(r()*24)*10);
  items.push({uid:`${seed}:${i}`,id,x,y,quality:tutorial?1:0.8+r()*0.4,state:'buried',tool:'hand'});}
  return {id:`BA-${seed}`,seed,mask:Array(1008).fill(0),items};
 }
@@ -22,14 +22,14 @@ export function buy(s:State,id:string){const t=tool(id);refresh(s);if(!t||t.impl
 export function exposure(p:Plot,f:Find){let n=0,total=0;for(let y=Math.floor((f.y-8)/10);y<=Math.floor((f.y+8)/10);y++)for(let x=Math.floor((f.x-8)/10);x<=Math.floor((f.x+8)/10);x++){if(x>=0&&x<36&&y>=0&&y<28){total++;n+=p.mask[y*36+x];}}return n/total;}
 function cost(s:State,id:string){const value=id==='hand'?5:tool(id)!.staminaCost;s.playerStats.stamina=Math.max(0,s.playerStats.stamina-value);s.playerStats.xp[3]++;}
 export function dig(s:State,id:string,x:number,y:number,dx:number){if(id!=='hand'&&!s.ownedTools.includes(id))return 0;if(id==='B201'||id==='B104'||Math.abs(dx)<2)return 0;const p=plot(s),limit=id==='B105'?280:id==='B101'?180:80;const radius=id==='B105'?26:id==='B101'?15:id==='B102'?34:7;const ry=id==='B102'?7:radius;const low=s.playerStats.stamina<10?0.5:1;const reachable=new Set<number>();for(let yy=0;yy<28;yy++)for(let xx=0;xx<36;xx++){const i=yy*36+xx;if(p.mask[i]<1&&(yy===0||p.mask[i-36]>=0.8))reachable.add(i);}
- let removed=0;for(const i of reachable){const xx=i%36*10+5,yy=Math.floor(i/36)*10+5;if(yy>limit||((xx-x)/(radius+4))**2+((yy-y)/(ry+4))**2>1)continue;const amount=Math.min(1-p.mask[i],(id==='hand'?0.45:0.85)*low);p.mask[i]+=amount;removed+=amount;}
+ let removed=0;for(const i of reachable){const xx=i%36*10+5,yy=Math.floor(i/36)*10+5;if(yy>limit||((xx-x)/(radius+4))**2+((yy-y)/(ry+4))**2>1)continue;const amount=Math.min(1-p.mask[i],(id==='hand'?0.45:0.85)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)));p.mask[i]+=amount;removed+=amount;}
  if(!removed)return 0;cost(s,id);s.digs++;s.cells+=removed;s.playerStats.xp[0]+=removed; s.playerStats.xp[1]+=0.5;
  if(id==='B101'||id==='B105'){let b=s.sandBatches.find(b=>b.plotId===p.id&&!b.processed&&b.cells<CONFIG.batchCells);if(!b){b={id:`batch-${s.sandBatches.length}`,plotId:p.id,items:[],processed:false,cells:0};s.sandBatches.push(b);}b.cells+=removed;for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&['B001','B002','B003','B004'].includes(f.id)){f.state='batch';f.tool=id;b.items.push(f.uid);}}
  refresh(s);return removed;
 }
-export function detect(s:State,x:number,y:number){if(!s.ownedTools.includes('B201'))return 0;cost(s,'B201');s.playerStats.xp[1]++;return Math.max(0,...plot(s).items.filter(f=>f.state==='buried'&&treasure(f.id).material==='metal').map(f=>1-Math.hypot(f.x-x,f.y-y)/95));}
-export function recover(s:State,uid:string){const p=plot(s),f=p.items.find(f=>f.uid===uid);if(!f||f.state!=='buried'||exposure(p,f)<CONFIG.exposure||stored(s).length>=CONFIG.capacity)return false;f.state='stored';f.tool=s.equippedTools[0]??'hand';s.playerStats.xp[2]++;return true;}
-export function sift(s:State,withSieve:boolean){if(withSieve&&!s.ownedTools.includes('B104'))return 0;const b=s.sandBatches.find(b=>!b.processed);if(!b)return 0;const p=s.explorationAreas.find(p=>p.id===b.plotId)!;const limit=withSieve?8:1;let n=0;for(const uid of [...b.items]){const f=p.items.find(f=>f.uid===uid)!;if(f.state==='batch'&&stored(s).length<CONFIG.capacity){f.state='stored';f.tool=withSieve?'B104':f.tool;n++;b.items=b.items.filter(x=>x!==uid);if(n>=limit)break;}}
+export function detect(s:State,x:number,y:number){if(!s.ownedTools.includes('B201'))return 0;cost(s,'B201');s.playerStats.xp[1]++;return Math.max(0,...plot(s).items.filter(f=>f.state==='buried'&&treasure(f.id).material==='metal').map(f=>1-Math.hypot(f.x-x,f.y-y)/(95+Math.min(15,Math.floor(s.playerStats.xp[1]/CONFIG.xpPerLevel)))));}
+export function recover(s:State,uid:string,usedTool='hand'){const p=plot(s),f=p.items.find(f=>f.uid===uid);if(!f||f.state!=='buried'||exposure(p,f)<CONFIG.exposure||stored(s).length>=CONFIG.capacity)return false;f.state='stored';f.tool=usedTool;s.playerStats.xp[2]++;return true;}
+export function sift(s:State,withSieve:boolean){if(withSieve&&!s.ownedTools.includes('B104'))return 0;const b=s.sandBatches.find(b=>!b.processed);if(!b)return 0;const p=s.explorationAreas.find(p=>p.id===b.plotId)!;const limit=withSieve?8+Math.min(2,Math.floor(s.playerStats.xp[2]/CONFIG.xpPerLevel/5)):1;let n=0;for(const uid of [...b.items]){const f=p.items.find(f=>f.uid===uid)!;if(f.state==='batch'&&stored(s).length<CONFIG.capacity){f.state='stored';f.tool=withSieve?'B104':f.tool;n++;b.items=b.items.filter(x=>x!==uid);if(n>=limit)break;}}
  if(!b.items.length)b.processed=true;cost(s,withSieve?'B104':'hand');s.playerStats.xp[2]+=n;return n;
 }
 export const stored=(s:State)=>s.explorationAreas.flatMap(p=>p.items).filter(f=>f.state==='stored');

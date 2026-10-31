@@ -1,0 +1,36 @@
+[
+  {
+    "ending": "END-02",
+    "status": "PASS",
+    "route": [
+      "rescue",
+      "earth"
+    ],
+    "record": {
+      "key": "ending:END-02:first",
+      "id": "4ab634c6-8eb9-4f41-8cb2-ceeb75aca762",
+      "ending": "END-02",
+      "decision": "rescue",
+      "duration": 45.31666666666474
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  },
+  {
+    "ending": "END-04",
+    "status": "PASS",
+    "route": [
+      "network",
+      "passage"
+    ],
+    "record": {
+      "key": "ending:END-04:first",
+      "id": "a3695fda-fdb8-49ae-93ef-0682f6c553ac",
+      "ending": "END-04",
+      "decision": "other",
+      "duration": 14.141666666666504
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  }
+]

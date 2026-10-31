@@ -1058,7 +1058,7 @@ function finalizeRecording(reason){
   const discoveryEvents=structuredClone(flightDiscoveries),storyEvents=structuredClone(flightStoryEvents);
   try{
     let record=current.finish(reason==='mission-incomplete'?{...state,status:'mission-incomplete'}:state,reason);
-    const final=Boolean(stage.finalVoyage),finalOutcome=final?dockFinal(homewardProgress.state,homewardProgress.state.finalVoyage,state,()=>0):null;
+    const final=Boolean(stage.finalVoyage),finalOutcome=final?dockFinal(homewardProgress.state,homewardProgress.state.finalVoyage,state):null;
     const deep=Boolean(stage.deepSpace),open=Boolean(stage.openVoyage),success=state.status==='cleared'&&(!homewardId||missionSatisfied(getHomewardSector(homewardId),evidence,choice));
     if(record&&final)record=finalRecord(record,state,finalOutcome);
     if(record&&deep)record=deepRecord(record,state,discoveryEvents);

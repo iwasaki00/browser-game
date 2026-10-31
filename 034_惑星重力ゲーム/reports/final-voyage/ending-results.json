@@ -148,8 +148,8 @@
       },
       "deep": {
         "completed": true,
+        "checkpoint": "return",
         "rewards": [],
-        "version": 1,
         "targets": {
           "DS01": {
             "state": "DETECTED"
@@ -170,8 +170,8 @@
             "state": "UNKNOWN"
           }
         },
+        "version": 1,
         "selected": "return",
-        "checkpoint": "origin",
         "visited": [],
         "choices": [],
         "records": {},
@@ -194,7 +194,7 @@
             "title": "THE LAST SIGNAL",
             "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
             "destination": "earth",
-            "at": 1793459352837,
+            "at": 1793460744982,
             "elapsed": 0
           },
           {
@@ -203,7 +203,7 @@
             "title": "THE OBSERVATION NETWORK",
             "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
             "destination": "earth",
-            "at": 1793459352837,
+            "at": 1793460744982,
             "elapsed": 0
           }
         ],
@@ -240,8 +240,8 @@
     ],
     "outcome": {
       "id": "END-01",
-      "firstAt": 1793459352870,
-      "lastAt": 1793459352870
+      "firstAt": 1793460745027,
+      "lastAt": 1793460745027
     },
     "rates": "1=100"
   },
@@ -394,8 +394,8 @@
       },
       "deep": {
         "completed": true,
+        "checkpoint": "return",
         "rewards": [],
-        "version": 1,
         "targets": {
           "DS01": {
             "state": "DETECTED"
@@ -416,8 +416,8 @@
             "state": "UNKNOWN"
           }
         },
+        "version": 1,
         "selected": "return",
-        "checkpoint": "origin",
         "visited": [],
         "choices": [],
         "records": {},
@@ -440,7 +440,7 @@
             "title": "THE LAST SIGNAL",
             "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
             "destination": "earth",
-            "at": 1793459352949,
+            "at": 1793460745118,
             "elapsed": 0
           },
           {
@@ -449,7 +449,7 @@
             "title": "THE OBSERVATION NETWORK",
             "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
             "destination": "earth",
-            "at": 1793459352949,
+            "at": 1793460745118,
             "elapsed": 0
           }
         ],
@@ -506,8 +506,8 @@
     ],
     "outcome": {
       "id": "END-02",
-      "firstAt": 1793459352996,
-      "lastAt": 1793459352996
+      "firstAt": 1793460745160,
+      "lastAt": 1793460745160
     },
     "rates": "1=100"
   },
@@ -1004,19 +1004,21 @@
       },
       "deep": {
         "completed": true,
+        "checkpoint": "return",
         "rewards": [
           "final-voyage-chart"
         ],
-        "version": 1,
         "targets": {
           "DS01": {
             "state": "DETECTED"
           },
           "DS02": {
-            "state": "UNKNOWN"
+            "state": "INVESTIGATED",
+            "investigatedAt": 1
           },
           "DS03": {
-            "state": "UNKNOWN"
+            "state": "INVESTIGATED",
+            "investigatedAt": 1
           },
           "DS04": {
             "state": "UNKNOWN"
@@ -1025,11 +1027,12 @@
             "state": "UNKNOWN"
           },
           "DS06": {
-            "state": "UNKNOWN"
+            "state": "INVESTIGATED",
+            "investigatedAt": 1
           }
         },
+        "version": 1,
         "selected": "return",
-        "checkpoint": "origin",
         "visited": [],
         "choices": [],
         "records": {},
@@ -1052,7 +1055,7 @@
             "title": "THE LAST SIGNAL",
             "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
             "destination": "earth",
-            "at": 1793459353052,
+            "at": 1793460745215,
             "elapsed": 0
           },
           {
@@ -1061,7 +1064,7 @@
             "title": "THE OBSERVATION NETWORK",
             "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
             "destination": "earth",
-            "at": 1793459353052,
+            "at": 1793460745215,
             "elapsed": 0
           }
         ],
@@ -1118,8 +1121,8 @@
     ],
     "outcome": {
       "id": "END-03",
-      "firstAt": 1793459353096,
-      "lastAt": 1793459353096
+      "firstAt": 1793460745270,
+      "lastAt": 1793460745270
     },
     "rates": "1=100"
   },
@@ -1272,8 +1275,8 @@
       },
       "deep": {
         "completed": true,
+        "checkpoint": "return",
         "rewards": [],
-        "version": 1,
         "targets": {
           "DS01": {
             "state": "DETECTED"
@@ -1294,8 +1297,8 @@
             "state": "UNKNOWN"
           }
         },
+        "version": 1,
         "selected": "return",
-        "checkpoint": "origin",
         "visited": [],
         "choices": [],
         "records": {},
@@ -1318,7 +1321,7 @@
             "title": "THE LAST SIGNAL",
             "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
             "destination": "earth",
-            "at": 1793459353170,
+            "at": 1793460745334,
             "elapsed": 0
           },
           {
@@ -1327,7 +1330,7 @@
             "title": "THE OBSERVATION NETWORK",
             "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
             "destination": "earth",
-            "at": 1793459353170,
+            "at": 1793460745334,
             "elapsed": 0
           }
         ],
@@ -1384,8 +1387,8 @@
     ],
     "outcome": {
       "id": "END-04",
-      "firstAt": 1793459353227,
-      "lastAt": 1793459353227
+      "firstAt": 1793460745364,
+      "lastAt": 1793460745364
     },
     "rates": "1=100"
   },
@@ -1538,8 +1541,8 @@
       },
       "deep": {
         "completed": true,
+        "checkpoint": "return",
         "rewards": [],
-        "version": 1,
         "targets": {
           "DS01": {
             "state": "DETECTED"
@@ -1560,8 +1563,8 @@
             "state": "UNKNOWN"
           }
         },
+        "version": 1,
         "selected": "return",
-        "checkpoint": "origin",
         "visited": [],
         "choices": [],
         "records": {},
@@ -1584,7 +1587,7 @@
             "title": "THE LAST SIGNAL",
             "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
             "destination": "earth",
-            "at": 1793459353300,
+            "at": 1793460745397,
             "elapsed": 0
           },
           {
@@ -1593,7 +1596,7 @@
             "title": "THE OBSERVATION NETWORK",
             "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
             "destination": "earth",
-            "at": 1793459353300,
+            "at": 1793460745397,
             "elapsed": 0
           }
         ],
@@ -1630,8 +1633,8 @@
     ],
     "outcome": {
       "id": "END-05",
-      "firstAt": 1793459353349,
-      "lastAt": 1793459353349
+      "firstAt": 1793460745418,
+      "lastAt": 1793460745418
     },
     "rates": "1=100"
   }

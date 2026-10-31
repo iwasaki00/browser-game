@@ -1,0 +1,19 @@
+[
+  {
+    "ending": "END-03",
+    "status": "PASS",
+    "route": [
+      "network",
+      "earth"
+    ],
+    "record": {
+      "key": "ending:END-03:first",
+      "id": "74a84714-617a-43fb-beed-4ef4792124c3",
+      "ending": "END-03",
+      "decision": "truth",
+      "duration": 33.916666666665385
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  }
+]

@@ -1,0 +1,284 @@
+[
+  {
+    "id": "END-01",
+    "decision": "home",
+    "ownedClues": [],
+    "deepRewards": [],
+    "deepTargets": {
+      "DS01": "DETECTED",
+      "DS02": "UNKNOWN",
+      "DS03": "UNKNOWN",
+      "DS04": "UNKNOWN",
+      "DS05": "UNKNOWN",
+      "DS06": "UNKNOWN"
+    },
+    "initialCheckpoint": "origin",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "earth",
+        "angleDeg": 144.02,
+        "speed": 220,
+        "time": 56.474999999997436,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 699.9851567370955,
+          "y": 8998.277086114036
+        },
+        "minClearance": 505.7399346325152,
+        "anomalyClearance": 505.7399346325152,
+        "distance": 12532.782573226488,
+        "ending": "END-01",
+        "steps": 6777
+      }
+    ],
+    "ending": {
+      "id": "END-01",
+      "firstAt": 1793460745027,
+      "lastAt": 1793460745027
+    }
+  },
+  {
+    "id": "END-02",
+    "decision": "rescue",
+    "ownedClues": [],
+    "deepRewards": [],
+    "deepTargets": {
+      "DS01": "DETECTED",
+      "DS02": "UNKNOWN",
+      "DS03": "UNKNOWN",
+      "DS04": "UNKNOWN",
+      "DS05": "UNKNOWN",
+      "DS06": "UNKNOWN"
+    },
+    "initialCheckpoint": "origin",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "rescue",
+        "angleDeg": 109.65,
+        "speed": 220,
+        "time": 13.0499999999999,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 9532.081233372226,
+          "y": 3905.285721956419
+        },
+        "minClearance": 2339.9767398083195,
+        "anomalyClearance": 4968.753570177919,
+        "distance": 2873.2281848676953,
+        "ending": null,
+        "steps": 1566
+      },
+      {
+        "from": "rescue",
+        "target": "earth",
+        "angleDeg": 151.91,
+        "speed": 220,
+        "time": 45.31666666666474,
+        "start": {
+          "x": 9500,
+          "y": 4200
+        },
+        "end": {
+          "x": 684.2713519017467,
+          "y": 9053.836226173944
+        },
+        "minClearance": 246.8792971787198,
+        "anomalyClearance": 439.69402927051647,
+        "distance": 10075.208147201738,
+        "ending": "END-02",
+        "steps": 5438
+      }
+    ],
+    "ending": {
+      "id": "END-02",
+      "firstAt": 1793460745160,
+      "lastAt": 1793460745160
+    }
+  },
+  {
+    "id": "END-03",
+    "decision": "truth",
+    "ownedClues": [
+      "CLUE-01",
+      "CLUE-02",
+      "CLUE-03",
+      "CLUE-04",
+      "CLUE-05",
+      "CLUE-06",
+      "CLUE-07",
+      "CLUE-08",
+      "CLUE-09"
+    ],
+    "deepRewards": [
+      "final-voyage-chart"
+    ],
+    "deepTargets": {
+      "DS01": "DETECTED",
+      "DS02": "INVESTIGATED",
+      "DS03": "INVESTIGATED",
+      "DS04": "UNKNOWN",
+      "DS05": "UNKNOWN",
+      "DS06": "INVESTIGATED"
+    },
+    "initialCheckpoint": "origin",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "network",
+        "angleDeg": 117,
+        "speed": 220,
+        "time": 26.499999999999137,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 7822.046336933048,
+          "y": 6402.460474535527
+        },
+        "minClearance": 1436.2297221973838,
+        "anomalyClearance": 2826.599930077982,
+        "distance": 5851.304803686017,
+        "ending": null,
+        "steps": 3180
+      },
+      {
+        "from": "network",
+        "target": "earth",
+        "angleDeg": 161.03,
+        "speed": 220,
+        "time": 33.916666666665385,
+        "start": {
+          "x": 7800,
+          "y": 6700
+        },
+        "end": {
+          "x": 618.1996920575162,
+          "y": 8901.67008995727
+        },
+        "minClearance": 465.0917436723829,
+        "anomalyClearance": 1543.0264870212984,
+        "distance": 7515.830368726415,
+        "ending": "END-03",
+        "steps": 4070
+      }
+    ],
+    "ending": {
+      "id": "END-03",
+      "firstAt": 1793460745270,
+      "lastAt": 1793460745270
+    }
+  },
+  {
+    "id": "END-04",
+    "decision": "other",
+    "ownedClues": [],
+    "deepRewards": [],
+    "deepTargets": {
+      "DS01": "DETECTED",
+      "DS02": "UNKNOWN",
+      "DS03": "UNKNOWN",
+      "DS04": "UNKNOWN",
+      "DS05": "UNKNOWN",
+      "DS06": "UNKNOWN"
+    },
+    "initialCheckpoint": "origin",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "network",
+        "angleDeg": 117,
+        "speed": 220,
+        "time": 26.499999999999137,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 7822.046336933048,
+          "y": 6402.460474535527
+        },
+        "minClearance": 1436.2297221973838,
+        "anomalyClearance": 2826.599930077982,
+        "distance": 5851.304803686017,
+        "ending": null,
+        "steps": 3180
+      },
+      {
+        "from": "network",
+        "target": "passage",
+        "angleDeg": -163.81,
+        "speed": 220,
+        "time": 14.141666666666504,
+        "start": {
+          "x": 7800,
+          "y": 6700
+        },
+        "end": {
+          "x": 4784.507949163227,
+          "y": 5853.464067636362
+        },
+        "minClearance": 84.25710468603567,
+        "anomalyClearance": 84.25710468603567,
+        "distance": 3133.6303561189125,
+        "ending": "END-04",
+        "steps": 1697
+      }
+    ],
+    "ending": {
+      "id": "END-04",
+      "firstAt": 1793460745364,
+      "lastAt": 1793460745364
+    }
+  },
+  {
+    "id": "END-05",
+    "decision": "continue",
+    "ownedClues": [],
+    "deepRewards": [],
+    "deepTargets": {
+      "DS01": "DETECTED",
+      "DS02": "UNKNOWN",
+      "DS03": "UNKNOWN",
+      "DS04": "UNKNOWN",
+      "DS05": "UNKNOWN",
+      "DS06": "UNKNOWN"
+    },
+    "initialCheckpoint": "origin",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "observatory",
+        "angleDeg": 175.43,
+        "speed": 220,
+        "time": 33.84999999999872,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 3097.0520471173377,
+          "y": 1775.89812973369
+        },
+        "minClearance": 471.22445130031707,
+        "anomalyClearance": 4307.706762651144,
+        "distance": 7425.657003506549,
+        "ending": "END-05",
+        "steps": 4062
+      }
+    ],
+    "ending": {
+      "id": "END-05",
+      "firstAt": 1793460745418,
+      "lastAt": 1793460745418
+    }
+  }
+]

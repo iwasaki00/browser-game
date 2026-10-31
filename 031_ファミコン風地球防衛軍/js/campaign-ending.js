@@ -4,7 +4,7 @@ export const ENDING_SCENES=Object.freeze([
   {id:'SIGNAL',title:'SIGNAL TERMINATED',text:'母艦の制御信号が、静寂へと変わる。',background:'silenceBackground'},
   {id:'EARTH',title:'INVASION HALTED',text:'市街地、地下、沿岸。地球上の侵略兵器が停止した。',background:'earthBackground'},
   {id:'ESCAPE',title:'ALL UNITS RETURN',text:'崩壊する母艦から、最後の部隊が離脱する。',background:'escapeBackground'},
-  {id:'MEMORIES',title:'THE SEVEN FRONTS',text:'8つの戦いは、ひとつの地球を守るためにあった。'},
+  {id:'MEMORIES',title:'THE SEVEN FRONTS',text:'7つの戦場を越え、最後の防衛へ。守るべき地球はひとつ。'},
   {id:'DEFENDED',title:'EARTH DEFENDED',text:'侵略の指揮生命体は消滅した。地球は守られた。',background:'earthBackground'},
   {id:'COMPLETE',title:'CAMPAIGN COMPLETE',text:'戦績と報酬を確認し、新たな兵科・装備で再び出撃できる。',background:'earthBackground'}]);
 export class CampaignEnding {
@@ -16,6 +16,9 @@ export class CampaignEnding {
 export function drawCampaignEnding(c,ending,pack,history=[],summary=''){
   const scene=ENDING_SCENES[ending.scene];c.save();c.fillStyle='#071320';c.fillRect(0,0,320,180);const image=pack?.[scene.background];if(image)c.drawImage(image,0,0,640,360,0,0,320,180);
   if(scene.id==='MEMORIES')for(let i=0;i<7;i++){const x=8+(i%4)*78,y=20+Math.floor(i/4)*53,resource=history[i];if(resource?.background)c.drawImage(resource.background,0,0,resource.background.width||640,resource.background.height||360,x,y,72,44);else{c.fillStyle='#233746';c.fillRect(x,y,72,44)}c.font='6px monospace';c.fillStyle='#e6ddbd';c.fillText('M0'+(i+1),x+2,y+8)}
+  if(scene.id==='SIGNAL'){c.strokeStyle='#b6cebc';c.lineWidth=1;c.beginPath();for(let i=0;i<=24;i++){const x=40+i*10,y=80+Math.round(Math.sin(i*1.5+ending.elapsed*6)*12*Math.max(0,1-ending.elapsed/4));if(i)c.lineTo(x,y);else c.moveTo(x,y)}c.stroke()}
+  if(scene.id==='EARTH')for(let i=0;i<3;i++){const a=history[i+2]?.actor;if(!a)continue;c.globalAlpha=.7;c.drawImage(a.image,0,0,a.w,a.h,55+i*78,115-a.dh*.5,a.dw*.5,a.dh*.5);c.globalAlpha=1}
+  if(scene.id==='ESCAPE'&&pack?.finalCollapse)for(let i=0;i<3;i++){const frame=(Math.floor(ending.elapsed*8)+i*2)%8;c.drawImage(pack.finalCollapse,frame*64,0,64,64,115+i*27,40+i%2*26,38,38)}
   // Bounded pixel stars, signal dashes and departing craft; no entities/timers.
   c.fillStyle='#dfdfbc';for(let i=0;i<12;i++)c.fillRect((i*43+Math.floor(ending.elapsed*3))%320,8+i%4*10,1,1);
   if(scene.id==='ESCAPE'){const x=240-(ending.elapsed%4)*28;c.fillStyle='#bbd3ce';c.fillRect(x,78,15,4);c.fillRect(x+4,75,7,9);c.fillStyle='#e2ba8b';c.fillRect(x+14,79,5,2)}

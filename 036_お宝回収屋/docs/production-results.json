@@ -1,0 +1,18 @@
+[
+  {
+    "channel": "chrome",
+    "build": "production",
+    "devFeatures": "absent",
+    "saveKey": "finders-v1",
+    "digAndReload": "PASS",
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "build": "production",
+    "devFeatures": "absent",
+    "saveKey": "finders-v1",
+    "digAndReload": "PASS",
+    "errors": []
+  }
+]

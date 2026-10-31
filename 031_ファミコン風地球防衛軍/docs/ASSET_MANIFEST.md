@@ -1,5 +1,25 @@
 # Asset Manifest
 
+## FINAL DEFENSE 01 / M08（1.0.0）
+
+生成：`py -3 tools/generate_assets.py --final-defense-only`。`tools/final_defense_assets.py`、固定シード10001008、Pillow、外部画像なし。専用 `assets/final-defense-01/` だけへ出力しM01〜M07のPNGを上書きしない。UNIFIED 01準拠、二値透過・nearest-neighbor・原画2倍。30 PNG／185セル相当（一覧画像を含む）、`catalog.json` に寸法・アンカー・SHA256を収録。
+
+| フォルダ／素材 | PNG数 | セルと用途 |
+| --- | ---: | --- |
+| backgrounds/deep, arsenal, network, source, final | 5 | 各640×360、M08の5エリア |
+| backgrounds/silence, earth, escape | 3 | 各640×360、エンディング |
+| sprites/overseer, biobreaker, coreguard | 3 | 論理32×28／48×42／36×34、各8コマ |
+| sprites/overmind1〜3 | 3 | 論理176×112、各8コマ。3形態の外形・弱点・損傷差 |
+| sprites/defensenode | 1 | 論理28×32、8コマ。制御装置・防御ノード |
+| far/（上記7種） | 7 | 同じ透明シルエット・寸法、縮小表示用に細部を整理 |
+| effects/finalShield, finalBeam, finalPulse, finalSpore, finalTransition, finalCollapse | 6 | 各512×64・8コマ、原画64×64セル |
+| tiles/final-defense | 1 | 256×64、原画32×32の16セル、床／天井／機械／生体／隔壁 |
+| contact-sheet | 1 | 検討用素材一覧。ゲームの画面証拠ではない |
+
+ランタイムは29素材を非同期読込し、画像ごとに失敗を分離して代替図形・既存描画へ戻す。透明画像の未読込でゲーム状態を止めない。原画アンカーはB-08上端−24、真核中心ワールド `(x,y+32)`、地上敵は足元を床へ一致。物理サイズ・銃口・攻撃判定は素材寸法から再計算しない。
+
+一時フォルダ2回生成のバイト一致・全寸法・アルファ・3形態差・近遠シルエット一致・出力先隔離をPythonテストで確認。[一覧](../assets/final-defense-01/contact-sheet.png)／[M08検証](../reports/final-defense/README.md)。最終1.2向けの全素材アート磨き込みとは区別する。
+
 ## MOTHERSHIP 01 / M07（0.9.0）
 
 `assets/mothership-01/catalog.json`：24 PNG／151セル、固定seed9009600。Python/Pillow・sourceScale2・nearest。既存PNGは上書きしない。
