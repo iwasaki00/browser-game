@@ -1,0 +1,339 @@
+{
+  "version": 1,
+  "currentSector": "homeward-09",
+  "cleared": [
+    "homeward-01",
+    "homeward-02",
+    "homeward-03",
+    "homeward-04",
+    "homeward-05",
+    "homeward-06",
+    "homeward-07",
+    "homeward-08",
+    "homeward-09"
+  ],
+  "openingSeen": true,
+  "active": true,
+  "eventsSeen": [
+    "homeward-09:arrival"
+  ],
+  "journal": {
+    "homeward-01": {
+      "importantFlightId": "old-first"
+    },
+    "homeward-09": {
+      "departure": "出航：選んだ目的地へ。",
+      "discovery": "帰還ゲートを通過。地球へつながる次の宙域を確認した。",
+      "discoveries": [
+        "漂流記録装置への寄港履歴",
+        "参考航路の表示を解放",
+        "帰還経路の短縮 −900",
+        "次の宙域向けの航行情報",
+        "未解明の識別列を回収・解析を継続",
+        "異常反応の調査点への到着履歴",
+        "次の宙域への通行情報"
+      ],
+      "arrival": "寄港：帰還ゲート",
+      "visited": [
+        "probe",
+        "rescue",
+        "planet",
+        "station",
+        "echo-signal",
+        "anomaly",
+        "gate"
+      ]
+    }
+  },
+  "extra": "KEEP",
+  "tutorial": {
+    "homeward-01": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-02": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-03": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-04": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-05": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-06": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-07": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-08": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-09": {
+      "status": "completed",
+      "step": 0
+    }
+  },
+  "choices": {},
+  "voyage": {
+    "checkpoint": "gate",
+    "selected": "gate",
+    "visited": [
+      "probe",
+      "rescue",
+      "planet",
+      "station",
+      "echo-signal",
+      "anomaly",
+      "gate"
+    ],
+    "discoveries": [
+      "漂流記録装置への寄港履歴",
+      "参考航路の表示を解放",
+      "帰還経路の短縮 −900",
+      "次の宙域向けの航行情報",
+      "未解明の識別列を回収・解析を継続",
+      "異常反応の調査点への到着履歴",
+      "次の宙域への通行情報"
+    ],
+    "rewards": [
+      "probe-visit",
+      "route-charts",
+      "navigation-tech",
+      "station-intel",
+      "echo-reception",
+      "anomaly-visit",
+      "next-region"
+    ],
+    "completed": true,
+    "elapsed": 50.40833333333369,
+    "planets": [
+      {
+        "id": "voyage-planet-1",
+        "x": 1100,
+        "y": 3400,
+        "type": "earth",
+        "size": "medium",
+        "radius": 38,
+        "mass": 5200,
+        "color": "#6fd3ff"
+      },
+      {
+        "id": "voyage-planet-2",
+        "x": 1900,
+        "y": 1500,
+        "type": "gas",
+        "size": "medium",
+        "radius": 48,
+        "mass": 8000,
+        "color": "#e9b677"
+      },
+      {
+        "id": "voyage-planet-3",
+        "x": 2700,
+        "y": 2350,
+        "type": "repulsor",
+        "size": "medium",
+        "radius": 28,
+        "mass": 3600,
+        "color": "#9880ff",
+        "gravityMultiplier": 1,
+        "gravityDirection": -1,
+        "collisionRadius": 28,
+        "hazards": [],
+        "effect": "repulsion",
+        "render": {
+          "style": "repulsor",
+          "glow": "#9b82ff"
+        }
+      }
+    ],
+    "records": {},
+    "launchPosition": {
+      "x": 2900,
+      "y": 860
+    }
+  },
+  "frontier": {
+    "version": 1,
+    "targets": {
+      "D01": {
+        "id": "D01",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 5.625399998789483,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 8.271313319984666,
+        "information": "回収した星図：別の信号位置と参考航路を解読"
+      },
+      "D02": {
+        "id": "D02",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 4.251801099996854,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 1.9457420268539185,
+        "information": "救難情報：漂流船の位置を特定。任意の救助航路を選択可能"
+      },
+      "D03": {
+        "id": "D03",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 4.950057457932481,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 7.728602591614442,
+        "information": "重力情報：紫の天体は反発。予測線の曲がりと、外側の調査点を確認"
+      },
+      "D04": {
+        "id": "D04",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "source": "dock",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 8.27500000000017,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 7.5333333333334975,
+        "information": "航行支援：安全な寄港地と、次の航行の参考方位を記録"
+      },
+      "D05": {
+        "id": "D05",
+        "state": "INVESTIGATED",
+        "tracking": 0.5051332476570027,
+        "source": "tracking",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 9.122540974822403,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 5.066666666666708,
+        "information": "探索記録：反応の追跡から、漂流記録装置の位置を推定"
+      }
+    },
+    "rewards": [
+      "probe-routes",
+      "rescue-option",
+      "gravity-notes",
+      "station-guidance",
+      "anomaly-clue"
+    ]
+  },
+  "echoes": {
+    "version": 1,
+    "clues": {
+      "CLUE-01": {
+        "id": "CLUE-01",
+        "at": 123456789,
+        "source": "D01",
+        "flightId": "first-CLUE-01"
+      },
+      "CLUE-02": {
+        "id": "CLUE-02",
+        "at": 123456789,
+        "source": "D03",
+        "flightId": "first-CLUE-02"
+      },
+      "CLUE-03": {
+        "id": "CLUE-03",
+        "at": 123456789,
+        "source": "D04",
+        "flightId": "first-CLUE-03"
+      },
+      "CLUE-04": {
+        "id": "CLUE-04",
+        "at": 123456789,
+        "flightId": "first-CLUE-04"
+      },
+      "CLUE-05": {
+        "id": "CLUE-05",
+        "at": 123456789,
+        "flightId": "first-CLUE-05"
+      }
+    },
+    "events": [
+      {
+        "id": "CLUE-01",
+        "message": "SIGNAL DETECTED · 古い通信断片を回収",
+        "destination": "probe",
+        "at": 123456789,
+        "elapsed": 8.27500000000017
+      },
+      {
+        "id": "CLUE-02",
+        "message": "DATA MATCH · 同じ間隔の信号を観測",
+        "destination": "planet",
+        "at": 123456789,
+        "elapsed": 7.7333333333335075
+      },
+      {
+        "id": "match-pattern",
+        "message": "DATA MATCH · 二つの場所に、同じ信号パターン",
+        "destination": "planet",
+        "at": 123456789,
+        "elapsed": 7.7333333333335075
+      },
+      {
+        "id": "CLUE-03",
+        "message": "ARCHIVE FOUND · 帰着しなかった調査船の記録",
+        "destination": "station",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      },
+      {
+        "id": "match-vessel",
+        "message": "DATA MATCH · 通信断片は、消えた調査船と関連する可能性",
+        "destination": "station",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      },
+      {
+        "id": "CLUE-04",
+        "message": "NEW DESTINATION · 救難信号の発信源を特定",
+        "destination": "echo-signal",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      },
+      {
+        "id": "CLUE-05",
+        "message": "UNKNOWN IDENTITY · 識別信号が一致。しかし、この記録は……",
+        "destination": "echo-signal",
+        "at": 123456789,
+        "elapsed": 2.949999999999992
+      }
+    ],
+    "choices": [
+      {
+        "choice": "follow",
+        "destination": "echo-signal",
+        "at": 1793290151924
+      },
+      {
+        "choice": "explore",
+        "destination": "anomaly",
+        "at": 1793290151952
+      }
+    ],
+    "records": {
+      "CLUE-01": "first-CLUE-01",
+      "CLUE-02": "first-CLUE-02",
+      "match-pattern": "first-match-pattern",
+      "CLUE-03": "first-CLUE-03",
+      "match-vessel": "first-match-vessel",
+      "CLUE-04": "first-CLUE-04",
+      "CLUE-05": "first-CLUE-05"
+    }
+  }
+}

@@ -33,7 +33,7 @@ export const M02=Object.freeze({id:'M02',world:{...WORLD,width:5600},bossX:4780,
 });
 export const NEST=Object.freeze({hp:250,interval:4,minBatch:2,maxBatch:4,ownedLimit:12,activationDistance:600,enemy:'worm',score:1500});
 export const ABYSS=Object.freeze({hp:2400,weakMultiplier:1.5,attackInterval:2.5,chargedInterval:1.8,summons:3,chargeSpeed:120,chargeDuration:1.1,weakCycle:4,weakOpen:2.6});
-export const isBoss=e=>e.type==='boss'||e.type==='queen'||e.type==='leviathan'||e.type==='fortress';
+export const isBoss=e=>e.type==='boss'||e.type==='queen'||e.type==='leviathan'||e.type==='fortress'||e.type==='reactor'||e.type==='neuralheart';
 export function createM02Geometry(){return M02.platforms.map(p=>({...p}))}
 export function ceilingAt(platforms,x){let bottom=8;for(const p of platforms)if(p.active!==false&&p.solid&&p.kind!=='metal'&&x>=p.x&&x<=p.x+p.w)bottom=Math.max(bottom,p.y+(p.h??8));return bottom}
 export function floorAt(platforms,x,fromY=0){let floor=WORLD.ground;for(const p of platforms)if(p.active!==false&&x>=p.x&&x<=p.x+p.w&&p.y>=fromY-.01)floor=Math.min(floor,p.y);return floor}

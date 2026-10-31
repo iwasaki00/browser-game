@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "currentSector": "homeward-09",
+  "cleared": [
+    "homeward-01",
+    "homeward-02",
+    "homeward-03",
+    "homeward-04",
+    "homeward-05",
+    "homeward-06",
+    "homeward-07",
+    "homeward-08",
+    "homeward-09"
+  ],
+  "openingSeen": true,
+  "active": true,
+  "eventsSeen": [
+    "homeward-09:enter",
+    "homeward-09:arrival"
+  ],
+  "oldExtra": {
+    "keep": true
+  },
+  "tutorial": {
+    "homeward-01": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-02": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-03": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-04": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-05": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-06": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-07": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-08": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-09": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": -55,
+      "speed": 200
+    }
+  },
+  "journal": {
+    "homeward-09": {
+      "flightToken": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471",
+      "departure": "出航：選んだ目的地へ。",
+      "discovery": "帰還ゲートを通過。地球へつながる次の宙域を確認した。",
+      "discoveries": [
+        "漂流記録装置への寄港履歴",
+        "次の宙域への通行情報"
+      ],
+      "arrival": "寄港：帰還ゲート",
+      "visited": [
+        "probe",
+        "gate"
+      ],
+      "flightId": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471",
+      "importantFlightId": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471",
+      "clearFlightId": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471"
+    }
+  },
+  "choices": {},
+  "frontier": {
+    "version": 1,
+    "targets": {
+      "D01": {
+        "id": "D01",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 1793287382897,
+        "detectedElapsed": 5.625399998789483,
+        "investigatedAt": 1793287383297,
+        "investigatedElapsed": 8.271313319984666,
+        "information": "回収した星図：別の信号位置と参考航路を解読",
+        "detectedFlightId": "8df3c345-ef1e-4698-8fbc-c73c4b4aef3c",
+        "investigatedFlightId": "8df3c345-ef1e-4698-8fbc-c73c4b4aef3c"
+      },
+      "D02": {
+        "id": "D02",
+        "state": "DETECTED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 1793287381521,
+        "detectedElapsed": 4.251801099996854,
+        "detectedFlightId": "8df3c345-ef1e-4698-8fbc-c73c4b4aef3c"
+      },
+      "D03": {
+        "id": "D03",
+        "state": "DETECTED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 1793287390017,
+        "detectedElapsed": 2.396726672759342,
+        "detectedFlightId": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471"
+      },
+      "D04": {
+        "id": "D04",
+        "state": "DETECTED",
+        "tracking": 0,
+        "source": "chart",
+        "firstDetectedAt": 1793287383297,
+        "detectedElapsed": 8.27500000000017,
+        "detectedFlightId": "8df3c345-ef1e-4698-8fbc-c73c4b4aef3c"
+      },
+      "D05": {
+        "id": "D05",
+        "state": "UNKNOWN",
+        "tracking": 0
+      }
+    },
+    "rewards": [
+      "probe-routes"
+    ]
+  },
+  "voyage": {
+    "checkpoint": "gate",
+    "selected": "gate",
+    "visited": [
+      "probe",
+      "gate"
+    ],
+    "discoveries": [
+      "漂流記録装置への寄港履歴",
+      "次の宙域への通行情報"
+    ],
+    "rewards": [
+      "probe-visit",
+      "next-region"
+    ],
+    "completed": true,
+    "elapsed": 21.23333333333341,
+    "planets": [
+      {
+        "id": "voyage-planet-1",
+        "x": 1100,
+        "y": 3400,
+        "type": "earth",
+        "size": "medium",
+        "radius": 38,
+        "mass": 5200,
+        "color": "#6fd3ff"
+      },
+      {
+        "id": "voyage-planet-2",
+        "x": 1900,
+        "y": 1500,
+        "type": "gas",
+        "size": "medium",
+        "radius": 48,
+        "mass": 8000,
+        "color": "#e9b677"
+      },
+      {
+        "id": "voyage-planet-3",
+        "x": 2700,
+        "y": 2350,
+        "type": "repulsor",
+        "size": "medium",
+        "radius": 28,
+        "mass": 3600,
+        "color": "#9880ff",
+        "gravityMultiplier": 1,
+        "gravityDirection": -1,
+        "collisionRadius": 28,
+        "hazards": [],
+        "effect": "repulsion",
+        "render": {
+          "style": "repulsor",
+          "glow": "#9b82ff"
+        }
+      }
+    ],
+    "records": {
+      "probe": "8df3c345-ef1e-4698-8fbc-c73c4b4aef3c",
+      "gate": "0e54b4b5-dbd1-42dc-b414-28ab3ab36471"
+    },
+    "launchPosition": {
+      "x": 2900,
+      "y": 860
+    }
+  }
+}

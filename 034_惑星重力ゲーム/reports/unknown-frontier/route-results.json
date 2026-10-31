@@ -1,0 +1,598 @@
+[
+  {
+    "route": "A",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "gate",
+        "angle": -59,
+        "speed": 220,
+        "elapsed": 20.324999999999488,
+        "changedAt": null,
+        "end": {
+          "x": 2894.8521578900413,
+          "y": 799.8674107084536
+        },
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 3.862742966112751
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 5.7988500587494425
+          },
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 11.300188148267988
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 18.74013277810926
+          }
+        ]
+      }
+    ],
+    "totalTime": 20.324999999999488,
+    "frontier": {
+      "version": 1,
+      "targets": {
+        "D01": {
+          "id": "D01",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 5.7988500587494425
+        },
+        "D02": {
+          "id": "D02",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 3.862742966112751
+        },
+        "D03": {
+          "id": "D03",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 11.300188148267988
+        },
+        "D04": {
+          "id": "D04",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 18.74013277810926
+        },
+        "D05": {
+          "id": "D05",
+          "state": "UNKNOWN",
+          "tracking": 0
+        }
+      },
+      "rewards": []
+    },
+    "status": "PASS"
+  },
+  {
+    "route": "B",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "probe",
+        "angle": -48,
+        "speed": 220,
+        "elapsed": 8.500000000000158,
+        "changedAt": 5.633333333333403,
+        "end": {
+          "x": 1430.5362312925174,
+          "y": 2991.352177328751
+        },
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 4.251801099996854
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 5.625399998789483
+          },
+          {
+            "id": "D01",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "elapsed": 8.271313319984666
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "chart",
+            "elapsed": 8.27500000000017
+          }
+        ]
+      },
+      {
+        "from": "probe",
+        "target": "gate",
+        "angle": -59,
+        "speed": 220,
+        "elapsed": 12.73333333333325,
+        "changedAt": null,
+        "end": {
+          "x": 2800.438480474395,
+          "y": 709.3543481735827
+        },
+        "events": [
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 2.396726672759342
+          }
+        ]
+      }
+    ],
+    "totalTime": 21.23333333333341,
+    "frontier": {
+      "version": 1,
+      "targets": {
+        "D01": {
+          "id": "D01",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 5.625399998789483,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 8.271313319984666,
+          "information": "回収した星図：別の信号位置と参考航路を解読"
+        },
+        "D02": {
+          "id": "D02",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 4.251801099996854
+        },
+        "D03": {
+          "id": "D03",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 2.396726672759342
+        },
+        "D04": {
+          "id": "D04",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "chart",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 8.27500000000017
+        },
+        "D05": {
+          "id": "D05",
+          "state": "UNKNOWN",
+          "tracking": 0
+        }
+      },
+      "rewards": [
+        "probe-routes"
+      ]
+    },
+    "status": "PASS"
+  },
+  {
+    "route": "C",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "rescue",
+        "angle": -65,
+        "speed": 220,
+        "elapsed": 6.100000000000093,
+        "changedAt": 3.799999999999989,
+        "end": {
+          "x": 872.4522368688597,
+          "y": 3190.9182091028556
+        },
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 3.7983122137905005
+          },
+          {
+            "id": "D02",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "elapsed": 5.811296898455634
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 5.864193039552304
+          }
+        ]
+      },
+      {
+        "from": "rescue",
+        "target": "gate",
+        "angle": -52,
+        "speed": 220,
+        "elapsed": 14.724999999999804,
+        "changedAt": null,
+        "end": {
+          "x": 2848.9453559597546,
+          "y": 785.9850180085102
+        },
+        "events": [
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 5.737323510223388
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 13.518148227503769
+          }
+        ]
+      }
+    ],
+    "totalTime": 20.824999999999896,
+    "frontier": {
+      "version": 1,
+      "targets": {
+        "D01": {
+          "id": "D01",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 5.864193039552304
+        },
+        "D02": {
+          "id": "D02",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 3.7983122137905005,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 5.811296898455634,
+          "information": "救難情報：漂流船の位置を特定。任意の救助航路を選択可能"
+        },
+        "D03": {
+          "id": "D03",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 5.737323510223388
+        },
+        "D04": {
+          "id": "D04",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 13.518148227503769
+        },
+        "D05": {
+          "id": "D05",
+          "state": "UNKNOWN",
+          "tracking": 0
+        }
+      },
+      "rewards": [
+        "rescue-option"
+      ]
+    },
+    "status": "PASS"
+  },
+  {
+    "route": "D",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "planet",
+        "angle": -32,
+        "speed": 220,
+        "elapsed": 14.499999999999817,
+        "changedAt": 10.525000000000043,
+        "end": {
+          "x": 2912.679037162241,
+          "y": 2716.8958104001044
+        },
+        "events": [
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 6.692464566208185
+          },
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 10.51853480400777
+          },
+          {
+            "id": "D03",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "elapsed": 13.03980751407056
+          },
+          {
+            "id": "D05",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 13.709194173410662
+          }
+        ]
+      },
+      {
+        "from": "planet",
+        "target": "station",
+        "angle": -77,
+        "speed": 220,
+        "elapsed": 7.5333333333334975,
+        "changedAt": 4.808333333333362,
+        "end": {
+          "x": 3401.953783311881,
+          "y": 1199.9809118320602
+        },
+        "events": [
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 4.806520590922124
+          },
+          {
+            "id": "D04",
+            "state": "INVESTIGATED",
+            "source": "dock",
+            "elapsed": 7.5333333333334975
+          }
+        ]
+      },
+      {
+        "from": "station",
+        "target": "gate",
+        "angle": -132,
+        "speed": 220,
+        "elapsed": 2.9583333333333255,
+        "changedAt": null,
+        "end": {
+          "x": 2963.5918434853515,
+          "y": 777.1756272545583
+        },
+        "events": []
+      }
+    ],
+    "totalTime": 24.99166666666664,
+    "frontier": {
+      "version": 1,
+      "targets": {
+        "D01": {
+          "id": "D01",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 6.692464566208185
+        },
+        "D02": {
+          "id": "D02",
+          "state": "UNKNOWN",
+          "tracking": 0
+        },
+        "D03": {
+          "id": "D03",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 10.51853480400777,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 13.03980751407056,
+          "information": "重力情報：紫の天体は反発。予測線の曲がりと、外側の調査点を確認"
+        },
+        "D04": {
+          "id": "D04",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "dock",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 4.806520590922124,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 7.5333333333334975,
+          "information": "航行支援：安全な寄港地と、次の航行の参考方位を記録"
+        },
+        "D05": {
+          "id": "D05",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 13.709194173410662
+        }
+      },
+      "rewards": [
+        "gravity-notes",
+        "station-guidance"
+      ]
+    },
+    "status": "PASS"
+  },
+  {
+    "route": "E",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "probe",
+        "angle": -48,
+        "speed": 220,
+        "elapsed": 8.500000000000158,
+        "changedAt": 5.633333333333403,
+        "end": {
+          "x": 1430.5362312925174,
+          "y": 2991.352177328751
+        },
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 4.251801099996854
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 5.625399998789483
+          },
+          {
+            "id": "D01",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "elapsed": 8.271313319984666
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "chart",
+            "elapsed": 8.27500000000017
+          }
+        ]
+      },
+      {
+        "from": "probe",
+        "target": "station",
+        "angle": -46,
+        "speed": 220,
+        "elapsed": 12.708333333333252,
+        "changedAt": null,
+        "end": {
+          "x": 3300.051055610298,
+          "y": 1096.8049232584697
+        },
+        "events": [
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "elapsed": 2.121381417721406
+          },
+          {
+            "id": "D03",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "elapsed": 4.418847525310772
+          },
+          {
+            "id": "D04",
+            "state": "INVESTIGATED",
+            "source": "dock",
+            "elapsed": 12.708333333333252
+          }
+        ]
+      },
+      {
+        "from": "station",
+        "target": "gate",
+        "angle": -132,
+        "speed": 220,
+        "elapsed": 2.9583333333333255,
+        "changedAt": null,
+        "end": {
+          "x": 2963.5918434853515,
+          "y": 777.1756272545583
+        },
+        "events": []
+      }
+    ],
+    "totalTime": 24.166666666666735,
+    "frontier": {
+      "version": 1,
+      "targets": {
+        "D01": {
+          "id": "D01",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 5.625399998789483,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 8.271313319984666,
+          "information": "回収した星図：別の信号位置と参考航路を解読"
+        },
+        "D02": {
+          "id": "D02",
+          "state": "DETECTED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 4.251801099996854
+        },
+        "D03": {
+          "id": "D03",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "proximity",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 2.121381417721406,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 4.418847525310772,
+          "information": "重力情報：紫の天体は反発。予測線の曲がりと、外側の調査点を確認"
+        },
+        "D04": {
+          "id": "D04",
+          "state": "INVESTIGATED",
+          "tracking": 0,
+          "source": "dock",
+          "firstDetectedAt": 123456789,
+          "detectedElapsed": 8.27500000000017,
+          "investigatedAt": 123456789,
+          "investigatedElapsed": 12.708333333333252,
+          "information": "航行支援：安全な寄港地と、次の航行の参考方位を記録"
+        },
+        "D05": {
+          "id": "D05",
+          "state": "UNKNOWN",
+          "tracking": 0
+        }
+      },
+      "rewards": [
+        "probe-routes",
+        "gravity-notes",
+        "station-guidance"
+      ]
+    },
+    "status": "PASS"
+  }
+]

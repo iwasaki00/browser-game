@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.4.1">
+  <link rel="stylesheet" href="styles.css?v=0.7.0">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.4.1</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.7.0</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -32,9 +32,16 @@
         <p class="blink">PRESS ENTER / TAP START</p>
       </div>
       <div id="screenMission" class="screen">
-        <p class="eyebrow">SELECT MISSION</p><h2>ミッション選択</h2>
+        <header class="command-header"><div><p class="eyebrow">CAMPAIGN COMMAND</p><h2>キャンペーン司令部</h2></div><label class="command-animation"><input id="campaignAnimation" type="checkbox" checked> プレビュー動画ON</label></header>
+        <nav class="command-tabs" role="tablist" aria-label="キャンペーン情報"><button id="campaignTab-missions" role="tab" aria-controls="campaignPanel-missions" aria-selected="true" data-action="campaign-tab" data-tab="missions">ミッション</button><button id="campaignTab-classes" role="tab" aria-controls="campaignPanel-classes" aria-selected="false" data-action="campaign-tab" data-tab="classes">兵科戦績</button><button id="campaignTab-weapons" role="tab" aria-controls="campaignPanel-weapons" aria-selected="false" data-action="campaign-tab" data-tab="weapons">武器コレクション</button></nav>
+        <div class="command-progress"><strong id="campaignProgress"></strong><progress id="campaignProgressBar" max="6" value="0" aria-label="キャンペーン進行率"></progress><span id="campaignNext"></span></div>
+        <section id="campaignPanel-missions" class="command-panel command-missions" role="tabpanel" aria-labelledby="campaignTab-missions">
         <div id="missionList" class="mission-list" aria-label="ミッション一覧"></div>
-        <button class="menu-button" data-action="back-title">戻る</button>
+          <article class="command-detail"><h3 id="campaignMissionTitle"></h3><div class="command-scene"><canvas id="campaignPreview" width="320" height="180" aria-label="戦場プレビュー"></canvas><div><p id="campaignMissionSetting"></p><p id="campaignMissionFeature"></p></div></div><p id="campaignMissionObjective"></p><p id="campaignMissionEnemies"></p><p id="campaignMissionRecord"></p></article>
+        </section>
+        <section id="campaignPanel-classes" class="command-panel" role="tabpanel" aria-labelledby="campaignTab-classes" hidden><p>正式出撃以降を集計。実働時間は前景のゲーム更新秒（ヒットストップ含む）。途中終了は敗北にしません。</p><div id="campaignClassList"></div></section>
+        <section id="campaignPanel-weapons" class="command-panel command-collection" role="tabpanel" aria-labelledby="campaignTab-weapons" hidden><div class="command-filter"><strong id="campaignWeaponProgress"></strong><label>検索<input id="campaignWeaponSearch" type="search" placeholder="ID・武器名" autocomplete="off"></label><label>カテゴリ<select id="campaignWeaponFilter"><option value="ALL">すべて</option><option value="rapid">連射・貫通</option><option value="blast">爆発</option><option value="energy">エネルギー</option><option value="flame">火炎</option><option value="special">特殊</option><option value="support">設置・支援</option></select></label></div><p>使用は発射・設置1操作。命中は実ダメージ適用回数（多段・直撃＋爆風を別計上）。撃破寄与は未対応。</p><div id="campaignWeaponList"></div></section>
+        <footer class="command-footer"><span id="campaignCoverage"></span><output id="campaignSaveStatus" role="status"></output><button class="menu-button" data-action="back-title">戻る</button><button id="campaignDeploy" class="menu-button menu-button--primary" data-action="select-mission" data-mission="M01">M01 出撃準備へ</button></footer>
       </div>
       <div id="screenEquip" class="screen">
         <p class="eyebrow">EQUIPMENT / FOUR CLASSES</p><h2>兵科・装備選択 <small>武器を2つ選択</small></h2>
@@ -91,7 +98,7 @@
         <div id="labContent" class="lab-content">
           <section id="labPanel-stage" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-stage">
             <fieldset class="lab-card"><legend>開始候補 <span>開始時に適用</span></legend><div class="lab-form-grid">
-              <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option><option>M03</option><option>M04</option></select></label>
+              <label>ミッション<select id="labStageMission"><option>M01</option><option>M02</option><option>M03</option><option>M04</option><option>M05</option><option>M06</option></select></label>
               <label>エリア<select id="labStageArea"></select></label>
               <label>M02 AREA03ルート<select id="labStageRoute"><option value="LOWER">下ルート</option><option value="UPPER">上ルート</option></select></label>
               <label>検証区分（無敵も連動）<select id="labValidation"><option value="A">A 地形到達性（攻撃なし）</option><option value="B">B 戦闘QA（無敵なし）</option><option value="C" selected>C 無敵QA</option><option value="D">D 通常プレイ条件</option></select></label>
@@ -99,7 +106,7 @@
             </div><output id="labStageStatus" role="status">候補を選び、下の「選択地点から開始」を押してください。</output></fieldset>
             <fieldset class="lab-card"><legend>ボス戦 <span>実行操作</span></legend><div class="lab-action-stack"><button data-action="lab-boss-1">M01 / B-01直接開始</button><button data-action="lab-boss-2">M02 / B-02直接開始</button>
               <label>B-03開始Phase（開始時に適用）<select id="labBossPhase"><option value="1">Phase 1 / HP100〜65%</option><option value="2">Phase 2 / HP65〜30%</option><option value="3">Phase 3 / HP30%以下</option></select></label>
-              <button data-action="lab-boss-3">B-03をこのPhaseから開始</button><label>B-04開始Phase（開始時に適用）<select id="labSkyPhase"><option value="1">Phase 1 / 外部砲台</option><option value="2">Phase 2 / シールド発生装置</option><option value="3">Phase 3 / コア露出</option></select></label><button data-action="lab-boss-4">B-04をこのPhaseから開始</button><details><summary>M04：初期武器・通常条件のQA</summary><p>設定だけ適用。無敵OFF・正式HP・A-01/S-02。STANDARDは次の開始時に適用。「B-04開始」か「選択地点から開始」で敵・タイマー等を初期化。途中QAは通常クリアではありません。</p><button data-action="lab-fortress-starter">M04 初期武器QAを設定</button><button data-action="lab-fortress-guardian">GUARDIAN 通常条件QAを設定</button></details></div>
+              <button data-action="lab-boss-3">B-03をこのPhaseから開始</button><label>B-04開始Phase（開始時に適用）<select id="labSkyPhase"><option value="1">Phase 1 / 外部砲台</option><option value="2">Phase 2 / シールド発生装置</option><option value="3">Phase 3 / コア露出</option></select></label><button data-action="lab-boss-4">B-04をこのPhaseから開始</button><details><summary>M06：神経中枢の開始状態</summary><label>B-06開始状態（開始時に適用）<select id="labLivingState"><option value="SHIELDED">シールド中 / HP100%</option><option value="LEFT">左ノード停止 / HP100%</option><option value="RIGHT">右ノード停止 / HP100%</option><option value="OPEN">両停止・コア露出 / HP100%</option><option value="HP65">HP65% / シールド中</option><option value="HP30">HP30% / シールド中</option></select></label><button class="lab-primary" data-action="lab-boss-6">B-06をこの状態から開始</button><p>選択だけでは再開始しません。実行でHP・ノード・敵・弾・設置・時間・カメラを初期化。通常セーブなし。</p></details><details><summary>M05：左右装置・動力炉の開始状態</summary><label>B-05開始状態（開始時に適用）<select id="labMobileState"><option value="FULL">両装置稼働・順序自由</option><option value="LEFT">左破壊済み・砲撃弱化</option><option value="RIGHT">右破壊済み・増援停止</option><option value="OPEN">両装置破壊済み・コア露出</option></select></label><button class="lab-primary" data-action="lab-boss-5">B-05をこの状態から開始</button><p>候補選択だけでは再開始しません。実行で装置・敵・弾・設置・時間・カメラを初期化。通常セーブなし。</p></details><details><summary>M04：初期武器・通常条件のQA</summary><p>設定だけ適用。無敵OFF・正式HP・A-01/S-02。STANDARDは次の開始時に適用。「B-04開始」か「選択地点から開始」で敵・タイマー等を初期化。途中QAは通常クリアではありません。</p><button data-action="lab-fortress-starter">M04 初期武器QAを設定</button><button data-action="lab-fortress-guardian">GUARDIAN 通常条件QAを設定</button></details></div>
               <p class="lab-hint">開始すると敵・弾・FX・設置物・時間・スコア・位置を初期化します。</p>
               <details><summary>HELP：QA区分・開始条件</summary><p>A〜Cは通常攻略Dの成功ではありません。B/Dの選択は無敵OFF、CはONへ即時連動します。Dは正式兵科・解放済み武器2枠・無敵OFFが必要。ボス直接開始はB/C/D。兵科・武器・LAB演出設定は維持、通常報酬なし。</p></details>
             </fieldset>
@@ -120,12 +127,12 @@
           </section>
           <section id="labPanel-enemies" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-enemies" hidden>
             <fieldset class="lab-card"><legend>生成候補 <span>生成時に適用</span></legend><div class="lab-form-grid">
-              <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option><option value="M03">M03 沿岸防衛戦</option><option value="M04">M04 天空要塞迎撃戦</option></select></label>
-              <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option><option value="shorecrab">E-07 ショアクラブ</option><option value="skyray">E-08 スカイレイ</option><option value="siegebeetle">E-09 シージビートル</option><option value="leviathan">B-03 リヴァイアサン（単体）</option><option value="interceptor">E-10 インターセプター</option><option value="shielddrone">E-11 シールドドローン</option><option value="heavygunner">E-12 ヘビーガンナー</option><option value="fortress">B-04 天空要塞（単体）</option></select></label>
+              <label>検証地形<select id="labTerrain"><option value="M01">M01 市街地</option><option value="M02">M02 地下施設</option><option value="M03">M03 沿岸防衛戦</option><option value="M04">M04 天空要塞迎撃戦</option><option value="M05">M05 巨大移動基地強襲戦</option><option value="M06">M06 巨大生物内部戦</option></select></label>
+              <label>敵種<select id="labEnemy"><option value="crawler">E-01 地上</option><option value="spider">E-02 天井</option><option value="needle">E-03 飛行</option><option value="beetle">E-04 中ボス（単体）</option><option value="boss">B-01 ボス（単体）</option><option value="worm">E-05 ワーム</option><option value="spitter">E-06 スピッター</option><option value="nest">H-01 ネスト（単体）</option><option value="queen">B-02 クイーン（単体）</option><option value="shorecrab">E-07 ショアクラブ</option><option value="skyray">E-08 スカイレイ</option><option value="siegebeetle">E-09 シージビートル</option><option value="leviathan">B-03 リヴァイアサン（単体）</option><option value="interceptor">E-10 インターセプター</option><option value="shielddrone">E-11 シールドドローン</option><option value="heavygunner">E-12 ヘビーガンナー</option><option value="fortress">B-04 天空要塞（単体）</option><option value="assaultroller">E-13 アサルトローラー</option><option value="repairdrone">E-14 リペアドローン</option><option value="sentrywalker">E-15 セントリーウォーカー</option><option value="reactor">B-05 動力炉（単体）</option><option value="pulseworm">E-16 パルスワーム</option><option value="sporefly">E-17 スポアフライ</option><option value="guardiancell">E-18 ガーディアンセル</option><option value="neuralheart">B-06 神経中枢（単体）</option></select></label>
               <label>個体数<select id="labCount"><option>1</option><option>10</option><option selected>30</option><option>50</option><option>100</option><option>200</option></select></label>
               <label>配置<select id="labPlacement"><option value="dense">密集</option><option value="spread">分散</option></select></label>
             </div></fieldset>
-            <fieldset class="lab-card"><legend>再配置・消去 <span>実行操作</span></legend><div class="lab-action-stack"><button class="lab-primary" data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-terrain-apply">地形だけ適用（LAB初期化）</button><button data-action="lab-clear">敵・弾・演出を全消去</button><details><summary>M03：海上侵攻・対空砲台の検証</summary><p>海上侵攻テストはM03へ再配置。砲台は現在のM03でのみON/OFF。</p><button data-action="lab-coast-invasion">M03 海上侵攻テスト（再配置）</button><button data-action="lab-coast-turrets">M03 対空砲台ON/OFF</button></details><details><summary>M04：移動足場・シールド・崩壊</summary><p>開始操作は位置・敵・攻撃・計測を初期化。通常セーブなし。</p><button data-action="lab-sky-platforms">AREA03 移動足場テスト</button><button data-action="lab-boss-4">選択Phaseで砲台・シールド検証</button><button data-action="lab-sky-core">コア露出から開始</button><button data-action="lab-sky-collapse">要塞崩壊プレビュー</button></details><button data-action="lab-boss-tab">本編ボスの直接開始へ →</button></div>
+            <fieldset class="lab-card"><legend>再配置・消去 <span>実行操作</span></legend><div class="lab-action-stack"><button class="lab-primary" data-action="lab-spawn">生成 / 同条件で再配置</button><button data-action="lab-terrain-apply">地形だけ適用（LAB初期化）</button><button data-action="lab-clear">敵・弾・演出を全消去</button><details><summary>M03：海上侵攻・対空砲台の検証</summary><p>海上侵攻テストはM03へ再配置。砲台は現在のM03でのみON/OFF。</p><button data-action="lab-coast-invasion">M03 海上侵攻テスト（再配置）</button><button data-action="lab-coast-turrets">M03 対空砲台ON/OFF</button></details><details><summary>M04：移動足場・シールド・崩壊</summary><p>開始操作は位置・敵・攻撃・計測を初期化。通常セーブなし。</p><button data-action="lab-sky-platforms">AREA03 移動足場テスト</button><button data-action="lab-boss-4">選択Phaseで砲台・シールド検証</button><button data-action="lab-sky-core">コア露出から開始</button><button data-action="lab-sky-collapse">要塞崩壊プレビュー</button></details><details><summary>M06：脈動・体液・神経ネットワーク</summary><p>エリア開始は戦闘状態を初期化。流れの変更は現在のM06へ即時反映、通常設定へ保存しません。</p><button data-action="lab-living-pulse">AREA02 脈動通路から開始</button><button data-action="lab-living-pulse-cycle">周期をOPENから再試験</button><button data-action="lab-living-flow">AREA03 体液区画から開始</button><label>体液流の力（px/s・±40）<input id="labLivingFlow" type="number" min="-40" max="40" step="4" value="24"></label><button data-action="lab-living-flow-apply">現在の体液流へ適用</button><button data-action="lab-living-flow-stop">現在の体液流を停止</button><button data-action="lab-living-neural">AREA04 神経ノードから開始</button><button data-action="lab-living-collapse">神経中枢崩壊プレビュー（NO SAVE）</button></details><details><summary>M05：走行基地・機関・足場</summary><p>指定エリアへ再配置します。走行速度は駆動装置を射撃破壊すると35%へ低下。地形・兵科の速度は不変。</p><button data-action="lab-mobile-deck">AREA02 砲塔・昇降足場</button><button data-action="lab-mobile-drive">AREA03 駆動装置・機械足場</button><button data-action="lab-mobile-collapse">動力炉崩壊プレビュー（NO SAVE）</button></details><button data-action="lab-boss-tab">本編ボスの直接開始へ →</button></div>
               <output id="labSpawnResult" role="status"></output><details><summary>HELP：初期化されるもの</summary><p>生成は位置・HP・時間・スコアを開始状態へ戻し、敵・弾・FX・設置・攻略計測を初期化。地形変更も「生成」か「適用」を押すまで保留。消去は敵・弾・FX・アイテム・設置物と攻略計測を消去。ネスト／クイーンは既存どおりM02へ移行、ボス・中ボス・ネストは単体です。</p></details>
             </fieldset>
           </section>
@@ -146,7 +153,7 @@
           <section id="labPanel-metrics" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-metrics" hidden>
             <fieldset class="lab-card"><legend>実機用30秒計測 <span>手動操作・NO SAVE</span></legend>
               <label>実機の環境<input id="mobileEnvironment" type="text" maxlength="120" placeholder="例：iPhone 13 / iOS版 / Safari" autocomplete="off"></label>
-              <label>計測条件<select id="mobileScenario"><option value="CURRENT">現在の戦闘を維持</option value="50">通常敵50体で開始（補充なし）</option><option value="100">通常敵100体で開始（補充なし）</option><option value="200">通常敵200体で開始（LAB限定・補充なし）</option></select></label>
+              <label>計測条件<select id="mobileScenario"><option value="CURRENT">現在の戦闘を維持</option><option value="50">通常敵50体で開始（補充なし）</option><option value="100">通常敵100体で開始（補充なし）</option><option value="200">通常敵200体で開始（LAB限定・補充なし）</option></select></label>
               <p class="lab-hint">兵科・武器・エリア・描画は他タブで設定。敵数指定時のみ、生成操作と同じく位置・HP・敵・弾・FX・時間を初期化します。選ぶだけでは変更しません。</p>
               <div class="lab-action-stack"><button class="lab-primary" data-action="mobile-start">30秒計測開始 → プレイ</button><button data-action="mobile-restart">再計測（新しい30秒）</button></div>
               <output id="mobileMeasureStatus" role="status" aria-live="polite">未計測</output>
@@ -206,6 +213,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.4.1"></script>
+  <script type="module" src="js/game.js?v=0.7.0"></script>
 </body>
 </html>

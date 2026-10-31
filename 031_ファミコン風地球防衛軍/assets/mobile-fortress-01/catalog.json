@@ -1,0 +1,758 @@
+{
+  "version": "0.5.0",
+  "style": "UNIFIED 01 / MOBILE FORTRESS 01",
+  "seed": 5008000,
+  "sourceScale": 2,
+  "sampling": "nearest",
+  "generator": "tools/mobile_fortress_assets.py",
+  "missions": [
+    "M05"
+  ],
+  "assets": [
+    {
+      "path": "backgrounds/wilderness.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "wilderness"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "6638e6cd2eadddf35f7e0c2fc98c99a509307f1f4493c673cfb31d9721334aa5"
+    },
+    {
+      "path": "backgrounds/deck.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "deck"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "ad3f9ff59f94958e7b7fe4c4047fb686b7e8a0fd12c6470aa5427f15ee045f05"
+    },
+    {
+      "path": "backgrounds/interior.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "interior"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "5124fc41d30349f527e1506f9d8cdf19eccf5d8f53faf03248ecd84e9fd63442"
+    },
+    {
+      "path": "backgrounds/control.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "control"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "9b598f871999d072ce1b4b6cda1ef9e13d0178102b963a7b8e49993e9a1c2ebd"
+    },
+    {
+      "path": "backgrounds/reactor.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "reactor"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "67e157115d6e4aaed8f3ff167fb72d1169add783548386a3903f78ebdc69278f"
+    },
+    {
+      "path": "backgrounds/distant-base.png",
+      "size": [
+        430,
+        164
+      ],
+      "cell": [
+        430,
+        164
+      ],
+      "logicalCell": [
+        215,
+        82
+      ],
+      "frames": 1,
+      "states": [
+        "distant-base"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "80753eeec92b8129a5b425214a47a2af1bd416ecce7644308257115d39bfba15"
+    },
+    {
+      "path": "tiles/mobile.png",
+      "size": [
+        256,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 16,
+      "states": [
+        "tile0",
+        "tile1",
+        "tile2",
+        "tile3",
+        "tile4",
+        "tile5",
+        "tile6",
+        "tile7",
+        "tile8",
+        "tile9",
+        "tile10",
+        "tile11",
+        "tile12",
+        "tile13",
+        "tile14",
+        "tile15"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "af4eed77a9518ad285cd968841899ad983ac3efb9bb079efc9c885a667fa1fbd"
+    },
+    {
+      "path": "sprites/assaultroller.png",
+      "size": [
+        576,
+        48
+      ],
+      "cell": [
+        72,
+        48
+      ],
+      "logicalCell": [
+        36,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "42328bf594c79baa896a9709b2e69b86534a337101b9c5ce7b32efde16b0e9d4"
+    },
+    {
+      "path": "far/assaultroller.png",
+      "size": [
+        576,
+        48
+      ],
+      "cell": [
+        72,
+        48
+      ],
+      "logicalCell": [
+        36,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "3bc2dfc74cb0eaa157308f144c8d81fd2082f5c2be9e7a118384bc86640c5763"
+    },
+    {
+      "path": "sprites/repairdrone.png",
+      "size": [
+        480,
+        44
+      ],
+      "cell": [
+        60,
+        44
+      ],
+      "logicalCell": [
+        30,
+        22
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 22
+      },
+      "sha256": "b6e4fc31ff02cef62bc3d1ccb653259a6b44d8bd5fd429575a2c40d98c2abd0d"
+    },
+    {
+      "path": "far/repairdrone.png",
+      "size": [
+        480,
+        44
+      ],
+      "cell": [
+        60,
+        44
+      ],
+      "logicalCell": [
+        30,
+        22
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 22
+      },
+      "sha256": "0a8fa131b7a5d5e35ed88f8efbde4ea28bbea42f2c816e273ec8db1b468a07ea"
+    },
+    {
+      "path": "sprites/sentrywalker.png",
+      "size": [
+        704,
+        76
+      ],
+      "cell": [
+        88,
+        76
+      ],
+      "logicalCell": [
+        44,
+        38
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 38
+      },
+      "sha256": "459260c255dbca9af159d20862b4ca53ab0d1f115d97dfd679434fa6f22be176"
+    },
+    {
+      "path": "far/sentrywalker.png",
+      "size": [
+        704,
+        76
+      ],
+      "cell": [
+        88,
+        76
+      ],
+      "logicalCell": [
+        44,
+        38
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 38
+      },
+      "sha256": "1204ab0aea61fc6bc1c9b83dd666fff9d7236bb40fae016719478f5e789b69ba"
+    },
+    {
+      "path": "sprites/reactor.png",
+      "size": [
+        2560,
+        192
+      ],
+      "cell": [
+        320,
+        192
+      ],
+      "logicalCell": [
+        160,
+        96
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -32,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "6205159f1906c5da87c9f6c5427f532170086a2d1718dd0d8b7083e745582864"
+    },
+    {
+      "path": "far/reactor.png",
+      "size": [
+        2560,
+        192
+      ],
+      "cell": [
+        320,
+        192
+      ],
+      "logicalCell": [
+        160,
+        96
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -32,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "1204202d41d05ebfa1ef2ac936330ca4f3e0cde006774e269338a5632abd75b4"
+    },
+    {
+      "path": "sprites/basedevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "cell": [
+        56,
+        64
+      ],
+      "logicalCell": [
+        28,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 32
+      },
+      "sha256": "e35545d0a4dc72454dde2cd9c779933960070ced6ed1c4cb74e7799f773d7eca"
+    },
+    {
+      "path": "far/basedevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "cell": [
+        56,
+        64
+      ],
+      "logicalCell": [
+        28,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 32
+      },
+      "sha256": "0147c3b5ca708191d69790432d43b2ddee86cf54038ae41b0d5a2802ff72e8d8"
+    },
+    {
+      "path": "effects/dust.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "dust:0",
+        "dust:1",
+        "dust:2",
+        "dust:3",
+        "dust:4",
+        "dust:5",
+        "dust:6",
+        "dust:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "ac952a0b13e0debab90a78e89a1da38241aabfabbb2a4233a03bde70ae1cc573"
+    },
+    {
+      "path": "effects/exhaust.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "exhaust:0",
+        "exhaust:1",
+        "exhaust:2",
+        "exhaust:3",
+        "exhaust:4",
+        "exhaust:5",
+        "exhaust:6",
+        "exhaust:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "d2c810724a28402095a24fd62f019053753ffad0cbbb5cad1b27d3394d96de3a"
+    },
+    {
+      "path": "effects/fire.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "fire:0",
+        "fire:1",
+        "fire:2",
+        "fire:3",
+        "fire:4",
+        "fire:5",
+        "fire:6",
+        "fire:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "3295fd577f755b4a05fa28f6f00b9ed12123d2a44faa5c10a7faa8b18f42267e"
+    },
+    {
+      "path": "effects/break.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "break:0",
+        "break:1",
+        "break:2",
+        "break:3",
+        "break:4",
+        "break:5",
+        "break:6",
+        "break:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "9abdac5ac08b2d8b4bed00e8909c0632ac60ff2b1e7b17f7a09e244eac3a64d5"
+    },
+    {
+      "path": "effects/heal.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "heal:0",
+        "heal:1",
+        "heal:2",
+        "heal:3",
+        "heal:4",
+        "heal:5",
+        "heal:6",
+        "heal:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "f0fe0efbe3659d3c675fac1f8047df344e97d6cf1643e90a68705c41a809cc62"
+    },
+    {
+      "path": "effects/warning.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "warning:0",
+        "warning:1",
+        "warning:2",
+        "warning:3",
+        "warning:4",
+        "warning:5",
+        "warning:6",
+        "warning:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "dec976929db942a2cf11afb05fcd645977e6cfb2b7c44ead6029481e852443ba"
+    },
+    {
+      "path": "contact-sheet.png",
+      "size": [
+        1280,
+        1000
+      ],
+      "cell": [
+        1280,
+        1000
+      ],
+      "logicalCell": [
+        1280,
+        1000
+      ],
+      "frames": 1,
+      "states": [
+        "preview"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "80e8fc801db99c3a69c28763573dfc85647de6228a1ee304962a500d1ec49719"
+    }
+  ],
+  "notes": [
+    "Only assets/mobile-fortress-01 is written.",
+    "Body hitboxes and projectile origins are not imported or changed.",
+    "Reactor visual center is source (160,128), world(e.x,e.y+32); draw top offset -32.",
+    "Travel belongs to backdrop scrolling, never to actor or platform collision coordinates."
+  ]
+}

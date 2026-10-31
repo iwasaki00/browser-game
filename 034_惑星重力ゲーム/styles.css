@@ -305,6 +305,12 @@ input[type='range'] { height:30px; }
 .destination-control { position:absolute; left:8px; top:5px; z-index:2; max-width:calc(100% - 100px); min-height:32px; padding:4px 8px; border:1px solid #639eaa; border-radius:7px; background:#0b2539ed; color:#c8fff0; font-size:10px; touch-action:manipulation; }
 .destination-control[hidden] { display:none; }
 .open-voyage .homeward-coach { top:44px; }
+.frontier-notice { position:absolute; top:44px; left:8px; right:86px; z-index:3; padding:8px; max-height:calc(100% - 150px); overflow-y:auto; overscroll-behavior:contain; background:#092536f5; border:1px solid #94ddd2; border-radius:8px; color:#e1ffef; touch-action:pan-y; }
+.frontier-notice[hidden] { display:none; }
+.frontier-notice p { font-size:11px; line-height:1.6; margin:0 0 6px; overflow-wrap:anywhere; }
+.frontier-notice>div { display:flex; gap:5px; }
+.frontier-notice button { min-width:44px; min-height:44px; flex:1; padding:4px; border:1px solid #699aaa; border-radius:6px; background:#154553; color:#e5fff9; font-size:10px; touch-action:manipulation; }
+.frontier-active .homeward-coach { display:none; }
 #voyageMap { display:block; width:100%; height:230px; background:#071422; border:1px solid #365567; border-radius:8px; }
 #voyageDestinations { display:grid; gap:8px; margin-top:10px; }
 #voyageDestinations button { text-align:left; white-space:normal; line-height:1.6; }
@@ -350,3 +356,9 @@ input[type='range'] { height:30px; }
 .replay-encounter-log { color:#ffdfa4; font-size:10px; }
 #encounterSelectionBar { pointer-events:none; }
 #encounterSelectionBar button { pointer-events:auto; }
+#echoesStory { margin: 12px 0; padding: 10px; border: 1px solid #417d90; border-radius: 10px; }
+#echoesStory button { display: block; width: 100%; min-height: 44px; margin: 7px 0; white-space: normal; }
+#echoesStory p { font-size: 14px; line-height: 1.5; }
+.echo-clue-chart { color: #a9f3df; }
+.frontier-notice.story-communication p { font-size: 14px; line-height: 1.5; }
+.frontier-notice.story-communication button { font-size: 12px; }

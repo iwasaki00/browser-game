@@ -1,3 +1,4 @@
+import {drawImpossible} from './impossible-signal.js';
 import {GalleryStore,galleryErrorMessage} from './gallery-store.js';
 import {FlightReplay,replaySnapshot} from './flight-replay.js';
 import {drawEncounters} from './encounter-render.js';
@@ -16,6 +17,7 @@ export function drawReplay(canvas,record,time,full=false,view=null){
   ctx.globalAlpha=star.alpha;ctx.fillStyle=star.color;ctx.beginPath();ctx.arc(star.x,star.y,star.radius/scale,0,Math.PI*2);ctx.fill();
  }
  ctx.globalAlpha=1;
+ if(record.impossibleDisplay&&time>=record.impossibleDisplay.visibleFrom)drawImpossible(ctx,{clues:{'CLUE-08':true}},time*1000,scale);
  const goal=record.goal;ctx.strokeStyle='#70f6b3';ctx.lineWidth=camera?1.5/scale:2;ctx.beginPath();ctx.arc(goal.x,goal.y,camera?Math.max(goal.radius,5/scale):goal.radius,0,Math.PI*2);ctx.stroke();
  for(const d of record.destinations??[]){if(d.id===goal.id)continue;ctx.strokeStyle=d.color;ctx.lineWidth=camera?1/scale:2;ctx.beginPath();ctx.arc(d.x,d.y,Math.max(d.radius,5/scale),0,Math.PI*2);ctx.stroke();}
  if(camera){const first=record.frames[0];ctx.fillStyle='#ffce8b';ctx.beginPath();ctx.arc(first[1],first[2],3/scale,0,Math.PI*2);ctx.fill();}
@@ -60,7 +62,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
   $('#replayResult').textContent=replay.time>=record.duration&&replay.phase!=='intro'?(record.result==='clear'?'CLEAR':'FAIL'):'';
   $('#replayPosition').value=String(replay.time);$('#replayCamera').value=replay.mode;
   $('#replayPhase').textContent=replay.phase==='intro'?'出航準備':replay.phase==='outro'?'航行終了':replay.mode.toUpperCase();
-  const event=replay.snapshot.frame.encounterEvents?.at(-1);$('#replayEncounterLog').textContent=event?(event.type==='station'?'発見：宇宙ステーションを記録':'重力異常の反応を観測'):'';
+  const event=replay.snapshot.frame.encounterEvents?.at(-1),discovery=[...(record.frontierEvents??[]),...(record.storyEvents??[])].filter(e=>e.elapsed<=replay.time).sort((a,b)=>a.elapsed-b.elapsed).at(-1);$('#replayEncounterLog').textContent=discovery?.message??(event?(event.type==='station'?'発見：宇宙ステーションを記録':'重力異常の反応を観測'):'');
  }
  function tick(now){
   if(!dialog.open||!replay){raf=null;return;}

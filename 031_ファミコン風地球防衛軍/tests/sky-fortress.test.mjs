@@ -10,9 +10,9 @@ const lab=()=>{const r=runtime(seed(),{debug:true,recordDraw:false});r.click('te
 const start=(r,area=0,mode='C',id='RANGER')=>{r.change('labPreset',id);r.change('labStageMission','M04');r.change('labStageArea',String(area));r.change('labValidation',mode);r.click('lab-stage-start')};
 const route="const p=game.player;input.right=true;input.left=false;const obstacle=game.platforms.some(b=>!['roof','arena','recovery'].includes(b.kind)&&p.x+30>=b.x&&p.x-7<b.x+b.w);const step=game.platforms.some(b=>b.kind==='roof'&&b.x>2900&&p.x+30>=b.x&&p.x<b.x&&p.y+32>b.y);input.jump=p.onGround&&(obstacle||step);input.up=p.classId==='WING'&&(obstacle||step);input.hover=false;input.special=false;";
 
-test('legacy M03 clear unlocks M04; M05 unavailable; death/retry retains progression',()=>{
+test('legacy M03 clear unlocks M04; M07 unavailable; death/retry retains progression',()=>{
   const old=sanitizeSave({version:1,cleared:['M01','M02','M03'],unlocked:['R-04'],equipped:['A-01','R-04']});
-  assert.ok(canPlayMission('M04',old));assert.equal(missionStatus(MISSIONS[4],old),'COMING SOON');assert.equal(canPlayMission('M05',old),false);
+  assert.ok(canPlayMission('M04',old));assert.equal(missionStatus(MISSIONS[6],old),'COMING SOON');assert.equal(canPlayMission('M05',old),false);
   const r=runtime(old),saved=r.storage.get(SAVE_KEY);r.run("startMission('M04');game.player.hp=0;update(1/60)");r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M04');assert.equal(r.storage.get(SAVE_KEY),saved);
 });
 for(const id of Object.keys(PLAYER_CLASSES))test('M04 '+id+': real movement reaches all areas without warp',t=>{
@@ -67,7 +67,7 @@ test('new art dimensions/fallback, five tabs, read-only rendering',async()=>{
   for(const [k,[p,w,h]] of Object.entries(SKY_FILES))assert.deepEqual(catalog.assets.find(a=>a.path===p)?.size,[w,h],k);
   assert.ok(Object.values(await loadSkyArt(async()=>{throw Error('missing')})).every(v=>v===null));
   const r=runtime(seed());r.run("assetsReady=true;Object.keys(imageFiles).forEach(k=>images[k]='old:'+k);startMission('M04');const s=JSON.stringify(game);draw()");assert.equal(r.run('JSON.stringify(game)'),r.run('s'));assert.ok(r.drawCalls.every(c=>c.slice(1).every(v=>typeof v!=='number'||Number.isFinite(v))));
-  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.equal((html.match(/role="tab"/g)||[]).length,5);assert.match(html,/labSkyPhase/);assert.match(html,/lab-sky-platforms/);
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.equal((html.match(/id="labTab-/g)||[]).length,5);assert.match(html,/labSkyPhase/);assert.match(html,/lab-sky-platforms/);
 });
 
 for(const id of Object.keys(PLAYER_CLASSES))test(id+': C QA from mission start, actual starter fire defeats all B04 phases without warp',t=>{
@@ -83,7 +83,7 @@ test('normal engine: no-warp start -> actual A01 combat -> all boss phases -> sa
   for(let batch=0;batch<300&&r.run('state')!=='result';batch++){
     r.run("for(let n=0;n<60&&state==='play';n++){"+route+"visited.add(game.area);const boss=game.enemies.find(e=>e.type==='fortress'&&!e.dead);const target=boss?(boss.skyPhase===3?boss:nearestEnemy(game.sky.parts.filter(e=>!e.dead&&skyTargetOpen(game,e)),p.x,p.y)):nearestEnemy(game.enemies,p.x,p.y,280);if(boss&&target){input.right=target.x-p.x>75;input.left=target.x-p.x<65;input.jump=false;input.up=false}const point=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=point.x-p.x-18,dy=point.y-p.y-13,len=Math.hypot(dx,dy)||1;input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;update(1/60)}");r.flush();r.flush();
   }
-  assert.equal(r.run('state'),'result');assert.deepEqual(r.json('[...visited]'),[0,1,2,3,4]);const saved=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(saved.clearedMissions.includes('M04'));assert.ok(saved.unlocked.length>2);assert.ok(saved.missionStats.M04.bestTime>0);assert.equal(canPlayMission('M05',saved),false);t.diagnostic('normal engine + immunity aid '+r.run('game.time').toFixed(2)+'s; not human normal clear');
+  assert.equal(r.run('state'),'result');assert.deepEqual(r.json('[...visited]'),[0,1,2,3,4]);const saved=JSON.parse(r.storage.get(SAVE_KEY));assert.ok(saved.clearedMissions.includes('M04'));assert.ok(saved.unlocked.length>2);assert.ok(saved.missionStats.M04.bestTime>0);assert.equal(canPlayMission('M05',saved),true);t.diagnostic('normal engine + immunity aid '+r.run('game.time').toFixed(2)+'s; not human normal clear');
 });
 test('all20 weapons execute against M04 geometry and devices; 200 enemies plus devices stay separately counted',()=>{
   const r=lab();r.click('lab-boss-4');r.run("const boss=game.enemies[0]");

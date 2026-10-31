@@ -20,7 +20,7 @@ test("clear, game over, retry, selection and reload keep progression; M02 opens,
   const r=runtime();r.run("startMission();game.time=100;completeMission()");r.flush();assert.equal(r.run("state"),"result");
   assert.deepEqual(r.json("save.unlockedMissions"),["M01","M02"]);
   r.click("mission-select");assert.equal(r.run("state"),"mission");
-  const list=r.get("missionList").children;assert.equal(list[0].dataset.status,"CLEAR");assert.equal(list[1].dataset.status,"OPEN");assert.equal(list[1].disabled,false);assert.equal(list[2].dataset.status,"LOCKED");assert.equal(list[3].dataset.status,"COMING SOON");assert.equal(r.run('startMission("M04")'),false);
+  const list=r.get("missionList").children;assert.equal(list[0].dataset.status,"CLEAR");assert.equal(list[1].dataset.status,"OPEN");assert.doesNotMatch(list[1].innerHTML,/class="command-deploy"[^>]*disabled/);assert.equal(list[2].dataset.status,"LOCKED");assert.equal(list[3].dataset.status,"LOCKED");assert.equal(list[6].dataset.status,"COMING SOON");assert.equal(r.run('startMission("M04")'),false);
   r.click("select-mission","M03");assert.equal(r.run("state"),"mission");assert.equal(r.run('startMission("M03")'),false);assert.equal(r.run("game"),null);
   r.click("select-mission","M01");r.click("deploy");r.run("game.player.hp=0;update(1/60)");r.flush();assert.equal(r.run("state"),"gameover");
   r.click("retry");assert.equal(r.run("state"),"play");assert.deepEqual(r.json("save.unlockedMissions"),["M01","M02"]);

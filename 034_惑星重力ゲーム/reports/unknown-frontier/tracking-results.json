@@ -1,0 +1,144 @@
+{
+  "state": {
+    "version": 1,
+    "targets": {
+      "D01": {
+        "id": "D01",
+        "state": "DETECTED",
+        "tracking": 0,
+        "source": "chart",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 9.258333333333448
+      },
+      "D02": {
+        "id": "D02",
+        "state": "UNKNOWN",
+        "tracking": 0
+      },
+      "D03": {
+        "id": "D03",
+        "state": "DETECTED",
+        "tracking": 0,
+        "source": "proximity",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 1.62863706287405
+      },
+      "D04": {
+        "id": "D04",
+        "state": "INVESTIGATED",
+        "tracking": 0,
+        "legacy": true,
+        "information": "航行支援：安全な寄港地と、次の航行の参考方位を記録"
+      },
+      "D05": {
+        "id": "D05",
+        "state": "INVESTIGATED",
+        "tracking": 0.5013829031249285,
+        "source": "tracking",
+        "firstDetectedAt": 123456789,
+        "detectedElapsed": 5.729463017068103,
+        "investigatedAt": 123456789,
+        "investigatedElapsed": 9.258333333333448,
+        "information": "探索記録：反応の追跡から、漂流記録装置の位置を推定"
+      }
+    },
+    "rewards": [
+      "station-guidance",
+      "anomaly-clue"
+    ]
+  },
+  "legs": [
+    {
+      "from": "station",
+      "target": "anomaly",
+      "course": [
+        93,
+        220
+      ],
+      "elapsed": 10.016666666666739,
+      "end": {
+        "x": 3289.6670342149637,
+        "y": 3451.079351822719
+      },
+      "events": [
+        {
+          "id": "D03",
+          "state": "DETECTED",
+          "source": "proximity",
+          "at": 123456789,
+          "elapsed": 1.62863706287405,
+          "message": "UNKNOWN SIGNAL：反応 D03 を検出"
+        },
+        {
+          "id": "D05",
+          "state": "DETECTED",
+          "source": "proximity",
+          "at": 123456789,
+          "elapsed": 5.729463017068103,
+          "message": "UNKNOWN SIGNAL：反応 D05 を検出"
+        },
+        {
+          "id": "D05",
+          "state": "INVESTIGATED",
+          "source": "tracking",
+          "at": 123456789,
+          "elapsed": 9.258333333333448,
+          "message": "追跡した反応から新しい調査地点を発見"
+        },
+        {
+          "id": "D01",
+          "state": "DETECTED",
+          "source": "chart",
+          "at": 123456789,
+          "elapsed": 9.258333333333448,
+          "message": "新しい調査地点を開示"
+        }
+      ]
+    },
+    {
+      "from": "anomaly",
+      "target": "probe",
+      "course": [
+        -160,
+        220
+      ],
+      "elapsed": 8.3583333333335,
+      "end": {
+        "x": 1560.0584509953349,
+        "y": 3035.9580653545345
+      },
+      "events": [
+        {
+          "id": "D02",
+          "state": "DETECTED",
+          "source": "proximity",
+          "at": 123456789,
+          "elapsed": 8.171033272304951,
+          "message": "UNKNOWN SIGNAL：反応 D02 を検出"
+        },
+        {
+          "id": "D01",
+          "state": "INVESTIGATED",
+          "source": "proximity",
+          "at": 123456789,
+          "elapsed": 8.21518765300068,
+          "message": "漂流探査機の記録を回収"
+        }
+      ]
+    },
+    {
+      "from": "probe",
+      "target": "gate",
+      "course": [
+        -59,
+        220
+      ],
+      "elapsed": 12.73333333333325,
+      "end": {
+        "x": 2800.438480474395,
+        "y": 709.3543481735827
+      },
+      "events": []
+    }
+  ]
+}

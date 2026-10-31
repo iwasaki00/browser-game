@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "currentSector": "homeward-09",
+  "cleared": [
+    "homeward-01",
+    "homeward-02",
+    "homeward-03",
+    "homeward-04",
+    "homeward-05",
+    "homeward-06",
+    "homeward-07",
+    "homeward-08"
+  ],
+  "openingSeen": true,
+  "active": true,
+  "eventsSeen": [
+    "homeward-09:enter"
+  ],
+  "frontier": {
+    "version": 1,
+    "targets": {
+      "D01": {
+        "id": "D01",
+        "state": "INVESTIGATED",
+        "investigatedFlightId": "legacy-important",
+        "tracking": 0
+      },
+      "D02": {
+        "id": "D02",
+        "state": "UNKNOWN",
+        "tracking": 0
+      },
+      "D03": {
+        "id": "D03",
+        "state": "INVESTIGATED",
+        "investigatedFlightId": "legacy-important",
+        "tracking": 0
+      },
+      "D04": {
+        "id": "D04",
+        "state": "INVESTIGATED",
+        "investigatedFlightId": "legacy-important",
+        "tracking": 0
+      },
+      "D05": {
+        "id": "D05",
+        "state": "DETECTED",
+        "tracking": 0
+      }
+    },
+    "rewards": []
+  },
+  "voyage": {
+    "checkpoint": "echo-signal",
+    "selected": "echo-signal",
+    "visited": [
+      "station",
+      "echo-signal"
+    ],
+    "elapsed": 2.949999999999992,
+    "discoveries": [
+      "未解明の識別列を回収・解析を継続"
+    ],
+    "rewards": [
+      "echo-reception"
+    ],
+    "completed": false,
+    "planets": [
+      {
+        "id": "voyage-planet-1",
+        "x": 1100,
+        "y": 3400,
+        "type": "earth",
+        "size": "medium",
+        "radius": 38,
+        "mass": 5200,
+        "color": "#6fd3ff"
+      },
+      {
+        "id": "voyage-planet-2",
+        "x": 1900,
+        "y": 1500,
+        "type": "gas",
+        "size": "medium",
+        "radius": 48,
+        "mass": 8000,
+        "color": "#e9b677"
+      },
+      {
+        "id": "voyage-planet-3",
+        "x": 2700,
+        "y": 2350,
+        "type": "repulsor",
+        "size": "medium",
+        "radius": 28,
+        "mass": 3600,
+        "color": "#9880ff",
+        "gravityMultiplier": 1,
+        "gravityDirection": -1,
+        "collisionRadius": 28,
+        "hazards": [],
+        "effect": "repulsion",
+        "render": {
+          "style": "repulsor",
+          "glow": "#9b82ff"
+        }
+      }
+    ],
+    "records": {
+      "echo-signal": "6244b155-10ad-489b-a875-e60ef385e1be"
+    },
+    "launchPosition": {
+      "x": 3300,
+      "y": 2160
+    }
+  },
+  "journal": {
+    "homeward-01": {
+      "importantFlightId": "legacy-important"
+    },
+    "homeward-09": {
+      "flightToken": "6244b155-10ad-489b-a875-e60ef385e1be",
+      "departure": "出航：選んだ目的地へ。",
+      "discovery": "通信記録を受信。識別列の一部が私たちの船と一致する。だが、この記録は出航より古い。発信者も船の所在も、まだ分からない。",
+      "discoveries": [
+        "未解明の識別列を回収・解析を継続"
+      ],
+      "arrival": "寄港：救難信号の発信源",
+      "visited": [
+        "station",
+        "echo-signal"
+      ],
+      "flightId": "6244b155-10ad-489b-a875-e60ef385e1be"
+    }
+  },
+  "extra": "KEEP",
+  "tutorial": {
+    "homeward-01": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-02": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-03": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-04": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-05": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-06": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-07": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-08": {
+      "status": "completed",
+      "step": 0
+    },
+    "homeward-09": {
+      "status": "skipped",
+      "step": 0,
+      "angleDeg": -132,
+      "speed": 200
+    }
+  },
+  "choices": {},
+  "echoes": {
+    "version": 1,
+    "clues": {
+      "CLUE-01": {
+        "id": "CLUE-01",
+        "at": null,
+        "source": "D01",
+        "flightId": "legacy-important"
+      },
+      "CLUE-02": {
+        "id": "CLUE-02",
+        "at": null,
+        "source": "D03",
+        "flightId": "legacy-important"
+      },
+      "CLUE-03": {
+        "id": "CLUE-03",
+        "at": null,
+        "source": "D04",
+        "flightId": "legacy-important"
+      },
+      "CLUE-04": {
+        "id": "CLUE-04",
+        "at": null
+      },
+      "CLUE-05": {
+        "id": "CLUE-05",
+        "at": 1793290434826,
+        "flightId": "6244b155-10ad-489b-a875-e60ef385e1be"
+      }
+    },
+    "events": [
+      {
+        "id": "CLUE-01",
+        "message": "SIGNAL DETECTED · 古い通信断片を回収",
+        "destination": "probe",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "CLUE-02",
+        "message": "DATA MATCH · 同じ間隔の信号を観測",
+        "destination": "planet",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "CLUE-03",
+        "message": "ARCHIVE FOUND · 帰着しなかった調査船の記録",
+        "destination": "station",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "match-pattern",
+        "message": "DATA MATCH · 二つの場所に、同じ信号パターン",
+        "destination": "planet",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "match-vessel",
+        "message": "DATA MATCH · 通信断片は、消えた調査船と関連する可能性",
+        "destination": "station",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "CLUE-04",
+        "message": "NEW DESTINATION · 救難信号の発信源を特定",
+        "destination": "echo-signal",
+        "at": null,
+        "elapsed": 0
+      },
+      {
+        "id": "CLUE-05",
+        "message": "UNKNOWN IDENTITY · 識別信号が一致。しかし、この記録は……",
+        "destination": "echo-signal",
+        "at": 1793290434826,
+        "elapsed": 2.949999999999992
+      }
+    ],
+    "choices": [
+      {
+        "choice": "return",
+        "destination": "gate",
+        "at": 1793290432522
+      },
+      {
+        "choice": "explore",
+        "destination": "anomaly",
+        "at": 1793290432615
+      },
+      {
+        "choice": "follow",
+        "destination": "echo-signal",
+        "at": 1793290432685
+      },
+      {
+        "choice": "return",
+        "destination": "gate",
+        "at": 1793290434635
+      },
+      {
+        "choice": "follow",
+        "destination": "echo-signal",
+        "at": 1793290434705
+      }
+    ],
+    "records": {
+      "CLUE-05": "6244b155-10ad-489b-a875-e60ef385e1be"
+    }
+  }
+}

@@ -1,4 +1,35 @@
 # Asset Manifest
+
+## LIVING COLOSSUS 01 / M06（0.6.0）
+
+`assets/living-colossus-01/catalog.json`に26 PNG／174セルの寸法・アンカー・SHA256。固定seed6008400、Python/Pillow、sourceScale2、nearest、旧PNGは上書きしない。
+
+| 分類 | PNG数 | 内容 |
+| --- | ---: | --- |
+| 背景 | 5 | 侵入口・脈動・体液・神経・中枢、各640×360 |
+| 地形 | 1 | living.png 256×64、32×32セル16種（論理16px） |
+| 敵・設備 | 12 | E-16 36×24、E-17 30×24、E-18 42×38、B-06 160×104、ノード24×28、外殻28×64、各8コマ×近/遠 |
+| FX | 7 | 流れ・泡・信号・胞子・パルス・崩壊・シールド、各512×64、8コマ |
+| 一覧 | 1 | contact-sheet.png（素材一覧でありゲームスクリーンショットではない） |
+
+生成：`py -3 tools/generate_assets.py --living-colossus-only`。生成器`tools/living_colossus_assets.py`、描画`js/living-art.js`。B-06上端y−24、source核中心(160,128)→world(x,y+40)。判定64×64・照準・銃口は不変。PNG単位で読込失敗を隔離し基本図形へフォールバック。[素材一覧](../assets/living-colossus-01/contact-sheet.png)／[M06仕様](MISSION_06.md)。
+
+## MOBILE FORTRESS 01 / M05（0.5.0）
+
+assets/mobile-fortress-01/catalog.jsonに24 PNG・151セルの寸法、アンカー、SHA256を記録。固定seed5008000、Python/Pillow、sourceScale2、nearest、背景以外は透過RGBA。旧PNGは上書きしない。
+
+| 分類 | PNG数 | 内容 |
+| --- | ---: | --- |
+| 背景 | 6 | 荒野／甲板／機関／制御／動力炉640×360、単独遠景基地430×164 |
+| 地形 | 1 | 256×64、32×32セル16種、論理16pxタイル |
+| 敵・装置 | 10 | E-13 36×24、E-14 30×22、E-15 44×38、B-05 160×96、装置28×32の論理寸法、各8コマ×通常／far |
+| FX | 6 | 土煙／排気／発砲／破壊／回復／予兆、512×64、各8コマ |
+| 一覧 | 1 | contact-sheet.png（素材一覧。実ゲーム画像ではない） |
+
+再生成：py -3 tools/generate_assets.py --mobile-fortress-only。生成器tools/mobile_fortress_assets.py、描画js/mobile-art.js。実行時は一覧以外23 PNGを画像単位で読み込み、失敗時はプリミティブ表示。画像URLは版数付き。リアクターのsource中心(160,128)をworld(e.x,e.y+32)へ合わせ、表示左上は(e.x−80,e.y−32)。敵判定64×64・銃口は変更しない。
+
+近／遠景の形・足元は同一。E-15は半分未満のHPで破損フレーム、B-05は防御／露出／破損を切替。[M05仕様](MISSION_05.md)、[素材一覧](../assets/mobile-fortress-01/contact-sheet.png)。
+
 ## SKY 01 / M04（0.4.0）
 
 `assets/sky-01/catalog.json`に19PNGの寸法・セル・SHA-256を記録。背景4、16セル地形アトラス1、E-10/E-11/E-12/B-04/固定装置の通常・遠距離アトラス10、FX4。Python/Pillowの固定seed4007200で `py -3 tools/generate_assets.py --sky-only`。既存PNGは上書きしない。ソース2px=1ワールドpx、nearest-neighbor、透過は0/255。コア中心アンカーは(80,64)、世界座標(6650,100)。[M04素材仕様](MISSION_04.md#素材と再生成)。

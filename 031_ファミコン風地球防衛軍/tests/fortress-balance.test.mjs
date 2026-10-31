@@ -87,5 +87,5 @@ test('QA shortcuts never restart or save; explicit start uses GUARDIAN, invincib
   r.run("game.enemies[0].shieldedUntil=99;game.sky.shieldSources.push({});game.sky.rescuePending=true");r.click('lab-open');r.click('lab-boss-4');assert.equal(r.run('game.enemies[0].shieldedUntil'),0);assert.equal(r.run('game.sky.shieldSources.length'),0);assert.equal(r.run('game.sky.rescuePending'),false);
 });
 test('five tabs and weapon picker stay intact; new shortcuts live in an existing collapsed help group',()=>{
-  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.equal((html.match(/role="tab"/g)||[]).length,5);assert.match(html,/lab-fortress-guardian/);assert.match(html,/id="labWeaponPicker"/);
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.equal((html.match(/id="labTab-/g)||[]).length,5);assert.match(html,/lab-fortress-guardian/);assert.match(html,/id="labWeaponPicker"/);
 });

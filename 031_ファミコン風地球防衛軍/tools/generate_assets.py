@@ -577,7 +577,21 @@ def main():
     parser.add_argument("--art-unified-only", action="store_true", help="Generate isolated UNIFIED 01 art only; preserve all earlier sets")
     parser.add_argument("--coastal-only", action="store_true", help="Generate only M03 COASTAL 01 assets; preserve all earlier PNGs")
     parser.add_argument("--sky-only", action="store_true", help="Generate isolated M04 SKY 01 assets only")
+    parser.add_argument("--mobile-fortress-only", action="store_true", help="Generate isolated M05 MOBILE FORTRESS 01 assets only")
+    parser.add_argument("--living-colossus-only", action="store_true", help="Generate isolated M06 LIVING COLOSSUS 01 assets only")
     args=parser.parse_args()
+    if args.living_colossus_only:
+        if any(value for key,value in vars(args).items() if key!="living_colossus_only"):
+            parser.error("--living-colossus-only cannot be combined with other generation flags")
+        from living_colossus_assets import generate
+        generate(ROOT)
+        return
+    if args.mobile_fortress_only:
+        if any(value for key,value in vars(args).items() if key!="mobile_fortress_only"):
+            parser.error("--mobile-fortress-only cannot be combined with other generation flags")
+        from mobile_fortress_assets import generate
+        generate(ROOT)
+        return
     if args.sky_only:
         if any(value for key,value in vars(args).items() if key!="sky_only"):
             parser.error("--sky-only cannot be combined with other generation flags")

@@ -1,3 +1,4 @@
+import {drawImpossible} from './impossible-signal.js';
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation, gravitationalAcceleration } from "./physics.js";
 import { PreviewController, loadPreviewEnabled, savePreviewEnabled } from './preview.js';
 import { getStage } from "./stages.js";
@@ -22,6 +23,9 @@ import {createHomewardUI} from './homeward-ui.js';
 import {DESTINATIONS,destination,normalizeVoyage,departurePosition,voyageTargetDistance} from './open-voyage.js';
 import {HomewardArchive,migrateHomewardRecords} from './homeward-archive.js';
 import {GalleryStore} from './gallery-store.js';
+import {targetAvailable,targetLabel,discoveryEntry,frontierTarget} from './frontier.js';
+import {createFrontierUI} from './frontier-ui.js';
+let flightDiscoveries=[],flightStoryEvents=[],frontierStorageWarning='';
 import {TUTORIAL_STEPS,tutorialEntry,tutorialTransition} from './homeward-tutorial.js';
 import { CHALLENGES, getChallenge } from './challenges.js';
 import {launchAllowed}from'./special-challenges.js';
@@ -168,7 +172,8 @@ function drawGoal(time) {
   ctx.fillStyle = "#96ffd0";
   ctx.font = `700 ${view.scale<.3?9/view.scale:8}px ui-monospace, monospace`;
   ctx.textAlign = "center";
-  ctx.fillText(stage.openVoyage?stage.goal.name:"GATE", 0, view.scale<.3?-radius-5/view.scale:3);
+  const goalLabel=stage.openVoyage&&discoveryEntry(homewardProgress.state.frontier,stage.goal.id).state==='DETECTED'?`? ${frontierTarget(stage.goal.id).id}`:stage.openVoyage?targetLabel(homewardProgress.state.frontier,stage.goal.id,homewardProgress.state.echoes):'GATE';
+  ctx.fillText(goalLabel, 0, view.scale<.3?-radius-5/view.scale:3);
   ctx.restore();
 }
 
@@ -310,17 +315,19 @@ function draw(time) {
   drawGoal(time);
   if(stage.openVoyage){
     const visited=homewardProgress.state.voyage?.visited??[];
-    for(const d of DESTINATIONS){if(d.id===stage.goal.id)continue;
+    for(const d of DESTINATIONS){if(d.id===stage.goal.id||!targetAvailable(homewardProgress.state.frontier,d.id,homewardProgress.state.echoes))continue;
       ctx.save();ctx.strokeStyle=d.color;ctx.fillStyle=d.color;ctx.lineWidth=1/view.scale;ctx.setLineDash(visited.includes(d.id)?[]:[3/view.scale,4/view.scale]);
-      ctx.beginPath();ctx.arc(d.x,d.y,d.radius,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.font=`${9/view.scale}px sans-serif`;ctx.textAlign='center';ctx.fillText(`${visited.includes(d.id)?'✓ ':''}${d.name}`,d.x,d.y-d.radius-6/view.scale);ctx.restore();
+      const label=discoveryEntry(homewardProgress.state.frontier,d.id).state==='DETECTED'?`? ${frontierTarget(d.id).id}`:targetLabel(homewardProgress.state.frontier,d.id,homewardProgress.state.echoes);
+      ctx.beginPath();ctx.arc(d.x,d.y,d.radius,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.font=`${9/view.scale}px sans-serif`;ctx.textAlign='center';ctx.fillText(`${visited.includes(d.id)?'✓ ':''}${label}`,d.x,d.y-d.radius-6/view.scale);ctx.restore();
     }
     const button=document.querySelector('#openDestinations');button.hidden=false;
-    const text=`目的地：${stage.goal.name} · ${Math.round(voyageTargetDistance(homewardProgress.state.voyage,simulation?.rocket.position??stage.launch.position)).toLocaleString()} `;
+    const text=`目的地：${targetLabel(homewardProgress.state.frontier,stage.goal.id,homewardProgress.state.echoes)} · ${Math.round(voyageTargetDistance(homewardProgress.state.voyage,simulation?.rocket.position??stage.launch.position)).toLocaleString()} `;
     if(button.textContent!==text)button.textContent=text;
   }else document.querySelector('#openDestinations').hidden=true;
+  if(stage.openVoyage)drawImpossible(ctx,homewardProgress.state.echoes,time,view.scale,experience.quality);
   drawTrail();
   for (const planet of stage.planets){const p=camera.toScreen(planet),r=planetExtent(planet)*1.8*view.scale;if(p.x+r>=0&&p.y+r>=0&&p.x-r<=camera.width&&p.y-r<=camera.height)drawPlanet(planet,time);}
-  if(stage.encounters?.length)drawEncounters(ctx,stage.encounters,simulation?.elapsed??0,simulation?.rocket.position??stage.launch.position,view.scale,selectedEncounterId,camera);
+  if(stage.encounters?.length)drawEncounters(ctx,stage.openVoyage?stage.encounters.filter(e=>e.type!=='station'||targetAvailable(homewardProgress.state.frontier,'station',homewardProgress.state.echoes)):stage.encounters,simulation?.elapsed??0,simulation?.rocket.position??stage.launch.position,view.scale,selectedEncounterId,camera);
   if (mode === 'flying' && gameMode === 'live') for(const planet of stage.planets) {
     const target=moveTargets[planet.id];if(!target)continue;
     ctx.strokeStyle='#ffdb80';ctx.lineWidth=1;ctx.setLineDash([3,4]);
@@ -361,7 +368,7 @@ function draw(time) {
   const log=playType==='homeward'&&mode==='flying'&&simulation.elapsed<3?getHomewardDefinition(stage.id).departure:'';
   if(document.querySelector('#voyageLog').textContent!==log)document.querySelector('#voyageLog').textContent=log;
   const event=simulation?.encounterEvents?.at(-1),sectorLog=playType==='homeward'&&simulation&&stage.mission&&missionEvidence.encounters.length?getHomewardDefinition(stage.id):null;
-  const encounterLog=sectorLog?(missionSatisfied(stage,missionEvidence,flightChoice)?sectorLog.discovery:sectorLog.encounterLog):event?(event.type==='station'?'発見：宇宙ステーション。航路情報を記録しました。':'未知の物体が反応。重力異常を観測しました。'):'';
+  const encounterLog=stage.openVoyage&&event?.type==='station'&&discoveryEntry(homewardProgress.state.frontier,'station').state!=='INVESTIGATED'?'未解析の信号に接近。目的地に指定して寄港すると調査できます。':sectorLog?(missionSatisfied(stage,missionEvidence,flightChoice)?sectorLog.discovery:sectorLog.encounterLog):event?(event.type==='station'?'発見：宇宙ステーション。航路情報を記録しました。':'未知の物体が反応。重力異常を観測しました。'):'';
   if(document.querySelector('#encounterLog').textContent!==encounterLog)document.querySelector('#encounterLog').textContent=encounterLog;
 }
 
@@ -434,6 +441,7 @@ function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Numb
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
+  flightDiscoveries=[];flightStoryEvents=[];frontierStorageWarning='';if(stage.openVoyage)homewardProgress.beginSurvey();frontierUI.hide();
   missionEvidence=newMission();flightChoice=playType==='homeward'?homewardProgress.state.choices[stage.id]??null:null;
   cinematic.reset();
   notifyTutorial('launch');
@@ -482,7 +490,7 @@ function showResult(status) {
   if(status==='cleared'&&playType==='homeward'){
     if(stage.openVoyage)homewardProgress.dock(simulation);else homewardProgress.clear(stage.id,missionEvidence);
     const sector=getHomewardDefinition(stage.id);
-    resultReason.textContent=stage.openVoyage?destination(simulation.goal.id).log:sector.arrival;
+    resultReason.textContent=stage.openVoyage?(['gate','echo-signal','temporal-anomaly'].includes(simulation.goal.id)||discoveryEntry(homewardProgress.state.frontier,simulation.goal.id).state==='INVESTIGATED'?destination(simulation.goal.id).log:'信号地点に到着。追加の調査条件は宇宙マップで確認できます。'):sector.arrival;
     if(stage.openVoyage)resultLabel.textContent=simulation.goal.id==='gate'?'CLEAR':'寄港しました';
     document.querySelector('#nextStage').textContent=sector.next?'次のセクターへ':'宇宙マップへ';
     document.querySelector('#nextStage').hidden=false;
@@ -498,6 +506,7 @@ function retry() {
   experienceCue.textContent='';
   audio.silence();
   finalizeRecording('reset');
+  frontierUI.hide();
   if(stage.openVoyage&&simulation?.status==='cleared'){stage=getHomewardSector(stage.id,homewardProgress.state.voyage);launchSnapshot=null;syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);updateOutputs();fitCamera();}
   if (gameMode === 'live' && launchSnapshot) stage = structuredClone(launchSnapshot);
   moveTargets = {};
@@ -547,6 +556,12 @@ function tick(time) {
       const previousState=simulation;
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      if(stage.openVoyage){
+        const discoveries=homewardProgress.observeSurvey(previousState,simulation),storyEvents=homewardProgress.lastStoryEvents;
+        flightStoryEvents.push(...storyEvents);flightDiscoveries.push(...discoveries);
+        if(storyEvents.length)frontierUI.communicate(storyEvents.at(-1));else if(discoveries.length)frontierUI.show(discoveries);
+        if(homewardProgress.notice&&frontierStorageWarning!==homewardProgress.notice){frontierStorageWarning=homewardProgress.notice;gallery.notify(frontierStorageWarning);}
+      }
       if(playType==='homeward'){
         const old=missionEvidence;missionEvidence=observeMission(old,previousState,simulation);
         if(stage.mission&&(old.encounters.length!==missionEvidence.encounters.length||!missionSatisfied(stage,old,flightChoice)&&missionSatisfied(stage,missionEvidence,flightChoice))){
@@ -887,7 +902,8 @@ updateMode();
 resizeCanvas();
 requestAnimationFrame(tick);
 const gallery=createGallery({store:standardGallery,archive:homewardArchive,canOpen:()=>mode!=='flying',onOpen:cancelGesture});
-const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onDestination:changeDestination,getNavigation:()=>({active:playType==='homeward'&&Boolean(stage.openVoyage),position:simulation?.rocket.position??stage.launch.position,flying:mode==='flying'}),canEnter:()=>mode!=='flying',onRecord:id=>{homewardUI.close();void gallery.openRecord(id);},onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
+const frontierUI=createFrontierUI({onDetails:id=>homewardUI.open(id)});frontierUI.initialize();
+const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onDestination:changeDestination,onAnalyze:kind=>{const events=homewardProgress.analyzeSignal(kind,mode==='flying'?simulation.elapsed:0);if(mode==='flying')flightStoryEvents.push(...events);if(events.length)frontierUI.communicate(events.at(-1));updateHomewardControls();},onImpossible:choice=>{const id=homewardProgress.chooseImpossible(choice);if(id)changeDestination(id);},onRoute:choice=>{const id=homewardProgress.chooseStory(choice);if(id)changeDestination(id);},getNavigation:()=>({active:playType==='homeward'&&Boolean(stage.openVoyage),position:simulation?.rocket.position??stage.launch.position,flying:mode==='flying'}),canEnter:()=>mode!=='flying',onRecord:id=>{homewardUI.close();void gallery.openRecord(id);},onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
 void migrateHomewardRecords(homewardProgress,standardGallery,homewardArchive).then(({migrated,missing})=>{if(migrated||missing.length)gallery.notify(`HOMEWARD記録：${migrated}件を専用保護。${missing.length}件は元記録がなく復元できません。`);}).catch(()=>gallery.notify('HOMEWARDの重要記録を保護・確認できませんでした。元の記録は変更していません。'));
 function notifyTutorial(event){
   if(playType!=='homeward')return;
@@ -947,7 +963,7 @@ function enterHomeward(id,{restoring=false}={}){
 document.querySelector('#openHomeward').addEventListener('click',()=>{if(mode!=='flying'||stage.openVoyage)homewardUI.open();});
 document.querySelector('#openDestinations').addEventListener('click',()=>{if(stage.openVoyage)homewardUI.open();});
 function changeDestination(id){
-  if(!stage.openVoyage||!homewardProgress.selectDestination(id))return;
+  if(!stage.openVoyage||!homewardProgress.selectDestination(id,{requireDiscovered:true}))return;
   cancelGesture();clearCameraGesture();
   if(mode==='flying'){
     stage.goal={...destination(id)};stage.destinationId=id;simulation={...simulation,goal:{...stage.goal}};cinematic.reset();preview.clear();
@@ -965,15 +981,19 @@ if(homewardProgress.state.active&&homewardProgress.state.openingSeen){
 }
 function finalizeRecording(reason){
   if(!recorder||!simulation)return;
+  if(stage.openVoyage)homewardProgress.endImpossibleFlight(simulation,reason);
   const current=recorder;recorder=null;
   const homewardId=playType==='homeward'?stage.id:null,state=simulation,evidence=structuredClone(missionEvidence),choice=flightChoice;
+  const discoveryEvents=structuredClone(flightDiscoveries),storyEvents=structuredClone(flightStoryEvents);
   try{
     let record=current.finish(reason==='mission-incomplete'?{...state,status:'mission-incomplete'}:state,reason);
     const open=Boolean(stage.openVoyage),success=state.status==='cleared'&&(!homewardId||missionSatisfied(getHomewardSector(homewardId),evidence,choice));
-    if(record&&open)record={...record,stageName:record.stageName+' / '+state.goal.name,goal:{...state.goal},destinationId:state.goal.id,destinations:structuredClone(DESTINATIONS),departureCheckpoint:homewardProgress.state.voyage?.checkpoint??'origin'};
+    if(record&&open)record={...record,stageName:record.stageName+' / '+targetLabel(homewardProgress.state.frontier,state.goal.id,homewardProgress.state.echoes),goal:{...state.goal},destinationId:state.goal.id,destinations:structuredClone(DESTINATIONS.filter(d=>targetAvailable(homewardProgress.state.frontier,d.id,homewardProgress.state.echoes))),frontierEvents:discoveryEvents,storyEvents,impossibleDisplay:homewardProgress.state.echoes?.clues?.['CLUE-08']?{visibleFrom:storyEvents.find(e=>e.id==='CLUE-08')?.elapsed??0}:null,impossibleChoices:structuredClone(homewardProgress.state.echoes?.impossible?.choices??[]),departureCheckpoint:homewardProgress.state.voyage?.checkpoint??'origin'};
     if(homewardId){if(open)homewardProgress.log(homewardId,{flightToken:record?.id});else homewardProgress.recordFlight(homewardId,state,evidence,choice,null,record?.id);}
     if(record)void (async()=>{
       let protectionFailed=false;
+      if(open&&discoveryEvents.length)try{for(const event of discoveryEvents){const reference=await homewardArchive.saveFirst(`discovery:homeward-09:${event.id}:${event.state}`,record);homewardProgress.attachDiscoveryRecord(event.id,event.state,reference);}}catch{protectionFailed=true;}
+      if(open&&storyEvents.length)try{for(const event of storyEvents){const reference=await homewardArchive.saveFirst(`story:homeward-09:${event.id}:first`,record);homewardProgress.attachStoryRecord(event.id,reference);}}catch{protectionFailed=true;}
       if(homewardId&&success){
         try{
           if(open){const reference=await homewardArchive.saveFirst(`dock:homeward-09:${state.goal.id}:first`,record);homewardProgress.attachDock(state.goal.id,reference);}

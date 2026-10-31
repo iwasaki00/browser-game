@@ -81,5 +81,5 @@ test('current-scene measurement on all three checkpoint missions keeps ordinary 
   }
 });
 test('HTML preserves five tabs and shared weapon picker; mobile controls are accessible and 44px CSS targets',()=>{
-  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8'),css=readFileSync(new URL('../styles.css',import.meta.url),'utf8');assert.equal((html.match(/role="tab"/g)||[]).length,5);assert.match(html,/id="labWeaponList"/);assert.match(html,/30秒計測開始/);assert.match(html,/id="mobileCopyText" readonly/);assert.match(css,/#screenLab button, #screenLab select \{ min-height: 44px/);assert.match(css,/safe-area-inset-bottom/);
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8'),css=readFileSync(new URL('../styles.css',import.meta.url),'utf8');assert.equal((html.match(/id="labTab-/g)||[]).length,5);assert.match(html,/id="labWeaponList"/);assert.match(html,/30秒計測開始/);assert.match(html,/id="mobileCopyText" readonly/);assert.match(css,/#screenLab button, #screenLab select \{ min-height: 44px/);assert.match(css,/safe-area-inset-bottom/);
 });

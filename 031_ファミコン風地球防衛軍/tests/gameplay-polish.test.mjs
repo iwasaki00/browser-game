@@ -82,5 +82,5 @@ test('normal mute and volume remain persisted; LAB audio/FX metrics and controls
   r.run('const calls=[];audioBus.play=(...args)=>calls.push(args);game.lab.settings.sound=true;game.lab.settings.volume=.4;tone(440,.1,"sine",.02);game.lab.settings.volume=0;tone(440,.1,"sine",.02)');assert.equal(r.run('calls.length'),1);assert.equal(r.run('calls[0][3]'),.008);
   r.get('soundToggle').listeners.click[0]({currentTarget:r.get('soundToggle')});assert.equal(r.storage.get(SAVE_KEY),saved);
   const seed=structuredClone(DEFAULT_SAVE);seed.settings.volume=.35;const normal=runtime(seed);normal.get('soundToggle').listeners.click[0]({currentTarget:normal.get('soundToggle')});assert.equal(JSON.parse(normal.storage.get(SAVE_KEY)).settings.volume,.35);assert.equal(JSON.parse(normal.storage.get(SAVE_KEY)).settings.sound,true);
-  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.doesNotMatch(html,/user-scalable=no|maximum-scale=1/);assert.equal((html.match(/role="tab"/g)||[]).length,5);assert.equal(WEAPONS.length,20);assert.equal(Object.keys(PLAYER_CLASSES).length,4);
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');assert.doesNotMatch(html,/user-scalable=no|maximum-scale=1/);assert.equal((html.match(/id="labTab-/g)||[]).length,5);assert.equal(WEAPONS.length,20);assert.equal(Object.keys(PLAYER_CLASSES).length,4);
 });

@@ -1,0 +1,828 @@
+{
+  "version": "0.6.0",
+  "style": "UNIFIED 01 / LIVING COLOSSUS 01",
+  "seed": 6008400,
+  "sourceScale": 2,
+  "sampling": "nearest",
+  "generator": "tools/living_colossus_assets.py",
+  "missions": [
+    "M06"
+  ],
+  "assets": [
+    {
+      "path": "backgrounds/entrance.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "entrance"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "6098b7f35abeb2c8e39233c77d101ffb559c964207c872c5279dee6b2297095e"
+    },
+    {
+      "path": "backgrounds/pulse.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "pulse"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "d83f5919b8bce4317c9c10ed3dd866c202c3145df0608ae97e5333a7ceefba04"
+    },
+    {
+      "path": "backgrounds/fluid.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "fluid"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "8ce909ea50bb1a05b9756cbc9c1c436a71b8f379c8cccddcd042b3e5fc5ccdde"
+    },
+    {
+      "path": "backgrounds/neural.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "neural"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "bced0baff6d5fb07ce907c3b57dfe9906e259577d482349099a8d28612b6c352"
+    },
+    {
+      "path": "backgrounds/heart.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "heart"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "eb93ce512ead9028f7cf4daafea4ec9ab6200f92f240e814c86461583d56c13c"
+    },
+    {
+      "path": "tiles/living.png",
+      "size": [
+        256,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 16,
+      "states": [
+        "tile0",
+        "tile1",
+        "tile2",
+        "tile3",
+        "tile4",
+        "tile5",
+        "tile6",
+        "tile7",
+        "tile8",
+        "tile9",
+        "tile10",
+        "tile11",
+        "tile12",
+        "tile13",
+        "tile14",
+        "tile15"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "2cef713cb540b58012e1a257004814f383b6b420cbeff6a3884dcf987f70acac"
+    },
+    {
+      "path": "sprites/pulseworm.png",
+      "size": [
+        576,
+        48
+      ],
+      "cell": [
+        72,
+        48
+      ],
+      "logicalCell": [
+        36,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "25117b755792373680f26e20813ba638f30973f6849fc8573b22371c2c2fdb2e"
+    },
+    {
+      "path": "far/pulseworm.png",
+      "size": [
+        576,
+        48
+      ],
+      "cell": [
+        72,
+        48
+      ],
+      "logicalCell": [
+        36,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "a8e80e49c677ce8beda5b1b5f42e7fa15593d051c41e92102eb36de0bd5e425d"
+    },
+    {
+      "path": "sprites/sporefly.png",
+      "size": [
+        480,
+        48
+      ],
+      "cell": [
+        60,
+        48
+      ],
+      "logicalCell": [
+        30,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "c052adc5b2518d516b7383fbb3d937db3fe4dbf45c7b2a5f2f0e14fa66999936"
+    },
+    {
+      "path": "far/sporefly.png",
+      "size": [
+        480,
+        48
+      ],
+      "cell": [
+        60,
+        48
+      ],
+      "logicalCell": [
+        30,
+        24
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 24
+      },
+      "sha256": "da680bee5f8a3b5b7ff1301ec5a8a53807d585176bb387383e131a2f42e304d5"
+    },
+    {
+      "path": "sprites/guardiancell.png",
+      "size": [
+        672,
+        76
+      ],
+      "cell": [
+        84,
+        76
+      ],
+      "logicalCell": [
+        42,
+        38
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 38
+      },
+      "sha256": "9dd9df1285467d45cebc2ab5e718bdc682d5fa8b579066208b65015233831b58"
+    },
+    {
+      "path": "far/guardiancell.png",
+      "size": [
+        672,
+        76
+      ],
+      "cell": [
+        84,
+        76
+      ],
+      "logicalCell": [
+        42,
+        38
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 38
+      },
+      "sha256": "1df5ce2782cf46b54e9944bef3f3a75ba50a345eecfc1da9c72e0c6bff0cca18"
+    },
+    {
+      "path": "sprites/neuralheart.png",
+      "size": [
+        2560,
+        208
+      ],
+      "cell": [
+        320,
+        208
+      ],
+      "logicalCell": [
+        160,
+        104
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          40
+        ]
+      },
+      "sha256": "1a47f65d3bf7a36bee314e1ef33dab56eb06e3b24368c27997e5daadb4e38f2c"
+    },
+    {
+      "path": "far/neuralheart.png",
+      "size": [
+        2560,
+        208
+      ],
+      "cell": [
+        320,
+        208
+      ],
+      "logicalCell": [
+        160,
+        104
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          40
+        ]
+      },
+      "sha256": "adc194d19c35e3e14b81c1743132d9f3e8ff05bddf7b5bfffa1cccef8cb0a823"
+    },
+    {
+      "path": "sprites/neuralnode.png",
+      "size": [
+        384,
+        56
+      ],
+      "cell": [
+        48,
+        56
+      ],
+      "logicalCell": [
+        24,
+        28
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 28
+      },
+      "sha256": "dbf889687c02fc8c2f02db837c0b0a1085a07d555330c50d798a4149ff5cb3e4"
+    },
+    {
+      "path": "far/neuralnode.png",
+      "size": [
+        384,
+        56
+      ],
+      "cell": [
+        48,
+        56
+      ],
+      "logicalCell": [
+        24,
+        28
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 28
+      },
+      "sha256": "44b70f5067c1471ef7ad7f4df5f3e4539a7b2dcb2971a93b441050c35d31b9fd"
+    },
+    {
+      "path": "sprites/bioshell.png",
+      "size": [
+        448,
+        128
+      ],
+      "cell": [
+        56,
+        128
+      ],
+      "logicalCell": [
+        28,
+        64
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 64
+      },
+      "sha256": "5519010a871c12c3bd06c091e0ee265f4ba58e99207d531d2609176f76625b73"
+    },
+    {
+      "path": "far/bioshell.png",
+      "size": [
+        448,
+        128
+      ],
+      "cell": [
+        56,
+        128
+      ],
+      "logicalCell": [
+        28,
+        64
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "idle"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 64
+      },
+      "sha256": "a63db8cad3543d39020c48256041e80bebe304ad5f3dffde6215aa2c060f0de2"
+    },
+    {
+      "path": "effects/flow.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "flow:0",
+        "flow:1",
+        "flow:2",
+        "flow:3",
+        "flow:4",
+        "flow:5",
+        "flow:6",
+        "flow:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "68793be0bc34e34fd23ce6c6105d723f69f29741d7e35b35af5fe631636f628b"
+    },
+    {
+      "path": "effects/foam.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "foam:0",
+        "foam:1",
+        "foam:2",
+        "foam:3",
+        "foam:4",
+        "foam:5",
+        "foam:6",
+        "foam:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "c9eb0783585607ba466e34d15437f6b4f0b8ad542e3b919abce52cc830189251"
+    },
+    {
+      "path": "effects/signal.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "signal:0",
+        "signal:1",
+        "signal:2",
+        "signal:3",
+        "signal:4",
+        "signal:5",
+        "signal:6",
+        "signal:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "77d30508b4c082a58b401bdc4e6c599a4ca8eced4cc897006c7f63ee3528f716"
+    },
+    {
+      "path": "effects/spore.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "spore:0",
+        "spore:1",
+        "spore:2",
+        "spore:3",
+        "spore:4",
+        "spore:5",
+        "spore:6",
+        "spore:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "57f1afdbb67a99424045ab961184a5780bb9a7d7983254f366f56eac159908d0"
+    },
+    {
+      "path": "effects/pulse.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "pulse:0",
+        "pulse:1",
+        "pulse:2",
+        "pulse:3",
+        "pulse:4",
+        "pulse:5",
+        "pulse:6",
+        "pulse:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "efe7efe0a97a5ae0289c1a2a5294ab03e7245694b9dbbe35613344bef1d68c5f"
+    },
+    {
+      "path": "effects/collapse.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "collapse:0",
+        "collapse:1",
+        "collapse:2",
+        "collapse:3",
+        "collapse:4",
+        "collapse:5",
+        "collapse:6",
+        "collapse:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "6969d88696ce3d522d70dd2871265bb31d6614087a7b89f0b3bb79107103de02"
+    },
+    {
+      "path": "effects/shield.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "shield:0",
+        "shield:1",
+        "shield:2",
+        "shield:3",
+        "shield:4",
+        "shield:5",
+        "shield:6",
+        "shield:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "5090470c139f97e5ea2b5e5a370bed28d85296a7e552f17752f8ef8c9ea30226"
+    },
+    {
+      "path": "contact-sheet.png",
+      "size": [
+        1280,
+        1120
+      ],
+      "cell": [
+        1280,
+        1120
+      ],
+      "logicalCell": [
+        1280,
+        1120
+      ],
+      "frames": 1,
+      "states": [
+        "preview"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "ec555c780cc6b7db621fca71a566f5e1f05fe58498aa6ba8c75af182919a7214"
+    }
+  ],
+  "notes": [
+    "Only assets/living-colossus-01 is written.",
+    "Actor art never imports or changes hitboxes or projectile origins.",
+    "Neural heart core source (160,128), world (e.x,e.y+40), top offset -24.",
+    "Pulse collider states and flow forces belong to mission logic, not this renderer.",
+    "Far sheets preserve exact alpha silhouettes and anchors."
+  ]
+}

@@ -1,0 +1,139 @@
+[
+  {
+    "target": "probe",
+    "angle": -48,
+    "speed": 220,
+    "time": 8.500000000000158,
+    "end": {
+      "x": 1430.5362312925174,
+      "y": 2991.352177328751
+    },
+    "events": [
+      {
+        "id": "CLUE-01",
+        "message": "SIGNAL DETECTED · 古い通信断片を回収",
+        "destination": "probe",
+        "at": 123456789,
+        "elapsed": 8.27500000000017
+      }
+    ],
+    "steps": 1020
+  },
+  {
+    "target": "rescue",
+    "angle": -174,
+    "speed": 220,
+    "time": 2.283333333333328,
+    "end": {
+      "x": 993.345970669918,
+      "y": 3117.6502056557656
+    },
+    "events": [],
+    "steps": 274
+  },
+  {
+    "target": "planet",
+    "angle": -19,
+    "speed": 220,
+    "time": 10.083333333333401,
+    "end": {
+      "x": 2979.129428746407,
+      "y": 2758.001940980469
+    },
+    "events": [
+      {
+        "id": "CLUE-02",
+        "message": "DATA MATCH · 同じ間隔の信号を観測",
+        "destination": "planet",
+        "at": 123456789,
+        "elapsed": 7.7333333333335075
+      },
+      {
+        "id": "match-pattern",
+        "message": "DATA MATCH · 二つの場所に、同じ信号パターン",
+        "destination": "planet",
+        "at": 123456789,
+        "elapsed": 7.7333333333335075
+      }
+    ],
+    "steps": 1210
+  },
+  {
+    "target": "station",
+    "angle": -77,
+    "speed": 220,
+    "time": 7.5333333333334975,
+    "end": {
+      "x": 3401.953783311881,
+      "y": 1199.9809118320602
+    },
+    "events": [
+      {
+        "id": "CLUE-03",
+        "message": "ARCHIVE FOUND · 帰着しなかった調査船の記録",
+        "destination": "station",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      },
+      {
+        "id": "match-vessel",
+        "message": "DATA MATCH · 通信断片は、消えた調査船と関連する可能性",
+        "destination": "station",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      },
+      {
+        "id": "CLUE-04",
+        "message": "NEW DESTINATION · 救難信号の発信源を特定",
+        "destination": "echo-signal",
+        "at": 123456789,
+        "elapsed": 7.5333333333334975
+      }
+    ],
+    "steps": 904
+  },
+  {
+    "target": "echo-signal",
+    "angle": 98,
+    "speed": 220,
+    "time": 2.949999999999992,
+    "end": {
+      "x": 3308.7342838713635,
+      "y": 1900.3821688388346
+    },
+    "events": [
+      {
+        "id": "CLUE-05",
+        "message": "UNKNOWN IDENTITY · 識別信号が一致。しかし、この記録は……",
+        "destination": "echo-signal",
+        "at": 123456789,
+        "elapsed": 2.949999999999992
+      }
+    ],
+    "steps": 354
+  },
+  {
+    "target": "anomaly",
+    "angle": 89,
+    "speed": 220,
+    "time": 5.9166666666667505,
+    "end": {
+      "x": 3331.5930723790125,
+      "y": 3461.245932114751
+    },
+    "events": [],
+    "steps": 710
+  },
+  {
+    "target": "gate",
+    "angle": -98,
+    "speed": 220,
+    "time": 13.141666666666561,
+    "end": {
+      "x": 2927.506153063328,
+      "y": 796.1426624535475
+    },
+    "events": [],
+    "steps": 1577
+  }
+]

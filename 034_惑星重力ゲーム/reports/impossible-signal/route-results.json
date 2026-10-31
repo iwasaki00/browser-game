@@ -1,0 +1,218 @@
+[
+  {
+    "name": "signal-investigate",
+    "from": "echo-signal",
+    "target": "temporal-anomaly",
+    "angle": -129,
+    "speed": 220,
+    "time": 7.5000000000001625,
+    "steps": 900,
+    "end": {
+      "x": 2250.2012149804214,
+      "y": 862.2883457356955
+    },
+    "events": [
+      {
+        "id": "impossible-approach",
+        "message": "SIGNAL RISING · 本船の識別信号を検出。発信時刻は依然として未来",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 5.183333333333381
+      },
+      {
+        "id": "impossible-result-investigate",
+        "message": "調査結果 · 内側で追加通信を受信。時空異常という仮説は未確定",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 7.18333333333348
+      },
+      {
+        "id": "CLUE-09",
+        "message": "ADDITIONAL SIGNAL · 識別番号も未来の時刻も一致。発信元の宇宙船は確認できません",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 7.18333333333348
+      },
+      {
+        "id": "impossible-ending",
+        "message": "SIGNAL LOST · 「こちらは……」「応答を……」「まだ、そこへ行くな……」",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 7.18333333333348
+      }
+    ],
+    "choice": {
+      "id": 1,
+      "choice": "investigate",
+      "destination": "temporal-anomaly",
+      "at": 3,
+      "result": "investigated",
+      "enteredInner": true,
+      "completedAt": 123456789,
+      "elapsed": 7.18333333333348
+    },
+    "return": {
+      "angle": -20,
+      "speed": 220,
+      "time": 2.974999999999992,
+      "end": {
+        "x": 2809.1571889540255,
+        "y": 741.8041108177819
+      }
+    }
+  },
+  {
+    "name": "station-investigate",
+    "from": "station",
+    "target": "temporal-anomaly",
+    "angle": -159,
+    "speed": 220,
+    "time": 5.450000000000061,
+    "steps": 654,
+    "end": {
+      "x": 2273.071554597999,
+      "y": 832.566054545058
+    },
+    "events": [
+      {
+        "id": "impossible-approach",
+        "message": "SIGNAL RISING · 本船の識別信号を検出。発信時刻は依然として未来",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 3.108333333333325
+      },
+      {
+        "id": "impossible-result-investigate",
+        "message": "調査結果 · 内側で追加通信を受信。時空異常という仮説は未確定",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 5.133333333333378
+      },
+      {
+        "id": "CLUE-09",
+        "message": "ADDITIONAL SIGNAL · 識別番号も未来の時刻も一致。発信元の宇宙船は確認できません",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 5.133333333333378
+      },
+      {
+        "id": "impossible-ending",
+        "message": "SIGNAL LOST · 「こちらは……」「応答を……」「まだ、そこへ行くな……」",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 5.133333333333378
+      }
+    ],
+    "choice": {
+      "id": 1,
+      "choice": "investigate",
+      "destination": "temporal-anomaly",
+      "at": 3,
+      "result": "investigated",
+      "enteredInner": true,
+      "completedAt": 123456789,
+      "elapsed": 5.133333333333378
+    },
+    "return": {
+      "angle": -20,
+      "speed": 220,
+      "time": 2.974999999999992,
+      "end": {
+        "x": 2809.1571889540255,
+        "y": 741.8041108177819
+      }
+    }
+  },
+  {
+    "name": "station-observe",
+    "from": "station",
+    "target": "temporal-anomaly",
+    "angle": -159,
+    "speed": 220,
+    "time": 5.450000000000061,
+    "steps": 654,
+    "end": {
+      "x": 2273.071554597999,
+      "y": 832.566054545058
+    },
+    "events": [
+      {
+        "id": "impossible-approach",
+        "message": "SIGNAL RISING · 本船の識別信号を検出。発信時刻は依然として未来",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 3.108333333333325
+      },
+      {
+        "id": "impossible-result-observe",
+        "message": "観測結果 · 外側の距離を1秒保ち、追加通信を受信。自動操船は行っていません",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 4.55833333333335
+      },
+      {
+        "id": "CLUE-09",
+        "message": "ADDITIONAL SIGNAL · 識別番号も未来の時刻も一致。発信元の宇宙船は確認できません",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 4.55833333333335
+      },
+      {
+        "id": "impossible-ending",
+        "message": "SIGNAL LOST · 「こちらは……」「応答を……」「まだ、そこへ行くな……」",
+        "destination": "temporal-anomaly",
+        "at": 123456789,
+        "elapsed": 4.55833333333335
+      }
+    ],
+    "choice": {
+      "id": 1,
+      "choice": "observe",
+      "destination": "temporal-anomaly",
+      "at": 3,
+      "result": "observed",
+      "completedAt": 123456789,
+      "elapsed": 4.55833333333335
+    },
+    "return": {
+      "angle": -20,
+      "speed": 220,
+      "time": 2.974999999999992,
+      "end": {
+        "x": 2809.1571889540255,
+        "y": 741.8041108177819
+      }
+    }
+  },
+  {
+    "name": "direct-avoid",
+    "from": "echo-signal",
+    "target": "gate",
+    "angle": -105,
+    "speed": 220,
+    "time": 6.391666666666774,
+    "steps": 767,
+    "end": {
+      "x": 2934.505511814159,
+      "y": 793.8582423362111
+    },
+    "events": [
+      {
+        "id": "impossible-result-avoid",
+        "message": "判断結果 · 帰還を優先。取得情報を保持し、調査は後から再開できます",
+        "destination": "gate",
+        "at": 123456789,
+        "elapsed": 6.391666666666774
+      }
+    ],
+    "choice": {
+      "id": 1,
+      "choice": "avoid",
+      "destination": "gate",
+      "at": 3,
+      "result": "returned",
+      "completedAt": 123456789,
+      "elapsed": 6.391666666666774
+    }
+  }
+]
