@@ -100,7 +100,7 @@ test('音声は操作後に開始、ON/OFF、種類別音、重複制限・ノ�
  for(const kind of ['approach','swingby','closecall'])assert.equal(audio.play(kind),true);
  assert.equal(audio.play('cleared'),false);assert.equal(audio.voices.size,4);
  for(const v of [...audio.voices])v.onended();assert.equal(audio.voices.size,0);
- for(const kind of ['cleared','collision','absorbed','overheated','escaped','timeout','ui']){
+ for(const kind of ['cleared','collision','absorbed','overheated','escaped','timeout','ui','discovery','decode','route']){
   audio.context.currentTime+=2;assert.equal(audio.play(kind),true);for(const v of [...audio.voices])v.onended();
  }
  audio.context.currentTime+=2;audio.play('launch');audio.setEnabled(false);assert.equal(audio.voices.size,0);assert.equal(audio.play('ui'),false);

@@ -1,5 +1,6 @@
-import {emptyCampaignStats,sanitizeCampaignStats} from "./campaign-stats.js?v=0.7.0";
-export const VERSION = "0.7.0";
+import {emptyCampaignStats,sanitizeCampaignStats} from "./campaign-stats.js?v=0.8.0";
+import {emptyAchievements,sanitizeAchievements} from "./challenges.js?v=0.8.0";
+export const VERSION = "0.8.0";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -177,7 +178,7 @@ export function normalizeDestructionLevel(value){return (typeof value==="number"
 
 export const DEFAULT_SAVE = Object.freeze({
   version:2, selectedClass:"RANGER", clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
-  bestTime:null, missionStats:{}, campaignStats:emptyCampaignStats(), settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
+  bestTime:null, missionStats:{}, campaignStats:emptyCampaignStats(), achievements:emptyAchievements(), settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
 });
 
 export const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
@@ -193,6 +194,7 @@ export function sanitizeSave(value){
   base.equipped=equipped.length===2?equipped:base.equipped;
   base.selectedClass=normalizeClass(value.selectedClass);
   base.campaignStats=sanitizeCampaignStats(value.campaignStats,{classes:Object.keys(PLAYER_CLASSES),weapons:WEAPONS.map(w=>w.id),missions:MISSIONS.map(m=>m.id)},true);
+  base.achievements=sanitizeAchievements(value.achievements,MISSIONS.map(m=>m.id));
   Object.assign(base,missionProgress(value));
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;

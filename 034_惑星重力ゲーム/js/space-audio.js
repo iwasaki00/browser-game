@@ -1,5 +1,6 @@
 // Only gestures unlock audio. Flight events never wait for resume or queue sounds.
 const NOTES = Object.freeze({
+  discovery:[660,880,.12,'sine'],decode:[440,740,.18,'triangle'],route:[660,1046,.24,'sine'],
   launch:[120,290,.18,'sawtooth'], approach:[330,440,.12,'sine'],
   swingby:[440,880,.24,'sine'], closecall:[740,1110,.18,'triangle'],
   cleared:[523,1046,.38,'sine'], collision:[140,55,.22,'triangle'],

@@ -1,6 +1,7 @@
 import {ReplayClock,replayFrame} from './flight-record.js';
 import {Camera} from './camera.js';
 import {CinematicCamera} from './cinematic-camera.js';
+import {frontierTarget} from './frontier.js';
 import {Starfield} from './starfield.js';
 
 export const REPLAY_MODES=['normal','follow','cinematic','overview'];
@@ -26,7 +27,7 @@ export function replaySnapshot(record,time){
 
 export class FlightReplay {
   constructor(record){
-    this.record=record;this.clock=new ReplayClock(record);this.camera=new Camera();this.cinematic=new CinematicCamera();this.stars=new Starfield();
+    this.record=record;this.clock=new ReplayClock(record);this.camera=new Camera();this.cinematic=new CinematicCamera();this.stars=new Starfield();this.cueTime=-Infinity;
     // Bounds include every recorded moving planet and the flight endpoints.
     let left=0,top=0,right=record.world.width,bottom=record.world.height;
     for(const row of record.frames)for(let i=1;i+1<row.length;i+=2){left=Math.min(left,finite(row[i]));right=Math.max(right,finite(row[i]));top=Math.min(top,finite(row[i+1]));bottom=Math.max(bottom,finite(row[i+1]));}
@@ -41,7 +42,7 @@ export class FlightReplay {
   setSpeed(value){this.clock.setSpeed(value);}
   setMode(mode){
     if(!REPLAY_MODES.includes(mode))return;
-    const previous=this.mode;this.mode=mode;this.cinematic.reset();
+    const previous=this.mode;this.mode=mode;this.cinematic.reset();this.cueTime=this.time;
     if(mode==='normal'||mode==='overview')this.camera.fit(this.stage);
     else{
       this.camera.setMode(mode);
@@ -54,13 +55,13 @@ export class FlightReplay {
   }
   restart(){
     this.clock.restart();this.playing=true;this.phase=this.mode==='cinematic'?'intro':'flight';this.remaining=REPLAY_HOLD.intro;
-    this.cinematic.reset();if(this.mode!=='manual')this.camera.fit(this.stage);
+    this.cinematic.reset();this.cueTime=-Infinity;if(this.mode!=='manual')this.camera.fit(this.stage);
     this.updateCamera(0);
   }
   toggle(){if(this.playing)this.pause();else if(this.phase==='ended')this.restart();else this.playing=true;}
   seek(time){
     this.clock.time=Math.max(0,Math.min(this.record.duration,finite(Number(time))));
-    this.phase=this.time>=this.record.duration?'ended':'flight';this.remaining=0;this.cinematic.reset();
+    this.phase=this.time>=this.record.duration?'ended':'flight';this.remaining=0;this.cinematic.reset();this.cueTime=this.time;
     if(this.phase==='ended')this.pause();
     if(this.mode==='cinematic'){this.camera.center={...this.snapshot.rocket.position};this.camera.zoom=1;}
     this.updateCamera(1/60);
@@ -69,7 +70,11 @@ export class FlightReplay {
   updateCamera(seconds){
     if(this.phase==='intro'){this.camera.fit(this.stage);return;}
     if(this.mode==='follow'){this.camera.mode='follow';this.camera.follow(this.snapshot.rocket.position);}
-    if(this.mode==='cinematic'){this.camera.mode='cinematic';this.cinematic.update(this.camera,this.snapshot,seconds,this.speed);}
+    if(this.mode==='cinematic'){
+      const event=[...(this.record.frontierEvents??[]),...(this.record.storyEvents??[])].filter(e=>e.elapsed>this.cueTime&&e.elapsed<=this.time).sort((a,b)=>a.elapsed-b.elapsed).at(-1);
+      if(event){const target=frontierTarget(event.id),point=this.record.destinations?.find(d=>d.id===(event.destination??target?.destination));if(point)this.cinematic.cue(point);this.cueTime=event.elapsed;}
+      this.camera.mode='cinematic';this.cinematic.update(this.camera,this.snapshot,seconds,this.speed);
+    }
   }
   advance(seconds){
     if(!this.playing)return;

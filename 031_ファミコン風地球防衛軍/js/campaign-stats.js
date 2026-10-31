@@ -1,3 +1,4 @@
+import {ChallengeRun} from './challenges.js?v=0.8.0';
 // Bounded cumulative counters, not an event log. No DOM or combat dependency.
 export const CAMPAIGN_SCHEMA=1;
 const MAX=Number.MAX_SAFE_INTEGER;
@@ -21,17 +22,18 @@ export function sanitizeCampaignStats(value,masters,legacy=true){
 function classRow(s,id){return s.classes[id]??={sorties:0,clears:0,gameOvers:0,kills:0,playSeconds:0,missions:{}}}
 function weaponRow(s,id){return s.weapons[id]??={equipped:0,uses:0,hits:0,placements:0,detonations:0,minesDetonated:0}}
 export class CampaignRun {
-  constructor(save,missionId,classId,equipped){
+  constructor(save,missionId,classId,equipped,player={}){
+    this.challenge=new ChallengeRun(save,missionId,classId,player.hp);
     this.missionId=missionId;this.classId=classId;this.closed=false;this.dirty=true;this.flushAfter=0;this.killed=new WeakSet();
     increment(classRow(save.campaignStats,classId),'sorties');for(const id of new Set(equipped))increment(weaponRow(save.campaignStats,id),'equipped');
   }
-  time(save,dt){if(this.closed||!Number.isFinite(dt)||dt<=0||dt>.1)return;increment(classRow(save.campaignStats,this.classId),'playSeconds',dt);this.flushAfter+=dt;this.dirty=true}
-  use(save,id,kind){if(this.closed)return;const r=weaponRow(save.campaignStats,id);increment(r,'uses');if(kind==='mine'||kind==='turret')increment(r,'placements');this.dirty=true}
-  detonate(save,count){if(this.closed||count<=0)return;const r=weaponRow(save.campaignStats,'M-18');increment(r,'detonations');increment(r,'minesDetonated',count);this.dirty=true}
+  time(save,dt){if(this.closed||!Number.isFinite(dt)||dt<=0||dt>.1)return;increment(classRow(save.campaignStats,this.classId),'playSeconds',dt);this.flushAfter+=dt;this.challenge.time(dt);this.dirty=true}
+  use(save,id,kind){if(this.closed)return;this.challenge.use(save,id);const r=weaponRow(save.campaignStats,id);increment(r,'uses');if(kind==='mine'||kind==='turret')increment(r,'placements');this.dirty=true}
+  detonate(save,count){if(this.closed||count<=0)return;this.challenge.use(save,'M-18');const r=weaponRow(save.campaignStats,'M-18');increment(r,'detonations');increment(r,'minesDetonated',count);this.dirty=true}
   hit(save,id,damage){if(this.closed||!id||!(damage>0))return;increment(weaponRow(save.campaignStats,id),'hits');this.dirty=true}
-  kill(save,enemy){if(this.closed||this.killed.has(enemy))return;this.killed.add(enemy);increment(classRow(save.campaignStats,this.classId),'kills');this.dirty=true}
-  finish(save,outcome,score=0,time=0,firstClear=false){
-    if(this.closed)return false;this.closed=true;const r=classRow(save.campaignStats,this.classId);
+  kill(save,enemy){if(this.closed||this.killed.has(enemy))return;this.killed.add(enemy);this.challenge.kill(save);increment(classRow(save.campaignStats,this.classId),'kills');this.dirty=true}
+  finish(save,outcome,score=0,time=0,firstClear=false,player={}){
+    if(this.closed)return false;this.challenge.finish(save,outcome,player);this.closed=true;const r=classRow(save.campaignStats,this.classId);
     if(outcome==='CLEAR'){increment(r,'clears');const old=r.missions[this.missionId];r.missions[this.missionId]={highScore:Math.max(old?.highScore??0,number(score)),bestTime:time>0?Math.min(old?.bestTime??Infinity,number(time,true)):old?.bestTime??null};if(firstClear)save.campaignStats.firstRewards[this.missionId]=true}
     else if(outcome==='GAME_OVER')increment(r,'gameOvers');this.dirty=true;return true;
   }

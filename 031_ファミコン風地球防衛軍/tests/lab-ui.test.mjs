@@ -62,7 +62,7 @@ test('metrics use valid profiler data, actual counts and weapon damage; copy has
   const r=lab();r.click('lab-stage-start');r.click('lab-open');r.run("game.lab.run.weaponDamage['A-01']=24;syncLabUI()");
   assert.match(r.get('labMetrics').textContent,/未計測/);assert.match(r.get('labDamageSummary').textContent,/A-01 24/);
   await r.run('copyLabReport()');assert.equal(r.get('labJSON').open,true);assert.equal(r.run('labTab'),'metrics');assert.equal(r.run('document.activeElement.id'),'labRunReport');
-  r.run("navigator.clipboard={writeText:async value=>{navigator.copied=value}}");await r.run('copyLabReport()');assert.equal(JSON.parse(r.run('navigator.copied')).version,'0.7.0');assert.match(r.get('labNotice').textContent,/コピーしました/);
+  r.run("navigator.clipboard={writeText:async value=>{navigator.copied=value}}");await r.run('copyLabReport()');assert.equal(JSON.parse(r.run('navigator.copied')).version,'0.8.0');assert.match(r.get('labNotice').textContent,/コピーしました/);
 });
 test('all weapons still select in independent picker without changing normal inventory',()=>{
   const r=lab(),saved=r.storage.get(SAVE_KEY);r.run("switchLabTab('loadout')");r.click('lab-weapons',undefined,undefined,'1');

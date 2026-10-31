@@ -50,11 +50,11 @@
       <div class="precision-settings" id="precisionSettings">
         <div class="tuner">
           <label for="angleInput"><span>ANGLE</span><output id="angleOutput">−55°</output></label>
-          <input id="angleInput" type="range" min="-72" max="-35" value="-55" step="1">
+          <div class="fine-tuner"><button type="button" data-fine="angleInput" data-delta="-1" aria-label="角度を1度下げる">−</button><input id="angleInput" type="range" min="-72" max="-35" value="-55" step="1"><button type="button" data-fine="angleInput" data-delta="1" aria-label="角度を1度上げる">＋</button></div>
         </div>
         <div class="tuner">
           <label for="speedInput"><span>THRUST</span><output id="speedOutput">170</output></label>
-          <input id="speedInput" type="range" min="120" max="220" value="170" step="2">
+          <div class="fine-tuner"><button type="button" data-fine="speedInput" data-delta="-1" aria-label="推力を1下げる">−</button><input id="speedInput" type="range" min="120" max="220" value="170" step="1"><button type="button" data-fine="speedInput" data-delta="1" aria-label="推力を1上げる">＋</button></div>
         </div>
       </div>
 
@@ -70,8 +70,9 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.6.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.7.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
+      <button id="startExperience" type="button">HOMEWARD EXPERIENCE · 約3分の体験航路</button>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
       <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option><option value="cinematic">CINEMATIC / 自動演出</option></select></label>
@@ -181,6 +182,7 @@
       <div class="art-actions"><button id="artGenerate" type="button">画像作成</button><button id="artSave" type="button" disabled>画像保存</button><button id="artShare" type="button" disabled>共有</button><a id="artOpenImage" target="_blank" rel="noopener" hidden>画像を開く</a></div>
     </section>
   </dialog>
+  <dialog id="experienceDialog" class="settings-dialog" aria-labelledby="experienceTitle"><header><div><small>OPTIONAL VOYAGE / 約3分</small><h2 id="experienceTitle">HOMEWARD EXPERIENCE</h2></div><button id="closeExperience" type="button">閉じる</button></header><div class="settings-content menu-content"><p>角度と推力を調整し、重力で曲がる予測を確かめて発射。水色は通常、緑は到達、赤は衝突、紫の輪は大きな曲がり、金の輪は目的地への接近です。</p><p id="experienceHint">直行の参考：ANGLE −59° / THRUST 220。途中で見つけた信号へ寄り道しても構いません。</p><button data-demo-target="gate" type="button">帰還ゲートへ向かう</button><button data-demo-target="probe" type="button">検出した信号へ寄り道</button><details><summary>体験ログ（今回のみ）</summary><div id="experienceLog"></div></details><button id="experienceReplay" type="button" disabled>今回の航行をCINEMATIC再生</button><button id="experienceHomeward" type="button">通常のHOMEWARDへ</button><button id="experienceExit" type="button">体験を終了して元の画面へ</button><small>通常HOMEWARDの進行・手掛かり・重要記録は変更しません。体験航行は通常ギャラリーで確認できます。</small></div></dialog>
   <script type="module" src="./js/game.js"></script>
 </body>
 </html>

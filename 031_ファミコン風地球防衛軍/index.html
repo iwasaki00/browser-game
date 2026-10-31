@@ -7,16 +7,17 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.7.0">
+  <link rel="stylesheet" href="styles.css?v=0.8.0">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v0.7.0</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v0.8.0</b></span>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
+    <aside id="achievementToast" class="achievement-toast" role="status" aria-live="polite" hidden><i id="achievementToastBadge" class="achievement-badge" aria-hidden="true"></i><span><small>ACHIEVEMENT UNLOCKED</small><strong id="achievementToastName"></strong></span><button type="button" data-action="achievement-skip" aria-label="実績通知をスキップ">×</button></aside>
     <section id="gameShell" class="game-shell" data-layout="landscape">
       <div id="gameStage" class="game-stage">
       <canvas id="game" width="320" height="180" tabindex="0" aria-label="ゲーム画面。タイトル画面です"></canvas>
@@ -33,7 +34,7 @@
       </div>
       <div id="screenMission" class="screen">
         <header class="command-header"><div><p class="eyebrow">CAMPAIGN COMMAND</p><h2>キャンペーン司令部</h2></div><label class="command-animation"><input id="campaignAnimation" type="checkbox" checked> プレビュー動画ON</label></header>
-        <nav class="command-tabs" role="tablist" aria-label="キャンペーン情報"><button id="campaignTab-missions" role="tab" aria-controls="campaignPanel-missions" aria-selected="true" data-action="campaign-tab" data-tab="missions">ミッション</button><button id="campaignTab-classes" role="tab" aria-controls="campaignPanel-classes" aria-selected="false" data-action="campaign-tab" data-tab="classes">兵科戦績</button><button id="campaignTab-weapons" role="tab" aria-controls="campaignPanel-weapons" aria-selected="false" data-action="campaign-tab" data-tab="weapons">武器コレクション</button></nav>
+        <nav class="command-tabs" role="tablist" aria-label="キャンペーン情報"><button id="campaignTab-missions" role="tab" aria-controls="campaignPanel-missions" aria-selected="true" data-action="campaign-tab" data-tab="missions">ミッション</button><button id="campaignTab-classes" role="tab" aria-controls="campaignPanel-classes" aria-selected="false" data-action="campaign-tab" data-tab="classes">兵科戦績</button><button id="campaignTab-weapons" role="tab" aria-controls="campaignPanel-weapons" aria-selected="false" data-action="campaign-tab" data-tab="weapons">武器コレクション</button><button id="campaignTab-achievements" role="tab" aria-controls="campaignPanel-achievements" aria-selected="false" data-action="campaign-tab" data-tab="achievements">実績</button></nav>
         <div class="command-progress"><strong id="campaignProgress"></strong><progress id="campaignProgressBar" max="6" value="0" aria-label="キャンペーン進行率"></progress><span id="campaignNext"></span></div>
         <section id="campaignPanel-missions" class="command-panel command-missions" role="tabpanel" aria-labelledby="campaignTab-missions">
         <div id="missionList" class="mission-list" aria-label="ミッション一覧"></div>
@@ -41,6 +42,10 @@
         </section>
         <section id="campaignPanel-classes" class="command-panel" role="tabpanel" aria-labelledby="campaignTab-classes" hidden><p>正式出撃以降を集計。実働時間は前景のゲーム更新秒（ヒットストップ含む）。途中終了は敗北にしません。</p><div id="campaignClassList"></div></section>
         <section id="campaignPanel-weapons" class="command-panel command-collection" role="tabpanel" aria-labelledby="campaignTab-weapons" hidden><div class="command-filter"><strong id="campaignWeaponProgress"></strong><label>検索<input id="campaignWeaponSearch" type="search" placeholder="ID・武器名" autocomplete="off"></label><label>カテゴリ<select id="campaignWeaponFilter"><option value="ALL">すべて</option><option value="rapid">連射・貫通</option><option value="blast">爆発</option><option value="energy">エネルギー</option><option value="flame">火炎</option><option value="special">特殊</option><option value="support">設置・支援</option></select></label></div><p>使用は発射・設置1操作。命中は実ダメージ適用回数（多段・直撃＋爆風を別計上）。撃破寄与は未対応。</p><div id="campaignWeaponList"></div></section>
+        <section id="campaignPanel-achievements" class="command-panel challenge-panel" role="tabpanel" aria-labelledby="campaignTab-achievements" hidden>
+          <div class="challenge-toolbar"><strong id="achievementProgress"></strong><label>カテゴリ<select id="achievementCategory"><option value="ALL">すべて</option><option value="C">キャンペーン</option><option value="K">兵科</option><option value="W">武器</option><option value="B">戦闘</option><option value="S">特殊攻略</option><option value="T">探索・戦略</option></select></label><label>状態<select id="achievementStatus"><option value="ALL">すべて</option><option value="OPEN">未達成のみ</option><option value="DONE">達成済みのみ</option></select></label></div>
+          <div class="challenge-content"><div id="achievementList" role="group" aria-label="実績一覧・スクロール可能"></div><aside class="challenge-info"><article id="achievementDetail"></article><h3>おすすめ実績</h3><div id="achievementRecommendations"></div><details><summary>バッジ・称号コレクション</summary><p>一覧のバッジは達成すると明るく表示されます。</p><p id="achievementSelectedTitle"></p><div id="achievementTitles"></div></details></aside></div>
+        </section>
         <footer class="command-footer"><span id="campaignCoverage"></span><output id="campaignSaveStatus" role="status"></output><button class="menu-button" data-action="back-title">戻る</button><button id="campaignDeploy" class="menu-button menu-button--primary" data-action="select-mission" data-mission="M01">M01 出撃準備へ</button></footer>
       </div>
       <div id="screenEquip" class="screen">
@@ -213,6 +218,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=0.7.0"></script>
+  <script type="module" src="js/game.js?v=0.8.0"></script>
 </body>
 </html>

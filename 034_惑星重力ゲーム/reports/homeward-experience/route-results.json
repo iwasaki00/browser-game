@@ -1,0 +1,128 @@
+[
+  {
+    "name": "direct",
+    "legs": [
+      {
+        "target": "gate",
+        "angle": -59,
+        "speed": 220,
+        "time": 20.324999999999488,
+        "maxTurnDegrees": 8.775301632853166,
+        "end": {
+          "x": 2894.8521578900413,
+          "y": 799.8674107084536
+        },
+        "changedAt": null,
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440376878,
+            "elapsed": 3.862742966112751,
+            "message": "UNKNOWN SIGNAL：反応 D02 を検出"
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440376883,
+            "elapsed": 5.7988500587494425,
+            "message": "UNKNOWN SIGNAL：反応 D01 を検出"
+          },
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440376889,
+            "elapsed": 11.300188148267988,
+            "message": "UNKNOWN SIGNAL：反応 D03 を検出"
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440376896,
+            "elapsed": 18.74013277810926,
+            "message": "UNKNOWN SIGNAL：反応 D04 を検出"
+          }
+        ]
+      }
+    ],
+    "totalTime": 20.324999999999488
+  },
+  {
+    "name": "detour",
+    "legs": [
+      {
+        "target": "probe",
+        "angle": -48,
+        "speed": 220,
+        "time": 8.500000000000158,
+        "maxTurnDegrees": 14.271854990508185,
+        "end": {
+          "x": 1430.5362312925174,
+          "y": 2991.352177328751
+        },
+        "changedAt": 5.633333333333403,
+        "events": [
+          {
+            "id": "D02",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440377009,
+            "elapsed": 4.251801099996854,
+            "message": "UNKNOWN SIGNAL：反応 D02 を検出"
+          },
+          {
+            "id": "D01",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440377010,
+            "elapsed": 5.625399998789483,
+            "message": "UNKNOWN SIGNAL：反応 D01 を検出"
+          },
+          {
+            "id": "D01",
+            "state": "INVESTIGATED",
+            "source": "proximity",
+            "at": 1793440377013,
+            "elapsed": 8.271313319984666,
+            "message": "漂流探査機の記録を回収"
+          },
+          {
+            "id": "D04",
+            "state": "DETECTED",
+            "source": "chart",
+            "at": 1793440377013,
+            "elapsed": 8.27500000000017,
+            "message": "新しい調査地点を開示"
+          }
+        ]
+      },
+      {
+        "target": "gate",
+        "angle": -59,
+        "speed": 220,
+        "time": 12.73333333333325,
+        "maxTurnDegrees": 6.509106843613419,
+        "end": {
+          "x": 2800.438480474395,
+          "y": 709.3543481735827
+        },
+        "changedAt": null,
+        "events": [
+          {
+            "id": "D03",
+            "state": "DETECTED",
+            "source": "proximity",
+            "at": 1793440377053,
+            "elapsed": 2.396726672759342,
+            "message": "UNKNOWN SIGNAL：反応 D03 を検出"
+          }
+        ]
+      }
+    ],
+    "totalTime": 21.23333333333341
+  }
+]

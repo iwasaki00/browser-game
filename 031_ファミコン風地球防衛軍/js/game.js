@@ -1,6 +1,8 @@
-import {CampaignRun} from "./campaign-stats.js?v=0.7.0";
-import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.7.0";
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.7.0";
+import {reconcileAchievements,selectAchievementTitle,AchievementNotices} from "./challenges.js?v=0.8.0";
+import {ACHIEVEMENT_BY_ID} from "./achievement-master.js?v=0.8.0";
+import {CampaignRun} from "./campaign-stats.js?v=0.8.0";
+import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.8.0";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=0.8.0";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.7.0";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
@@ -37,7 +39,9 @@ const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player
 Object.assign(imageFiles,{underground:'assets/backgrounds/underground.png',undergroundTiles:'assets/tiles/underground_tiles.png',worm:'assets/sprites/enemies/tunnel_worm.png',spitter:'assets/sprites/enemies/ceiling_spitter.png',nest:'assets/sprites/enemies/spawn_nest.png',queen:'assets/sprites/bosses/abyss_queen.png',acid:'assets/effects/acid.png',wave:'assets/effects/ground_wave.png',nestBreak:'assets/effects/nest_break.png',bossBreak:'assets/effects/boss_break.png'});
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
-const campaign=new CampaignCommand(document);let campaignSaveError="";
+const campaign=new CampaignCommand(document);const achievementNotices=new AchievementNotices();let noticeLast=0,noticeRendered=null;let campaignSaveError="";
+// Restore justified legacy achievements silently; never replay a burst on boot.
+reconcileAchievements(save);
 let weaponFilter="ALL",activeEquipSlot=0,remoteTimer=null,remoteHeld=false;
 let labWeaponPickerOpen=false,labEditingSlot=0,labWeaponQuery="";
 // UI-only state: never stored in game/save, and never advances the simulation.
@@ -121,11 +125,26 @@ function renderMissionList(){
   campaign.render(save,(c,w)=>{if(!drawStudyIcon(c,releaseArt.pack,w.id,0,0,32,32)&&images.weapons)c.drawImage(images.weapons,w.assetIndex*32,0,32,32,0,0,32,32)});document.querySelector("#campaignSaveStatus").textContent=campaignSaveError;
 }
 function normalCampaignRun(){return game&&!game.lab&&game.campaignRun&&!game.campaignRun.closed&&!game.campaignRun.combatEnded?game.campaignRun:null}
+function refreshAchievements(){
+  if(game?.lab)return;const ids=reconcileAchievements(save);if(!ids.length)return;
+  if(game?.campaignRun)game.campaignRun.dirty=true;
+  // A rare unlock is a save boundary, not a write on every use/hit.
+  if(game?.campaignRun)flushCampaign();else storeSave();
+  achievementNotices.enqueue(ids);
+}
+function updateAchievementNotice(ts){
+  const dt=noticeLast?Math.max(0,(ts-noticeLast)/1000):0;noticeLast=ts;
+  const visible=!document.hidden&&(document.hasFocus?.()??true)&&!game?.lab&&!['pause','confirm','settings','howto','equip','lab'].includes(state);
+  const id=achievementNotices.tick(dt,visible),el=document.querySelector('#achievementToast');
+  if(!id){el.hidden=true;noticeRendered=null;return}
+  // Presentation is deliberately separate from the saved unlock transaction.
+  try{if(id!==noticeRendered){const a=ACHIEVEMENT_BY_ID.get(id);document.querySelector('#achievementToastName').textContent=a.name;document.querySelector('#achievementToastBadge').dataset.category=a.category;el.setAttribute('aria-label',`実績達成：${a.name}`);noticeRendered=id}el.hidden=false}catch{el.hidden=true}
+}
 function flushCampaign(){const r=game?.campaignRun;if(game?.lab||!r||!r.dirty)return;if(storeSave()){r.dirty=false;r.flushAfter=0}}
-function finishCampaign(outcome,firstClear=false){const r=game?.campaignRun;if(game?.lab||!r)return;r.finish(save,outcome,game.score,game.time,firstClear);flushCampaign()}
+function finishCampaign(outcome,firstClear=false){const r=game?.campaignRun;if(game?.lab||!r)return;if(r.finish(save,outcome,game.score,game.time,firstClear,game.player))refreshAchievements();flushCampaign()}
 function campaignSourceId(source){const id=source.weapon?.id??source.weaponId??WEAPONS[source.assetIndex]?.id;return WEAPON_BY_ID.has(id)?id:null}
-function recordCampaignUse(w){normalCampaignRun()?.use(save,w.id,w.type)}
-function useRemoteMines(){const count=detonateMines(game,weaponAPI);normalCampaignRun()?.detonate(save,count);return count}
+function recordCampaignUse(w){const run=normalCampaignRun();if(run){run.use(save,w.id,w.type);refreshAchievements()}}
+function useRemoteMines(){const count=detonateMines(game,weaponAPI);normalCampaignRun()?.detonate(save,count);if(count)refreshAchievements();return count}
 function campaignPreviewResources(){const pack=releaseArt.pack,actor=(image,w,h,dw,dh,frames=8)=>image?{image,w,h,dw,dh,frames}:null;
   return {M01:{background:pack?.city??images.bg,actor:actor(images.enemies,48,48,32,32,4)},
     M02:{background:pack?.underground??images.underground,actor:actor(images.queen,120,96,90,72,4)},
@@ -137,8 +156,10 @@ function campaignPreviewResources(){const pack=releaseArt.pack,actor=(image,w,h,
 document.querySelector('#campaignWeaponSearch').addEventListener('input',e=>{if(state==='mission'){campaign.query=e.target.value.slice(0,80);campaign.renderWeapons(save,(c,w)=>{if(!drawStudyIcon(c,releaseArt.pack,w.id,0,0,32,32)&&images.weapons)c.drawImage(images.weapons,w.assetIndex*32,0,32,32,0,0,32,32)})}});
 document.querySelector('#campaignWeaponFilter').addEventListener('change',e=>{if(state==='mission'){campaign.category=Object.hasOwn(WEAPON_CATEGORIES,e.target.value)?e.target.value:'ALL';renderMissionList()}});
 document.querySelector('#campaignAnimation').addEventListener('change',e=>{campaign.animation=e.target.checked;campaign.lastPreview=-Infinity});
-document.querySelector('#screenMission').addEventListener('keydown',e=>{const tab=e.target?.dataset?.tab;if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const i=CAMPAIGN_TABS.indexOf(tab);campaign.tab=CAMPAIGN_TABS[e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowRight'?1:2))%3];renderMissionList();document.querySelector('#campaignTab-'+campaign.tab).focus()});
+document.querySelector('#screenMission').addEventListener('keydown',e=>{const tab=e.target?.dataset?.tab;if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const i=CAMPAIGN_TABS.indexOf(tab);campaign.tab=CAMPAIGN_TABS[e.key==='Home'?0:e.key==='End'?CAMPAIGN_TABS.length-1:(i+(e.key==='ArrowRight'?1:CAMPAIGN_TABS.length-1))%CAMPAIGN_TABS.length];renderMissionList();document.querySelector('#campaignTab-'+campaign.tab).focus()});
 window.addEventListener('pagehide',()=>flushCampaign());
+document.querySelector('#achievementCategory').addEventListener('change',e=>{if(state!=='mission')return;campaign.challenges.category=['ALL','C','K','W','B','S','T'].includes(e.target.value)?e.target.value:'ALL';campaign.challenges.render(save,campaign.selected)});
+document.querySelector('#achievementStatus').addEventListener('change',e=>{if(state!=='mission')return;campaign.challenges.status=['ALL','OPEN','DONE'].includes(e.target.value)?e.target.value:'ALL';campaign.challenges.render(save,campaign.selected)});
 function weapon(id){return WEAPON_BY_ID.get(id)}
 function activeEquipment(){return game?.lab?.equipped??save.equipped}
 function activeSettings(){return game?.lab?.settings??save.settings}
@@ -245,6 +266,13 @@ for(const ev of ['pointerup','pointercancel','lostpointercapture'])aimPad.addEve
 document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");if(!a)return;initAudio();tone(620,.05);const action=a.dataset.action;
   if(action==='campaign-tab'){if(state==="mission"&&CAMPAIGN_TABS.includes(a.dataset.tab)){campaign.tab=a.dataset.tab;renderMissionList()}return}
   if(action==='campaign-select'){if(state==="mission"&&MISSIONS.some(m=>m.id===a.dataset.mission)){campaign.selected=a.dataset.mission;renderMissionList()}return}
+  if(action==='achievement-select'||action==='achievement-recommend'){
+    if(state!=='mission'||!ACHIEVEMENT_BY_ID.has(a.dataset.achievement))return;
+    if(action==='achievement-recommend'){campaign.challenges.category=campaign.challenges.status='ALL';document.querySelector('#achievementCategory').value=document.querySelector('#achievementStatus').value='ALL'}
+    campaign.challenges.selected=a.dataset.achievement;campaign.challenges.render(save,campaign.selected);if(action==='achievement-recommend')document.querySelector(`#achievementList [data-achievement="${a.dataset.achievement}"]`)?.scrollIntoView?.({block:'nearest'});return;
+  }
+  if(action==='achievement-title'){if(state==='mission'&&!game?.lab&&selectAchievementTitle(save,a.dataset.achievement||null)){storeSave();renderMissionList()}return}
+  if(action==='achievement-skip'){achievementNotices.skip();document.querySelector('#achievementToast').hidden=true;noticeRendered=null;return}
   if(action==='mobile-start'||action==='mobile-restart'){startMobileMeasurement();return}
   if(action==='mobile-copy'||action==='mobile-json'||action==='mobile-qa-copy'){copyMobileResult(action);return}
   if(labWeaponPickerOpen)return;
@@ -336,7 +364,7 @@ function startMission(id=selectedMissionId,labOnly=false){
   if(id==='M06'){game.world=M06.world;game.player.world=game.world;game.areas=M06.areas;game.platforms=createM06Geometry();game.living=createLivingState();initializeLiving(game);game.grid=new SpatialGrid(INVASION.gridSize,game.world);game.director=new SpawnDirector(game.density,M06.encounters);game.items=[{x:3000,y:123,type:'crate',alive:true},{x:6400,y:123,type:'crate',alive:true},{x:4740,y:123,type:'heal',alive:true}]}
   if(id==='M05'){game.world=M05.world;game.player.world=game.world;game.areas=M05.areas;game.platforms=createM05Geometry();game.mobile=createMobileState();initializeMobile(game);game.grid=new SpatialGrid(INVASION.gridSize,game.world);game.director=new SpawnDirector(game.density,M05.encounters);game.items=[{x:2800,y:100,type:'crate',alive:true},{x:5960,y:123,type:'crate',alive:true},{x:4560,y:123,type:'heal',alive:true}]}
   game.battleCamera=createBattleCamera(game.player);syncCameraView();
-  if(!labOnly){game.campaignRun=new CampaignRun(save,id,game.player.classId,save.equipped);flushCampaign()}
+  if(!labOnly){game.campaignRun=new CampaignRun(save,id,game.player.classId,save.equipped,game.player);flushCampaign()}
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
   canvas.setAttribute('aria-label',`ゲーム画面。${id} ${MISSIONS.find(m=>m.id===id).name}を進行中`);
 }
@@ -417,7 +445,7 @@ function update(dt){if(state!=="play"||!game)return;const g=game,p=g.player,miss
 
 function hitRect(a,b){return a.x-a.w/2<b.x+b.w/2&&a.x+a.w/2>b.x-b.w/2&&a.y-a.h/2<b.y+b.h/2&&a.y+a.h/2>b.y-b.h/2}
 function damageEnemy(e,dmg,source={}){
-  if(e.dead)return;if(game.living&&hitLivingNode(game,e,pushEffect))return;const baseDamage=dmg;if(game.living)dmg=livingDamage(game,e,dmg);if(game.mobile)dmg=mobileDamage(game,e,dmg);if(game.sky)dmg=skyDamage(game,e,dmg);if(e.type==='queen')dmg=queenDamage(e,dmg,source);if(e.type==='leviathan')dmg=coastalDamage(e,dmg,source);
+  if(e.dead)return;if(game.living&&e.type==='neuralnode'){const boss=game.enemies.find(b=>b.type==='neuralheart'&&!b.dead),wasShielded=boss?.shielded;hitLivingNode(game,e,pushEffect);if(wasShielded&&boss&&!boss.shielded)normalCampaignRun()?.challenge.special('core-open');return;}const baseDamage=dmg;if(game.living)dmg=livingDamage(game,e,dmg);if(game.mobile)dmg=mobileDamage(game,e,dmg);if(game.sky)dmg=skyDamage(game,e,dmg);if(e.type==='queen')dmg=queenDamage(e,dmg,source);if(e.type==='leviathan')dmg=coastalDamage(e,dmg,source);
   if(game.lab?.run?.outcome==='RUNNING'){const id=source.weapon?.id??source.weaponId??WEAPONS[source.assetIndex]?.id??WEAPONS.find(w=>w.type===source.type)?.id;game.lab.run.damage(id,Math.min(Math.max(0,e.hp),Math.max(0,dmg)))}
   if(normalCampaignRun())game.campaignRun.hit(save,campaignSourceId(source),Math.min(Math.max(0,e.hp),Math.max(0,dmg)));
   e.hp-=dmg;if(dmg>0)game.score+=Math.max(1,Math.round(dmg));const category=game.sky&&dmg>0&&dmg<baseDamage&&e.hp>0?'SHIELD HIT':feedbackCategory(e,baseDamage,dmg,e.hp<=0),core=dmg>baseDamage?(e.type==='queen'?weakCore(e):e.type==='leviathan'?coastalWeakCore(e):null):null;
@@ -426,10 +454,10 @@ function damageEnemy(e,dmg,source={}){
   if(game.mobile&&e.type==='reactor'&&dmg===0)e.shieldedUntil=game.time+.45;
   if(game.sky&&e.type==='fortress'&&dmg===0)e.shieldedUntil=game.time+FORTRESS_GUIDANCE.blockedHit;
   if(e.hp>0)return;
-  e.dead=true;beginDeath(game,e,source,viewBounds(game.camera,view.zoom));if(!e.fixedDevice){if(normalCampaignRun()&&/^[EB]-/.test(ENEMY_TYPES[e.type].id))game.campaignRun.kill(save,e);game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;}
+  e.dead=true;beginDeath(game,e,source,viewBounds(game.camera,view.zoom));if(!e.fixedDevice){if(normalCampaignRun()&&/^[EB]-/.test(ENEMY_TYPES[e.type].id))game.campaignRun.kill(save,e);refreshAchievements();game.liveEnemies--;if(isMob(e))game.liveMobs--;game.kills++;game.score+=ENEMY_TYPES[e.type].score;}
   if(game.lab?.run?.outcome==='RUNNING'&&!e.fixedDevice)game.lab.run.kills++;
   if(game.sky&&e.type==='shielddrone')pushEffect({kind:'skyShieldOff',x:e.x,y:e.y+14,life:FORTRESS_GUIDANCE.shieldRelease,max:FORTRESS_GUIDANCE.shieldRelease});
-  if(e.fixedDevice){if(game.living){livingPartDestroyed(game,e,pushEffect);impactShake(game);return}if(game.mobile){mobilePartDestroyed(game,e,pushEffect);impactShake(game);return}if(e.partKind==='generator')pushEffect({kind:'skyShieldOff',x:e.x,y:e.y+16,life:FORTRESS_GUIDANCE.shieldRelease,max:FORTRESS_GUIDANCE.shieldRelease});pushEffect({kind:'skyBreak',x:e.x,y:e.y+16,life:.6,max:.6});impactShake(game);return}
+  if(e.fixedDevice){if(game.living){livingPartDestroyed(game,e,pushEffect);impactShake(game);return}if(game.mobile){mobilePartDestroyed(game,e,pushEffect);if(game.bossStarted&&e.destroyNotified)normalCampaignRun()?.challenge.special('mobile-device',e.partKind,e);impactShake(game);return}if(e.partKind==='generator')pushEffect({kind:'skyShieldOff',x:e.x,y:e.y+16,life:FORTRESS_GUIDANCE.shieldRelease,max:FORTRESS_GUIDANCE.shieldRelease});pushEffect({kind:'skyBreak',x:e.x,y:e.y+16,life:.6,max:.6});impactShake(game);return}
   if(e.type==='neuralheart'){game.living.hazards.length=0;game.living.collapseLeft=LIVING.collapseDuration}
   if(e.type==='reactor'){game.mobile.hazards.length=0;game.mobile.collapseLeft=MOBILE.collapseDuration}
   if(e.type==='fortress'){game.sky.hazards.length=0;game.sky.collapseLeft=SKY.collapseDuration}
@@ -497,10 +525,10 @@ function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);p
 function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0:e.hp>400?1:2;if(e.phase==="charge"){e.x+=e.vx*dt;if(e.x<4130||e.x>4720){e.x=clamp(e.x,4130,4720);e.vx*=-1;e.phase="move";e.timer=0}}else{e.x+=Math.sign((phase===2?p.x:4540)-e.x)*ENEMY_TYPES.boss.speed*(phase===2?.45:.18)*dt;if(e.timer>2.2-phase*.3){e.timer=0;const action=Math.floor(Math.random()*3);if(action===0)enemyBurst(e,5,130);else if(action===1){for(let i=0;i<2+phase;i++)spawnBossMinion(e,i)}else{e.phase="charge";e.vx=Math.sign(p.x-e.x)*(100+phase*25)}}}}
 function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({kind:e.type==='spitter'||e.type==='queen'?'acid':null,x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:e.type==='spitter'?12:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
-function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.run?.mode==='A'||game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;const before=p.hp;p.hp=Math.max(0,p.hp-amount*scale);if(game.lab?.run?.outcome==='RUNNING')game.lab.run.damageTaken+=before-p.hp;p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
+function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.run?.mode==='A'||game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;const before=p.hp;p.hp=Math.max(0,p.hp-amount*scale);normalCampaignRun()?.challenge.damage(before-p.hp);if(game.lab?.run?.outcome==='RUNNING')game.lab.run.damageTaken+=before-p.hp;p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
 function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){const x=s.x,y=s.y;s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(['M02','M03','M04','M05','M06'].includes(game.missionId)&&terrainContact(x,y,s.x,s.y,game.platforms,s.kind==='wave'?0:2,false,game.world))s.dead=true;if(!s.dead&&game.coast)for(const t of game.coast.turrets)if(t.hp>0&&Math.abs(s.x-t.x)<16&&s.y>=t.y&&s.y<=148){t.hp=Math.max(0,t.hp-s.damage);s.dead=true;break}if(!s.dead&&hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
-function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.weaponRewards.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";storeSave()}
+function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.weaponRewards.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";refreshAchievements();storeSave()}
 function updateEffects(dt){let write=0;for(const f of game.effects){f.life-=dt;if(f.life>0)game.effects[write++]=f}game.effects.length=write;updateParticles(game,dt)}
 
 function statCards(entries){return entries.map(([label,value])=>`<div><span>${label}</span><b>${value}</b></div>`).join('')}
@@ -711,7 +739,7 @@ function loop(ts){
   const begin=DEBUG?performance.now():0,dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;
   while(acc>=1/60){update(1/60);acc-=1/60}
   if(profiler?.running&&game&&state==="play")fillBenchmarkPopulation();
-  const updateEnd=DEBUG?performance.now():0;draw();campaign.preview(ts,state==="mission"&&!document.hidden,(state==="mission"?campaignPreviewResources():{}));const drawEnd=DEBUG?performance.now():0;
+  const updateEnd=DEBUG?performance.now():0;draw();updateAchievementNotice(ts);campaign.preview(ts,state==="mission"&&!document.hidden,(state==="mission"?campaignPreviewResources():{}));const drawEnd=DEBUG?performance.now():0;
   if(game?.lab){
     sampleCombatResources(game);
     const counts={enemies:game.liveEnemies,shots:game.shots.length+game.enemyShots.length,effects:game.effects.length+game.impact.particles.length},active=frameActive;

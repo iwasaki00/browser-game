@@ -58,6 +58,7 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
   node('rect',{width:3750,height:5000,fill:'#071422'});
   for(const p of stage.planets)node('circle',{cx:p.x,cy:p.y,r:Math.max(55,p.radius),fill:p.color});
   for(const d of DESTINATIONS){if(!targetAvailable(survey,d.id,progress.state.echoes))continue;
+   if(dialog.dataset.recentDestination===d.id&&performance.now()<Number(dialog.dataset.recentUntil))node('circle',{cx:d.x,cy:d.y,r:180,fill:'none',stroke:'#ffe28a','stroke-width':22,class:'signal-highlight'});
    if(discoveryEntry(survey,d.id).state==='DETECTED')node('circle',{cx:d.x,cy:d.y,r:230,fill:'none',stroke:d.color,'stroke-width':8,'stroke-dasharray':'30 30'});
    if(v.rewards.includes('route-charts')||survey.rewards.includes('probe-routes'))node('line',{x1:position.x,y1:position.y,x2:d.x,y2:d.y,stroke:'#426c85','stroke-width':10,'stroke-dasharray':'40 40'});
    node('circle',{cx:d.x,cy:d.y,r:d.id===v.selected?110:75,fill:v.visited.includes(d.id)?d.color:'#183044',stroke:d.color,'stroke-width':d.id===v.selected?30:14});

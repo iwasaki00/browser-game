@@ -11,7 +11,8 @@ const extent=p=>Math.max(p.radius??0,...(p.hazards??[]).map(h=>h.radius));
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export class CinematicCamera {
   constructor(){this.reset();}
-  reset(){this.phase='launch';this.planetId=null;this.goalActive=false;this.fast=false;this.updates=0;}
+  reset(){this.phase='launch';this.planetId=null;this.goalActive=false;this.fast=false;this.updates=0;this.signalCue=null;}
+  cue(point){this.signalCue={...point,radius:24,left:1.6};}
   update(camera,state,seconds,rate=1){
     if(camera.mode!=='cinematic'||!state)return;
     const config=CINEMATIC,rocket=state.rocket.position,velocity=state.rocket.velocity;
@@ -29,6 +30,8 @@ export class CinematicCamera {
     const terminal=state.status!=='flying'&&state.status!=='ready';
     this.phase=state.status==='cleared'?'arrival':terminal?'ended':this.goalActive?'goal':planet?'planet':state.elapsed<config.launchSeconds?'launch':this.fast?'fast':'cruise';
     let focus=this.phase==='goal'||this.phase==='arrival'?state.goal:this.phase==='planet'?planet:null;
+    if(this.signalCue){this.signalCue.left-=Math.max(0,Math.min(.1,seconds||0));if(this.signalCue.left<=0)this.signalCue=null;}
+    if(!focus&&!terminal&&this.signalCue&&distance(rocket,this.signalCue)<Math.max(500,config.planetDistance*factor*1.5)){focus=this.signalCue;this.phase='discovery';}
     let target={...rocket};
     if(focus&&this.phase!=='arrival')target={x:rocket.x*.65+focus.x*.35,y:rocket.y*.65+focus.y*.35};
     else if(['cruise','fast'].includes(this.phase)){

@@ -190,6 +190,7 @@ h2 small { color: var(--muted); font-size: .35em; }
 .command-footer span { flex:1; color:#a8bcba; font-size:9px; min-width:100px; }
 .command-footer output { color:#ffbe8c; font-size:10px; }
 .command-footer .menu-button { min-width:70px; min-height:44px; margin:0; font-size:12px; }
+.command-footer .menu-button:disabled { opacity:.4; cursor:not-allowed; box-shadow:none; }
 #campaignClassList { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
 .command-class,.command-weapon { background:#0b1d2b; border:1px solid #2b5060; padding:9px; min-width:0; }
 .command-class h3,.command-weapon h3 { margin:0 0 5px; color:#c5e6cc; font-size:13px; }
@@ -201,7 +202,7 @@ h2 small { color: var(--muted); font-size: .35em; }
 .command-collection { display:flex; flex-direction:column; overflow:hidden; }
 .command-filter { display:flex; gap:8px; align-items:center; padding:3px 0 5px; flex-wrap:wrap; }
 .command-filter strong { color:var(--yellow); font-size:12px; }
-.command-filter label { display:flex; gap:5px; align-items:center; font-size:11px; min-width:0; }
+.command-filter label { display:flex; gap:5px; align-items:center; font-size:11px; min-width:0; white-space:nowrap; }
 .command-filter input,.command-filter select { min-height:36px; max-width:165px; min-width:0; width:100%; color:var(--ink); background:#071826; border:1px solid #3a5864; padding:4px; font-size:12px; -webkit-user-select:text; user-select:text; }
 #campaignWeaponList { min-height:0; overflow:auto; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; align-content:start; touch-action:pan-y; overscroll-behavior:contain; }
 .command-weapon { position:relative; padding-left:9px; padding-right:41px; }
@@ -211,8 +212,50 @@ h2 small { color: var(--muted); font-size: .35em; }
 .command-weapon small { color:#b4c9c4; font-size:10px; }
 .command-weapon p { font-size:10px; line-height:1.5; margin:5px 0; }
 .command-weapon[data-unlocked="false"] { border-style:dashed; }
+/* Challenge Operations: screen-space only; no changes to world or combat HUD. */
+.challenge-panel { display:flex; flex-direction:column; overflow:hidden; }
+.challenge-toolbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:2px 0 7px; font-size:11px; }
+.challenge-toolbar strong { color:var(--yellow); }
+.challenge-toolbar label { display:flex; align-items:center; gap:4px; white-space:nowrap; min-width:0; }
+.challenge-toolbar select { min-height:36px; max-width:160px; width:100%; background:#081d2a; color:var(--ink); border:1px solid #426170; padding:4px; font-size:12px; }
+.challenge-content { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
+#achievementList,.challenge-info { min-height:0; overflow:auto; overscroll-behavior:contain; touch-action:pan-y; -webkit-overflow-scrolling:touch; }
+#achievementList { display:flex; flex-direction:column; gap:5px; }
+.achievement-card { display:grid; grid-template-columns:28px minmax(0,1fr); gap:6px; align-items:center; flex-shrink:0; min-height:58px; width:100%; padding:6px; border:1px solid #31505c; background:#081b28; color:var(--ink); text-align:left; cursor:pointer; position:relative; }
+.achievement-card strong { font-size:12px; display:block; padding-right:2px; }
+.achievement-card small { display:block; color:#b0c2be; font-size:10px; margin-top:4px; }
+.achievement-stars { grid-column:2; color:#acaa80; font-size:8px; line-height:8px; }
+.achievement-card[aria-pressed="true"] { border-color:var(--cyan); background:#143440; }
+.achievement-card:focus-visible,.challenge-info button:focus-visible,.challenge-toolbar select:focus-visible { outline:2px solid var(--yellow); outline-offset:-2px; }
+.challenge-info { padding:8px; background:#071725; border:1px solid #31505c; font-size:11px; }
+.challenge-info h3 { font-size:13px; color:#e9dc9a; margin:8px 0; }
+.challenge-info p { font-size:11px; line-height:1.5; margin:6px 0; }
+.challenge-info progress { width:100%; height:8px; accent-color:var(--cyan); }
+#achievementDetail header { display:flex; align-items:center; gap:8px; }
+.challenge-info button { display:block; width:100%; min-height:44px; margin:5px 0; padding:5px; color:var(--ink); background:#102936; border:1px solid #3e5a64; font-size:11px; cursor:pointer; text-align:left; }
+.challenge-info button:disabled { opacity:.45; cursor:not-allowed; }
+.challenge-info button[aria-pressed="true"] { border-color:var(--yellow); color:var(--yellow); }
+.challenge-info summary { min-height:44px; padding-top:13px; cursor:pointer; color:var(--cyan); }
+.achievement-badge { display:inline-block; flex-shrink:0; width:26px; height:26px; background:#8bbca9; box-shadow:inset 0 0 0 3px #293f48; position:relative; image-rendering:pixelated; }
+.achievement-badge::after { content:''; position:absolute; inset:7px; border:2px solid #122734; }
+.achievement-badge[data-category="C"] { background:#cfbf7e; clip-path:polygon(0 0,100% 0,100% 65%,50% 100%,0 65%); }
+.achievement-badge[data-category="K"] { background:#9bc5a0; clip-path:polygon(50% 0,100% 40%,100% 68%,50% 32%,0 68%,0 40%); }
+.achievement-badge[data-category="W"] { background:#99cad3; clip-path:polygon(35% 0,65% 0,65% 25%,100% 25%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0 65%,0 25%,35% 25%); }
+.achievement-badge[data-category="B"] { background:#dda980; clip-path:polygon(50% 0,65% 25%,100% 10%,80% 50%,100% 80%,65% 75%,50% 100%,35% 75%,0 80%,20% 50%,0 10%,35% 25%); }
+.achievement-badge[data-category="S"] { background:#c2a4d0; clip-path:polygon(15% 0,85% 0,85% 40%,100% 65%,75% 100%,25% 100%,0 65%,15% 40%); }
+.achievement-badge[data-category="T"] { background:#b8c886; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); }
+[data-earned="false"] .achievement-badge { filter:grayscale(.85) brightness(.45); }
+.achievement-toast { position:fixed; z-index:60; top:max(3px,env(safe-area-inset-top)); left:50%; transform:translateX(-50%); width:min(300px,calc(100vw - 190px - env(safe-area-inset-left) - env(safe-area-inset-right))); height:32px; display:flex; align-items:center; gap:5px; padding:2px 4px; background:#092330; border:1px solid #d4c989; box-shadow:2px 2px #020c13; pointer-events:none; }
+.achievement-toast[hidden] { display:none!important; }
+.achievement-toast .achievement-badge { width:22px; height:24px; }
+.achievement-toast span { min-width:0; flex:1; }
+.achievement-toast small { display:block; font-size:7px; color:#a8c1b7; white-space:nowrap; overflow:hidden; }
+.achievement-toast strong { display:block; font-size:11px; color:#f1df99; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.achievement-toast button { pointer-events:auto; background:#15323d; color:#eee4b4; border:1px solid #728d90; min-width:28px; height:28px; cursor:pointer; }
+@media(orientation:portrait) { .challenge-toolbar strong { flex-basis:100%; } .challenge-toolbar label { flex:1; } .challenge-content { grid-template-columns:1fr; grid-template-rows:minmax(130px,1fr) minmax(140px,1fr); } .command-tabs button { font-size:11px; } }
+@media(orientation:landscape) and (max-height:440px) { .challenge-toolbar { padding-bottom:4px; gap:6px; } .challenge-toolbar select { min-height:32px; } }
 @media(max-width:700px) { #campaignClassList { grid-template-columns:repeat(2,minmax(0,1fr)); } #campaignWeaponList { grid-template-columns:repeat(2,minmax(0,1fr)); } .command-header h2 { font-size:18px; } }
-@media(orientation:portrait) { .command-missions { grid-template-columns:1fr; grid-template-rows:minmax(130px,1fr) minmax(140px,1fr); } .command-progress span { width:100%; } .command-footer span { flex-basis:100%; } .command-animation { white-space:normal; max-width:94px; } .command-filter label { flex:1; } #campaignWeaponList { grid-template-columns:1fr; } }
+@media(orientation:portrait) { .command-missions { grid-template-columns:1fr; grid-template-rows:minmax(130px,1fr) minmax(140px,1fr); } .command-progress span { width:100%; } .command-footer span { flex-basis:100%; } .command-animation { white-space:normal; max-width:94px; } .command-filter strong { flex-basis:100%; } .command-filter label { flex:1; } #campaignWeaponList { grid-template-columns:1fr; } }
 @media(orientation:landscape) and (max-height:440px) { #screenMission.is-active { gap:4px; padding-top:5px; padding-bottom:5px; } .command-header .eyebrow { display:none; } .command-header h2 { font-size:17px; } .command-header { min-height:24px; } .command-tabs button { min-height:36px; } .command-progress { font-size:9px; } .command-footer .menu-button { padding:4px 8px; min-height:36px; font-size:11px; } .command-filter input,.command-filter select { min-height:32px; } }
 .mission-card {
   display: grid;

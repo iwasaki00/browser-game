@@ -22,6 +22,7 @@ export function failureKind(state) {
   return state.status === 'crashed' ? (state.reason ?? 'collision') : state.status;
 }
 export const EVENT_STYLE = Object.freeze({
+  discovery:['#ffe28a','NEW SIGNAL'], decode:['#c6a7ff','DATA RECEIVED'], route:['#8affd0','ROUTE UNLOCKED'],
   launch: ['#ffb66c', 'LIFTOFF'], approach: ['#8beaff', 'GRAVITY ASSIST'],
   swingby: ['#bc9aff', 'SWINGBY'], closecall: ['#ffe6a3', 'CLOSE CALL'],
   cleared: ['#86ffd0', 'CLEAR'], collision: ['#ff8f9c', 'IMPACT'],

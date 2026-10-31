@@ -1,0 +1,78 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 402
+    },
+    "scroll": {
+      "width": 320,
+      "height": 568
+    },
+    "storage": "HOMEWARD v1 byte-for-byte unchanged; CLASSIC key kept; reload PASS",
+    "records": "old favorite and important archive unchanged",
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 501
+    },
+    "scroll": {
+      "width": 375,
+      "height": 667
+    },
+    "storage": "HOMEWARD v1 byte-for-byte unchanged; CLASSIC key kept; reload PASS",
+    "records": "old favorite and important archive unchanged",
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 678
+    },
+    "scroll": {
+      "width": 390,
+      "height": 844
+    },
+    "storage": "HOMEWARD v1 byte-for-byte unchanged; CLASSIC key kept; reload PASS",
+    "records": "old favorite and important archive unchanged",
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED"
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "board": {
+      "x": 5,
+      "y": 46,
+      "width": 834,
+      "height": 276
+    },
+    "scroll": {
+      "width": 844,
+      "height": 390
+    },
+    "storage": "HOMEWARD v1 byte-for-byte unchanged; CLASSIC key kept; reload PASS",
+    "records": "old favorite and important archive unchanged",
+    "status": "PASS",
+    "device": "PC Chrome viewport emulation; iPhone UNVERIFIED"
+  },
+  {
+    "freshPlayer": "experience needs no sector unlock; normal opening remains unseen; no tutorial progress written",
+    "status": "PASS"
+  }
+]
