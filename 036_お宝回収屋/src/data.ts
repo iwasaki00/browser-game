@@ -1,0 +1,13 @@
+﻿import rows from './master-source.json';
+export const VERSION = '0.1.0';
+export const CONFIG = { cols:36, rows:28, cell:10, regen:5, xpPerLevel:120, exposure:0.55, batchCells:18, capacity:24 };
+export const weights:Record<string,number>={C:65,U:25,R:8,SR:1.8,J:0.2};
+export const income:Record<string,number>={B001:12,B002:20,B003:35,B004:45,B005:35,B007:120,B009:800,B011:4500,B012:18000};
+const live=['B101','B102','B104','B105','B201'];
+export const treasures=rows.filter(r=>r.length===6).map(r=>({id:r[0],name:r[1],baseValueFN:+r[2],rarity:r[3],locations:r[4].split(','),description:r[5],category:r[0][0],depth:[0,280],material:r[0][0]==='G'?'mineral':'metal',weight:1,requiredToolCapabilities:[],handlingType:['B009','B011','B012'].includes(r[0])?'contract':'cleanup',contractOnly:['B009','B011','B012'].includes(r[0]),spawnWeight:weights[r[3]],imageId:r[0]}));
+export const tools=rows.filter(r=>r.length===4).map(r=>({id:r[0],name:r[1],priceFN:+r[2],description:r[3],category:r[0][0],stage:+r[0][1],capabilities:({B101:['dig'],B102:['rake'],B104:['sift'],B105:['dig','bulk'],B201:['detect']} as Record<string,string[]>)[r[0]]??[],unlockConditions:({B101:'回収2個',B102:'回収5個',B104:'回収8個 または 砂採取',B105:'3区画 または 回収15個',B201:'回収20個 または 金属探索実績'} as Record<string,string>)[r[0]]??'後続フェーズ',compatibleAreas:[r[0][0]+'-A'],compatibleTools:[],equipmentType:'quick',operationType:({B102:'横スワイプ',B104:'左右に振る',B201:'走査'} as Record<string,string>)[r[0]]??'なぞる',staminaCost:({B101:7,B102:6,B104:4,B105:12,B201:3} as Record<string,number>)[r[0]]??0,imageId:r[0],implementationStatus:live.includes(r[0])?'available':'catalogOnly'}));
+export const hand={id:'hand',name:'素手',staminaCost:5};
+export const tool=(id:string)=>tools.find(t=>t.id===id);
+export const treasure=(id:string)=>treasures.find(t=>t.id===id)!;
+export const combinations=[['C01','B102+B104','表層探索と小物選別'],['C02','B105+B104+B108','大量採取・選別・運搬'],['C03','B201+B202','金属位置特定'],['C04','B206+B106','識別と精密掘削'],['C05','R104+R110','投擲と巻取り'],['C06','R201+R206','重量物回収'],['C07','R204+R205','映像回収'],['C08','R201+R301','電動巻上げ'],['C09','G101+G103+G102','採取と砂金選別'],['C10','G203+G205','水流と砂鉄分離'],['C11','G302+G306','水流循環'],['C12','G305+G308','微細金回収'],['C13','B401+B305+B406','自動探索運搬'],['C14','R402+R403+R405','大型回収ライン'],['C15','G401+G403+G402','連続選鉱'],['C16','B102+B105+B104','熊手 → 大型スコップ → 砂ふるい']].map(([id,ids,description])=>({id,tools:ids.split('+'),description}));
+export const areas=['乾いた砂浜','波打ち際','砂利混じりの浜','深い砂層','岸辺の浅瀬','石だまり','流れの緩い場所','深い川底','河原の表面','河原の砂州','岩盤の隙間','有望な砂金層'].map((name,i)=>({id:'BRG'[Math.floor(i/4)]+'-'+'ABCD'[i%4],name,implementationStatus:i===0?'available':'catalogOnly',unlockConditions:i===0?'初期解放':'後続フェーズ'}));

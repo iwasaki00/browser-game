@@ -19,9 +19,9 @@ export const REACTIONS=Object.freeze({
   homing:{speed:145,lift:120,spin:6,life:.42,color:"#fff08b"}
 });
 export const FEEDBACK=Object.freeze({targetGap:.055,flashGap:.09,window:.1,maxStarts:12,reducedStarts:6});
-const ARMOR_TYPES=new Set(['beetle','boss','queen','leviathan','barrier','shorecrab','siegebeetle','fortress','skydevice','heavygunner','shielddrone','assaultroller','sentrywalker','reactor','basedevice','neuralheart','neuralnode','bioshell','guardiancell']);
+const ARMOR_TYPES=new Set(['beetle','boss','queen','leviathan','barrier','shorecrab','siegebeetle','fortress','skydevice','heavygunner','shielddrone','assaultroller','sentrywalker','reactor','basedevice','overmind','defensenode','biobreaker','coreguard','commandcore','commanddevice','commanddrone','assaulttitan','neuralheart','neuralnode','bioshell','guardiancell']);
 export const feedbackCategory=(e,base,actual,finish=false)=>finish?'FINISH':actual>base+1e-8?'WEAK POINT':ARMOR_TYPES.has(e.type)?'ARMOR HIT':'HIT';
-const ENEMY_COLORS={crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1",shorecrab:"#b7a9b4",skyray:"#7eacd1",siegebeetle:"#9f8aab",leviathan:"#b5a0c4",interceptor:"#98bdd3",shielddrone:"#8ec9ad",heavygunner:"#bc9d80",fortress:"#9caac0",skydevice:"#e8bc7c",assaultroller:"#bc9876",repairdrone:"#9bd8ba",sentrywalker:"#b4a69c",reactor:"#d4b989",basedevice:"#d8c392",pulseworm:"#b2d4bf",sporefly:"#e1d2a2",guardiancell:"#b7c5ba",neuralheart:"#e2c6b0",neuralnode:"#9cdecf",bioshell:"#a8ada5"};
+const ENEMY_COLORS={overseer:"#d5b88d",biobreaker:"#b0cfa6",coreguard:"#aeaccd",overmind:"#dbb8a7",defensenode:"#b6dac7",commanddrone:"#9dbcb8",phasestalker:"#ad9fc9",assaulttitan:"#c4b096",commandcore:"#d5c2a6",commanddevice:"#b9d5bc",crawler:"#ff4f6d",spider:"#b88cff",needle:"#37e8df",beetle:"#718ca1",boss:"#718ca1",worm:"#d7b350",spitter:"#85df88",nest:"#ff659a",queen:"#bc81eb",barrier:"#718ca1",shorecrab:"#b7a9b4",skyray:"#7eacd1",siegebeetle:"#9f8aab",leviathan:"#b5a0c4",interceptor:"#98bdd3",shielddrone:"#8ec9ad",heavygunner:"#bc9d80",fortress:"#9caac0",skydevice:"#e8bc7c",assaultroller:"#bc9876",repairdrone:"#9bd8ba",sentrywalker:"#b4a69c",reactor:"#d4b989",basedevice:"#d8c392",pulseworm:"#b2d4bf",sporefly:"#e1d2a2",guardiancell:"#b7c5ba",neuralheart:"#e2c6b0",neuralnode:"#9cdecf",bioshell:"#a8ada5"};
 const noise=n=>((n*2654435761)>>>0)/4294967296;
 export function createImpactState(){return {clock:0,stop:0,nextStop:0,budgetStart:0,spent:0,shakeUntil:0,nextShake:0,
   corpses:0,particles:[],free:[],chainCount:0,lastKill:-10,labelUntil:0,feedbackStart:0,feedbackStarts:0,feedbackDropped:0,feedbackCounts:{HIT:0,'ARMOR HIT':0,'WEAK POINT':0,'SHIELD HIT':0,FINISH:0}}}
@@ -80,7 +80,7 @@ export function beginDeath(g,e,source={},bounds){
   const radial=source.radial,dx=radial?e.x-source.x:source.vx??(e.x-g.player.x),dy=radial?e.y+e.h/2-source.y:source.vy??0;
   const length=Math.hypot(dx,dy)||1,sign=Math.sign(dx)||(e.uid%2?1:-1);
   const close=type==="spread"?1.15-.55*clamp(Math.abs(e.x-(source.originX??g.player.x))/150,0,1):1;
-  const leader=e.type==="boss"||e.type==="beetle"||e.type==="queen"||e.type==="leviathan"||e.type==="fortress"||e.type==="reactor"||e.type==="neuralheart"||e.fixedDevice||e.type==="nest",weight=leader?.25:1;
+  const leader=e.type==="boss"||e.type==="beetle"||e.type==="queen"||e.type==="leviathan"||e.type==="fortress"||e.type==="reactor"||e.type==="neuralheart"||e.type==="commandcore"||e.type==="overmind"||e.fixedDevice||e.type==="nest",weight=leader?.25:1;
   e.deathType=type;e.deathColor=ENEMY_COLORS[e.type];e.deathMax=e.death=(leader?.48:r.life)*level.life;
   e.deathVx=(radial?(Math.abs(dx)<.01?sign*.7:dx/length):sign)*r.speed*close*weight*level.speed;
   e.deathVy=(-r.lift+clamp(dy/length,-1,1)*r.speed*.3)*weight*level.speed;

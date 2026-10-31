@@ -9,6 +9,8 @@ export const MISSION_BRIEFINGS=Object.freeze({
   M03:{setting:'海岸・港湾施設',feature:'海上侵攻と飛行敵の編隊を迎撃',enemies:'E-07〜09 / B-03 リヴァイアサン',background:'coast'},
   M04:{setting:'空中要塞と輸送足場',feature:'外部砲台→左右装置→中央コアを破壊',enemies:'E-10〜12 / B-04 スカイフォートレス',background:'sky'},
   M05:{setting:'走行する巨大移動基地',feature:'甲板・機関・制御を突破し動力炉を破壊',enemies:'E-13〜15 / B-05 フォートレスリアクター',background:'mobile'},
+  M08:{setting:'母艦深層・最終中枢',feature:'侵略信号網を遮断し3形態の最終決戦へ',enemies:'E-22〜24 / B-08 オーバーマインド',background:'final'},
+  M07:{setting:'地球上空の侵略母艦',feature:'混成部隊・生体機械・3防衛系統と司令中枢',enemies:'E-19〜21 / B-07 マザーコマンドコア',background:'mothership'},
   M06:{setting:'巨大異星生物の内部',feature:'脈動通路・体液流・神経網と神経中枢を攻略',enemies:'E-16〜18 / B-06 ニューラルハート',background:'living'}
 });
 export const campaignTime=seconds=>Number.isFinite(seconds)&&seconds>0?`${Math.floor(seconds/60)}:${String(Math.floor(seconds%60)).padStart(2,'0')}`:'記録なし';
@@ -25,7 +27,8 @@ export class CampaignCommand {
   constructor(doc){this.document=doc;this.challenges=new ChallengeBoard(doc);this.tab='missions';this.selected='M01';this.category='ALL';this.query='';this.animation=true;this.lastPreview=-Infinity;this.previewFrame=0;this.previewFrames=0}
   render(save,icon){const document=this.document,text=(id,value)=>document.querySelector('#'+id).textContent=value;
     const progress=campaignProgress(save);if(!MISSIONS.some(m=>m.id===this.selected))this.selected=progress.next?.id??MISSIONS[0]?.id;
-    text('campaignProgress',`CAMPAIGN ${progress.cleared}/${progress.total} COMPLETE · ${progress.percent}%`);text('campaignNext',progress.next?`次の目標：${progress.next.id} ${progress.next.name}`:progress.total>0&&progress.cleared===progress.total?'実装済みミッションを全クリア！兵科や装備を変えて再挑戦':'挑戦可能な未クリアミッションはありません');
+    text('campaignProgress',`CAMPAIGN ${progress.cleared}/${progress.total} COMPLETE · ${progress.percent}%`);text('campaignNext',progress.next?`次の目標：${progress.next.id} ${progress.next.name}`:progress.total>0&&progress.cleared===progress.total?'CAMPAIGN COMPLETE / 兵科・装備を変えて再出撃可能':'挑戦可能な未クリアミッションはありません');
+    document.querySelector('#campaignEndingReplay').hidden=!save.firstEndingReached;
     const bar=document.querySelector('#campaignProgressBar');bar.value=progress.cleared;bar.max=progress.total||1;
     for(const tab of CAMPAIGN_TABS){const active=this.tab===tab,b=document.querySelector('#campaignTab-'+tab);b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;document.querySelector('#campaignPanel-'+tab).hidden=!active}
     const title=ACHIEVEMENT_BY_ID.get(save.achievements.selectedTitle)?.title;const coverage=save.campaignStats.legacyUnrecorded?'戦績は0.7.0以降のみ。過去分未記録。':'戦績は0.7.0以降の正式出撃のみ。';text('campaignCoverage',`${title?'称号：'+title+' · ':''}${coverage}`);

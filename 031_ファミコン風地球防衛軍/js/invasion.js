@@ -1,6 +1,6 @@
 import {WORLD,ENEMY_TYPES,DENSITY_MODES,INVASION,SPAWN_PATTERNS,M01_ENCOUNTERS,clamp} from "./data.js";
 
-export const isMob = e => !["boss","beetle","queen","leviathan","fortress","skydevice","reactor","basedevice","neuralheart","neuralnode","bioshell","nest","barrier"].includes(e.type);
+export const isMob = e => !["boss","beetle","queen","leviathan","fortress","skydevice","reactor","basedevice","overmind","defensenode","commandcore","commanddevice","neuralheart","neuralnode","bioshell","nest","barrier"].includes(e.type);
 export const variation = uid => ((uid*2654435761)>>>0)/4294967296;
 
 export class SpatialGrid {
@@ -74,7 +74,7 @@ export class SpawnDirector {
     const x=clamp(desired,24,(game.world??WORLD).width-24);
     if(Math.abs(x-p.x)<INVASION.minSpawnDistance)return null;
     const type=d.enemy??pattern.enemy;
-    const y=["interceptor","shielddrone","repairdrone","sporefly"].includes(type)?48+(ordinal%4)*12:type==="skyray"?36+(ordinal%3)*12:type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
+    const y=["interceptor","shielddrone","repairdrone","sporefly","commanddrone","overseer"].includes(type)?48+(ordinal%4)*12:type==="skyray"?36+(ordinal%3)*12:type==="needle"?35+(ordinal%5)*14+variation(ordinal+7)*6:type==="spider"?28+(ordinal%3)*6:null;
     return {x,y};
   }
 }
@@ -84,7 +84,7 @@ export class AttackDirector {
   begin(time,enemies,shots){
     if(time-this.windowStart>=INVASION.normalAttackWindow){this.windowStart=time;this.starts=0}
     this.activeDives=0;this.projectiles=0;
-    for(let i=0;i<enemies.length;i++)if(!enemies[i].dead&&(enemies[i].diveTimer>0||enemies[i].type==='skyray'&&enemies[i].diveWarningLeft>0||['assaultroller','pulseworm','guardiancell'].includes(enemies[i].type)&&(enemies[i].warningLeft>0||enemies[i].dashLeft>0)))this.activeDives++;
+    for(let i=0;i<enemies.length;i++)if(!enemies[i].dead&&(enemies[i].diveTimer>0||enemies[i].type==='skyray'&&enemies[i].diveWarningLeft>0||['assaultroller','pulseworm','guardiancell','assaulttitan','biobreaker'].includes(enemies[i].type)&&(enemies[i].warningLeft>0||enemies[i].dashLeft>0)))this.activeDives++;
     for(let i=0;i<shots.length;i++)if(shots[i].normal&&!shots[i].dead)this.projectiles++;
   }
   ranged(time){

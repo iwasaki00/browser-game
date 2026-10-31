@@ -5,13 +5,13 @@ export const PLAYER_PRESETS=Object.freeze({
   STANDARD:{...PLAYER_CLASSES.RANGER}, SPEED:{...PLAYER_CLASSES.SCOUT,jump:220},
   HEAVY:{...PLAYER_CLASSES.GUARDIAN,jump:176}, FLIGHT:{...PLAYER_CLASSES.WING,jump:0}
 });
-export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen","E-07":"shorecrab","E-08":"skyray","E-09":"siegebeetle","B-03":"leviathan","E-10":"interceptor","E-11":"shielddrone","E-12":"heavygunner","B-04":"fortress","E-13":"assaultroller","E-14":"repairdrone","E-15":"sentrywalker","B-05":"reactor","E-16":"pulseworm","E-17":"sporefly","E-18":"guardiancell","B-06":"neuralheart"});
+export const LAB_ENEMIES=Object.freeze({"E-01":"crawler","E-02":"spider","E-03":"needle","E-04":"beetle","B-01":"boss","E-05":"worm","E-06":"spitter","H-01":"nest","B-02":"queen","E-07":"shorecrab","E-08":"skyray","E-09":"siegebeetle","B-03":"leviathan","E-10":"interceptor","E-11":"shielddrone","E-12":"heavygunner","B-04":"fortress","E-13":"assaultroller","E-14":"repairdrone","E-15":"sentrywalker","B-05":"reactor","E-16":"pulseworm","E-17":"sporefly","E-18":"guardiancell","B-06":"neuralheart","E-19":"commanddrone","E-20":"phasestalker","E-21":"assaulttitan","B-07":"commandcore","E-22":"overseer","E-23":"biobreaker","E-24":"coreguard","B-08":"overmind"});
 export const LAB_COUNTS=Object.freeze([1,10,30,50,100,200]);
 export function createLabState(equipped,settings){return {
   equipped:[...equipped],settings:{...settings},invincible:true,preset:"STANDARD",
   enemy:"crawler",count:30,placement:"dense",cameraMode:"AUTO",fixedZoom:.5,showFps:true,
   // Reposition always starts from this anchor, not the player's later position.
-  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD',livingBossStart:'SHIELDED',mobileBossStart:'FULL',skyBossPhase:1,bossPhase:1
+  anchorX:1000,anchorY:WORLD.ground-32,terrain:'M01',stageMission:'M01',stageArea:0,stageRoute:'LOWER',validationMode:'C',stageDensity:settings.enemyDensity??'STANDARD',finalForm:1,finalNodeMask:0,finalSquad:'D',mothershipPhase:1,mothershipMask:0,mixedSquad:'A',livingBossStart:'SHIELDED',mobileBossStart:'FULL',skyBossPhase:1,bossPhase:1
 }}
 
 export function landLabPlayer(p,platforms){

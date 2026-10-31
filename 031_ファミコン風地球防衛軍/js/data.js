@@ -1,6 +1,6 @@
 import {emptyCampaignStats,sanitizeCampaignStats} from "./campaign-stats.js?v=0.8.0";
 import {emptyAchievements,sanitizeAchievements} from "./challenges.js?v=0.8.0";
-export const VERSION = "0.8.0";
+export const VERSION = "1.0.0";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({
@@ -80,7 +80,8 @@ export const MISSIONS = Object.freeze([
   {id:"M04",name:"天空要塞迎撃戦",description:"輸送足場と防衛線を突破し、天空要塞中枢を破壊せよ",implemented:true},
   {id:"M05",name:"巨大移動基地強襲戦",description:"走行基地へ乗り込み、駆動・制御装置と動力炉を破壊せよ",implemented:true},
   {id:"M06",name:"巨大生物内部戦",description:"脈動回廊・体液流・神経網を突破し神経中枢を破壊せよ",implemented:true},
-  {id:"M07",name:"次の防衛作戦",description:"今後のアップデートで追加予定",implemented:false}
+  {id:"M07",name:"侵略母艦突入戦",description:"混成部隊と防衛3系統を突破し母艦司令中枢を破壊せよ",implemented:true},
+  {id:"M08",name:"地球最終防衛戦",description:"侵略制御網を遮断し、真の指揮生命体オーバーマインドを撃破せよ",implemented:true}
 ]);
 
 const validMissionId = id => typeof id==="string" && /^M\d{2,}$/.test(id) && Number(id.slice(1))>0 && Number.isSafeInteger(Number(id.slice(1)));
@@ -160,6 +161,16 @@ export const ENEMY_TYPES = {
   pulseworm:{id:"E-16",name:"パルスワーム",hp:85,speed:28,damage:14,score:160,w:36,h:24},
   sporefly:{id:"E-17",name:"スポアフライ",hp:55,speed:22,damage:10,score:150,w:30,h:24},
   guardiancell:{id:"E-18",name:"ガーディアンセル",hp:260,speed:16,damage:18,score:420,w:42,h:38},
+  overseer:{id:"E-22",name:"オーバーシアー",hp:140,speed:18,damage:8,score:550,w:32,h:28},
+  biobreaker:{id:"E-23",name:"バイオブレイカー",hp:300,speed:18,damage:22,score:1200,w:48,h:42},
+  coreguard:{id:"E-24",name:"コアガード",hp:180,speed:20,damage:16,score:700,w:36,h:34},
+  overmind:{id:"B-08",name:"オーバーマインド",hp:2400,speed:0,damage:0,score:50000,w:64,h:64},
+  defensenode:{id:"O-08",name:"最終防御ノード",hp:180,speed:0,damage:0,score:0,w:28,h:32},
+  commanddrone:{id:"E-19",name:"コマンドドローン",hp:100,speed:20,damage:6,score:450,w:32,h:26},
+  phasestalker:{id:"E-20",name:"フェイズストーカー",hp:125,speed:32,damage:16,score:500,w:32,h:32},
+  assaulttitan:{id:"E-21",name:"アサルトタイタン",hp:420,speed:18,damage:22,score:1500,w:56,h:48},
+  commandcore:{id:"B-07",name:"マザーコマンドコア",hp:4200,speed:0,damage:0,score:42000,w:64,h:64},
+  commanddevice:{id:"O-07",name:"母艦防衛制御装置",hp:300,speed:0,damage:0,score:0,w:28,h:32},
   neuralheart:{id:"B-06",name:"ニューラルハート",hp:3800,speed:0,damage:0,score:38000,w:64,h:64},
   neuralnode:{id:"O-06N",name:"神経ノード",hp:1,speed:0,damage:0,score:0,w:24,h:28},
   bioshell:{id:"O-06S",name:"侵入外殻",hp:120,speed:0,damage:0,score:0,w:28,h:64}
@@ -178,7 +189,7 @@ export function normalizeDestructionLevel(value){return (typeof value==="number"
 
 export const DEFAULT_SAVE = Object.freeze({
   version:2, selectedClass:"RANGER", clearedMissions:[], unlockedMissions:["M01"], unlocked:["A-01","S-02"], equipped:["A-01","S-02"], highScore:0,
-  bestTime:null, missionStats:{}, campaignStats:emptyCampaignStats(), achievements:emptyAchievements(), settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
+  bestTime:null, missionStats:{}, campaignComplete:false,firstEndingReached:false,campaignRewardClaimed:false,campaignStats:emptyCampaignStats(), achievements:emptyAchievements(), settings:{sound:true, volume:.65, shake:true, touchAim:"relative",enemyDensity:"STANDARD",destructionLevel:1}
 });
 
 export const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
@@ -196,12 +207,15 @@ export function sanitizeSave(value){
   base.campaignStats=sanitizeCampaignStats(value.campaignStats,{classes:Object.keys(PLAYER_CLASSES),weapons:WEAPONS.map(w=>w.id),missions:MISSIONS.map(m=>m.id)},true);
   base.achievements=sanitizeAchievements(value.achievements,MISSIONS.map(m=>m.id));
   Object.assign(base,missionProgress(value));
+  base.campaignComplete=base.clearedMissions.includes('M08');
+  base.firstEndingReached=base.campaignComplete&&value.firstEndingReached===true;
+  base.campaignRewardClaimed=base.campaignComplete&&value.campaignRewardClaimed===true;
   base.highScore=Number.isFinite(value.highScore)?Math.max(0,Math.floor(value.highScore)):0;
   base.bestTime=Number.isFinite(value.bestTime)&&value.bestTime>0?value.bestTime:null;
   if(value.missionStats&&typeof value.missionStats==='object')for(const [id,stats] of Object.entries(value.missionStats)){
     if(!validMissionId(id)||!stats||typeof stats!=='object')continue;
     base.missionStats[id]={highScore:Number.isFinite(stats.highScore)?Math.max(0,stats.highScore):0,bestTime:Number.isFinite(stats.bestTime)&&stats.bestTime>0?stats.bestTime:null};
-    if(['M05','M06'].includes(id)&&Number.isFinite(stats.kills))base.missionStats[id].kills=Math.max(0,Math.floor(stats.kills));
+    if(['M05','M06','M07','M08'].includes(id)&&Number.isFinite(stats.kills))base.missionStats[id].kills=Math.max(0,Math.floor(stats.kills));
   }
   if(base.clearedMissions.includes('M01')&&!base.missionStats.M01)base.missionStats.M01={highScore:base.highScore,bestTime:base.bestTime};
   if(value.settings && typeof value.settings==="object") base.settings={...base.settings,...value.settings};

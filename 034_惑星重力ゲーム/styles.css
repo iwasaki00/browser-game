@@ -381,3 +381,7 @@ input[type='range'] { height:30px; }
 
 
 @media (orientation:landscape) and (max-height:450px) { .controls { grid-template-rows:auto; } .controls .actions { grid-column:2; grid-row:1; } }
+
+.deep-map{display:block;width:100%;max-height:320px;border:1px solid #36536e;border-radius:10px}.deep-actions{display:flex;flex-wrap:wrap;gap:6px}.deep-actions button{flex:1 1 140px;min-height:44px;white-space:normal}#deepNavigation{overflow-wrap:anywhere}
+
+#finalNavigation{overflow-wrap:anywhere}.ending-card{position:absolute;z-index:12;top:10%;left:12px;right:12px;max-height:72%;overflow:auto;overscroll-behavior:contain;padding:14px;border:1px solid var(--ending-color,#9ef);border-radius:14px;background:#081524f5;box-shadow:0 0 20px #645ea333;color:#edf6ff}.ending-card h3{color:var(--ending-color);margin:7px 0}.ending-card p{font-size:14px;line-height:1.6}.ending-card button,.final-ending-list button{min-height:44px;white-space:normal}.ending-card[data-ending="END-04"]{animation:other-side 1.4s ease-out 1}@keyframes other-side{from{box-shadow:0 0 35px #a085eeaa}to{box-shadow:0 0 20px #645ea333}}@media(prefers-reduced-motion:reduce){.ending-card{animation:none!important}}

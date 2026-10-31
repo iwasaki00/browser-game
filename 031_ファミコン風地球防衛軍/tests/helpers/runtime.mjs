@@ -16,6 +16,11 @@ import * as player from "../../js/player.js";
 import * as weapons from "../../js/weapons.js";
 import * as mission02 from "../../js/mission02.js";
 import * as art from "../../js/art-preview.js";
+import * as mission08 from "../../js/mission08.js";
+import * as finalArt from "../../js/final-art.js";
+import * as campaignEnding from "../../js/campaign-ending.js";
+import * as mission07 from "../../js/mission07.js";
+import * as mothershipArt from "../../js/mothership-art.js";
 import * as mission06 from "../../js/mission06.js";
 import * as livingArt from "../../js/living-art.js";
 import * as mission05 from "../../js/mission05.js";
@@ -43,11 +48,11 @@ export function runtime(seed=null,{recordDraw=true,debug=false}={}){
   }
   const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
   const touchButtons=["left","right","jump","switch","up","down","special","hover"].map(key=>{const e=get(key);e.dataset.touch=key;return e});
-  const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Confirm","Lab","Settings"].map(n=>get(`screen${n}`));
+  const screens=["Title","Mission","Equip","Howto","Pause","Gameover","Result","Ending","Confirm","Lab","Settings"].map(n=>get(`screen${n}`));
   const document={documentElement:get("html"),body:get("body"),hidden:false,activeElement:null,querySelector:selector=>get(selector.replace(/^#/,"")),querySelectorAll:selector=>selector===".screen"?screens:selector==="#touchControls [data-touch]"?touchButtons:selector==="#labWeaponPicker button, #labWeaponPicker input"?[get("labWeaponPickerClose"),get("labPickerSlot1"),get("labPickerSlot2"),get("labWeaponSearch"),...get("labWeaponList").children.filter(e=>e.type==="button")]:[],createElement:()=>new Element(),addEventListener:(name,fn)=>{(listeners.get(name)||listeners.set(name,[]).get(name)).push(fn)}};
   const storage=new Map();if(seed)storage.set(data.SAVE_KEY,JSON.stringify(seed));
   let randomSeed=12345;const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);
-  const sandbox={...data,...challenges,...achievementMaster,...campaign,...campaignStats,...camera,...invasion,...playground,...impact,...player,...weapons,...mission02,...missionLab,...art,...mission03,...mission06,...livingArt,...mission05,...mobileArt,...mission04,...skyArt,...fortressUI,...coastalArt,...combatAudio,...gameplayUI,...mobilePlaytest,FrameProfiler,LiveProfiler,RunProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
+  const sandbox={...data,...challenges,...achievementMaster,...campaign,...campaignStats,...camera,...invasion,...playground,...impact,...player,...weapons,...mission02,...missionLab,...art,...mission03,...mission08,...finalArt,...campaignEnding,...mission07,...mothershipArt,...mission06,...livingArt,...mission05,...mobileArt,...mission04,...skyArt,...fortressUI,...coastalArt,...combatAudio,...gameplayUI,...mobilePlaytest,FrameProfiler,LiveProfiler,RunProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
   sandbox.window={innerHeight:720,addEventListener:(name,fn)=>{(listeners.get(`window:${name}`)||listeners.set(`window:${name}`,[]).get(`window:${name}`)).push(fn)}};
   const scope=vm.createContext(sandbox);vm.runInContext(source,scope);vm.runInContext("save.settings.sound=false",scope);
   const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));

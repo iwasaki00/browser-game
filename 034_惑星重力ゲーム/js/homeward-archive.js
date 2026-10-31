@@ -16,8 +16,23 @@ export class HomewardArchive {
   try{operation(tx.objectStore('flights'),value=>{result=value;});}catch(error){tx.abort();reject(error);}
  });}
  list(){return this.transaction('readonly',(store,done)=>{const request=store.getAll();request.onsuccess=()=>done(request.result);});}
- async find(id){return (await this.list()).find(row=>row.record.id===id)?.record??null;}
- saveFirst(key,record){
+ async find(id){return (await this.list()).filter(row=>row.record.id===id).sort((a,b)=>Number(Boolean(a.record.partial))-Number(Boolean(b.record.partial))||b.record.duration-a.record.duration)[0]?.record??null;}
+ async retry(operation){let last;for(let i=0;i<3;i++){try{return await operation();}catch(error){last=error;if(i<2)await new Promise(resolve=>setTimeout(resolve,50*(i+1)));}}throw last;}
+ saveCheckpoint(record){
+  if(!record?.id||!record.frames?.length||record.frames.length>4096)return Promise.reject(Error('段階保存の形式が不正です。'));
+  const key=`partial:${record.id}`;
+  return this.retry(()=>this.transaction('readwrite',(store,done)=>{const r=store.getAll();r.onsuccess=()=>{
+   const rows=r.result,existing=rows.find(row=>row.key===key);
+   if(existing&&(!existing.record.partial||existing.record.duration>record.duration)){done(existing.record.id);return;}
+   if(!existing&&rows.filter(row=>row.key.startsWith('partial:')).length>=30)throwQuota();
+   else{store.put({key,record:structuredClone(record),savedAt:Date.now()});done(record.id);}
+   function throwQuota(){// Abort the transaction: protected flights are never evicted.
+    store.transaction.abort();
+   }
+  };}));
+ }
+ saveFirst(key,record){return this.retry(()=>this.saveFirstAttempt(key,record));}
+ saveFirstAttempt(key,record){
   if(!record?.frames?.length||record.frames.length>4096)return Promise.reject(Error('重要記録の形式または点数が不正です。'));
   return this.transaction('readwrite',(store,done)=>{const r=store.get(key);r.onsuccess=()=>{
    if(r.result){done(r.result.record.id);return;}

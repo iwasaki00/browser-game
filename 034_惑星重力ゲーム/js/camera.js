@@ -1,7 +1,7 @@
 // Presentation only: CSS pixel coordinates <-> immutable world coordinates.
 export class Camera {
   constructor({minZoom=.1,maxZoom=3,padding=12}={}) {
-    Object.assign(this,{minZoom,maxZoom,padding,width:1,height:1,zoom:1,center:{x:0,y:0},bounds:{left:0,top:0,right:375,bottom:500}});
+    Object.assign(this,{configuredMinZoom:minZoom,minZoom,maxZoom,padding,width:1,height:1,zoom:1,center:{x:0,y:0},bounds:{left:0,top:0,right:375,bottom:500}});
   }
   resize(width,height){this.width=Math.max(1,width);this.height=Math.max(1,height);}
   get baseScale(){return Math.min(Math.max(1,this.width-2*this.padding)/375,Math.max(1,this.height-2*this.padding)/500);}
@@ -10,6 +10,7 @@ export class Camera {
   toWorld(point){const v=this.transform;return {x:(point.x-v.offsetX)/v.scale,y:(point.y-v.offsetY)/v.scale};}
   toScreen(point){const v=this.transform;return {x:point.x*v.scale+v.offsetX,y:point.y*v.scale+v.offsetY};}
   fit(stage){
+    this.minZoom=(stage.deepSpace||stage.finalVoyage)?.025:this.configuredMinZoom;
     const objects=[{...stage.launch.position,radius:18},{...stage.goal,radius:stage.goal.radius+8},...stage.planets.map(p=>({...p,radius:Math.max(p.radius+14,...(p.hazards??[]).map(h=>h.radius+4))}))];
     this.bounds={left:Math.min(0,...objects.map(p=>p.x-p.radius)),top:Math.min(0,...objects.map(p=>p.y-p.radius)),right:Math.max(stage.world.width,...objects.map(p=>p.x+p.radius)),bottom:Math.max(stage.world.height,...objects.map(p=>p.y+p.radius))};
     this.center={x:(this.bounds.left+this.bounds.right)/2,y:(this.bounds.top+this.bounds.bottom)/2};

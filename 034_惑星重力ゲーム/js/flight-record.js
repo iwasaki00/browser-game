@@ -27,7 +27,11 @@ export function createFlightRecorder(stage,state,metadata={},now=Date.now()){
   frames.push(row(state));
  }
  capture(state);
- return {capture,finish(state,reason){
+ return {capture,checkpoint(state){
+  if(ended)return null;
+  const copy=frames.map(r=>[...r]);if(copy.at(-1)?.[0]!==state.elapsed)copy.push(row(state));
+  return structuredClone({...record,frames:copy,duration:state.elapsed,result:'partial',partial:true,reason:'in-flight',encounterEvents:state.encounterEvents??[]});
+ },finish(state,reason){
   if(ended)return null;capture(state,true);ended=true;
   return {...record,duration:state.elapsed,result:state.status==='cleared'?'clear':'fail',reason:reason??state.reason??state.status,...(state.encounters?.length?{encounterEvents:structuredClone(state.encounterEvents??[])}:{})};
  }};

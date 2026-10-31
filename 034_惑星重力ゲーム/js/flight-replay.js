@@ -31,7 +31,7 @@ export class FlightReplay {
     // Bounds include every recorded moving planet and the flight endpoints.
     let left=0,top=0,right=record.world.width,bottom=record.world.height;
     for(const row of record.frames)for(let i=1;i+1<row.length;i+=2){left=Math.min(left,finite(row[i]));right=Math.max(right,finite(row[i]));top=Math.min(top,finite(row[i+1]));bottom=Math.max(bottom,finite(row[i+1]));}
-    this.stage={world:{...record.world},launch:{position:{x:record.frames[0][1],y:record.frames[0][2]}},goal:{...record.goal},planets:[...(record.planets??[]),{x:left,y:top,radius:0},{x:right,y:bottom,radius:0}]};
+    this.stage={finalVoyage:record.finalVoyage===true,deepSpace:record.deepSpace===true,world:{...record.world},launch:{position:{x:record.frames[0][1],y:record.frames[0][2]}},goal:{...record.goal},planets:[...(record.planets??[]),{x:left,y:top,radius:0},{x:right,y:bottom,radius:0}]};
     this.mode='normal';this.playing=false;this.phase='flight';this.remaining=0;this.camera.resize(375,500);this.camera.fit(this.stage);
   }
   get time(){return this.clock.time;}

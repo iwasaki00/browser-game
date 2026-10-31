@@ -1,0 +1,1638 @@
+[
+  {
+    "id": "END-01",
+    "start": {
+      "version": 1,
+      "currentSector": "homeward-final",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03",
+        "homeward-04",
+        "homeward-05",
+        "homeward-06",
+        "homeward-07",
+        "homeward-08",
+        "homeward-09",
+        "homeward-deep"
+      ],
+      "openingSeen": true,
+      "active": true,
+      "eventsSeen": [
+        "homeward-09:arrival",
+        "homeward-09:enter"
+      ],
+      "journal": {
+        "homeward-01": {
+          "importantFlightId": "old-first"
+        },
+        "homeward-09": {
+          "departure": "出航：選んだ目的地へ。",
+          "discovery": "信号の反応地点へ到達。未来を示す時刻は残るが、発信元の宇宙船は確認できない。調査も帰還も自分たちで選べる。",
+          "discoveries": [
+            "漂流記録装置への寄港履歴",
+            "参考航路の表示を解放",
+            "帰還経路の短縮 −900",
+            "次の宙域向けの航行情報",
+            "未解明の識別列を回収・解析を継続",
+            "異常反応の調査点への到着履歴",
+            "次の宙域への通行情報",
+            "異常反応地点への寄港履歴（原因未確定）"
+          ],
+          "arrival": "寄港：時空異常（未確定）",
+          "visited": [
+            "probe",
+            "rescue",
+            "planet",
+            "station",
+            "echo-signal",
+            "anomaly",
+            "gate",
+            "temporal-anomaly"
+          ],
+          "flightToken": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        }
+      },
+      "extra": "KEEP",
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-04": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-05": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-06": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-07": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-08": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-09": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-deep": null
+      },
+      "choices": {},
+      "voyage": {
+        "checkpoint": "gate",
+        "selected": "gate",
+        "visited": [
+          "gate"
+        ],
+        "completed": true,
+        "discoveries": [],
+        "rewards": [],
+        "elapsed": 0,
+        "planets": null,
+        "records": {}
+      },
+      "frontier": {
+        "version": 1,
+        "targets": {
+          "D01": {
+            "id": "D01",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D02": {
+            "id": "D02",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D03": {
+            "id": "D03",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D04": {
+            "id": "D04",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D05": {
+            "id": "D05",
+            "state": "UNKNOWN",
+            "tracking": 0
+          }
+        },
+        "rewards": []
+      },
+      "echoes": {
+        "version": 1,
+        "clues": {},
+        "events": [],
+        "choices": [],
+        "records": {}
+      },
+      "deep": {
+        "completed": true,
+        "rewards": [],
+        "version": 1,
+        "targets": {
+          "DS01": {
+            "state": "DETECTED"
+          },
+          "DS02": {
+            "state": "UNKNOWN"
+          },
+          "DS03": {
+            "state": "UNKNOWN"
+          },
+          "DS04": {
+            "state": "UNKNOWN"
+          },
+          "DS05": {
+            "state": "UNKNOWN"
+          },
+          "DS06": {
+            "state": "UNKNOWN"
+          }
+        },
+        "selected": "return",
+        "checkpoint": "origin",
+        "visited": [],
+        "choices": [],
+        "records": {},
+        "elapsed": 0
+      },
+      "finalVoyage": {
+        "version": 1,
+        "selected": "earth",
+        "checkpoint": "origin",
+        "decision": null,
+        "choices": [],
+        "chapters": [
+          1,
+          2
+        ],
+        "communications": [
+          {
+            "id": "chapter:1",
+            "chapter": 1,
+            "title": "THE LAST SIGNAL",
+            "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
+            "destination": "earth",
+            "at": 1793459352837,
+            "elapsed": 0
+          },
+          {
+            "id": "chapter:2",
+            "chapter": 2,
+            "title": "THE OBSERVATION NETWORK",
+            "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
+            "destination": "earth",
+            "at": 1793459352837,
+            "elapsed": 0
+          }
+        ],
+        "visited": [],
+        "records": {},
+        "endings": {},
+        "networkRead": false,
+        "rescueSaved": false,
+        "elapsed": 0
+      }
+    },
+    "decision": "home",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "earth",
+        "angleDeg": 144.02,
+        "speed": 220,
+        "time": 56.474999999997436,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 699.9851567370955,
+          "y": 8998.277086114036
+        },
+        "minClearance": 505.7399346325152,
+        "anomalyClearance": 505.7399346325152,
+        "distance": 12532.782573226488,
+        "ending": "END-01",
+        "steps": 6777
+      }
+    ],
+    "outcome": {
+      "id": "END-01",
+      "firstAt": 1793459352870,
+      "lastAt": 1793459352870
+    },
+    "rates": "1=100"
+  },
+  {
+    "id": "END-02",
+    "start": {
+      "version": 1,
+      "currentSector": "homeward-final",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03",
+        "homeward-04",
+        "homeward-05",
+        "homeward-06",
+        "homeward-07",
+        "homeward-08",
+        "homeward-09",
+        "homeward-deep"
+      ],
+      "openingSeen": true,
+      "active": true,
+      "eventsSeen": [
+        "homeward-09:arrival",
+        "homeward-09:enter"
+      ],
+      "journal": {
+        "homeward-01": {
+          "importantFlightId": "old-first"
+        },
+        "homeward-09": {
+          "departure": "出航：選んだ目的地へ。",
+          "discovery": "信号の反応地点へ到達。未来を示す時刻は残るが、発信元の宇宙船は確認できない。調査も帰還も自分たちで選べる。",
+          "discoveries": [
+            "漂流記録装置への寄港履歴",
+            "参考航路の表示を解放",
+            "帰還経路の短縮 −900",
+            "次の宙域向けの航行情報",
+            "未解明の識別列を回収・解析を継続",
+            "異常反応の調査点への到着履歴",
+            "次の宙域への通行情報",
+            "異常反応地点への寄港履歴（原因未確定）"
+          ],
+          "arrival": "寄港：時空異常（未確定）",
+          "visited": [
+            "probe",
+            "rescue",
+            "planet",
+            "station",
+            "echo-signal",
+            "anomaly",
+            "gate",
+            "temporal-anomaly"
+          ],
+          "flightToken": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        }
+      },
+      "extra": "KEEP",
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-04": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-05": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-06": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-07": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-08": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-09": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-deep": null
+      },
+      "choices": {},
+      "voyage": {
+        "checkpoint": "gate",
+        "selected": "gate",
+        "visited": [
+          "gate"
+        ],
+        "completed": true,
+        "discoveries": [],
+        "rewards": [],
+        "elapsed": 0,
+        "planets": null,
+        "records": {}
+      },
+      "frontier": {
+        "version": 1,
+        "targets": {
+          "D01": {
+            "id": "D01",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D02": {
+            "id": "D02",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D03": {
+            "id": "D03",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D04": {
+            "id": "D04",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D05": {
+            "id": "D05",
+            "state": "UNKNOWN",
+            "tracking": 0
+          }
+        },
+        "rewards": []
+      },
+      "echoes": {
+        "version": 1,
+        "clues": {},
+        "events": [],
+        "choices": [],
+        "records": {}
+      },
+      "deep": {
+        "completed": true,
+        "rewards": [],
+        "version": 1,
+        "targets": {
+          "DS01": {
+            "state": "DETECTED"
+          },
+          "DS02": {
+            "state": "UNKNOWN"
+          },
+          "DS03": {
+            "state": "UNKNOWN"
+          },
+          "DS04": {
+            "state": "UNKNOWN"
+          },
+          "DS05": {
+            "state": "UNKNOWN"
+          },
+          "DS06": {
+            "state": "UNKNOWN"
+          }
+        },
+        "selected": "return",
+        "checkpoint": "origin",
+        "visited": [],
+        "choices": [],
+        "records": {},
+        "elapsed": 0
+      },
+      "finalVoyage": {
+        "version": 1,
+        "selected": "earth",
+        "checkpoint": "origin",
+        "decision": null,
+        "choices": [],
+        "chapters": [
+          1,
+          2
+        ],
+        "communications": [
+          {
+            "id": "chapter:1",
+            "chapter": 1,
+            "title": "THE LAST SIGNAL",
+            "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
+            "destination": "earth",
+            "at": 1793459352949,
+            "elapsed": 0
+          },
+          {
+            "id": "chapter:2",
+            "chapter": 2,
+            "title": "THE OBSERVATION NETWORK",
+            "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
+            "destination": "earth",
+            "at": 1793459352949,
+            "elapsed": 0
+          }
+        ],
+        "visited": [],
+        "records": {},
+        "endings": {},
+        "networkRead": false,
+        "rescueSaved": false,
+        "elapsed": 0
+      }
+    },
+    "decision": "rescue",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "rescue",
+        "angleDeg": 109.65,
+        "speed": 220,
+        "time": 13.0499999999999,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 9532.081233372226,
+          "y": 3905.285721956419
+        },
+        "minClearance": 2339.9767398083195,
+        "anomalyClearance": 4968.753570177919,
+        "distance": 2873.2281848676953,
+        "ending": null,
+        "steps": 1566
+      },
+      {
+        "from": "rescue",
+        "target": "earth",
+        "angleDeg": 151.91,
+        "speed": 220,
+        "time": 45.31666666666474,
+        "start": {
+          "x": 9500,
+          "y": 4200
+        },
+        "end": {
+          "x": 684.2713519017467,
+          "y": 9053.836226173944
+        },
+        "minClearance": 246.8792971787198,
+        "anomalyClearance": 439.69402927051647,
+        "distance": 10075.208147201738,
+        "ending": "END-02",
+        "steps": 5438
+      }
+    ],
+    "outcome": {
+      "id": "END-02",
+      "firstAt": 1793459352996,
+      "lastAt": 1793459352996
+    },
+    "rates": "1=100"
+  },
+  {
+    "id": "END-03",
+    "start": {
+      "version": 1,
+      "currentSector": "homeward-final",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03",
+        "homeward-04",
+        "homeward-05",
+        "homeward-06",
+        "homeward-07",
+        "homeward-08",
+        "homeward-09",
+        "homeward-deep"
+      ],
+      "openingSeen": true,
+      "active": true,
+      "eventsSeen": [
+        "homeward-09:arrival",
+        "homeward-09:enter"
+      ],
+      "journal": {
+        "homeward-01": {
+          "importantFlightId": "old-first"
+        },
+        "homeward-09": {
+          "departure": "出航：選んだ目的地へ。",
+          "discovery": "信号の反応地点へ到達。未来を示す時刻は残るが、発信元の宇宙船は確認できない。調査も帰還も自分たちで選べる。",
+          "discoveries": [
+            "漂流記録装置への寄港履歴",
+            "参考航路の表示を解放",
+            "帰還経路の短縮 −900",
+            "次の宙域向けの航行情報",
+            "未解明の識別列を回収・解析を継続",
+            "異常反応の調査点への到着履歴",
+            "次の宙域への通行情報",
+            "異常反応地点への寄港履歴（原因未確定）"
+          ],
+          "arrival": "寄港：時空異常（未確定）",
+          "visited": [
+            "probe",
+            "rescue",
+            "planet",
+            "station",
+            "echo-signal",
+            "anomaly",
+            "gate",
+            "temporal-anomaly"
+          ],
+          "flightToken": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        }
+      },
+      "extra": "KEEP",
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-04": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-05": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-06": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-07": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-08": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-09": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-deep": null
+      },
+      "choices": {},
+      "voyage": {
+        "checkpoint": "temporal-anomaly",
+        "selected": "temporal-anomaly",
+        "visited": [
+          "probe",
+          "rescue",
+          "planet",
+          "station",
+          "echo-signal",
+          "anomaly",
+          "gate",
+          "temporal-anomaly"
+        ],
+        "discoveries": [
+          "漂流記録装置への寄港履歴",
+          "参考航路の表示を解放",
+          "帰還経路の短縮 −900",
+          "次の宙域向けの航行情報",
+          "未解明の識別列を回収・解析を継続",
+          "異常反応の調査点への到着履歴",
+          "次の宙域への通行情報",
+          "異常反応地点への寄港履歴（原因未確定）"
+        ],
+        "rewards": [
+          "probe-visit",
+          "route-charts",
+          "navigation-tech",
+          "station-intel",
+          "echo-reception",
+          "anomaly-visit",
+          "next-region",
+          "temporal-arrival"
+        ],
+        "completed": true,
+        "elapsed": 7.5000000000001625,
+        "planets": [
+          {
+            "id": "voyage-planet-1",
+            "x": 1100,
+            "y": 3400,
+            "type": "earth",
+            "size": "medium",
+            "radius": 38,
+            "mass": 5200,
+            "color": "#6fd3ff"
+          },
+          {
+            "id": "voyage-planet-2",
+            "x": 1900,
+            "y": 1500,
+            "type": "gas",
+            "size": "medium",
+            "radius": 48,
+            "mass": 8000,
+            "color": "#e9b677"
+          },
+          {
+            "id": "voyage-planet-3",
+            "x": 2700,
+            "y": 2350,
+            "type": "repulsor",
+            "size": "medium",
+            "radius": 28,
+            "mass": 3600,
+            "color": "#9880ff",
+            "gravityMultiplier": 1,
+            "gravityDirection": -1,
+            "collisionRadius": 28,
+            "hazards": [],
+            "effect": "repulsion",
+            "render": {
+              "style": "repulsor",
+              "glow": "#9b82ff"
+            }
+          }
+        ],
+        "records": {
+          "temporal-anomaly": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        },
+        "launchPosition": {
+          "x": 2200,
+          "y": 960
+        }
+      },
+      "frontier": {
+        "version": 1,
+        "targets": {
+          "D01": {
+            "id": "D01",
+            "state": "INVESTIGATED",
+            "tracking": 0,
+            "source": "proximity",
+            "firstDetectedAt": 123456789,
+            "detectedElapsed": 5.625399998789483,
+            "investigatedAt": 123456789,
+            "investigatedElapsed": 8.271313319984666,
+            "information": "回収した星図：別の信号位置と参考航路を解読"
+          },
+          "D02": {
+            "id": "D02",
+            "state": "INVESTIGATED",
+            "tracking": 0,
+            "source": "proximity",
+            "firstDetectedAt": 123456789,
+            "detectedElapsed": 4.251801099996854,
+            "investigatedAt": 123456789,
+            "investigatedElapsed": 1.9457420268539185,
+            "information": "救難情報：漂流船の位置を特定。任意の救助航路を選択可能"
+          },
+          "D03": {
+            "id": "D03",
+            "state": "INVESTIGATED",
+            "tracking": 0,
+            "source": "proximity",
+            "firstDetectedAt": 123456789,
+            "detectedElapsed": 4.950057457932481,
+            "investigatedAt": 123456789,
+            "investigatedElapsed": 7.728602591614442,
+            "information": "重力情報：紫の天体は反発。予測線の曲がりと、外側の調査点を確認"
+          },
+          "D04": {
+            "id": "D04",
+            "state": "INVESTIGATED",
+            "tracking": 0,
+            "source": "dock",
+            "firstDetectedAt": 123456789,
+            "detectedElapsed": 8.27500000000017,
+            "investigatedAt": 123456789,
+            "investigatedElapsed": 7.5333333333334975,
+            "information": "航行支援：安全な寄港地と、次の航行の参考方位を記録"
+          },
+          "D05": {
+            "id": "D05",
+            "state": "INVESTIGATED",
+            "tracking": 0,
+            "source": "tracking",
+            "firstDetectedAt": 123456789,
+            "detectedElapsed": 9.122540974822403,
+            "investigatedAt": 123456789,
+            "investigatedElapsed": 5.066666666666708,
+            "information": "探索記録：反応の追跡から、漂流記録装置の位置を推定"
+          }
+        },
+        "rewards": [
+          "probe-routes",
+          "rescue-option",
+          "gravity-notes",
+          "station-guidance",
+          "anomaly-clue"
+        ]
+      },
+      "echoes": {
+        "version": 1,
+        "clues": {
+          "CLUE-01": {
+            "id": "CLUE-01",
+            "at": 123456789,
+            "source": "D01",
+            "flightId": "first-CLUE-01"
+          },
+          "CLUE-02": {
+            "id": "CLUE-02",
+            "at": 123456789,
+            "source": "D03",
+            "flightId": "first-CLUE-02"
+          },
+          "CLUE-03": {
+            "id": "CLUE-03",
+            "at": 123456789,
+            "source": "D04",
+            "flightId": "first-CLUE-03"
+          },
+          "CLUE-04": {
+            "id": "CLUE-04",
+            "at": 123456789,
+            "flightId": "first-CLUE-04"
+          },
+          "CLUE-05": {
+            "id": "CLUE-05",
+            "at": 123456789,
+            "flightId": "legacy-protected"
+          },
+          "CLUE-06": {
+            "id": "CLUE-06",
+            "at": 1793422446472,
+            "related": [
+              "CLUE-05"
+            ],
+            "unlocks": [
+              "通信時刻の解析"
+            ],
+            "flightId": "legacy-protected"
+          },
+          "CLUE-07": {
+            "id": "CLUE-07",
+            "at": 1793422446537,
+            "related": [
+              "CLUE-05",
+              "CLUE-06"
+            ],
+            "unlocks": [
+              "信号座標の照合"
+            ],
+            "flightId": "legacy-protected"
+          },
+          "CLUE-08": {
+            "id": "CLUE-08",
+            "at": 1793422446537,
+            "related": [
+              "CLUE-06",
+              "CLUE-07"
+            ],
+            "unlocks": [
+              "UNKNOWN ANOMALY"
+            ],
+            "flightId": "legacy-protected"
+          },
+          "CLUE-09": {
+            "id": "CLUE-09",
+            "at": 1793422455648,
+            "related": [
+              "CLUE-05",
+              "CLUE-06",
+              "CLUE-07",
+              "CLUE-08"
+            ],
+            "unlocks": [
+              "追加通信と調査結果の日誌"
+            ],
+            "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+          }
+        },
+        "events": [
+          {
+            "id": "CLUE-01",
+            "message": "SIGNAL DETECTED · 古い通信断片を回収",
+            "destination": "probe",
+            "at": 123456789,
+            "elapsed": 8.27500000000017
+          },
+          {
+            "id": "CLUE-02",
+            "message": "DATA MATCH · 同じ間隔の信号を観測",
+            "destination": "planet",
+            "at": 123456789,
+            "elapsed": 7.7333333333335075
+          },
+          {
+            "id": "match-pattern",
+            "message": "DATA MATCH · 二つの場所に、同じ信号パターン",
+            "destination": "planet",
+            "at": 123456789,
+            "elapsed": 7.7333333333335075
+          },
+          {
+            "id": "CLUE-03",
+            "message": "ARCHIVE FOUND · 帰着しなかった調査船の記録",
+            "destination": "station",
+            "at": 123456789,
+            "elapsed": 7.5333333333334975
+          },
+          {
+            "id": "match-vessel",
+            "message": "DATA MATCH · 通信断片は、消えた調査船と関連する可能性",
+            "destination": "station",
+            "at": 123456789,
+            "elapsed": 7.5333333333334975
+          },
+          {
+            "id": "CLUE-04",
+            "message": "NEW DESTINATION · 救難信号の発信源を特定",
+            "destination": "echo-signal",
+            "at": 123456789,
+            "elapsed": 7.5333333333334975
+          },
+          {
+            "id": "CLUE-05",
+            "message": "UNKNOWN IDENTITY · 識別信号が一致。しかし、この記録は……",
+            "destination": "echo-signal",
+            "at": 123456789,
+            "elapsed": 2.949999999999992
+          },
+          {
+            "id": "CLUE-06",
+            "message": "IDENTITY MATCH · 識別番号 HN-0417 は本船と同一。記録に矛盾",
+            "destination": "temporal-anomaly",
+            "at": 1793422446472,
+            "elapsed": 0
+          },
+          {
+            "id": "CLUE-07",
+            "message": "TEMPORAL ERROR · 送信時刻は基準時より72時間先。整合性を確認できません",
+            "destination": "temporal-anomaly",
+            "at": 1793422446537,
+            "elapsed": 0
+          },
+          {
+            "id": "CLUE-08",
+            "message": "NEW COORDINATES · UNKNOWN ANOMALYの反応座標を特定",
+            "destination": "temporal-anomaly",
+            "at": 1793422446537,
+            "elapsed": 0
+          },
+          {
+            "id": "impossible-approach",
+            "message": "SIGNAL RISING · 本船の識別信号を検出。発信時刻は依然として未来",
+            "destination": "temporal-anomaly",
+            "at": 1793422453648,
+            "elapsed": 5.183333333333381
+          },
+          {
+            "id": "impossible-result-investigate",
+            "message": "調査結果 · 内側で追加通信を受信。時空異常という仮説は未確定",
+            "destination": "temporal-anomaly",
+            "at": 1793422455648,
+            "elapsed": 7.18333333333348
+          },
+          {
+            "id": "CLUE-09",
+            "message": "ADDITIONAL SIGNAL · 識別番号も未来の時刻も一致。発信元の宇宙船は確認できません",
+            "destination": "temporal-anomaly",
+            "at": 1793422455648,
+            "elapsed": 7.18333333333348
+          },
+          {
+            "id": "impossible-ending",
+            "message": "SIGNAL LOST · 「こちらは……」「応答を……」「まだ、そこへ行くな……」",
+            "destination": "temporal-anomaly",
+            "at": 1793422455648,
+            "elapsed": 7.18333333333348
+          }
+        ],
+        "choices": [
+          {
+            "choice": "follow",
+            "destination": "echo-signal",
+            "at": 1793290151924
+          },
+          {
+            "choice": "explore",
+            "destination": "anomaly",
+            "at": 1793290151952
+          }
+        ],
+        "records": {
+          "CLUE-01": "first-CLUE-01",
+          "CLUE-02": "first-CLUE-02",
+          "match-pattern": "first-match-pattern",
+          "CLUE-03": "first-CLUE-03",
+          "match-vessel": "first-match-vessel",
+          "CLUE-04": "first-CLUE-04",
+          "CLUE-05": "legacy-protected",
+          "impossible-approach": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "impossible-result-investigate": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "CLUE-09": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "impossible-ending": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        },
+        "impossible": {
+          "analysis": {
+            "identity": true,
+            "timestamp": true
+          },
+          "choices": [
+            {
+              "id": 1,
+              "choice": "avoid",
+              "destination": "gate",
+              "at": 1793422446639,
+              "result": "superseded",
+              "completedAt": 1793422446706
+            },
+            {
+              "id": 2,
+              "choice": "observe",
+              "destination": "gate",
+              "at": 1793422446706,
+              "result": "superseded",
+              "completedAt": 1793422446772
+            },
+            {
+              "id": 3,
+              "choice": "investigate",
+              "destination": "temporal-anomaly",
+              "at": 1793422446772,
+              "result": "investigated",
+              "enteredInner": true,
+              "completedAt": 1793422455648,
+              "elapsed": 7.18333333333348
+            }
+          ],
+          "tracking": 0,
+          "approached": true,
+          "investigated": true
+        }
+      },
+      "deep": {
+        "completed": true,
+        "rewards": [
+          "final-voyage-chart"
+        ],
+        "version": 1,
+        "targets": {
+          "DS01": {
+            "state": "DETECTED"
+          },
+          "DS02": {
+            "state": "UNKNOWN"
+          },
+          "DS03": {
+            "state": "UNKNOWN"
+          },
+          "DS04": {
+            "state": "UNKNOWN"
+          },
+          "DS05": {
+            "state": "UNKNOWN"
+          },
+          "DS06": {
+            "state": "UNKNOWN"
+          }
+        },
+        "selected": "return",
+        "checkpoint": "origin",
+        "visited": [],
+        "choices": [],
+        "records": {},
+        "elapsed": 0
+      },
+      "finalVoyage": {
+        "version": 1,
+        "selected": "earth",
+        "checkpoint": "origin",
+        "decision": null,
+        "choices": [],
+        "chapters": [
+          1,
+          2
+        ],
+        "communications": [
+          {
+            "id": "chapter:1",
+            "chapter": 1,
+            "title": "THE LAST SIGNAL",
+            "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
+            "destination": "earth",
+            "at": 1793459353052,
+            "elapsed": 0
+          },
+          {
+            "id": "chapter:2",
+            "chapter": 2,
+            "title": "THE OBSERVATION NETWORK",
+            "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
+            "destination": "earth",
+            "at": 1793459353052,
+            "elapsed": 0
+          }
+        ],
+        "visited": [],
+        "records": {},
+        "endings": {},
+        "networkRead": false,
+        "rescueSaved": false,
+        "elapsed": 0
+      }
+    },
+    "decision": "truth",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "network",
+        "angleDeg": 117,
+        "speed": 220,
+        "time": 26.499999999999137,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 7822.046336933048,
+          "y": 6402.460474535527
+        },
+        "minClearance": 1436.2297221973838,
+        "anomalyClearance": 2826.599930077982,
+        "distance": 5851.304803686017,
+        "ending": null,
+        "steps": 3180
+      },
+      {
+        "from": "network",
+        "target": "earth",
+        "angleDeg": 161.03,
+        "speed": 220,
+        "time": 33.916666666665385,
+        "start": {
+          "x": 7800,
+          "y": 6700
+        },
+        "end": {
+          "x": 618.1996920575162,
+          "y": 8901.67008995727
+        },
+        "minClearance": 465.0917436723829,
+        "anomalyClearance": 1543.0264870212984,
+        "distance": 7515.830368726415,
+        "ending": "END-03",
+        "steps": 4070
+      }
+    ],
+    "outcome": {
+      "id": "END-03",
+      "firstAt": 1793459353096,
+      "lastAt": 1793459353096
+    },
+    "rates": "1=100"
+  },
+  {
+    "id": "END-04",
+    "start": {
+      "version": 1,
+      "currentSector": "homeward-final",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03",
+        "homeward-04",
+        "homeward-05",
+        "homeward-06",
+        "homeward-07",
+        "homeward-08",
+        "homeward-09",
+        "homeward-deep"
+      ],
+      "openingSeen": true,
+      "active": true,
+      "eventsSeen": [
+        "homeward-09:arrival",
+        "homeward-09:enter"
+      ],
+      "journal": {
+        "homeward-01": {
+          "importantFlightId": "old-first"
+        },
+        "homeward-09": {
+          "departure": "出航：選んだ目的地へ。",
+          "discovery": "信号の反応地点へ到達。未来を示す時刻は残るが、発信元の宇宙船は確認できない。調査も帰還も自分たちで選べる。",
+          "discoveries": [
+            "漂流記録装置への寄港履歴",
+            "参考航路の表示を解放",
+            "帰還経路の短縮 −900",
+            "次の宙域向けの航行情報",
+            "未解明の識別列を回収・解析を継続",
+            "異常反応の調査点への到着履歴",
+            "次の宙域への通行情報",
+            "異常反応地点への寄港履歴（原因未確定）"
+          ],
+          "arrival": "寄港：時空異常（未確定）",
+          "visited": [
+            "probe",
+            "rescue",
+            "planet",
+            "station",
+            "echo-signal",
+            "anomaly",
+            "gate",
+            "temporal-anomaly"
+          ],
+          "flightToken": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        }
+      },
+      "extra": "KEEP",
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-04": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-05": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-06": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-07": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-08": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-09": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-deep": null
+      },
+      "choices": {},
+      "voyage": {
+        "checkpoint": "gate",
+        "selected": "gate",
+        "visited": [
+          "gate"
+        ],
+        "completed": true,
+        "discoveries": [],
+        "rewards": [],
+        "elapsed": 0,
+        "planets": null,
+        "records": {}
+      },
+      "frontier": {
+        "version": 1,
+        "targets": {
+          "D01": {
+            "id": "D01",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D02": {
+            "id": "D02",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D03": {
+            "id": "D03",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D04": {
+            "id": "D04",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D05": {
+            "id": "D05",
+            "state": "UNKNOWN",
+            "tracking": 0
+          }
+        },
+        "rewards": []
+      },
+      "echoes": {
+        "version": 1,
+        "clues": {},
+        "events": [],
+        "choices": [],
+        "records": {}
+      },
+      "deep": {
+        "completed": true,
+        "rewards": [],
+        "version": 1,
+        "targets": {
+          "DS01": {
+            "state": "DETECTED"
+          },
+          "DS02": {
+            "state": "UNKNOWN"
+          },
+          "DS03": {
+            "state": "UNKNOWN"
+          },
+          "DS04": {
+            "state": "UNKNOWN"
+          },
+          "DS05": {
+            "state": "UNKNOWN"
+          },
+          "DS06": {
+            "state": "UNKNOWN"
+          }
+        },
+        "selected": "return",
+        "checkpoint": "origin",
+        "visited": [],
+        "choices": [],
+        "records": {},
+        "elapsed": 0
+      },
+      "finalVoyage": {
+        "version": 1,
+        "selected": "earth",
+        "checkpoint": "origin",
+        "decision": null,
+        "choices": [],
+        "chapters": [
+          1,
+          2
+        ],
+        "communications": [
+          {
+            "id": "chapter:1",
+            "chapter": 1,
+            "title": "THE LAST SIGNAL",
+            "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
+            "destination": "earth",
+            "at": 1793459353170,
+            "elapsed": 0
+          },
+          {
+            "id": "chapter:2",
+            "chapter": 2,
+            "title": "THE OBSERVATION NETWORK",
+            "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
+            "destination": "earth",
+            "at": 1793459353170,
+            "elapsed": 0
+          }
+        ],
+        "visited": [],
+        "records": {},
+        "endings": {},
+        "networkRead": false,
+        "rescueSaved": false,
+        "elapsed": 0
+      }
+    },
+    "decision": "other",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "network",
+        "angleDeg": 117,
+        "speed": 220,
+        "time": 26.499999999999137,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 7822.046336933048,
+          "y": 6402.460474535527
+        },
+        "minClearance": 1436.2297221973838,
+        "anomalyClearance": 2826.599930077982,
+        "distance": 5851.304803686017,
+        "ending": null,
+        "steps": 3180
+      },
+      {
+        "from": "network",
+        "target": "passage",
+        "angleDeg": -163.81,
+        "speed": 220,
+        "time": 14.141666666666504,
+        "start": {
+          "x": 7800,
+          "y": 6700
+        },
+        "end": {
+          "x": 4784.507949163227,
+          "y": 5853.464067636362
+        },
+        "minClearance": 84.25710468603567,
+        "anomalyClearance": 84.25710468603567,
+        "distance": 3133.6303561189125,
+        "ending": "END-04",
+        "steps": 1697
+      }
+    ],
+    "outcome": {
+      "id": "END-04",
+      "firstAt": 1793459353227,
+      "lastAt": 1793459353227
+    },
+    "rates": "1=100"
+  },
+  {
+    "id": "END-05",
+    "start": {
+      "version": 1,
+      "currentSector": "homeward-final",
+      "cleared": [
+        "homeward-01",
+        "homeward-02",
+        "homeward-03",
+        "homeward-04",
+        "homeward-05",
+        "homeward-06",
+        "homeward-07",
+        "homeward-08",
+        "homeward-09",
+        "homeward-deep"
+      ],
+      "openingSeen": true,
+      "active": true,
+      "eventsSeen": [
+        "homeward-09:arrival",
+        "homeward-09:enter"
+      ],
+      "journal": {
+        "homeward-01": {
+          "importantFlightId": "old-first"
+        },
+        "homeward-09": {
+          "departure": "出航：選んだ目的地へ。",
+          "discovery": "信号の反応地点へ到達。未来を示す時刻は残るが、発信元の宇宙船は確認できない。調査も帰還も自分たちで選べる。",
+          "discoveries": [
+            "漂流記録装置への寄港履歴",
+            "参考航路の表示を解放",
+            "帰還経路の短縮 −900",
+            "次の宙域向けの航行情報",
+            "未解明の識別列を回収・解析を継続",
+            "異常反応の調査点への到着履歴",
+            "次の宙域への通行情報",
+            "異常反応地点への寄港履歴（原因未確定）"
+          ],
+          "arrival": "寄港：時空異常（未確定）",
+          "visited": [
+            "probe",
+            "rescue",
+            "planet",
+            "station",
+            "echo-signal",
+            "anomaly",
+            "gate",
+            "temporal-anomaly"
+          ],
+          "flightToken": "7c0e7be2-fa14-406f-aac8-2271489b2f0c",
+          "flightId": "7c0e7be2-fa14-406f-aac8-2271489b2f0c"
+        }
+      },
+      "extra": "KEEP",
+      "tutorial": {
+        "homeward-01": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-02": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-03": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-04": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-05": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-06": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-07": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-08": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-09": {
+          "status": "completed",
+          "step": 0
+        },
+        "homeward-deep": null
+      },
+      "choices": {},
+      "voyage": {
+        "checkpoint": "gate",
+        "selected": "gate",
+        "visited": [
+          "gate"
+        ],
+        "completed": true,
+        "discoveries": [],
+        "rewards": [],
+        "elapsed": 0,
+        "planets": null,
+        "records": {}
+      },
+      "frontier": {
+        "version": 1,
+        "targets": {
+          "D01": {
+            "id": "D01",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D02": {
+            "id": "D02",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D03": {
+            "id": "D03",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D04": {
+            "id": "D04",
+            "state": "UNKNOWN",
+            "tracking": 0
+          },
+          "D05": {
+            "id": "D05",
+            "state": "UNKNOWN",
+            "tracking": 0
+          }
+        },
+        "rewards": []
+      },
+      "echoes": {
+        "version": 1,
+        "clues": {},
+        "events": [],
+        "choices": [],
+        "records": {}
+      },
+      "deep": {
+        "completed": true,
+        "rewards": [],
+        "version": 1,
+        "targets": {
+          "DS01": {
+            "state": "DETECTED"
+          },
+          "DS02": {
+            "state": "UNKNOWN"
+          },
+          "DS03": {
+            "state": "UNKNOWN"
+          },
+          "DS04": {
+            "state": "UNKNOWN"
+          },
+          "DS05": {
+            "state": "UNKNOWN"
+          },
+          "DS06": {
+            "state": "UNKNOWN"
+          }
+        },
+        "selected": "return",
+        "checkpoint": "origin",
+        "visited": [],
+        "choices": [],
+        "records": {},
+        "elapsed": 0
+      },
+      "finalVoyage": {
+        "version": 1,
+        "selected": "earth",
+        "checkpoint": "origin",
+        "decision": null,
+        "choices": [],
+        "chapters": [
+          1,
+          2
+        ],
+        "communications": [
+          {
+            "id": "chapter:1",
+            "chapter": 1,
+            "title": "THE LAST SIGNAL",
+            "message": "最後の通信が届く。「まだ、そこへ行くな」。警告は未来の確定を意味するのか。",
+            "destination": "earth",
+            "at": 1793459353300,
+            "elapsed": 0
+          },
+          {
+            "id": "chapter:2",
+            "chapter": 2,
+            "title": "THE OBSERVATION NETWORK",
+            "message": "古い通信と72時間のずれが、同じ観測網で重なる。中枢へ行けば転送の仕組みを調べられる。",
+            "destination": "earth",
+            "at": 1793459353300,
+            "elapsed": 0
+          }
+        ],
+        "visited": [],
+        "records": {},
+        "endings": {},
+        "networkRead": false,
+        "rescueSaved": false,
+        "elapsed": 0
+      }
+    },
+    "decision": "continue",
+    "legs": [
+      {
+        "from": "origin",
+        "target": "observatory",
+        "angleDeg": 175.43,
+        "speed": 220,
+        "time": 33.84999999999872,
+        "start": {
+          "x": 10500,
+          "y": 1200
+        },
+        "end": {
+          "x": 3097.0520471173377,
+          "y": 1775.89812973369
+        },
+        "minClearance": 471.22445130031707,
+        "anomalyClearance": 4307.706762651144,
+        "distance": 7425.657003506549,
+        "ending": "END-05",
+        "steps": 4062
+      }
+    ],
+    "outcome": {
+      "id": "END-05",
+      "firstAt": 1793459353349,
+      "lastAt": 1793459353349
+    },
+    "rates": "1=100"
+  }
+]

@@ -1,5 +1,19 @@
 # Asset Manifest
 
+## MOTHERSHIP 01 / M07（0.9.0）
+
+`assets/mothership-01/catalog.json`：24 PNG／151セル、固定seed9009600。Python/Pillow・sourceScale2・nearest。既存PNGは上書きしない。
+
+| 分類 | PNG数 | 内容 |
+| --- | ---: | --- |
+| 背景 | 6 | 外殻・格納庫・融合・防衛網・中枢・未知信号、各640×360 |
+| 地形 | 1 | mothership.png 256×64、32×32セル16種（論理16px） |
+| Actor | 10 | E-19 32×26／E-20 32×32／E-21 56×48／B-07 176×112／装置28×32、各8コマ×近/遠（数値は論理px） |
+| FX | 6 | 指揮・シールド・転移・攻撃・破壊・信号、各512×64・8コマ |
+| 一覧 | 1 | contact-sheet.png（素材一覧、実ゲーム撮影ではない） |
+
+生成：`py -3 tools/generate_assets.py --mothership-only`。生成器`tools/mothership_assets.py`、描画`js/mothership-art.js`。寸法・アンカー・SHA256はcatalog参照。B-07描画上端y−24、核中心world(x,y+32)、判定64×64。通常20武器・銃口・旧素材は変更しない。読込失敗はPNG単位で基本図形へフォールバック。[素材一覧](../assets/mothership-01/contact-sheet.png)／[M07仕様](MISSION_07.md)。
+
 ## LIVING COLOSSUS 01 / M06（0.6.0）
 
 `assets/living-colossus-01/catalog.json`に26 PNG／174セルの寸法・アンカー・SHA256。固定seed6008400、Python/Pillow、sourceScale2、nearest、旧PNGは上書きしない。

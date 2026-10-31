@@ -579,7 +579,21 @@ def main():
     parser.add_argument("--sky-only", action="store_true", help="Generate isolated M04 SKY 01 assets only")
     parser.add_argument("--mobile-fortress-only", action="store_true", help="Generate isolated M05 MOBILE FORTRESS 01 assets only")
     parser.add_argument("--living-colossus-only", action="store_true", help="Generate isolated M06 LIVING COLOSSUS 01 assets only")
+    parser.add_argument("--mothership-only", action="store_true", help="Generate isolated M07 MOTHERSHIP 01 assets only")
+    parser.add_argument("--final-defense-only", action="store_true", help="Generate isolated M08 FINAL DEFENSE assets only")
     args=parser.parse_args()
+    if args.final_defense_only:
+        if any(value for key,value in vars(args).items() if key!="final_defense_only"):
+            parser.error("--final-defense-only cannot be combined with other generation flags")
+        from final_defense_assets import generate
+        generate(ROOT)
+        return
+    if args.mothership_only:
+        if any(value for key,value in vars(args).items() if key!="mothership_only"):
+            parser.error("--mothership-only cannot be combined with other generation flags")
+        from mothership_assets import generate
+        generate(ROOT)
+        return
     if args.living_colossus_only:
         if any(value for key,value in vars(args).items() if key!="living_colossus_only"):
             parser.error("--living-colossus-only cannot be combined with other generation flags")

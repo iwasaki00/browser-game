@@ -59,7 +59,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
   if(!replay)return;resize();drawReplay(canvas,record,replay.time,full,replay);
   $('#replayTime').textContent=`${replay.time.toFixed(2)} / ${record.duration.toFixed(2)}秒`;
   $('#replayPlay').textContent=replay.playing?'一時停止':'再生';
-  $('#replayResult').textContent=replay.time>=record.duration&&replay.phase!=='intro'?(record.result==='clear'?'CLEAR':'FAIL'):'';
+  $('#replayResult').textContent=replay.time>=record.duration&&replay.phase!=='intro'?(record.partial?'PARTIAL / \u98db\u884c\u9014\u4e2d':record.result==='clear'?'CLEAR':'FAIL'):'';
   $('#replayPosition').value=String(replay.time);$('#replayCamera').value=replay.mode;
   $('#replayPhase').textContent=replay.phase==='intro'?'出航準備':replay.phase==='outro'?'航行終了':replay.mode.toUpperCase();
   const event=replay.snapshot.frame.encounterEvents?.at(-1),discovery=[...(record.frontierEvents??[]),...(record.storyEvents??[])].filter(e=>e.elapsed<=replay.time).sort((a,b)=>a.elapsed-b.elapsed).at(-1);$('#replayEncounterLog').textContent=discovery?.message??(event?(event.type==='station'?'発見：宇宙ステーションを記録':'重力異常の反応を観測'):'');
@@ -81,7 +81,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
     const item=document.createElement('article'),open=document.createElement('button');open.className='gallery-record';open.type='button';
     const thumb=document.createElement('canvas');thumb.width=120;thumb.height=160;thumb.setAttribute('aria-hidden','true');drawReplay(thumb,row,row.duration,true);
     const copy=document.createElement('span');copy.textContent=`${row.favorite?'★ ':''}${row.stageName}`;
-    const info=document.createElement('small');info.textContent=`${new Date(row.createdAt).toLocaleString('ja-JP')}\n${row.gameMode==='live'?'重力操作':'軌道設計'} / ${row.launchMode==='slingshot'?'スリングショット':'精密発射'}\n${row.result==='clear'?'CLEAR':'FAIL'} · ${row.duration.toFixed(2)}秒`;
+    const info=document.createElement('small');info.textContent=`${new Date(row.createdAt).toLocaleString('ja-JP')}\n${row.gameMode==='live'?'重力操作':'軌道設計'} / ${row.launchMode==='slingshot'?'スリングショット':'精密発射'}\n${row.partial?'PARTIAL':row.result==='clear'?'CLEAR':'FAIL'} · ${row.duration.toFixed(2)}秒`;
     copy.append(info);open.append(thumb,copy);open.addEventListener('click',()=>play(row));
     const favorite=document.createElement('button');favorite.type='button';favorite.textContent=row.favorite?'★ 解除':'☆ お気に入り';favorite.setAttribute('aria-pressed',String(row.favorite));
     favorite.addEventListener('click',async()=>{try{if(!await store.setFavorite(row.id,!row.favorite))notify('お気に入りは最大30件です。解除してから登録してください。');await refresh();}catch(error){notify(galleryErrorMessage(error));}});

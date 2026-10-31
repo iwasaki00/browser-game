@@ -1,0 +1,78 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 402
+    },
+    "overview": "0.03×",
+    "UI": "PASS",
+    "flight": "DS01 / reload / return / midflight target switch / cinematic PASS",
+    "oldSaves": "preserved",
+    "device": "PC Chrome emulation; iPhone UNVERIFIED"
+  },
+  {
+    "width": 375,
+    "height": 667,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 501
+    },
+    "overview": "0.03×",
+    "UI": "PASS",
+    "flight": "DS01 / reload / return / midflight target switch / cinematic PASS",
+    "oldSaves": "preserved",
+    "device": "PC Chrome emulation; iPhone UNVERIFIED"
+  },
+  {
+    "indexedDB": {
+      "failed": true,
+      "capAttempts": 3,
+      "count": 30,
+      "final": "clear",
+      "protected": true,
+      "oldFound": true,
+      "version": 1,
+      "favorite": true
+    }
+  },
+  {
+    "archiveCapacityFailure": "notification shown; flight continues; RESET works",
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 678
+    },
+    "overview": "0.03×",
+    "UI": "PASS",
+    "flight": "DS01 / reload / return / midflight target switch / cinematic PASS",
+    "oldSaves": "preserved",
+    "device": "PC Chrome emulation; iPhone UNVERIFIED"
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "board": {
+      "x": 5,
+      "y": 46,
+      "width": 834,
+      "height": 276
+    },
+    "overview": "0.05×",
+    "UI": "PASS",
+    "flight": "DS01 / reload / return / midflight target switch / cinematic PASS",
+    "oldSaves": "preserved",
+    "device": "PC Chrome emulation; iPhone UNVERIFIED"
+  }
+]

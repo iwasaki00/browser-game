@@ -1,0 +1,69 @@
+{
+  "legs": [
+    {
+      "decision": "continue",
+      "from": "origin",
+      "target": "observatory",
+      "ending": "END-05"
+    },
+    {
+      "decision": "home",
+      "from": "observatory",
+      "target": "earth",
+      "ending": "END-01"
+    },
+    {
+      "decision": "rescue",
+      "from": "earth",
+      "target": "rescue",
+      "ending": null
+    },
+    {
+      "decision": "rescue",
+      "from": "rescue",
+      "target": "earth",
+      "ending": "END-02"
+    },
+    {
+      "decision": "other",
+      "from": "earth",
+      "target": "network",
+      "ending": null
+    },
+    {
+      "decision": "other",
+      "from": "network",
+      "target": "passage",
+      "ending": "END-04"
+    },
+    {
+      "decision": "home",
+      "from": "passage",
+      "target": "earth",
+      "ending": "END-01"
+    }
+  ],
+  "endings": {
+    "END-01": {
+      "id": "END-01",
+      "firstAt": 1793459353488,
+      "lastAt": 1793459353594,
+      "flightId": "first"
+    },
+    "END-02": {
+      "id": "END-02",
+      "firstAt": 1793459353552,
+      "lastAt": 1793459353552
+    },
+    "END-04": {
+      "id": "END-04",
+      "firstAt": 1793459353580,
+      "lastAt": 1793459353580
+    },
+    "END-05": {
+      "id": "END-05",
+      "firstAt": 1793459353467,
+      "lastAt": 1793459353467
+    }
+  }
+}

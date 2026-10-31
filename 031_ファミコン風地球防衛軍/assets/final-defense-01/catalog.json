@@ -1,0 +1,958 @@
+{
+  "version": "1.0.0",
+  "style": "UNIFIED 01 / FINAL DEFENSE 01",
+  "seed": 10001008,
+  "sourceScale": 2,
+  "sampling": "nearest",
+  "generator": "tools/final_defense_assets.py",
+  "missions": [
+    "M08"
+  ],
+  "assets": [
+    {
+      "path": "backgrounds/deep.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "deep"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "7bf6bda0c596be4101a7709f590af76c9298fe83c403c45494d4bac3867f5619"
+    },
+    {
+      "path": "backgrounds/arsenal.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "arsenal"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "5c64ddef7fd349c568a45d4ccbeaaa94d287a40e41f4fc6162e4ed774ed70dbe"
+    },
+    {
+      "path": "backgrounds/network.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "network"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "532c472f88031dffcc4d2ed9ce935f5430be0d5e70e66a6bbc48c5672cb4fba8"
+    },
+    {
+      "path": "backgrounds/source.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "source"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "b800687f59350f9a53fddea3130e8b2b1a50bf460531f324816d4d06916341a4"
+    },
+    {
+      "path": "backgrounds/final.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "final"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "93ea8b9292464278e7240f74a04565b0b3c3953fd057e751bfbd2ceea9bff4e8"
+    },
+    {
+      "path": "backgrounds/earth.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "earth"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "24b7613bb9a05248275c5644974db91f88a0a28dc3199d4bd7be50880037cbc9"
+    },
+    {
+      "path": "backgrounds/escape.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "escape"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "4e6a89298a13ca6f94b5244afa5d8a43985b116810cf55f3bc93e045fd8ae8dc"
+    },
+    {
+      "path": "backgrounds/silence.png",
+      "size": [
+        640,
+        360
+      ],
+      "cell": [
+        640,
+        360
+      ],
+      "logicalCell": [
+        320,
+        180
+      ],
+      "frames": 1,
+      "states": [
+        "silence"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "5de0b500ee43484da4415654ce34dc4e59515315a3f970b872be942bba877774"
+    },
+    {
+      "path": "tiles/final-defense.png",
+      "size": [
+        256,
+        64
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "logicalCell": [
+        16,
+        16
+      ],
+      "frames": 16,
+      "states": [
+        "tile0",
+        "tile1",
+        "tile2",
+        "tile3",
+        "tile4",
+        "tile5",
+        "tile6",
+        "tile7",
+        "tile8",
+        "tile9",
+        "tile10",
+        "tile11",
+        "tile12",
+        "tile13",
+        "tile14",
+        "tile15"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "2192f6459a8336be82ecbe0a07a5ba101e8ddc311965218d1e41d8a07bda6195"
+    },
+    {
+      "path": "sprites/overseer.png",
+      "size": [
+        512,
+        56
+      ],
+      "cell": [
+        64,
+        56
+      ],
+      "logicalCell": [
+        32,
+        28
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 28
+      },
+      "sha256": "dc3b8e6862dd7bd13673e3f0bf9abceba40f2a5cce3995c1ca6dc1482a11556f"
+    },
+    {
+      "path": "far/overseer.png",
+      "size": [
+        512,
+        56
+      ],
+      "cell": [
+        64,
+        56
+      ],
+      "logicalCell": [
+        32,
+        28
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 28
+      },
+      "sha256": "e9e682740b198f8355f8b945b9a0fd42aced907f86b33f8792326d9337faeb60"
+    },
+    {
+      "path": "sprites/biobreaker.png",
+      "size": [
+        768,
+        84
+      ],
+      "cell": [
+        96,
+        84
+      ],
+      "logicalCell": [
+        48,
+        42
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 42
+      },
+      "sha256": "e5eaad56d28810c9068ab31a259acfb34ac44428fb260800391f5888ae8817c9"
+    },
+    {
+      "path": "far/biobreaker.png",
+      "size": [
+        768,
+        84
+      ],
+      "cell": [
+        96,
+        84
+      ],
+      "logicalCell": [
+        48,
+        42
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 42
+      },
+      "sha256": "7ce1924df0c76aa179408220a040995810756d71f8d0deff5150f3d1c757f6b9"
+    },
+    {
+      "path": "sprites/coreguard.png",
+      "size": [
+        576,
+        68
+      ],
+      "cell": [
+        72,
+        68
+      ],
+      "logicalCell": [
+        36,
+        34
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 34
+      },
+      "sha256": "76bbfd86ef25adef330b72622d4ec6709fbbc3217b4273ebd974de9571ac0ba9"
+    },
+    {
+      "path": "far/coreguard.png",
+      "size": [
+        576,
+        68
+      ],
+      "cell": [
+        72,
+        68
+      ],
+      "logicalCell": [
+        36,
+        34
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 34
+      },
+      "sha256": "ed7dc0320e10ec2e0eb379ec3a90ee9242d87dbbd7be3fb6c4e65a5a2386e008"
+    },
+    {
+      "path": "sprites/overmind1.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "fbf94230ae6ca2d92b97d30edb115fddf4b0f6ede31ad0d99f856483f5fdf45b"
+    },
+    {
+      "path": "far/overmind1.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "f04a65d4e446727dce070684cf968b7f56452e2baf4756ad5d81b95638464e5e"
+    },
+    {
+      "path": "sprites/overmind2.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "8b2118a629edad99e9d2944a88925453966c6c31b069d6952e0bb968c9653ba3"
+    },
+    {
+      "path": "far/overmind2.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "5846a374dfcb497cf0d3329b059fd032db9f489e1babe903a7955ed934d07d71"
+    },
+    {
+      "path": "sprites/overmind3.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "9057cc7505758c81470b3443c0c0180756129dd74b0547939fde5cd665739463"
+    },
+    {
+      "path": "far/overmind3.png",
+      "size": [
+        2816,
+        224
+      ],
+      "cell": [
+        352,
+        224
+      ],
+      "logicalCell": [
+        176,
+        112
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "topOffset": -24,
+        "coreCenter": [
+          0,
+          32
+        ]
+      },
+      "sha256": "6e59f9f4ec5364c6c6eafc7a4f84d987670ee53490ae3d2f90dab707edaafb57"
+    },
+    {
+      "path": "sprites/defensenode.png",
+      "size": [
+        448,
+        64
+      ],
+      "cell": [
+        56,
+        64
+      ],
+      "logicalCell": [
+        28,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 32
+      },
+      "sha256": "b749e44ba16786bfbd24cc4a94940139fba6250e4092157590f723f36ac2bd5c"
+    },
+    {
+      "path": "far/defensenode.png",
+      "size": [
+        448,
+        64
+      ],
+      "cell": [
+        56,
+        64
+      ],
+      "logicalCell": [
+        28,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "idle",
+        "move",
+        "attack",
+        "death",
+        "hit",
+        "open",
+        "damaged",
+        "phase"
+      ],
+      "anchor": {
+        "centerX": 0,
+        "feet": 32
+      },
+      "sha256": "3181bae187bddfcbf55fd7fef7728c1e4b06d8046bf5d36ba1f504b562d6649c"
+    },
+    {
+      "path": "effects/finalShield.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalShield:0",
+        "finalShield:1",
+        "finalShield:2",
+        "finalShield:3",
+        "finalShield:4",
+        "finalShield:5",
+        "finalShield:6",
+        "finalShield:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "fbf4a0fe20fcc383c5c5c7478e98ae9f3f2b390fda866859b8c9b7304355a57d"
+    },
+    {
+      "path": "effects/finalBeam.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalBeam:0",
+        "finalBeam:1",
+        "finalBeam:2",
+        "finalBeam:3",
+        "finalBeam:4",
+        "finalBeam:5",
+        "finalBeam:6",
+        "finalBeam:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "78aba981b89d869299e71e016e0f77a17b23a45062979b2f0633850573af92d9"
+    },
+    {
+      "path": "effects/finalPulse.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalPulse:0",
+        "finalPulse:1",
+        "finalPulse:2",
+        "finalPulse:3",
+        "finalPulse:4",
+        "finalPulse:5",
+        "finalPulse:6",
+        "finalPulse:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "265797811bcda1b9969bbd950aa9f60cf9b3a43deecdc7727c0bfdb8cab52d82"
+    },
+    {
+      "path": "effects/finalSpore.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalSpore:0",
+        "finalSpore:1",
+        "finalSpore:2",
+        "finalSpore:3",
+        "finalSpore:4",
+        "finalSpore:5",
+        "finalSpore:6",
+        "finalSpore:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "6232360b7f294e5bfd3d966526cec0541e68bc6e7fcd889051a3171505deb70d"
+    },
+    {
+      "path": "effects/finalTransition.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalTransition:0",
+        "finalTransition:1",
+        "finalTransition:2",
+        "finalTransition:3",
+        "finalTransition:4",
+        "finalTransition:5",
+        "finalTransition:6",
+        "finalTransition:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "d2507feeef7cf97e6279336522118c8ea0baf9ede45b3e2a86bd602eae4bae0c"
+    },
+    {
+      "path": "effects/finalCollapse.png",
+      "size": [
+        512,
+        64
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "logicalCell": [
+        32,
+        32
+      ],
+      "frames": 8,
+      "states": [
+        "finalCollapse:0",
+        "finalCollapse:1",
+        "finalCollapse:2",
+        "finalCollapse:3",
+        "finalCollapse:4",
+        "finalCollapse:5",
+        "finalCollapse:6",
+        "finalCollapse:7"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "964d91e5c2b354bba7559fb8367c4d915fa15cf5bd5728efb2931c9895b4a6eb"
+    },
+    {
+      "path": "contact-sheet.png",
+      "size": [
+        1280,
+        1440
+      ],
+      "cell": [
+        1280,
+        1440
+      ],
+      "logicalCell": [
+        1280,
+        1440
+      ],
+      "frames": 1,
+      "states": [
+        "preview"
+      ],
+      "anchor": {
+        "topLeft": [
+          0,
+          0
+        ]
+      },
+      "sha256": "cb2404fd6a89caf163f5088a2a03fc3a363030caf98915d508805e623a81a97e"
+    }
+  ],
+  "tileIndex": {
+    "hull": 0,
+    "ceiling": 1,
+    "container": 2,
+    "gate": 3,
+    "biofield": 4
+  },
+  "notes": [
+    "Only assets/final-defense-01 is written.",
+    "All three forms share source core (176,112), world (e.x,e.y+32), top offset -24.",
+    "No artwork changes collision, weapon origins or AI.",
+    "Far sheets preserve exact alpha and world anchors.",
+    "Ending backgrounds are presentation-only."
+  ]
+}

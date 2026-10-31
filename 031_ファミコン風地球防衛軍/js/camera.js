@@ -51,11 +51,11 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
   const playerY=player.y+(player.h||27)/2;
   for(let i=0;i<enemies.length;i++){
     const enemy=enemies[i];
-    if(enemy.fixedDevice||enemy.dead||enemy.active===false||enemy.spawned===false||enemy.hp<=0)continue;
+    if(enemy.fixedDevice||enemy.dead||enemy.active===false||enemy.spawned===false||enemy.hp<=0&&!enemy.transitionLeft)continue;
     const dx=enemy.x-player.x,dy=enemy.y+(enemy.h||0)/2-playerY;
     const distance=Math.hypot(dx,dy);
-    if(distance>c.evaluationDistance&&!(['fortress','reactor','neuralheart'].includes(enemy.type)&&battle.bossStarted))continue;
-    if(enemy.type==="boss"||enemy.type==="queen"||enemy.type==='leviathan'||enemy.type==='fortress'||enemy.type==='reactor'||enemy.type==='neuralheart'){
+    if(distance>c.evaluationDistance&&!(['fortress','reactor','neuralheart','commandcore','overmind'].includes(enemy.type)&&battle.bossStarted))continue;
+    if(enemy.type==="boss"||enemy.type==="queen"||enemy.type==='leviathan'||enemy.type==='fortress'||enemy.type==='reactor'||enemy.type==='neuralheart'||enemy.type==='commandcore'||enemy.type==='overmind'){
       if(battle.bossStarted)boss=enemy;
       continue;
     }
@@ -94,7 +94,7 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
     let focus=leader;
     left=Math.min(player.x-14,focus.x-(focus.w||88)/2);
     right=Math.max(player.x+14,focus.x+(focus.w||88)/2);if(leader.type==='fortress'&&leader.skyPhase<3)for(const part of leader.activeParts??[])if(!part.dead&&part.partKind===(leader.skyPhase===1?'turret':'generator')){left=Math.min(left,part.x-part.w/2);right=Math.max(right,part.x+part.w/2)}
-    if(['reactor','neuralheart'].includes(leader.type)&&leader.shielded)for(const part of leader.activeParts??[])if(!part.dead){left=Math.min(left,part.x-part.w/2);right=Math.max(right,part.x+part.w/2)}
+    if(['reactor','neuralheart','commandcore','overmind'].includes(leader.type)&&leader.shielded)for(const part of leader.activeParts??[])if(!part.dead){left=Math.min(left,part.x-part.w/2);right=Math.max(right,part.x+part.w/2)}
     raw=clamp(VIEW.canvasWidth/(right-left+padding*2),boss?c.bossMinZoom:c.minZoom,boss?c.bossMaxZoom:c.midbossMaxZoom);
     if(leader.type==='fortress')raw=Math.min(raw,leader.cameraMaxZoom??c.bossMaxZoom);
     focusX=(left+right)/2;mode=boss?"boss":"midboss";

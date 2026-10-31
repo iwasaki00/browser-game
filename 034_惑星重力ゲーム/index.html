@@ -70,7 +70,7 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.7.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.8.0</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
       <button id="startExperience" type="button">HOMEWARD EXPERIENCE · 約3分の体験航路</button>
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
@@ -110,6 +110,8 @@
           <g id="homewardNode07"><circle cx="74" cy="43" r="3"/><text x="72" y="53">07</text></g>
           <g id="homewardNode08"><circle cx="60" cy="23" r="3"/><text x="54" y="18">08</text></g>
           <g id="homewardNode09"><circle cx="79" cy="23" r="3"/><text x="76" y="33">09</text></g>
+          <path d="M79 23 L96 38 L92 52" fill="none" stroke="#9185be" stroke-width=".6" stroke-dasharray="2 2"/>
+          <g id="homewardNodeDEEP"><circle cx="92" cy="52" r="3"/><text x="82" y="62">DEEP</text></g>
           <circle cx="90" cy="18" r="4" fill="#72cbef" stroke="#a5ffc2" stroke-width=".6"/><text x="82" y="9">地球</text><text x="65" y="32">未知宙域</text>
         </svg>
         <p class="settings-note">黄色：現在地 ／ ✓：通過済み ／ 🔒：未到達</p>
@@ -117,7 +119,7 @@
         <div id="homewardMapChoices" class="homeward-choices" hidden></div>
         <details class="settings-help"><summary>現在のセクターの攻略ヒント</summary><p id="homewardRouteHint" class="homeward-story"></p></details>
         <details class="settings-help"><summary>航海日誌・航行の再生</summary><div id="homewardJournal"></div><p class="settings-note">初回クリアと09の初回寄港航行はHOMEWARD専用に保護します。通常ギャラリーの自動整理では消えません。保存できなかった航行・既に削除された旧記録は保護・復元できません。サイトデータの消去にはご注意ください。</p></details>
-        <p id="homewardFoundationEnd" class="homeward-distance" hidden>9セクターを航行しました。選んだ航路の先へ、帰還の旅は続きます。</p>
+        <p id="homewardFoundationEnd" class="homeward-distance" hidden>9セクターと遠方の中継点を航行しました。選んだ航路の先へ、帰還の旅は続きます。</p>
       </section>
       <section id="homeward-event" hidden><p class="homeward-eyebrow">航法記録</p><h3 id="homewardEventTitle"></h3><p id="homewardEventText" class="homeward-story"></p><p class="settings-note">01はそのまま発射。02以降は予測線と遭遇条件を確認して調整します。移動する物体は発射からの航行時間で動きます。</p><div id="homewardEventChoices" class="homeward-choices" hidden></div><details class="settings-help"><summary>攻略ヒント</summary><p id="homewardBriefHint" class="homeward-story"></p></details><button id="homewardContinue" class="homeward-primary" type="button">航行を始める</button></section>
       <p id="homewardSaveNotice" class="homeward-save-notice" role="status" aria-live="polite"></p>

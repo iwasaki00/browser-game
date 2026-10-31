@@ -1,0 +1,354 @@
+[
+  {
+    "from": "origin",
+    "target": "earth",
+    "angleDeg": 144.02,
+    "speed": 220,
+    "time": 56.474999999997436,
+    "start": {
+      "x": 10500,
+      "y": 1200
+    },
+    "end": {
+      "x": 699.9851567370955,
+      "y": 8998.277086114036
+    },
+    "minClearance": 505.7399346325152,
+    "anomalyClearance": 505.7399346325152,
+    "distance": 12532.782573226488,
+    "status": "cleared",
+    "steps": 6777,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "origin",
+    "target": "rescue",
+    "angleDeg": 109.65,
+    "speed": 220,
+    "time": 13.0499999999999,
+    "start": {
+      "x": 10500,
+      "y": 1200
+    },
+    "end": {
+      "x": 9532.081233372226,
+      "y": 3905.285721956419
+    },
+    "minClearance": 2339.9767398083195,
+    "anomalyClearance": 4968.753570177919,
+    "distance": 2873.2281848676953,
+    "status": "cleared",
+    "steps": 1566,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "rescue",
+    "target": "earth",
+    "angleDeg": 151.91,
+    "speed": 220,
+    "time": 45.31666666666474,
+    "start": {
+      "x": 9500,
+      "y": 4200
+    },
+    "end": {
+      "x": 684.2713519017467,
+      "y": 9053.836226173944
+    },
+    "minClearance": 246.8792971787198,
+    "anomalyClearance": 439.69402927051647,
+    "distance": 10075.208147201738,
+    "status": "cleared",
+    "steps": 5438,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "origin",
+    "target": "network",
+    "angleDeg": 117,
+    "speed": 220,
+    "time": 26.499999999999137,
+    "start": {
+      "x": 10500,
+      "y": 1200
+    },
+    "end": {
+      "x": 7822.046336933048,
+      "y": 6402.460474535527
+    },
+    "minClearance": 1436.2297221973838,
+    "anomalyClearance": 2826.599930077982,
+    "distance": 5851.304803686017,
+    "status": "cleared",
+    "steps": 3180,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "network",
+    "target": "earth",
+    "angleDeg": 161.03,
+    "speed": 220,
+    "time": 33.916666666665385,
+    "start": {
+      "x": 7800,
+      "y": 6700
+    },
+    "end": {
+      "x": 618.1996920575162,
+      "y": 8901.67008995727
+    },
+    "minClearance": 465.0917436723829,
+    "anomalyClearance": 1543.0264870212984,
+    "distance": 7515.830368726415,
+    "status": "cleared",
+    "steps": 4070,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "network",
+    "target": "passage",
+    "angleDeg": -163.81,
+    "speed": 220,
+    "time": 14.141666666666504,
+    "start": {
+      "x": 7800,
+      "y": 6700
+    },
+    "end": {
+      "x": 4784.507949163227,
+      "y": 5853.464067636362
+    },
+    "minClearance": 84.25710468603567,
+    "anomalyClearance": 84.25710468603567,
+    "distance": 3133.6303561189125,
+    "status": "cleared",
+    "steps": 1697,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "origin",
+    "target": "observatory",
+    "angleDeg": 175.43,
+    "speed": 220,
+    "time": 33.84999999999872,
+    "start": {
+      "x": 10500,
+      "y": 1200
+    },
+    "end": {
+      "x": 3097.0520471173377,
+      "y": 1775.89812973369
+    },
+    "minClearance": 471.22445130031707,
+    "anomalyClearance": 4307.706762651144,
+    "distance": 7425.657003506549,
+    "status": "cleared",
+    "steps": 4062,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "observatory",
+    "target": "berth",
+    "angleDeg": 96.58,
+    "speed": 220,
+    "time": 23.19166666666599,
+    "start": {
+      "x": 3000,
+      "y": 2000
+    },
+    "end": {
+      "x": 2406.7986665505396,
+      "y": 7100.231377010933
+    },
+    "minClearance": 1148.0223924619984,
+    "anomalyClearance": 2429.61165190505,
+    "distance": 5134.630574721472,
+    "status": "cleared",
+    "steps": 2783,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "berth",
+    "target": "earth",
+    "angleDeg": 138.37,
+    "speed": 220,
+    "time": 10.583333333333373,
+    "start": {
+      "x": 2400,
+      "y": 7400
+    },
+    "end": {
+      "x": 683.0440839320752,
+      "y": 8944.28931768608
+    },
+    "minClearance": 1065.1652472578287,
+    "anomalyClearance": 2930.748566898751,
+    "distance": 2309.283662426627,
+    "status": "cleared",
+    "steps": 1270,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "passage",
+    "target": "earth",
+    "angleDeg": 145.31,
+    "speed": 220,
+    "time": 22.991666666666003,
+    "start": {
+      "x": 4700,
+      "y": 6000
+    },
+    "end": {
+      "x": 689.3706030859518,
+      "y": 9044.865301782706
+    },
+    "minClearance": 277.5091402328918,
+    "anomalyClearance": 277.5091402328918,
+    "distance": 5037.249824307213,
+    "status": "cleared",
+    "steps": 2759,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "earth",
+    "target": "network",
+    "angleDeg": -17.15,
+    "speed": 220,
+    "time": 34.233333333332034,
+    "start": {
+      "x": 600,
+      "y": 9000
+    },
+    "end": {
+      "x": 7744.589329350665,
+      "y": 6416.755435143242
+    },
+    "minClearance": 412.1620482891476,
+    "anomalyClearance": 1386.2305243221567,
+    "distance": 7602.49662088957,
+    "status": "cleared",
+    "steps": 4108,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "earth",
+    "target": "rescue",
+    "angleDeg": -32.33,
+    "speed": 220,
+    "time": 45.64999999999805,
+    "start": {
+      "x": 600,
+      "y": 9000
+    },
+    "end": {
+      "x": 9475.774499769701,
+      "y": 4097.0212612708765
+    },
+    "minClearance": 296.23581786171724,
+    "anomalyClearance": 382.6709058688392,
+    "distance": 10147.739747417589,
+    "status": "cleared",
+    "steps": 5478,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "earth",
+    "target": "observatory",
+    "angleDeg": -71.57,
+    "speed": 220,
+    "time": 34.19166666666537,
+    "start": {
+      "x": 600,
+      "y": 9000
+    },
+    "end": {
+      "x": 3041.213912635837,
+      "y": 1891.1120925302762
+    },
+    "minClearance": 1457.1299702132835,
+    "anomalyClearance": 3176.5486566178033,
+    "distance": 7516.452868768906,
+    "status": "cleared",
+    "steps": 4103,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "observatory",
+    "target": "earth",
+    "angleDeg": 108.92,
+    "speed": 220,
+    "time": 32.99999999999877,
+    "start": {
+      "x": 3000,
+      "y": 2000
+    },
+    "end": {
+      "x": 650.6210351306727,
+      "y": 8913.75899581812
+    },
+    "minClearance": 1479.635698152602,
+    "anomalyClearance": 3169.461993812489,
+    "distance": 7302.108176444696,
+    "status": "cleared",
+    "steps": 3960,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "origin",
+    "target": "relay",
+    "angleDeg": -177.59,
+    "speed": 220,
+    "time": 42.833333333331545,
+    "start": {
+      "x": 10500,
+      "y": 1200
+    },
+    "end": {
+      "x": 1099.9558144983648,
+      "y": 802.9723976800722
+    },
+    "minClearance": 1205.280704734567,
+    "anomalyClearance": 4991.7507696205985,
+    "distance": 9408.470896641351,
+    "status": "cleared",
+    "steps": 5140,
+    "prediction": "exact",
+    "rates": "1=100"
+  },
+  {
+    "from": "relay",
+    "target": "berth",
+    "angleDeg": 77.28,
+    "speed": 220,
+    "time": 28.333333333332366,
+    "start": {
+      "x": 1000,
+      "y": 1000
+    },
+    "end": {
+      "x": 2377.180520844395,
+      "y": 7102.638450243092
+    },
+    "minClearance": 1174.044011405071,
+    "anomalyClearance": 2779.3268269414675,
+    "distance": 6256.109687103513,
+    "status": "cleared",
+    "steps": 3400,
+    "prediction": "exact",
+    "rates": "1=100"
+  }
+]

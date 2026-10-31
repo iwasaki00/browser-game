@@ -1,10 +1,12 @@
+import {renderFinalVoyage,appendFinalJournal} from './final-voyage-ui.js';
+import {renderDeepSpace,appendDeepJournal} from './deep-space-ui.js';
 import {renderEchoes} from './echoes-ui.js';
 import {HOMEWARD,HOMEWARD_SECTORS,getHomewardDefinition} from './homeward-data.js';
 import {homewardDistance,sectorUnlocked} from './homeward-progress.js';
 import {DESTINATIONS,ORIGIN,normalizeVoyage,departurePosition,createOpenVoyage} from './open-voyage.js';
 import {VOYAGE_COURSES} from './voyage-courses.js';
 import {FRONTIER_TARGETS,normalizeFrontier,targetAvailable,targetLabel,discoveryEntry,frontierTarget} from './frontier.js';
-export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{},onRecord=()=>{},onDestination=()=>{},onRoute=()=>{},onAnalyze=()=>{},onImpossible=()=>{},getNavigation=()=>({}),canEnter=()=>true}){
+export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{},onRecord=()=>{},onDestination=()=>{},onFinalChoice=()=>{},onFinalDestination=()=>{},onEnding=()=>{},onDeepDestination=()=>{},onDeepPolicy=()=>{},onRoute=()=>{},onAnalyze=()=>{},onImpossible=()=>{},getNavigation=()=>({}),canEnter=()=>true}){
  const $=s=>document.querySelector(s),dialog=$('#homewardDialog');let pending=null;
  function show(view){for(const id of ['intro','map','event'])$('#homeward-'+id).hidden=id!==view;if(!dialog.open){onOpen();dialog.showModal();}}
  function render(){
@@ -25,9 +27,13 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
   $('#homewardFoundationEnd').hidden=state.cleared.length!==HOMEWARD_SECTORS.length;
   choices($('#homewardMapChoices'),state.currentSector);
   renderVoyage();
+  let deep=document.querySelector('#deepNavigation');if(!deep){deep=document.createElement('section');deep.id='deepNavigation';document.querySelector('#voyageNavigation').after(deep);}
+  renderDeepSpace({container:deep,state,navigation:getNavigation(),onDestination:id=>{onDeepDestination(id);render();},onPolicy:id=>{onDeepPolicy(id);render();},onRecord});
+  let final=document.querySelector('#finalNavigation');if(!final){final=document.createElement('section');final.id='finalNavigation';deep.after(final);}
+  renderFinalVoyage({container:final,state,navigation:getNavigation(),onChoice:id=>{onFinalChoice(id);render();},onDestination:id=>{onFinalDestination(id);render();},onEnding,onRecord});
   const journal=$('#homewardJournal');journal.replaceChildren();
   for(const sector of HOMEWARD_SECTORS){
-   const entry=state.journal?.[sector.id];if(!entry&&!state.cleared.includes(sector.id))continue;
+   const entry=state.journal?.[sector.id];if(!entry&&!state.cleared.includes(sector.id)&&!(sector.id==='homeward-deep'&&state.deep)&&!(sector.id==='homeward-final'&&state.finalVoyage))continue;
    const item=document.createElement('article'),title=document.createElement('h4');title.textContent=`${sector.number} ${sector.name}${state.cleared.includes(sector.id)?' · 通過済み':''}`;item.append(title);
    for(const text of entry?[entry.departure,entry.encounter,entry.discovery,entry.choiceLog,entry.arrival]:[sector.arrival])if(typeof text==='string'){const p=document.createElement('p');p.textContent=text;item.append(p);}
    if(Array.isArray(entry?.choiceHistory)&&entry.choiceHistory.length>1){const p=document.createElement('p');p.textContent='選択履歴：'+entry.choiceHistory.map(e=>e?.choice==='pursue'?'追跡':'回避').join(' → ');item.append(p);}
@@ -36,8 +42,10 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
     const p=document.createElement('p');p.textContent=d.id==='gate'||(d.id==='echo-signal'||discoveryEntry(state.frontier,d.id).state==='INVESTIGATED')?d.log:`${targetLabel(state.frontier,d.id,state.echoes)}の地点へ寄港`;item.append(p);
     const reference=state.voyage.records?.[d.id];if(typeof reference==='string'){const replay=document.createElement('button');replay.type='button';replay.textContent=`${targetLabel(state.frontier,d.id,state.echoes)}の寄港記録をCINEMATIC再生（専用保護）`;replay.addEventListener('click',()=>onRecord(reference));item.append(replay);}
    }
-   const refs=[['保護した到着記録をCINEMATIC再生（専用保護）',entry?.importantFlightId],['到着の航行をCINEMATIC再生',entry?.clearFlightId],['保存済みの直近航行をCINEMATIC再生',entry?.flightId]];
+   const refs=[['保護した到着記録をCINEMATIC再生（専用保護）',entry?.importantFlightId],['到着の航行をCINEMATIC再生',entry?.clearFlightId],['保存済みの直近航行をCINEMATIC再生',entry?.flightId],['PARTIAL / CINEMATIC',entry?.stagedFlightId]];
    const used=new Set();for(const [label,id]of refs)if(typeof id==='string'&&!used.has(id)){used.add(id);const button=document.createElement('button');button.type='button';button.textContent=label;button.addEventListener('click',()=>onRecord(id));item.append(button);}
+   if(sector.id==='homeward-deep')appendDeepJournal(item,state.deep,onRecord);
+   if(sector.id==='homeward-final')appendFinalJournal(item,state.finalVoyage,onEnding,onRecord);
    journal.append(item);
   }
   renderEchoes({state,container:$('#echoesStory'),journal,onAnalyze:kind=>{onAnalyze(kind);render();},onAction:choice=>{onImpossible(choice);render();},onRoute:choice=>{onRoute(choice);render();},onRecord});

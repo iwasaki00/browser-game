@@ -52,7 +52,7 @@ export async function drawOrbitArt(canvas,record,{text=true,background='space'}=
   ctx.fillStyle='#e8f8ff';ctx.font=`800 ${w*.045}px system-ui,sans-serif`;ctx.fillText('ORBIT MAKER',w*.085,w*.09);
   ctx.fillStyle='#90bbd5';ctx.font=`500 ${w*.021}px system-ui,sans-serif`;
   let title=String(record.stageName??'FREE');while(title.length>1&&ctx.measureText(title).width>w*.8)title=title.slice(0,-2)+'…';ctx.fillText(title,w*.085,w*.13);
-  ctx.fillStyle=record.result==='clear'?'#9bffce':'#ffc09b';ctx.font=`700 ${w*.025}px system-ui,sans-serif`;ctx.fillText(`${record.result==='clear'?'CLEAR':'FAIL'}   /   ${record.duration.toFixed(2)} s`,w*.085,h-w*.065);
+  ctx.fillStyle=record.result==='clear'?'#9bffce':'#ffc09b';ctx.font=`700 ${w*.025}px system-ui,sans-serif`;ctx.fillText(`${record.partial?'PARTIAL / \u98db\u884c\u9014\u4e2d':record.result==='clear'?'CLEAR':'FAIL'}   /   ${record.duration.toFixed(2)} s`,w*.085,h-w*.065);
  }
  return layout;
 }

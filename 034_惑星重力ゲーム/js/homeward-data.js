@@ -1,3 +1,5 @@
+import {FINAL_SECTOR,createFinalVoyage} from './final-voyage.js';
+import {DEEP_SECTOR,createDeepSpace} from './deep-space.js';
 import {getStage} from './stages.js';
 import {configurePlanet} from './planets.js';
 import {createEncounter} from './encounters.js';
@@ -29,11 +31,13 @@ export const HOMEWARD_SECTORS=[
   departure:'出航：反発と引力の境界を抜ける。',
   initial:{angleDeg:-60,speed:200},angleRange:[-75,-50],hint:'紫は反発、暗い星は吸収、橙の外周は熱。解答例：ANGLE −65°、THRUST 220。反発で吸収域を避け、二つの引力で出口へ曲がります。',
   planets:[[1000,3200,'repulsor'],[1250,2300,'blackhole'],[1500,2000,'star']],goal:{x:2731,y:1245,radius:80}},
- ...LOST_SECTORS.map(s=>s.number==='08'?{...s,next:'homeward-09'}:s),OPEN_SECTOR,
+ ...LOST_SECTORS.map(s=>s.number==='08'?{...s,next:'homeward-09'}:s),OPEN_SECTOR,DEEP_SECTOR,FINAL_SECTOR,
 ];
 export function getHomewardDefinition(id){return HOMEWARD_SECTORS.find(s=>s.id===id);}
-export function getHomewardSector(id,voyage){
+export function getHomewardSector(id,voyage,deep,finalVoyage){
  const data=getHomewardDefinition(id);if(!data)throw Error('Unknown HOMEWARD sector');
+ if(data.finalVoyage)return createFinalVoyage(finalVoyage);
+ if(data.deepSpace)return createDeepSpace(deep);
  if(data.openVoyage)return createOpenVoyage(voyage);
  const base=getStage(),planets=data.planets.map(([x,y,type],i)=>configurePlanet({id:`homeward-planet-${i+1}`,x,y},type,'medium'));
  const legacy={...base,id:data.id,name:`HOMEWARD ${data.number} / ${data.name}`,description:data.theme,
