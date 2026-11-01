@@ -12,6 +12,7 @@ import {createPreview,advancePreview} from '../js/preview.js';
 import {velocityFromAngleSpeed,slingshotLaunch} from '../js/launch.js';
 import {createFlightRecorder,replayFrame} from '../js/flight-record.js';
 import {FlightReplay} from '../js/flight-replay.js';
+import {normalizeEchoes} from '../js/echoes.js';
 import {HomewardArchive,migrateHomewardRecords} from '../js/homeward-archive.js';
 const dir=new URL('../reports/open-voyage/',import.meta.url);mkdirSync(dir,{recursive:true});const results=[];
 const prior=HOMEWARD_SECTORS.slice(0,8).map(s=>s.id);
@@ -32,7 +33,9 @@ for(const [name,route]of Object.entries({A:['gate'],B:['rescue','gate'],C:['plan
   const job=createPreview(stage,velocityFromAngleSpeed(...course));while(!job.done)advancePreview(job,2000);assert.deepEqual(job.state,flight.state);
   const live=fly(stage,course,{live:true});assert.deepEqual(live.state,flight.state);
   assert.ok(p.dock(flight.state));assert.equal(p.dock(flight.state),false);assert.deepEqual(p.state.cleared.slice(0,8),prior);
-  const reload=new HomewardProgress(p.storage);assert.deepEqual(reload.state,p.state);p=reload;
+  // v1.5+ adds an empty optional story object when reading a legacy voyage.
+  // Compare every old field and the explicit normalized default, not an absent key.
+  const reload=new HomewardProgress(p.storage);assert.deepEqual(reload.state,{...p.state,echoes:normalizeEchoes(p.state.echoes)});p=reload;
   const next=createOpenVoyage(p.state.voyage);assert.deepEqual(next.launch.position,departurePosition(p.state.voyage));assert.ok(next.planets.every(q=>Math.hypot(q.x-next.launch.position.x,q.y-next.launch.position.y)>q.radius+34));
   const record=flight.record,saved=JSON.stringify(record),replay=new FlightReplay(record);replay.setMode('cinematic');replay.restart();for(let i=0;i<600&&replay.time<record.duration;i++)replay.advance(.1);
   assert.equal(replay.time,record.duration);assert.deepEqual(replayFrame(record,record.duration).rocket,flight.state.rocket.position);assert.equal(JSON.stringify(record),saved);

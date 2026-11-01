@@ -1,0 +1,177 @@
+{
+  "legs": [
+    {
+      "id": "homeward-01",
+      "time": 17.749999999999634,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-02",
+      "time": 17.73333333333297,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-03",
+      "time": 17.64999999999964,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-04",
+      "time": 4.275000000000002,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-05",
+      "time": 4.300000000000003,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-06",
+      "time": 5.6500000000000705,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-07",
+      "time": 4.683333333333356,
+      "status": "cleared"
+    },
+    {
+      "id": "homeward-08",
+      "time": 4.7916666666666945,
+      "status": "cleared"
+    },
+    {
+      "id": "09:origin>probe",
+      "time": 8.500000000000158,
+      "status": "cleared",
+      "changedAt": 5.633333333333403
+    },
+    {
+      "id": "09:probe>rescue",
+      "time": 2.283333333333328,
+      "status": "cleared",
+      "changedAt": null
+    },
+    {
+      "id": "09:rescue>planet",
+      "time": 10.083333333333401,
+      "status": "cleared",
+      "changedAt": 4.9583333333333695
+    },
+    {
+      "id": "09:planet>station",
+      "time": 7.5333333333334975,
+      "status": "cleared",
+      "changedAt": null
+    },
+    {
+      "id": "09:station>echo-signal",
+      "time": 2.949999999999992,
+      "status": "cleared",
+      "changedAt": null
+    },
+    {
+      "id": "09:echo-signal>temporal-anomaly",
+      "time": 7.5000000000001625,
+      "status": "cleared",
+      "changedAt": null
+    },
+    {
+      "id": "09:temporal-anomaly>gate",
+      "time": 2.974999999999992,
+      "status": "cleared",
+      "changedAt": null
+    },
+    {
+      "id": "DEEP:origin>DS01",
+      "time": 11.075000000000012,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS01>DS02",
+      "time": 12.424999999999935,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS02>DS03",
+      "time": 14.191666666666501,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS03>DS04",
+      "time": 14.058333333333175,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS04>DS05",
+      "time": 14.983333333333123,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS05>return",
+      "time": 19.441666666666205,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:return>DS06",
+      "time": 33.84999999999872,
+      "status": "cleared"
+    },
+    {
+      "id": "DEEP:DS06>return",
+      "time": 34.25833333333203,
+      "status": "cleared"
+    }
+  ],
+  "endings": [
+    {
+      "id": "END-01",
+      "decision": "home",
+      "targets": [
+        "earth"
+      ],
+      "status": "PASS",
+      "preconditions": "derived from new-game physical journey; no granted clues/unlocks"
+    },
+    {
+      "id": "END-02",
+      "decision": "rescue",
+      "targets": [
+        "earth"
+      ],
+      "status": "PASS",
+      "preconditions": "derived from new-game physical journey; no granted clues/unlocks"
+    },
+    {
+      "id": "END-03",
+      "decision": "truth",
+      "targets": [
+        "network",
+        "earth"
+      ],
+      "status": "PASS",
+      "preconditions": "derived from new-game physical journey; no granted clues/unlocks"
+    },
+    {
+      "id": "END-04",
+      "decision": "other",
+      "targets": [
+        "network",
+        "passage"
+      ],
+      "status": "PASS",
+      "preconditions": "derived from new-game physical journey; no granted clues/unlocks"
+    },
+    {
+      "id": "END-05",
+      "decision": "continue",
+      "targets": [
+        "observatory"
+      ],
+      "status": "PASS",
+      "preconditions": "derived from new-game physical journey; no granted clues/unlocks"
+    }
+  ],
+  "clues": "01–09 physically acquired",
+  "deepTargets": 6
+}

@@ -1,0 +1,634 @@
+✔ stage-01 ★3達成・小摂動の許容性 (7.2008ms)
+✔ stage-02 ★3達成・小摂動の許容性 (1.3254ms)
+✔ stage-03 ★3達成・小摂動の許容性・変更箇所の互換性 (5.3004ms)
+✔ stage-04 ★3達成・小摂動の許容性 (0.728ms)
+✔ stage-05 ★3達成・小摂動の許容性・変更箇所の互換性 (3.2728ms)
+✔ stage-06 ★3達成・小摂動の許容性・変更箇所の互換性 (25.0328ms)
+✔ stage-07 ★3達成・小摂動の許容性・変更箇所の互換性 (3.846ms)
+✔ stage-08 ★3達成・小摂動の許容性・変更箇所の互換性 (2ms)
+✔ stage-09 ★3達成・小摂動の許容性・変更箇所の互換性 (4.3239ms)
+✔ stage-10 ★3達成・小摂動の許容性・変更箇所の互換性 (3.4599ms)
+✔ 記録済み最高星と解放状態・保存形式を維持 (2.0125ms)
+✔ 移動あり別解の再現と、同条件の固定惑星での失敗 (16.2416ms)
+✔ ★3検証レポート (10.563ms)
+✔ 3画面サイズで主要オブジェクトに余白を取り、逆変換は全倍率で一致 (1.9253ms)
+✔ ピンチの中心を保ち、2本指の平行移動で視点を移す。倍率上限を守る (0.3215ms)
+✔ 追加時の種類・サイズを適用し、ステージ固定条件と配置制約を守る (0.595ms)
+✔ stage-01 データ・制約・両モード解答・両発射 (9.7966ms)
+✔ stage-02 データ・制約・両モード解答・両発射 (2.2682ms)
+✔ stage-03 データ・制約・両モード解答・両発射 (1.4339ms)
+✔ stage-04 データ・制約・両モード解答・両発射 (1.6037ms)
+✔ stage-05 データ・制約・両モード解答・両発射 (2.2885ms)
+✔ stage-06 データ・制約・両モード解答・両発射 (11.717ms)
+✔ stage-07 データ・制約・両モード解答・両発射 (3.2363ms)
+✔ stage-08 データ・制約・両モード解答・両発射 (1.7484ms)
+✔ stage-09 データ・制約・両モード解答・両発射 (2.8458ms)
+✔ stage-10 データ・制約・両モード解答・両発射 (3.5695ms)
+✔ 進行解放・最高星・独立記録・保存復元・壊れた保存 (2.1101ms)
+✔ 10ステージのIDは一意、発射条件と制約データが整合 (0.3807ms)
+✔ 星評価の境界と未クリア (0.2921ms)
+✔ フリープレイは元のステージと3惑星を維持、ステージ複製は独立 (0.5285ms)
+✔ 検証レポート出力 (9.4746ms)
+✔ 発射・通常・高速・到着の優先順位と滑らかなズームイン (2.4047ms)
+✔ 接近からスイングバイ離脱まで主要惑星を維持し、危険領域を含めて収める (0.7577ms)
+✔ ゴール接近のヒステリシスで境界の往復に耐える (0.3059ms)
+✔ STANDARD/LARGE/HUGE、全倍率上限、急な100倍移動でロケットを見失わない (3.2132ms)
+✔ 位置・ズーム補間は表示時間に従い、同じ状態なら30/60/120fpsで一致 (2.6217ms)
+✔ 既存3モードでは制御しない。パン・ピンチ・全体表示とCINEMATIC復帰 (0.9838ms)
+✔ カメラ演出は状態を変更せず、1倍/100倍で全飛行記録と終端が完全一致 (54.7415ms)
+✔ origin > DS01: actual arrival / 1x=100x / prediction (60.6635ms)
+✔ DS01 > return: actual arrival / 1x=100x / prediction (147.7507ms)
+✔ origin > DS02: actual arrival / 1x=100x / prediction (57.2996ms)
+✔ DS02 > return: actual arrival / 1x=100x / prediction (80.1136ms)
+✔ origin > DS03: actual arrival / 1x=100x / prediction (70.3862ms)
+✔ DS03 > return: actual arrival / 1x=100x / prediction (64.1157ms)
+✔ origin > DS04: actual arrival / 1x=100x / prediction (98.7687ms)
+✔ DS04 > return: actual arrival / 1x=100x / prediction (34.1251ms)
+✔ origin > DS05: actual arrival / 1x=100x / prediction (86.1206ms)
+✔ DS05 > return: actual arrival / 1x=100x / prediction (94.0625ms)
+✔ origin > DS06: actual arrival / 1x=100x / prediction (123.7582ms)
+✔ DS06 > return: actual arrival / 1x=100x / prediction (83.7228ms)
+✔ origin > return: actual arrival / 1x=100x / prediction (135.6229ms)
+✔ DS01 > DS02: actual arrival / 1x=100x / prediction (32.639ms)
+✔ DS02 > DS03: actual arrival / 1x=100x / prediction (46.7517ms)
+✔ DS03 > DS04: actual arrival / 1x=100x / prediction (31.519ms)
+✔ DS04 > DS05: actual arrival / 1x=100x / prediction (36.2675ms)
+✔ return > DS06: actual arrival / 1x=100x / prediction (74.6088ms)
+✔ swept detection, no duplicate rewards, information chain, no physics mutation (1.6225ms)
+✔ gravity anomaly uses existing force and changes trajectory without new physics (56.2673ms)
+✔ planning policies, hidden unknowns, reversible decisions, dock guard and save restoration (70.1138ms)
+✔ checkpoint snapshot / coalescing / retry bounds / replay immutability (337.0491ms)
+✔ deep overview fits world; legacy camera minimum restored (1.9769ms)
+✔ existing Sector09 four representative routes unchanged (105.3055ms)
+✔ old Sector01-08 reference endpoints unchanged (38.8258ms)
+✔ all six are playable in discovery order, checkpoint reloads and return remain available (245.4944ms)
+✔ actual enlarged world boundary, not legacy screen bounds (0.3911ms)
+✔ 手掛かりは全6順序で同じ情報を開示し、再計算・再訪で重複しない (1.8733ms)
+✔ 旧v1.4の知識・記録・チェックポイントを保護し、読み込みだけでは書かない (0.8155ms)
+✔ 三つの判断は可逆で、目的地と履歴だけを変え、重複選択を記録しない (1.0784ms)
+✔ 実航行で手掛かりを集め、発信源へ到達、再探索・帰還。1/100倍・予測一致 (303.4219ms)
+✔ 新寄港地から帰還優先も再調査も通常の到達判定で成立する (22.4333ms)
+✔ 容量不足でも手掛かりをメモリに保持し、元セーブや他キーを削除しない (34.2809ms)
+✔ v1.3代表4航路の終端は既存JSONと完全一致（新しい地点を通過しても未選択なら終了しない） (145.2538ms)
+fatal: not a git repository (or any of the parent directories): .git
+✔ 5種類の追加・数量/速度/強度制限、配置・上限・固定物体 (8.4308ms)
+✔ 移動は時刻の純粋関数。隕石は一定方向、UFO航路は周期境界でも連続 (2.3159ms)
+✔ meteor: 高速通過の相対連続衝突とゴール優先順位 (2.3335ms)
+✔ ufo: 高速通過の相対連続衝突とゴール優先順位 (0.8426ms)
+✔ 彗星の加速・減速、尾の高速横断でも効果を落とさない (1.9151ms)
+✔ 未知物体の重力異常は局所的・強度依存。惑星重力とは合算 (0.8906ms)
+✔ ステーション発見は透過・一度だけ。高速通過も記録 (9.0829ms)
+✔ meteor: サンプル到達、予測一致、1〜100倍、ギャラリーv1拡張 (78.2446ms)
+✔ comet: サンプル到達、予測一致、1〜100倍、ギャラリーv1拡張 (28.9409ms)
+✔ unknown: サンプル到達、予測一致、1〜100倍、ギャラリーv1拡張 (30.1847ms)
+✔ ufo: サンプル到達、予測一致、1〜100倍、ギャラリーv1拡張 (21.2565ms)
+✔ station: サンプル到達、予測一致、1〜100倍、ギャラリーv1拡張 (13.0723ms)
+✖ ギミックなしは旧エンジンと完全一致：Stage01〜20、HOMEWARD01〜03、FREE (38.9949ms)
+✔ ギミック併用時も移動惑星の連続衝突を維持 (0.5689ms)
+✔ 惑星操作と未知物体の併用でも1倍/100倍で終端一致 (6.8417ms)
+fatal: not a git repository (or any of the parent directories): .git
+✔ HUGE voyage：長距離到達・予測一致・記録終端・引力の寄与 (47.707ms)
+✔ HUGE swing：長距離到達・予測一致・記録終端・引力の寄与 (18.3798ms)
+✔ HUGE deep：長距離到達・予測一致・記録終端・引力の寄与 (22.5977ms)
+✔ STANDARDは従来のデータ・12秒制限。拡張ワールドでは旧境界を越えて飛べる (1.423ms)
+✔ HUGE 0.1倍・全体表示・追従・逆変換は物理状態を変更しない (1.8088ms)
+✔ 予測の時間上限と描画点間引きは独立。180秒飛行の記録も終端を維持 (29.4735ms)
+✔ 広域の高速連続衝突：earth (0.4261ms)
+✔ 広域の高速連続衝突：blackhole (0.4428ms)
+✔ 広域の高速連続衝突：star (0.4874ms)
+✖ 共通物理変更の影響範囲：Stage01〜20全基準軌道を変更前エンジンと各ステップ比較 (44.6104ms)
+✔ origin>earth: physical arrival, prediction, 1x/100x (151.4492ms)
+✔ origin>rescue: physical arrival, prediction, 1x/100x (25.9291ms)
+✔ rescue>earth: physical arrival, prediction, 1x/100x (92.4619ms)
+✔ origin>network: physical arrival, prediction, 1x/100x (58.884ms)
+✔ network>earth: physical arrival, prediction, 1x/100x (62.4733ms)
+✔ network>passage: physical arrival, prediction, 1x/100x (25.7067ms)
+✔ origin>observatory: physical arrival, prediction, 1x/100x (60.7093ms)
+✔ observatory>berth: physical arrival, prediction, 1x/100x (39.3724ms)
+✔ berth>earth: physical arrival, prediction, 1x/100x (19.7087ms)
+✔ passage>earth: physical arrival, prediction, 1x/100x (46.2406ms)
+✔ earth>network: physical arrival, prediction, 1x/100x (62.5893ms)
+✔ earth>rescue: physical arrival, prediction, 1x/100x (76.337ms)
+✔ earth>observatory: physical arrival, prediction, 1x/100x (61.8291ms)
+✔ observatory>earth: physical arrival, prediction, 1x/100x (59.4797ms)
+✔ origin>relay: physical arrival, prediction, 1x/100x (95.0436ms)
+✔ relay>berth: physical arrival, prediction, 1x/100x (53.4099ms)
+✔ earth>passage: physical arrival, prediction, 1x/100x (51.4106ms)
+✔ passage>observatory: physical arrival, prediction, 1x/100x (33.8828ms)
+✔ observatory>network: physical arrival, prediction, 1x/100x (49.8254ms)
+✔ END-01: real voyage, eligibility, persistence, protected replay contract (125.0471ms)
+✔ END-02: real voyage, eligibility, persistence, protected replay contract (96.8433ms)
+✔ END-03: real voyage, eligibility, persistence, protected replay contract (107.1906ms)
+✔ END-04: real voyage, eligibility, persistence, protected replay contract (68.5249ms)
+✔ END-05: real voyage, eligibility, persistence, protected replay contract (93.492ms)
+✔ explicit final decision wins; missing requirements never fall back to a different ending (64.1253ms)
+✔ ENDLESS -> HOMEWARD -> RESCUE -> OTHER SIDE remain playable without erasing earlier endings (149.0703ms)
+✔ legacy HOMEWARD v1 never grants endings; save failure keeps playing; first ending timestamps and fields preserved (51.5746ms)
+✔ safe outer route is longer and has more than twice the sampled clearance of the direct route (0.211ms)
+✔ actual anomaly-core collision fails without END-04; prediction and 1x/100x agree (35.118ms)
+✔ many reversible decisions keep core story transmissions and bounded history (27.4563ms)
+✔ existing physics, classic, old sectors and DEEP geometry files remain byte-identical to v1.8 baseline (20.8459ms)
+✔ homeward-01: 初期難易度と解答・近接余裕・調整許容範囲 (26.9096ms)
+✔ homeward-02: 初期難易度と解答・近接余裕・調整許容範囲 (22.717ms)
+✔ homeward-03: 初期難易度と解答・近接余裕・調整許容範囲 (27.2207ms)
+✔ 03の新配置で危険領域の高速通過を検出：absorbed (0.5476ms)
+✔ 03の新配置で危険領域の高速通過を検出：overheated (0.2655ms)
+✔ チュートリアルは順に進み、発射観察・再試行・スキップ・完了を保存復元 (2.5673ms)
+✔ 旧v1の02・03クリア済み進行と既読を保持。起動だけでは書き換えない (1.0494ms)
+✔ ガイドと設定の状態遷移は物理ステージを変更しない (0.7944ms)
+✔ 速度未記録の旧v1座標から速度を推定し、保存位置・移動惑星は従来の補間と一致 (2.0128ms)
+✔ 一件のみ・同時刻・欠落速度/惑星座標に安全な表示用代替を用いる (1.5456ms)
+✔ 出航待機と到着余韻、途中の一時停止・再開、終了後の再生 (0.6784ms)
+✔ 全カメラモード切替・再生速度は時刻を巻き戻さず、航行倍率とは独立 (0.4329ms)
+✔ シーク・最初からで判定状態を初期化。手動構図は優先し、自動へ戻せる (0.4941ms)
+✔ 既存HOMEWARD v1の全点再生と新規記録、全操作による記録の非破壊性 (16.5656ms)
+✔ A: 実航行・検出後の目的地変更・予測/100倍一致・チェックポイント復元 (132.2872ms)
+✔ B: 実航行・検出後の目的地変更・予測/100倍一致・チェックポイント復元 (133.4792ms)
+✔ C: 実航行・検出後の目的地変更・予測/100倍一致・チェックポイント復元 (108.0962ms)
+✔ D: 実航行・検出後の目的地変更・予測/100倍一致・チェックポイント復元 (152.9976ms)
+✔ E: 実航行・検出後の目的地変更・予測/100倍一致・チェックポイント復元 (111.9942ms)
+✔ D05は実際の追跡で調査し、未検出の探査機への手掛かりを開示する (60.1029ms)
+✔ 高速の1固定ステップで範囲を横断してもUNKNOWN→DETECTED→INVESTIGATEDを取りこぼさない (0.7984ms)
+✔ 未発見名称を隠し目的地設定を制限、ゲート・実際の重力情報を維持する (0.3494ms)
+✔ 旧v1.3の寄港・選択・記録参照を保持し、未知の日時を捏造しない (21.5085ms)
+✔ 保存容量不足でも調査・報酬・寄港を継続し、元データを削除しない (17.694ms)
+✔ 遅延した重要記録参照が次の固定ステップや再訪で消えず、報酬が重複しない (24.0119ms)
+✔ v1.3代表4航路の物理結果は保存済み基準終点・時間と一致 (57.4194ms)
+✔ 軌道clear記録と全固定ステップの再生一致 (7.6031ms)
+✔ 軌道fail記録と全固定ステップの再生一致 (0.989ms)
+✔ 重力操作の移動履歴とサブステップ補間を再現 (3.3129ms)
+✔ 再生速度・一時停止・最初から・終端 (0.6329ms)
+✔ RESET中断記録とメタデータ・初期状態を独立保存 (0.4552ms)
+✔ IndexedDB非対応・容量不足でも例外を通知用に扱える (1.207ms)
+✔ 測定表の単独・組合せ試験、合法範囲、保護ファイル (15.9082ms)
+✔ stage-01: 同じ攻略入力・最接近・予測・1/10/100倍 (7.9091ms)
+✔ stage-02: 同じ攻略入力・最接近・予測・1/10/100倍 (2.8579ms)
+✔ stage-03: 同じ攻略入力・最接近・予測・1/10/100倍 (2.4464ms)
+✔ stage-04: 同じ攻略入力・最接近・予測・1/10/100倍 (3.0032ms)
+✔ stage-05: 同じ攻略入力・最接近・予測・1/10/100倍 (1.9516ms)
+✔ stage-06: 同じ攻略入力・最接近・予測・1/10/100倍 (2.9692ms)
+✔ stage-07: 同じ攻略入力・最接近・予測・1/10/100倍 (2.3699ms)
+✔ stage-08: 同じ攻略入力・最接近・予測・1/10/100倍 (2.4024ms)
+✔ stage-09: 同じ攻略入力・最接近・予測・1/10/100倍 (6.121ms)
+✔ stage-10: 同じ攻略入力・最接近・予測・1/10/100倍 (2.5787ms)
+✔ stage-11: 同じ攻略入力・最接近・予測・1/10/100倍 (3.1464ms)
+✔ stage-12: 同じ攻略入力・最接近・予測・1/10/100倍 (2.2735ms)
+✔ stage-13: 同じ攻略入力・最接近・予測・1/10/100倍 (1.6911ms)
+✔ stage-14: 同じ攻略入力・最接近・予測・1/10/100倍 (4.66ms)
+✔ stage-15: 同じ攻略入力・最接近・予測・1/10/100倍 (2.5418ms)
+✔ stage-16: 同じ攻略入力・最接近・予測・1/10/100倍 (1.5373ms)
+✔ stage-17: 同じ攻略入力・最接近・予測・1/10/100倍 (1.1515ms)
+✔ stage-18: 同じ攻略入力・最接近・予測・1/10/100倍 (1.234ms)
+✔ stage-19: 同じ攻略入力・最接近・予測・1/10/100倍 (2.2822ms)
+✔ stage-20: 同じ攻略入力・最接近・予測・1/10/100倍 (1.8974ms)
+✔ homeward-01: 同じ攻略入力・最接近・予測・1/10/100倍 (19.7031ms)
+✔ homeward-02: 同じ攻略入力・最接近・予測・1/10/100倍 (14.7426ms)
+✔ homeward-03: 同じ攻略入力・最接近・予測・1/10/100倍 (18.9181ms)
+✔ homeward-04: 同じ攻略入力・最接近・予測・1/10/100倍 (18.9809ms)
+✔ homeward-05: 同じ攻略入力・最接近・予測・1/10/100倍 (13.6387ms)
+✔ homeward-06: 同じ攻略入力・最接近・予測・1/10/100倍 (18.0187ms)
+✔ homeward-07: 同じ攻略入力・最接近・予測・1/10/100倍 (11.8002ms)
+✔ homeward-08: 同じ攻略入力・最接近・予測・1/10/100倍 (12.5852ms)
+✔ 09:origin>gate: 同じ攻略入力・最接近・予測・1/10/100倍 (131.7442ms)
+✔ 09:origin>rescue: 同じ攻略入力・最接近・予測・1/10/100倍 (39.3138ms)
+✔ 09:rescue>gate: 同じ攻略入力・最接近・予測・1/10/100倍 (103.0686ms)
+✔ 09:origin>planet: 同じ攻略入力・最接近・予測・1/10/100倍 (63.7924ms)
+✔ 09:planet>gate: 同じ攻略入力・最接近・予測・1/10/100倍 (39.6178ms)
+✔ 09:rescue>planet: 同じ攻略入力・最接近・予測・1/10/100倍 (37.6579ms)
+✔ 09:planet>station: 同じ攻略入力・最接近・予測・1/10/100倍 (28.8008ms)
+✔ 09:station>gate: 同じ攻略入力・最接近・予測・1/10/100倍 (10.7927ms)
+✔ DEEP:origin>DS01: 同じ攻略入力・最接近・予測・1/10/100倍 (59.9827ms)
+✔ DEEP:DS01>return: 同じ攻略入力・最接近・予測・1/10/100倍 (182.7805ms)
+✔ DEEP:origin>DS02: 同じ攻略入力・最接近・予測・1/10/100倍 (79.7408ms)
+✔ DEEP:DS02>return: 同じ攻略入力・最接近・予測・1/10/100倍 (115.058ms)
+✔ DEEP:origin>DS03: 同じ攻略入力・最接近・予測・1/10/100倍 (106.3067ms)
+✔ DEEP:DS03>return: 同じ攻略入力・最接近・予測・1/10/100倍 (88.9313ms)
+✔ DEEP:origin>DS04: 同じ攻略入力・最接近・予測・1/10/100倍 (156.687ms)
+✔ DEEP:DS04>return: 同じ攻略入力・最接近・予測・1/10/100倍 (47.0592ms)
+✔ DEEP:origin>DS05: 同じ攻略入力・最接近・予測・1/10/100倍 (131.7763ms)
+✔ DEEP:DS05>return: 同じ攻略入力・最接近・予測・1/10/100倍 (70.9495ms)
+✔ DEEP:origin>DS06: 同じ攻略入力・最接近・予測・1/10/100倍 (112.4802ms)
+✔ DEEP:DS06>return: 同じ攻略入力・最接近・予測・1/10/100倍 (112.0763ms)
+✔ DEEP:origin>return: 同じ攻略入力・最接近・予測・1/10/100倍 (196.3327ms)
+✔ DEEP:DS01>DS02: 同じ攻略入力・最接近・予測・1/10/100倍 (40.5628ms)
+✔ DEEP:DS02>DS03: 同じ攻略入力・最接近・予測・1/10/100倍 (56.6655ms)
+✔ DEEP:DS03>DS04: 同じ攻略入力・最接近・予測・1/10/100倍 (52.4677ms)
+✔ DEEP:DS04>DS05: 同じ攻略入力・最接近・予測・1/10/100倍 (48.995ms)
+✔ DEEP:return>DS06: 同じ攻略入力・最接近・予測・1/10/100倍 (118.4805ms)
+✔ FINAL:origin>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (284.1954ms)
+✔ FINAL:origin>rescue: 同じ攻略入力・最接近・予測・1/10/100倍 (50.7025ms)
+✔ FINAL:rescue>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (216.0752ms)
+✔ FINAL:origin>network: 同じ攻略入力・最接近・予測・1/10/100倍 (196.9792ms)
+✔ FINAL:network>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (225.1794ms)
+✔ FINAL:network>passage: 同じ攻略入力・最接近・予測・1/10/100倍 (95.0327ms)
+✔ FINAL:origin>observatory: 同じ攻略入力・最接近・予測・1/10/100倍 (219.9699ms)
+✔ FINAL:observatory>berth: 同じ攻略入力・最接近・予測・1/10/100倍 (158.2374ms)
+✔ FINAL:berth>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (66.1295ms)
+✔ FINAL:passage>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (94.6116ms)
+✔ FINAL:earth>network: 同じ攻略入力・最接近・予測・1/10/100倍 (107.3275ms)
+✔ FINAL:earth>rescue: 同じ攻略入力・最接近・予測・1/10/100倍 (295.8ms)
+✔ FINAL:earth>observatory: 同じ攻略入力・最接近・予測・1/10/100倍 (206.3493ms)
+✔ FINAL:observatory>earth: 同じ攻略入力・最接近・予測・1/10/100倍 (246.3609ms)
+✔ FINAL:origin>relay: 同じ攻略入力・最接近・予測・1/10/100倍 (278.3903ms)
+✔ FINAL:relay>berth: 同じ攻略入力・最接近・予測・1/10/100倍 (262.4164ms)
+✔ FINAL:earth>passage: 同じ攻略入力・最接近・予測・1/10/100倍 (213.9863ms)
+✔ FINAL:passage>observatory: 同じ攻略入力・最接近・予測・1/10/100倍 (133.9585ms)
+✔ FINAL:observatory>network: 同じ攻略入力・最接近・予測・1/10/100倍 (151.1343ms)
+✔ FREE:voyage: 同じ攻略入力・最接近・予測・1/10/100倍 (25.1194ms)
+✔ FREE:swing: 同じ攻略入力・最接近・予測・1/10/100倍 (23.4781ms)
+✔ FREE:deep: 同じ攻略入力・最接近・予測・1/10/100倍 (23.8965ms)
+✔ 微調整は範囲内・累積誤差なし・粗調整と切替 (12.7041ms)
+✔ 線分最接近・目標変更・不変性・失敗理由 (0.6348ms)
+✔ 共通速度ベクトル・復元キーは別ステージや寄港地点を混同しない (6.7077ms)
+✔ 通常帰還の参考入力は旧攻略を維持し、同じ摂動格子で許容性を比較 (557.0624ms)
+✔ direct: 調整・発見・任意寄り道・到達・予測・1/100倍・両発射方式・再生 (174.3896ms)
+✔ detour: 調整・発見・任意寄り道・到達・予測・1/100倍・両発射方式・再生 (207.3172ms)
+✔ 体験はロック・通常進行のない使い捨て。未検出地点は選べず、初期設定は自動成功しない (16.0246ms)
+✔ 表示特徴・通知強調は不変な入力から作り、マーカーと寿命を制限する (0.403ms)
+✔ CINEMATICの発見構図は一時的。手動を変えず、物理スナップショットも変更しない (1.3461ms)
+✔ 通常Sector09とSector01〜08の基準終端を変更しない (110.7898ms)
+✔ homeward-01: データ整合性・到達・広域予測一致・両方式と両モード・ギャラリーv1 (41.397ms)
+✔ homeward-02: データ整合性・到達・広域予測一致・両方式と両モード・ギャラリーv1 (19.4466ms)
+✔ homeward-03: データ整合性・到達・広域予測一致・両方式と両モード・ギャラリーv1 (22.6484ms)
+✔ セクターの順次解放、重複加算防止、地球未帰還、モード離脱と再読込 (3.8323ms)
+✔ CLASSIC、FREE SPACE、音声の旧キーを読み書きしない。コンストラクタは保存しない (0.8756ms)
+✔ 破損・将来形式のHOMEWARDセーブを上書きせず、一時プレイを許可 (2.1887ms)
+✔ 保存容量不足・利用不可でも航行進行を保持し、保存失敗を通知 (0.3843ms)
+✔ 不正な現在位置と飛び越し済みデータを安全な解放済み位置へ補正 (0.2889ms)
+✔ CLUE-05が前提。段階解析・固定72時間・情報の組合せ・重複防止 (4.2906ms)
+✔ 三判断は可逆。OBSERVEは現在の目的地を変えず、位置・速度・条件を補正しない (3.1426ms)
+✔ signal-investigate: 実航行・予測・1/100倍・日誌/再生・復元 (98.54ms)
+✔ station-investigate: 実航行・予測・1/100倍・日誌/再生・復元 (66.4708ms)
+✔ station-observe: 実航行・予測・1/100倍・日誌/再生・復元 (47.643ms)
+✔ direct-avoid: 実航行・予測・1/100倍・日誌/再生・復元 (46.0664ms)
+✔ 高速ステップの両端が範囲外でも接近・詳細調査を検出。物理入力不変 (3.6257ms)
+✔ OBSERVEは連続した帯域内時間だけを集計。内側や帯域外・RESETを跨いで加算しない (3.1842ms)
+✔ 旧v1.5の全情報・記録を保持し、欠落項目は未解析。容量不足でも継続 (23.0085ms)
+✔ Sector09代表4航路とSector01〜08の基準終端を維持 (102.936ms)
+✔ 精密方式とスリング方式の同一ベクトルは同じ軌道になる (2.5518ms)
+✔ 引いた方向の反対に発射し、距離で速度が増加する (0.1537ms)
+✔ キャンセル境界、最小・最大速度を守る (0.1715ms)
+✔ 惑星とロケットの入力を分離し、重なった場合はロケット優先 (0.725ms)
+✔ モードを保存復元し、ストレージ例外でもプレイを妨げない (0.2133ms)
+✖ 入力イベント: 精密発射、リセット、キャンセル、マルチタッチ、再発射 (75.5267ms)
+✔ 設計モードは固定・既存の飛行と一致 (2.0985ms)
+✔ 移動速度上限と不変入力 (0.538ms)
+✔ 高速な移動でもplanetの制約をすり抜けない (9.3952ms)
+✔ 高速な移動でもgoalの制約をすり抜けない (0.1965ms)
+✔ 高速な移動でもlaunchの制約をすり抜けない (0.1547ms)
+✔ 高速な移動でもedgeの制約をすり抜けない (0.1141ms)
+✔ precisionと重力操作の共存、惑星移動で軌道変化 (1.3792ms)
+✔ slingshotと重力操作の共存、惑星移動で軌道変化 (0.9477ms)
+✔ フレーム分割が異なっても同じ固定ステップ数なら一致 (2.4555ms)
+✔ モード保存復元・例外耐性 (0.4393ms)
+✔ homeward-04: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生 (39.8122ms)
+✔ homeward-05: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生 (36.109ms)
+✔ homeward-06: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生 (24.6313ms)
+✔ homeward-07: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生 (21.6851ms)
+✔ homeward-08: 初期失敗→操作調整→成功・予測一致・両方式/両モード・100倍・記録再生 (17.2877ms)
+✔ 彗星なしでは全許可推力で時間内に届かず、異常重力なしでは許可角度で出口に届かない (9.0798ms)
+✔ ステーション未受信は物理ゴールに到達しても解放されず、UFO選択なしも不可 (7.1687ms)
+✔ 追跡・回避の別解、距離増加、日誌、順次解放、保存復元、旧進行・他キー保護 (27.6393ms)
+✔ 新ガイドの段階進行・スキップ・復元とRESET時の初期配置 (0.4618ms)
+✔ HOMEWARD01〜03の保存済み基準終点・到達時間を維持、旧記録のCINEMATICも不変 (27.3224ms)
+✔ 各新セクターに複数の成功条件があり、一点だけの正解に限定しない (28.1282ms)
+✔ 隕石・UFOを取り除いた場合だけ初期航路が通り、移動障害物が攻略に意味を持つ (3.2851ms)
+✔ 遅れて完了したIndexedDB保存が、直近の別航行の日誌を上書きしない (2.4291ms)
+✔ 遭遇対象を実飛行と同じ時刻の位置でCINEMATICに収め、状態を変更しない (1.0288ms)
+✔ 非同期resume完了を待って実ゲームと同じmaster/destinationへテスト音を送る (3.2602ms)
+✔ resumeの重複をまとめ、完了前の飛行音を後から大量再生しない (0.3833ms)
+✔ テスト音をすぐ再タップしても失敗にせず、前の確認音と重ねない (0.2972ms)
+✔ resumeが解決しない場合は期限付きで診断し、次のタップだけで再生成する (13.5911ms)
+✔ 開始拒否と非対応を診断し、再タップで回復する (1.5858ms)
+✔ 中断・バックグラウンドから戻っても勝手に音を出さず、次の操作でresumeする (0.6435ms)
+✔ closed状態は次の明示操作で再生成し、古いcontextを使わない (0.3663ms)
+✔ 開始待ち中のmuteで遅延した確認音をキャンセル (1.0134ms)
+✔ 開始待ち中のbackgroundで遅延した確認音をキャンセル (11.2277ms)
+✔ runningでも音声時計が停止していれば診断し、次のテスト音で再生成する (735.435ms)
+✔ 音声時計進行と4音上限、AudioSession非対応でも通常経路を維持 (188.1966ms)
+✔ gravity-core-01: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (7.3518ms)
+✔ stage-01: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (8.1348ms)
+✔ stage-10: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (3.4913ms)
+✔ stage-20: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (5.6445ms)
+✔ homeward-01: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (25.6123ms)
+✔ homeward-02: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (19.473ms)
+✔ homeward-03: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (17.8661ms)
+✔ huge-voyage: 6倍率で全ステップ・終了状態・時刻・座標が完全一致 (20.6161ms)
+✔ 処理予算・ステップ上限、未処理時間保存、倍率変更・リセット (0.4848ms)
+✔ 倍率切替中もライブ移動・特殊領域の衝突・予測・記録が一致 (60.329ms)
+✔ 星の座標・色がカメラ往復/再生成で安定、HUGE表示の密度・キャッシュ上限 (38.9741ms)
+✔ 1指パンの逆変換、FOLLOW解除・復帰、境界とピンチ遷移 (2.1069ms)
+✖ A: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (139.449ms)
+✖ B: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (38.4583ms)
+✖ C: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (57.3016ms)
+✖ D: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (24.1209ms)
+✔ 全16区間の参考航路は自己完結した物理シミュレーションで到達する (243.0104ms)
+✔ 非選択地点は終了させず、飛行中の変更でも位置・速度・経過時刻は保持する (4.8995ms)
+✔ 報酬は再訪で重複せず、参考航路・距離短縮・情報を保存、チェックポイントは失敗で変わらない (50.2022ms)
+✔ 危険な寄港発射位置を選ばず、未知の旧フィールドと08までのセーブを維持 (0.4868ms)
+✔ 既存01〜08の保存済み基準到達時間と終点を維持 (58.3902ms)
+✔ 旧日誌から残存記録だけを非破壊移行、重要記録の再移行・初回スロットは上書きしない (5.4042ms)
+✔ 惑星調査の参考航路は引力と反発で曲がり、重力を除いた対照では到達しない (24.9979ms)
+✔ スリングショットでも同じ速度ベクトルを使い直接帰還できる (28.2207ms)
+✔ 1080×1080 文字true：全軌道と惑星が余白内に入る・縦横比維持 (2.5548ms)
+✔ 1080×1080 文字false：全軌道と惑星が余白内に入る・縦横比維持 (0.2639ms)
+✔ 1080×1920 文字true：全軌道と惑星が余白内に入る・縦横比維持 (0.1553ms)
+✔ 1080×1920 文字false：全軌道と惑星が余白内に入る・縦横比維持 (0.1386ms)
+✔ ファイル名：FREE・ステージID・UTC記録日時・禁止文字除外 (8.7042ms)
+✔ Web Share対応・非対応・例外の判定 (0.2735ms)
+✔ PNG生成失敗の通知境界と復旧 (1.1405ms)
+✔ 惑星への接近でロケットの軌道が惑星側へ曲がる (2.027ms)
+✔ 距離の二乗に応じて引力が弱くなる (0.1523ms)
+✔ 惑星の質量を大きくすると引力が比例して強くなる (0.1301ms)
+✔ 高速移動でも線分と惑星の衝突を検出する (0.0992ms)
+✔ 高速で惑星を横切る場合も失敗判定する (0.2076ms)
+✔ 高速移動でもゴール通過をクリア判定する (0.1219ms)
+✔ 同じ初期条件では同じ軌道になる (3.4825ms)
+✔ 新しいシミュレーション作成で初期状態に戻る (0.4439ms)
+✔ ステージは375px基準の縦画面内に配置される (0.3786ms)
+✔ 地球型中は既存惑星と同じ軌道 (3.5574ms)
+✔ 2惑星の重力合算と順序独立 (0.2378ms)
+✔ 3惑星の重力合算と順序独立 (0.1242ms)
+✔ 種類とサイズに応じた重力・質量、上限 (0.2311ms)
+✔ 追加上限、全惑星間の間隔、発射地点・ゴール・画面境界の制限 (0.4532ms)
+✔ 2番目と3番目の惑星でも高速衝突を検出 (0.2473ms)
+✔ 複数惑星で両発射方式の共通ベクトルを維持 (1.5608ms)
+✔ 1惑星・precisionの全ステップが実飛行と一致、入力は不変 (4.4852ms)
+✔ 1惑星・slingshotの全ステップが実飛行と一致、入力は不変 (1.0152ms)
+✔ 2惑星・precisionの全ステップが実飛行と一致、入力は不変 (1.9886ms)
+✔ 2惑星・slingshotの全ステップが実飛行と一致、入力は不変 (1.6704ms)
+✔ 3惑星・precisionの全ステップが実飛行と一致、入力は不変 (1.2237ms)
+✔ 3惑星・slingshotの全ステップが実飛行と一致、入力は不変 (0.6051ms)
+✔ clearedの予測終端 (0.7577ms)
+✔ crashedの予測終端 (0.2703ms)
+✔ escapedの予測終端 (0.778ms)
+✔ timeoutの予測終端 (2.8637ms)
+✔ 上限、分割実行、スナップショット独立性 (0.347ms)
+✔ ON/OFF保存、OFFは計算停止、条件変更時は古い結果を破棄、RESET後復元 (2.3307ms)
+✔ 初期ミュート・標準、設定保存復元と旧セーブへの非干渉 (3.6713ms)
+✔ CLOSE CALL absorbed: 安全離脱時のみ・侵入と高速横断は除外 (1.06ms)
+✔ CLOSE CALL overheated: 安全離脱時のみ・侵入と高速横断は除外 (0.1933ms)
+✔ 接近と90度旋回イベント、通常／特殊惑星の色 (0.2398ms)
+✔ 発射・CLEAR・5種類の失敗演出、有限寿命、RESET、軽量の上限 (1.2218ms)
+✔ 物理状態・軌道予測・重力操作に非干渉（通常／特殊、両品質） (55.5949ms)
+✔ 音声は操作後に開始、ON/OFF、種類別音、重複制限・ノード解放 (3.2893ms)
+✔ 音声非対応・開始拒否でもゲーム側へ例外を出さない (0.8718ms)
+✔ stage-11 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (74.7327ms)
+✔ stage-12 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (34.1729ms)
+✔ stage-13 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (28.2693ms)
+✔ stage-14 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (59.3454ms)
+✔ stage-15 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (48.705ms)
+✔ stage-16 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (25.9805ms)
+✔ stage-17 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (20.7651ms)
+✔ stage-18 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (13.6459ms)
+✔ stage-19 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (17.8ms)
+✔ stage-20 データ・到達・★3・発射/モード互換・特殊惑星の寄与 (25.6342ms)
+✔ 特殊危険領域の高速横断は新ステージでも失敗 (1.6014ms)
+✔ 旧セーブ維持・10→11→20解放・モード別最高星・保存復元 (0.8188ms)
+✔ 既存01〜10・星条件とデータを維持 (8.9744ms)
+✔ レポート出力 (3.3593ms)
+✔ 7種類の設定とサイズ変更・特殊→通常でパラメータを残さない (3.5593ms)
+✔ ブラックホール・高密度惑星の引力と有限性 (0.2908ms)
+✔ 反重力は同質量・同倍率の通常加速度と逆符号 (0.1699ms)
+✔ 複数特殊惑星と通常惑星を合算 (0.244ms)
+✔ blackhole高速通過で危険/衝突を検出 (0.6722ms)
+✔ star高速通過で危険/衝突を検出 (0.1962ms)
+✔ dense高速通過で危険/衝突を検出 (0.1469ms)
+✔ blackholeサンプル・予測と実飛行の全ステップ一致・入力不変 (5.2422ms)
+✔ repulsorサンプル・予測と実飛行の全ステップ一致・入力不変 (7.8608ms)
+✔ starサンプル・予測と実飛行の全ステップ一致・入力不変 (2.1328ms)
+✔ denseサンプル・予測と実飛行の全ステップ一致・入力不変 (4.0144ms)
+✔ 恒星の危険外周も配置・移動制約で保護 (0.4145ms)
+✔ 重力操作中の特殊領域にも同じ失敗理由を適用 (0.3993ms)
+✔ 移動する恒星がロケットを横切る場合の熱領域も検出 (0.2517ms)
+✔ 全10ステージのデータと通常惑星の軌道はv0.5.1と不変 (27.084ms)
+ℹ tests 402
+ℹ suites 0
+ℹ pass 395
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20019.7499
+
+✖ failing tests:
+
+test at tests\encounters.test.mjs:71:1
+✖ ギミックなしは旧エンジンと完全一致：Stage01〜20、HOMEWARD01〜03、FREE (38.9949ms)
+  Error: Command failed: git show 8ba5aa8:034_惑星重力ゲーム/js/physics.js
+  fatal: not a git repository (or any of the parent directories): .git
+  
+      at genericNodeError (node:internal/errors:998:15)
+      at wrappedFn (node:internal/errors:543:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/encounters.test.mjs:72:15)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12) {
+    status: 128,
+    signal: null,
+    output: [ null, '', 'fatal: not a git repository (or any of the parent directories): .git\n' ],
+    pid: 27496,
+    stdout: '',
+    stderr: 'fatal: not a git repository (or any of the parent directories): .git\n'
+  }
+
+test at tests\expanded-space.test.mjs:58:1
+✖ 共通物理変更の影響範囲：Stage01〜20全基準軌道を変更前エンジンと各ステップ比較 (44.6104ms)
+  Error: Command failed: git show ba20c0564fd07b60a955a00119b7ba61ecb60233:034_惑星重力ゲーム/js/physics.js
+  fatal: not a git repository (or any of the parent directories): .git
+  
+      at genericNodeError (node:internal/errors:998:15)
+      at wrappedFn (node:internal/errors:543:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/expanded-space.test.mjs:60:15)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12) {
+    status: 128,
+    signal: null,
+    output: [ null, '', 'fatal: not a git repository (or any of the parent directories): .git\n' ],
+    pid: 31276,
+    stdout: '',
+    stderr: 'fatal: not a git repository (or any of the parent directories): .git\n'
+  }
+
+test at tests\launch.test.mjs:43:1
+✖ 入力イベント: 精密発射、リセット、キャンセル、マルチタッチ、再発射 (75.5267ms)
+  TypeError: document.createElement is not a function
+      at createFrontierUI (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/js/frontier-ui.js:4:155)
+      at file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/js/game.js?input-test:963:18
+      at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+      at async node:internal/modules/esm/loader:639:26
+      at async TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/launch.test.mjs:62:3)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests\open-voyage.test.mjs:26:134
+✖ A: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (139.449ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      active: true,
+      choices: {},
+      cleared: [
+        'homeward-01',
+  ...
+      },
+  +   echoes: {
+  +     choices: [],
+  +     clues: {},
+  +     events: [],
+  +     records: {},
+  +     version: 1
+  +   },
+      eventsSeen: [
+        'homeward-09:arrival'
+      ],
+      frontier: {
+        rewards: [],
+  
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/open-voyage.test.mjs:35:55)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08', 'homeward-09' ], eventsSeen: [ 'homeward-09:arrival' ], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object], 'homeward-09': [Object] }, choices: {}, voyage: { checkpoint: 'gate', selected: 'gate', visited: [Array], discoveries: [Array], rewards: [Array], completed: true, elapsed: 20.324999999999488, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] }, echoes: { version: 1, clues: {}, events: [], choices: [], records: {} } },
+    expected: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08', 'homeward-09' ], eventsSeen: [ 'homeward-09:arrival' ], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object], 'homeward-09': [Object] }, choices: {}, voyage: { checkpoint: 'gate', selected: 'gate', visited: [Array], discoveries: [Array], rewards: [Array], completed: true, elapsed: 20.324999999999488, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\open-voyage.test.mjs:26:134
+✖ B: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (38.4583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      active: true,
+      choices: {},
+      cleared: [
+        'homeward-01',
+  ...
+      },
+  +   echoes: {
+  +     choices: [],
+  +     clues: {},
+  +     events: [],
+  +     records: {},
+  +     version: 1
+  +   },
+      eventsSeen: [],
+      frontier: {
+        rewards: [],
+        targets: {
+          D01: {
+  
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/open-voyage.test.mjs:35:55)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'rescue', selected: 'rescue', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 6.100000000000093, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] }, echoes: { version: 1, clues: {}, events: [], choices: [], records: {} } },
+    expected: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'rescue', selected: 'rescue', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 6.100000000000093, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\open-voyage.test.mjs:26:134
+✖ C: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (57.3016ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      active: true,
+      choices: {},
+      cleared: [
+        'homeward-01',
+  ...
+      },
+  +   echoes: {
+  +     choices: [],
+  +     clues: {},
+  +     events: [],
+  +     records: {},
+  +     version: 1
+  +   },
+      eventsSeen: [],
+      frontier: {
+        rewards: [],
+        targets: {
+          D01: {
+  
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/open-voyage.test.mjs:35:55)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'planet', selected: 'planet', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 14.499999999999817, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] }, echoes: { version: 1, clues: {}, events: [], choices: [], records: {} } },
+    expected: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'planet', selected: 'planet', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 14.499999999999817, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\open-voyage.test.mjs:26:134
+✖ D: 実物理で探索・安全な寄港再発射・予測/100倍一致・保存復元・重要記録用のCINEMATIC (24.1209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      active: true,
+      choices: {},
+      cleared: [
+        'homeward-01',
+  ...
+      },
+  +   echoes: {
+  +     choices: [],
+  +     clues: {},
+  +     events: [],
+  +     records: {},
+  +     version: 1
+  +   },
+      eventsSeen: [],
+      frontier: {
+        rewards: [],
+        targets: {
+          D01: {
+  
+      at TestContext.<anonymous> (file:///C:/Users/shish/AppData/Local/Temp/orbit-qa-V0nrhW/game/tests/open-voyage.test.mjs:35:55)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'rescue', selected: 'rescue', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 6.100000000000093, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] }, echoes: { version: 1, clues: {}, events: [], choices: [], records: {} } },
+    expected: { version: 1, openingSeen: true, active: true, currentSector: 'homeward-09', cleared: [ 'homeward-01', 'homeward-02', 'homeward-03', 'homeward-04', 'homeward-05', 'homeward-06', 'homeward-07', 'homeward-08' ], eventsSeen: [], journal: { 'homeward-01': [Object], 'homeward-09': [Object] }, custom: { kept: true }, tutorial: { 'homeward-01': [Object], 'homeward-02': [Object], 'homeward-03': [Object], 'homeward-04': [Object], 'homeward-05': [Object], 'homeward-06': [Object], 'homeward-07': [Object], 'homeward-08': [Object] }, choices: {}, voyage: { checkpoint: 'rescue', selected: 'rescue', visited: [Array], discoveries: [Array], rewards: [Array], completed: false, elapsed: 6.100000000000093, planets: [Array], records: {}, launchPosition: [Object] }, frontier: { version: 1, targets: [Object], rewards: [] } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+

@@ -7,13 +7,14 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=1.0.0">
+  <link rel="stylesheet" href="styles.css?v=1.2.0-A">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v1.1.0</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v1.2.0-A</b></span>
+      <output id="acceptanceHUD" class="acceptance-hud" aria-label="実機診断HUD" aria-live="off" hidden></output>
       <small class="orientation-note">横向き推奨</small>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
@@ -158,6 +159,20 @@
             </fieldset>
           </section>
           <section id="labPanel-metrics" class="lab-tab-panel" role="tabpanel" aria-labelledby="labTab-metrics" hidden>
+            <fieldset class="lab-card acceptance-card"><legend>実機診断 1.2.0-A <span>LAB限定・通常SAVE非加算</span></legend>
+              <div class="lab-form-grid"><label>代表試験<select id="acceptancePreset"></select></label><label>有効計測時間<select id="acceptanceDuration"><option value="30">30秒</option><option value="60">60秒</option><option value="120">120秒</option><option value="0">手動停止（120秒以上も可）</option></select></label></div>
+              <output id="acceptancePresetHelp"></output><div class="lab-action-stack"><button data-action="acceptance-preset">選択試験を開始（LAB初期化＋計測）</button><button data-action="acceptance-start" class="lab-primary">現在の戦闘で計測開始 → プレイ</button><button data-action="acceptance-stop">計測停止・履歴保存</button><button data-action="acceptance-clear">現在の計測結果クリア（履歴は保持）</button></div>
+              <label class="lab-check"><input id="acceptanceHudToggle" type="checkbox"> コンパクト診断HUD（ゲーム外ヘッダー）</label><output id="acceptanceStatus" role="status" aria-live="polite">未取得</output><pre id="acceptanceMetrics">未取得</pre>
+              <details><summary>HELP：計測品質と安全な通常攻略試験</summary><p>FPSはRAF間隔、CPUは更新／描画の処理時間。復帰後1秒を除外。250ms超はCPU整合か判別不能を別記し、継続遅延の疑いも保存します。成立／参考値／測定不成立を区別。温度・メモリは未取得。通常攻略はLABを終了し、別の検証用ブラウザ環境で無敵なし・正規解放装備を使ってください。LABからの途中開始は通常全編クリアではありません。</p></details>
+              <details id="acceptanceRecords"><summary>履歴・人手評価・問題記録（直近20件）</summary>
+                <label>評価する記録<select id="acceptanceHistory"><option value="">未記録</option></select></label><div class="lab-action-stack"><button data-action="acceptance-capture">現在の部分記録を履歴へ保存</button><button data-action="acceptance-delete">選択履歴を削除</button></div>
+                <div class="lab-form-grid"><label>デバイス名（任意）<input id="acceptanceDevice" maxlength="80" autocomplete="off" placeholder="任意。個人情報は入力しない"></label><label>人手結果<select id="acceptanceOutcome"><option>未評価</option><option>クリア</option><option>敗北</option><option>中断</option></select></label></div><div id="acceptanceRatings" class="lab-form-grid"></div>
+                <label>自由メモ<textarea id="acceptanceMemo" rows="2" maxlength="500"></textarea></label><button data-action="acceptance-review">評価を明示保存</button>
+                <details><summary>問題をこの試験へ紐づける</summary><label>重大度<select id="acceptanceSeverity"><option>MEDIUM</option><option>BLOCKER</option><option>HIGH</option><option>LOW</option></select></label><label>発生条件<textarea id="acceptanceCondition" rows="2" maxlength="300"></textarea></label><label>再現方法<textarea id="acceptanceRepro" rows="2" maxlength="300"></textarea></label><label>影響<textarea id="acceptanceImpact" rows="2" maxlength="300"></textarea></label><label>値・状況／備考<textarea id="acceptanceIssueMemo" rows="2" maxlength="300"></textarea></label><button data-action="acceptance-issue">問題をOPENで追加</button><pre id="acceptanceIssueList">未記録</pre><label>変更する問題ID<select id="acceptanceIssueId"></select></label><label>修正状況<select id="acceptanceIssueState"><option>OPEN</option><option>RETEST</option><option>RESOLVED</option></select></label><button data-action="acceptance-issue-state">選択問題の状況を明示更新</button></details>
+              </details>
+              <div class="lab-action-stack"><button data-action="acceptance-copy">選択記録をテキストコピー</button><button data-action="acceptance-json">履歴JSON出力・コピー</button><button data-action="acceptance-download">履歴JSONを端末内保存</button></div><output id="acceptanceCopyStatus" role="status"></output><details id="acceptanceOutputBox"><summary>出力テキスト（自動コピー失敗時は長押し選択）</summary><textarea id="acceptanceOutput" readonly rows="6" spellcheck="false"></textarea></details>
+            </fieldset>
+            <details class="acceptance-legacy"><summary>従来30秒計測・旧受入チェック（セッション内8件）</summary>
             <fieldset class="lab-card"><legend>実機用30秒計測 <span>手動操作・NO SAVE</span></legend>
               <label>実機の環境<input id="mobileEnvironment" type="text" maxlength="120" placeholder="例：iPhone 13 / iOS版 / Safari" autocomplete="off"></label>
               <label>計測条件<select id="mobileScenario"><option value="CURRENT">現在の戦闘を維持</option><option value="50">通常敵50体で開始（補充なし）</option><option value="100">通常敵100体で開始（補充なし）</option><option value="200">通常敵200体で開始（LAB限定・補充なし）</option></select></label>
@@ -173,6 +188,7 @@
               <details id="mobileQADetails"><summary>iPhone実機受入チェック IP-01〜08</summary><p>初期値はすべて未確認。実機で確認した項目だけ手動でOK／NGを選び、NGには短いメモを記入してください。</p><div id="mobileQAList"></div><button data-action="mobile-qa-copy">チェック結果をコピー</button></details>
               <output id="mobileCopyStatus" role="status"></output><details id="mobileCopyBox"><summary>選択・手動コピー用テキスト</summary><label>コピーする内容<textarea id="mobileCopyText" readonly rows="8" spellcheck="false"></textarea></label></details>
             </fieldset>
+            </details>
             <fieldset class="lab-card"><legend>実プレイ計測 <span>表示／実行操作</span></legend>
               <label class="lab-check"><input id="labFps" type="checkbox" checked> ゲーム上にFPS・CPU表示</label><output id="labMeasureStatus" role="status"></output><pre id="labMetrics"></pre>
               <p class="lab-hint">閉じて前景で連続実行。復帰後500msを除外、連続30サンプル・有効500ms以上でFPS集計。短区間を合算せず、250ms超は中断として除外。</p>
@@ -220,6 +236,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=1.1.0"></script>
+  <script type="module" src="js/game.js?v=1.2.0-A"></script>
 </body>
 </html>

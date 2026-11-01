@@ -1,0 +1,162 @@
+[
+  {
+    "id": "stage-01",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.9333333333333256,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-02",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.9916666666666587,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-03",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.499999999999994,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-04",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.974999999999992,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-05",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.4666666666666606,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-06",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.56666666666666,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-07",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.4666666666666606,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-08",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.366666666666661,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-09",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.258333333333328,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-10",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.1583333333333283,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-11",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.199999999999995,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-12",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.8666666666666625,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-13",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.391666666666661,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-14",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.741666666666663,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-15",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.1583333333333283,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-16",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 2.1583333333333283,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-17",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.8583333333333292,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-18",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.7333333333333296,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-19",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.741666666666663,
+    "reload": "PASS"
+  },
+  {
+    "id": "stage-20",
+    "failure": "escaped",
+    "retry": "cleared",
+    "stars": 3,
+    "elapsed": 1.5916666666666635,
+    "reload": "PASS"
+  }
+]

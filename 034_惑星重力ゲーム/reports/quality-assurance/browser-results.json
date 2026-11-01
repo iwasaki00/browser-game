@@ -1,0 +1,269 @@
+{
+  "browser": "156.0.8078.48",
+  "platform": "win32",
+  "classic": [
+    {
+      "id": "stage-01",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-02",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-03",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-04",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-05",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-06",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-07",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-08",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-09",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-10",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-11",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-12",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-13",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-14",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-15",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-16",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-17",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-18",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-19",
+      "stars": 3,
+      "status": "PASS"
+    },
+    {
+      "id": "stage-20",
+      "stars": 3,
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    {
+      "width": 320,
+      "height": 568,
+      "board": {
+        "x": 5,
+        "y": 52,
+        "width": 310,
+        "height": 402
+      },
+      "panel": {
+        "x": 12,
+        "y": 12,
+        "width": 296,
+        "height": 544
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "board": {
+        "x": 5,
+        "y": 52,
+        "width": 365,
+        "height": 501
+      },
+      "panel": {
+        "x": 12,
+        "y": 12,
+        "width": 351,
+        "height": 643
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "board": {
+        "x": 5,
+        "y": 52,
+        "width": 380,
+        "height": 678
+      },
+      "panel": {
+        "x": 12,
+        "y": 12,
+        "width": 366,
+        "height": 820
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "board": {
+        "x": 338,
+        "y": 52,
+        "width": 690,
+        "height": 602
+      },
+      "panel": {
+        "x": 483,
+        "y": 12,
+        "width": 400,
+        "height": 744
+      },
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "storage": {
+    "galleryRows": 50,
+    "favorites": 30,
+    "autos": 20,
+    "atomicAbort": "PASS",
+    "protectedUnchanged": "PASS",
+    "transientQuotaRetries": 3,
+    "permanentQuotaRetries": 3,
+    "quota": "fault injection; actual disk exhaustion not performed",
+    "reload": {
+      "gallery": 50,
+      "protected": 2
+    }
+  },
+  "performance": {
+    "condition": "PC headless Chrome, real wall clock, CINEMATIC replay, 50 gallery rows, forced-GC samples; not iPhone",
+    "samples": [
+      {
+        "seconds": 10,
+        "fps": 59.08818236352729,
+        "heapUsedBytes": 7171984,
+        "rendererTaskCpuPercent": null
+      },
+      {
+        "seconds": 20,
+        "fps": 59.88083416087388,
+        "heapUsedBytes": 7200588,
+        "rendererTaskCpuPercent": 15.68923535253227
+      },
+      {
+        "seconds": 30,
+        "fps": 59.948217486556466,
+        "heapUsedBytes": 7194980,
+        "rendererTaskCpuPercent": 20.780123481378215
+      },
+      {
+        "seconds": 40,
+        "fps": 59.942248332171665,
+        "heapUsedBytes": 7194108,
+        "rendererTaskCpuPercent": 19.893896246141587
+      },
+      {
+        "seconds": 50,
+        "fps": 59.90049751243781,
+        "heapUsedBytes": 7180244,
+        "rendererTaskCpuPercent": 23.28154228855722
+      },
+      {
+        "seconds": 60,
+        "fps": 60.013956734124214,
+        "heapUsedBytes": 7180104,
+        "rendererTaskCpuPercent": 2.184767221612996
+      },
+      {
+        "seconds": 70,
+        "fps": 59.40981043580223,
+        "heapUsedBytes": 17025920,
+        "rendererTaskCpuPercent": 4.036613249951144
+      },
+      {
+        "seconds": 80,
+        "fps": 58.446678493987775,
+        "heapUsedBytes": 7227880,
+        "rendererTaskCpuPercent": 23.04913266311846
+      },
+      {
+        "seconds": 90,
+        "fps": 59.74437729119192,
+        "heapUsedBytes": 7251788,
+        "rendererTaskCpuPercent": 20.2344099871198
+      },
+      {
+        "seconds": 100,
+        "fps": 59.99801331081752,
+        "heapUsedBytes": 7240948,
+        "rendererTaskCpuPercent": 19.89548028210985
+      },
+      {
+        "seconds": 110,
+        "fps": 59.964200477326976,
+        "heapUsedBytes": 7268640,
+        "rendererTaskCpuPercent": 18.657130071599042
+      },
+      {
+        "seconds": 120,
+        "fps": 59.92434799920367,
+        "heapUsedBytes": 7208920,
+        "rendererTaskCpuPercent": 17.37023691021303
+      }
+    ],
+    "heapDelta": 36936
+  }
+}

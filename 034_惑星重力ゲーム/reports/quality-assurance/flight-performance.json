@@ -1,0 +1,165 @@
+{
+  "browser": "156.0.8078.48",
+  "platform": "win32",
+  "viewport": "1366x768",
+  "condition": "real wall clock; HUGE LONG VOYAGE, 3 planets, CINEMATIC, prediction, recorder, IndexedDB; repeated 20 launches; UI automation overhead included",
+  "seconds": 6.4725506,
+  "frames": 388,
+  "fps": 59.945456432584706,
+  "rendererTaskCpuPercent": 37.75738732733893,
+  "heaps": [
+    {
+      "flight": 5,
+      "usedSize": 4246108,
+      "totalSize": 5292032,
+      "embedderHeapUsedSize": 3897600,
+      "backingStorageSize": 323458
+    },
+    {
+      "flight": 10,
+      "usedSize": 4337116,
+      "totalSize": 5292032,
+      "embedderHeapUsedSize": 3847264,
+      "backingStorageSize": 323458
+    },
+    {
+      "flight": 15,
+      "usedSize": 4398988,
+      "totalSize": 5292032,
+      "embedderHeapUsedSize": 3907560,
+      "backingStorageSize": 323458
+    },
+    {
+      "flight": 20,
+      "usedSize": 4414456,
+      "totalSize": 5292032,
+      "embedderHeapUsedSize": 3920560,
+      "backingStorageSize": 323458
+    }
+  ],
+  "flights": [
+    {
+      "flight": 1,
+      "wallMs": 298.2854,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 2,
+      "wallMs": 278.08590000000004,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 3,
+      "wallMs": 263.69669999999996,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 4,
+      "wallMs": 288.6806999999999,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 5,
+      "wallMs": 281.47569999999996,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 6,
+      "wallMs": 262.43420000000015,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 7,
+      "wallMs": 292.35490000000027,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 8,
+      "wallMs": 267.19129999999996,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 9,
+      "wallMs": 282.3186000000005,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 10,
+      "wallMs": 246.4944000000005,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 11,
+      "wallMs": 262.9456,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 12,
+      "wallMs": 265.6754000000001,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 13,
+      "wallMs": 266.15830000000005,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 14,
+      "wallMs": 283.66569999999956,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 15,
+      "wallMs": 295.72609999999986,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 16,
+      "wallMs": 265.5042000000003,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 17,
+      "wallMs": 283.3723,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 18,
+      "wallMs": 282.83100000000013,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 19,
+      "wallMs": 277.4245000000001,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 20,
+      "wallMs": 278.3018000000002,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    }
+  ],
+  "errors": [],
+  "physicalEquivalence": "separately verified by full fixed-step tests, not inferred from FPS",
+  "iPhone": "UNVERIFIED"
+}

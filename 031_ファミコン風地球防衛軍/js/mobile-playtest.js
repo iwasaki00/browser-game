@@ -1,9 +1,9 @@
 // Manual mobile QA is session-only. It does not use the legacy BENCH gap filter.
 export const MOBILE_TEST=Object.freeze({warmupMs:1000,durationMs:30000,histogramStepMs:.25,maxContinuousGapMs:2000,cpuGapEvidenceRatio:.75,maxLongFrames:16,historyLimit:8});
 export const MOBILE_STATUS=Object.freeze({ARMED:'ゲーム再開待ち',WARMUP:'準備中（1秒）',RECORDING:'30秒計測中',COMPLETE:'計測完了',INTERRUPTED:'中断あり',INVALID:'無効'});
-const terminal=s=>['COMPLETE','INTERRUPTED','INVALID'].includes(s);
+const terminal=s=>['COMPLETE','INTERRUPTED','INVALID','STOPPED'].includes(s);
 export class MobilePlaytest {
-  constructor(){this.run=null;this.history=[];this.serial=0;this.bins=new Uint32Array(MOBILE_TEST.maxContinuousGapMs/MOBILE_TEST.histogramStepMs+1);this.seconds=new Uint32Array(32);this.longFrames=new Float64Array(MOBILE_TEST.maxLongFrames)}
+  constructor(options={}){this.options={...MOBILE_TEST,...options};this.run=null;this.history=[];this.serial=0;this.bins=new Uint32Array(MOBILE_TEST.maxContinuousGapMs/MOBILE_TEST.histogramStepMs+1);this.seconds=new Uint32Array(32);this.longFrames=new Float64Array(MOBILE_TEST.maxLongFrames)}
   get active(){return !!this.run&&!terminal(this.run.status)}
   start(metadata,startedAt=new Date().toISOString()){
     if(this.active)this.interrupt('再計測を開始したため終了');
@@ -33,7 +33,7 @@ export class MobilePlaytest {
     if(delta>MOBILE_TEST.maxContinuousGapMs)this.longFrames[r.longCount++]=delta;else this.bins[Math.ceil(delta/MOBILE_TEST.histogramStepMs)]++;
     this.seconds[Math.min(this.seconds.length-1,Math.max(0,Math.floor((r.durationMs-1e-6)/1000)))]++;
     this.peaks(counts);
-    if(r.durationMs>=MOBILE_TEST.durationMs-1e-6){this.finish('COMPLETE','中断なしの観測RAF計測完了（表示完了・GPU時間の測定ではありません）');return true}
+    if(r.durationMs>=this.options.durationMs-1e-6){this.finish('COMPLETE','目標有効時間の観測RAF計測完了（表示完了・GPU時間の測定ではありません）');return true}
     return false;
   }
   peaks(c){const r=this.run;for(const [key,source] of [['maxEnemies','enemies'],['maxShots','shots'],['maxEffects','effects']])r[key]=Math.max(r[key],Number.isFinite(c[source])?c[source]:0)}
@@ -43,14 +43,14 @@ export class MobilePlaytest {
     const fullSeconds=Math.floor((r.durationMs+1e-6)/1000);let minimum=fullSeconds>this.seconds.length?0:null;
     for(let i=0;i<Math.min(fullSeconds,this.seconds.length);i++)minimum=minimum===null?this.seconds[i]:Math.min(minimum,this.seconds[i]);
     return {id:r.id,startedAt:r.startedAt,metadata:JSON.parse(JSON.stringify(r.metadata)),status:r.status,statusLabel:MOBILE_STATUS[r.status],reason:r.reason,
-      valid:r.status==='COMPLETE'&&r.samples>0&&r.durationMs>=MOBILE_TEST.durationMs-1e-6&&r.interruptions===0,targetDurationMs:MOBILE_TEST.durationMs,acceptedDurationMs:r.durationMs,remainingMs:Math.max(0,MOBILE_TEST.durationMs-r.durationMs),samples:r.samples,
+      valid:r.status==='COMPLETE'&&r.samples>0&&r.durationMs>=this.options.durationMs-1e-6&&r.interruptions===0,targetDurationMs:this.options.durationMs,acceptedDurationMs:r.durationMs,remainingMs:Math.max(0,this.options.durationMs-r.durationMs),samples:r.samples,
       observedRafFps:r.samples?1000*r.samples/r.durationMs:null,minimumOneSecondFps:minimum,fullSecondWindows:fullSeconds,
       p50FrameMs:this.percentile(.5),p95FrameMs:this.percentile(.95),p99FrameMs:this.percentile(.99),maxFrameMs:r.samples?r.maxFrameMs:null,
       updateCpuMs:r.samples?r.updateMs/r.samples:null,drawCpuMs:r.samples?r.drawMs/r.samples:null,maxEnemies:r.maxEnemies,maxShots:r.maxShots,maxEffects:r.maxEffects,
       interruptions:r.interruptions,warmupFrames:r.warmupFrames,warmupMs:MOBILE_TEST.warmupMs,actualWarmupMs:r.recordStart===null?null:r.recordStart-r.warmupStart,unclassifiedGapMs:r.unclassifiedGapMs,cpuAccountedLongFrames:r.longCount,histogramResolutionMs:MOBILE_TEST.histogramStepMs,
       normalProgressSaved:false,normalClearCertified:false};
   }
-  finish(status,reason){if(!this.active)return;this.run.status=status;this.run.reason=reason;this.history.push(this.snapshot());if(this.history.length>MOBILE_TEST.historyLimit)this.history.shift()}
+  finish(status,reason){if(!this.active)return;this.run.status=status;this.run.reason=reason;this.history.push(this.snapshot());if(this.history.length>this.options.historyLimit)this.history.shift()}
   result(id){return this.run?.id===Number(id)?this.snapshot():this.history.find(r=>r.id===Number(id))??null}
 }
 

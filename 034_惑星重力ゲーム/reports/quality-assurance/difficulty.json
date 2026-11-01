@@ -1,0 +1,276 @@
+{
+  "physicsAndStageData": "byte-identical to v1.9.1",
+  "homeward02": [
+    {
+      "sector": "homeward-02",
+      "delta": -1,
+      "success": false,
+      "reason": "escaped"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": -0.1,
+      "success": false,
+      "reason": "escaped"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": -0.0328125,
+      "success": false,
+      "reason": "escaped"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": -0.03203125,
+      "success": true,
+      "reason": "cleared"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": -0.01,
+      "success": true,
+      "reason": "cleared"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 0,
+      "success": true,
+      "reason": "cleared"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 0.01,
+      "success": true,
+      "reason": "cleared"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 0.03203125,
+      "success": true,
+      "reason": "cleared"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 0.0328125,
+      "success": false,
+      "reason": "escaped"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 0.1,
+      "success": false,
+      "reason": "escaped"
+    },
+    {
+      "sector": "homeward-02",
+      "delta": 1,
+      "success": false,
+      "reason": "crashed"
+    }
+  ],
+  "homeward02Advice": "keep angle -65, change thrust 200 -> 218..220; 0.01 degree controls retained",
+  "classic19": {
+    "legalInputGrid": {
+      "tested": 120,
+      "valid": 16,
+      "success": 16,
+      "excluded": 104,
+      "failures": {}
+    },
+    "placement": [
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": -10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": -5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": -2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": 2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": 5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "x",
+        "delta": 10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": -10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": -5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": -2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": 2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": 5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 0,
+        "axis": "y",
+        "delta": 10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": -10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": -5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": -2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": 2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": 5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "x",
+        "delta": 10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": -10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": -5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": -2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": 2,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": 5,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      },
+      {
+        "planet": 1,
+        "axis": "y",
+        "delta": 10,
+        "legal": true,
+        "success": true,
+        "reason": "cleared"
+      }
+    ],
+    "decision": "retain goal and rating; challenge is not strictly increasing at stage19"
+  }
+}

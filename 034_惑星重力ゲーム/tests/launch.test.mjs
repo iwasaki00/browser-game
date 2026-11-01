@@ -42,7 +42,8 @@ test('モードを保存復元し、ストレージ例外でもプレイを妨�
 
 test('入力イベント: 精密発射、リセット、キャンセル、マルチタッチ、再発射', async () => {
   class Target {
-    constructor(){this.listeners={};this.hidden=false;this.disabled=false;this.value='';this.dataset={};this.classList={toggle(){}};this.captures=new Set();}
+    constructor(){this.listeners={};this.hidden=false;this.disabled=false;this.value='';this.dataset={};this.classList={toggle(){},add(){},remove(){}};this.style={setProperty(){}};this.captures=new Set();}
+    append(){} prepend(){} replaceChildren(){} close(){this.open=false;} showModal(){this.open=true;}
     addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);}
     emit(type,props={}){const e={type,pointerId:1,button:0,clientX:48,clientY:430,preventDefault(){},...props};for(const fn of this.listeners[type]??[])fn(e);}
     setAttribute(k,v){this[k]=v;}
@@ -53,7 +54,7 @@ test('入力イベント: 精密発射、リセット、キャンセル、マル
   }
   const elements=new Map(); const el=s=>{if(!elements.has(s))elements.set(s,new Target());return elements.get(s);};
   const buttons=['precision','slingshot'].map(mode=>{const b=new Target();b.dataset.launchMode=mode;return b;});
-  globalThis.document=new Target();document.querySelector=el;document.querySelectorAll=()=>buttons;
+  globalThis.document=new Target();document.querySelector=el;document.querySelectorAll=selector=>selector==='[data-launch-mode]'?buttons:[];document.createElement=()=>new Target();document.getElementById=id=>el('#'+id);document.body=new Target();
   globalThis.window=new Target();window.devicePixelRatio=1;
   globalThis.ResizeObserver=class {observe(){}};
   globalThis.requestAnimationFrame=()=>{};
