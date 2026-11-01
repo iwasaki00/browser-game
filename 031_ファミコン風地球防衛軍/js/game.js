@@ -2,12 +2,12 @@ import {reconcileAchievements,selectAchievementTitle,AchievementNotices} from ".
 import {ACHIEVEMENT_BY_ID} from "./achievement-master.js?v=0.8.0";
 import {CampaignRun} from "./campaign-stats.js?v=0.8.0";
 import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.8.0";
-import {READABILITY,playerOpacity,drawPlayerLocator,drawEnemyShotAccent,drawDangerAccents,crowdedVisuals} from "./readability.js?v=1.2.0-B";
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-B";
+import {READABILITY,playerOpacity,drawEnemyShotAccent,drawDangerAccents,crowdedVisuals} from "./readability.js?v=1.2.0-B1";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-B1";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.7.0";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
-import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=1.2.0-B";
+import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=1.2.0-B1";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.6.0";
 import {FrameProfiler,LiveProfiler,RunProfiler} from "./profiler.js?v=0.6.0";
 import {LAB_CHECKPOINTS,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=0.6.0";
@@ -731,7 +731,7 @@ function drawUnderground(g,bounds){
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
 }
-function drawPlayer(p){ctx.save();ctx.globalAlpha=playerOpacity(p);drawPlayerSprite(p);ctx.restore();drawPlayerLocator(ctx,p,view.zoom)}
+function drawPlayer(p){ctx.save();ctx.globalAlpha=playerOpacity(p);drawPlayerSprite(p);ctx.restore()}
 function drawPlayerSprite(p){if(drawStudyPlayer(ctx,activeStudy(),p,weapon(activeEquipment()[p.weaponSlot]),images.heldWeapons))return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
     const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;

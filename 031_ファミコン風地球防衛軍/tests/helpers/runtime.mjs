@@ -37,7 +37,7 @@ import * as mobilePlaytest from "../../js/mobile-playtest.js";
 import * as mobileAcceptance from "../../js/mobile-acceptance.js";
 
 const source=readFileSync(new URL("../../js/game.js",import.meta.url),"utf8").replace(/^import .*;\r?\n/gm,"");
-export function runtime(seed=null,{recordDraw=true,debug=false,randomSeed=12345}={}){
+export function runtime(seed=null,{recordDraw=true,debug=false,randomSeed=12345,sourceText=source,modules={}}={}){
   const elements=new Map(),timers=new Map(),listeners=new Map(),drawCalls=[];
   let nextTimer=0,rafCount=0;
   const context=new Proxy({},{get:(target,name)=>name in target?target[name]:(...args)=>{if(recordDraw)drawCalls.push([name,...args])},set:(target,name,value)=>{target[name]=value;return true}});
@@ -56,7 +56,8 @@ export function runtime(seed=null,{recordDraw=true,debug=false,randomSeed=12345}
   const writes=[];const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);
   const sandbox={...data,...challenges,...achievementMaster,...campaign,...campaignStats,...camera,...readability,...invasion,...playground,...impact,...player,...weapons,...mission02,...missionLab,...art,...mission03,...mission08,...finalArt,...campaignEnding,...mission07,...mothershipArt,...mission06,...livingArt,...mission05,...mobileArt,...mission04,...skyArt,...fortressUI,...coastalArt,...combatAudio,...gameplayUI,...mobilePlaytest,...mobileAcceptance,FrameProfiler,LiveProfiler,RunProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{writes.push({key:k,value:v});storage.set(k,v)}},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
   sandbox.window={innerHeight:720,addEventListener:(name,fn)=>{(listeners.get(`window:${name}`)||listeners.set(`window:${name}`,[]).get(`window:${name}`)).push(fn)}};
-  const scope=vm.createContext(sandbox);vm.runInContext(source,scope);vm.runInContext("save.settings.sound=false",scope);
+  Object.assign(sandbox,modules);
+  const scope=vm.createContext(sandbox);vm.runInContext(sourceText.replace(/^import .*;\r?\n/gm,""),scope);vm.runInContext("save.settings.sound=false",scope);
   const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
   return {run,json,storage,writes,timers,drawCalls,get,rafCount:()=>rafCount,
     click(action,mission,playerClass,slot,extra={}){const target={dataset:{action,mission,playerClass,slot,...extra},closest(){return this}};for(const fn of listeners.get("click")||[])fn({target})},

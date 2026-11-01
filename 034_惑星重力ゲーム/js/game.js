@@ -1,4 +1,7 @@
 import {FINAL_ID,FINAL_DESTINATIONS,normalizeFinal,finalDestination,endingDefinition,dockFinal} from './final-voyage.js';
+import {createSpaceScanner} from './space-scanner-ui.js';
+import {planetPermissions} from './space-scanner.js';
+let scanner=null;
 import {observeApproach,adjustInput,inputStep,launchInput,attemptKey,flightFeedback,goalKey} from './navigation-feedback.js';
 let approach=null,lastAttempt=null,previousAttempt=null,fineAdjustment=true,restoredVelocity=null;
 function currentLaunchVelocity(){return restoredVelocity??velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));}
@@ -124,11 +127,11 @@ function syncCamera(){view={...view,...camera.transform};document.querySelector(
 function fitCamera(){const automatic=camera.mode==='cinematic';camera.fit(stage);if(automatic)camera.setMode('cinematic',stage);cinematic.reset();syncCamera();}
 function screenPoint(event){const b=canvas.getBoundingClientRect();return {x:event.clientX-b.left,y:event.clientY-b.top};}
 function clearCameraGesture(){cameraPointers.clear();cameraActive=false;camera.endGesture();}
-function zoomCamera(factor){cancelGesture();if(camera.mode!=='follow')camera.mode='fixed';camera.zoomAt(camera.zoom*factor);syncCamera();}
+function zoomCamera(factor){scanner?.manual();cancelGesture();if(camera.mode!=='follow')camera.mode='fixed';camera.zoomAt(camera.zoom*factor);syncCamera();}
 document.querySelector('#zoomIn').addEventListener('click',()=>zoomCamera(1.25));
 document.querySelector('#zoomOut').addEventListener('click',()=>zoomCamera(.8));
-document.querySelector('#fitCamera').addEventListener('click',()=>{cancelGesture();camera.fit(stage);cinematic.reset();syncCamera();});
-document.querySelector('#cameraMode').addEventListener('change',event=>{cancelGesture();camera.setMode(event.target.value,stage);cinematic.reset();if(simulation)camera.follow(simulation.rocket.position);syncCamera();});
+document.querySelector('#fitCamera').addEventListener('click',()=>{scanner?.manual();cancelGesture();camera.fit(stage);cinematic.reset();syncCamera();});
+document.querySelector('#cameraMode').addEventListener('change',event=>{scanner?.manual();cancelGesture();camera.setMode(event.target.value,stage);cinematic.reset();if(simulation)camera.follow(simulation.rocket.position);syncCamera();});
 document.querySelector('#minimapToggle').addEventListener('click',event=>{showMinimap=!showMinimap;event.target.textContent=`ミニマップ ${showMinimap?'ON':'OFF'}`;event.target.setAttribute('aria-pressed',String(showMinimap));});
 function loadFreeWorld(next){if(playType!=='free'||mode!=='editing')return;stage=next;launchSnapshot=structuredClone(stage);selectedPlanetId=null;syncLaunchControls();angleInput.value=String(stage.launch.angleDeg);speedInput.value=String(stage.launch.speed);retry();updateOutputs();document.querySelector('.mission strong').textContent=stage.name;settingsUI.closeAll();fitCamera();}
 document.querySelector('#worldSize').addEventListener('change',event=>loadFreeWorld(createFreeWorld(event.target.value)));
@@ -622,12 +625,14 @@ function tick(time) {
       showResult(simulation.status);
     }
   }
+  scanner?.update(time);
   if(mode==='flying'&&camera.mode==='follow'){camera.follow(simulation.rocket.position);syncCamera();}
   if(camera.mode==='cinematic'){
     const snapshot=simulation??{status:'ready',elapsed:0,world:stage.world,goal:stage.goal,planets:stage.planets,rocket:{position:stage.launch.position,velocity:velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value)),radius:stage.rocketRadius}};
     cinematic.update(camera,snapshot,frameSeconds,mode==='flying'?flightClock.rate:1);syncCamera();
   }
   draw(time);
+  scanner?.render(ctx,time);
   requestAnimationFrame(tick);
 }
 
@@ -659,6 +664,7 @@ window.addEventListener('pointerdown', event => {
 }, true);
 canvas.addEventListener("pointerdown", (event) => {
   if(event.button!==0)return;
+  scanner?.manual();
   cameraPointers.set(event.pointerId,screenPoint(event));
   canvas.setPointerCapture(event.pointerId);
   if(cameraPointers.size>=2){
@@ -688,7 +694,7 @@ canvas.addEventListener("pointerdown", (event) => {
     for(const [id,value]of [['encounterType',e.type],['encounterSpeed',e.speed],['encounterCount',e.count],['encounterStrength',e.strength],['encounterTailMode',e.tailMode]])document.querySelector('#'+id).value=String(value);
     updatePlanetEditor();
   }
-  gesture = { ...target, pointerId: event.pointerId, point };
+  gesture = { ...target, pointerId: event.pointerId, point, screenStart:screenPoint(event) };
   if (target.type === 'rocket') aim = slingshotLaunch(stage.launch.position, point);
   canvas.setPointerCapture(event.pointerId);
   event.preventDefault();
@@ -722,6 +728,7 @@ canvas.addEventListener("pointermove", (event) => {
     if(stage.planets.every(p=>Math.hypot(p.x-goal.x,p.y-goal.y)>planetExtent(p)+goal.radius+12)&&Math.hypot(goal.x-stage.launch.position.x,goal.y-stage.launch.position.y)>goal.radius+28)Object.assign(stage.goal,goal);
   } else {
     const planet = stage.planets.find(item => item.id === gesture.id);
+    if(!planet||!planetPermissions(stage,planet,mode,gameMode).movable)return;
     if(mode === 'flying') { moveTargets[planet.id] = point; event.preventDefault(); return; }
     const candidate = { ...planet, x: Math.max(planet.radius, Math.min(stage.world.width-planet.radius,point.x)), y: Math.max(planet.radius, Math.min(stage.world.height-planet.radius,point.y)) };
     if (placementAllowed(candidate, stage)) Object.assign(planet, candidate);
@@ -740,6 +747,8 @@ function stopDragging(event) {
   if (!gesture || gesture.pointerId !== event.pointerId) return;
   const shot = gesture.type === 'rocket' && event.type === 'pointerup' && pointers.size === 1
     ? slingshotLaunch(stage.launch.position, worldPoint(event)) : null;
+  const start=gesture.screenStart??gesture.start,point=screenPoint(event);
+  if(event.type==='pointerup'&&pointers.size===1&&gesture.type!=='rocket'&&start&&Math.hypot(point.x-start.x,point.y-start.y)<6)scanner?.tap(worldPoint(event));
   cancelGesture();
   if (shot && !shot.cancelled && mode === 'editing') launch(shot.velocity);
 }
@@ -802,7 +811,7 @@ function updatePlanetEditor() {
   document.querySelector('#specialSample').disabled=playType!=='free'||mode!=='editing';
   document.querySelector('#worldSize').disabled=document.querySelector('#hugeSample').disabled=playType!=='free'||mode!=='editing';
   document.querySelector('#worldSize').value=stage.worldPreset??'standard';
-  deletePlanetButton.disabled = mode !== 'editing' || fixed || !planet || stage.planets.length<=(stage.rules?.minPlanets??0);
+  deletePlanetButton.disabled = !planet || !planetPermissions(stage,planet,mode,gameMode).removable;
   document.querySelector('#selectionBar').hidden=!planet;
   document.querySelector('#deleteReason').textContent=deletePlanetButton.disabled?(mode!=='editing'?'飛行後は削除できません':'ステージの個数・種類は固定です'):'';
   document.querySelector('#addReason').textContent=addPlanetButton.disabled?(mode!=='editing'?'飛行後は追加できません':fixed?'このステージは惑星の種類・サイズ・個数が固定です':`惑星は${stage.rules?.maxPlanets??MAX_PLANETS}個までです`):'惑星・発射地点・ゲートを避けて配置します。';
@@ -1197,4 +1206,12 @@ document.querySelector('#deleteEncounter').addEventListener('click',()=>{
 document.querySelector('#encounterSample').addEventListener('change',event=>{
  if(playType!=='free'||mode!=='editing'||!event.target.value)return;
  selectedEncounterId=null;loadFreeWorld(getEncounterSample(event.target.value));event.target.value='';
+});
+
+scanner=createSpaceScanner({root:frame,camera,
+ getContext:()=>({stage,phase:mode,gameMode,playType,progress:demo?{...homewardProgress.state,frontier:demo.frontier}:homewardProgress.state,elapsed:simulation?.elapsed??0,quality:experience.quality}),
+ onCamera:()=>{cinematic.reset();syncCamera();},
+ onPrepare:()=>{cancelGesture();clearCameraGesture();},
+ onSelect:id=>{selectedPlanetId=id;selectedEncounterId=null;updatePlanetEditor();},
+ onDestination:id=>{if(stage.finalVoyage)changeFinalDestination(id);else if(stage.deepSpace)changeDeepDestination(id);else if(stage.openVoyage)changeDestination(id);}
 });

@@ -1,16 +1,18 @@
 import { CONFIG, income, treasure, tool, weights, combinations } from './data';
 import {scanReading,finishQuality,recordRecovery,initializeBatch,batchRemaining,tiny,type SurveyMark,type ScanReading,type SortEvent,type RecoveryEvent} from './tool-value';
+import {generateRiver,areaId,beachCount,RIVER_TOOLS,type RiverSession,type RiverMetrics} from './river';
+import {logEvent,type GameEvent} from './events';
 import type {HandFeedback} from './feedback';
-export interface Find { uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'stored'|'paid'; tool:string; }
-export interface Plot { id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
+export interface Find { areaId?:string; weight?:number; magnetic?:boolean; material?:string; difficulty?:number; obstacle?:boolean; rarity?:string; recoveryOperations?:number; uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'stored'|'paid'; tool:string; }
+export interface Plot {areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
 export interface Batch { id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
 export interface State {
- lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
+ events?:GameEvent[]; riverSession?:RiverSession; riverMetrics?:RiverMetrics; maxStamina?:number; lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
  explorationAreas:Plot[]; currentPlot:number; exploredPlots:number; retainedFinds:Find[]; sandSampled:boolean;
  collectedTreasures:string[]; completedContracts:string[]; activeContracts:string[]; jackpotHistory:string[]; sandBatches:Batch[];
- revenueHistory:{time:number;fn:number;jackpot:boolean}[]; purchases:{id:string;time:number;before:number;predicted:number}[];
+ revenueHistory:{time:number;fn:number;jackpot:boolean;area?:string;item?:string}[]; purchases:{id:string;time:number;before:number;predicted:number}[];
  playTime:number; lastSavedAt:string; digs:number; cells:number; settings:{sound:boolean;short:boolean};
 }
 export function rng(seed:number) { return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;}; }
@@ -44,6 +46,7 @@ const allFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
 export function refresh(s:State) {
  const n=s.collectedTreasures.length;
  const conditions:Record<string,boolean>={B101:n>=2,B102:n>=5,B104:n>=8||s.sandSampled||s.sandBatches.length>0,B105:s.exploredPlots>=3||n>=15,B201:n>=20};
+ if(beachCount(s)>=10)for(const id of RIVER_TOOLS)conditions[id]=true;
  const added=Object.keys(conditions).filter(id=>conditions[id]&&!s.unlockedTools.includes(id));s.unlockedTools.push(...added);
  for(const f of allFinds(s))if(treasure(f.id).contractOnly&&f.state!=='paid'&&!s.activeContracts.includes(f.uid))s.activeContracts.push(f.uid);
  return added;
@@ -55,7 +58,7 @@ export function buy(s:State,id:string) {
  const t=tool(id);refresh(s);
  if(!t||t.implementationStatus!=='available'||!s.unlockedTools.includes(id)||s.ownedTools.includes(id)||s.currentFN<t.priceFN)return false;
  const before=rate(s).normal;s.currentFN-=t.priceFN;s.ownedTools.push(id);const slot=s.quickSlots.indexOf('');if(slot>=0)s.quickSlots[slot]=id;
- s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});return true;
+ s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});logEvent(s,'道具購入',id);return true;
 }
 export const MAX_DEPTH=280;
 export function depthAt(p:Plot,x:number,y:number){if(x<0||x>=360||y<0||y>=280)return 0;return (p.mask[Math.floor(y/10)*36+Math.floor(x/10)]??0)*MAX_DEPTH;}
@@ -73,6 +76,7 @@ export const diggingLimit=(id:string)=>DIG_LIMITS[id]??0;
 export function dig(s:State,id:string,x:number,y:number,dx:number) {
  if((id!=='hand'&&!s.ownedTools.includes(id))||id==='B201'||id==='B104'||Math.abs(dx)<2||x<0||x>=360||y<0||y>=280)return 0;
  if(!diggingLimit(id))return 0;
+ if(areaId(s)!=='B-A')return 0;
  const p=plot(s),maxDepth=diggingLimit(id),limit=maxDepth/MAX_DEPTH,radius=id==='B105'?26:id==='B101'?15:id==='B102'?34:7,ry=id==='B102'?7:radius;
  const low=s.playerStats.stamina<10?.5:1;let removed=0;
  for(let yy=Math.max(0,Math.floor((y-ry-4)/10));yy<=Math.min(27,Math.floor((y+ry+4)/10));yy++)for(let xx=Math.max(0,Math.floor((x-radius-4)/10));xx<=Math.min(35,Math.floor((x+radius+4)/10));xx++){
@@ -99,6 +103,7 @@ export function scan(s:State,x:number,y:number){if(!s.ownedTools.includes('B201'
 export function detect(s:State,x:number,y:number){return scan(s,x,y).strength;}
 export function recover(s:State,uid:string,usedTool='hand') {
  const p=plot(s),f=p.items.find(f=>f.uid===uid);
+ if(areaId(s)!=='B-A')return false;
  if(!f||f.state!=='buried'||exposure(p,f)<CONFIG.exposure||stored(s).length>=CONFIG.capacity)return false;
  finishQuality(s,f,usedTool);f.state='stored';f.tool=usedTool;recordRecovery(s,f);s.playerStats.xp[2]++;return true;
 }
@@ -133,18 +138,20 @@ export function reward(s:State,uid:string) {
  const f=stored(s).find(f=>f.uid===uid);if(!f||s.collectedTreasures.includes(uid))return 0;
  const t=treasure(f.id),fn=income[f.id]??0;f.state='paid';s.collectedTreasures.push(uid);s.currentFN+=fn;s.totalEarnedFN+=fn;
  const d=s.discoveredTreasures[f.id]??={count:0,first:new Date().toISOString(),best:0,locations:[],tools:[]};d.count++;d.best=Math.max(d.best,Math.round(t.baseValueFN*f.quality));
- if(!d.locations.includes('B-A'))d.locations.push('B-A');if(!d.tools.includes(f.tool))d.tools.push(f.tool);
+ const location=f.areaId??(f.id.startsWith('R')?'R-A':'B-A');if(!d.locations.includes(location))d.locations.push(location);if(!d.tools.includes(f.tool))d.tools.push(f.tool);
  if(t.contractOnly){s.completedContracts.push(uid);s.activeContracts=s.activeContracts.filter(x=>x!==uid);}if(f.id==='B012')s.jackpotHistory.push(uid);
- s.revenueHistory.push({time:s.playTime,fn,jackpot:f.id==='B012'});s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');refresh(s);return fn;
+ s.revenueHistory.push({time:s.playTime,fn,jackpot:f.id==='B012',area:location,item:f.id});logEvent(s,'報酬獲得',`${f.id} / ${fn} FN`);s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');refresh(s);return fn;
 }
-export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false) {
- const old=plot(s);if(seed===old.seed)seed=(seed+1)>>>0;
+export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false,area=areaId(s)) {
+ const old=plot(s);
  s.retainedFinds=allFinds(s).filter(f=>f.state==='stored'||f.state==='batch');
  s.sandSampled ||= s.sandBatches.length>0;s.sandBatches=s.sandBatches.filter(b=>!b.processed);
- s.handFeedback=[];delete s.lastScan;s.exploredPlots++;const next=generate(seed,false,noJackpot);
- next.id=`BA-${seed}-${s.exploredPlots}`;next.items.forEach((f,i)=>f.uid=`${s.playerId}:${s.exploredPlots}:${seed}:${i}`);
+ s.handFeedback=[];delete s.lastScan;s.exploredPlots++;delete s.riverSession;const next=area.startsWith('R-')?generateRiver(seed,area):generate(seed,false,noJackpot);
+ next.id=`${area}-${seed}-${s.exploredPlots}`;next.items.forEach((f,i)=>f.uid=`${s.playerId}:${s.exploredPlots}:${seed}:${i}`);
  s.explorationAreas=[next];s.currentPlot=0;
  s.activeContracts=s.activeContracts.filter(uid=>s.retainedFinds.some(f=>f.uid===uid));refresh(s);
 }
-export function tick(s:State,seconds:number,idle:boolean) {s.playTime+=seconds;if(idle)s.playerStats.stamina=Math.min(100+Math.floor(s.playerStats.xp[3]/CONFIG.xpPerLevel)*2,s.playerStats.stamina+seconds*CONFIG.regen);}
+export function tick(s:State,seconds:number,idle:boolean) {s.playTime+=seconds;if(idle)s.playerStats.stamina=Math.min(maxStamina(s),s.playerStats.stamina+seconds*CONFIG.regen);}
 export function rate(s:State) {const rows=s.revenueHistory.filter(r=>r.time>s.playTime-60);return {normal:rows.filter(r=>!r.jackpot).reduce((n,r)=>n+r.fn,0),total:rows.reduce((n,r)=>n+r.fn,0),finds:rows.length};}
+
+export const maxStamina=(s:State)=>s.maxStamina??100+Math.floor(s.playerStats.xp[3]/CONFIG.xpPerLevel)*2;

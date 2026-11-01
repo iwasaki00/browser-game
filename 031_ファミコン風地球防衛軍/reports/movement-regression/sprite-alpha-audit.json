@@ -1,0 +1,609 @@
+{
+  "method": "Pillow inspection only; NOT a browser screenshot",
+  "assets": [
+    {
+      "path": "assets/art-refresh/unified-01/sprites/ranger.png",
+      "sha256": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2",
+      "historicalHashes": {
+        "08e1548": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2",
+        "dfad850": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2"
+      },
+      "mode": "RGBA",
+      "size": [
+        576,
+        64
+      ],
+      "alphaValues": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 1,
+          "alphaBounds": [
+            0,
+            7,
+            42,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 2,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 3,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 4,
+          "alphaBounds": [
+            4,
+            7,
+            41,
+            59
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 5,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 6,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 7,
+          "alphaBounds": [
+            5,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 8,
+          "alphaBounds": [
+            3,
+            44,
+            47,
+            64
+          ],
+          "opaquePerimeterPixels": 1,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 9,
+          "alphaBounds": [
+            0,
+            7,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 10,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 11,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        }
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/wing.png",
+      "sha256": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e",
+      "historicalHashes": {
+        "08e1548": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e",
+        "dfad850": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e"
+      },
+      "mode": "RGBA",
+      "size": [
+        576,
+        64
+      ],
+      "alphaValues": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 1,
+          "alphaBounds": [
+            0,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 15,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 2,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 3,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 4,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            59
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 5,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 6,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 7,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 8,
+          "alphaBounds": [
+            3,
+            40,
+            47,
+            64
+          ],
+          "opaquePerimeterPixels": 1,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 9,
+          "alphaBounds": [
+            0,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 10,
+          "alphaBounds": [
+            1,
+            1,
+            45,
+            63
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 11,
+          "alphaBounds": [
+            1,
+            1,
+            45,
+            63
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        }
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/ranger.png",
+      "sha256": "b15ff463f4c6bd2a781a05561875eae343f43a99696909dbe3d9160e4e4bb8d9",
+      "historicalHashes": {
+        "08e1548": "b15ff463f4c6bd2a781a05561875eae343f43a99696909dbe3d9160e4e4bb8d9",
+        "dfad850": "b15ff463f4c6bd2a781a05561875eae343f43a99696909dbe3d9160e4e4bb8d9"
+      },
+      "mode": "RGBA",
+      "size": [
+        576,
+        64
+      ],
+      "alphaValues": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 1,
+          "alphaBounds": [
+            0,
+            7,
+            42,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 2,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 3,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 4,
+          "alphaBounds": [
+            4,
+            7,
+            41,
+            59
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 5,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 6,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 7,
+          "alphaBounds": [
+            5,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 8,
+          "alphaBounds": [
+            3,
+            44,
+            47,
+            64
+          ],
+          "opaquePerimeterPixels": 1,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 9,
+          "alphaBounds": [
+            0,
+            7,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 10,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 11,
+          "alphaBounds": [
+            6,
+            7,
+            41,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        }
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/wing.png",
+      "sha256": "d521301cf2eef7ab1d0d2f6a455d4da8d0a070970ce20cffc2930b4fe78e4eb0",
+      "historicalHashes": {
+        "08e1548": "d521301cf2eef7ab1d0d2f6a455d4da8d0a070970ce20cffc2930b4fe78e4eb0",
+        "dfad850": "d521301cf2eef7ab1d0d2f6a455d4da8d0a070970ce20cffc2930b4fe78e4eb0"
+      },
+      "mode": "RGBA",
+      "size": [
+        576,
+        64
+      ],
+      "alphaValues": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 1,
+          "alphaBounds": [
+            0,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 15,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 2,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 3,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 4,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            59
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 5,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 11,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 6,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 7,
+          "alphaBounds": [
+            1,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 22,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 8,
+          "alphaBounds": [
+            3,
+            40,
+            47,
+            64
+          ],
+          "opaquePerimeterPixels": 1,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 9,
+          "alphaBounds": [
+            0,
+            1,
+            44,
+            64
+          ],
+          "opaquePerimeterPixels": 16,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 10,
+          "alphaBounds": [
+            1,
+            1,
+            45,
+            63
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        },
+        {
+          "frame": 11,
+          "alphaBounds": [
+            1,
+            1,
+            45,
+            63
+          ],
+          "opaquePerimeterPixels": 0,
+          "fullOpaqueFrameBorder": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,21 +1,6 @@
 // Screen-legible accents only. No collision, damage, RNG, timers or save writes.
 export const READABILITY=Object.freeze({invulnerableAlpha:.7,crowdEnemies:50,crowdEffects:48,decorDraws:16,particleDraws:48,dangerAccents:24});
 export const playerOpacity=p=>p.invuln>0&&!(p.hitPose>0)?(Math.floor(p.invuln*12)%2?READABILITY.invulnerableAlpha:1):1;
-const colors={RANGER:'#a3e5cf',SCOUT:'#e9d59c',GUARDIAN:'#b9cde4',WING:'#bce5ec'};
-export function drawPlayerLocator(c,p,zoom){
- if(p.dead)return;const u=1/zoom,x=p.x,y=p.y+32,head=p.y-3*u;
- c.save();c.globalAlpha=1;c.lineWidth=u;c.strokeStyle='#031017';
- if(p.onGround){c.fillStyle='#020a11aa';c.fillRect(x-8,y,16,2*u)}
- c.beginPath();c.moveTo(x-7*u,y);c.lineTo(x-7*u,y+2*u);c.lineTo(x-3*u,y+2*u);c.moveTo(x+7*u,y);c.lineTo(x+7*u,y+2*u);c.lineTo(x+3*u,y+2*u);c.stroke();
- c.fillStyle=p.hitPose>0?'#fff1c4':colors[p.classId]??colors.RANGER;
- c.fillRect(x-6*u,y+u,3*u,u);c.fillRect(x+3*u,y+u,3*u,u);
- // Four compact, class-specific head marks; never a full-body glow or box.
- if(p.classId==='WING'){c.fillRect(x-5*u,head,u,2*u);c.fillRect(x+4*u,head,u,2*u)}
- else if(p.classId==='GUARDIAN'){c.fillRect(x-2*u,head,4*u,u);c.fillRect(x-u,head+u,2*u,u)}
- else if(p.classId==='SCOUT'){c.fillRect(x-2*u,head,2*u,u);c.fillRect(x+u,head,2*u,u)}
- else c.fillRect(x-u,head,2*u,u);
- c.restore();
-}
 export function drawEnemyShotAccent(c,s,zoom){
  if((s.w??6)>16||(s.h??6)>16)return;
  const u=1/zoom,r=Math.max((s.w??6)/2,2*u),x=Math.round(s.x),y=Math.round(s.y),speed=Math.hypot(s.vx||0,s.vy||0)||1;

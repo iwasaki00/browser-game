@@ -1,0 +1,76 @@
+import {CONFIG,treasure,tool} from './data';
+import type {Find,Plot,State} from './engine';
+import {finishQuality,recordRecovery} from './tool-value';
+import {logEvent} from './events';
+
+export const RIVER_TOOLS=['R101','R106','R103','R104','R110','R201','R206'];
+export type RiverPhase='empty'|'hooked'|'reeling'|'lifting';
+export interface RiverSession {tool:string;x:number;y:number;originX:number;originY:number;uid?:string;progress:number;phase:RiverPhase;elapsed:number;magnetic:boolean;operations:number;}
+export interface RiverMetrics {attempts:number;successes:number;operations:number;uses:Record<string,number>;failures:Record<string,number>;bottleneck:string;}
+export const areaId=(s:State)=>s.explorationAreas[0].areaId??'B-A';
+export const isRiver=(s:State)=>areaId(s).startsWith('R-');
+export function beachCount(s:State){return Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,d])=>n+d.count,0);}
+export function areaUnlocked(s:State,id:string){return id==='B-A'||id==='R-A'&&beachCount(s)>=10||id==='R-B'&&beachCount(s)>=20;}
+function random(seed:number){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+export function generateRiver(seed:number,area='R-A'):Plot {
+ const r=random(seed),items:Find[]=[];
+ // Every free plot contains reachable, unobstructed earnings even with bare hands.
+ for(let i=0;i<14;i++){
+  const shallow=i<6,ids=area==='R-A'?['R001','R002','R003','R004','R009']:['R004','R005','R006','R007','R009'];
+  const id=shallow?['R001','R002','R003'][i%3]:ids[Math.floor(r()*ids.length)],t=treasure(id),quality=.8+r()*.4;
+  items.push({uid:`${area}:${seed}:${i}`,id,x:25+r()*310,y:shallow?235+r()*28:35+r()*180,depth:shallow?15:50+r()*150,weight:t.weight,magnetic:t.magnetic,material:t.material,difficulty:shallow?1:area==='R-B'?2:1,obstacle:!shallow&&area==='R-B'&&(i%3===0),areaId:area,initialQuality:quality,quality,state:'buried',tool:'hand'});
+ }
+ return {id:`${area}-${seed}`,areaId:area,seed,mask:Array(1008).fill(0),items};
+}
+export function riverCapabilities(s:State,id:string){
+ const equipped=new Set(s.equippedTools.filter(t=>s.ownedTools.includes(t)));const valid=id==='hand'||RIVER_TOOLS.includes(id)&&s.ownedTools.includes(id);
+ const magnetic=['R103','R104','R201'].includes(id),rope=magnetic&&(id==='R104'||equipped.has('R104'));
+ const strong=magnetic&&(id==='R201'||equipped.has('R201'));
+ const reel=rope&&equipped.has('R110'),pulley=rope&&strong&&equipped.has('R206');
+ return {valid:valid&&!['R110','R206'].includes(id),magnetic,rope,strong,reel,pulley,
+  reach:rope?265:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
+  radius:magnetic?(strong?32:24):id==='R101'?24:18,
+  adhesion:magnetic?(strong?18:id==='R104'?4:3):Infinity,
+  lift:(pulley?22:strong?8:id==='hand'?.75:id==='R101'?2:id==='R106'?5:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
+  speed:reel?2.6:1,hook:id==='R106',combos:[...(reel?['C05']:[]),...(pulley?['C06']:[])]};
+}
+export function metrics(s:State){return s.riverMetrics??={attempts:0,successes:0,operations:0,uses:{},failures:{},bottleneck:'なし'};}
+function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;logEvent(s,'回収失敗',reason);return {ok:false,reason};}
+export function riverCheck(s:State,id:string,f:Find,includeLift=true){
+ const c=riverCapabilities(s,id),weight=f.weight??treasure(f.id).weight;
+ if(!c.valid)return '回収道具を選んでください。巻取り器・滑車は装備枠で組み合わせます。';
+ if(!isRiver(s)||f.state!=='buried')return '回収済みです。';
+ if((c.rope?Math.hypot(f.x-180,278-f.y):280-f.y)>c.reach)return c.rope?'ロープが届かない。岸に近い場所を狙おう。':'届かない。もっと長い道具が必要そうだ。';
+ if(f.obstacle&&!c.hook)return '岩の隙間に引っかかっている。回収フックが必要そうだ。';
+ if(c.magnetic&&!(f.magnetic??treasure(f.id).magnetic))return '磁石に付かない金属のようだ。トングやフックを試そう。';
+ if(c.magnetic&&weight>c.adhesion)return '磁石が弱くて外れてしまう。強力な磁石が必要そうだ。';
+ if(includeLift&&weight>c.lift)return '重くて引き上げられない。もっと強い道具が必要そうだ。';
+ return '';
+}
+export function riverStart(s:State,id:string,x:number,y:number,cast=false){
+ if(!isRiver(s))return {ok:false,reason:'川底で使用します。'};
+ const m=metrics(s);m.attempts++;m.uses[id]=(m.uses[id]??0)+1;
+ const c=riverCapabilities(s,id);if(!c.valid)return failure(s,'回収道具を選んでください。');
+ if(c.rope&&!cast)return failure(s,'岸から水底へスワイプして磁石を投げよう。');
+ const distance=Math.hypot(x-180,y-278),ratio=Math.min(1,c.reach/Math.max(1,distance));
+ const target=c.rope?{x:180+(x-180)*ratio,y:278+(y-278)*ratio}:{x,y};
+ const candidates=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&Math.hypot(f.x-target.x,f.y-target.y)<=c.radius).sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y));
+ const f=candidates[0];logEvent(s,c.rope?'磁石投擲':'対象選択',`${id} / ${target.x.toFixed(0)},${target.y.toFixed(0)}`);
+ s.riverSession={tool:id,...target,originX:180,originY:278,progress:0,phase:'empty',elapsed:0,magnetic:c.magnetic,operations:0};
+ if(!f)return failure(s,c.rope&&distance>c.reach?'ロープが届かない。もう少し近くを狙おう。':'手応えなし。違う場所を探そう。');
+ const reason=riverCheck(s,id,f,false);if(reason)return failure(s,reason);
+ s.riverSession.uid=f.uid;s.riverSession.phase='hooked';logEvent(s,c.magnetic?'磁石吸着':'つかんだ','何かが引っかかった');return {ok:true,reason:'何かが引っかかった！ 手前へドラッグして引き上げよう。'};
+}
+export function riverPull(s:State,amount=50){
+ const r=s.riverSession;if(!isRiver(s)||!r?.uid||r.phase==='empty'||!Number.isFinite(amount)||amount<=0)return {ok:false,reason:'対象をつかんでから引こう。',recovered:false};
+ const f=s.explorationAreas[0].items.find(f=>f.uid===r.uid);if(!f)return {ok:false,reason:'対象がありません。',recovered:false};
+ const reason=riverCheck(s,r.tool,f);if(reason){s.riverSession=undefined;return {...failure(s,reason),recovered:false};}
+ const c=riverCapabilities(s,r.tool),weight=f.weight??treasure(f.id).weight;
+ r.operations++;metrics(s).operations++;r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
+ s.playerStats.stamina=Math.max(0,s.playerStats.stamina-2);s.playerStats.xp[0]+=.3;s.playerStats.xp[3]++;
+ if(r.progress<1)return {ok:true,reason:r.phase==='lifting'?'重みを感じる…もう少し引き上げよう。':'手応えあり。正体はまだ分からない…',recovered:false};
+ if([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state==='stored').length>=CONFIG.capacity){r.progress=.99;return {ok:false,reason:'保管がいっぱいです。先に洗浄しよう。',recovered:false};}
+ finishQuality(s,f,r.tool);f.state='stored';f.tool=r.tool;f.recoveryOperations=r.operations;recordRecovery(s,f);s.playerStats.xp[2]++;metrics(s).successes++;metrics(s).bottleneck='なし';logEvent(s,'引き上げ成功',f.uid);s.riverSession=undefined;
+ return {ok:true,reason:'水面まで引き上げた！ 洗浄して正体を確かめよう。',recovered:true};
+}
+export function riverTick(s:State,seconds:number){if(s.riverSession)s.riverSession.elapsed+=seconds;}

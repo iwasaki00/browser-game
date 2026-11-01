@@ -35,7 +35,9 @@ test('real loader validates dimensions and handles image errors',async()=>{
 });
 
 test('live and paused swaps preserve every gameplay field, score, progression and save bytes',async()=>{
-  const r=lab(),saved=r.storage.get(SAVE_KEY);r.run("spawnEnemy('crawler',1400);shoot();game.player.hp=41;game.score=123;game.time=12;const before=JSON.stringify(game)");
+  // The existing UI samples diagnostic FX peaks. Establish that baseline first;
+  // keep the full gameplay+diagnostic snapshot assertion (do not omit fields).
+  const r=lab(),saved=r.storage.get(SAVE_KEY);r.run("spawnEnemy('crawler',1400);shoot();game.player.hp=41;game.score=123;game.time=12;sampleCombatResources(game);const before=JSON.stringify(game)");
   for(const playing of [false,true]){
     if(playing)r.click('lab-close');
     assert.equal(await r.run("setArtStyle('STUDY_01')"),true);assert.equal(r.run('JSON.stringify(game)'),r.run('before'));
@@ -85,7 +87,9 @@ for(const resolution of [1,2])for(const zoom of [.35,.5,.85])test(`${320*resolut
   assert.ok(Math.abs(r.run('game.shots.at(-1).vy'))<1e-8);assert.ok(Math.abs(r.run('game.shots.at(-1).vx')-310)<1e-8);assert.equal(r.run('JSON.stringify(game.battleCamera)'),r.run('beforeCamera'));
   assert.deepEqual(r.json('clientToScreen({x:160,y:90},{left:0,top:0,width:320,height:180})'),{x:160,y:90});
   assert.deepEqual(r.json('[game.player.w,game.player.h]'),[14,27]);assert.ok(r.drawCalls.some(c=>c[0]==='setTransform'&&c[1]===resolution&&c[4]===resolution));
-  assert.ok(r.drawCalls.some(c=>c[0]==='fillText'&&c[1]==='HP 100'&&c[2]===9&&c[3]===15));assert.equal(r.run('ctx.imageSmoothingEnabled'),false);
+  // Current shared HUD (unchanged since before A1): numeric HP and class stay
+  // in logical screen coordinates at both backing resolutions.
+  assert.ok(r.drawCalls.some(c=>c[0]==='fillText'&&c[1]==='100/100'&&c[2]===110&&c[3]===12));assert.ok(r.drawCalls.some(c=>c[0]==='fillText'&&c[1]==='RANGER'&&c[2]===8&&c[3]===12));assert.equal(r.run('ctx.imageSmoothingEnabled'),false);
 });
 
 test('all 20 weapon data and identical simulations survive render-only swapping',async()=>{

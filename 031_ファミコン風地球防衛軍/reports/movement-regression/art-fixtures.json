@@ -1,0 +1,287 @@
+[
+  {
+    "version": "A1",
+    "styleSwitchDifferences": [
+      {
+        "path": ".lab.resourcePeaks.effects",
+        "before": 0,
+        "after": 1
+      }
+    ],
+    "drawDifferences": [],
+    "hud": [
+      [
+        "fillText",
+        "RANGER",
+        8,
+        12
+      ],
+      [
+        "fillText",
+        "41/100",
+        110,
+        12
+      ],
+      [
+        "fillText",
+        "HP",
+        8,
+        29
+      ],
+      [
+        "fillText",
+        "QA / NO SAVE",
+        25,
+        29
+      ],
+      [
+        "fillText",
+        "M01 A01",
+        123,
+        12
+      ]
+    ],
+    "normalDeployDifferences": [
+      {
+        "path": ".campaignStats.classes.RANGER",
+        "after": {
+          "sorties": 1,
+          "clears": 0,
+          "gameOvers": 0,
+          "kills": 0,
+          "playSeconds": 0,
+          "missions": {}
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.A-01",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.S-02",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".achievements.totals.runs",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "path": ".settings.sound",
+        "before": true,
+        "after": false
+      }
+    ],
+    "normalShotDifferences": [
+      {
+        "path": ".campaignStats.weapons.A-01.uses",
+        "before": 0,
+        "after": 1
+      }
+    ]
+  },
+  {
+    "version": "B",
+    "styleSwitchDifferences": [
+      {
+        "path": ".lab.resourcePeaks.effects",
+        "before": 0,
+        "after": 1
+      }
+    ],
+    "drawDifferences": [],
+    "hud": [
+      [
+        "fillText",
+        "RANGER",
+        8,
+        12
+      ],
+      [
+        "fillText",
+        "41/100",
+        110,
+        12
+      ],
+      [
+        "fillText",
+        "HP",
+        8,
+        29
+      ],
+      [
+        "fillText",
+        "QA / NO SAVE",
+        25,
+        29
+      ],
+      [
+        "fillText",
+        "M01 A01",
+        123,
+        12
+      ]
+    ],
+    "normalDeployDifferences": [
+      {
+        "path": ".campaignStats.classes.RANGER",
+        "after": {
+          "sorties": 1,
+          "clears": 0,
+          "gameOvers": 0,
+          "kills": 0,
+          "playSeconds": 0,
+          "missions": {}
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.A-01",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.S-02",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".achievements.totals.runs",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "path": ".settings.sound",
+        "before": true,
+        "after": false
+      }
+    ],
+    "normalShotDifferences": [
+      {
+        "path": ".campaignStats.weapons.A-01.uses",
+        "before": 0,
+        "after": 1
+      }
+    ]
+  },
+  {
+    "version": "B1",
+    "styleSwitchDifferences": [
+      {
+        "path": ".lab.resourcePeaks.effects",
+        "before": 0,
+        "after": 1
+      }
+    ],
+    "drawDifferences": [],
+    "hud": [
+      [
+        "fillText",
+        "RANGER",
+        8,
+        12
+      ],
+      [
+        "fillText",
+        "41/100",
+        110,
+        12
+      ],
+      [
+        "fillText",
+        "HP",
+        8,
+        29
+      ],
+      [
+        "fillText",
+        "QA / NO SAVE",
+        25,
+        29
+      ],
+      [
+        "fillText",
+        "M01 A01",
+        123,
+        12
+      ]
+    ],
+    "normalDeployDifferences": [
+      {
+        "path": ".campaignStats.classes.RANGER",
+        "after": {
+          "sorties": 1,
+          "clears": 0,
+          "gameOvers": 0,
+          "kills": 0,
+          "playSeconds": 0,
+          "missions": {}
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.A-01",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".campaignStats.weapons.S-02",
+        "after": {
+          "equipped": 1,
+          "uses": 0,
+          "hits": 0,
+          "placements": 0,
+          "detonations": 0,
+          "minesDetonated": 0
+        }
+      },
+      {
+        "path": ".achievements.totals.runs",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "path": ".settings.sound",
+        "before": true,
+        "after": false
+      }
+    ],
+    "normalShotDifferences": [
+      {
+        "path": ".campaignStats.weapons.A-01.uses",
+        "before": 0,
+        "after": 1
+      }
+    ]
+  }
+]

@@ -5,6 +5,13 @@ export function project(x:number,y:number){return {x:180+(x-180)*(.8+.2*y/280),y
 export function unproject(x:number,y:number){const v=(y-48)/.88;return {x:180+(x-180)/(.8+.2*v/280),y:v};}
 export const onSurface=(p:{x:number;y:number})=>p.x>=0&&p.x<360&&p.y>=0&&p.y<280;
 const paths:Record<string,string>={
+ R101:'<path d="M8 3l15 23 6-3M8 3l6 28 6-1"/>',
+ R106:'<path d="M6 3l15 18c14 15-8 17-5 5"/>',
+ R103:'<path d="M8 8v14a10 10 0 0020 0V8h-7v14a3 3 0 01-6 0V8z" fill="#bd7155"/>',
+ R104:'<path d="M3 2c26 0 0 10 15 12M10 15v9a8 8 0 0016 0v-9h-6v9a2 2 0 01-4 0v-9z" fill="#bd7155"/>',
+ R110:'<circle cx="18" cy="18" r="10"/><circle cx="18" cy="18" r="4"/><path d="M18 18l13 10M6 32h24M11 27v5M24 27v5"/>',
+ R201:'<path d="M6 7v15a12 12 0 0024 0V7h-9v15a3 3 0 01-6 0V7z" fill="#6b9590"/><path d="M4 4l-2 4M32 4l2 4"/>',
+ R206:'<circle cx="18" cy="15" r="9"/><circle cx="18" cy="15" r="3"/><path d="M9 15v18M27 15v18M18 6V2M14 33h17"/>',
  hand:'<path d="M10 16V9a2 2 0 014 0v6-9a2 2 0 014 0v9-7a2 2 0 014 0v8-4a2 2 0 014 0v10c0 6-4 9-9 9-5 0-7-3-10-8l-3-5a2 2 0 013-2l3 3z" fill="#e7b77b"/>',
  B101:'<path d="M9 5l5 5M9 5L5 9l5 5 4-4 9 9"/><path d="M19 17l9 9c-8 6-14 0-9-9z" fill="#b4c8c2"/>',
  B102:'<path d="M8 3l14 19M13 27l15-10M13 27l3 4M18 24l3 4M23 21l3 4M28 17l3 4"/>',

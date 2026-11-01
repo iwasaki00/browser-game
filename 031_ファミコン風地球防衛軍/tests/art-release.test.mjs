@@ -1,10 +1,13 @@
-import test from 'node:test';
+import test, {after} from 'node:test';
 import assert from 'node:assert/strict';
 import {runtime} from './helpers/runtime.mjs';
 import {DEFAULT_SAVE,SAVE_KEY,WEAPONS,PLAYER_CLASSES} from '../js/data.js';
 import {UNIFIED_FILES,UNIFIED_ENEMIES} from '../js/art-preview.js';
 
 const seed=()=>({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01'],unlockedMissions:['M01','M02'],unlocked:WEAPONS.map(w=>w.id)});
+// Independent runtimes must observe the same achievement time. Freeze only this
+// test process; preserve exact save-byte comparisons, including timestamps.
+const actualNow=Date.now;Date.now=()=>1700000000000;after(()=>{Date.now=actualNow});
 const loader=(path,w,h,root)=>Promise.resolve(root+path);
 const prepare=async(r,load=loader)=>{
   r.run("assetsReady=true;Object.keys(imageFiles).forEach(k=>images[k]='OLD:'+k)");
@@ -12,6 +15,7 @@ const prepare=async(r,load=loader)=>{
   await r.run('loadReleaseArt')(load);return r;
 };
 const drawn=(r,key)=>r.drawCalls.some(c=>c[0]==='drawImage'&&String(c[1]).includes('unified-01/'+UNIFIED_FILES[key][0]));
+const drawWithoutSaving=r=>{const bytes=r.storage.get(SAVE_KEY),writes=r.writes.length;r.run('draw()');assert.equal(r.storage.get(SAVE_KEY),bytes);assert.equal(r.writes.length,writes)};
 
 test('normal URL preloads release art without creating LAB controls or profilers',async()=>{
   const r=runtime();assert.equal(r.run('DEBUG'),false);assert.equal(r.run('releaseArt.loading'),true);assert.equal(r.run('releaseArt.requested'),'UNIFIED_01');assert.equal(r.run('artPreview'),null);
@@ -31,22 +35,24 @@ test('pending normal art keeps original images until the whole validated pack co
 });
 
 for(const mission of ['M01','M02'])test(`${mission}: normal 320 rendering uses unified world, all four classes, both bosses/nests and 20 real weapons`,async()=>{
-  const r=await prepare(runtime(seed()));r.run(`startMission('${mission}')`);const save=r.storage.get(SAVE_KEY);
+  const r=await prepare(runtime(seed()));r.run(`startMission('${mission}')`);const progress=r.json('[save.clearedMissions,save.unlockedMissions,save.unlocked,save.highScore,save.bestTime,save.missionStats]');
   for(const id of Object.keys(PLAYER_CLASSES)){
-    r.run(`applyPlayerClass(game.player,'${id}');game.battleCamera.zoom=.5;syncCameraView()`);r.drawCalls.length=0;r.run('draw()');assert.ok(drawn(r,id.toLowerCase()),id);
+    r.run(`applyPlayerClass(game.player,'${id}');game.battleCamera.zoom=.5;syncCameraView()`);r.drawCalls.length=0;drawWithoutSaving(r);assert.ok(drawn(r,id.toLowerCase()),id);
     assert.deepEqual(r.json('[game.player.w,game.player.h]'),[14,27]);
     for(const w of WEAPONS){
       r.run(`save.equipped[0]='${w.id}';game.player.weaponSlot=0;game.player.shotCd=game.player.switchCd=0;input.aimMode='touch';input.touchDx=1;input.touchDy=0;shoot()`);
       assert.equal(r.run('game.player.shotCd'),w.interval,`${id}/${w.id}`);
-      r.drawCalls.length=0;r.run('draw()');assert.ok(drawn(r,'held'));assert.ok(drawn(r,'icons'));
+      r.drawCalls.length=0;drawWithoutSaving(r);assert.ok(drawn(r,'held'));assert.ok(drawn(r,'icons'));
       r.run('game.shots.length=0;clearArsenal(game)');
     }
   }
   for(const type of Object.keys(UNIFIED_ENEMIES)){
-    r.run(`game.enemies=[];game.liveEnemies=game.liveMobs=0;game.bossStarted=false;spawnEnemy('${type}',game.player.x+100,40);`);r.drawCalls.length=0;r.run('draw()');assert.ok(drawn(r,type),type);
+    r.run(`game.enemies=[];game.liveEnemies=game.liveMobs=0;game.bossStarted=false;spawnEnemy('${type}',game.player.x+100,40);`);r.drawCalls.length=0;drawWithoutSaving(r);assert.ok(drawn(r,type),type);
   }
-  r.drawCalls.length=0;r.run('draw()');assert.ok(drawn(r,mission==='M01'?'city':'underground'));assert.ok(drawn(r,mission==='M01'?'cityTiles':'underTiles'));
-  assert.equal(r.get('game').dataset.artStyle,'UNIFIED_01');assert.equal(r.get('game').width,320);assert.equal(r.run('ctx.imageSmoothingEnabled'),false);assert.equal(r.storage.get(SAVE_KEY),save);
+  r.drawCalls.length=0;drawWithoutSaving(r);assert.ok(drawn(r,mission==='M01'?'city':'underground'));assert.ok(drawn(r,mission==='M01'?'cityTiles':'underTiles'));
+  // Normal shooting legitimately records weapon uses/achievements. Check each
+  // draw's bytes above rather than forbid the real actions' progression writes.
+  assert.equal(r.get('game').dataset.artStyle,'UNIFIED_01');assert.equal(r.get('game').width,320);assert.equal(r.run('ctx.imageSmoothingEnabled'),false);assert.deepEqual(r.json('[save.clearedMissions,save.unlockedMissions,save.unlocked,save.highScore,save.bestTime,save.missionStats]'),progress);assert.equal(r.run("save.campaignStats.weapons['A-01'].uses"),4);
 });
 
 test('normal art renders death/hit/environmental FX and keeps world, muzzle and queen weak core coordinates',async()=>{
@@ -68,8 +74,8 @@ test('LAB ORIGINAL and 640 are independent of release art, across pending loads 
   r.run('artPreview.uPack=releaseArt.uPack');await r.run("setArtStyle('UNIFIED_01')");r.run('setPreviewResolution(2);draw()');assert.equal(r.get('game').width,640);
   const before=r.run('JSON.stringify(game)');await r.run("setArtStyle('ORIGINAL')");r.run('draw()');assert.equal(r.get('game').dataset.artStyle,'ORIGINAL');assert.equal(r.run('JSON.stringify(game)'),before);
   const gates=[];const pending=r.run('artPreview.select.bind(artPreview)')('STUDY_01',()=>new Promise(resolve=>gates.push(resolve)));
-  r.click('lab-exit');r.run("startMission('M02');draw()");gates.forEach(f=>f('STUDY'));await pending;r.run('draw()');
-  assert.equal(r.get('game').dataset.artStyle,'UNIFIED_01');assert.equal(r.get('game').width,320);assert.equal(r.run('releaseArt.requested'),'UNIFIED_01');assert.equal(r.storage.get(SAVE_KEY),saved);
+  r.click('lab-exit');assert.equal(r.storage.get(SAVE_KEY),saved);r.run("startMission('M02')");const deployed=r.storage.get(SAVE_KEY);drawWithoutSaving(r);gates.forEach(f=>f('STUDY'));await pending;drawWithoutSaving(r);
+  assert.equal(r.get('game').dataset.artStyle,'UNIFIED_01');assert.equal(r.get('game').width,320);assert.equal(r.run('releaseArt.requested'),'UNIFIED_01');assert.equal(r.storage.get(SAVE_KEY),deployed);assert.equal(r.run('save.campaignStats.classes.RANGER.sorties'),1);
   r.click('test-lab');assert.equal(r.run('artPreview.style'),'ORIGINAL');assert.equal(r.run('previewRenderScale'),1);
 });
 

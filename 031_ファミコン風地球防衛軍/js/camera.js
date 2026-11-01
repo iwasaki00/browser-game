@@ -113,12 +113,13 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
 
 export function updateBattleCamera(camera,player,enemies,battle,dt){
   const c=BATTLE_CAMERA;
-  // Confirm a turn in real time; one-frame collision/input jitter must not flip look-ahead.
+  // face is set by movement input before collisions. Intentional turns must not
+  // wait for the velocity-noise filter (B introduced a 0.12s input-to-camera lag).
   if(Math.abs(player.vx||0)>1){
     const direction=Math.sign(player.vx);
     camera.directionAge=camera.directionCandidate===direction?(camera.directionAge||0)+dt:dt;
     camera.directionCandidate=direction;
-    if(camera.directionAge+1e-9>=CAMERA_STABILITY.directionHold)camera.direction=direction;
+    if(direction===player.face||camera.directionAge+1e-9>=CAMERA_STABILITY.directionHold)camera.direction=direction;
   }else camera.directionAge=0;
   camera.elapsed+=dt;
   if(camera.elapsed+1e-9>=c.evaluationInterval){

@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-B",
-  "startedAt": "2026-11-01T12:03:01.325Z",
+  "version": "1.2.0-B1",
+  "startedAt": "2026-11-01T13:16:24.960Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "08e15488cd9372091f3aab9290ffc129821c1a1d",
-    "worktree": "M index.html\n M js/camera.js\n M js/data.js\n M js/game.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tests/helpers/runtime.mjs\n M tools/campaign-integration.mjs\n?? js/readability.js\n?? reports/final-polish/\n?? tests/final-polish.test.mjs\n?? tests/helpers/polish-scenes.js\n?? tools/final-polish-preview.mjs\n?? tools/polish-render-benchmark.mjs"
+    "commit": "dfad8500a4bf5045702dc401b00fc23770c838c3",
+    "worktree": "M index.html\n M js/camera.js\n M js/data.js\n M js/game.js\n M js/readability.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M tests/art-preview.test.mjs\n M tests/art-release.test.mjs\n M tests/campaign-integration.test.mjs\n M tests/helpers/runtime.mjs\n M tools/campaign-integration.mjs\n?? reports/movement-regression/\n?? tests/helpers/movement-comparison.mjs\n?? tests/movement-sprite-regression.test.mjs\n?? tools/art-fixture-audit.mjs\n?? tools/movement-regression-report.mjs\n?? tools/sprite-regression-audit.py"
   },
   "cases": [
     {
@@ -5784,8 +5784,13 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 613,
+      "assertions": 693,
       "files": [
+        "tests/movement-sprite-regression.test.mjs",
+        "tests/classes.test.mjs",
+        "tests/class-movement.test.mjs",
+        "tests/art-preview.test.mjs",
+        "tests/art-release.test.mjs",
         "tests/final-polish.test.mjs",
         "tests/camera.test.mjs",
         "tests/result-freeze.test.mjs",
@@ -5872,7 +5877,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T12:03:57.192Z",
+  "finishedAt": "2026-11-01T13:18:49.711Z",
   "summary": {
     "total": 156,
     "pass": 140,
