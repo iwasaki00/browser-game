@@ -1,9 +1,9 @@
 {
   "name": "orbit-maker",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/qa-all.mjs --final"
+    "test": "node tests/qa-all.mjs --final --report=mobile-polish"
   }
 }

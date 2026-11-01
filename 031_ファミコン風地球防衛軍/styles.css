@@ -733,6 +733,10 @@ input, textarea { user-select: text; -webkit-user-select: text; }
 .result-rewards .reward-box { width: 100%; margin: 0; min-width: 0; padding: 9px; }
 #resultUnlock, #resultWeapons { margin: 7px 0; color: var(--cyan); font-size: 11px; overflow-wrap: anywhere; }
 .outcome-skip { font-size: 9px; color: var(--muted); }
+#resultSaveStatus { margin: 2px 0; max-width: 100%; font-size: 10px; color: var(--yellow); overflow-wrap: anywhere; }
+.result-diagnostics { width: min(100%,460px); font-size: 9px; text-align: left; }
+.result-diagnostics pre { max-height: 100px; overflow: auto; white-space: pre-wrap; user-select: text; -webkit-user-select: text; }
+#campaignSaveRetry { min-width: 100px; min-height: 36px; font-size: 10px; }
 .outcome-screen.is-active .outcome-heading { animation: outcome-in .22s ease-out both; }
 .outcome-screen.skip-intro .outcome-heading { animation: none; }
 @keyframes outcome-in { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
@@ -744,6 +748,7 @@ input, textarea { user-select: text; -webkit-user-select: text; }
   #screenResult .result-stats { grid-column: 1; }
   #screenResult .result-rewards { grid-column: 2; grid-row: 1 / span 2; }
   #screenResult .outcome-actions, #screenResult .outcome-skip { grid-column: 1 / -1; }
+  #screenResult #resultSaveStatus, #screenResult #resultSaveRetry, #screenResult .result-diagnostics { grid-column: 1 / -1; }
   #screenGameover { padding: 8px 16px; gap: 5px; }
   .outcome-actions button { padding: 6px 12px; min-width: 110px; }
 }

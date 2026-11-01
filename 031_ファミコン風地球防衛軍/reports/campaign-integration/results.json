@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-A",
-  "startedAt": "2026-11-01T04:10:00.523Z",
+  "version": "1.2.0-A1",
+  "startedAt": "2026-11-01T05:20:15.756Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "4c23aa3dd12151d21b3d4d9008716592ad7e8d28",
-    "worktree": "M index.html\n M js/game.js\n M js/mobile-acceptance.js\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/lab-ui.test.mjs\n M tests/mobile-acceptance.test.mjs\n M tools/campaign-integration.mjs\n?? reports/mobile-acceptance/"
+    "commit": "0ede9276b15b383594803512575fc2e963955f80",
+    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tools/campaign-integration.mjs\n?? reports/result-freeze/\n?? tests/result-freeze.test.mjs\n?? tools/result-freeze-preview.mjs"
   },
   "cases": [
     {
@@ -5784,8 +5784,10 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 549,
+      "assertions": 587,
       "files": [
+        "tests/result-freeze.test.mjs",
+        "tests/gameplay-polish.test.mjs",
         "tests/mobile-acceptance.test.mjs",
         "tests/mobile-playtest.test.mjs",
         "tests/lab-ui.test.mjs",
@@ -5868,7 +5870,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T04:11:53.824Z",
+  "finishedAt": "2026-11-01T05:22:10.571Z",
   "summary": {
     "total": 156,
     "pass": 140,

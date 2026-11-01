@@ -1,0 +1,1363 @@
+{
+  "browser": "156.0.8078.48",
+  "type": "PC Chrome; emulated safe insets and viewport changes; not iPhone Safari",
+  "results": [
+    {
+      "size": [
+        320,
+        568
+      ],
+      "phases": [
+        {
+          "name": "portrait",
+          "width": 320,
+          "height": 568,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 243.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 312,
+              "bottom": 103,
+              "left": 243.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 191.46875,
+              "y": 490,
+              "width": 123.515625,
+              "height": 44,
+              "top": 490,
+              "right": 314.984375,
+              "bottom": 534,
+              "left": 191.46875,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 98.234375,
+              "y": 490,
+              "width": 88.234375,
+              "height": 44,
+              "top": 490,
+              "right": 186.46875,
+              "bottom": 534,
+              "left": 98.234375,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 490,
+              "width": 88.234375,
+              "height": 44,
+              "top": 490,
+              "right": 93.234375,
+              "bottom": 534,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 310,
+            "height": 317,
+            "top": 107,
+            "right": 315,
+            "bottom": 424,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            320,
+            568
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 296,
+            "height": 451
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 292,
+            "height": 230
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 440,
+              "width": 144.5,
+              "height": 44,
+              "top": 440,
+              "right": 157.5,
+              "bottom": 484,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "bars-visible",
+          "width": 320,
+          "height": 488,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 243.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 38,
+              "top": 59,
+              "right": 312,
+              "bottom": 97,
+              "left": 243.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 191.46875,
+              "y": 410,
+              "width": 123.515625,
+              "height": 44,
+              "top": 410,
+              "right": 314.984375,
+              "bottom": 454,
+              "left": 191.46875,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 98.234375,
+              "y": 410,
+              "width": 88.234375,
+              "height": 44,
+              "top": 410,
+              "right": 186.46875,
+              "bottom": 454,
+              "left": 98.234375,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 410,
+              "width": 88.234375,
+              "height": 44,
+              "top": 410,
+              "right": 93.234375,
+              "bottom": 454,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 101,
+            "width": 310,
+            "height": 243,
+            "top": 101,
+            "right": 315,
+            "bottom": 344,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            320,
+            488
+          ],
+          "visualScale": 1,
+          "violations": [
+            {
+              "id": "openMenuSettings",
+              "x": 243.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 38,
+              "top": 59,
+              "right": 312,
+              "bottom": 97,
+              "left": 243.03125,
+              "hit": true
+            }
+          ],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 296,
+            "height": 371
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 292,
+            "height": 150
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 360,
+              "width": 144.5,
+              "height": 44,
+              "top": 360,
+              "right": 157.5,
+              "bottom": 404,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 320,
+          "safe": {
+            "top": 0,
+            "right": 59,
+            "bottom": 21,
+            "left": 59
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 437.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 506,
+              "bottom": 42,
+              "left": 437.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 406.03125,
+              "y": 254,
+              "width": 102.953125,
+              "height": 44,
+              "top": 254,
+              "right": 508.984375,
+              "bottom": 298,
+              "left": 406.03125,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 327.5,
+              "y": 254,
+              "width": 73.53125,
+              "height": 44,
+              "top": 254,
+              "right": 401.03125,
+              "bottom": 298,
+              "left": 327.5,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 248.984375,
+              "y": 254,
+              "width": 73.515625,
+              "height": 44,
+              "top": 254,
+              "right": 322.5,
+              "bottom": 298,
+              "left": 248.984375,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 59,
+            "y": 46,
+            "width": 450,
+            "height": 189,
+            "top": 46,
+            "right": 509,
+            "bottom": 235,
+            "left": 59
+          },
+          "scroll": [
+            0,
+            0,
+            568,
+            320
+          ],
+          "visualScale": 1,
+          "violations": [
+            {
+              "id": "openMenuSettings",
+              "x": 437.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 506,
+              "bottom": 42,
+              "left": 437.03125,
+              "hit": true
+            }
+          ],
+          "panel": {
+            "x": 84,
+            "y": 12,
+            "width": 400,
+            "height": 275
+          },
+          "replay": {
+            "x": 68,
+            "y": 110,
+            "width": 432,
+            "height": 118
+          },
+          "replayControls": {
+            "rect": {
+              "x": 67,
+              "y": 277,
+              "width": 214.5,
+              "height": 44,
+              "top": 277,
+              "right": 281.5,
+              "bottom": 321,
+              "left": 67
+            },
+            "hit": true
+          }
+        }
+      ],
+      "touch": "not run",
+      "save": "fixture only",
+      "errors": []
+    },
+    {
+      "size": [
+        375,
+        667
+      ],
+      "phases": [
+        {
+          "name": "portrait",
+          "width": 375,
+          "height": 667,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 298.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 367,
+              "bottom": 103,
+              "left": 298.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 223.8125,
+              "y": 589,
+              "width": 146.171875,
+              "height": 44,
+              "top": 589,
+              "right": 369.984375,
+              "bottom": 633,
+              "left": 223.8125,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 114.40625,
+              "y": 589,
+              "width": 104.40625,
+              "height": 44,
+              "top": 589,
+              "right": 218.8125,
+              "bottom": 633,
+              "left": 114.40625,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 589,
+              "width": 104.40625,
+              "height": 44,
+              "top": 589,
+              "right": 109.40625,
+              "bottom": 633,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 365,
+            "height": 416,
+            "top": 107,
+            "right": 370,
+            "bottom": 523,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            375,
+            667
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 351,
+            "height": 550
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 347,
+            "height": 329
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 539,
+              "width": 172,
+              "height": 44,
+              "top": 539,
+              "right": 185,
+              "bottom": 583,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "bars-visible",
+          "width": 375,
+          "height": 587,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 298.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 367,
+              "bottom": 103,
+              "left": 298.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 223.8125,
+              "y": 509,
+              "width": 146.171875,
+              "height": 44,
+              "top": 509,
+              "right": 369.984375,
+              "bottom": 553,
+              "left": 223.8125,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 114.40625,
+              "y": 509,
+              "width": 104.40625,
+              "height": 44,
+              "top": 509,
+              "right": 218.8125,
+              "bottom": 553,
+              "left": 114.40625,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 509,
+              "width": 104.40625,
+              "height": 44,
+              "top": 509,
+              "right": 109.40625,
+              "bottom": 553,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 365,
+            "height": 336,
+            "top": 107,
+            "right": 370,
+            "bottom": 443,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            375,
+            587
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 351,
+            "height": 470
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 347,
+            "height": 249
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 459,
+              "width": 172,
+              "height": 44,
+              "top": 459,
+              "right": 185,
+              "bottom": 503,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "landscape",
+          "width": 667,
+          "height": 375,
+          "safe": {
+            "top": 0,
+            "right": 59,
+            "bottom": 21,
+            "left": 59
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 536.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 605,
+              "bottom": 42,
+              "left": 536.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 505.046875,
+              "y": 309,
+              "width": 102.953125,
+              "height": 44,
+              "top": 309,
+              "right": 608,
+              "bottom": 353,
+              "left": 505.046875,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 426.515625,
+              "y": 309,
+              "width": 73.53125,
+              "height": 44,
+              "top": 309,
+              "right": 500.046875,
+              "bottom": 353,
+              "left": 426.515625,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 348,
+              "y": 309,
+              "width": 73.515625,
+              "height": 44,
+              "top": 309,
+              "right": 421.515625,
+              "bottom": 353,
+              "left": 348,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 59,
+            "y": 46,
+            "width": 549,
+            "height": 244,
+            "top": 46,
+            "right": 608,
+            "bottom": 290,
+            "left": 59
+          },
+          "scroll": [
+            0,
+            0,
+            667,
+            375
+          ],
+          "visualScale": 1,
+          "violations": [
+            {
+              "id": "openMenuSettings",
+              "x": 536.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 605,
+              "bottom": 42,
+              "left": 536.03125,
+              "hit": true
+            }
+          ],
+          "panel": {
+            "x": 133.5,
+            "y": 12,
+            "width": 400,
+            "height": 330
+          },
+          "replay": {
+            "x": 117.5,
+            "y": 110,
+            "width": 432,
+            "height": 118
+          },
+          "replayControls": {
+            "rect": {
+              "x": 116.5,
+              "y": 277,
+              "width": 214.5,
+              "height": 44,
+              "top": 277,
+              "right": 331,
+              "bottom": 321,
+              "left": 116.5
+            },
+            "hit": true
+          }
+        }
+      ],
+      "touch": "not run",
+      "save": "fixture only",
+      "errors": []
+    },
+    {
+      "size": [
+        390,
+        844
+      ],
+      "phases": [
+        {
+          "name": "portrait",
+          "width": 390,
+          "height": 844,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 313.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 382,
+              "bottom": 103,
+              "left": 313.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 232.640625,
+              "y": 766,
+              "width": 152.34375,
+              "height": 44,
+              "top": 766,
+              "right": 384.984375,
+              "bottom": 810,
+              "left": 232.640625,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 118.8125,
+              "y": 766,
+              "width": 108.828125,
+              "height": 44,
+              "top": 766,
+              "right": 227.640625,
+              "bottom": 810,
+              "left": 118.8125,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 766,
+              "width": 108.8125,
+              "height": 44,
+              "top": 766,
+              "right": 113.8125,
+              "bottom": 810,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 380,
+            "height": 593,
+            "top": 107,
+            "right": 385,
+            "bottom": 700,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            390,
+            844
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 366,
+            "height": 727
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 362,
+            "height": 506
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 716,
+              "width": 179.5,
+              "height": 44,
+              "top": 716,
+              "right": 192.5,
+              "bottom": 760,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "bars-visible",
+          "width": 390,
+          "height": 764,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 313.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 382,
+              "bottom": 103,
+              "left": 313.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 232.640625,
+              "y": 686,
+              "width": 152.34375,
+              "height": 44,
+              "top": 686,
+              "right": 384.984375,
+              "bottom": 730,
+              "left": 232.640625,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 118.8125,
+              "y": 686,
+              "width": 108.828125,
+              "height": 44,
+              "top": 686,
+              "right": 227.640625,
+              "bottom": 730,
+              "left": 118.8125,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 686,
+              "width": 108.8125,
+              "height": 44,
+              "top": 686,
+              "right": 113.8125,
+              "bottom": 730,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 380,
+            "height": 513,
+            "top": 107,
+            "right": 385,
+            "bottom": 620,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            390,
+            764
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 12,
+            "y": 71,
+            "width": 366,
+            "height": 647
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 362,
+            "height": 426
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 636,
+              "width": 179.5,
+              "height": 44,
+              "top": 636,
+              "right": 192.5,
+              "bottom": 680,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "landscape",
+          "width": 844,
+          "height": 390,
+          "safe": {
+            "top": 0,
+            "right": 59,
+            "bottom": 21,
+            "left": 59
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 713.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 782,
+              "bottom": 42,
+              "left": 713.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 665.90625,
+              "y": 324,
+              "width": 119.0625,
+              "height": 44,
+              "top": 324,
+              "right": 784.96875,
+              "bottom": 368,
+              "left": 665.90625,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 575.859375,
+              "y": 324,
+              "width": 85.046875,
+              "height": 44,
+              "top": 324,
+              "right": 660.90625,
+              "bottom": 368,
+              "left": 575.859375,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 485.828125,
+              "y": 324,
+              "width": 85.03125,
+              "height": 44,
+              "top": 324,
+              "right": 570.859375,
+              "bottom": 368,
+              "left": 485.828125,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 59,
+            "y": 46,
+            "width": 726,
+            "height": 259,
+            "top": 46,
+            "right": 785,
+            "bottom": 305,
+            "left": 59
+          },
+          "scroll": [
+            0,
+            0,
+            844,
+            390
+          ],
+          "visualScale": 1,
+          "violations": [
+            {
+              "id": "openMenuSettings",
+              "x": 713.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 782,
+              "bottom": 42,
+              "left": 713.03125,
+              "hit": true
+            }
+          ],
+          "panel": {
+            "x": 222,
+            "y": 12,
+            "width": 400,
+            "height": 345
+          },
+          "replay": {
+            "x": 206,
+            "y": 110,
+            "width": 432,
+            "height": 118
+          },
+          "replayControls": {
+            "rect": {
+              "x": 205,
+              "y": 277,
+              "width": 214.5,
+              "height": 44,
+              "top": 277,
+              "right": 419.5,
+              "bottom": 321,
+              "left": 205
+            },
+            "hit": true
+          }
+        }
+      ],
+      "touch": "not run",
+      "save": "fixture only",
+      "errors": []
+    },
+    {
+      "size": [
+        430,
+        932
+      ],
+      "phases": [
+        {
+          "name": "portrait",
+          "width": 430,
+          "height": 932,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 353.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 422,
+              "bottom": 103,
+              "left": 353.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 256.171875,
+              "y": 854,
+              "width": 168.828125,
+              "height": 44,
+              "top": 854,
+              "right": 425,
+              "bottom": 898,
+              "left": 256.171875,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 130.578125,
+              "y": 854,
+              "width": 120.59375,
+              "height": 44,
+              "top": 854,
+              "right": 251.171875,
+              "bottom": 898,
+              "left": 130.578125,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 854,
+              "width": 120.578125,
+              "height": 44,
+              "top": 854,
+              "right": 125.578125,
+              "bottom": 898,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 420,
+            "height": 681,
+            "top": 107,
+            "right": 425,
+            "bottom": 788,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            430,
+            932
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 15,
+            "y": 71,
+            "width": 400,
+            "height": 815
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 402,
+            "height": 594
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 804,
+              "width": 199.5,
+              "height": 44,
+              "top": 804,
+              "right": 212.5,
+              "bottom": 848,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "bars-visible",
+          "width": 430,
+          "height": 852,
+          "safe": {
+            "top": 59,
+            "right": 0,
+            "bottom": 34,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 353.03125,
+              "y": 59,
+              "width": 68.96875,
+              "height": 44,
+              "top": 59,
+              "right": 422,
+              "bottom": 103,
+              "left": 353.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 256.171875,
+              "y": 774,
+              "width": 168.828125,
+              "height": 44,
+              "top": 774,
+              "right": 425,
+              "bottom": 818,
+              "left": 256.171875,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 130.578125,
+              "y": 774,
+              "width": 120.59375,
+              "height": 44,
+              "top": 774,
+              "right": 251.171875,
+              "bottom": 818,
+              "left": 130.578125,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 5,
+              "y": 774,
+              "width": 120.578125,
+              "height": 44,
+              "top": 774,
+              "right": 125.578125,
+              "bottom": 818,
+              "left": 5,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 5,
+            "y": 107,
+            "width": 420,
+            "height": 601,
+            "top": 107,
+            "right": 425,
+            "bottom": 708,
+            "left": 5
+          },
+          "scroll": [
+            0,
+            0,
+            430,
+            852
+          ],
+          "visualScale": 1,
+          "violations": [],
+          "panel": {
+            "x": 15,
+            "y": 71,
+            "width": 400,
+            "height": 735
+          },
+          "replay": {
+            "x": 14,
+            "y": 161,
+            "width": 402,
+            "height": 514
+          },
+          "replayControls": {
+            "rect": {
+              "x": 13,
+              "y": 724,
+              "width": 199.5,
+              "height": 44,
+              "top": 724,
+              "right": 212.5,
+              "bottom": 768,
+              "left": 13
+            },
+            "hit": true
+          }
+        },
+        {
+          "name": "landscape",
+          "width": 932,
+          "height": 430,
+          "safe": {
+            "top": 0,
+            "right": 59,
+            "bottom": 21,
+            "left": 59
+          },
+          "buttons": [
+            {
+              "id": "openMenuSettings",
+              "x": 801.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 870,
+              "bottom": 42,
+              "left": 801.03125,
+              "hit": true
+            },
+            {
+              "id": "launchButton",
+              "x": 738.8125,
+              "y": 364,
+              "width": 134.171875,
+              "height": 44,
+              "top": 364,
+              "right": 872.984375,
+              "bottom": 408,
+              "left": 738.8125,
+              "hit": true
+            },
+            {
+              "id": "resetButton",
+              "x": 637.984375,
+              "y": 364,
+              "width": 95.828125,
+              "height": 44,
+              "top": 364,
+              "right": 733.8125,
+              "bottom": 408,
+              "left": 637.984375,
+              "hit": true
+            },
+            {
+              "id": "openPlanetSettings",
+              "x": 537.15625,
+              "y": 364,
+              "width": 95.828125,
+              "height": 44,
+              "top": 364,
+              "right": 632.984375,
+              "bottom": 408,
+              "left": 537.15625,
+              "hit": true
+            }
+          ],
+          "board": {
+            "x": 59,
+            "y": 46,
+            "width": 814,
+            "height": 299,
+            "top": 46,
+            "right": 873,
+            "bottom": 345,
+            "left": 59
+          },
+          "scroll": [
+            0,
+            0,
+            932,
+            430
+          ],
+          "visualScale": 1,
+          "violations": [
+            {
+              "id": "openMenuSettings",
+              "x": 801.03125,
+              "y": 4,
+              "width": 68.96875,
+              "height": 38,
+              "top": 4,
+              "right": 870,
+              "bottom": 42,
+              "left": 801.03125,
+              "hit": true
+            }
+          ],
+          "panel": {
+            "x": 266,
+            "y": 12,
+            "width": 400,
+            "height": 385
+          },
+          "replay": {
+            "x": 250,
+            "y": 110,
+            "width": 432,
+            "height": 156
+          },
+          "replayControls": {
+            "rect": {
+              "x": 249,
+              "y": 315,
+              "width": 214.5,
+              "height": 44,
+              "top": 315,
+              "right": 463.5,
+              "bottom": 359,
+              "left": 249
+            },
+            "hit": true
+          }
+        }
+      ],
+      "touch": "not run",
+      "save": "fixture only",
+      "errors": []
+    }
+  ]
+}

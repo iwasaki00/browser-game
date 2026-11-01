@@ -1,0 +1,141 @@
+{
+  "version": "1.9.3",
+  "browser": "156.0.8078.48",
+  "environment": {
+    "platform": "win32",
+    "release": "10.0.26300",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+    "ramBytes": 16849256448,
+    "viewport": "375x667",
+    "deviceScaleFactor": 3,
+    "safeArea": {
+      "top": 59,
+      "bottom": 34,
+      "left": 0,
+      "right": 0
+    }
+  },
+  "method": "PC headless Chrome, real wall clock; rAF scheduling, renderer TaskDuration, forced-GC JS heap; not iPhone performance",
+  "phases": [
+    {
+      "name": "normal-1x-HUGE-3-planets",
+      "seconds": 18.081,
+      "fps": 59.786516232509264,
+      "rendererTaskCpuPercent": 24.87521154803385,
+      "heapBefore": 4539348,
+      "heapAfter": 4312804
+    },
+    {
+      "name": "100x-20-launch-reset-retry",
+      "seconds": 6.739,
+      "fps": 58.46564772221398,
+      "rendererTaskCpuPercent": 37.36210120195875,
+      "heapBefore": 4239800,
+      "heapAfter": 4687432
+    },
+    {
+      "name": "3-planets-6-encounter-groups-prediction",
+      "seconds": 10.247,
+      "fps": 59.919976578510784,
+      "rendererTaskCpuPercent": 28.14728213135552,
+      "heapBefore": 4788508,
+      "heapAfter": 4804828
+    },
+    {
+      "name": "DEEP-12000x10000-6-targets-1x-first-8-seconds",
+      "seconds": 8.394,
+      "fps": 58.97069335239457,
+      "rendererTaskCpuPercent": 32.8833571598761,
+      "heapBefore": 18446164,
+      "heapAfter": 5212152
+    },
+    {
+      "name": "DEEP-100x-to-return",
+      "seconds": 1.711,
+      "fps": 35.067212156633545,
+      "rendererTaskCpuPercent": 92.45791934541202,
+      "heapBefore": 5096648,
+      "heapAfter": 5439168
+    }
+  ],
+  "errors": [],
+  "cinematic": {
+    "source": "actual protected DEEP arrival record; 50 gallery rows",
+    "samples": [
+      {
+        "seconds": 10,
+        "fps": 58.06768023540951,
+        "heapBytes": 8161892,
+        "rendererTaskCpuPercent": 25.148504168710158
+      },
+      {
+        "seconds": 20,
+        "fps": 59.90049751243781,
+        "heapBytes": 8164264,
+        "rendererTaskCpuPercent": 19.92398009950248
+      },
+      {
+        "seconds": 30,
+        "fps": 59.79340484704013,
+        "heapBytes": 8145808,
+        "rendererTaskCpuPercent": 18.329658323400878
+      },
+      {
+        "seconds": 40,
+        "fps": 59.98806207719857,
+        "heapBytes": 8196304,
+        "rendererTaskCpuPercent": 20.194707520891374
+      },
+      {
+        "seconds": 50,
+        "fps": 59.92248832356156,
+        "heapBytes": 8177832,
+        "rendererTaskCpuPercent": 22.510265328430897
+      },
+      {
+        "seconds": 60,
+        "fps": 58.490746955604564,
+        "heapBytes": 8629596,
+        "rendererTaskCpuPercent": 23.058730463131653
+      },
+      {
+        "seconds": 70,
+        "fps": 58.000984736582964,
+        "heapBytes": 8162864,
+        "rendererTaskCpuPercent": 23.18895125553912
+      },
+      {
+        "seconds": 80,
+        "fps": 59.976128903918834,
+        "heapBytes": 8192672,
+        "rendererTaskCpuPercent": 20.09013328028645
+      },
+      {
+        "seconds": 90,
+        "fps": 59.98806207719857,
+        "heapBytes": 8163340,
+        "rendererTaskCpuPercent": 18.4658575407879
+      },
+      {
+        "seconds": 100,
+        "fps": 59.99999999999999,
+        "heapBytes": 8135680,
+        "rendererTaskCpuPercent": 17.711611940298514
+      },
+      {
+        "seconds": 110,
+        "fps": 59.86652056977787,
+        "heapBytes": 8184304,
+        "rendererTaskCpuPercent": 22.095756549457146
+      },
+      {
+        "seconds": 120,
+        "fps": 59.94631673128542,
+        "heapBytes": 8190312,
+        "rendererTaskCpuPercent": 20.781051794412924
+      }
+    ],
+    "heapDelta": 28420
+  },
+  "status": "PASS"
+}

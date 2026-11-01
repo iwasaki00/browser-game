@@ -41,6 +41,7 @@ export function createGallery({canOpen=()=>true,onOpen=()=>{},store=new GalleryS
  const $=s=>document.querySelector(s),dialog=$('#galleryDialog'),list=$('#galleryList'),player=$('#galleryPlayer'),listView=$('#galleryListView');
  let replay=null,record=null,full=false,raf=null,last=0,noticeTimer=null;
  const canvas=$('#replayCanvas'),cameraPointers=new Map();let pan=null,multi=false;
+ canvas.addEventListener('contextmenu',event=>event.preventDefault());
  const art=createOrbitShareUI({getRecord:()=>record,onEnter:()=>{stop();paint();},onExit:paint});
  function notify(message){
   $('#galleryNotice').textContent=message;$('#galleryMessage').textContent=message;

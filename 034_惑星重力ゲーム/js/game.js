@@ -46,6 +46,7 @@ import {getSpecialSample} from './special-samples.js';
 import { loadLaunchMode, saveLaunchMode, velocityFromAngleSpeed, slingshotLaunch, classifyDragTarget } from "./launch.js";
 
 const canvas = document.querySelector("#gameCanvas");
+canvas.addEventListener('contextmenu',event=>event.preventDefault());
 const frame = document.querySelector("#spaceFrame");
 const ctx = canvas.getContext("2d");
 const launchButton = document.querySelector("#launchButton");
@@ -94,7 +95,7 @@ const experience = new SpaceExperience(experienceSettings.quality, kind => audio
 const soundButton = document.querySelector('#soundToggle');
 const qualityInput = document.querySelector('#effectQuality');
 const experienceCue = document.querySelector('#experienceCue');
-const settingsUI = createSettingsUI({onOpen:()=>{cancelGesture();clearCameraGesture();}});
+const settingsUI = createSettingsUI({onOpen:()=>{cancelGesture();clearCameraGesture();audio.silence();}});
 const testSoundButton = document.querySelector('#testSound');
 let launchMode = loadLaunchMode(storage);
 let progress=loadProgress(storage);

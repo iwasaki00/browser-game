@@ -19,7 +19,7 @@
 
         <h1>ORBIT <span>MAKER</span></h1><small id="modeSummary" class="mode-summary"></small><div class="mission"><strong>最初のスイングバイ</strong></div><output id="homewardProgress" class="homeward-progress" hidden></output>
       </div>
-      <button id="openMenuSettings" type="button" aria-haspopup="dialog" aria-controls="menuPanel">☰ メニュー</button>
+      <button id="openMenuSettings" type="button" aria-haspopup="dialog" aria-controls="menuPanel" aria-label="メニュー（飛行中は一時停止）" title="メニューを開くと飛行を一時停止">☰ メニュー</button>
     </header>
 
     <section class="space-frame" id="spaceFrame">
@@ -73,7 +73,7 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.9.2</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v1.9.3</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
       <label>＋／−の調整幅 <select id="adjustmentMode"><option value="fine">微調整：角度0.01° / 推力1</option><option value="coarse">通常：角度1° / 推力10</option></select></label>
       <button id="restoreLastInput" type="button" disabled>直前の配置・入力を復元</button><small>この画面での直前の失敗・中断が対象。発射は自動で行いません。</small>
       <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>

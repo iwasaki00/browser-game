@@ -38,7 +38,10 @@ test('三つの判断は可逆で、目的地と履歴だけを変え、重複�
  p.state.frontier=normalizeFrontier();for(const id of ['D01','D03','D04'])p.state.frontier.targets[id].state='INVESTIGATED';p.state.echoes=resolveEchoes(p.state.echoes,p.state.frontier,{}).story;
  assert.equal(p.chooseStory('follow'),SIGNAL_ID);assert.equal(p.chooseStory('follow'),SIGNAL_ID);assert.equal(p.chooseStory('explore'),'probe');assert.equal(p.chooseStory('return'),'gate');assert.equal(p.chooseStory('follow'),SIGNAL_ID);assert.equal(p.state.echoes.choices.length,5);assert.ok(signalUnlocked(p.state.echoes));assert.deepEqual(new HomewardProgress(p.storage).state,p.state);
 });
-test('実航行で手掛かりを集め、発信源へ到達、再探索・帰還。1/100倍・予測一致',()=>{
+test('実航行で手掛かりを集め、発信源へ到達、再探索・帰還。1/100倍・予測一致',t=>{
+ // Compare two simulated journeys under the same wall clock as well as physics.
+ // Sequential Date.now calls can otherwise differ by 1 ms on a slower PC.
+ t.mock.method(Date,'now',()=>123456789);
  const p=new HomewardProgress(storage(base())),q=new HomewardProgress(storage(base())),metrics=[];
  for(const [target,angle] of [['probe',-48],['rescue',-174],['planet',-19],['station',-77],[SIGNAL_ID,98],['anomaly',89],['gate',-98]]){
   // Internal route tests may select known v1.4 sites before sensor discovery;

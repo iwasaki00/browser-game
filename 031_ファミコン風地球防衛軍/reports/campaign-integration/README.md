@@ -1,6 +1,6 @@
-# CAMPAIGN INTEGRATION QA / 1.2.0-A
+# CAMPAIGN INTEGRATION QA / 1.2.0-A1
 
-実行日時：2026-11-01T04:10:00.523Z（UTC、利用者TZ Asia/Tokyo）。終了：2026-11-01T04:11:53.824Z。Node v25.9.0 / win32。対象HEAD：4c23aa3dd12151d21b3d4d9008716592ad7e8d28＋ローカル変更（詳細JSON）。公開・commit・push・デプロイなし。
+実行日時：2026-11-01T05:20:15.756Z（UTC、利用者TZ Asia/Tokyo）。終了：2026-11-01T05:22:10.571Z。Node v25.9.0 / win32。対象HEAD：0ede9276b15b383594803512575fc2e963955f80＋ローカル変更（詳細JSON）。公開・commit・push・デプロイなし。
 
 ## 集計
 
@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 156 | 140 | 0 | 8 | 8 | 0 | 0 | 0 | 0 |
 
-上記は試験グループ・行の数。関連Nodeスイートは別に549テスト。NOT_CLEAREDは実行済み戦闘で未クリア、NOT_RUNは未実施であり、PASSと区別する。各ケースの環境・失敗位置・兵科・武器・保存検証は[results.json](results.json)、関連詳細は[related-tests.txt](related-tests.txt)。
+上記は試験グループ・行の数。関連Nodeスイートは別に587テスト。NOT_CLEAREDは実行済み戦闘で未クリア、NOT_RUNは未実施であり、PASSと区別する。各ケースの環境・失敗位置・兵科・武器・保存検証は[results.json](results.json)、関連詳細は[related-tests.txt](related-tests.txt)。
 
 ## 全8作戦の連続進行（ASSISTED）
 
