@@ -10,3 +10,5 @@
 fixedPlanetsは種類・個数固定を示す。位置制限はplanetRanges／placementで判断する。飛行中はliveのみ移動可。スキャンは描画・カメラ専用、保存設定を追加しない。UNKNOWN対象を新たに検出する機能ではなく、既存の知識範囲を整理する機能。危険天体の物理情報は隠さない。
 
 SCAN中も航行・パン・発射を継続できる。情報パネルは折りたたみ可能。カメラ表示は約0.3秒、戻るで元の位置・倍率へ復帰しFIXEDにする（追従の再開は既存モード選択）。カメラ移動自身は物理・時計・保存を操作しない。
+
+- [x] Follow-up: 3-minute real-time PC scanner / camera endurance; bounded memory, DOM, progress preservation. See ENDURANCE.md.

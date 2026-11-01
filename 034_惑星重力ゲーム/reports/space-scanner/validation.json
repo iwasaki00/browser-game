@@ -68,5 +68,18 @@
   "criticalOpen": 0,
   "highOpen": 0,
   "iPhone": "UNVERIFIED",
-  "pushPublishDeploy": "not performed"
+  "pushPublishDeploy": "not performed",
+  "endurance": {
+    "status": "PASS",
+    "activeSeconds": 180.14,
+    "elapsedSeconds": 188.241,
+    "fpsRange": [
+      52.051051351261286,
+      56.532747018455595
+    ],
+    "retainedHeapDeltaBytes": 287468,
+    "domDelta": 3,
+    "progress": "unchanged",
+    "scope": "PC Chrome; editing DEEP SPACE + scan / camera; iPhone unverified"
+  }
 }

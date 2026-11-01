@@ -1,0 +1,1798 @@
+{
+  "version": "1.2.0-C",
+  "generatedAt": "2026-11-01T14:31:44.952Z",
+  "status": "PASS",
+  "method": "Temporary Node loopback allowlist server; URL-encoded Japanese project subdirectory + version queries; every runtime file byte/hash/MIME checked",
+  "runtimeFileCount": 254,
+  "checks": 255,
+  "rows": [
+    {
+      "path": "assets/art-refresh/study-01-b/backgrounds/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5077
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/backgrounds/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4749
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5109
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/mother_crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6958
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/needle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6218
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/ranger.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3472
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/wing.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4023
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/tiles/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 999
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/tiles/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 881
+    },
+    {
+      "path": "assets/art-refresh/study-01/backgrounds/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5105
+    },
+    {
+      "path": "assets/art-refresh/study-01/backgrounds/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4646
+    },
+    {
+      "path": "assets/art-refresh/study-01/in-game/ranger_body.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1238
+    },
+    {
+      "path": "assets/art-refresh/study-01/in-game/wing_body.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1236
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1155
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/mother_crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5217
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/needle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1429
+    },
+    {
+      "path": "assets/art-refresh/study-01/tiles/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 999
+    },
+    {
+      "path": "assets/art-refresh/study-01/tiles/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 870
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/equipped.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1457
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/icons.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1457
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/impacts.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4892
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/projectiles.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 927
+    },
+    {
+      "path": "assets/art-refresh/unified-01/backgrounds/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5077
+    },
+    {
+      "path": "assets/art-refresh/unified-01/backgrounds/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4749
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/acid.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 569
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/bossBreak.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4063
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/nestBreak.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2624
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/wave.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1509
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/barrier.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1071
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/beetle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6751
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/boss.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6034
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4534
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/guardian.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2467
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/needle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5570
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/nest.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2062
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/queen.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8631
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/ranger.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2763
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/scout.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2532
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/spider.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5307
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/spitter.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3164
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/wing.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3193
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/worm.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3182
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/barrier.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1368
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/beetle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7908
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/boss.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8294
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6071
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/guardian.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2770
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/needle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7354
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/nest.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2537
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/queen.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 10819
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/ranger.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3472
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/scout.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2980
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/spider.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6156
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/spitter.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4065
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/wing.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4023
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/worm.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4130
+    },
+    {
+      "path": "assets/art-refresh/unified-01/tiles/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6599
+    },
+    {
+      "path": "assets/art-refresh/unified-01/tiles/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8895
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2333
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/icons.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2655
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16691
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3006
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/special.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 19004
+    },
+    {
+      "path": "assets/backgrounds/city.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1459
+    },
+    {
+      "path": "assets/backgrounds/underground.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2226
+    },
+    {
+      "path": "assets/coastal-01/backgrounds/coast.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5059
+    },
+    {
+      "path": "assets/coastal-01/effects/artillery.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 344
+    },
+    {
+      "path": "assets/coastal-01/effects/bossBreak.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 11480
+    },
+    {
+      "path": "assets/coastal-01/effects/splash.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 557
+    },
+    {
+      "path": "assets/coastal-01/effects/tentacle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2495
+    },
+    {
+      "path": "assets/coastal-01/effects/warning.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 640
+    },
+    {
+      "path": "assets/coastal-01/far/leviathan.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 11525
+    },
+    {
+      "path": "assets/coastal-01/far/shorecrab.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4855
+    },
+    {
+      "path": "assets/coastal-01/far/siegebeetle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6817
+    },
+    {
+      "path": "assets/coastal-01/far/skyray.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4801
+    },
+    {
+      "path": "assets/coastal-01/sprites/aa.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1605
+    },
+    {
+      "path": "assets/coastal-01/sprites/leviathan.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 15272
+    },
+    {
+      "path": "assets/coastal-01/sprites/shorecrab.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6350
+    },
+    {
+      "path": "assets/coastal-01/sprites/siegebeetle.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8697
+    },
+    {
+      "path": "assets/coastal-01/sprites/skyray.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6493
+    },
+    {
+      "path": "assets/coastal-01/tiles/coast.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7750
+    },
+    {
+      "path": "assets/effects/acid.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 316
+    },
+    {
+      "path": "assets/effects/boss_break.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3566
+    },
+    {
+      "path": "assets/effects/explosion.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 363
+    },
+    {
+      "path": "assets/effects/ground_wave.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 584
+    },
+    {
+      "path": "assets/effects/nest_break.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2716
+    },
+    {
+      "path": "assets/effects/weapon_fx.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8061
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/arsenal.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5662
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/deep.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4678
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/earth.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5136
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/escape.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4250
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/final.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 13458
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/network.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7853
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/silence.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5380
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/source.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 10751
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalBeam.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1129
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalCollapse.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2187
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalPulse.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1932
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalShield.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1427
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalSpore.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 942
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalTransition.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1768
+    },
+    {
+      "path": "assets/final-defense-01/far/biobreaker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2788
+    },
+    {
+      "path": "assets/final-defense-01/far/coreguard.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1925
+    },
+    {
+      "path": "assets/final-defense-01/far/defensenode.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1482
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind1.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16806
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind2.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16548
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind3.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16960
+    },
+    {
+      "path": "assets/final-defense-01/far/overseer.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1703
+    },
+    {
+      "path": "assets/final-defense-01/sprites/biobreaker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3601
+    },
+    {
+      "path": "assets/final-defense-01/sprites/coreguard.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2442
+    },
+    {
+      "path": "assets/final-defense-01/sprites/defensenode.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1983
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind1.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 20815
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind2.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 20380
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind3.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 21228
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overseer.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2068
+    },
+    {
+      "path": "assets/final-defense-01/tiles/final-defense.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1800
+    },
+    {
+      "path": "assets/game-icon.svg",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1222
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/entrance.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 12860
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/fluid.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 10410
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/heart.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16017
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/neural.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 14125
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/pulse.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 13088
+    },
+    {
+      "path": "assets/living-colossus-01/effects/collapse.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2356
+    },
+    {
+      "path": "assets/living-colossus-01/effects/flow.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 574
+    },
+    {
+      "path": "assets/living-colossus-01/effects/foam.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 377
+    },
+    {
+      "path": "assets/living-colossus-01/effects/pulse.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1844
+    },
+    {
+      "path": "assets/living-colossus-01/effects/shield.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1367
+    },
+    {
+      "path": "assets/living-colossus-01/effects/signal.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 498
+    },
+    {
+      "path": "assets/living-colossus-01/effects/spore.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1072
+    },
+    {
+      "path": "assets/living-colossus-01/far/bioshell.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2886
+    },
+    {
+      "path": "assets/living-colossus-01/far/guardiancell.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2381
+    },
+    {
+      "path": "assets/living-colossus-01/far/neuralheart.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 14982
+    },
+    {
+      "path": "assets/living-colossus-01/far/neuralnode.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1368
+    },
+    {
+      "path": "assets/living-colossus-01/far/pulseworm.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1532
+    },
+    {
+      "path": "assets/living-colossus-01/far/sporefly.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1735
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/bioshell.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4321
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/guardiancell.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3243
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/neuralheart.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 19816
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/neuralnode.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1785
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/pulseworm.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2071
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/sporefly.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2303
+    },
+    {
+      "path": "assets/living-colossus-01/tiles/living.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1706
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/control.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3283
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/deck.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4373
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/distant-base.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3079
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/interior.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7145
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/reactor.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4644
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/wilderness.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2755
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/break.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1507
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/dust.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 549
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/exhaust.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 547
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/fire.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1501
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/heal.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1506
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/warning.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 994
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/assaultroller.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1641
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/basedevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1006
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/reactor.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8195
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/repairdrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1156
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/sentrywalker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2024
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/assaultroller.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1934
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/basedevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1175
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/reactor.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 11426
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/repairdrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1329
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/sentrywalker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2409
+    },
+    {
+      "path": "assets/mobile-fortress-01/tiles/mobile.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 857
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/command.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 8605
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/fusion.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4343
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/hangar.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4611
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/network.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 6565
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/shell.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 5433
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/signal.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 7859
+    },
+    {
+      "path": "assets/mothership-01/effects/break.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2199
+    },
+    {
+      "path": "assets/mothership-01/effects/command.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 965
+    },
+    {
+      "path": "assets/mothership-01/effects/phase.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 573
+    },
+    {
+      "path": "assets/mothership-01/effects/shield.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1422
+    },
+    {
+      "path": "assets/mothership-01/effects/signal.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 533
+    },
+    {
+      "path": "assets/mothership-01/effects/strike.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 653
+    },
+    {
+      "path": "assets/mothership-01/far/assaulttitan.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3288
+    },
+    {
+      "path": "assets/mothership-01/far/commandcore.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16421
+    },
+    {
+      "path": "assets/mothership-01/far/commanddevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1387
+    },
+    {
+      "path": "assets/mothership-01/far/commanddrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1594
+    },
+    {
+      "path": "assets/mothership-01/far/phasestalker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1918
+    },
+    {
+      "path": "assets/mothership-01/sprites/assaulttitan.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4330
+    },
+    {
+      "path": "assets/mothership-01/sprites/commandcore.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 21055
+    },
+    {
+      "path": "assets/mothership-01/sprites/commanddevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1852
+    },
+    {
+      "path": "assets/mothership-01/sprites/commanddrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1950
+    },
+    {
+      "path": "assets/mothership-01/sprites/phasestalker.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2236
+    },
+    {
+      "path": "assets/mothership-01/tiles/mothership.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1683
+    },
+    {
+      "path": "assets/sky-01/backgrounds/sky.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3753
+    },
+    {
+      "path": "assets/sky-01/effects/break.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1826
+    },
+    {
+      "path": "assets/sky-01/effects/shot.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1503
+    },
+    {
+      "path": "assets/sky-01/far/fortress.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 13556
+    },
+    {
+      "path": "assets/sky-01/far/heavygunner.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2608
+    },
+    {
+      "path": "assets/sky-01/far/interceptor.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2041
+    },
+    {
+      "path": "assets/sky-01/far/shielddrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2025
+    },
+    {
+      "path": "assets/sky-01/far/skydevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1336
+    },
+    {
+      "path": "assets/sky-01/sprites/fortress.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 16701
+    },
+    {
+      "path": "assets/sky-01/sprites/heavygunner.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3043
+    },
+    {
+      "path": "assets/sky-01/sprites/interceptor.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2449
+    },
+    {
+      "path": "assets/sky-01/sprites/shielddrone.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2134
+    },
+    {
+      "path": "assets/sky-01/sprites/skydevice.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1479
+    },
+    {
+      "path": "assets/sky-01/tiles/sky.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 709
+    },
+    {
+      "path": "assets/sprites/bosses/abyss_queen.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3466
+    },
+    {
+      "path": "assets/sprites/bosses/mother_crawler.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2404
+    },
+    {
+      "path": "assets/sprites/enemies/ceiling_spitter.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 479
+    },
+    {
+      "path": "assets/sprites/enemies/enemies.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 3302
+    },
+    {
+      "path": "assets/sprites/enemies/spawn_nest.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1293
+    },
+    {
+      "path": "assets/sprites/enemies/tunnel_worm.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 727
+    },
+    {
+      "path": "assets/sprites/player/classes.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 4219
+    },
+    {
+      "path": "assets/sprites/player/player.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 822
+    },
+    {
+      "path": "assets/sprites/ui/items.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 243
+    },
+    {
+      "path": "assets/sprites/weapons/equipped.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1212
+    },
+    {
+      "path": "assets/sprites/weapons/projectiles.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1152
+    },
+    {
+      "path": "assets/sprites/weapons/weapon_icons.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 2049
+    },
+    {
+      "path": "assets/tiles/city_tiles.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 314
+    },
+    {
+      "path": "assets/tiles/underground_tiles.png",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "image/png",
+      "bytes": 1096
+    },
+    {
+      "path": "index.html",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 53651
+    },
+    {
+      "path": "js/achievement-master.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 4386
+    },
+    {
+      "path": "js/art-preview.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 13862
+    },
+    {
+      "path": "js/camera.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 8649
+    },
+    {
+      "path": "js/campaign-ending.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 3583
+    },
+    {
+      "path": "js/campaign-stats.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 4083
+    },
+    {
+      "path": "js/campaign.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 10764
+    },
+    {
+      "path": "js/challenge-ui.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 4642
+    },
+    {
+      "path": "js/challenges.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 8454
+    },
+    {
+      "path": "js/coastal-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 5365
+    },
+    {
+      "path": "js/combat-audio.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 2465
+    },
+    {
+      "path": "js/data.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 20486
+    },
+    {
+      "path": "js/final-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 7172
+    },
+    {
+      "path": "js/fortress-ui.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 3970
+    },
+    {
+      "path": "js/game.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 179163
+    },
+    {
+      "path": "js/gameplay-ui.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 3735
+    },
+    {
+      "path": "js/impact.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 10841
+    },
+    {
+      "path": "js/invasion.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 7260
+    },
+    {
+      "path": "js/living-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 8869
+    },
+    {
+      "path": "js/mission-lab.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 10496
+    },
+    {
+      "path": "js/mission02.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 6903
+    },
+    {
+      "path": "js/mission03.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 11827
+    },
+    {
+      "path": "js/mission04.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 13587
+    },
+    {
+      "path": "js/mission05.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 15473
+    },
+    {
+      "path": "js/mission06.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 15675
+    },
+    {
+      "path": "js/mission07.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 22627
+    },
+    {
+      "path": "js/mission08.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 20892
+    },
+    {
+      "path": "js/mobile-acceptance.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 13650
+    },
+    {
+      "path": "js/mobile-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 9241
+    },
+    {
+      "path": "js/mobile-playtest.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 9574
+    },
+    {
+      "path": "js/mothership-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 9516
+    },
+    {
+      "path": "js/player.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 3791
+    },
+    {
+      "path": "js/playground.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 3262
+    },
+    {
+      "path": "js/profiler.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 9096
+    },
+    {
+      "path": "js/readability.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 2358
+    },
+    {
+      "path": "js/sky-art.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 4219
+    },
+    {
+      "path": "js/weapons.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 12946
+    },
+    {
+      "path": "styles.css",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/css",
+      "bytes": 56075
+    },
+    {
+      "path": "missing-acceptance-fixture.png",
+      "status": "PASS",
+      "httpStatus": 404
+    }
+  ],
+  "limitations": [
+    "Not the production hosting configuration",
+    "No JavaScript execution, rendering, input or browser-cache validation",
+    "No GitHub Pages/CDN/remote HTTP or iPhone test; no publishing"
+  ]
+}

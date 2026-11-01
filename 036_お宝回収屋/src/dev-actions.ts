@@ -32,4 +32,4 @@ export function applyScenario(s:State,id:string){const scenario=scenarios.find(x
  const ids=[scenario.tool,...(scenario.extra??[])];ids.filter(id=>id!=='hand').forEach(id=>grant(s,id));s.quickSlots=[...ids,'','','',''].slice(0,4);s.equippedTools=ids.filter(id=>id!=='hand');
  const f=spawn(s,scenario.item,{x:180,y:scenario.y,weight:scenario.weight,obstacle:scenario.obstacle??false});logEvent(s,'シナリオ',id);return {find:f,tool:scenario.tool,capabilities:riverCapabilities(s,scenario.tool)};
 }
-export function debugSnapshot(s:State){return {version:'0.2.0',save:s,events:s.events??[]};}
+export function debugSnapshot(s:State){return {version:'0.3.0',save:s,events:s.events??[]};}

@@ -73,6 +73,8 @@ Reference before DOM throttling: OFF 29.27 FPS / ON 23.93 FPS. Each is a short P
 
 ヒープの短時間測定には割当・GCの変動がある。数時間のメモリ安定性やiPhoneの発熱は未確認。高負荷の全景・100倍航行は最終受入で軽量演出と併せて確認する。
 
+追加の3分間連続動作試験は [ENDURANCE.md](ENDURANCE.md) と [endurance.json](endurance.json) を参照。対象はDEEP SPACEの発射前編集・SCAN・視点移動であり、飛行途中の長時間耐久やiPhone実測とは区別する。
+
 ## 10. 全自動試験・保存互換性
 
 既存405件＋追加24件＝**全429件**を対象に実行。原結果は [all-final.json](all-final.json) と [all-final.txt](all-final.txt)。初回の426件結果も [all-initial.json](all-initial.json) に保持。追加されたゴール権限・レーダー時刻・選択中矢印の回帰を含む。
@@ -94,6 +96,7 @@ npm test
 node tests/space-scanner-ui.mjs
 node tests/space-scanner-capture.mjs
 node tests/space-scanner-modes.mjs
+node tests/space-scanner-endurance.mjs
 ```
 
 Chromeと既存019_bomber-lab内Playwrightを使用する。ブラウザ試験はNode429件と別集計し、水増ししない。実時間性能の採取時には他の検証を同時に実行しない。

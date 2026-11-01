@@ -5,6 +5,13 @@ export function project(x:number,y:number){return {x:180+(x-180)*(.8+.2*y/280),y
 export function unproject(x:number,y:number){const v=(y-48)/.88;return {x:180+(x-180)/(.8+.2*v/280),y:v};}
 export const onSurface=(p:{x:number;y:number})=>p.x>=0&&p.x<360&&p.y>=0&&p.y<280;
 const paths:Record<string,string>={
+ G101:'<path d="M8 3l10 14M4 4l5-3 5 5-6 5M15 16l14 13c-9 7-19 0-14-13z" fill="#92a390"/>',
+ G102:'<ellipse cx="18" cy="18" rx="15" ry="9" fill="#6e9f8d"/><ellipse cx="18" cy="17" rx="10" ry="5"/><path d="M3 18v3c4 14 26 14 30 0v-3M13 18l2 2M22 16h1"/>',
+ G103:'<rect x="3" y="6" width="30" height="24" rx="6" fill="#ddd4aa"/><path d="M5 13h26M5 21h26M12 7v22M20 7v22M28 7v22"/>',
+ G105:'<circle cx="14" cy="13" r="10" fill="#c7e9df"/><path d="M21 21l11 11M9 11l6-4"/>',
+ G110:'<path d="M15 4h10l-2 10h-6z" fill="#6e9f8d"/><path d="M17 14h6v13l-5 7-1-7z" fill="#cbe8dd"/>',
+ G201:'<ellipse cx="18" cy="16" rx="17" ry="10" fill="#568d7b"/><ellipse cx="18" cy="15" rx="12" ry="6"/><path d="M1 16v5c4 17 30 17 34 0v-5M10 14l16 5M10 19l15-8"/>',
+ G203:'<path d="M5 3h26l-3 30H8z" fill="#7b9b8a"/><path d="M6 9h24M7 15h22M8 21h20M9 27h18M15 4v28M23 4v28"/>',
  R101:'<path d="M8 3l15 23 6-3M8 3l6 28 6-1"/>',
  R106:'<path d="M6 3l15 18c14 15-8 17-5 5"/>',
  R103:'<path d="M8 8v14a10 10 0 0020 0V8h-7v14a3 3 0 01-6 0V8z" fill="#bd7155"/>',

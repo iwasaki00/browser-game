@@ -1,6 +1,8 @@
 import {CONFIG,treasure,tool} from './data';
 import type {Find,Plot,State} from './engine';
 import {finishQuality,recordRecovery} from './tool-value';
+import {goldAreaUnlocked} from './gold';
+import {measure} from './measure';
 import {logEvent} from './events';
 
 export const RIVER_TOOLS=['R101','R106','R103','R104','R110','R201','R206'];
@@ -10,7 +12,7 @@ export interface RiverMetrics {attempts:number;successes:number;operations:numbe
 export const areaId=(s:State)=>s.explorationAreas[0].areaId??'B-A';
 export const isRiver=(s:State)=>areaId(s).startsWith('R-');
 export function beachCount(s:State){return Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,d])=>n+d.count,0);}
-export function areaUnlocked(s:State,id:string){return id==='B-A'||id==='R-A'&&beachCount(s)>=10||id==='R-B'&&beachCount(s)>=20;}
+export function areaUnlocked(s:State,id:string){return goldAreaUnlocked(s,id)||id==='B-A'||id==='R-A'&&beachCount(s)>=10||id==='R-B'&&beachCount(s)>=20;}
 function random(seed:number){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 export function generateRiver(seed:number,area='R-A'):Plot {
  const r=random(seed),items:Find[]=[];
@@ -35,7 +37,7 @@ export function riverCapabilities(s:State,id:string){
   speed:(reel?2.6:1)*(id==='R103'?1.35:1),hook:id==='R106',combos:[...(reel?['C05']:[]),...(pulley?['C06']:[])]};
 }
 export function metrics(s:State){return s.riverMetrics??={attempts:0,successes:0,operations:0,uses:{},failures:{},bottleneck:'なし'};}
-function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;logEvent(s,/磁石が弱く|磁石に付かない/.test(reason)?'吸着失敗':/重く/.test(reason)?'引き上げ失敗':'回収失敗',reason);return {ok:false,reason};}
+function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;measure(s,s.riverSession?.tool??'hand','引上げ失敗',0,0,0,false);logEvent(s,/磁石が弱く|磁石に付かない/.test(reason)?'吸着失敗':/重く/.test(reason)?'引き上げ失敗':'回収失敗',reason);return {ok:false,reason};}
 export function riverCheck(s:State,id:string,f:Find,includeLift=true){
  const c=riverCapabilities(s,id),weight=f.weight??treasure(f.id).weight;
  if(!c.valid)return '回収道具を選んでください。巻取り器・滑車は装備枠で組み合わせます。';
@@ -59,15 +61,15 @@ export function riverStart(s:State,id:string,x:number,y:number,cast=false){
  s.riverSession={tool:id,...target,originX:180,originY:278,progress:0,phase:'empty',elapsed:0,magnetic:c.magnetic,operations:0};
  if(!f)return failure(s,c.rope&&distance>c.reach?'ロープが届かない。もう少し近くを狙おう。':'手応えなし。違う場所を探そう。');
  const reason=riverCheck(s,id,f,false);if(reason)return failure(s,reason);
- s.riverSession.uid=f.uid;s.riverSession.phase='hooked';logEvent(s,c.magnetic?'磁石吸着':'つかんだ','何かが引っかかった');return {ok:true,reason:'何かが引っかかった！ 手前へドラッグして引き上げよう。'};
+ s.riverSession.uid=f.uid;s.riverSession.phase='hooked';measure(s,id,'吸着・把持',1,0);logEvent(s,c.magnetic?'磁石吸着':'つかんだ','何かが引っかかった');return {ok:true,reason:'何かが引っかかった！ 手前へドラッグして引き上げよう。'};
 }
 export function riverPull(s:State,amount=50){
  const r=s.riverSession;if(!isRiver(s)||!r?.uid||r.phase==='empty'||!Number.isFinite(amount)||amount<=0)return {ok:false,reason:'対象をつかんでから引こう。',recovered:false};
  const f=s.explorationAreas[0].items.find(f=>f.uid===r.uid);if(!f)return {ok:false,reason:'対象がありません。',recovered:false};
  const reason=riverCheck(s,r.tool,f);if(reason){s.riverSession=undefined;return {...failure(s,reason),recovered:false};}
  const c=riverCapabilities(s,r.tool),weight=f.weight??treasure(f.id).weight;
- r.operations++;metrics(s).operations++;r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
- s.playerStats.stamina=Math.max(0,s.playerStats.stamina-2*Math.min(100,amount)/70);s.playerStats.xp[0]+=.3*Math.min(100,amount)/70;s.playerStats.xp[3]+=Math.min(100,amount)/70;
+ const beforeProgress=r.progress,beforeStamina=s.playerStats.stamina;r.operations++;metrics(s).operations++;r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
+ s.playerStats.stamina=Math.max(0,s.playerStats.stamina-2*Math.min(100,amount)/70);s.playerStats.xp[0]+=.3*Math.min(100,amount)/70;s.playerStats.xp[3]+=Math.min(100,amount)/70;measure(s,r.tool,'引上げ',r.progress-beforeProgress,beforeStamina-s.playerStats.stamina,Number(r.progress>=1));
  if(r.progress<1)return {ok:true,reason:r.phase==='lifting'?'重みを感じる…もう少し引き上げよう。':'手応えあり。正体はまだ分からない…',recovered:false};
  if([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state==='stored').length>=CONFIG.capacity){r.progress=.99;return {ok:false,reason:'保管がいっぱいです。先に洗浄しよう。',recovered:false};}
  finishQuality(s,f,r.tool);f.evaluationFN=Math.round(treasure(f.id).baseValueFN*f.quality);f.damageState=f.quality<.95?'scratched':'worn';f.state='stored';f.tool=r.tool;f.recoveryOperations=r.operations;recordRecovery(s,f);s.playerStats.xp[2]++;metrics(s).successes++;metrics(s).bottleneck='なし';logEvent(s,'引き上げ成功',f.uid);s.riverSession=undefined;
