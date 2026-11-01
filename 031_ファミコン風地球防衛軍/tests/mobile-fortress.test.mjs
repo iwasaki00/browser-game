@@ -8,19 +8,12 @@ import {MOBILE_FILES,loadMobileArt} from '../js/mobile-art.js';
 const seed=()=>({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01','M02','M03','M04']});
 const lab=()=>{const r=runtime(seed(),{debug:true,recordDraw:false});r.click('test-lab');r.change('labStageMission','M05');return r};
 function start(r,area=0,mode='C',id='RANGER'){if(r.run('state')==='play')r.click('lab-open');r.change('labPreset',id);r.change('labValidation',mode);r.change('labStageArea',String(area));r.click('lab-stage-start')}
-const route=`const p=game.player;input.right=true;input.left=false;input.jump=false;input.up=false;input.hover=false;input.special=false;
-const obstacle=game.platforms.some(b=>b.active!==false&&!b.gate&&!['wilderness','ceiling'].includes(b.kind)&&p.x+30>=b.x&&p.x-7<b.x+b.w&&p.y+32>b.y+.5);
-input.jump=p.onGround&&obstacle;input.up=p.classId==='WING'&&obstacle;
-const b=game.enemies.find(e=>e.type==='reactor'&&!e.dead),devices=game.mobile.devices.filter(e=>!e.dead);
-const target=b?(b.shielded?nearestEnemy(devices,p.x,p.y):b):nearestEnemy(devices.filter(e=>e.x>=p.x-90),p.x,p.y,470)??nearestEnemy(game.enemies.filter(e=>!e.fixedDevice),p.x,p.y,200);
-if(target&&(target.fixedDevice||b)){input.right=target.x-p.x>75;input.left=target.x-p.x<65;if(b){input.jump=false;input.up=false}}
-const point=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=point.x-p.x-18,dy=point.y-p.y-13,len=Math.hypot(dx,dy)||1;
-input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;`;
+import {M05Route as route} from './helpers/campaign-routes.mjs';
 
 test('old M04 clear unlocks implemented M05; M06 remains locked without M05 clear; retry keeps save',()=>{
   const old=sanitizeSave({version:1,cleared:['M01','M02','M03','M04'],unlocked:['R-04'],equipped:['A-01','R-04']});
   assert.ok(canPlayMission('M05',old));assert.equal(missionStatus(MISSIONS[5],old),'LOCKED');assert.equal(canPlayMission('M06',old),false);
-  const r=runtime(old);r.run("startMission('M05');game.player.hp=0;update(1/60)");r.flush();const saved=r.storage.get(SAVE_KEY);r.click('retry');assert.equal(r.run('game.missionId'),'M05');assert.equal(r.storage.get(SAVE_KEY),saved);
+  const r=runtime(old);r.run("startMission('M05');game.player.hp=0;update(1/60)");r.flush();const saved=r.storage.get(SAVE_KEY);r.click('retry');assert.equal(r.run('game.missionId'),'M05');const after=JSON.parse(r.storage.get(SAVE_KEY)),before=JSON.parse(saved);assert.deepEqual(after.clearedMissions,before.clearedMissions);assert.deepEqual(after.unlockedMissions,before.unlockedMissions);assert.deepEqual(after.unlocked,before.unlocked);assert.equal(after.campaignStats.classes.RANGER.sorties,2);assert.equal(after.campaignStats.classes.RANGER.gameOvers,1);
 });
 for(const id of Object.keys(PLAYER_CLASSES))test(id+' A: real movement/mandatory-device shooting boards base and reaches all areas without warp',t=>{
   const r=lab();start(r,0,'A',id);r.run('var visited=new Set();var boarded=false;var peak=0');

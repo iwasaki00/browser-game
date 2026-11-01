@@ -1,0 +1,153 @@
+{
+  "version": "1.1.0",
+  "startedAt": "2026-11-01T00:16:52.847Z",
+  "timezone": "Asia/Tokyo",
+  "environment": {
+    "node": "v25.9.0",
+    "platform": "win32",
+    "engine": "existing game.js / Node VM DOM adapter",
+    "seed": 11001008,
+    "dt": 0.016666666666666666,
+    "storage": "isolated per-runtime Map only; no browser/user storage",
+    "commit": "7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb",
+    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M tests/final-defense.test.mjs\n M tests/helpers/runtime.mjs\n M tests/living-colossus.test.mjs\n M tests/mobile-fortress.test.mjs\n M tests/mothership.test.mjs\n M tests/sky-fortress.test.mjs\n?? reports/campaign-integration/\n?? tests/campaign-integration.test.mjs\n?? tests/helpers/campaign-routes.mjs\n?? tools/campaign-integration.mjs"
+  },
+  "cases": [
+    {
+      "id": "SAVE-S01",
+      "mode": "STRUCTURAL",
+      "cleared": [],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S02",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S03",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01",
+        "M02",
+        "M03"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S04",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S05",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S06",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S07",
+      "mode": "STRUCTURAL",
+      "cleared": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07",
+        "M08"
+      ],
+      "source": "current v2 schema fixture; not an old-version claim",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S08-LEGACY",
+      "mode": "STRUCTURAL",
+      "source": "documented version1 cleared/unlocked/equipped fields from existing legacy tests; no invented class or weapon history",
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S09-MISSING",
+      "mode": "STRUCTURAL",
+      "unknownVsZero": true,
+      "status": "PASS"
+    },
+    {
+      "id": "SAVE-S10-CORRUPT",
+      "mode": "STRUCTURAL",
+      "bounded": true,
+      "status": "PASS"
+    },
+    {
+      "id": "ISOLATION-LAB",
+      "mode": "STRUCTURAL",
+      "persistedBytesUnchanged": true,
+      "storageWritesDuringLab": 0,
+      "qaPreset": "LAB",
+      "status": "PASS"
+    },
+    {
+      "id": "ISOLATION-gameplay",
+      "mode": "STRUCTURAL",
+      "persistedBytesUnchanged": true,
+      "storageWritesDuringLab": 0,
+      "qaPreset": "gameplay",
+      "status": "PASS"
+    }
+  ],
+  "issues": [],
+  "unperformed": [
+    "HUMAN: all eight normal-difficulty manual clears",
+    "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
+  ],
+  "finishedAt": "2026-11-01T00:16:53.366Z",
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0,
+    "notCleared": 0,
+    "unperformed": 0,
+    "blocker": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  }
+}

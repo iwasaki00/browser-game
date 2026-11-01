@@ -1,4 +1,7 @@
 import {FINAL_ID,FINAL_DESTINATIONS,normalizeFinal,finalDestination,endingDefinition,dockFinal} from './final-voyage.js';
+import {observeApproach,adjustInput,inputStep,launchInput,attemptKey,flightFeedback,goalKey} from './navigation-feedback.js';
+let approach=null,lastAttempt=null,previousAttempt=null,fineAdjustment=true,restoredVelocity=null;
+function currentLaunchVelocity(){return restoredVelocity??velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));}
 import {createEndingPresentation} from './final-voyage-ui.js';
 import {FlightCheckpoints} from './flight-checkpoints.js';
 import {DEEP_ID,DEEP_TARGETS,DEEP_GATE,deepTarget,deepLabel,deepAvailable,normalizeDeep} from './deep-space.js';
@@ -411,7 +414,7 @@ function drawGravity() {
 }
 
 function drawPrediction() {
-  const velocity = aim && !aim.cancelled ? aim.velocity : velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value));
+  const velocity = aim && !aim.cancelled ? aim.velocity : currentLaunchVelocity();
   const job = preview.update(stage, velocity, mode === 'editing'&&launchAllowed(stage,velocity,launchMode));
   document.querySelector('#previewStatus').textContent=!job?'':!job.done?'予測計算中…':job.state.status==='flying'?`予測${Math.round(job.state.elapsed)}秒まで（この先は未予測）`:job.state.status==='timeout'?'飛行時間上限までの予測：到達なし':job.state.status==='cleared'?'ゴール到達予測':'';
   if (!job || job.points.length < 2) return;
@@ -419,10 +422,13 @@ function drawPrediction() {
   ctx.beginPath(); ctx.rect(0,0,stage.world.width,stage.world.height); ctx.clip();
   drawPreviewRoute(ctx,job,stage.goal,view.scale);
   if(job.done&&job.state.status==='crashed')document.querySelector('#previewStatus').textContent='衝突予測 · 赤い航路を調整';
+  if(job.approach){const gap=Math.max(0,job.approach.minimum-stage.goal.radius);document.querySelector('#previewStatus').textContent+=` · 最接近あと${gap.toFixed(1)}${job.done?'':'（計算中）'}`;}
   ctx.restore();
 }
 
 function setEditingControls(enabled) {
+  document.querySelector('#adjustmentMode').disabled=!enabled;
+  updateRestoreButtons();
   for(const button of document.querySelectorAll('[data-fine]'))button.disabled=!enabled;
   angleInput.disabled = !enabled;
   speedInput.disabled = !enabled;
@@ -438,13 +444,17 @@ function setEditingControls(enabled) {
   updateHomewardControls();
 }
 
-function launch(velocity = velocityFromAngleSpeed(Number(angleInput.value), Number(speedInput.value))) {
+function launch(velocity = currentLaunchVelocity()) {
   if (mode !== "editing") return;
   if((stage.openVoyage&&homewardProgress.state.voyage?.checkpoint===stage.goal.id)||(stage.deepSpace&&homewardProgress.state.deep?.checkpoint===stage.goal.id)||(stage.finalVoyage&&homewardProgress.state.finalVoyage?.checkpoint===stage.goal.id)){homewardUI.open();statusText.textContent='寄港中です。次の目的地を選んでください。';return;}
   if(playType==='homeward'&&getHomewardDefinition(stage.id).choices&&!homewardProgress.state.choices[stage.id]){homewardUI.briefing(stage.id);statusText.textContent='出航前に追跡／回避を選択してください。';return;}
   if(!launchAllowed(stage,velocity,launchMode)){statusText.textContent='角度・推力が発射条件外です。メニュー内のステージ条件を確認してください。';return;}
   cancelGesture();
   launchSnapshot = structuredClone(stage);
+  const key=attemptKey(stage,playType);
+  previousAttempt=lastAttempt?.key===key?lastAttempt:null;
+  lastAttempt={key,stage:structuredClone(stage),input:launchInput(velocity),velocity:{...velocity},launchMode,gameMode};
+  approach=null;
   movement=0;
   moveTargets = {};
   simulation = createSimulation(stage, { velocity });
@@ -485,6 +495,14 @@ function showResult(status) {
   const hazardReason=simulation?.reason==='absorbed'?'ブラックホールに吸収':simulation?.reason==='overheated'?'恒星の熱領域へ侵入':null;
   const encounterReason={'encounter-meteor':'隕石に接触','encounter-comet':'彗星本体に接触','encounter-ufo':'UFOに接触','encounter-unknown':'未知の物体に接触'}[simulation?.reason];
   resultReason.textContent = encounterReason??hazardReason??reason;
+  const feedback=flightFeedback(simulation,approach,missionFailed),input=lastAttempt.input;
+  let comparison='';
+  if(previousAttempt?.feedback&&previousAttempt.feedbackGoal===goalKey(simulation.goal)){const delta=feedback.gap-previousAttempt.feedback.gap,changed=JSON.stringify(previousAttempt.stage.planets)!==JSON.stringify(lastAttempt.stage.planets);comparison=`前回比：角度 ${(input.angleDeg-previousAttempt.input.angleDeg).toFixed(2)}° / 推力 ${(input.speed-previousAttempt.input.speed).toFixed(1)} / 最接近 ${delta>=0?'+':''}${delta.toFixed(1)}（小さいほど近い）${changed?' / 配置変更あり':''}`;}
+  document.querySelector('#attemptFeedback').textContent=`${feedback.reason}。T+${simulation.elapsed.toFixed(2)}秒 / ANGLE ${input.angleDeg.toFixed(2)}° / THRUST ${input.speed.toFixed(1)} / 目的地の端まで最接近 ${feedback.gap.toFixed(1)}。${feedback.hint} ${comparison}`;
+  lastAttempt.feedback=feedback;
+  lastAttempt.feedbackGoal=goalKey(simulation.goal);
+  lastAttempt.failed=status!=='cleared';
+  updateRestoreButtons();
   if(missionFailed)resultReason.textContent=MISSION_HINT;
   result.classList.toggle("success", status === "cleared");
   result.hidden = false;
@@ -513,6 +531,7 @@ function showResult(status) {
 }
 
 function retry() {
+  restoredVelocity=null;
   endingCue=null;endingPresentation?.hide();
   cinematic.reset();
   experience.reset();
@@ -570,6 +589,7 @@ function tick(time) {
       const previousState=simulation;
       const previousPlanets=simulation.planets;
       simulation = stepLiveFlight(simulation, moveTargets, stage, gameMode, dt);
+      approach=observeApproach(approach,previousState,simulation);
       if(demo){const discoveries=demo.observe(previousState,simulation);flightDiscoveries.push(...discoveries);if(discoveries.length){frontierUI.show(discoveries);presentDiscoveries(discoveries);}}
       if(stage.deepSpace){const events=homewardProgress.surveyDeep(previousState,simulation);if(events.length){flightDiscoveries.push(...events);frontierUI.show(events);presentDiscoveries(events);if(homewardProgress.notice)gallery.notify(homewardProgress.notice);}}
       if(stage.openVoyage){
@@ -739,12 +759,28 @@ window.addEventListener('pageshow',()=>{lastTime=performance.now();audio.foregro
 modeButtons.forEach(button => button.addEventListener('click', () => {
   if (mode !== 'editing') return;
   launchMode = saveLaunchMode(storage, button.dataset.launchMode);
+  restoredVelocity=null;syncLaunchControls();
   updateMode();
 }));
-function refreshLaunch(){updateOutputs();preview.clear();if(mode==='editing')preview.update(stage,velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value)),true);}
+function refreshLaunch(){restoredVelocity=null;updateOutputs();preview.clear();if(mode==='editing')preview.update(stage,velocityFromAngleSpeed(Number(angleInput.value),Number(speedInput.value)),true);}
 angleInput.addEventListener("input",()=>{refreshLaunch();notifyTutorial('angle');});
 speedInput.addEventListener("input",()=>{refreshLaunch();notifyTutorial('thrust');});
-for(const button of document.querySelectorAll('[data-fine]'))button.addEventListener('click',()=>{const input=document.getElementById(button.dataset.fine);if(input.disabled)return;input.value=String(Math.max(Number(input.min),Math.min(Number(input.max),Number(input.value)+Number(button.dataset.delta)*((stage.deepSpace||stage.finalVoyage)&&input===angleInput?.1:1))));input.dispatchEvent(new Event('input',{bubbles:true}));});
+for(const button of document.querySelectorAll('[data-fine]'))button.addEventListener('click',()=>{const input=document.getElementById(button.dataset.fine);if(input.disabled)return;input.value=String(adjustInput(Number(input.value),Number(button.dataset.delta),input===angleInput?'angle':'speed',fineAdjustment,Number(input.min),Number(input.max)));input.dispatchEvent(new Event('input',{bubbles:true}));});
+document.querySelector('#adjustmentMode').addEventListener('change',event=>{fineAdjustment=event.target.value==='fine';syncAdjustmentLabels();});
+function syncAdjustmentLabels(){for(const b of document.querySelectorAll('[data-fine]'))b.setAttribute('aria-label',`${b.dataset.fine==='angleInput'?'ANGLE':'THRUST'} ${Number(b.dataset.delta)>0?'+':'-'}${inputStep(b.dataset.fine==='angleInput'?'angle':'speed',fineAdjustment)}`);}
+function canRestoreLast(){return mode!=='flying'&&lastAttempt&&attemptKey(stage,playType)===lastAttempt.key&&(lastAttempt.failed||mode==='editing');}
+function updateRestoreButtons(){for(const id of ['restoreLastInput','retryLastResult','relaunchLast'])document.querySelector('#'+id).disabled=!canRestoreLast();}
+function restoreLastInput(){
+ if(!canRestoreLast())return;
+ const saved=lastAttempt;
+ simulation=null;launchSnapshot=null;stage=structuredClone(saved.stage);gameMode=saved.gameMode;launchMode=saved.launchMode;
+ gameModeInput.value=gameMode;
+ retry();syncLaunchControls();if(launchMode==='slingshot'){angleInput.min='-180';angleInput.max='180';}angleInput.value=String(saved.input.angleDeg);speedInput.value=String(saved.input.speed);updateOutputs();updateMode();restoredVelocity={...saved.velocity};preview.clear();settingsUI.closeAll();
+ statusText.textContent='直前の配置・発射設定を復元。調整して再発射できます。';
+}
+document.querySelector('#restoreLastInput').addEventListener('click',restoreLastInput);
+document.querySelector('#retryLastResult').addEventListener('click',restoreLastInput);
+document.querySelector('#relaunchLast').addEventListener('click',()=>{if(!canRestoreLast())return;const velocity={...lastAttempt.velocity};restoreLastInput();launch(velocity);});
 for(const input of [angleInput,speedInput])input.addEventListener('change',()=>notifyTutorial('settings'));
 launchButton.addEventListener("click", () => { if (launchMode === 'precision') launch(); });
 resetButton.addEventListener("click", reset);
@@ -911,8 +947,8 @@ document.querySelector('#nextStage').addEventListener('click',()=>{
 });
 updatePlanetEditor();
 function syncLaunchControls(){
-  angleInput.step=(stage.deepSpace||stage.finalVoyage)?'0.01':'1';
-  for(const b of document.querySelectorAll('[data-fine=angleInput]'))b.setAttribute('aria-label',`ANGLE ${Number(b.dataset.delta)>0?'+':'-'}${(stage.deepSpace||stage.finalVoyage)?'0.1':'1'} degrees`);
+  angleInput.step='0.01';
+  syncAdjustmentLabels();
   const [amin,amax]=stage.launch.angleRange,[smin,smax]=stage.launch.speedRange;
   const oldAngle=Number(angleInput.value),oldSpeed=Number(speedInput.value);
   angleInput.min=String(amin);angleInput.max=String(amax);speedInput.min=String(smin);speedInput.max=String(smax);

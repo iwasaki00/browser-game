@@ -1,0 +1,349 @@
+{
+  "controls": [
+    {
+      "id": "stage-01",
+      "oldStep": 1,
+      "newStep": 0.01,
+      "probes": [
+        {
+          "offset": -1,
+          "legal": false
+        },
+        {
+          "offset": -0.01,
+          "legal": false
+        },
+        {
+          "offset": 0,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 1,
+          "legal": true,
+          "success": false
+        }
+      ]
+    },
+    {
+      "id": "homeward-02",
+      "oldStep": 1,
+      "newStep": 0.01,
+      "probes": [
+        {
+          "offset": -1,
+          "legal": true,
+          "success": false
+        },
+        {
+          "offset": -0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 1,
+          "legal": true,
+          "success": false
+        }
+      ]
+    },
+    {
+      "id": "FINAL:origin>earth",
+      "oldStep": 0.1,
+      "newStep": 0.01,
+      "probes": [
+        {
+          "offset": -0.1,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": -0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.1,
+          "legal": true,
+          "success": true
+        }
+      ]
+    },
+    {
+      "id": "FINAL:network>earth",
+      "oldStep": 0.1,
+      "newStep": 0.01,
+      "probes": [
+        {
+          "offset": -0.1,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": -0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.01,
+          "legal": true,
+          "success": true
+        },
+        {
+          "offset": 0.1,
+          "legal": true,
+          "success": false
+        }
+      ]
+    }
+  ],
+  "refinements": [
+    {
+      "id": "stage-12",
+      "angle+": {
+        "successDelta": 0.13515625000000003,
+        "failedDelta": 0.13593750000000002,
+        "bracketWidth": 0.0007812499999999833
+      }
+    },
+    {
+      "id": "stage-17",
+      "angle+": {
+        "successDelta": 0.0023437500000000003,
+        "failedDelta": 0.003125,
+        "bracketWidth": 0.0007812499999999998
+      }
+    },
+    {
+      "id": "stage-18",
+      "angle+": {
+        "successDelta": 0.10703125000000001,
+        "failedDelta": 0.1078125,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "homeward-01",
+      "angle-": {
+        "successDelta": -0.115625,
+        "failedDelta": -0.11640625,
+        "bracketWidth": 0.0007812499999999972
+      },
+      "angle+": {
+        "successDelta": 0.13593750000000002,
+        "failedDelta": 0.13671875,
+        "bracketWidth": 0.0007812499999999833
+      }
+    },
+    {
+      "id": "homeward-02",
+      "angle-": {
+        "successDelta": -0.03203125,
+        "failedDelta": -0.0328125,
+        "bracketWidth": 0.0007812500000000042
+      },
+      "angle+": {
+        "successDelta": 0.03203125,
+        "failedDelta": 0.0328125,
+        "bracketWidth": 0.0007812500000000042
+      }
+    },
+    {
+      "id": "homeward-03",
+      "angle-": {
+        "successDelta": -0.13437500000000002,
+        "failedDelta": -0.13515625000000003,
+        "bracketWidth": 0.0007812500000000111
+      }
+    },
+    {
+      "id": "DEEP:DS01>return",
+      "angle+": {
+        "successDelta": 0,
+        "failedDelta": 0.00078125,
+        "bracketWidth": 0.00078125
+      }
+    },
+    {
+      "id": "DEEP:origin>DS02",
+      "angle+": {
+        "successDelta": 0.043750000000000004,
+        "failedDelta": 0.04453125000000001,
+        "bracketWidth": 0.0007812500000000042
+      }
+    },
+    {
+      "id": "DEEP:DS02>return",
+      "angle+": {
+        "successDelta": 0.07500000000000001,
+        "failedDelta": 0.07578125000000001,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "DEEP:origin>DS03",
+      "angle-": {
+        "successDelta": -0.01171875,
+        "failedDelta": -0.0125,
+        "bracketWidth": 0.0007812500000000007
+      }
+    },
+    {
+      "id": "DEEP:origin>DS04",
+      "angle+": {
+        "successDelta": 0.07109375000000001,
+        "failedDelta": 0.07187500000000001,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "DEEP:origin>DS05",
+      "angle+": {
+        "successDelta": 0.053125000000000006,
+        "failedDelta": 0.05390625,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "DEEP:DS06>return",
+      "angle-": {
+        "successDelta": -0.0421875,
+        "failedDelta": -0.04296875,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "DEEP:origin>return",
+      "angle-": {
+        "successDelta": -0.02890625,
+        "failedDelta": -0.0296875,
+        "bracketWidth": 0.0007812499999999972
+      },
+      "angle+": {
+        "successDelta": 0.013281250000000001,
+        "failedDelta": 0.0140625,
+        "bracketWidth": 0.000781249999999999
+      }
+    },
+    {
+      "id": "DEEP:DS02>DS03",
+      "angle-": {
+        "successDelta": -0.05546875,
+        "failedDelta": -0.05625,
+        "bracketWidth": 0.0007812500000000042
+      }
+    },
+    {
+      "id": "FINAL:origin>earth",
+      "angle-": {
+        "successDelta": -0.10390625,
+        "failedDelta": -0.10468750000000002,
+        "bracketWidth": 0.0007812500000000111
+      }
+    },
+    {
+      "id": "FINAL:rescue>earth",
+      "angle-": {
+        "successDelta": -0.022656250000000003,
+        "failedDelta": -0.0234375,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "FINAL:network>earth",
+      "angle+": {
+        "successDelta": 0.05625,
+        "failedDelta": 0.057031250000000006,
+        "bracketWidth": 0.0007812500000000042
+      }
+    },
+    {
+      "id": "FINAL:passage>earth",
+      "angle-": {
+        "successDelta": -0.09062500000000001,
+        "failedDelta": -0.09140625000000001,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "FINAL:earth>network",
+      "angle-": {
+        "successDelta": -0.01171875,
+        "failedDelta": -0.0125,
+        "bracketWidth": 0.0007812500000000007
+      }
+    },
+    {
+      "id": "FINAL:earth>rescue",
+      "angle+": {
+        "successDelta": 0.07109375000000001,
+        "failedDelta": 0.07187500000000001,
+        "bracketWidth": 0.0007812499999999972
+      }
+    },
+    {
+      "id": "FINAL:earth>passage",
+      "angle+": {
+        "successDelta": 0.043750000000000004,
+        "failedDelta": 0.04453125000000001,
+        "bracketWidth": 0.0007812500000000042
+      }
+    },
+    {
+      "id": "FREE:voyage",
+      "angle-": {
+        "successDelta": -0.115625,
+        "failedDelta": -0.11640625,
+        "bracketWidth": 0.0007812499999999972
+      },
+      "angle+": {
+        "successDelta": 0.13593750000000002,
+        "failedDelta": 0.13671875,
+        "bracketWidth": 0.0007812499999999833
+      }
+    },
+    {
+      "id": "FREE:swing",
+      "angle-": {
+        "successDelta": -0.03203125,
+        "failedDelta": -0.0328125,
+        "bracketWidth": 0.0007812500000000042
+      },
+      "angle+": {
+        "successDelta": 0.03203125,
+        "failedDelta": 0.0328125,
+        "bracketWidth": 0.0007812500000000042
+      }
+    }
+  ]
+}

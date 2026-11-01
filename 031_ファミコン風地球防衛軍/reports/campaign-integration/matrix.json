@@ -1,0 +1,4310 @@
+{
+  "version": "1.0.0",
+  "startedAt": "2026-11-01T00:08:40.507Z",
+  "timezone": "Asia/Tokyo",
+  "environment": {
+    "node": "v25.9.0",
+    "platform": "win32",
+    "engine": "existing game.js / Node VM DOM adapter",
+    "seed": 11001008,
+    "dt": 0.016666666666666666,
+    "storage": "isolated per-runtime Map only; no browser/user storage",
+    "commit": "7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb",
+    "worktree": "M tests/final-defense.test.mjs\n M tests/helpers/runtime.mjs\n M tests/living-colossus.test.mjs\n M tests/mobile-fortress.test.mjs\n M tests/mothership.test.mjs\n?? reports/campaign-integration/\n?? tests/helpers/campaign-routes.mjs\n?? tools/campaign-integration.mjs"
+  },
+  "cases": [
+    {
+      "id": "ROUTE-M01-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 43.48333333333215,
+      "frames": 2609,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4101.000000000056,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M01-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 22.916666666666647,
+      "frames": 1375,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4102,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M01-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 62.78333333333105,
+      "frames": 3767,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4100.750000000083,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M01-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 37.43333333333249,
+      "frames": 2246,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4101.666666666715,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M02-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 49.71666666666513,
+      "frames": 2983,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4781.3333333333885,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M02-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 26.649999999999768,
+      "frames": 1599,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4783,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M02-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 72.6333333333305,
+      "frames": 4358,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4780.0833333332685,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M02-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 43.13333333333217,
+      "frames": 2588,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4781.4999999999245,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M03-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 57.01666666666471,
+      "frames": 3421,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5480.583333333225,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M03-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 30.199999999999566,
+      "frames": 1812,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5483,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M03-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 83.33333333332989,
+      "frames": 5000,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5480.666666666508,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M03-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 49.566666666665135,
+      "frames": 2974,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5480.499999999886,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M04-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 65.44999999999757,
+      "frames": 3927,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6200.749999999681,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M04-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 34.34999999999933,
+      "frames": 2061,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6202,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M04-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 94.51666666666259,
+      "frames": 5671,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6200.76666666608,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M04-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 56.11666666666476,
+      "frames": 3367,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6201.666666666457,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M05-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 72.28333333333052,
+      "frames": 4337,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6841.566666666299,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "drive",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "control",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M05-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 42.949999999998845,
+      "frames": 2577,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6842.133333333341,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "drive",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "control",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M05-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 103.5999999999954,
+      "frames": 6216,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6840.666666665983,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "drive",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "control",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M05-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 64.3166666666643,
+      "frames": 3859,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6840.33333333315,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": -2,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "drive",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "control",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M06-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 73.1166666666638,
+      "frames": 4387,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7000.883333333006,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "network",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M06-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 39.133333333332395,
+      "frames": 2348,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7002.600000000008,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "network",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M06-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 107.93333333332849,
+      "frames": 6476,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7000.066666666171,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "network",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M06-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 62.93333333333104,
+      "frames": 3776,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7001.466666666397,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "network",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M07-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 81.04999999999669,
+      "frames": 4863,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7760.583333332788,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "entry",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "fusion",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M07-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 44.549999999998754,
+      "frames": 2673,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7762,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "entry",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "fusion",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M07-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 118.41666666666123,
+      "frames": 7105,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7761.083333332536,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "entry",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "fusion",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M07-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 70.21666666666397,
+      "frames": 4213,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7760.333333332863,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "entry",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "fusion",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M08-RANGER",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "RANGER",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 87.54999999999632,
+      "frames": 5253,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 8381.249999999445,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "defensenode",
+          "kind": "deep",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "mechanical",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "biological",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "defense",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M08-SCOUT",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "SCOUT",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 49.13333333333183,
+      "frames": 2948,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 8383,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "defensenode",
+          "kind": "deep",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "mechanical",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "biological",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "defense",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M08-GUARDIAN",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "GUARDIAN",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 127.94999999999402,
+      "frames": 7677,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 8380.749999999189,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "defensenode",
+          "kind": "deep",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "mechanical",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "biological",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "defense",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-M08-WING",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "WING",
+      "method": "LAB AREA01, real input/movement, no post-start warp; enemy attacks excluded",
+      "seconds": 75.61666666666366,
+      "frames": 4537,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 8381.833333332854,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": true,
+      "outcome": "TERRAIN_REACHED",
+      "warningsObserved": 0,
+      "parts": [
+        {
+          "type": "defensenode",
+          "kind": "deep",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "mechanical",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "biological",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "defensenode",
+          "kind": "defense",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 19.883333333333486,
+      "frames": 1193,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.866666666666138,
+      "frames": 1912,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 19.883333333333486,
+      "frames": 1193,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.866666666666138,
+      "frames": 1912,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 19.883333333333486,
+      "frames": 1193,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 32.516666666666104,
+      "frames": 1951,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 19.883333333333486,
+      "frames": 1193,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M01-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M01",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.866666666666138,
+      "frames": 1912,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.3499999999995,
+      "frames": 1881,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4948.833333333305,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": -4
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 55.916666666664774,
+      "frames": 3355,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4815.83333333333,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": -2.5
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.3499999999995,
+      "frames": 1881,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4947,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 57.2166666666647,
+      "frames": 3433,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4812,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": -2.5
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 32.81666666666609,
+      "frames": 1969,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4948.416666666625,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 58.51666666666463,
+      "frames": 3511,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4816.249999999995,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": -2.5
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 31.3499999999995,
+      "frames": 1881,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4948.499999999975,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M02-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M02",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 55.26666666666481,
+      "frames": 3316,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 4812.833333333331,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 40.94999999999896,
+      "frames": 2457,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.666666666573,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 900,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -8
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 65.66666666666423,
+      "frames": 3940,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.666666666573,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1350,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -5
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 40.68333333333231,
+      "frames": 2441,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5989,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 900,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -4
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 63.71666666666433,
+      "frames": 3823,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5989,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1306,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 41.48333333333226,
+      "frames": 2489,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.499999999864,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 900,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -4
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 66.96666666666415,
+      "frames": 4018,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.499999999864,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1422,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 40.94999999999896,
+      "frames": 2457,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.666666666586,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 900,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -8
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M03-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M03",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 65.01666666666426,
+      "frames": 3901,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 5987.666666666586,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1350,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -5
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 89.41666666666288,
+      "frames": 5365,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.833333333265,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 10,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3667,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 157.38333333335072,
+      "frames": 9443,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.833333333265,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 18,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8348,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 84.48333333332982,
+      "frames": 5069,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 10,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3567,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 154.1500000000148,
+      "frames": 9249,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 18,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8359,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 91.68333333332941,
+      "frames": 5501,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.4999999999,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 9,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3648,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 166.51666666669132,
+      "frames": 9991,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.4999999999,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 18,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8842,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 88.08333333332962,
+      "frames": 5285,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.499999999941,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 10,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3703,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M04-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M04",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 156.08333333334969,
+      "frames": 9365,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 6577.499999999941,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 18,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8309,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 75.78333333333032,
+      "frames": 4547,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7413.583333333231,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1640,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 135.91666666666697,
+      "frames": 8155,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7413.583333333231,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 10,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 4493,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 72.18333333333052,
+      "frames": 4331,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7414,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1716,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 129.39999999999512,
+      "frames": 7764,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7414,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 8,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3972,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 77.7833333333302,
+      "frames": 4667,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7414.083333333184,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1911,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 141.1166666666711,
+      "frames": 8467,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7414.083333333184,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 11,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5197,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 73.51666666666378,
+      "frames": 4411,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7413.499999999912,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 1536,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M05-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M05",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 130.71666666666283,
+      "frames": 7843,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7413.499999999912,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 8,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 4389,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 87.7999999999963,
+      "frames": 5268,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7352.333333333281,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5428,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 152.1666666666799,
+      "frames": 9130,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7352.333333333281,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 10978,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 80.59999999999671,
+      "frames": 4836,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7353,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 4879,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 134.63333333333262,
+      "frames": 8078,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7353,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 9168,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 98.14999999999571,
+      "frames": 5889,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7403.916666666576,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 6472,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 158.61666666668503,
+      "frames": 9517,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7414.749999999906,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 11608,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 90.01666666666284,
+      "frames": 5401,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7404.499999999946,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5709,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M06-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M06",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 143.06666666667266,
+      "frames": 8584,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 7351.3333333332885,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 9998,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 90.73333333332947,
+      "frames": 5444,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8431.750000000016,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 2585,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 148.30000000001016,
+      "frames": 8898,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8431.750000000016,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5606,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 90.8666666666628,
+      "frames": 5452,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8433,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 3005,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 157.36666666668404,
+      "frames": 9442,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8433,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5830,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 92.19999999999605,
+      "frames": 5532,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8432.666666666692,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 2604,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 156.08333333334969,
+      "frames": 9365,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8432.666666666692,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5154,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 90.06666666666284,
+      "frames": 5404,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8432.500000000015,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 2598,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M07-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M07",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 148.933333333344,
+      "frames": 8936,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 8432.500000000015,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 5067,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-RANGER-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 202.4833333333866,
+      "frames": 12149,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.750000000271,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8965,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-RANGER-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "RANGER",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 308.1833333333817,
+      "frames": 18491,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.750000000271,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 14488,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-SCOUT-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 193.2833333333793,
+      "frames": 11597,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9128,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 2,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8398,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-SCOUT-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "SCOUT",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 308.1833333333817,
+      "frames": 18491,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9128,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 75,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 14506,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-GUARDIAN-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 202.0833333333863,
+      "frames": 12125,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.416666667063,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8875,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-GUARDIAN-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 320.5333333333705,
+      "frames": 19232,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.416666667063,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 200,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 3,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 15505,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-WING-A-01",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "WING",
+      "weapons": [
+        "A-01"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 191.81666666671146,
+      "frames": 11509,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.6666666669,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 1,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 8345,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "id": "STARTER-M08-WING-S-02",
+      "mode": "STRUCTURAL",
+      "mission": "M08",
+      "classId": "WING",
+      "weapons": [
+        "S-02"
+      ],
+      "method": "boss checkpoint / invincible LAB real shots and mandatory boss parts; not full normal clear",
+      "seconds": 315.3333333333752,
+      "frames": 18920,
+      "area": 4,
+      "areas": [
+        4
+      ],
+      "x": 9127.6666666669,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 65,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 4,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "BOSS_DEFEATED",
+      "warningsObserved": 15086,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "issues": [],
+  "unperformed": [
+    "HUMAN: all eight normal-difficulty manual clears",
+    "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
+  ],
+  "finishedAt": "2026-11-01T00:09:09.751Z",
+  "summary": {
+    "total": 96,
+    "pass": 96,
+    "fail": 0,
+    "notCleared": 0,
+    "unperformed": 2
+  }
+}

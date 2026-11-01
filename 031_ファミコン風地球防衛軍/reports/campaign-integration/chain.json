@@ -1,0 +1,652 @@
+{
+  "version": "1.0.0",
+  "startedAt": "2026-11-01T00:06:08.274Z",
+  "timezone": "Asia/Tokyo",
+  "environment": {
+    "node": "v25.9.0",
+    "platform": "win32",
+    "engine": "existing game.js / Node VM DOM adapter",
+    "seed": 11001008,
+    "dt": 0.016666666666666666,
+    "storage": "isolated per-runtime Map only; no browser/user storage",
+    "commit": "7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb",
+    "worktree": "M tests/final-defense.test.mjs\n M tests/helpers/runtime.mjs\n M tests/living-colossus.test.mjs\n M tests/mobile-fortress.test.mjs\n M tests/mothership.test.mjs\n?? reports/campaign-integration/\n?? tests/helpers/campaign-routes.mjs\n?? tools/campaign-integration.mjs"
+  },
+  "cases": [
+    {
+      "id": "CHAIN-M01",
+      "mode": "ASSISTED",
+      "mission": "M01",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 80.68333333333004,
+      "frames": 4851,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4100,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 121,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "boss",
+          "hp": 0
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03"
+      ],
+      "storedClear": [
+        "M01"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M02",
+      "mode": "ASSISTED",
+      "mission": "M02",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 81.48333333333,
+      "frames": 4889,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 4947.583333333357,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 28,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": -8
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05"
+      ],
+      "storedClear": [
+        "M01",
+        "M02"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M03",
+      "mode": "ASSISTED",
+      "mission": "M03",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 98.41666666666237,
+      "frames": 5905,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5987.249999999794,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 42,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 900,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "leviathan",
+          "hp": -4
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M04",
+      "mode": "ASSISTED",
+      "mission": "M04",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 155.01666666668217,
+      "frames": 9301,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 6577.583333332942,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 43,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 7461,
+      "parts": [
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "turret",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "skydevice",
+          "kind": "generator",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "fortress",
+          "hp": 0
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20",
+        "D-19",
+        "T-06",
+        "X-11"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03",
+        "M04"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M05",
+      "mode": "ASSISTED",
+      "mission": "M05",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 277.78333333340936,
+      "frames": 16667,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7414.733333332886,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 87,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 16886,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "left",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "basedevice",
+          "kind": "right",
+          "hp": 0,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "reactor",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20",
+        "D-19",
+        "T-06",
+        "X-11",
+        "M-18",
+        "H-08",
+        "R-10"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M06",
+      "mode": "ASSISTED",
+      "mission": "M06",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 168.81666666669315,
+      "frames": 10129,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 7399.116666666267,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 18,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 8685,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "left",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "neuralnode",
+          "kind": "right",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [
+        {
+          "type": "neuralheart",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20",
+        "D-19",
+        "T-06",
+        "X-11",
+        "M-18",
+        "H-08",
+        "R-10"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M07",
+      "mode": "ASSISTED",
+      "mission": "M07",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 172.86666666669637,
+      "frames": 10372,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 8431.916666666131,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 16,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "result",
+      "warningsObserved": 7938,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": -4,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": -4,
+          "dead": true
+        }
+      ],
+      "bosses": [
+        {
+          "type": "commandcore",
+          "hp": 0,
+          "shielded": false
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20",
+        "D-19",
+        "T-06",
+        "X-11",
+        "M-18",
+        "H-08",
+        "R-10"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-M08",
+      "mode": "ASSISTED",
+      "mission": "M08",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "player.invuln=3600; no warp, HP edits or direct clear",
+      "seconds": 291.8000000000633,
+      "frames": 17508,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 9128.583333333065,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 100,
+      "damage": 0,
+      "hits": 0,
+      "lastHit": null,
+      "kills": 8,
+      "bossReached": true,
+      "bossDefeated": true,
+      "outcome": "ending",
+      "warningsObserved": 12292,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "overmind",
+          "hp": 0,
+          "form": 3,
+          "shielded": false
+        }
+      ],
+      "storedWeapons": [
+        "A-01",
+        "S-02",
+        "P-13",
+        "R-04",
+        "G-07",
+        "P-12",
+        "L-03",
+        "F-15",
+        "B-09",
+        "F-05",
+        "T-16",
+        "S-17",
+        "G-14",
+        "M-20",
+        "D-19",
+        "T-06",
+        "X-11",
+        "M-18",
+        "H-08",
+        "R-10"
+      ],
+      "storedClear": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05",
+        "M06",
+        "M07",
+        "M08"
+      ],
+      "saveWrites": true,
+      "reload": true,
+      "status": "PASS"
+    },
+    {
+      "id": "CHAIN-COMPLETE-REPLAY",
+      "mode": "ASSISTED",
+      "campaignComplete": true,
+      "replayNoReward": true,
+      "status": "PASS"
+    }
+  ],
+  "issues": [],
+  "unperformed": [
+    "HUMAN: all eight normal-difficulty manual clears",
+    "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
+  ],
+  "finishedAt": "2026-11-01T00:06:20.636Z",
+  "summary": {
+    "total": 9,
+    "pass": 9,
+    "fail": 0,
+    "notCleared": 0,
+    "unperformed": 2
+  }
+}

@@ -12,8 +12,8 @@ const route="const p=game.player;input.right=true;input.left=false;const obstacl
 
 test('legacy M03 clear unlocks M04; M07 unavailable; death/retry retains progression',()=>{
   const old=sanitizeSave({version:1,cleared:['M01','M02','M03'],unlocked:['R-04'],equipped:['A-01','R-04']});
-  assert.ok(canPlayMission('M04',old));assert.equal(missionStatus(MISSIONS[6],old),'COMING SOON');assert.equal(canPlayMission('M05',old),false);
-  const r=runtime(old),saved=r.storage.get(SAVE_KEY);r.run("startMission('M04');game.player.hp=0;update(1/60)");r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M04');assert.equal(r.storage.get(SAVE_KEY),saved);
+  assert.ok(canPlayMission('M04',old));assert.equal(missionStatus(MISSIONS[6],old),'LOCKED');assert.equal(canPlayMission('M05',old),false);
+  const r=runtime(old),saved=r.storage.get(SAVE_KEY);r.run("startMission('M04');game.player.hp=0;update(1/60)");r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M04');const after=JSON.parse(r.storage.get(SAVE_KEY)),before=JSON.parse(saved);assert.deepEqual(after.clearedMissions,before.clearedMissions);assert.deepEqual(after.unlockedMissions,before.unlockedMissions);assert.deepEqual(after.unlocked,before.unlocked);assert.equal(after.campaignStats.classes.RANGER.sorties,2);assert.equal(after.campaignStats.classes.RANGER.gameOvers,1);
 });
 for(const id of Object.keys(PLAYER_CLASSES))test('M04 '+id+': real movement reaches all areas without warp',t=>{
   const r=lab();start(r,0,'A',id);r.run("for(let i=0;i<18000&&state==='play';i++){"+route+"update(1/60)}");

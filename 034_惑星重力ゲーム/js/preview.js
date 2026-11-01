@@ -1,4 +1,5 @@
 import { DEFAULT_PHYSICS, createSimulation, stepSimulation } from './physics.js';
+import {observeApproach} from './navigation-feedback.js';
 
 export const PREVIEW_KEY = 'orbit-maker.preview';
 export function loadPreviewEnabled(storage) {
@@ -20,7 +21,9 @@ export function createPreview(stage, velocity, maxSteps = Math.ceil((stage.previ
 export function advancePreview(job, budget = 120, deadline = Infinity) {
   let count = 0;
   while (!job.done && count < budget && performance.now() < deadline) {
+    const previous=job.state;
     job.state = stepSimulation(job.state, DEFAULT_PHYSICS.fixedTimeStep);
+    job.approach=observeApproach(job.approach,previous,job.state);
     job.steps++; count++;
     job.done = job.state.status !== 'flying' || job.steps >= job.maxSteps;
     if(job.steps%job.sampleEvery===0||job.done)job.points.push({ ...job.state.rocket.position, time: job.state.elapsed });

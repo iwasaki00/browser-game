@@ -10,18 +10,8 @@ const lab=()=>{const r=runtime(seed(),{debug:true,recordDraw:false});r.click('te
 function start(r,area=0,mode='C',id='RANGER'){if(r.run('state')==='play')r.click('lab-open');r.change('labPreset',id);r.change('labValidation',mode);r.change('labStageArea',String(area));r.click('lab-stage-start')}
 // Input-only route controller. It never writes player coordinates, enemy HP,
 // gate state, cooldowns, energy or progression after the chosen start.
-export const livingRoute=`const p=game.player;input.right=true;input.left=false;input.jump=false;input.up=false;input.hover=false;input.special=false;
-const obstacle=game.platforms.some(b=>b.active!==false&&!b.gate&&b.kind==='biorib'&&p.x+35>=b.x&&p.x-7<b.x+b.w&&p.y+32>b.y+.5);
-input.jump=p.onGround&&obstacle;input.up=p.classId==='WING'&&obstacle;
-const b=game.enemies.find(e=>e.type==='neuralheart'&&!e.dead),m=game.living;
-let target=null;
-if(b){target=b.shielded?nearestEnemy(m.nodes.filter(n=>n.stoppedUntil<=game.time),p.x,p.y):b;
- if(target){const desired=target.x-70;input.right=p.x<desired-3;input.left=p.x>desired+3;input.jump=input.up=false}}
-else if(m.shell&&!m.shell.dead&&Math.abs(m.shell.x-p.x)<300){target=m.shell;input.right=p.x<target.x-70}
-else if(p.x>5400&&p.x<5820&&m.networkState!=='DISABLED'){target=m.nodes.find(n=>n.partKind==='network');input.right=p.x<target.x-70}
-else target=nearestEnemy(game.enemies.filter(e=>!e.fixedDevice),p.x,p.y,200);
-const point=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=point.x-p.x-18,dy=point.y-p.y-13,len=Math.hypot(dx,dy)||1;
-input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;`;
+import {M06Route as livingRoute} from './helpers/campaign-routes.mjs';
+export {livingRoute};
 
 test('legacy M05 clear unlocks M06 with old records intact; M07 cannot run; death retry is monotonic',()=>{
  const s=sanitizeSave({...seed(),version:1,unlocked:['A-01','S-02','R-04'],selectedClass:'GUARDIAN',missionStats:{M05:{highScore:555,bestTime:250,kills:34}}});assert.ok(canPlayMission('M06',s));assert.equal(missionStatus(MISSIONS.find(m=>m.id==='M08'),s),'LOCKED');assert.equal(s.missionStats.M05.kills,34);

@@ -1,0 +1,2054 @@
+[
+  {
+    "id": "stage-01",
+    "flightSeconds": 2.9333333333333256,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 176,
+        "scheduledWallSeconds": 2.933333333333333,
+        "cpuMs": 2.33659999999999,
+        "effective": 0.9999999999999974
+      },
+      {
+        "rate": 10,
+        "frames": 18,
+        "scheduledWallSeconds": 0.3,
+        "cpuMs": 0.9558999999999997,
+        "effective": 9.777777777777752
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.35370000000000346,
+        "effective": 87.99999999999977
+      }
+    ]
+  },
+  {
+    "id": "stage-02",
+    "flightSeconds": 3.0999999999999917,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 186,
+        "scheduledWallSeconds": 3.1,
+        "cpuMs": 1.0095000000000027,
+        "effective": 0.9999999999999972
+      },
+      {
+        "rate": 10,
+        "frames": 19,
+        "scheduledWallSeconds": 0.31666666666666665,
+        "cpuMs": 0.4122000000000128,
+        "effective": 9.7894736842105
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.24289999999999168,
+        "effective": 92.99999999999974
+      }
+    ]
+  },
+  {
+    "id": "stage-03",
+    "flightSeconds": 2.6249999999999933,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 158,
+        "scheduledWallSeconds": 2.6333333333333333,
+        "cpuMs": 0.5137999999999749,
+        "effective": 0.9968354430379721
+      },
+      {
+        "rate": 10,
+        "frames": 16,
+        "scheduledWallSeconds": 0.26666666666666666,
+        "cpuMs": 0.13659999999998718,
+        "effective": 9.843749999999975
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.1297999999999888,
+        "effective": 78.7499999999998
+      }
+    ]
+  },
+  {
+    "id": "stage-04",
+    "flightSeconds": 3.2666666666666577,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 196,
+        "scheduledWallSeconds": 3.2666666666666666,
+        "cpuMs": 0.19780000000000086,
+        "effective": 0.9999999999999973
+      },
+      {
+        "rate": 10,
+        "frames": 20,
+        "scheduledWallSeconds": 0.3333333333333333,
+        "cpuMs": 0.5596999999999923,
+        "effective": 9.799999999999974
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.18530000000001223,
+        "effective": 97.99999999999973
+      }
+    ]
+  },
+  {
+    "id": "stage-05",
+    "flightSeconds": 2.724999999999993,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 164,
+        "scheduledWallSeconds": 2.7333333333333334,
+        "cpuMs": 0.3785999999999774,
+        "effective": 0.9969512195121926
+      },
+      {
+        "rate": 10,
+        "frames": 17,
+        "scheduledWallSeconds": 0.2833333333333333,
+        "cpuMs": 0.28889999999998395,
+        "effective": 9.617647058823504
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.4375,
+        "effective": 81.74999999999979
+      }
+    ]
+  },
+  {
+    "id": "stage-06",
+    "flightSeconds": 2.941666666666659,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 177,
+        "scheduledWallSeconds": 2.95,
+        "cpuMs": 0.5061000000000035,
+        "effective": 0.9971751412429352
+      },
+      {
+        "rate": 10,
+        "frames": 18,
+        "scheduledWallSeconds": 0.3,
+        "cpuMs": 0.29849999999999,
+        "effective": 9.80555555555553
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.23159999999998604,
+        "effective": 88.24999999999977
+      }
+    ]
+  },
+  {
+    "id": "stage-07",
+    "flightSeconds": 3.0166666666666586,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 181,
+        "scheduledWallSeconds": 3.0166666666666666,
+        "cpuMs": 0.26200000000000045,
+        "effective": 0.9999999999999973
+      },
+      {
+        "rate": 10,
+        "frames": 19,
+        "scheduledWallSeconds": 0.31666666666666665,
+        "cpuMs": 0.6204999999999927,
+        "effective": 9.52631578947366
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.23829999999998108,
+        "effective": 90.49999999999976
+      }
+    ]
+  },
+  {
+    "id": "stage-08",
+    "flightSeconds": 3.0166666666666586,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 181,
+        "scheduledWallSeconds": 3.0166666666666666,
+        "cpuMs": 0.2539000000000158,
+        "effective": 0.9999999999999973
+      },
+      {
+        "rate": 10,
+        "frames": 19,
+        "scheduledWallSeconds": 0.31666666666666665,
+        "cpuMs": 0.24160000000000537,
+        "effective": 9.52631578947366
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.5937000000000126,
+        "effective": 90.49999999999976
+      }
+    ]
+  },
+  {
+    "id": "stage-09",
+    "flightSeconds": 3.033333333333325,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 182,
+        "scheduledWallSeconds": 3.033333333333333,
+        "cpuMs": 0.6383000000000152,
+        "effective": 0.9999999999999973
+      },
+      {
+        "rate": 10,
+        "frames": 19,
+        "scheduledWallSeconds": 0.31666666666666665,
+        "cpuMs": 0.379099999999994,
+        "effective": 9.578947368421028
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.6425999999999874,
+        "effective": 90.99999999999976
+      }
+    ]
+  },
+  {
+    "id": "stage-10",
+    "flightSeconds": 2.316666666666661,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 139,
+        "scheduledWallSeconds": 2.316666666666667,
+        "cpuMs": 0.4435000000000002,
+        "effective": 0.9999999999999976
+      },
+      {
+        "rate": 10,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 0.247099999999989,
+        "effective": 9.928571428571404
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.20409999999998263,
+        "effective": 69.49999999999983
+      }
+    ]
+  },
+  {
+    "id": "stage-11",
+    "flightSeconds": 2.199999999999995,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 132,
+        "scheduledWallSeconds": 2.2,
+        "cpuMs": 0.4753000000000043,
+        "effective": 0.9999999999999976
+      },
+      {
+        "rate": 10,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 0.4397000000000162,
+        "effective": 9.428571428571406
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.8160000000000025,
+        "effective": 65.99999999999984
+      }
+    ]
+  },
+  {
+    "id": "stage-12",
+    "flightSeconds": 1.8666666666666625,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 112,
+        "scheduledWallSeconds": 1.8666666666666667,
+        "cpuMs": 0.21010000000001128,
+        "effective": 0.9999999999999978
+      },
+      {
+        "rate": 10,
+        "frames": 12,
+        "scheduledWallSeconds": 0.2,
+        "cpuMs": 0.09770000000000323,
+        "effective": 9.333333333333313
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.095799999999997,
+        "effective": 55.99999999999987
+      }
+    ]
+  },
+  {
+    "id": "stage-13",
+    "flightSeconds": 2.391666666666661,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 144,
+        "scheduledWallSeconds": 2.4,
+        "cpuMs": 0.18779999999998154,
+        "effective": 0.9965277777777753
+      },
+      {
+        "rate": 10,
+        "frames": 15,
+        "scheduledWallSeconds": 0.25,
+        "cpuMs": 0.3984000000000094,
+        "effective": 9.566666666666643
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.11840000000000828,
+        "effective": 71.74999999999983
+      }
+    ]
+  },
+  {
+    "id": "stage-14",
+    "flightSeconds": 1.741666666666663,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 105,
+        "scheduledWallSeconds": 1.75,
+        "cpuMs": 0.398399999999981,
+        "effective": 0.9952380952380931
+      },
+      {
+        "rate": 10,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 0.5602000000000089,
+        "effective": 9.49999999999998
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.3002999999999929,
+        "effective": 52.249999999999886
+      }
+    ]
+  },
+  {
+    "id": "stage-15",
+    "flightSeconds": 2.1583333333333283,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 130,
+        "scheduledWallSeconds": 2.1666666666666665,
+        "cpuMs": 0.2727000000000146,
+        "effective": 0.996153846153844
+      },
+      {
+        "rate": 10,
+        "frames": 13,
+        "scheduledWallSeconds": 0.21666666666666667,
+        "cpuMs": 0.48799999999999955,
+        "effective": 9.961538461538439
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.21860000000000923,
+        "effective": 64.74999999999986
+      }
+    ]
+  },
+  {
+    "id": "stage-16",
+    "flightSeconds": 2.1583333333333283,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 130,
+        "scheduledWallSeconds": 2.1666666666666665,
+        "cpuMs": 0.2553000000000054,
+        "effective": 0.996153846153844
+      },
+      {
+        "rate": 10,
+        "frames": 13,
+        "scheduledWallSeconds": 0.21666666666666667,
+        "cpuMs": 0.23609999999999332,
+        "effective": 9.961538461538439
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.23610000000002174,
+        "effective": 64.74999999999986
+      }
+    ]
+  },
+  {
+    "id": "stage-17",
+    "flightSeconds": 1.8583333333333292,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 112,
+        "scheduledWallSeconds": 1.8666666666666667,
+        "cpuMs": 0.24789999999998713,
+        "effective": 0.9955357142857121
+      },
+      {
+        "rate": 10,
+        "frames": 12,
+        "scheduledWallSeconds": 0.2,
+        "cpuMs": 0.21330000000000382,
+        "effective": 9.291666666666645
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.17259999999998854,
+        "effective": 55.74999999999988
+      }
+    ]
+  },
+  {
+    "id": "stage-18",
+    "flightSeconds": 1.7333333333333296,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 104,
+        "scheduledWallSeconds": 1.7333333333333334,
+        "cpuMs": 0.08949999999998681,
+        "effective": 0.9999999999999978
+      },
+      {
+        "rate": 10,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 0.0811000000000206,
+        "effective": 9.454545454545435
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.07270000000002597,
+        "effective": 51.999999999999886
+      }
+    ]
+  },
+  {
+    "id": "stage-19",
+    "flightSeconds": 1.741666666666663,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 105,
+        "scheduledWallSeconds": 1.75,
+        "cpuMs": 0.23929999999998586,
+        "effective": 0.9952380952380931
+      },
+      {
+        "rate": 10,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 0.21590000000000487,
+        "effective": 9.49999999999998
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 0.19180000000000064,
+        "effective": 52.249999999999886
+      }
+    ]
+  },
+  {
+    "id": "stage-20",
+    "flightSeconds": 1.5916666666666635,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 96,
+        "scheduledWallSeconds": 1.6,
+        "cpuMs": 0.1787999999999954,
+        "effective": 0.9947916666666646
+      },
+      {
+        "rate": 10,
+        "frames": 10,
+        "scheduledWallSeconds": 0.16666666666666666,
+        "cpuMs": 0.14269999999999072,
+        "effective": 9.549999999999981
+      },
+      {
+        "rate": 100,
+        "frames": 1,
+        "scheduledWallSeconds": 0.016666666666666666,
+        "cpuMs": 0.143100000000004,
+        "effective": 95.49999999999982
+      }
+    ]
+  },
+  {
+    "id": "homeward-01",
+    "flightSeconds": 17.749999999999634,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1065,
+        "scheduledWallSeconds": 17.75,
+        "cpuMs": 4.848000000000013,
+        "effective": 0.9999999999999793
+      },
+      {
+        "rate": 10,
+        "frames": 107,
+        "scheduledWallSeconds": 1.7833333333333334,
+        "cpuMs": 2.3818999999999733,
+        "effective": 9.953271028037177
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 2.2324000000000126,
+        "effective": 96.81818181817982
+      }
+    ]
+  },
+  {
+    "id": "homeward-02",
+    "flightSeconds": 17.73333333333297,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1064,
+        "scheduledWallSeconds": 17.733333333333334,
+        "cpuMs": 2.0811000000000206,
+        "effective": 0.9999999999999793
+      },
+      {
+        "rate": 10,
+        "frames": 107,
+        "scheduledWallSeconds": 1.7833333333333334,
+        "cpuMs": 1.979299999999995,
+        "effective": 9.943925233644654
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 2.8711000000000126,
+        "effective": 96.72727272727074
+      }
+    ]
+  },
+  {
+    "id": "homeward-03",
+    "flightSeconds": 17.64999999999964,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1059,
+        "scheduledWallSeconds": 17.65,
+        "cpuMs": 2.9022999999999968,
+        "effective": 0.9999999999999797
+      },
+      {
+        "rate": 10,
+        "frames": 106,
+        "scheduledWallSeconds": 1.7666666666666666,
+        "cpuMs": 2.5139999999999816,
+        "effective": 9.990566037735645
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 1.9630999999999972,
+        "effective": 96.27272727272532
+      }
+    ]
+  },
+  {
+    "id": "homeward-04",
+    "flightSeconds": 4.275000000000002,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 257,
+        "scheduledWallSeconds": 4.283333333333333,
+        "cpuMs": 4.490499999999997,
+        "effective": 0.9980544747081718
+      },
+      {
+        "rate": 10,
+        "frames": 26,
+        "scheduledWallSeconds": 0.43333333333333335,
+        "cpuMs": 2.5892000000000053,
+        "effective": 9.86538461538462
+      },
+      {
+        "rate": 100,
+        "frames": 3,
+        "scheduledWallSeconds": 0.05,
+        "cpuMs": 2.139499999999998,
+        "effective": 85.50000000000004
+      }
+    ]
+  },
+  {
+    "id": "homeward-05",
+    "flightSeconds": 4.300000000000003,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 258,
+        "scheduledWallSeconds": 4.3,
+        "cpuMs": 2.187999999999988,
+        "effective": 1.0000000000000009
+      },
+      {
+        "rate": 10,
+        "frames": 26,
+        "scheduledWallSeconds": 0.43333333333333335,
+        "cpuMs": 1.9214000000000055,
+        "effective": 9.92307692307693
+      },
+      {
+        "rate": 100,
+        "frames": 3,
+        "scheduledWallSeconds": 0.05,
+        "cpuMs": 3.2503000000000384,
+        "effective": 86.00000000000006
+      }
+    ]
+  },
+  {
+    "id": "homeward-06",
+    "flightSeconds": 5.6500000000000705,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 339,
+        "scheduledWallSeconds": 5.65,
+        "cpuMs": 2.2291999999999916,
+        "effective": 1.0000000000000124
+      },
+      {
+        "rate": 10,
+        "frames": 34,
+        "scheduledWallSeconds": 0.5666666666666667,
+        "cpuMs": 1.7309999999999945,
+        "effective": 9.970588235294242
+      },
+      {
+        "rate": 100,
+        "frames": 4,
+        "scheduledWallSeconds": 0.06666666666666667,
+        "cpuMs": 1.9698000000000206,
+        "effective": 84.75000000000107
+      }
+    ]
+  },
+  {
+    "id": "homeward-07",
+    "flightSeconds": 4.683333333333356,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 281,
+        "scheduledWallSeconds": 4.683333333333334,
+        "cpuMs": 2.407299999999964,
+        "effective": 1.0000000000000047
+      },
+      {
+        "rate": 10,
+        "frames": 29,
+        "scheduledWallSeconds": 0.48333333333333334,
+        "cpuMs": 2.23539999999997,
+        "effective": 9.68965517241384
+      },
+      {
+        "rate": 100,
+        "frames": 3,
+        "scheduledWallSeconds": 0.05,
+        "cpuMs": 1.5729000000000042,
+        "effective": 93.66666666666711
+      }
+    ]
+  },
+  {
+    "id": "homeward-08",
+    "flightSeconds": 4.7916666666666945,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 288,
+        "scheduledWallSeconds": 4.8,
+        "cpuMs": 1.2439999999999714,
+        "effective": 0.9982638888888947
+      },
+      {
+        "rate": 10,
+        "frames": 29,
+        "scheduledWallSeconds": 0.48333333333333334,
+        "cpuMs": 1.0932000000000244,
+        "effective": 9.913793103448333
+      },
+      {
+        "rate": 100,
+        "frames": 3,
+        "scheduledWallSeconds": 0.05,
+        "cpuMs": 1.0751999999999953,
+        "effective": 95.83333333333388
+      }
+    ]
+  },
+  {
+    "id": "09:origin>gate",
+    "flightSeconds": 20.324999999999488,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1220,
+        "scheduledWallSeconds": 20.333333333333332,
+        "cpuMs": 13.954400000000021,
+        "effective": 0.9995901639344011
+      },
+      {
+        "rate": 10,
+        "frames": 122,
+        "scheduledWallSeconds": 2.033333333333333,
+        "cpuMs": 11.898599999999988,
+        "effective": 9.99590163934401
+      },
+      {
+        "rate": 100,
+        "frames": 13,
+        "scheduledWallSeconds": 0.21666666666666667,
+        "cpuMs": 11.933600000000013,
+        "effective": 93.80769230768993
+      }
+    ]
+  },
+  {
+    "id": "09:origin>rescue",
+    "flightSeconds": 6.100000000000093,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 366,
+        "scheduledWallSeconds": 6.1,
+        "cpuMs": 3.690400000000011,
+        "effective": 1.0000000000000153
+      },
+      {
+        "rate": 10,
+        "frames": 37,
+        "scheduledWallSeconds": 0.6166666666666667,
+        "cpuMs": 3.636699999999962,
+        "effective": 9.891891891892042
+      },
+      {
+        "rate": 100,
+        "frames": 4,
+        "scheduledWallSeconds": 0.06666666666666667,
+        "cpuMs": 4.043700000000001,
+        "effective": 91.50000000000139
+      }
+    ]
+  },
+  {
+    "id": "09:rescue>gate",
+    "flightSeconds": 14.724999999999804,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 884,
+        "scheduledWallSeconds": 14.733333333333333,
+        "cpuMs": 8.209000000000003,
+        "effective": 0.9994343891402583
+      },
+      {
+        "rate": 10,
+        "frames": 89,
+        "scheduledWallSeconds": 1.4833333333333334,
+        "cpuMs": 7.684399999999982,
+        "effective": 9.926966292134699
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 8.708100000000002,
+        "effective": 98.16666666666536
+      }
+    ]
+  },
+  {
+    "id": "09:origin>planet",
+    "flightSeconds": 14.499999999999817,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 870,
+        "scheduledWallSeconds": 14.5,
+        "cpuMs": 7.979199999999992,
+        "effective": 0.9999999999999873
+      },
+      {
+        "rate": 10,
+        "frames": 87,
+        "scheduledWallSeconds": 1.45,
+        "cpuMs": 7.248699999999985,
+        "effective": 9.999999999999874
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 7.188599999999951,
+        "effective": 96.66666666666545
+      }
+    ]
+  },
+  {
+    "id": "09:planet>gate",
+    "flightSeconds": 9.200000000000118,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 552,
+        "scheduledWallSeconds": 9.2,
+        "cpuMs": 6.143899999999974,
+        "effective": 1.0000000000000129
+      },
+      {
+        "rate": 10,
+        "frames": 56,
+        "scheduledWallSeconds": 0.9333333333333333,
+        "cpuMs": 5.338999999999999,
+        "effective": 9.857142857142984
+      },
+      {
+        "rate": 100,
+        "frames": 6,
+        "scheduledWallSeconds": 0.1,
+        "cpuMs": 4.363200000000006,
+        "effective": 92.00000000000118
+      }
+    ]
+  },
+  {
+    "id": "09:rescue>planet",
+    "flightSeconds": 10.083333333333401,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 605,
+        "scheduledWallSeconds": 10.083333333333334,
+        "cpuMs": 4.862799999999936,
+        "effective": 1.0000000000000067
+      },
+      {
+        "rate": 10,
+        "frames": 61,
+        "scheduledWallSeconds": 1.0166666666666666,
+        "cpuMs": 6.9997999999999365,
+        "effective": 9.918032786885313
+      },
+      {
+        "rate": 100,
+        "frames": 7,
+        "scheduledWallSeconds": 0.11666666666666667,
+        "cpuMs": 4.87740000000008,
+        "effective": 86.42857142857201
+      }
+    ]
+  },
+  {
+    "id": "09:planet>station",
+    "flightSeconds": 7.5333333333334975,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 452,
+        "scheduledWallSeconds": 7.533333333333333,
+        "cpuMs": 3.884700000000066,
+        "effective": 1.0000000000000218
+      },
+      {
+        "rate": 10,
+        "frames": 46,
+        "scheduledWallSeconds": 0.7666666666666667,
+        "cpuMs": 3.879099999999994,
+        "effective": 9.826086956521953
+      },
+      {
+        "rate": 100,
+        "frames": 5,
+        "scheduledWallSeconds": 0.08333333333333333,
+        "cpuMs": 3.629099999999994,
+        "effective": 90.40000000000198
+      }
+    ]
+  },
+  {
+    "id": "09:station>gate",
+    "flightSeconds": 2.9583333333333255,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 178,
+        "scheduledWallSeconds": 2.966666666666667,
+        "cpuMs": 1.4225000000000136,
+        "effective": 0.9971910112359523
+      },
+      {
+        "rate": 10,
+        "frames": 18,
+        "scheduledWallSeconds": 0.3,
+        "cpuMs": 1.575900000000047,
+        "effective": 9.861111111111086
+      },
+      {
+        "rate": 100,
+        "frames": 2,
+        "scheduledWallSeconds": 0.03333333333333333,
+        "cpuMs": 1.4097999999999047,
+        "effective": 88.74999999999977
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS01",
+    "flightSeconds": 11.075000000000012,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 665,
+        "scheduledWallSeconds": 11.083333333333334,
+        "cpuMs": 6.872500000000059,
+        "effective": 0.9992481203007528
+      },
+      {
+        "rate": 10,
+        "frames": 67,
+        "scheduledWallSeconds": 1.1166666666666667,
+        "cpuMs": 5.910699999999906,
+        "effective": 9.917910447761205
+      },
+      {
+        "rate": 100,
+        "frames": 7,
+        "scheduledWallSeconds": 0.11666666666666667,
+        "cpuMs": 6.096199999999953,
+        "effective": 94.92857142857153
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS01>return",
+    "flightSeconds": 47.208333333331296,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2833,
+        "scheduledWallSeconds": 47.21666666666667,
+        "cpuMs": 26.431299999999965,
+        "effective": 0.999823508648033
+      },
+      {
+        "rate": 10,
+        "frames": 284,
+        "scheduledWallSeconds": 4.733333333333333,
+        "cpuMs": 28.274,
+        "effective": 9.973591549295344
+      },
+      {
+        "rate": 100,
+        "frames": 29,
+        "scheduledWallSeconds": 0.48333333333333334,
+        "cpuMs": 26.708999999999946,
+        "effective": 97.67241379309924
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS02",
+    "flightSeconds": 23.258333333332654,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1396,
+        "scheduledWallSeconds": 23.266666666666666,
+        "cpuMs": 13.576599999999985,
+        "effective": 0.9996418338108591
+      },
+      {
+        "rate": 10,
+        "frames": 140,
+        "scheduledWallSeconds": 2.3333333333333335,
+        "cpuMs": 11.929499999999962,
+        "effective": 9.967857142856852
+      },
+      {
+        "rate": 100,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 12.020399999999995,
+        "effective": 99.67857142856852
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS02>return",
+    "flightSeconds": 34.89999999999866,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2094,
+        "scheduledWallSeconds": 34.9,
+        "cpuMs": 18.599399999999946,
+        "effective": 0.9999999999999617
+      },
+      {
+        "rate": 10,
+        "frames": 210,
+        "scheduledWallSeconds": 3.5,
+        "cpuMs": 20.035799999999995,
+        "effective": 9.97142857142819
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 18.464500000000044,
+        "effective": 99.7142857142819
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS03",
+    "flightSeconds": 34.233333333332034,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2054,
+        "scheduledWallSeconds": 34.233333333333334,
+        "cpuMs": 19.414800000000014,
+        "effective": 0.999999999999962
+      },
+      {
+        "rate": 10,
+        "frames": 206,
+        "scheduledWallSeconds": 3.433333333333333,
+        "cpuMs": 19.70769999999993,
+        "effective": 9.97087378640739
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 17.713300000000004,
+        "effective": 97.8095238095201
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS03>return",
+    "flightSeconds": 28.241666666665704,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1695,
+        "scheduledWallSeconds": 28.25,
+        "cpuMs": 18.18539999999996,
+        "effective": 0.9997050147492285
+      },
+      {
+        "rate": 10,
+        "frames": 170,
+        "scheduledWallSeconds": 2.8333333333333335,
+        "cpuMs": 20.691100000000006,
+        "effective": 9.96764705882319
+      },
+      {
+        "rate": 100,
+        "frames": 17,
+        "scheduledWallSeconds": 0.2833333333333333,
+        "cpuMs": 32.54500000000007,
+        "effective": 99.6764705882319
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS04",
+    "flightSeconds": 45.64999999999805,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2739,
+        "scheduledWallSeconds": 45.65,
+        "cpuMs": 48.42610000000013,
+        "effective": 0.9999999999999574
+      },
+      {
+        "rate": 10,
+        "frames": 274,
+        "scheduledWallSeconds": 4.566666666666666,
+        "cpuMs": 38.177900000000136,
+        "effective": 9.996350364963078
+      },
+      {
+        "rate": 100,
+        "frames": 28,
+        "scheduledWallSeconds": 0.4666666666666667,
+        "cpuMs": 27.11889999999994,
+        "effective": 97.82142857142439
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS04>return",
+    "flightSeconds": 14.724999999999804,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 884,
+        "scheduledWallSeconds": 14.733333333333333,
+        "cpuMs": 8.928199999999833,
+        "effective": 0.9994343891402583
+      },
+      {
+        "rate": 10,
+        "frames": 89,
+        "scheduledWallSeconds": 1.4833333333333334,
+        "cpuMs": 8.346199999999953,
+        "effective": 9.926966292134699
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 7.996699999999919,
+        "effective": 98.16666666666536
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS05",
+    "flightSeconds": 39.24166666666508,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2355,
+        "scheduledWallSeconds": 39.25,
+        "cpuMs": 27.0467000000001,
+        "effective": 0.9997876857749065
+      },
+      {
+        "rate": 10,
+        "frames": 236,
+        "scheduledWallSeconds": 3.933333333333333,
+        "cpuMs": 27.307000000000016,
+        "effective": 9.976694915253836
+      },
+      {
+        "rate": 100,
+        "frames": 24,
+        "scheduledWallSeconds": 0.4,
+        "cpuMs": 26.226200000000063,
+        "effective": 98.1041666666627
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS05>return",
+    "flightSeconds": 19.441666666666205,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1167,
+        "scheduledWallSeconds": 19.45,
+        "cpuMs": 13.846499999999878,
+        "effective": 0.9995715509854091
+      },
+      {
+        "rate": 10,
+        "frames": 117,
+        "scheduledWallSeconds": 1.95,
+        "cpuMs": 14.813599999999951,
+        "effective": 9.970085470085234
+      },
+      {
+        "rate": 100,
+        "frames": 12,
+        "scheduledWallSeconds": 0.2,
+        "cpuMs": 13.342699999999923,
+        "effective": 97.20833333333101
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>DS06",
+    "flightSeconds": 34.19166666666537,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2052,
+        "scheduledWallSeconds": 34.2,
+        "cpuMs": 29.192400000000134,
+        "effective": 0.9997563352826131
+      },
+      {
+        "rate": 10,
+        "frames": 206,
+        "scheduledWallSeconds": 3.433333333333333,
+        "cpuMs": 32.69920000000002,
+        "effective": 9.958737864077293
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 26.468599999999924,
+        "effective": 97.6904761904725
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS06>return",
+    "flightSeconds": 34.25833333333203,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2056,
+        "scheduledWallSeconds": 34.266666666666666,
+        "cpuMs": 34.08220000000006,
+        "effective": 0.9997568093384834
+      },
+      {
+        "rate": 10,
+        "frames": 206,
+        "scheduledWallSeconds": 3.433333333333333,
+        "cpuMs": 49.13800000000015,
+        "effective": 9.978155339805447
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 36.59069999999997,
+        "effective": 97.88095238094867
+      }
+    ]
+  },
+  {
+    "id": "DEEP:origin>return",
+    "flightSeconds": 57.108333333330734,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 3427,
+        "scheduledWallSeconds": 57.11666666666667,
+        "cpuMs": 58.60050000000001,
+        "effective": 0.9998540997956942
+      },
+      {
+        "rate": 10,
+        "frames": 343,
+        "scheduledWallSeconds": 5.716666666666667,
+        "cpuMs": 59.369699999999966,
+        "effective": 9.989795918366893
+      },
+      {
+        "rate": 100,
+        "frames": 35,
+        "scheduledWallSeconds": 0.5833333333333334,
+        "cpuMs": 48.27759999999989,
+        "effective": 97.89999999999554
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS01>DS02",
+    "flightSeconds": 12.424999999999935,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 746,
+        "scheduledWallSeconds": 12.433333333333334,
+        "cpuMs": 10.508100000000013,
+        "effective": 0.9993297587131315
+      },
+      {
+        "rate": 10,
+        "frames": 75,
+        "scheduledWallSeconds": 1.25,
+        "cpuMs": 9.13090000000011,
+        "effective": 9.939999999999948
+      },
+      {
+        "rate": 100,
+        "frames": 8,
+        "scheduledWallSeconds": 0.13333333333333333,
+        "cpuMs": 11.02410000000009,
+        "effective": 93.18749999999952
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS02>DS03",
+    "flightSeconds": 14.191666666666501,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 852,
+        "scheduledWallSeconds": 14.2,
+        "cpuMs": 26.549399999999878,
+        "effective": 0.9994131455398945
+      },
+      {
+        "rate": 10,
+        "frames": 86,
+        "scheduledWallSeconds": 1.4333333333333333,
+        "cpuMs": 28.4692,
+        "effective": 9.901162790697558
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 20.06979999999976,
+        "effective": 94.61111111111
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS03>DS04",
+    "flightSeconds": 14.058333333333175,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 844,
+        "scheduledWallSeconds": 14.066666666666666,
+        "cpuMs": 26.920399999999972,
+        "effective": 0.9994075829383774
+      },
+      {
+        "rate": 10,
+        "frames": 85,
+        "scheduledWallSeconds": 1.4166666666666667,
+        "cpuMs": 22.88670000000002,
+        "effective": 9.923529411764594
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 19.834499999999935,
+        "effective": 93.72222222222118
+      }
+    ]
+  },
+  {
+    "id": "DEEP:DS04>DS05",
+    "flightSeconds": 14.983333333333123,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 899,
+        "scheduledWallSeconds": 14.983333333333333,
+        "cpuMs": 12.43159999999989,
+        "effective": 0.999999999999986
+      },
+      {
+        "rate": 10,
+        "frames": 90,
+        "scheduledWallSeconds": 1.5,
+        "cpuMs": 13.654700000000048,
+        "effective": 9.988888888888749
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 13.070299999999861,
+        "effective": 99.8888888888875
+      }
+    ]
+  },
+  {
+    "id": "DEEP:return>DS06",
+    "flightSeconds": 33.84999999999872,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2031,
+        "scheduledWallSeconds": 33.85,
+        "cpuMs": 30.4708999999998,
+        "effective": 0.9999999999999623
+      },
+      {
+        "rate": 10,
+        "frames": 204,
+        "scheduledWallSeconds": 3.4,
+        "cpuMs": 33.62180000000035,
+        "effective": 9.955882352940801
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 27.472200000000157,
+        "effective": 96.71428571428207
+      }
+    ]
+  },
+  {
+    "id": "FINAL:origin>earth",
+    "flightSeconds": 56.474999999997436,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 3389,
+        "scheduledWallSeconds": 56.483333333333334,
+        "cpuMs": 65.80510000000004,
+        "effective": 0.9998524638535987
+      },
+      {
+        "rate": 10,
+        "frames": 339,
+        "scheduledWallSeconds": 5.65,
+        "cpuMs": 51.071699999999964,
+        "effective": 9.995575221238484
+      },
+      {
+        "rate": 100,
+        "frames": 34,
+        "scheduledWallSeconds": 0.5666666666666667,
+        "cpuMs": 55.74230000000034,
+        "effective": 99.66176470587783
+      }
+    ]
+  },
+  {
+    "id": "FINAL:origin>rescue",
+    "flightSeconds": 13.0499999999999,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 783,
+        "scheduledWallSeconds": 13.05,
+        "cpuMs": 11.370900000000347,
+        "effective": 0.9999999999999922
+      },
+      {
+        "rate": 10,
+        "frames": 79,
+        "scheduledWallSeconds": 1.3166666666666667,
+        "cpuMs": 11.791099999999915,
+        "effective": 9.911392405063214
+      },
+      {
+        "rate": 100,
+        "frames": 8,
+        "scheduledWallSeconds": 0.13333333333333333,
+        "cpuMs": 11.060899999999947,
+        "effective": 97.87499999999925
+      }
+    ]
+  },
+  {
+    "id": "FINAL:rescue>earth",
+    "flightSeconds": 45.31666666666474,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2719,
+        "scheduledWallSeconds": 45.31666666666667,
+        "cpuMs": 96.3746000000001,
+        "effective": 0.9999999999999574
+      },
+      {
+        "rate": 10,
+        "frames": 272,
+        "scheduledWallSeconds": 4.533333333333333,
+        "cpuMs": 102.16939999999977,
+        "effective": 9.99632352941134
+      },
+      {
+        "rate": 100,
+        "frames": 28,
+        "scheduledWallSeconds": 0.4666666666666667,
+        "cpuMs": 74.75979999999981,
+        "effective": 97.10714285713873
+      }
+    ]
+  },
+  {
+    "id": "FINAL:origin>network",
+    "flightSeconds": 26.499999999999137,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1590,
+        "scheduledWallSeconds": 26.5,
+        "cpuMs": 47.534799999999905,
+        "effective": 0.9999999999999675
+      },
+      {
+        "rate": 10,
+        "frames": 159,
+        "scheduledWallSeconds": 2.65,
+        "cpuMs": 48.99209999999994,
+        "effective": 9.999999999999675
+      },
+      {
+        "rate": 100,
+        "frames": 16,
+        "scheduledWallSeconds": 0.26666666666666666,
+        "cpuMs": 77.3110999999999,
+        "effective": 99.37499999999676
+      }
+    ]
+  },
+  {
+    "id": "FINAL:network>earth",
+    "flightSeconds": 33.916666666665385,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2035,
+        "scheduledWallSeconds": 33.916666666666664,
+        "cpuMs": 64.42210000000023,
+        "effective": 0.9999999999999623
+      },
+      {
+        "rate": 10,
+        "frames": 204,
+        "scheduledWallSeconds": 3.4,
+        "cpuMs": 75.22299999999996,
+        "effective": 9.975490196078054
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 73.11460000000034,
+        "effective": 96.90476190475825
+      }
+    ]
+  },
+  {
+    "id": "FINAL:network>passage",
+    "flightSeconds": 14.141666666666504,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 849,
+        "scheduledWallSeconds": 14.15,
+        "cpuMs": 28.40399999999954,
+        "effective": 0.9994110718492228
+      },
+      {
+        "rate": 10,
+        "frames": 85,
+        "scheduledWallSeconds": 1.4166666666666667,
+        "cpuMs": 30.64350000000013,
+        "effective": 9.982352941176355
+      },
+      {
+        "rate": 100,
+        "frames": 9,
+        "scheduledWallSeconds": 0.15,
+        "cpuMs": 33.48019999999997,
+        "effective": 94.27777777777669
+      }
+    ]
+  },
+  {
+    "id": "FINAL:origin>observatory",
+    "flightSeconds": 33.84999999999872,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2031,
+        "scheduledWallSeconds": 33.85,
+        "cpuMs": 82.23599999999988,
+        "effective": 0.9999999999999623
+      },
+      {
+        "rate": 10,
+        "frames": 204,
+        "scheduledWallSeconds": 3.4,
+        "cpuMs": 87.04670000000078,
+        "effective": 9.955882352940801
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 70.3136000000004,
+        "effective": 96.71428571428207
+      }
+    ]
+  },
+  {
+    "id": "FINAL:observatory>berth",
+    "flightSeconds": 23.19166666666599,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1392,
+        "scheduledWallSeconds": 23.2,
+        "cpuMs": 41.09349999999995,
+        "effective": 0.9996408045976721
+      },
+      {
+        "rate": 10,
+        "frames": 140,
+        "scheduledWallSeconds": 2.3333333333333335,
+        "cpuMs": 75.4416999999994,
+        "effective": 9.939285714285424
+      },
+      {
+        "rate": 100,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 67.42160000000058,
+        "effective": 99.39285714285425
+      }
+    ]
+  },
+  {
+    "id": "FINAL:berth>earth",
+    "flightSeconds": 10.583333333333373,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 635,
+        "scheduledWallSeconds": 10.583333333333334,
+        "cpuMs": 33.89930000000004,
+        "effective": 1.0000000000000038
+      },
+      {
+        "rate": 10,
+        "frames": 64,
+        "scheduledWallSeconds": 1.0666666666666667,
+        "cpuMs": 19.187999999999192,
+        "effective": 9.921875000000037
+      },
+      {
+        "rate": 100,
+        "frames": 7,
+        "scheduledWallSeconds": 0.11666666666666667,
+        "cpuMs": 18.445600000000013,
+        "effective": 90.71428571428605
+      }
+    ]
+  },
+  {
+    "id": "FINAL:passage>earth",
+    "flightSeconds": 22.991666666666003,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1380,
+        "scheduledWallSeconds": 23,
+        "cpuMs": 54.31910000000062,
+        "effective": 0.9996376811593914
+      },
+      {
+        "rate": 10,
+        "frames": 138,
+        "scheduledWallSeconds": 2.3,
+        "cpuMs": 62.686799999999494,
+        "effective": 9.996376811593915
+      },
+      {
+        "rate": 100,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 42.79809999999998,
+        "effective": 98.53571428571144
+      }
+    ]
+  },
+  {
+    "id": "FINAL:earth>network",
+    "flightSeconds": 34.233333333332034,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2054,
+        "scheduledWallSeconds": 34.233333333333334,
+        "cpuMs": 73.11110000000008,
+        "effective": 0.999999999999962
+      },
+      {
+        "rate": 10,
+        "frames": 206,
+        "scheduledWallSeconds": 3.433333333333333,
+        "cpuMs": 68.00980000000072,
+        "effective": 9.97087378640739
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 76.03890000000047,
+        "effective": 97.8095238095201
+      }
+    ]
+  },
+  {
+    "id": "FINAL:earth>rescue",
+    "flightSeconds": 45.64999999999805,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2739,
+        "scheduledWallSeconds": 45.65,
+        "cpuMs": 118.0009,
+        "effective": 0.9999999999999574
+      },
+      {
+        "rate": 10,
+        "frames": 274,
+        "scheduledWallSeconds": 4.566666666666666,
+        "cpuMs": 111.28200000000015,
+        "effective": 9.996350364963078
+      },
+      {
+        "rate": 100,
+        "frames": 28,
+        "scheduledWallSeconds": 0.4666666666666667,
+        "cpuMs": 103.4371999999994,
+        "effective": 97.82142857142439
+      }
+    ]
+  },
+  {
+    "id": "FINAL:earth>observatory",
+    "flightSeconds": 34.19166666666537,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2052,
+        "scheduledWallSeconds": 34.2,
+        "cpuMs": 70.08529999999973,
+        "effective": 0.9997563352826131
+      },
+      {
+        "rate": 10,
+        "frames": 206,
+        "scheduledWallSeconds": 3.433333333333333,
+        "cpuMs": 75.61719999999968,
+        "effective": 9.958737864077293
+      },
+      {
+        "rate": 100,
+        "frames": 21,
+        "scheduledWallSeconds": 0.35,
+        "cpuMs": 90.23019999999997,
+        "effective": 97.6904761904725
+      }
+    ]
+  },
+  {
+    "id": "FINAL:observatory>earth",
+    "flightSeconds": 32.99999999999877,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1980,
+        "scheduledWallSeconds": 33,
+        "cpuMs": 91.79539999999997,
+        "effective": 0.9999999999999627
+      },
+      {
+        "rate": 10,
+        "frames": 198,
+        "scheduledWallSeconds": 3.3,
+        "cpuMs": 90.07639999999992,
+        "effective": 9.999999999999629
+      },
+      {
+        "rate": 100,
+        "frames": 20,
+        "scheduledWallSeconds": 0.3333333333333333,
+        "cpuMs": 81.69859999999971,
+        "effective": 98.99999999999632
+      }
+    ]
+  },
+  {
+    "id": "FINAL:origin>relay",
+    "flightSeconds": 42.833333333331545,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 2570,
+        "scheduledWallSeconds": 42.833333333333336,
+        "cpuMs": 101.42420000000038,
+        "effective": 0.9999999999999581
+      },
+      {
+        "rate": 10,
+        "frames": 257,
+        "scheduledWallSeconds": 4.283333333333333,
+        "cpuMs": 93.48419999999987,
+        "effective": 9.999999999999583
+      },
+      {
+        "rate": 100,
+        "frames": 26,
+        "scheduledWallSeconds": 0.43333333333333335,
+        "cpuMs": 84.18069999999989,
+        "effective": 98.84615384614972
+      }
+    ]
+  },
+  {
+    "id": "FINAL:relay>berth",
+    "flightSeconds": 28.333333333332366,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1700,
+        "scheduledWallSeconds": 28.333333333333332,
+        "cpuMs": 85.61920000000009,
+        "effective": 0.9999999999999659
+      },
+      {
+        "rate": 10,
+        "frames": 170,
+        "scheduledWallSeconds": 2.8333333333333335,
+        "cpuMs": 74.45859999999993,
+        "effective": 9.999999999999657
+      },
+      {
+        "rate": 100,
+        "frames": 17,
+        "scheduledWallSeconds": 0.2833333333333333,
+        "cpuMs": 72.34429999999975,
+        "effective": 99.99999999999659
+      }
+    ]
+  },
+  {
+    "id": "FINAL:earth>passage",
+    "flightSeconds": 23.258333333332654,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1396,
+        "scheduledWallSeconds": 23.266666666666666,
+        "cpuMs": 58.88559999999961,
+        "effective": 0.9996418338108591
+      },
+      {
+        "rate": 10,
+        "frames": 140,
+        "scheduledWallSeconds": 2.3333333333333335,
+        "cpuMs": 87.32779999999912,
+        "effective": 9.967857142856852
+      },
+      {
+        "rate": 100,
+        "frames": 14,
+        "scheduledWallSeconds": 0.23333333333333334,
+        "cpuMs": 87.18239999999969,
+        "effective": 99.67857142856852
+      }
+    ]
+  },
+  {
+    "id": "FINAL:passage>observatory",
+    "flightSeconds": 20.499999999999478,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1230,
+        "scheduledWallSeconds": 20.5,
+        "cpuMs": 64.09469999999965,
+        "effective": 0.9999999999999746
+      },
+      {
+        "rate": 10,
+        "frames": 123,
+        "scheduledWallSeconds": 2.05,
+        "cpuMs": 50.11269999999968,
+        "effective": 9.999999999999746
+      },
+      {
+        "rate": 100,
+        "frames": 13,
+        "scheduledWallSeconds": 0.21666666666666667,
+        "cpuMs": 59.02140000000145,
+        "effective": 94.6153846153822
+      }
+    ]
+  },
+  {
+    "id": "FINAL:observatory>network",
+    "flightSeconds": 29.416666666665638,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1765,
+        "scheduledWallSeconds": 29.416666666666668,
+        "cpuMs": 72.30019999999968,
+        "effective": 0.999999999999965
+      },
+      {
+        "rate": 10,
+        "frames": 177,
+        "scheduledWallSeconds": 2.95,
+        "cpuMs": 78.75880000000143,
+        "effective": 9.971751412429029
+      },
+      {
+        "rate": 100,
+        "frames": 18,
+        "scheduledWallSeconds": 0.3,
+        "cpuMs": 69.4944000000014,
+        "effective": 98.05555555555213
+      }
+    ]
+  },
+  {
+    "id": "FREE:voyage",
+    "flightSeconds": 17.749999999999634,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1065,
+        "scheduledWallSeconds": 17.75,
+        "cpuMs": 5.414699999999357,
+        "effective": 0.9999999999999793
+      },
+      {
+        "rate": 10,
+        "frames": 107,
+        "scheduledWallSeconds": 1.7833333333333334,
+        "cpuMs": 4.344699999999648,
+        "effective": 9.953271028037177
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 5.505299999998897,
+        "effective": 96.81818181817982
+      }
+    ]
+  },
+  {
+    "id": "FREE:swing",
+    "flightSeconds": 17.73333333333297,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1064,
+        "scheduledWallSeconds": 17.733333333333334,
+        "cpuMs": 5.955799999999726,
+        "effective": 0.9999999999999793
+      },
+      {
+        "rate": 10,
+        "frames": 107,
+        "scheduledWallSeconds": 1.7833333333333334,
+        "cpuMs": 9.09979999999996,
+        "effective": 9.943925233644654
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 7.228399999999965,
+        "effective": 96.72727272727074
+      }
+    ]
+  },
+  {
+    "id": "FREE:deep",
+    "flightSeconds": 17.749999999999634,
+    "times": [
+      {
+        "rate": 1,
+        "frames": 1065,
+        "scheduledWallSeconds": 17.75,
+        "cpuMs": 6.096499999999651,
+        "effective": 0.9999999999999793
+      },
+      {
+        "rate": 10,
+        "frames": 107,
+        "scheduledWallSeconds": 1.7833333333333334,
+        "cpuMs": 4.788600000001679,
+        "effective": 9.953271028037177
+      },
+      {
+        "rate": 100,
+        "frames": 11,
+        "scheduledWallSeconds": 0.18333333333333332,
+        "cpuMs": 5.90480000000025,
+        "effective": 96.81818181817982
+      }
+    ]
+  }
+]

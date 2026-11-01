@@ -9,13 +9,8 @@ import {FINAL_FILES,loadFinalArt} from '../js/final-art.js';
 const seed=()=>({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01','M02','M03','M04','M05','M06','M07']});
 const lab=()=>{const r=runtime(seed(),{debug:true,recordDraw:false});r.click('test-lab');r.change('labStageMission','M08');return r};
 function start(r,area=0,mode='C',id='RANGER'){if(r.run('state')==='play')r.click('lab-open');r.change('labPreset',id);r.change('labValidation',mode);r.change('labStageArea',String(area));r.click('lab-stage-start')}
-export const finalRoute=`const p=game.player,f=game.finalDefense;input.right=true;input.left=false;input.jump=false;input.up=false;input.hover=false;input.special=false;
-const obstacle=game.platforms.some(b=>b.active!==false&&b.kind==='container'&&p.x+35>=b.x&&p.x-7<b.x+b.w&&p.y+32>b.y+.5);input.jump=p.onGround&&obstacle;input.up=p.classId==='WING'&&obstacle;
-const boss=game.enemies.find(e=>e.type==='overmind'&&!e.dead);let target=null;
-if(boss){target=boss.form===1&&boss.shielded?nearestEnemy(f.devices.filter(n=>!n.dead),p.x,p.y):boss;if(target){const at=target.x-70;input.right=p.x<at-3;input.left=p.x>at+3;input.jump=input.up=false}}
-else{for(const d of f.devices){if(d.dead)continue;if(d.partKind==='deep'&&p.x<1460||['mechanical','biological','defense'].includes(d.partKind)&&p.x>3700){if(Math.abs(d.x-p.x)<260){target=d;break}}}if(target){input.right=p.x<target.x-65;input.left=p.x>target.x-60;input.jump=input.up=false}else target=nearestEnemy(game.enemies.filter(e=>!e.fixedDevice),p.x,p.y,170)}
-input.jump=p.onGround&&obstacle;input.up=p.classId==='WING'&&obstacle;
-const pt=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=pt.x-p.x-18,dy=pt.y-p.y-13,len=Math.hypot(dx,dy)||1;input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;`;
+import {M08Route as finalRoute} from './helpers/campaign-routes.mjs';
+export {finalRoute};
 test('legacy M07 unlocks M08, compatible completion flags, eight-master campaign and replay guards',()=>{
  const s=sanitizeSave({...seed(),selectedClass:'WING',unlocked:['A-01','S-02','R-04'],missionStats:{M07:{highScore:456,bestTime:170,kills:30}}});assert.ok(canPlayMission('M08',s));assert.equal(s.campaignComplete,false);assert.equal(s.firstEndingReached,false);assert.equal(s.missionStats.M07.kills,30);assert.equal(MISSIONS.filter(m=>m.implemented).length,8);
  const r=runtime(s);r.run("startMission('M08');update(1/60)");assert.equal(r.run('game.missionId'),'M08');assert.equal(r.run("beginEnding('mission',false)"),false);r.run('game.player.hp=0;update(1/60)');r.flush();r.click('retry');assert.equal(r.run('game.missionId'),'M08');assert.ok(r.run("canPlayMission('M08',save)"));

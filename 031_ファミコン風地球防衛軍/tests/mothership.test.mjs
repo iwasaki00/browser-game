@@ -11,17 +11,8 @@ const seed=()=>({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01','M02','
 const lab=()=>{const r=runtime(seed(),{debug:true,recordDraw:false});r.click('test-lab');r.change('labStageMission','M07');return r};
 function start(r,area=0,mode='C',id='RANGER'){if(r.run('state')==='play')r.click('lab-open');r.change('labPreset',id);r.change('labValidation',mode);r.change('labStageArea',String(area));r.click('lab-stage-start')}
 // Inputs only after start: no HP/coordinate/gate/energy/cooldown writes.
-export const mothershipRoute=`const p=game.player;input.right=true;input.left=false;input.jump=false;input.up=false;input.hover=false;input.special=false;
-const obstacle=game.platforms.some(b=>b.active!==false&&b.kind==='container'&&p.x+35>=b.x&&p.x-7<b.x+b.w&&p.y+32>b.y+.5);
-input.jump=p.onGround&&obstacle;input.up=p.classId==='WING'&&obstacle;
-const b=game.enemies.find(e=>e.type==='commandcore'&&!e.dead),m=game.mothership;
-let target=null;
-if(b){target=b.shielded?nearestEnemy(m.devices.filter(n=>!n.dead),p.x,p.y):b;if(target){const desired=target.x-70;input.right=p.x<desired-3;input.left=p.x>desired+3;input.jump=input.up=false}}
-else {for(const n of m.devices){if(n.dead||n.partKind==='fusion'&&game.time<m.fusionUntil-2)continue;
-if(n.partKind==='entry'&&p.x<1260||n.partKind==='fusion'&&p.x>4300&&p.x<4724||['shield','reinforcement','turret'].includes(n.partKind)&&p.x>5300){if(Math.abs(n.x-p.x)<260){target=n;break}}}
-if(target){input.right=p.x<target.x-65;input.left=p.x>target.x-60;input.jump=input.up=false}else target=nearestEnemy(game.enemies.filter(e=>!e.fixedDevice),p.x,p.y,170);}
-const point=target?{x:target.x,y:target.y+target.h/2}:{x:p.x+200,y:p.y+13},dx=point.x-p.x-18,dy=point.y-p.y-13,len=Math.hypot(dx,dy)||1;
-input.aimMode='touch';input.touchDx=dx/len;input.touchDy=dy/len;input.fire=true;`;
+import {M07Route as mothershipRoute} from './helpers/campaign-routes.mjs';
+export {mothershipRoute};
 
 test('legacy M06 save unlocks M07, M08 disabled, seven campaign denominator and fixed thirty achievements',()=>{
  const s=sanitizeSave({...seed(),selectedClass:'GUARDIAN',unlocked:['A-01','S-02','R-04'],missionStats:{M06:{highScore:777,bestTime:300,kills:12}}});

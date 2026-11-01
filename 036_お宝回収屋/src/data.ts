@@ -1,5 +1,5 @@
 ﻿import rows from './master-source.json';
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export const CONFIG = { cols:36, rows:28, cell:10, regen:5, xpPerLevel:120, exposure:0.55, batchCells:18, capacity:24 };
 export const weights:Record<string,number>={C:65,U:25,R:8,SR:1.8,J:0.2};
 export const income:Record<string,number>={B001:12,B002:20,B003:35,B004:45,B005:35,B007:120,B009:800,B011:4500,B012:18000};

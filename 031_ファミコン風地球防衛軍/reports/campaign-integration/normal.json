@@ -1,0 +1,463 @@
+{
+  "version": "1.0.0",
+  "startedAt": "2026-11-01T00:07:39.472Z",
+  "timezone": "Asia/Tokyo",
+  "environment": {
+    "node": "v25.9.0",
+    "platform": "win32",
+    "engine": "existing game.js / Node VM DOM adapter",
+    "seed": 11001008,
+    "dt": 0.016666666666666666,
+    "storage": "isolated per-runtime Map only; no browser/user storage",
+    "commit": "7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb",
+    "worktree": "M tests/final-defense.test.mjs\n M tests/helpers/runtime.mjs\n M tests/living-colossus.test.mjs\n M tests/mobile-fortress.test.mjs\n M tests/mothership.test.mjs\n?? reports/campaign-integration/\n?? tests/helpers/campaign-routes.mjs\n?? tools/campaign-integration.mjs"
+  },
+  "cases": [
+    {
+      "id": "NORMAL-M01",
+      "mode": "NORMAL_SIM",
+      "mission": "M01",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 28.19999999999968,
+      "frames": 1692,
+      "area": 2,
+      "areas": [
+        0,
+        1,
+        2
+      ],
+      "x": 2080.6666666666297,
+      "y": 116,
+      "maxHp": 100,
+      "hp": 0,
+      "damage": 125,
+      "hits": 13,
+      "lastHit": {
+        "amount": 5,
+        "sourceX": 2089.1200113423693,
+        "x": 2080.6666666666297,
+        "y": 116,
+        "time": 28.19999999999968,
+        "area": 2
+      },
+      "kills": 50,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M02",
+      "mode": "NORMAL_SIM",
+      "mission": "M02",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 92.54999999999603,
+      "frames": 5553,
+      "area": 4,
+      "areas": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x": 5174.416666666491,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 0,
+      "damage": 300,
+      "hits": 41,
+      "lastHit": {
+        "amount": 5.25,
+        "sourceX": 5212,
+        "x": 5174.416666666491,
+        "y": 116,
+        "time": 92.54999999999603,
+        "area": 4
+      },
+      "kills": 74,
+      "bossReached": true,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [
+        {
+          "type": "queen",
+          "hp": 1036
+        }
+      ],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M03",
+      "mode": "NORMAL_SIM",
+      "mission": "M03",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 9.200000000000037,
+      "frames": 552,
+      "area": 1,
+      "areas": [
+        0,
+        1
+      ],
+      "x": 1695,
+      "y": 76.38333333333333,
+      "maxHp": 75,
+      "hp": 0,
+      "damage": 75,
+      "hits": 7,
+      "lastHit": {
+        "amount": 3,
+        "sourceX": 1679.8814864489639,
+        "x": 1695,
+        "y": 76.38333333333333,
+        "time": 9.200000000000037,
+        "area": 1
+      },
+      "kills": 1,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 0,
+      "parts": [],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M04",
+      "mode": "NORMAL_SIM",
+      "mission": "M04",
+      "classId": "WING",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 12.250000000000188,
+      "frames": 735,
+      "area": 1,
+      "areas": [
+        0,
+        1
+      ],
+      "x": 1405.499999999993,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 0,
+      "damage": 65,
+      "hits": 4,
+      "lastHit": {
+        "amount": 17,
+        "sourceX": 1415.6472422767938,
+        "x": 1405.499999999993,
+        "y": 116,
+        "time": 12.250000000000188,
+        "area": 1
+      },
+      "kills": 3,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 884,
+      "parts": [],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M05",
+      "mode": "NORMAL_SIM",
+      "mission": "M05",
+      "classId": "RANGER",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 23.549999999999944,
+      "frames": 1413,
+      "area": 1,
+      "areas": [
+        0,
+        1
+      ],
+      "x": 1826.2499999999714,
+      "y": 92,
+      "maxHp": 100,
+      "hp": 0,
+      "damage": 162,
+      "hits": 14,
+      "lastHit": {
+        "amount": 6,
+        "sourceX": 1815.902210928045,
+        "x": 1826.2499999999714,
+        "y": 92,
+        "time": 23.549999999999944,
+        "area": 1
+      },
+      "kills": 6,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 1344,
+      "parts": [
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": 150,
+          "dead": false
+        },
+        {
+          "type": "basedevice",
+          "kind": "turret",
+          "hp": 150,
+          "dead": false
+        },
+        {
+          "type": "basedevice",
+          "kind": "drive",
+          "hp": 240,
+          "dead": false
+        },
+        {
+          "type": "basedevice",
+          "kind": "control",
+          "hp": 120,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M06",
+      "mode": "NORMAL_SIM",
+      "mission": "M06",
+      "classId": "GUARDIAN",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 62.799999999997716,
+      "frames": 3768,
+      "area": 2,
+      "areas": [
+        0,
+        1,
+        2
+      ],
+      "x": 3942.08333333354,
+      "y": 116,
+      "maxHp": 200,
+      "hp": 0,
+      "damage": 231.5,
+      "hits": 23,
+      "lastHit": {
+        "amount": 3.5,
+        "sourceX": 3931.713542665851,
+        "x": 3942.08333333354,
+        "y": 116,
+        "time": 62.799999999997716,
+        "area": 2
+      },
+      "kills": 20,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 2433,
+      "parts": [
+        {
+          "type": "neuralnode",
+          "kind": "network",
+          "hp": 1,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M07",
+      "mode": "NORMAL_SIM",
+      "mission": "M07",
+      "classId": "SCOUT",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 10.716666666666779,
+      "frames": 643,
+      "area": 1,
+      "areas": [
+        0,
+        1
+      ],
+      "x": 1828,
+      "y": 116,
+      "maxHp": 75,
+      "hp": 0,
+      "damage": 75,
+      "hits": 4,
+      "lastHit": {
+        "amount": 15,
+        "sourceX": 1854.2532851486772,
+        "x": 1828,
+        "y": 116,
+        "time": 10.716666666666779,
+        "area": 1
+      },
+      "kills": 1,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 350,
+      "parts": [
+        {
+          "type": "commanddevice",
+          "kind": "entry",
+          "hp": 0,
+          "dead": true
+        },
+        {
+          "type": "commanddevice",
+          "kind": "fusion",
+          "hp": 1,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "shield",
+          "hp": 120,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "reinforcement",
+          "hp": 120,
+          "dead": false
+        },
+        {
+          "type": "commanddevice",
+          "kind": "turret",
+          "hp": 120,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    },
+    {
+      "id": "NORMAL-M08",
+      "mode": "NORMAL_SIM",
+      "mission": "M08",
+      "classId": "WING",
+      "weapons": [
+        "A-01",
+        "S-02"
+      ],
+      "aid": "none: normal HP, damage and death active",
+      "seconds": 10.083333333333414,
+      "frames": 605,
+      "area": 0,
+      "areas": [
+        0
+      ],
+      "x": 1173.166666666669,
+      "y": 116,
+      "maxHp": 65,
+      "hp": 0,
+      "damage": 65,
+      "hits": 4,
+      "lastHit": {
+        "amount": 11,
+        "sourceX": 1197.3126802956847,
+        "x": 1173.166666666669,
+        "y": 116,
+        "time": 10.083333333333414,
+        "area": 0
+      },
+      "kills": 0,
+      "bossReached": false,
+      "bossDefeated": false,
+      "outcome": "gameover",
+      "warningsObserved": 572,
+      "parts": [
+        {
+          "type": "defensenode",
+          "kind": "deep",
+          "hp": 140,
+          "dead": false
+        },
+        {
+          "type": "defensenode",
+          "kind": "mechanical",
+          "hp": 140,
+          "dead": false
+        },
+        {
+          "type": "defensenode",
+          "kind": "biological",
+          "hp": 140,
+          "dead": false
+        },
+        {
+          "type": "defensenode",
+          "kind": "defense",
+          "hp": 140,
+          "dead": false
+        }
+      ],
+      "bosses": [],
+      "status": "NOT_CLEARED",
+      "classification": "E: input-only QA controller has no general reactive dodge policy; A-D not established",
+      "difficultyCertified": false
+    }
+  ],
+  "issues": [],
+  "unperformed": [
+    "HUMAN: all eight normal-difficulty manual clears",
+    "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
+  ],
+  "finishedAt": "2026-11-01T00:07:41.755Z",
+  "summary": {
+    "total": 8,
+    "pass": 0,
+    "fail": 0,
+    "notCleared": 8,
+    "unperformed": 2
+  }
+}

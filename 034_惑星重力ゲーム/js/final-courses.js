@@ -1,9 +1,9 @@
 // Reference inputs only. Never applied automatically.
 export const FINAL_COURSES={
   "origin>earth": [
-    144.02,
+    144.22,
     220,
-    56.474999999997436
+    56.39166666666411
   ],
   "origin>rescue": [
     109.65,

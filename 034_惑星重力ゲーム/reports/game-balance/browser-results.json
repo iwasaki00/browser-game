@@ -1,0 +1,50 @@
+[
+  {
+    "size": "320x568",
+    "status": "PASS",
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 310,
+      "height": 402
+    },
+    "checks": "fine/coarse input; immediate preview; failed flight; same-vector relaunch; comparison; restore after RESET; old saves unchanged; no page overflow",
+    "iPhone": "UNVERIFIED"
+  },
+  {
+    "size": "375x667",
+    "status": "PASS",
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 365,
+      "height": 501
+    },
+    "checks": "fine/coarse input; immediate preview; failed flight; same-vector relaunch; comparison; restore after RESET; old saves unchanged; no page overflow",
+    "iPhone": "UNVERIFIED"
+  },
+  {
+    "size": "390x844",
+    "status": "PASS",
+    "board": {
+      "x": 5,
+      "y": 52,
+      "width": 380,
+      "height": 678
+    },
+    "checks": "fine/coarse input; immediate preview; failed flight; same-vector relaunch; comparison; restore after RESET; old saves unchanged; no page overflow",
+    "iPhone": "UNVERIFIED"
+  },
+  {
+    "size": "844x390",
+    "status": "PASS",
+    "board": {
+      "x": 5,
+      "y": 46,
+      "width": 834,
+      "height": 276
+    },
+    "checks": "fine/coarse input; immediate preview; failed flight; same-vector relaunch; comparison; restore after RESET; old saves unchanged; no page overflow",
+    "iPhone": "UNVERIFIED"
+  }
+]
