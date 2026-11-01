@@ -1,3 +1,5 @@
+> 現行版はVersion 0.3.0です。DEBUG LABは8タブ・22シナリオになり、河原の情報と時間加速を追加しました。開き方と保存分離は継続しています。[河原とDEBUG LABの現行説明](GOLD_PANNING.md)を参照してください。
+
 # Version 0.2.0 — RIVER RECOVERY & DEBUG LAB
 
 ## 川底を遊ぶ

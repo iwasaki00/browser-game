@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=1.2.0-B">
+  <link rel="stylesheet" href="styles.css?v=1.2.0-C1">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v1.2.0-C</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v1.2.0-C1</b></span>
       <output id="acceptanceHUD" class="acceptance-hud" aria-label="実機診断HUD" aria-live="off" hidden></output>
       <small class="orientation-note">横向き推奨</small>
       <button id="pauseButton" type="button" data-action="pause-game" aria-label="一時停止（再開できます）" hidden>Ⅱ PAUSE</button>
@@ -48,7 +48,7 @@
           <div class="challenge-toolbar"><strong id="achievementProgress"></strong><label>カテゴリ<select id="achievementCategory"><option value="ALL">すべて</option><option value="C">キャンペーン</option><option value="K">兵科</option><option value="W">武器</option><option value="B">戦闘</option><option value="S">特殊攻略</option><option value="T">探索・戦略</option></select></label><label>状態<select id="achievementStatus"><option value="ALL">すべて</option><option value="OPEN">未達成のみ</option><option value="DONE">達成済みのみ</option></select></label></div>
           <div class="challenge-content"><div id="achievementList" role="group" aria-label="実績一覧・スクロール可能"></div><aside class="challenge-info"><article id="achievementDetail"></article><h3>おすすめ実績</h3><div id="achievementRecommendations"></div><details><summary>バッジ・称号コレクション</summary><p>一覧のバッジは達成すると明るく表示されます。</p><p id="achievementSelectedTitle"></p><div id="achievementTitles"></div></details></aside></div>
         </section>
-        <footer class="command-footer"><span id="campaignCoverage"></span><button id="campaignSaveRetry" class="menu-button" data-action="retry-save" hidden>保存を再試行</button><output id="campaignSaveStatus" role="status"></output><button class="menu-button" data-action="back-title">戻る</button><button id="campaignEndingReplay" class="menu-button" data-action="ending-replay" hidden>エンディング再視聴</button><button id="campaignDeploy" class="menu-button menu-button--primary" data-action="select-mission" data-mission="M01">M01 出撃準備へ</button></footer>
+        <footer class="command-footer"><details class="result-diagnostics"><summary>遷移診断（不具合再発時）</summary><p>このタブの一時記録です。通常セーブは変更しません。</p><button class="menu-button" data-action="result-diagnostics-copy">診断を表示・コピー</button><output id="commandFlowStatus" role="status"></output><textarea id="commandFlowOutput" readonly hidden rows="4" spellcheck="false" aria-label="遷移診断JSON・長押しコピー"></textarea><pre id="commandFlowLog"></pre></details><span id="campaignCoverage"></span><button id="campaignSaveRetry" class="menu-button" data-action="retry-save" hidden>保存を再試行</button><output id="campaignSaveStatus" role="status"></output><button class="menu-button" data-action="back-title">戻る</button><button id="campaignEndingReplay" class="menu-button" data-action="ending-replay" hidden>エンディング再視聴</button><button id="campaignDeploy" class="menu-button menu-button--primary" data-action="select-mission" data-mission="M01">M01 出撃準備へ</button></footer>
       </div>
       <div id="screenEquip" class="screen">
         <p class="eyebrow">EQUIPMENT / FOUR CLASSES</p><h2>兵科・装備選択 <small>武器を2つ選択</small></h2>
@@ -69,6 +69,7 @@
         <p class="class-help">SCOUT：C / DASHで短距離ダッシュ（無敵なし）<br>WING：W / ↑ / FLY長押しで上昇、離すと緩やかに下降<br>Space / HOLDでホバー、S / ↓で下降。着地で飛行EN回復</p>
       </div>
       <div id="screenPause" class="screen screen--panel"><p class="eyebrow">SYSTEM HALTED</p><h2>PAUSE</h2><button class="menu-button menu-button--primary" data-action="resume">再開</button><button class="menu-button" data-action="settings">設定</button><button class="menu-button" data-action="retry">ミッションを再開</button><button class="menu-button" data-action="quit">タイトルへ</button>
+        <details class="result-diagnostics"><summary>遷移診断（不具合再発時）</summary><p>このタブの一時記録です。通常セーブは変更しません。</p><button class="menu-button" data-action="result-diagnostics-copy">診断を表示・コピー</button><output id="pauseFlowStatus" role="status"></output><textarea id="pauseFlowOutput" readonly hidden rows="4" spellcheck="false" aria-label="遷移診断JSON・長押しコピー"></textarea><pre id="pauseFlowLog"></pre></details>
         <fieldset id="pauseArtControls" class="art-controls" hidden><legend>ART PREVIEW / 一時停止中・NO SAVE</legend>
           <label>ART STYLE<select id="pauseArtStyle"><option value="ORIGINAL">ORIGINAL</option><option value="STUDY_01">STUDY 01</option><option value="STUDY_01_B">STUDY 01-B</option><option value="UNIFIED_01">UNIFIED 01</option></select></label>
           <label>RENDER RESOLUTION<select id="pauseRenderScale"><option value="1">320×180</option><option value="2">640×360 / EXPERIMENTAL</option></select></label>
@@ -87,7 +88,7 @@
       </section>
       <div id="screenGameover" class="screen screen--panel outcome-screen"><div class="outcome-heading"><p class="eyebrow danger">DEFENSE FAILED</p><h2>GAME OVER</h2><p id="gameoverMode"></p></div><div id="gameoverStats" class="result-stats"></div><div class="outcome-actions"><button id="labGameoverReport" class="menu-button" data-action="lab-open" hidden>LAB計測結果 / 指定再開</button><button class="menu-button menu-button--primary" data-action="retry">再挑戦</button><button class="menu-button" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div><small class="outcome-skip">タップ・キー入力で演出をスキップ</small></div>
       <div id="screenEnding" class="screen screen--ending" role="dialog" aria-label="キャンペーンエンディング"><div class="ending-copy"><h2 id="endingTitle"></h2><p id="endingText"></p><output id="endingStatus"></output></div><div class="ending-actions"><button class="menu-button" data-action="ending-next">次のシーン</button><button class="menu-button menu-button--primary" data-action="ending-skip">エンディングをスキップ</button></div></div>
-      <div id="screenResult" class="screen screen--result outcome-screen"><div class="outcome-heading"><p class="eyebrow">MISSION COMPLETE</p><h2 id="resultTitle">ミッション完了</h2><p id="resultClass"></p></div><div id="resultStats" class="result-stats"></div><div class="result-rewards"><div id="rewardBox" class="reward-box"></div><p id="resultWeapons"></p><p id="resultUnlock"></p></div><section id="mothershipStory" class="mothership-transmission" aria-label="母艦からの最終通信" hidden><img src="assets/mothership-01/backgrounds/signal.png" alt="母艦最深部に残る未知の構造物の影"><p>母艦の指揮系統が停止した。しかし、さらに奥から未知の信号を検出</p><strong>SIGNAL SOURCE UNKNOWN</strong><small>M08 — FINAL DEFENSE / 報酬は保存済み</small><button class="menu-button" data-action="mothership-story-skip">通信をスキップしてリザルトへ</button></section><p id="resultSaveStatus" role="status"></p><button id="resultSaveRetry" class="menu-button" data-action="retry-save" hidden>保存を再試行</button><details class="result-diagnostics"><summary>遷移診断（不具合再発時）</summary><pre id="resultFlowLog"></pre></details><div class="outcome-actions"><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div><small class="outcome-skip">タップ・キー入力で演出をスキップ</small></div>
+      <div id="screenResult" class="screen screen--result outcome-screen"><div class="outcome-heading"><p class="eyebrow">MISSION COMPLETE</p><h2 id="resultTitle">ミッション完了</h2><p id="resultClass"></p></div><div id="resultStats" class="result-stats"></div><div class="result-rewards"><div id="rewardBox" class="reward-box"></div><p id="resultWeapons"></p><p id="resultUnlock"></p></div><section id="mothershipStory" class="mothership-transmission" aria-label="母艦からの最終通信" hidden><img src="assets/mothership-01/backgrounds/signal.png" alt="母艦最深部に残る未知の構造物の影"><p>母艦の指揮系統が停止した。しかし、さらに奥から未知の信号を検出</p><strong>SIGNAL SOURCE UNKNOWN</strong><small>M08 — FINAL DEFENSE / 報酬は保存済み</small><button class="menu-button" data-action="mothership-story-skip">通信をスキップしてリザルトへ</button></section><p id="resultSaveStatus" role="status"></p><button id="resultSaveRetry" class="menu-button" data-action="retry-save" hidden>保存を再試行</button><details class="result-diagnostics"><summary>遷移診断（不具合再発時）</summary><p>このタブの一時記録です。通常セーブは変更しません。</p><button class="menu-button" data-action="result-diagnostics-copy">診断を表示・コピー</button><output id="resultFlowStatus" role="status"></output><textarea id="resultFlowOutput" readonly hidden rows="4" spellcheck="false" aria-label="遷移診断JSON・長押しコピー"></textarea><pre id="resultFlowLog"></pre></details><div class="outcome-actions"><button class="menu-button menu-button--primary" data-action="mission-select">ミッション選択</button><button class="menu-button" data-action="quit">タイトルへ</button></div><small class="outcome-skip">タップ・キー入力で演出をスキップ</small></div>
       <div id="screenConfirm" class="screen screen--panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><p class="eyebrow">RETURN TO TITLE</p><h2 id="confirmTitle">タイトルへ戻りますか？</h2><p class="confirm-message">進行中のミッションを終了します。<br>取得済み武器とステージ進行記録は保持されます。</p><button class="menu-button menu-button--primary" data-action="confirm-title">タイトルへ戻る</button><button class="menu-button" data-action="cancel-title">キャンセルして続ける</button></div>
       <button id="finalRevealSkip" class="final-reveal-skip" data-action="final-reveal-skip" hidden>通信スキップ</button>
       <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
@@ -240,6 +241,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=1.2.0-C"></script>
+  <script type="module" src="js/game.js?v=1.2.0-C1"></script>
 </body>
 </html>

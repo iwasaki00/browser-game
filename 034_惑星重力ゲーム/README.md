@@ -6,7 +6,7 @@ Version 2.0.0-rc.1 — FINAL ACCEPTANCE（最終受入候補）
 
 [最終QA・完成判定](reports/final-acceptance/REPORT.md) ／ [iPhone最終確認表](reports/final-acceptance/IPHONE_CHECKLIST.md) ／ [公開前監査](reports/final-acceptance/RELEASE_AUDIT.md)
 
-ローカル確認はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0` を実行し、PCでは `http://localhost:8000/`、同じWi-FiのiPhoneでは `http://＜PCのIPv4アドレス＞:8000/` を開きます。停止はCtrl+Cです。新しいURLは既存URLと別の保存領域になるため、以前の記録が見えなくても削除されたとは限りません。受入時は既存の正式URL・同じSafariプロファイルを優先してください。候補版の公開はまだ行っていません。
+ローカル確認はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0 --directory release-preview` を実行し、PCでは `http://localhost:8000/`、同じWi-FiのiPhoneでは `http://＜PCのIPv4アドレス＞:8000/` を開きます。停止はCtrl+Cです。新しいURLは既存URLと別の保存領域になるため、以前の記録が見えなくても削除されたとは限りません。受入時は既存の正式URL・同じSafariプロファイルを優先してください。候補版の公開はまだ行っていません。
 
 全自動テストは `npm test`。使い捨てコピーで実施し、結果は `reports/final-acceptance/` に保存します。ブラウザ検証も独立環境を使用します。公開・push・デプロイは行いません。
 

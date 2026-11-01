@@ -738,6 +738,11 @@ input, textarea { user-select: text; -webkit-user-select: text; }
 #resultSaveStatus { margin: 2px 0; max-width: 100%; font-size: 10px; color: var(--yellow); overflow-wrap: anywhere; }
 .result-diagnostics { width: min(100%,460px); font-size: 9px; text-align: left; }
 .result-diagnostics pre { max-height: 100px; overflow: auto; white-space: pre-wrap; user-select: text; -webkit-user-select: text; }
+.result-diagnostics textarea { box-sizing:border-box; width:100%; max-height:100px; font:11px monospace; user-select:text; -webkit-user-select:text; touch-action:pan-y; }
+.result-diagnostics[open] { max-height:min(230px,calc(var(--app-height,100vh) - 150px)); overflow:auto; overscroll-behavior:contain; touch-action:pan-y; }
+.result-diagnostics summary { min-height:32px; cursor:pointer; }
+.command-footer .result-diagnostics { width:auto; min-width:0; }
+.command-footer .result-diagnostics[open] { flex-basis:100%; }
 #campaignSaveRetry { min-width: 100px; min-height: 36px; font-size: 10px; }
 .outcome-screen.is-active .outcome-heading { animation: outcome-in .22s ease-out both; }
 .outcome-screen.skip-intro .outcome-heading { animation: none; }

@@ -47,9 +47,4 @@ for(const row of manifest){const target=path.join(preview,row.file);fs.mkdirSync
 assert.deepEqual(walk('release-preview').map(p=>p.slice('release-preview/'.length)).sort(),runtime.slice().sort());
 const summary={version:JSON.parse(read('package.json')).version,status:'PASS',runtimeFiles:manifest.length,runtimeBytes:manifest.reduce((a,b)=>a+b.bytes,0),manifest,protectedFiles,references,syntax,findings,staging:'release-preview (local only)',license:fs.existsSync(path.join(root,'LICENSE'))?'present':'UNVERIFIED: owner must choose public source licensing',limits:['Pattern checks are not a complete secret detector','No deployment or real personal storage accessed']};
 fs.writeFileSync(path.join(out,'release-audit.json'),JSON.stringify(summary,null,2)+'\n');
-const qa=JSON.parse(read('reports/final-acceptance/all-final.json'));
-for(const file of ['classic-progression.json','homeward-progression.json']){
- const source=path.join(qa.temporaryCopy,'reports/quality-assurance',file);
- assert.ok(fs.existsSync(source));fs.copyFileSync(source,path.join(out,file));
-}
 console.log(JSON.stringify({status:summary.status,version:summary.version,files:summary.runtimeFiles,bytes:summary.runtimeBytes,protected:protectedFiles.length,references:references.length,license:summary.license}));

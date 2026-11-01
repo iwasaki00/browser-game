@@ -1,0 +1,18 @@
+normal-1x-HUGE-3-planets {"name":"normal-1x-HUGE-3-planets","seconds":17.885,"fps":59.8825831702544,"rendererTaskCpuPercent":18.90829745596869,"heapBefore":4349020,"heapAfter":4325396}
+100x-20-launch-reset-retry {"name":"100x-20-launch-reset-retry","seconds":11.883,"fps":59.74922157704284,"rendererTaskCpuPercent":32.32660944206009,"heapBefore":4336708,"heapAfter":4769180}
+3-planets-6-encounter-groups-prediction {"name":"3-planets-6-encounter-groups-prediction","seconds":10.236,"fps":59.49589683470105,"rendererTaskCpuPercent":33.02982610394684,"heapBefore":4737856,"heapAfter":4889680}
+DEEP-12000x10000-6-targets-1x-first-8-seconds {"name":"DEEP-12000x10000-6-targets-1x-first-8-seconds","seconds":8.613,"fps":57.00685011029839,"rendererTaskCpuPercent":38.45512597236736,"heapBefore":14074304,"heapAfter":5248828}
+DEEP-100x-to-return {"name":"DEEP-100x-to-return","seconds":1.864,"fps":24.67811158798283,"rendererTaskCpuPercent":95.42886266094418,"heapBefore":5158820,"heapAfter":5920060}
+CINEMATIC {"seconds":10,"fps":57.80232787532058,"heapBytes":8182720,"rendererTaskCpuPercent":23.636772538962315}
+CINEMATIC {"seconds":20,"fps":59.81549449459379,"heapBytes":8222452,"rendererTaskCpuPercent":18.296905068941562}
+CINEMATIC {"seconds":30,"fps":59.91653418124006,"heapBytes":8206300,"rendererTaskCpuPercent":19.095786963434033}
+CINEMATIC {"seconds":40,"fps":60.05767127373968,"heapBytes":8223968,"rendererTaskCpuPercent":20.604544098637774}
+CINEMATIC {"seconds":50,"fps":59.90049751243781,"heapBytes":8239840,"rendererTaskCpuPercent":23.154855721393023}
+CINEMATIC {"seconds":60,"fps":58.98876404494382,"heapBytes":16342676,"rendererTaskCpuPercent":24.307923285548245}
+CINEMATIC {"seconds":70,"fps":57.66208251473478,"heapBytes":8223644,"rendererTaskCpuPercent":25.030373280943028}
+CINEMATIC {"seconds":80,"fps":59.89453785692966,"heapBytes":8296372,"rendererTaskCpuPercent":18.048413093224532}
+CINEMATIC {"seconds":90,"fps":59.99801331081752,"heapBytes":8224116,"rendererTaskCpuPercent":22.2800238402702}
+CINEMATIC {"seconds":100,"fps":59.95418782989742,"heapBytes":8231696,"rendererTaskCpuPercent":19.402599342694927}
+CINEMATIC {"seconds":110,"fps":59.83923786841322,"heapBytes":8246196,"rendererTaskCpuPercent":23.672094869504843}
+CINEMATIC {"seconds":120,"fps":59.12801114871591,"heapBytes":8261072,"rendererTaskCpuPercent":19.366374676488157}
+MOBILE PERFORMANCE PASS

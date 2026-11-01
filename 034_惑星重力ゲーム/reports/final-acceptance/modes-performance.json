@@ -1,0 +1,94 @@
+{
+  "browser": "156.0.8078.76",
+  "environment": {
+    "os": "win32",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+    "viewport": "375x667",
+    "dpr": 3
+  },
+  "method": "real wall clock; rAF / renderer TaskDuration / forced-GC JS heap; PC only, not iPhone",
+  "modes": [
+    {
+      "mode": "CLASSIC",
+      "searchCount": 2,
+      "permissions": "タップして選択できます。ドラッグで位置を変更できます。許可された狭い配置範囲内で移動できます",
+      "offscreenArrows": 2,
+      "status": "PASS",
+      "save": "unchanged",
+      "camera": "show / manual interrupt / restore"
+    },
+    {
+      "mode": "FREE SPACE",
+      "searchCount": 3,
+      "permissions": "タップして選択できます。ドラッグで位置を変更できます。選択後に削除できます。惑星・発射地点・ゴールを避けて移動できます",
+      "offscreenArrows": 2,
+      "status": "PASS",
+      "save": "unchanged",
+      "camera": "show / manual interrupt / restore"
+    },
+    {
+      "mode": "HOMEWARD",
+      "searchCount": 3,
+      "permissions": "タップして選択できます。ドラッグで位置を変更できます。惑星・発射地点・ゴールを避けて移動できます",
+      "offscreenArrows": 2,
+      "status": "PASS",
+      "save": "unchanged",
+      "camera": "show / manual interrupt / restore"
+    },
+    {
+      "mode": "DEEP SPACE",
+      "searchCount": 3,
+      "permissions": "タップして選択できます。ドラッグで位置を変更できます。惑星・発射地点・ゴールを避けて移動できます",
+      "offscreenArrows": 2,
+      "status": "PASS",
+      "save": "unchanged",
+      "camera": "show / manual interrupt / restore"
+    },
+    {
+      "mode": "FINAL VOYAGE",
+      "searchCount": 3,
+      "permissions": "タップして選択できます。ドラッグで位置を変更できます。惑星・発射地点・ゴールを避けて移動できます",
+      "offscreenArrows": 2,
+      "status": "PASS",
+      "save": "unchanged",
+      "camera": "show / manual interrupt / restore"
+    }
+  ],
+  "performance": [
+    {
+      "scan": false,
+      "seconds": 10.084,
+      "fps": 56.52518841729473,
+      "rendererTaskPercent": 89.38433161443872,
+      "heapBefore": 21254492,
+      "heapAfter": 12320156
+    },
+    {
+      "scan": true,
+      "seconds": 10.124,
+      "fps": 47.60964045831687,
+      "rendererTaskPercent": 98.45698340576848,
+      "heapBefore": 12592760,
+      "heapAfter": 12663412
+    }
+  ],
+  "flights": [
+    {
+      "scan": true,
+      "seconds": 2.69,
+      "fps": 45.353159851301115,
+      "result": "clear",
+      "flightSeconds": 57.108333333330734,
+      "recordedFrames": 1144
+    },
+    {
+      "scan": false,
+      "seconds": 2.668,
+      "fps": 48.35082458770614,
+      "result": "clear",
+      "flightSeconds": 57.108333333330734,
+      "recordedFrames": 1144
+    }
+  ],
+  "errors": []
+}

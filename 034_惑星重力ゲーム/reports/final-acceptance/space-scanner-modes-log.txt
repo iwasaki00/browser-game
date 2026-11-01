@@ -1,0 +1,35 @@
+CLASSIC PASS
+FREE SPACE PASS
+HOMEWARD PASS
+DEEP SPACE PASS
+FINAL VOYAGE PASS
+PERF [{"scan":false,"seconds":10.084,"fps":56.52518841729473,"rendererTaskPercent":89.38433161443872,"heapBefore":21254492,"heapAfter":12320156},{"scan":true,"seconds":10.124,"fps":47.60964045831687,"rendererTaskPercent":98.45698340576848,"heapBefore":12592760,"heapAfter":12663412}]
+FLIGHT START true {
+  angle: '-37.69',
+  speed: '220',
+  target: '帰還中継点 · 12,274単位',
+  dialogs: []
+}
+FLIGHT LIVE {
+  hidden: false,
+  status: '軌道確立。ミッション成功。',
+  rate: '1',
+  effective: '実効 1×',
+  frames: 145
+}
+FLIGHT END true 遠方帰還中継点に到達。通信の矛盾は残る。
+FLIGHT START false {
+  angle: '-37.69',
+  speed: '220',
+  target: '帰還中継点 · 12,336単位',
+  dialogs: []
+}
+FLIGHT LIVE {
+  hidden: false,
+  status: '軌道確立。ミッション成功。',
+  rate: '1',
+  effective: '実効 1×',
+  frames: 128
+}
+FLIGHT END false 遠方帰還中継点に到達。通信の矛盾は残る。
+MODES / SCAN PERFORMANCE / IDENTICAL FLIGHTS PASS

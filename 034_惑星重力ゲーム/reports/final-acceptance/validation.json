@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0-rc.1",
+  "decision": "CONDITIONAL",
+  "automatic": {
+    "tests": 429,
+    "pass": 429,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "browserSuite": 9,
+  "browserFollowup": 3,
+  "classicStages": 20,
+  "endings": 5,
+  "protectedSourceFiles": 11,
+  "releaseRuntimeFiles": 59,
+  "readmeLinks": 39,
+  "gameplaySourceChanges": false,
+  "gameBugs": {
+    "critical": 0,
+    "high": 0
+  },
+  "observations": {
+    "medium": [
+      "PC scan FPS below previous measurement"
+    ],
+    "low": [
+      "HOMEWARD02 angular sensitivity",
+      "CLASSIC19 difficulty discontinuity"
+    ]
+  },
+  "iPhoneScanner": "OK: user-reported v1.9.4 acceptance",
+  "iPhoneFinalAcceptance": "UNVERIFIED",
+  "publicLicense": "UNVERIFIED: no LICENSE file",
+  "push": false,
+  "publish": false,
+  "deploy": false,
+  "qaBrowser": "PASS: classic progression, storage faults, desktop replay soak",
+  "lineEndings": "UTF-8/LF for new report text; existing attributes unchanged"
+}

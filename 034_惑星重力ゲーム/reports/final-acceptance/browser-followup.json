@@ -1,0 +1,25 @@
+[
+  {
+    "name": "mobile-polish-ui",
+    "args": [],
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 75275
+  },
+  {
+    "name": "acceptance-classic-performance",
+    "args": [],
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 22449
+  },
+  {
+    "name": "orbit-share-ui",
+    "args": [
+      "--staged"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 2900
+  }
+]

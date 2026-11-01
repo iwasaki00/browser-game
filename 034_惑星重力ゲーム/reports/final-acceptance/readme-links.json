@@ -1,0 +1,158 @@
+[
+  {
+    "target": "reports/final-acceptance/REPORT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/final-acceptance/IPHONE_CHECKLIST.md",
+    "exists": true
+  },
+  {
+    "target": "reports/final-acceptance/RELEASE_AUDIT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/space-scanner/REPORT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/mobile-polish/REPORT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/mobile-polish/IPHONE_CHECKLIST.md",
+    "exists": true
+  },
+  {
+    "target": "reports/final-voyage/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/final-voyage/ROUTES.md",
+    "exists": true
+  },
+  {
+    "target": "reports/deep-space/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/homeward-experience/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/impossible-signal/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/echoes-of-the-unknown/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/unknown-frontier/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/open-voyage/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/lost-sectors/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/space-encounters/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/flight-replay/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/cinematic-camera/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/navigation-ux/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/first-voyage/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "HOMEWARD_SPEC.md",
+    "exists": true
+  },
+  {
+    "target": "reports/homeward/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/expanded-space/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/big-space/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "SPACE_OBJECT_DESIGN.md",
+    "exists": true
+  },
+  {
+    "target": "reports/mobile-ui-audio/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/quality-audit/AUDIT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/quality-audit/IPHONE_CHECKLIST.md",
+    "exists": true
+  },
+  {
+    "target": "reports/acceptance-preparation/PREPARATION_REPORT.md",
+    "exists": true
+  },
+  {
+    "target": "reports/acceptance-preparation/IPHONE_QUICK_CHECK.md",
+    "exists": true
+  },
+  {
+    "target": "reports/space-experience/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/orbit-share/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/gallery/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/special-challenges/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/special/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/balance/BALANCE.md",
+    "exists": true
+  },
+  {
+    "target": "reports/balance/THREE_STARS.md",
+    "exists": true
+  },
+  {
+    "target": "reports/stages/VERIFICATION.md",
+    "exists": true
+  },
+  {
+    "target": "reports/mobile/CHECK.md",
+    "exists": true
+  }
+]

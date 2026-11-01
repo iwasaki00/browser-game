@@ -1,0 +1,7 @@
+{"cycle":1,"elapsedSeconds":31.524,"seconds":30.017,"fps":48.53916114201952,"rendererTaskPercent":96.96454342539228,"heap":5731344,"dom":{"documents":1,"nodes":1628,"jsEventListeners":169}}
+{"cycle":2,"elapsedSeconds":62.966,"seconds":30.007,"fps":44.756223547838836,"rendererTaskPercent":96.80010997433932,"heap":5753180,"dom":{"documents":1,"nodes":1631,"jsEventListeners":169}}
+{"cycle":3,"elapsedSeconds":94.576,"seconds":30.008,"fps":35.92375366568915,"rendererTaskPercent":97.05215942415359,"heap":5742212,"dom":{"documents":1,"nodes":1631,"jsEventListeners":169}}
+{"cycle":4,"elapsedSeconds":126.034,"seconds":30.013,"fps":49.14537033951954,"rendererTaskPercent":95.68523306567151,"heap":5785500,"dom":{"documents":1,"nodes":1631,"jsEventListeners":169}}
+{"cycle":5,"elapsedSeconds":157.562,"seconds":30.015,"fps":46.64334499416958,"rendererTaskPercent":96.40243211727467,"heap":5799308,"dom":{"documents":1,"nodes":1631,"jsEventListeners":169}}
+{"cycle":6,"elapsedSeconds":189.056,"seconds":30.013,"fps":47.47942558224769,"rendererTaskPercent":95.48363042681511,"heap":5801792,"dom":{"documents":1,"nodes":1631,"jsEventListeners":169}}
+SCANNER 3-MINUTE ENDURANCE PASS

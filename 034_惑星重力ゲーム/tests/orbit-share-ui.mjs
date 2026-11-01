@@ -1,10 +1,10 @@
 import{chromium}from'../../019_bomber-lab/tests/node_modules/playwright/index.mjs';import{createServer}from'node:http';import{readFile,mkdir,writeFile}from'node:fs/promises';import{fileURLToPath}from'node:url';import assert from'node:assert/strict';
-const root=new URL('../',import.meta.url),dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/share/':process.argv.includes('--mobile-polish')?'reports/mobile-polish/share/':process.argv.includes('--qa')?'reports/quality-assurance/share/':'reports/orbit-share/',root);await mkdir(dir,{recursive:true});
+const root=new URL('../',import.meta.url),dir=new URL(process.argv.includes('--staged')?'reports/final-acceptance/staged-share/':process.argv.includes('--acceptance')?'reports/final-acceptance/share/':process.argv.includes('--mobile-polish')?'reports/mobile-polish/share/':process.argv.includes('--qa')?'reports/quality-assurance/share/':'reports/orbit-share/',root);await mkdir(dir,{recursive:true});
 const server=createServer(async(req,res)=>{try{const u=new URL('.'+new URL(req.url,'http://localhost').pathname,root),f=u.pathname.endsWith('/')?new URL('index.html',u):u;if(!fileURLToPath(f).startsWith(fileURLToPath(root)))throw Error();res.setHeader('Content-Type',f.pathname.endsWith('.js')?'text/javascript':f.pathname.endsWith('.css')?'text/css':f.pathname.endsWith('.svg')?'image/svg+xml':'text/html');res.end(await readFile(f));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
- const page=await browser.newPage({viewport:{width:375,height:667},hasTouch:true,isMobile:true,acceptDownloads:true});const errors=[],requests=[];
- page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push({url:r.url(),method:r.method()}));const base=`http://127.0.0.1:${server.address().port}`;await page.goto(base);
+ const page=await browser.newPage({viewport:{width:375,height:667},hasTouch:true,isMobile:true,acceptDownloads:true});const errors=[],requests=[],failedResponses=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)failedResponses.push({status:r.status(),url:r.url()});});page.on('request',r=>requests.push({url:r.url(),method:r.method()}));const base=`http://127.0.0.1:${server.address().port}`+(process.argv.includes('--staged')?'/release-preview/':'');await page.goto(base);if(process.argv.includes('--staged'))assert.match(await page.locator('#menuPanel header small').textContent(),/v2\.0\.0-rc\.1/);
  const before=await page.evaluate(async()=>{
   const {GalleryStore}=await import('./js/gallery-store.js'),{CHALLENGES}=await import('./js/challenges.js'),{createSimulation,stepSimulation}=await import('./js/physics.js'),{createFlightRecorder}=await import('./js/flight-record.js');
   const s=CHALLENGES[19];let state=createSimulation(s,s.solution);const rec=createFlightRecorder(s,state,{playType:'challenge',gameMode:'design',launchMode:'precision'});
@@ -50,7 +50,7 @@ try{
  await page.waitForFunction(()=>imageUrls.size===0);
  assert.equal(await page.evaluate(()=>imageUrls.size),0);
  const after=await page.evaluate(async()=>{const {GalleryStore}=await import('./js/gallery-store.js');return{records:JSON.stringify(await new GalleryStore().list()),progress:localStorage.getItem('orbit-maker.stage-progress.v1')};});assert.deepEqual(after,before);
- assert.deepEqual(errors,[]);assert.ok(requests.every(r=>r.method==='GET'&&(r.url.startsWith(base)||r.url.startsWith('blob:'))));
- await writeFile(new URL('result.json',dir),JSON.stringify({browser:'Windows Chrome 375x667; not iPhone Safari',square:[1080,1080],portrait:[1080,1920],nonDestructive:true,workerAndFallback:true,switches,shareStub:true,unsupportedFallback:true,failureRecovery:true,urlsReleased:true,externalUpload:false,errors},null,2));
+ assert.deepEqual(errors,[]);assert.deepEqual(failedResponses,[]);assert.ok(requests.every(r=>r.method==='GET'&&(r.url.startsWith(base)||r.url.startsWith('blob:'))));
+ await writeFile(new URL('result.json',dir),JSON.stringify({browser:'Windows Chrome 375x667; not iPhone Safari',square:[1080,1080],portrait:[1080,1920],nonDestructive:true,workerAndFallback:true,switches,shareStub:true,unsupportedFallback:true,failureRecovery:true,urlsReleased:true,externalUpload:false,failedResponses,errors},null,2));
  console.log('Orbit Share PASS: PNG sizes, downloads, switches, share stubs/fallback, non-destructive, failures/retry, URL cleanup, no upload');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

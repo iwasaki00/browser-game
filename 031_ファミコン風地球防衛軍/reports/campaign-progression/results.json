@@ -1,0 +1,35 @@
+{
+  "version": "1.2.0-C1",
+  "date": "2026-11-02",
+  "timezone": "Asia/Tokyo",
+  "decision": "NOT READY",
+  "reportedIssue": {
+    "severity": "BLOCKER",
+    "status": "UNRESOLVED_PENDING_DEVICE_EVIDENCE",
+    "reproducedInNode": false,
+    "rootCause": null,
+    "realSafariSaveAccessed": false,
+    "runtimeFixClaimed": false
+  },
+  "changes": "Existing result diagnostics extended before boss death, bounded tab-local storage/export, regression tests; no forced clear or unconditional unlock",
+  "hp4Regression": {
+    "status": "PASS",
+    "classes": ["RANGER", "SCOUT", "GUARDIAN", "WING"],
+    "weapons": ["A-01", "S-02"],
+    "invulnerabilityBeforeKill": false,
+    "method": "Formal sortie followed by arena/Phase3/HP4 reproduction fixture; actual engine movement/shots/hits/AI. Existing VM timers flushed, not real browser wall time",
+    "A01": {"updateFrames": 4, "hpAfter": -4},
+    "S02": {"updateFrames": 4, "hpAfter": -1},
+    "resultToCommand": "PASS",
+    "M05UnlockSelectDeployReload": "PASS",
+    "fullNormalHumanClear": "NOT RUN"
+  },
+  "newRelatedTests": {"file": "tests/campaign-progression.test.mjs", "pass": 16, "fail": 0, "includedInTotalBelow": true},
+  "campaignQA": {"command": "npm run qa", "exitCode": 0, "groups": 156, "pass": 140, "fail": 0, "normalSimNotCleared": 8, "humanNotRun": 8, "relatedFiles": 27, "relatedTests": 716, "relatedPass": 716, "relatedFail": 0, "skip": 0, "evidence": "../campaign-integration/results.json"},
+  "developmentFailure": {"relatedPass": 715, "relatedFail": 1, "cause": "Diagnostic heartbeat inserted into guarded RAF accumulator source", "resolution": "Moved sampling to update, preserved loop and original test expectation; full QA rerun passes", "isUserIssueRootCause": false},
+  "browser": {"status": "BLOCKED", "gameplayVerified": false, "reason": "Browser access host unavailable; native accessibility null / screenshots zero; subsequent capture stopped by Computer Use because current Windows browser URL could not be determined with sufficient confidence. No further UI actions"},
+  "iphone": {"status": "NOT RUN", "nextEvidence": "Same-tab transition diagnostic JSON plus device/iOS/Safari/weapons/held-input/interruption details"},
+  "savePolicy": {"normalSaveResetOrDeleted": false, "schemaChanged": false, "testStorage": "isolated per-runtime Map", "diagnosticStorage": "sessionStorage pdf-result-transition-v1, up to 24 events, best-effort, not a normal progress save", "LABWrites": 0},
+  "published": false,
+  "commitPushDeployPerformedByAgent": false
+}

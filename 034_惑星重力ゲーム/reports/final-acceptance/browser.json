@@ -1,0 +1,118 @@
+{
+  "browser": "156.0.8078.76",
+  "device": "PC Chrome safe-area / touch emulation; iPhone UNVERIFIED",
+  "results": [
+    {
+      "size": [
+        320,
+        568
+      ],
+      "board": {
+        "x": 5,
+        "y": 107,
+        "width": 310,
+        "height": 317
+      },
+      "panel": {
+        "x": 13,
+        "y": 162,
+        "width": 294,
+        "height": 187
+      },
+      "landscape": {
+        "x": 104,
+        "y": 8,
+        "width": 360,
+        "height": 191
+      },
+      "status": "PASS",
+      "touch": "real CDP touch; scan/search/restore/pan/pinch/launch/reset",
+      "saves": "old progress/favorite/protected record unchanged",
+      "errors": []
+    },
+    {
+      "size": [
+        375,
+        667
+      ],
+      "board": {
+        "x": 5,
+        "y": 107,
+        "width": 365,
+        "height": 416
+      },
+      "panel": {
+        "x": 13,
+        "y": 162,
+        "width": 349,
+        "height": 286
+      },
+      "landscape": {
+        "x": 153.5,
+        "y": 8,
+        "width": 360,
+        "height": 246
+      },
+      "status": "PASS",
+      "touch": "real CDP touch; scan/search/restore/pan/pinch/launch/reset",
+      "saves": "old progress/favorite/protected record unchanged",
+      "errors": []
+    },
+    {
+      "size": [
+        390,
+        844
+      ],
+      "board": {
+        "x": 5,
+        "y": 107,
+        "width": 380,
+        "height": 593
+      },
+      "panel": {
+        "x": 17,
+        "y": 162,
+        "width": 360,
+        "height": 463
+      },
+      "landscape": {
+        "x": 242,
+        "y": 8,
+        "width": 360,
+        "height": 261
+      },
+      "status": "PASS",
+      "touch": "real CDP touch; scan/search/restore/pan/pinch/launch/reset",
+      "saves": "old progress/favorite/protected record unchanged",
+      "errors": []
+    },
+    {
+      "size": [
+        430,
+        932
+      ],
+      "board": {
+        "x": 5,
+        "y": 107,
+        "width": 420,
+        "height": 681
+      },
+      "panel": {
+        "x": 57,
+        "y": 162,
+        "width": 360,
+        "height": 551
+      },
+      "landscape": {
+        "x": 286,
+        "y": 8,
+        "width": 360,
+        "height": 301
+      },
+      "status": "PASS",
+      "touch": "real CDP touch; scan/search/restore/pan/pinch/launch/reset",
+      "saves": "old progress/favorite/protected record unchanged",
+      "errors": []
+    }
+  ]
+}

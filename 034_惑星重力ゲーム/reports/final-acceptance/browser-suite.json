@@ -1,0 +1,56 @@
+[
+  {
+    "name": "final-voyage-ui",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 113817
+  },
+  {
+    "name": "space-scanner-ui",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 40115
+  },
+  {
+    "name": "space-scanner-capture",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 11274
+  },
+  {
+    "name": "space-scanner-modes",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 67451
+  },
+  {
+    "name": "mobile-polish-audio",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 8319
+  },
+  {
+    "name": "mobile-polish-navigation",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 48216
+  },
+  {
+    "name": "orbit-share-ui",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 5309
+  },
+  {
+    "name": "mobile-polish-performance",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 187541
+  },
+  {
+    "name": "space-scanner-endurance",
+    "exitCode": 0,
+    "status": "PASS",
+    "elapsedMs": 196309
+  }
+]

@@ -1,8 +1,8 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.2.0 — RIVER RECOVERY & DEBUG LAB**
+**Version 0.3.0 — GOLD PANNING**
 
-少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。素手からスコップ、熊手、砂ふるいへ。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
 
 ## Windows / VSCodeで起動
 
@@ -17,6 +17,15 @@ npm.cmd run dev
 ```
 
 ターミナルに出る `http://localhost:5173/` をブラウザで開きます。使用中のポートがあれば、表示された別の番号を使ってください。停止はCtrl+Cです。`npm.cmd` を使うとPowerShellのスクリプト実行ポリシーの影響を避けられます。
+
+## 0.3.0の変更
+
+- G-A/G-Bの河原探索、砂利袋、指で動かすパンニング、7道具、連続選別するスルースを追加。
+- 砂浜20個または川底5個でG-A。河原発見10個またはパンニング5回でG-B。初回は素手、資金と荷物は共通です。
+- ふるいで前処理し、通常皿で微細粒を残すC09。虫眼鏡で見分け、吸引瓶で精密回収します。
+- 砂浜・川底・河原のクイック装備を各4枠で保存。砂利の残渣や途中作業も保存します。
+- DEBUG LABは8タブ・22シナリオへ。河原状態・工程別実測・1/2/10倍速を追加。本番ビルドから除外します。
+- 初心者向け操作、保存互換、LABの使い方は [GOLD PANNING説明書](docs/GOLD_PANNING.md)。[試験結果](docs/TEST_RESULTS.md)と[バランス](docs/BALANCE.md)も更新しました。
 
 ## 0.2.0の変更
 
@@ -82,6 +91,8 @@ npm.cmd run test:depth-browser
 npm.cmd run test:reveal-browser
 npm.cmd run balance:tools
 npm.cmd run balance:river
+npm.cmd run balance:gold
+npm.cmd run test:gold-browser
 npm.cmd run test:river-browser
 npm.cmd run test:production
 ```
@@ -99,8 +110,11 @@ npm.cmd run test:production
 - `src/reveal.ts`: 洗浄演出と完了状態
 - `src/river.ts`, `src/river-view.ts`: 川底の独立回収処理と水面描画
 - `src/dev.ts`, `src/dev-actions.ts`, `src/dev.css`: 開発専用DEBUG LAB
+- `src/gold.ts`, `src/gold-ui.ts`, `src/gold-view.ts`: 河原・砂利・選別・作業台
+- `src/equipment.ts`, `src/measure.ts`: カテゴリ別装備・共通工程実測
+- `src/dev-gold.ts`: 開発専用の河原シナリオ
 - `src/events.ts`: 上限100件の重要イベント
 - `tests/`, `scripts/`: 自動テスト・模擬プレイ・ブラウザ試験
 - `docs/`: 仕様・判断・試験結果・今後の計画
 
-R-C/R-Dなどの将来エリア・114道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。
+R-C/R-D、G-C/G-Dなどの将来エリア・107道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。

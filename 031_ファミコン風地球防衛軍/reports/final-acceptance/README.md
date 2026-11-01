@@ -1,5 +1,7 @@
 # 1.2.0-C — FINAL ACCEPTANCE
 
+> C1でM04進行不能の再発報告あり。本書・results.jsonのCONDITIONALは再発報告前のCの履歴です。現在は**NOT READY：BLOCKERの原因未確定・実機再確認待ち**。[C1調査結果](../campaign-progression/README.md)を参照。
+
 最終判定：**CONDITIONAL**。必須の統合QA・関連700件・ローカル静的監査は合格。通常難易度の人手全編攻略、iPhoneの残りの受入項目、前景FPS、実際の公開方式・配信先は未確認。READYではない。公開・commit・push・デプロイは、こちらから実施していない。
 
 実施日：2026-11-01。各自動試験のUTC実行時刻・対象版はJSONを参照。[結果集計](results.json)／[公開前監査](release-audit.json)／[性能の未計測表](performance.json)／[手順](../../docs/FINAL_ACCEPTANCE.md)。
