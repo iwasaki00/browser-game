@@ -1,0 +1,464 @@
+{
+  "schema": "mobile-acceptance-1",
+  "rows": [
+    {
+      "id": "QA-mvxb3d73-1",
+      "sessionId": "AC-mvxb2jsn-1",
+      "measurement": {
+        "id": 1,
+        "startedAt": "2026-11-01T04:04:01.078Z",
+        "metadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-01",
+          "missionId": "M01",
+          "area": 1,
+          "playerClass": "RANGER",
+          "weapons": [
+            "A-01",
+            "S-02"
+          ],
+          "density": "STANDARD",
+          "enemyLimit": 50,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.5,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "844×390",
+          "audio": "running",
+          "normalProgressSaved": false
+        },
+        "status": "COMPLETE",
+        "statusLabel": "計測完了",
+        "reason": "目標有効時間の観測RAF計測完了（表示完了・GPU時間の測定ではありません）",
+        "valid": false,
+        "targetDurationMs": 30000,
+        "acceptedDurationMs": 30008.199999999997,
+        "remainingMs": 0,
+        "samples": 892,
+        "observedRafFps": 29.725208443025576,
+        "minimumOneSecondFps": null,
+        "fullSecondWindows": 30,
+        "p50FrameMs": 33.5,
+        "p95FrameMs": 33.5,
+        "p99FrameMs": 34,
+        "maxFrameMs": 100.09999999999854,
+        "updateCpuMs": 0.4461883412248083,
+        "drawCpuMs": 0.9969730942505892,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "interruptions": 4,
+        "warmupFrames": 119,
+        "warmupMs": 1000,
+        "actualWarmupMs": -8590.5,
+        "unclassifiedGapMs": null,
+        "cpuAccountedLongFrames": 0,
+        "histogramResolutionMs": 0.25,
+        "normalProgressSaved": false,
+        "normalClearCertified": false,
+        "quality": "REFERENCE",
+        "qualityLabel": "参考値",
+        "currentFps": 29.97452165659194,
+        "averageFps": 29.725208443025576,
+        "lowFps": 29.850746268656717,
+        "lowFpsDefinition": "1000 / p95 RAF間隔（最低FPSではない）",
+        "elapsedWallMs": 38198.3,
+        "excludedFrames": 128,
+        "warmupExcluded": 119,
+        "baselineExcluded": 5,
+        "longGaps": 4,
+        "cpuLoadFrames": 0,
+        "unresolvedGapMs": 3936.600000000013,
+        "continuousDelaySuspected": false,
+        "sessionId": "AC-mvxb2jsn-1",
+        "currentCounts": {
+          "enemies": 0,
+          "shots": 0,
+          "effects": 0
+        },
+        "endMetadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-01",
+          "missionId": "M01",
+          "area": 1,
+          "playerClass": "RANGER",
+          "weapons": [
+            "A-01",
+            "S-02"
+          ],
+          "density": "STANDARD",
+          "enemyLimit": 50,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.5,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "844×390",
+          "audio": "running",
+          "normalProgressSaved": false
+        },
+        "events": [
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 834.1000000000058,
+            "detail": "834.1ms / 直前CPU 10.6ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 834.1000000000058,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 3786.600000000006,
+            "detail": "1034.3ms / 直前CPU 16.9ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 3786.600000000006,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 6672.200000000004,
+            "detail": "1034.2ms / 直前CPU 2.6ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 6672.200000000004,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 16747.100000000006,
+            "detail": "1034.0ms / 直前CPU 44.7ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 16747.100000000006,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          }
+        ]
+      },
+      "review": {
+        "mode": "A_LAB",
+        "normalContext": null,
+        "device": "",
+        "outcome": "未評価",
+        "ratings": {
+          "controls": null,
+          "visibility": null,
+          "difficulty": null,
+          "audio": null,
+          "performance": null
+        },
+        "notes": {
+          "controls": "",
+          "visibility": "",
+          "difficulty": "",
+          "audio": "",
+          "performance": ""
+        },
+        "memo": ""
+      },
+      "issues": []
+    },
+    {
+      "id": "QA-mvxbfgug-1",
+      "sessionId": "AC-mvxbf9lu-1",
+      "measurement": {
+        "id": 1,
+        "startedAt": "2026-11-01T04:13:54.401Z",
+        "metadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-10",
+          "missionId": "M01",
+          "area": 1,
+          "playerClass": "STANDARD",
+          "weapons": [
+            "A-01",
+            "S-02"
+          ],
+          "density": "MASSIVE",
+          "enemyLimit": 200,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.5,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "844×390",
+          "audio": "running",
+          "muted": false,
+          "volume": 0.65,
+          "normalProgressSaved": false
+        },
+        "status": "STOPPED",
+        "statusLabel": "計測停止",
+        "reason": "手動停止",
+        "valid": false,
+        "targetDurationMs": null,
+        "acceptedDurationMs": 7989.799999999999,
+        "remainingMs": null,
+        "samples": 479,
+        "observedRafFps": 59.95143808355654,
+        "minimumOneSecondFps": null,
+        "fullSecondWindows": 7,
+        "p50FrameMs": 16.75,
+        "p95FrameMs": 17,
+        "p99FrameMs": 17,
+        "maxFrameMs": 17.099999999998545,
+        "updateCpuMs": 0.22108559484646068,
+        "drawCpuMs": 0.6062630479358183,
+        "maxEnemies": 0,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "interruptions": 1,
+        "warmupFrames": 60,
+        "warmupMs": 1000,
+        "actualWarmupMs": null,
+        "unclassifiedGapMs": null,
+        "cpuAccountedLongFrames": 0,
+        "histogramResolutionMs": 0.25,
+        "normalProgressSaved": false,
+        "normalClearCertified": false,
+        "quality": "REFERENCE",
+        "qualityLabel": "参考値",
+        "currentFps": null,
+        "averageFps": 59.95143808355654,
+        "lowFps": 58.8235294117647,
+        "lowFpsDefinition": "1000 / p95 RAF間隔（最低FPSではない）",
+        "elapsedWallMs": 9357.899999999998,
+        "excludedFrames": 73,
+        "warmupExcluded": 60,
+        "baselineExcluded": 1,
+        "longGaps": 0,
+        "cpuLoadFrames": 0,
+        "unresolvedGapMs": 0,
+        "continuousDelaySuspected": false,
+        "sessionId": "AC-mvxbf9lu-1",
+        "currentCounts": {
+          "enemies": 0,
+          "shots": 0,
+          "effects": 0
+        },
+        "endMetadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-10",
+          "missionId": "M01",
+          "area": 1,
+          "playerClass": "STANDARD",
+          "weapons": [
+            "A-01",
+            "S-02"
+          ],
+          "density": "MASSIVE",
+          "enemyLimit": 200,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.5,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "780×360",
+          "audio": "running",
+          "muted": false,
+          "volume": 0.65,
+          "normalProgressSaved": false
+        },
+        "events": [
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 8990.8,
+            "detail": "画面切替:lab"
+          }
+        ]
+      },
+      "review": {
+        "mode": "A_LAB",
+        "normalContext": null,
+        "device": "",
+        "outcome": "未評価",
+        "ratings": {
+          "controls": null,
+          "visibility": null,
+          "difficulty": null,
+          "audio": null,
+          "performance": null
+        },
+        "notes": {
+          "controls": "",
+          "visibility": "",
+          "difficulty": "",
+          "audio": "",
+          "performance": ""
+        },
+        "memo": "Chrome UI確認用。人手攻略・iPhone評価は未実施。"
+      },
+      "issues": []
+    },
+    {
+      "id": "QA-mvxbgf4l-2",
+      "sessionId": "AC-mvxbgalm-2",
+      "measurement": {
+        "id": 2,
+        "startedAt": "2026-11-01T04:14:42.345Z",
+        "metadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-07",
+          "missionId": "M08",
+          "area": 5,
+          "playerClass": "RANGER",
+          "weapons": [
+            "R-04",
+            "S-02"
+          ],
+          "density": "STANDARD",
+          "enemyLimit": 50,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.35,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "844×390",
+          "audio": "running",
+          "muted": false,
+          "volume": 0.65,
+          "normalProgressSaved": false
+        },
+        "status": "STOPPED",
+        "statusLabel": "計測停止",
+        "reason": "手動停止",
+        "valid": false,
+        "targetDurationMs": null,
+        "acceptedDurationMs": 0,
+        "remainingMs": null,
+        "samples": 0,
+        "observedRafFps": null,
+        "minimumOneSecondFps": null,
+        "fullSecondWindows": 0,
+        "p50FrameMs": null,
+        "p95FrameMs": null,
+        "p99FrameMs": null,
+        "maxFrameMs": null,
+        "updateCpuMs": null,
+        "drawCpuMs": null,
+        "maxEnemies": 1,
+        "maxShots": 0,
+        "maxEffects": 0,
+        "interruptions": 4,
+        "warmupFrames": 39,
+        "warmupMs": 1000,
+        "actualWarmupMs": null,
+        "unclassifiedGapMs": null,
+        "cpuAccountedLongFrames": 0,
+        "histogramResolutionMs": 0.25,
+        "normalProgressSaved": false,
+        "normalClearCertified": false,
+        "quality": "INVALID",
+        "qualityLabel": "測定不成立",
+        "currentFps": null,
+        "averageFps": null,
+        "lowFps": null,
+        "lowFpsDefinition": "1000 / p95 RAF間隔（最低FPSではない）",
+        "elapsedWallMs": 5838.100000000006,
+        "excludedFrames": 50,
+        "warmupExcluded": 39,
+        "baselineExcluded": 4,
+        "longGaps": 3,
+        "cpuLoadFrames": 0,
+        "unresolvedGapMs": 2402.100000000006,
+        "continuousDelaySuspected": false,
+        "sessionId": "AC-mvxbgalm-2",
+        "currentCounts": {
+          "enemies": 1,
+          "shots": 0,
+          "effects": 0
+        },
+        "endMetadata": {
+          "version": "1.2.0-A",
+          "testId": "IP-07",
+          "missionId": "M08",
+          "area": 5,
+          "playerClass": "RANGER",
+          "weapons": [
+            "R-04",
+            "S-02"
+          ],
+          "density": "STANDARD",
+          "enemyLimit": 50,
+          "invincible": true,
+          "resolution": "320×180",
+          "cameraZoom": 0.35,
+          "cameraMode": "AUTO",
+          "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+          "viewport": "844×390",
+          "audio": "running",
+          "muted": false,
+          "volume": 0.65,
+          "normalProgressSaved": false
+        },
+        "events": [
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 1217.699999999997,
+            "detail": "1000.9ms / 直前CPU 0.9ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 1217.699999999997,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 2618.800000000003,
+            "detail": "400.4ms / 直前CPU 2.4ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 2618.800000000003,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "UNRESOLVED_LONG_GAP",
+            "atMs": 4620.5,
+            "detail": "1000.8ms / 直前CPU 2.2ms"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 4620.5,
+            "detail": "長い間隔：停止／継続遅延を判別不能"
+          },
+          {
+            "kind": "INTERRUPTION",
+            "atMs": 5621.300000000003,
+            "detail": "画面切替:lab"
+          }
+        ]
+      },
+      "review": {
+        "mode": "A_LAB",
+        "normalContext": null,
+        "device": "",
+        "outcome": "未評価",
+        "ratings": {
+          "controls": null,
+          "visibility": null,
+          "difficulty": null,
+          "audio": null,
+          "performance": null
+        },
+        "notes": {
+          "controls": "",
+          "visibility": "",
+          "difficulty": "",
+          "audio": "",
+          "performance": ""
+        },
+        "memo": ""
+      },
+      "issues": []
+    }
+  ],
+  "normalSaveModified": false,
+  "externalTransmission": false
+}

@@ -580,7 +580,8 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 .lab-bench-buttons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin: 8px 0; }
 .mobile-measure-badge { position: absolute; z-index: 26; bottom: 94px; left: 50%; transform: translateX(-50%); max-width: calc(100% - 24px); padding: 5px 8px; background: #041320e8; border: 1px solid var(--cyan); color: var(--yellow); font: 11px/1.4 monospace; pointer-events: none; text-align: center; }
 .acceptance-hud { flex-basis: 100%; order: 10; font: 10px/1.4 monospace; color: var(--yellow); pointer-events: none; overflow-wrap: anywhere; }
-header:has(.acceptance-hud:not([hidden])) { flex-wrap: wrap; }
+:root.has-acceptance-hud { --header-h: 60px; }
+.has-acceptance-hud .site-bar { flex-wrap: wrap; gap: 2px 12px; align-content: center; }
 #screenLab .acceptance-card { grid-column: 1 / -1; min-width: 0; }
 #screenLab .acceptance-card pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; }
 #screenLab .acceptance-legacy { min-width: 0; }

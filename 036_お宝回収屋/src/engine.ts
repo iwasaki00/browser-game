@@ -1,9 +1,10 @@
 import { CONFIG, income, treasure, tool, weights, combinations } from './data';
+import type {HandFeedback} from './feedback';
 export interface Find { uid:string; id:string; x:number; y:number; depth?:number; quality:number; state:'buried'|'batch'|'stored'|'paid'; tool:string; }
 export interface Plot { id:string; seed:number; mask:number[]; items:Find[]; }
 export interface Batch { id:string; plotId:string; items:string[]; processed:boolean; cells:number; }
 export interface State {
- saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
+ handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
  explorationAreas:Plot[]; currentPlot:number; exploredPlots:number; retainedFinds:Find[]; sandSampled:boolean;
@@ -34,7 +35,7 @@ export function generate(seed:number,tutorial=false,noJackpot=false):Plot {
  return {id:`BA-${seed}`,seed,mask:Array(1008).fill(0),items};
 }
 export function createState(seed=Date.now()>>>0):State {
- return {saveVersion:2,playerId:`finder-${seed}`,currentFN:0,totalEarnedFN:0,playerStats:{stamina:100,xp:[0,0,0,0]},ownedTools:[],equippedTools:[],quickSlots:['hand','','',''],unlockedTools:[],discoveredTreasures:{},explorationAreas:[generate(seed,true)],currentPlot:0,exploredPlots:1,retainedFinds:[],sandSampled:false,collectedTreasures:[],completedContracts:[],activeContracts:[],jackpotHistory:[],sandBatches:[],revenueHistory:[],purchases:[],playTime:0,lastSavedAt:'',digs:0,cells:0,settings:{sound:false,short:false}};
+ return {handFeedback:[],saveVersion:2,playerId:`finder-${seed}`,currentFN:0,totalEarnedFN:0,playerStats:{stamina:100,xp:[0,0,0,0]},ownedTools:[],equippedTools:[],quickSlots:['hand','','',''],unlockedTools:[],discoveredTreasures:{},explorationAreas:[generate(seed,true)],currentPlot:0,exploredPlots:1,retainedFinds:[],sandSampled:false,collectedTreasures:[],completedContracts:[],activeContracts:[],jackpotHistory:[],sandBatches:[],revenueHistory:[],purchases:[],playTime:0,lastSavedAt:'',digs:0,cells:0,settings:{sound:false,short:false}};
 }
 export const plot=(s:State)=>s.explorationAreas[0];
 const allFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
@@ -54,25 +55,31 @@ export function buy(s:State,id:string) {
  const before=rate(s).normal;s.currentFN-=t.priceFN;s.ownedTools.push(id);const slot=s.quickSlots.indexOf('');if(slot>=0)s.quickSlots[slot]=id;
  s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});return true;
 }
-export const depthAt=(p:Plot,x:number,y:number)=>p.mask[Math.floor(y/10)*36+Math.floor(x/10)]*280||0;
+export const MAX_DEPTH=280;
+export function depthAt(p:Plot,x:number,y:number){if(x<0||x>=360||y<0||y>=280)return 0;return (p.mask[Math.floor(y/10)*36+Math.floor(x/10)]??0)*MAX_DEPTH;}
+export const reachedFind=(p:Plot,f:Find)=>depthAt(p,f.x,f.y)+1e-7>=(f.depth??f.y);
 export function exposure(p:Plot,f:Find) {
  let n=0,total=0;const depth=f.depth??f.y;
  for(let y=Math.floor((f.y-8)/10);y<=Math.floor((f.y+8)/10);y++)for(let x=Math.floor((f.x-8)/10);x<=Math.floor((f.x+8)/10);x++){
   if(x>=0&&x<36&&y>=0&&y<28){total++;n+=Math.max(0,Math.min(1,(p.mask[y*36+x]*280-depth+12)/20));}
  }
- return total?n/total:0;
+ return total&&reachedFind(p,f)?n/total:0;
 }
 function cost(s:State,id:string) {s.playerStats.stamina=Math.max(0,s.playerStats.stamina-(id==='hand'?5:tool(id)!.staminaCost));s.playerStats.xp[3]++;}
-export const diggingLimit=(id:string)=>id==='B105'?280:id==='B101'?180:80;
+const DIG_LIMITS:Record<string,number>={hand:80,B102:80,B101:180,B105:280};
+export const diggingLimit=(id:string)=>DIG_LIMITS[id]??0;
 export function dig(s:State,id:string,x:number,y:number,dx:number) {
  if((id!=='hand'&&!s.ownedTools.includes(id))||id==='B201'||id==='B104'||Math.abs(dx)<2||x<0||x>=360||y<0||y>=280)return 0;
- const p=plot(s),limit=diggingLimit(id)/280,radius=id==='B105'?26:id==='B101'?15:id==='B102'?34:7,ry=id==='B102'?7:radius;
+ if(!diggingLimit(id))return 0;
+ const p=plot(s),maxDepth=diggingLimit(id),limit=maxDepth/MAX_DEPTH,radius=id==='B105'?26:id==='B101'?15:id==='B102'?34:7,ry=id==='B102'?7:radius;
  const low=s.playerStats.stamina<10?.5:1;let removed=0;
  for(let yy=Math.max(0,Math.floor((y-ry-4)/10));yy<=Math.min(27,Math.floor((y+ry+4)/10));yy++)for(let xx=Math.max(0,Math.floor((x-radius-4)/10));xx<=Math.min(35,Math.floor((x+radius+4)/10));xx++){
   const i=yy*36+xx;
   if(p.mask[i]>=limit||((xx*10+5-x)/(radius+4))**2+((yy*10+5-y)/(ry+4))**2>1)continue;
-  const amount=Math.min(limit-p.mask[i],(id==='hand'?.45:.85)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*limit);
-  p.mask[i]+=amount;removed+=amount/limit;
+  const currentDepth=p.mask[i]*MAX_DEPTH;
+  const strokeDepth=(id==='hand'?.45:.85)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*maxDepth;
+  const nextDepth=Math.min(maxDepth,currentDepth+strokeDepth);
+  p.mask[i]=nextDepth/MAX_DEPTH;removed+=(nextDepth-currentDepth)/maxDepth;
  }
  if(!removed)return 0;
  cost(s,id);s.digs++;s.cells+=removed;s.playerStats.xp[0]+=removed;s.playerStats.xp[1]+=.5;
@@ -120,7 +127,7 @@ export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false) {
  const old=plot(s);if(seed===old.seed)seed=(seed+1)>>>0;
  s.retainedFinds=allFinds(s).filter(f=>f.state==='stored'||f.state==='batch');
  s.sandSampled ||= s.sandBatches.length>0;s.sandBatches=s.sandBatches.filter(b=>!b.processed);
- s.exploredPlots++;const next=generate(seed,false,noJackpot);
+ s.handFeedback=[];s.exploredPlots++;const next=generate(seed,false,noJackpot);
  next.id=`BA-${seed}-${s.exploredPlots}`;next.items.forEach((f,i)=>f.uid=`${s.playerId}:${s.exploredPlots}:${seed}:${i}`);
  s.explorationAreas=[next];s.currentPlot=0;
  s.activeContracts=s.activeContracts.filter(uid=>s.retainedFinds.some(f=>f.uid===uid));refresh(s);

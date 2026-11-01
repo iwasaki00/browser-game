@@ -1,0 +1,55 @@
+
+> orbit-maker@1.9.2 test
+> node tests/qa-all.mjs --final
+
+{
+  "version": "1.9.2",
+  "node": "v25.9.0",
+  "platform": "win32",
+  "files": 32,
+  "testFiles": [
+    "balance.test.mjs",
+    "camera.test.mjs",
+    "challenges.test.mjs",
+    "cinematic.test.mjs",
+    "deep-space.test.mjs",
+    "echoes.test.mjs",
+    "encounters.test.mjs",
+    "expanded-space.test.mjs",
+    "final-voyage.test.mjs",
+    "first-voyage.test.mjs",
+    "flight-replay.test.mjs",
+    "frontier.test.mjs",
+    "gallery.test.mjs",
+    "game-balance.test.mjs",
+    "homeward-experience.test.mjs",
+    "homeward.test.mjs",
+    "impossible-signal.test.mjs",
+    "launch.test.mjs",
+    "live-gravity.test.mjs",
+    "lost-sectors.test.mjs",
+    "mobile-audio.test.mjs",
+    "navigation.test.mjs",
+    "open-voyage.test.mjs",
+    "orbit-art.test.mjs",
+    "physics.test.mjs",
+    "planets.test.mjs",
+    "preview.test.mjs",
+    "qa-difficulty.test.mjs",
+    "qa-progression.test.mjs",
+    "space-experience.test.mjs",
+    "special-challenges.test.mjs",
+    "special-planets.test.mjs"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 38448,
+  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-Wn3vyJ\\game",
+  "counts": {
+    "tests": 405,
+    "pass": 405,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  }
+}

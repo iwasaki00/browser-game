@@ -1,0 +1,32 @@
+{
+  "baseline": "0.1.1",
+  "stages": [
+    {
+      "id": "hand",
+      "actions": 3,
+      "center": 80,
+      "connectedAverage": 80,
+      "max": 80
+    },
+    {
+      "id": "B101",
+      "actions": 1,
+      "center": 180,
+      "connectedAverage": 168.00000000000003,
+      "max": 180
+    },
+    {
+      "id": "B105",
+      "actions": 1,
+      "center": 280,
+      "connectedAverage": 251.03448275862078,
+      "max": 280
+    }
+  ],
+  "boundary": {
+    "excavated": 80,
+    "buried": 80.5,
+    "exposure": 0.5750000000000001,
+    "recoverable": true
+  }
+}

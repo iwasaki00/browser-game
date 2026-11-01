@@ -2,159 +2,547 @@
   "browser": "156.0.8078.48",
   "platform": "win32",
   "viewport": "1366x768",
-  "condition": "real wall clock; HUGE LONG VOYAGE, 3 planets, CINEMATIC, prediction, recorder, IndexedDB; repeated 20 launches; UI automation overhead included",
-  "seconds": 6.4725506,
-  "frames": 388,
-  "fps": 59.945456432584706,
-  "rendererTaskCpuPercent": 37.75738732733893,
+  "condition": "real wall clock; HUGE LONG VOYAGE, 3 planets, CINEMATIC, prediction, recorder, IndexedDB; repeated 80 launches with alternating RESET/retry; UI automation overhead included",
+  "seconds": 35.9041854,
+  "frames": 2133,
+  "fps": 59.40811569004431,
+  "rendererTaskCpuPercent": 46.78421140282993,
   "heaps": [
     {
-      "flight": 5,
-      "usedSize": 4246108,
-      "totalSize": 5292032,
-      "embedderHeapUsedSize": 3897600,
-      "backingStorageSize": 323458
-    },
-    {
       "flight": 10,
-      "usedSize": 4337116,
-      "totalSize": 5292032,
-      "embedderHeapUsedSize": 3847264,
-      "backingStorageSize": 323458
-    },
-    {
-      "flight": 15,
-      "usedSize": 4398988,
-      "totalSize": 5292032,
-      "embedderHeapUsedSize": 3907560,
-      "backingStorageSize": 323458
+      "usedSize": 4407724,
+      "totalSize": 5816320,
+      "embedderHeapUsedSize": 4043048,
+      "backingStorageSize": 323477
     },
     {
       "flight": 20,
-      "usedSize": 4414456,
-      "totalSize": 5292032,
-      "embedderHeapUsedSize": 3920560,
-      "backingStorageSize": 323458
+      "usedSize": 4456688,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 4145248,
+      "backingStorageSize": 323477
+    },
+    {
+      "flight": 30,
+      "usedSize": 4588584,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 4137464,
+      "backingStorageSize": 323498
+    },
+    {
+      "flight": 40,
+      "usedSize": 4533872,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 3823416,
+      "backingStorageSize": 323498
+    },
+    {
+      "flight": 50,
+      "usedSize": 4557144,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 3914256,
+      "backingStorageSize": 323498
+    },
+    {
+      "flight": 60,
+      "usedSize": 4572216,
+      "totalSize": 5816320,
+      "embedderHeapUsedSize": 3998984,
+      "backingStorageSize": 323498
+    },
+    {
+      "flight": 70,
+      "usedSize": 4574568,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 3817520,
+      "backingStorageSize": 323498
+    },
+    {
+      "flight": 80,
+      "usedSize": 4608592,
+      "totalSize": 5816320,
+      "embedderHeapUsedSize": 3791144,
+      "backingStorageSize": 323498
     }
   ],
   "flights": [
     {
       "flight": 1,
-      "wallMs": 298.2854,
+      "wallMs": 392.81579999999985,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 2,
-      "wallMs": 278.08590000000004,
+      "wallMs": 347.05790000000025,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 3,
-      "wallMs": 263.69669999999996,
+      "wallMs": 283.9879000000001,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 4,
-      "wallMs": 288.6806999999999,
+      "wallMs": 293.77549999999974,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 5,
-      "wallMs": 281.47569999999996,
+      "wallMs": 309.6230000000005,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 6,
-      "wallMs": 262.43420000000015,
+      "wallMs": 307.6207999999997,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 7,
-      "wallMs": 292.35490000000027,
+      "wallMs": 299.78310000000056,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 8,
-      "wallMs": 267.19129999999996,
+      "wallMs": 315.8129999999992,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 9,
-      "wallMs": 282.3186000000005,
+      "wallMs": 350.09659999999985,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 10,
-      "wallMs": 246.4944000000005,
+      "wallMs": 298.7615000000005,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 11,
-      "wallMs": 262.9456,
+      "wallMs": 280.84619999999995,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 12,
-      "wallMs": 265.6754000000001,
+      "wallMs": 339.54619999999977,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 13,
-      "wallMs": 266.15830000000005,
+      "wallMs": 440.8771999999999,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 14,
-      "wallMs": 283.66569999999956,
+      "wallMs": 380.3582999999999,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 15,
-      "wallMs": 295.72609999999986,
+      "wallMs": 294.5702999999994,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 16,
-      "wallMs": 265.5042000000003,
+      "wallMs": 331.29979999999887,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 17,
-      "wallMs": 283.3723,
+      "wallMs": 307.83259999999973,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 18,
-      "wallMs": 282.83100000000013,
+      "wallMs": 357.6804000000011,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 19,
-      "wallMs": 277.4245000000001,
+      "wallMs": 306.28559999999925,
       "selectedRate": 100,
       "result": "CLEAR"
     },
     {
       "flight": 20,
-      "wallMs": 278.3018000000002,
+      "wallMs": 331.677099999999,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 21,
+      "wallMs": 308.98029999999926,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 22,
+      "wallMs": 358.8282999999992,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 23,
+      "wallMs": 328.83619999999974,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 24,
+      "wallMs": 294.08280000000013,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 25,
+      "wallMs": 294.3758999999991,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 26,
+      "wallMs": 317.84219999999914,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 27,
+      "wallMs": 597.8155000000006,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 28,
+      "wallMs": 383.91789999999855,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 29,
+      "wallMs": 553.0614999999998,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 30,
+      "wallMs": 711.0571000000018,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 31,
+      "wallMs": 657.6885000000002,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 32,
+      "wallMs": 474.30859999999666,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 33,
+      "wallMs": 799.106200000002,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 34,
+      "wallMs": 701.5820000000022,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 35,
+      "wallMs": 383.6419999999998,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 36,
+      "wallMs": 441.32090000000244,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 37,
+      "wallMs": 360.0519000000022,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 38,
+      "wallMs": 374.2263000000021,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 39,
+      "wallMs": 320.90810000000056,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 40,
+      "wallMs": 312.3633000000009,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 41,
+      "wallMs": 328.1469999999972,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 42,
+      "wallMs": 325.7633999999998,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 43,
+      "wallMs": 317.52549999999974,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 44,
+      "wallMs": 401.8660999999993,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 45,
+      "wallMs": 380.91929999999775,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 46,
+      "wallMs": 333.4398000000001,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 47,
+      "wallMs": 307.10889999999927,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 48,
+      "wallMs": 334.96589999999924,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 49,
+      "wallMs": 354.3351999999977,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 50,
+      "wallMs": 319.8764999999985,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 51,
+      "wallMs": 346.6009000000013,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 52,
+      "wallMs": 320.3778999999995,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 53,
+      "wallMs": 312.3188000000009,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 54,
+      "wallMs": 294.0542999999998,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 55,
+      "wallMs": 309.6418999999987,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 56,
+      "wallMs": 299.72309999999925,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 57,
+      "wallMs": 311.8051000000014,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 58,
+      "wallMs": 306.47350000000006,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 59,
+      "wallMs": 293.4471999999987,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 60,
+      "wallMs": 275.5740000000005,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 61,
+      "wallMs": 297.4922000000006,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 62,
+      "wallMs": 283.429500000002,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 63,
+      "wallMs": 312.7311000000045,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 64,
+      "wallMs": 298.92269999999553,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 65,
+      "wallMs": 341.61590000000433,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 66,
+      "wallMs": 303.50940000000264,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 67,
+      "wallMs": 331.5850999999966,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 68,
+      "wallMs": 306.15989999999874,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 69,
+      "wallMs": 289.83150000000023,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 70,
+      "wallMs": 284.5720999999976,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 71,
+      "wallMs": 305.8004000000001,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 72,
+      "wallMs": 307.51320000000123,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 73,
+      "wallMs": 282.857600000003,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 74,
+      "wallMs": 307.5780999999988,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 75,
+      "wallMs": 310.7448000000004,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 76,
+      "wallMs": 307.2215999999971,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 77,
+      "wallMs": 280.39979999999923,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 78,
+      "wallMs": 325.6767000000036,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 79,
+      "wallMs": 302.54299999999785,
+      "selectedRate": 100,
+      "result": "CLEAR"
+    },
+    {
+      "flight": 80,
+      "wallMs": 294.9412000000011,
       "selectedRate": 100,
       "result": "CLEAR"
     }

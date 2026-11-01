@@ -1,6 +1,6 @@
 ﻿# お宝回収屋 — THE FINDERS
 
-**Version 0.1.1 — SURFACE VIEW UPDATE**
+**Version 0.1.2 — PERSPECTIVE & DEPTH FIX**
 
 少し斜めから見下ろす砂浜をなぞって掘り、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。素手からスコップ、熊手、砂ふるいへ。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
 
@@ -18,7 +18,13 @@ npm.cmd run dev
 
 ターミナルに出る `http://localhost:5173/` をブラウザで開きます。使用中のポートがあれば、表示された別の番号を使ってください。停止はCtrl+Cです。`npm.cmd` を使うとPowerShellのスクリプト実行ポリシーの影響を避けられます。
 
-## 0.1.1の変更
+## 0.1.2の変更
+
+砂浜の左右を水平にし、前後だけの遠近感へ変更しました。同じ穴を素手→小型スコップ→大型スコップと掘り進めると、地点ごとの底色・壁・影が変わります。通常UIに深さの数値は表示しません。素手の限界の下に未発見品があると、低確率で小さな「コツッ」と手応えを返します。探知・回収そのものを代行する機能ではありません。
+
+画面例：[素手](docs/v012-depth-hand.png) / [小型スコップ](docs/v012-depth-small-shovel.png) / [大型スコップ](docs/v012-depth-large-shovel.png)。原因調査と保存互換の詳細は [PERSPECTIVE_DEPTH_FIX](docs/PERSPECTIVE_DEPTH_FIX.md)。
+
+## 0.1.1から引き継いだ機能
 
 断面表示を廃止し、穴の影と縁で深さを表現しました。深さの数字は表示しません。6種類の道具カーソルと、指を置いている間だけ出る半透明アイコンに対応。通知は砂浜上部に表示され、タップで消せます。0.1.0のセーブは自動移行し、現在の1区画と回収済みの荷物を保持します。詳細は `docs/SURFACE_VIEW_UPDATE.md`。
 
@@ -55,6 +61,7 @@ npm.cmd run balance
 npm.cmd run dev -- --port 5176
 # 元のターミナルで:
 npm.cmd run test:browser
+npm.cmd run test:depth-browser
 ```
 
 ブラウザ試験はインストール済みGoogle Chromeを利用します。開発版と本番版のセーブは別です。開発版は設定からFN変更・道具付与・お宝出現等を利用できます。

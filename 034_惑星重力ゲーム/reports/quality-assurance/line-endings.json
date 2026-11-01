@@ -1,0 +1,105 @@
+{
+  "scope": "Only edited sources and QA artifacts; no repository-wide renormalization",
+  "changed": [
+    {
+      "file": "reports\\quality-assurance\\all-before.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\all-final.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\browser-log.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\browser-results.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\classic-progression.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\crowded-performance-log.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\crowded-performance.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\difficulty-tests.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\difficulty.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\environment.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\final-ui-log.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\flight-performance-log.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\flight-performance.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\homeward-progression.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\launch-recheck.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\npm-test.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\progression-tests.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\share\\result.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\share-log.txt",
+      "from": "utf16le",
+      "to": "utf8 / LF"
+    },
+    {
+      "file": "reports\\quality-assurance\\ui-results.json",
+      "from": "utf8",
+      "to": "utf8 / LF"
+    }
+  ]
+}

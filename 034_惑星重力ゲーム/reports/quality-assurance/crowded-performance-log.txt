@@ -1,0 +1,22 @@
+{
+  "browser": "156.0.8078.48",
+  "platform": "win32",
+  "viewport": "1366x768",
+  "condition": "real wall clock; HUGE, 3 planets, 6 encounter groups (two meteor groups of 12 bodies), prediction recalculated 10 times in editor",
+  "seconds": 10.278174299999998,
+  "frames": 616,
+  "fps": 59.93282289443176,
+  "rendererTaskCpuPercent": 28.692615185558786,
+  "heaps": [
+    {
+      "usedSize": 4429388,
+      "totalSize": 5554176,
+      "embedderHeapUsedSize": 3322392,
+      "backingStorageSize": 323305
+    }
+  ],
+  "flights": [],
+  "errors": [],
+  "physicalEquivalence": "separately verified by full fixed-step tests, not inferred from FPS",
+  "iPhone": "UNVERIFIED"
+}

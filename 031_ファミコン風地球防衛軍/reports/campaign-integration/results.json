@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "startedAt": "2026-11-01T00:17:48.095Z",
+  "version": "1.2.0-A",
+  "startedAt": "2026-11-01T04:10:00.523Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb",
-    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M tests/final-defense.test.mjs\n M tests/helpers/runtime.mjs\n M tests/living-colossus.test.mjs\n M tests/mobile-fortress.test.mjs\n M tests/mothership.test.mjs\n M tests/sky-fortress.test.mjs\n?? reports/campaign-integration/\n?? tests/campaign-integration.test.mjs\n?? tests/helpers/campaign-routes.mjs\n?? tools/campaign-integration.mjs"
+    "commit": "4c23aa3dd12151d21b3d4d9008716592ad7e8d28",
+    "worktree": "M index.html\n M js/game.js\n M js/mobile-acceptance.js\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/lab-ui.test.mjs\n M tests/mobile-acceptance.test.mjs\n M tools/campaign-integration.mjs\n?? reports/mobile-acceptance/"
   },
   "cases": [
     {
@@ -5784,8 +5784,12 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 477,
+      "assertions": 549,
       "files": [
+        "tests/mobile-acceptance.test.mjs",
+        "tests/mobile-playtest.test.mjs",
+        "tests/lab-ui.test.mjs",
+        "tests/lab-weapon-picker.test.mjs",
         "tests/campaign-integration.test.mjs",
         "tests/mission02.test.mjs",
         "tests/boss-polish.test.mjs",
@@ -5864,7 +5868,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T00:19:45.041Z",
+  "finishedAt": "2026-11-01T04:11:53.824Z",
   "summary": {
     "total": 156,
     "pass": 140,
