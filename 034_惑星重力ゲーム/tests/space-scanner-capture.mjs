@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';import {writeFile} from 'node:fs/promises';import {fileURLToPath} from 'node:url';
 import {harness,root,tap} from './mobile-polish-harness.mjs';
-const h=await harness(),dir=new URL('reports/space-scanner/',root);
+const h=await harness(),dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/':'reports/space-scanner/',root);
 try{
  const context=await h.browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));const cdp=await context.newCDPSession(page);
  await page.goto(h.url+'/setup');await page.evaluate(async()=>{const {HOMEWARD_SECTORS}=await import('./js/homeward-data.js'),raw=await(await fetch('./reports/impossible-signal/browser-save.json')).json();raw.active=true;raw.currentSector='homeward-deep';raw.cleared=HOMEWARD_SECTORS.slice(0,9).map(s=>s.id);raw.eventsSeen.push('homeward-deep:enter');raw.deep={checkpoint:'origin',selected:'return'};localStorage.setItem('orbit-maker.homeward.v1',JSON.stringify(raw));});

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';import {writeFile,mkdir} from 'node:fs/promises';import {fileURLToPath} from 'node:url';import os from 'node:os';
 import {harness,tap,swipe,root} from './mobile-polish-harness.mjs';
-const dir=new URL('reports/space-scanner/',root);await mkdir(dir,{recursive:true});const h=await harness(),results=[],errors=[];
+const dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/':'reports/space-scanner/',root);await mkdir(dir,{recursive:true});const h=await harness(),results=[],errors=[];
 async function seed(page,id){await page.goto(h.url+'/setup');await page.evaluate(async id=>{const {HOMEWARD_SECTORS}=await import('./js/homeward-data.js'),raw=await(await fetch('./reports/impossible-signal/browser-save.json')).json();raw.currentSector=id;raw.active=true;raw.openingSeen=true;raw.cleared=HOMEWARD_SECTORS.filter(s=>s.id!==id).map(s=>s.id);raw.eventsSeen.push(id+':enter');raw.deep={completed:true,checkpoint:'origin',selected:'return',targets:Object.fromEntries(['DS01','DS02','DS03','DS04','DS05','DS06'].map(id=>[id,{state:'INVESTIGATED'}]))};raw.finalVoyage={checkpoint:'origin',selected:'earth'};localStorage.setItem('orbit-maker.homeward.v1',JSON.stringify(raw));localStorage.setItem('orbit-maker.stage-progress.v1',JSON.stringify({design:Object.fromEntries(Array.from({length:20},(_,i)=>['stage-'+String(i+1).padStart(2,'0'),3])),live:{}}));},id);}
 try{
  for(const mode of ['CLASSIC','FREE SPACE','HOMEWARD','DEEP SPACE','FINAL VOYAGE']){

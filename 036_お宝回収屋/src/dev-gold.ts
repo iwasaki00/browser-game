@@ -13,7 +13,7 @@ export function applyGoldScenario(s:State,id:string){
  delete s.goldWork;s.sluiceFeed=[];s.gravelBatches=[];s.retainedFinds=s.retainedFinds.filter(f=>!f.id.startsWith('G')||f.state==='stored');
  addPlot(s,93000+n,true,n<=3?'G-A':'G-B');const p=plot(s),site=p.goldSites![0];p.items=p.items.filter(f=>f.goldSite!==site.id);site.items=[];site.total=24;site.collected=0;site.coarse=.72;site.rich=n===11;
  const ids=n===1?['G001','G004','G003']:['G007','G003','G008'];
- ids.forEach((item,i)=>{const f=spawn(s,item,{x:site.x,y:site.y,depth:0,...grainProfile[item],goldSite:site.id,goldOffset:n===1?.3+i*7:1+i*7,captureRank:.35,goldCapture:0,goldRich:n===11});site.items.push(f.uid);});
+ ids.forEach((item,i)=>{const f=spawn(s,item,{x:site.x,y:site.y,depth:0,...grainProfile[item],goldSite:site.id,goldOffset:n===1?.3+i*7:1+i*7,captureRank:.35,goldCapture:0,goldRich:n===11});if(!site.items.includes(f.uid))site.items.push(f.uid);});
  const tools=n===1?[]:['G101',...(n>=3?['G102']:[]),...(n===3||n===9?['G103']:[]),...(n===5?['G105']:[]),...(n===6?['G110']:[]),...(n===7?['G201']:[]),...(n===8||n===12?['G203']:[])];tools.forEach(id=>grant(s,id));
  s.quickSlots=[scenario.tool,...tools.filter(t=>t!==scenario.tool),'','','',''].slice(0,4);s.equippedTools=s.quickSlots.filter(Boolean).filter(id=>id!=='hand');
  if(n>=3){for(let i=0;i<4;i++)collectGravel(s,'G101',site.x,site.y,24);const b=s.gravelBatches![0];

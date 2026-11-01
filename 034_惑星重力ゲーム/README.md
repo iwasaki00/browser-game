@@ -1,5 +1,17 @@
 # ORBIT MAKER（オービットメーカー）
 
+Version 2.0.0-rc.1 — FINAL ACCEPTANCE（最終受入候補）
+
+正式完成の判定は保留中です。SPACE SCANNERのv1.9.4実機評価OKはユーザー申告として引き継ぎ、ゲーム全体のiPhone最終受入は別に実施します。ゲームの物理・ステージ・保存形式は変更していません。
+
+[最終QA・完成判定](reports/final-acceptance/REPORT.md) ／ [iPhone最終確認表](reports/final-acceptance/IPHONE_CHECKLIST.md) ／ [公開前監査](reports/final-acceptance/RELEASE_AUDIT.md)
+
+ローカル確認はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0` を実行し、PCでは `http://localhost:8000/`、同じWi-FiのiPhoneでは `http://＜PCのIPv4アドレス＞:8000/` を開きます。停止はCtrl+Cです。新しいURLは既存URLと別の保存領域になるため、以前の記録が見えなくても削除されたとは限りません。受入時は既存の正式URL・同じSafariプロファイルを優先してください。候補版の公開はまだ行っていません。
+
+全自動テストは `npm test`。使い捨てコピーで実施し、結果は `reports/final-acceptance/` に保存します。ブラウザ検証も独立環境を使用します。公開・push・デプロイは行いません。
+
+以下は過去の実装履歴です。実機未確認の記述は各版の検証時点を示します。
+
 Version 1.9.4 — SPACE SCANNER
 
 盤面の「SCAN」で既知の天体・危険領域・探索対象を確認できます。「惑星を探す」は現在移動・削除が許可される配置済み惑星を近い順に表示します。「表示」で視点だけを移動し、「視点を戻す」で元の位置・倍率へ戻れます。未発見の目的地・未取得のCLUEは公開しません。

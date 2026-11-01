@@ -5,8 +5,8 @@ import {harness,root,tap} from './mobile-polish-harness.mjs';
 
 // Three real minutes of scanner/catalogue/DOM reuse. No virtual clock, no save
 // deletion, no change to physical limits, and no claim about iPhone thermals.
-const h=await harness(),dir=new URL('reports/space-scanner/',root);
-const result={version:'1.9.4',browser:h.browser.version(),environment:{os:os.platform(),cpu:os.cpus()[0].model,viewport:'375x667',dpr:3},method:'6 x 30 real seconds, editing DEEP SPACE 12000x10000; CDP touch; memory sampled while menu-paused after forced GC; PC only',samples:[],errors:[]};
+const h=await harness(),dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/':'reports/space-scanner/',root);
+const result={version:process.argv.includes('--acceptance')?'2.0.0-rc.1':'1.9.4',browser:h.browser.version(),environment:{os:os.platform(),cpu:os.cpus()[0].model,viewport:'375x667',dpr:3},method:'6 x 30 real seconds, editing DEEP SPACE 12000x10000; CDP touch; memory sampled while menu-paused after forced GC; PC only',samples:[],errors:[]};
 try{
  const context=await h.browser.newContext({viewport:{width:375,height:667},hasTouch:true,isMobile:true,deviceScaleFactor:3}),page=await context.newPage(),cdp=await context.newCDPSession(page);
  page.on('pageerror',e=>result.errors.push(e.stack));

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';import {writeFile,mkdir} from 'node:fs/promises';import {fileURLToPath} from 'node:url';
 import {harness,tap,swipe,touch,root} from './mobile-polish-harness.mjs';
-const dir=new URL('reports/space-scanner/',root);await mkdir(dir,{recursive:true});const h=await harness(),results=[];
+const dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/':'reports/space-scanner/',root);await mkdir(dir,{recursive:true});const h=await harness(),results=[];
 try{for(const [width,height]of [[320,568],[375,667],[390,844],[430,932]]){
  const context=await h.browser.newContext({viewport:{width,height},hasTouch:true,isMobile:true,deviceScaleFactor:1}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack));const cdp=await context.newCDPSession(page);
  await page.addInitScript(()=>{const proto=CanvasRenderingContext2D.prototype,text=proto.fillText,set=proto.setTransform;proto.setTransform=function(...a){if(this.canvas.id==='gameCanvas'&&(a[0]!==1||a[4]||a[5]))window.scanMatrix=a;return set.apply(this,a);};proto.fillText=function(v,...a){if(this.canvas.id==='gameCanvas'&&String(v).startsWith('T+'))window.scanTime=v;return text.call(this,v,...a);};});

@@ -1,7 +1,7 @@
 import {chromium} from '../../019_bomber-lab/tests/node_modules/playwright/index.mjs';
 import {createServer} from 'node:http';import {readFile,writeFile,mkdir} from 'node:fs/promises';import {fileURLToPath} from 'node:url';import assert from 'node:assert/strict';
 import {CHALLENGES} from '../js/challenges.js';
-const root=new URL('../',import.meta.url),dir=new URL('reports/quality-assurance/',root);await mkdir(dir,{recursive:true});
+const root=new URL('../',import.meta.url),dir=new URL(process.argv.includes('--acceptance')?'reports/final-acceptance/':'reports/quality-assurance/',root);await mkdir(dir,{recursive:true});
 const server=createServer(async(req,res)=>{try{const u=new URL('.'+new URL(req.url,'http://localhost').pathname,root),f=u.pathname.endsWith('/')?new URL('index.html',u):u;if(!fileURLToPath(f).startsWith(fileURLToPath(root)))throw Error();res.setHeader('Content-Type',f.pathname.endsWith('.js')?'text/javascript':f.pathname.endsWith('.css')?'text/css':f.pathname.endsWith('.svg')?'image/svg+xml':'text/html');res.end(await readFile(f));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'chrome',headless:true}),url=`http://127.0.0.1:${server.address().port}`,result={browser:browser.version(),platform:process.platform,classic:[],screens:[],errors:[]};
 try{

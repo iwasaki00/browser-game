@@ -59,7 +59,7 @@ export function collectGravel(s:State,id:string,x:number,y:number,stroke:number)
 }
 export function handSortGravel(s:State,b:GravelBatch){if(!s.gravelBatches?.includes(b))return 0;const previous=b.handProcessed,amount=Math.min(2,b.amount-b.handProcessed);if(amount<=0)return 0;b.handProcessed+=amount;let found=0;
  for(const uid of b.contents){const f=goldFinds(s).find(f=>f.uid===uid);if(f&&((f.goldAllocation??0)<previous||(f.goldAllocation??0)>=b.handProcessed))continue;if(f&&f.state==='batch'&&(f.grain??1)>=.6&&!b.separated.includes(uid))b.separated.push(uid);if(f&&storeGold(s,b,f,'hand'))found++;}
- if(b.contents.every(uid=>b.recovered.includes(uid)))b.processed=b.amount;measure(s,'hand','手選別',amount,spend(s,2),found);return amount;
+ if(b.handProcessed>=b.amount-1e-8&&b.contents.every(uid=>b.recovered.includes(uid)))b.processed=b.amount;measure(s,'hand','手選別',amount,spend(s,2),found);return amount;
 }
 export function goldProcessingRate(tool:string,screened:number,coarse:number,grain=.12,density=19.3,rough=0){
  if(grain>=.6)return 1;
@@ -71,9 +71,9 @@ export function beginGoldWork(s:State,batchId:string,id:string){
  if(s.goldWork)return s.goldWork.batchId===batchId&&s.goldWork.tool===id;
  const screen=id==='G103',reprocess=!screen&&b.processed>=b.amount-1e-8;
  if(screen&&b.screened>=b.amount-1e-8||reprocess&&!b.contents.some(uid=>{const f=goldFinds(s).find(f=>f.uid===uid);return f?.state==='batch'&&!b.separated.includes(uid);}))return false;
- const start=screen?b.screened:reprocess?(b.reprocessCursor??0):b.processed,load=Math.min(screen?8:id==='G201'?14:id==='G203'?20:4,b.amount-start);if(load<=0)return false;
+ const start=screen?b.screened:reprocess?(b.reprocessCursor??0):b.processed,baseCapacity=screen?8:id==='G201'?14:id==='G203'?20:4,screenedLoad=Math.min(Math.max(0,b.screened-start),baseCapacity/(1-b.coarse*.65)),load=Math.min(!screen&&id!=='G203'?Math.max(baseCapacity,screenedLoad):baseCapacity,b.amount-start);if(load<=0)return false;
  const screened=Math.max(0,Math.min(1,(b.screened-start)/load));
- s.goldWork={batchId,tool:id,mode:screen?'screen':id==='G203'?'sluice':'pan',start,load,work:0,required:screen?Math.max(.8,load*.3):id==='G203'?load*(.45+b.coarse*.25*(1-screened)):load*(id==='G201'?1.12:1)*(1+(1-screened)*b.coarse*4),rough:0,strokes:0,reprocess};
+ s.goldWork={batchId,tool:id,mode:screen?'screen':id==='G203'?'sluice':'pan',start,load,work:0,required:screen?Math.max(.8,load*.3):id==='G203'?load*(.45+b.coarse*.25*(1-screened)):load*(1-screened*b.coarse*.65)*(id==='G201'?1.12:1)*(1+(1-screened)*b.coarse*4),rough:0,strokes:0,reprocess};
  measure(s,id,screen?'粒径選別':id==='G203'?'水流選別':'比重選別',0,0,0,false);logEvent(s,'選別開始',`${id}/${batchId}`);return true;
 }
 function finishGoldWork(s:State){const w=s.goldWork,b=s.gravelBatches?.find(b=>b.id===w?.batchId);if(!w||!b)return false;
@@ -104,14 +104,16 @@ export function collectGrain(s:State,batchId:string,uid:string,id='hand'){const 
 export function observeGrain(s:State,uid:string){const f=goldFinds(s).find(f=>f.uid===uid);if(!f||!owns(s,'G105')||f.state!=='batch'||!s.gravelBatches?.some(b=>b.separated.includes(uid)))return '選別した粒を虫眼鏡で観察しよう。';f.observed=true;measure(s,'G105','観察',1,spend(s,.2));return grainDescription(f);}
 export function grainDescription(f:Find){if(!f.observed)return ['G003','G007','G008','G009','G011','G012'].includes(f.id)?'金色の粒。正体はまだ分からない。':'小さな鉱物片。洗浄して確認しよう。';return f.id==='G003'?'淡い金色・角のある粒・鏡のような強い光沢。黄鉄鉱の特徴。':f.id.startsWith('G00')&&['G007','G008','G009'].includes(f.id)?'濃い黄金色・丸い輪郭・柔らかな光沢。天然金の特徴。':`${treasure(f.id).name}：${treasure(f.id).description}`;}
 export function goldPipeline(ids:string[],coarse=.65){const scoop=ids.includes('G101')?3:.65,sieve=ids.includes('G103')?4:Infinity,tool=ids.includes('G203')?'G203':ids.includes('G201')?'G201':ids.includes('G102')?'G102':'hand',load=tool==='G203'?20:tool==='G201'?14:4,screened=ids.includes('G103')?1:0;
- const work=tool==='hand'?Infinity:tool==='G203'?load*(.45+coarse*.25*(1-screened)):load*(tool==='G201'?1.12:1)*(1+(1-screened)*coarse*4);
- const separation=tool==='hand'?.45:load/(1+work*(tool==='G203'?1:.6));return {collect:scoop,screen:sieve===Infinity?null:sieve,separate:separation,throughput:Math.min(scoop,sieve,separation),fineCapture:goldProcessingRate(tool,screened,coarse),capacity:load};}
+ const rawLoad=tool==='G203'?load:load/(1-screened*coarse*.65);
+ const work=tool==='hand'?Infinity:tool==='G203'?load*(.45+coarse*.25*(1-screened)):rawLoad*(1-screened*coarse*.65)*(tool==='G201'?1.12:1)*(1+(1-screened)*coarse*4);
+ const separation=tool==='hand'?.45:rawLoad/(1+work*(tool==='G203'?1:.6));return {collect:scoop,screen:sieve===Infinity?null:sieve,separate:separation,throughput:Math.min(scoop,sieve,separation),fineCapture:goldProcessingRate(tool,screened,coarse),capacity:load};}
 export function validateGold(s:State){
  if((s.goldVersion??0)>1)throw Error('新しい砂利セーブ形式です');s.goldVersion=1;
  for(const site of s.explorationAreas[0].goldSites??[])if(![site.x,site.y,site.total,site.collected,site.coarse].every(Number.isFinite)||site.total<=0||site.collected<0||site.collected>site.total+1e-6||site.coarse<0||site.coarse>1)throw Error('採取地点データが不正です');
- const ids=new Set(goldFinds(s).map(f=>f.uid)),seen=new Set<string>();
+ const finds=goldFinds(s),ids=new Set(finds.map(f=>f.uid)),seen=new Set<string>(),assigned=new Set<string>();
+ for(const f of finds){for(const n of [f.grain,f.density,f.goldOffset,f.goldAllocation,f.captureRank,f.goldCapture])if(n!==undefined&&(!Number.isFinite(n)||n<0))throw Error('鉱物の粒径・選別データが不正です');if(f.grain!==undefined&&f.grain<=0||f.density!==undefined&&f.density<=0||(f.captureRank??0)>1||(f.goldCapture??0)>1)throw Error('鉱物の粒径・選別データが不正です');}
  for(const b of s.gravelBatches??[]){if(seen.has(b.id)||![b.amount,b.screened,b.processed,b.handProcessed,b.coarse].every(Number.isFinite)||b.amount<=0||[b.screened,b.processed,b.handProcessed].some(v=>v<0||v>b.amount+1e-6)||b.coarse<0||b.coarse>1||new Set(b.contents).size!==b.contents.length)throw Error('砂利バッチが不正です');seen.add(b.id);
-  if(b.contents.some(uid=>!ids.has(uid)&&!s.collectedTreasures.includes(uid))||[...b.separated,...b.recovered].some(uid=>!b.contents.includes(uid)))throw Error('砂利個体の参照が不正です');}
- const w=s.goldWork;if(w&&(!s.gravelBatches?.some(b=>b.id===w.batchId)||![w.start,w.load,w.work,w.required].every(Number.isFinite)||w.load<=0||w.required<=0||w.work<0||w.work>w.required+1e-6||!owns(s,w.tool)))throw Error('選別中の状態が不正です');
+  if(b.contents.some(uid=>!ids.has(uid)&&!s.collectedTreasures.includes(uid))||[...b.separated,...b.recovered].some(uid=>!b.contents.includes(uid)))throw Error('砂利個体の参照が不正です');for(const uid of b.contents){if(assigned.has(uid))throw Error('砂利個体が重複しています');assigned.add(uid);}if(new Set(b.separated).size!==b.separated.length||new Set(b.recovered).size!==b.recovered.length)throw Error('砂利の回収記録が重複しています');}
+ const w=s.goldWork;if(w&&(!s.gravelBatches?.some(b=>b.id===w.batchId)||![w.start,w.load,w.work,w.required].every(Number.isFinite)||w.start<0||w.load<=0||w.start+w.load>(s.gravelBatches!.find(b=>b.id===w.batchId)!.amount)+1e-6||!['G102','G103','G201','G203'].includes(w.tool)||!['pan','screen','sluice'].includes(w.mode)||w.required<=0||w.work<0||w.work>w.required+1e-6||!owns(s,w.tool)))throw Error('選別中の状態が不正です');
  s.sluiceFeed=(s.sluiceFeed??[]).filter(id=>s.gravelBatches?.some(b=>b.id===id));
 }
