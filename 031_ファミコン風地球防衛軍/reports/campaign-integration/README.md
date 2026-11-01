@@ -1,14 +1,14 @@
 # CAMPAIGN INTEGRATION QA / 1.1.0
 
-実行日時：2026-11-01T00:13:06.243Z（UTC、利用者TZ Asia/Tokyo）。終了：2026-11-01T00:15:29.697Z。Node v25.9.0 / win32。対象HEAD：7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb＋ローカル変更（詳細JSON）。公開・commit・push・デプロイなし。
+実行日時：2026-11-01T00:17:48.095Z（UTC、利用者TZ Asia/Tokyo）。終了：2026-11-01T00:19:45.041Z。Node v25.9.0 / win32。対象HEAD：7a4409d7e3e80ee52ca9017c5d8f3c1ca1dad0fb＋ローカル変更（詳細JSON）。公開・commit・push・デプロイなし。
 
 ## 集計
 
 | 総ケース | 成功 | 失敗 | NORMAL_SIM未クリア | 未実施HUMAN | BLOCKER | HIGH | MEDIUM | LOW |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 156 | 139 | 1 | 8 | 8 | 0 | 1 | 0 | 0 |
+| 156 | 140 | 0 | 8 | 8 | 0 | 0 | 0 | 0 |
 
-上記は試験グループ・行の数。関連Nodeスイートは別に0テスト。NOT_CLEAREDは実行済み戦闘で未クリア、NOT_RUNは未実施であり、PASSと区別する。各ケースの環境・失敗位置・兵科・武器・保存検証は[results.json](results.json)、関連詳細は[related-tests.txt](related-tests.txt)。
+上記は試験グループ・行の数。関連Nodeスイートは別に477テスト。NOT_CLEAREDは実行済み戦闘で未クリア、NOT_RUNは未実施であり、PASSと区別する。各ケースの環境・失敗位置・兵科・武器・保存検証は[results.json](results.json)、関連詳細は[related-tests.txt](related-tests.txt)。
 
 ## 全8作戦の連続進行（ASSISTED）
 

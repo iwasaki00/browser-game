@@ -79,6 +79,18 @@ A地形衝突、B必須部位攻撃不能、C回避経路欠如、D進行保存�
 
 通常320、LAB640、UNIFIED 01、LAB5タブ、司令部4タブ、武器20、兵科4、既存AI・HP・カメラ・保存キー・30実績・Arcade031は維持。
 
+### 作成・変更ファイル
+
+- 新規ランナー：`tools/campaign-integration.mjs`。
+- QA共有・監視：`tests/helpers/campaign-routes.mjs`、`tests/helpers/runtime.mjs`、新規`tests/campaign-integration.test.mjs`。
+- 既存ルートの共通化：`tests/mobile-fortress.test.mjs`、`living-colossus.test.mjs`、`mothership.test.mjs`、`final-defense.test.mjs`。ルートの挙動は変更しない。
+- 旧期待値の修正：`tests/sky-fortress.test.mjs`、`mobile-fortress.test.mjs`。実装済みミッションのLOCKEDとリトライ時の正当な戦績を確認する。
+- バージョン・コマンド：`js/data.js`、`js/game.js`のdata import cache query、`index.html`、`package.json`。
+- 文書：`README.md`、`docs/GAME_SPEC.md`、`TEST_LAB_UI.md`、`CAMPAIGN_COMMAND.md`、本書。
+- 証拠：`reports/campaign-integration/`の生成README／results JSON／関連テストログ、部分実行JSON、ブラウザ記録とM01画像。**最新の統合判断はresults.jsonと生成READMEを正とし、部分実行JSONは各ファイルのversion・日時・試験範囲で区別する。**
+
+作業中に外部からHEADの更新を確認した。ランナーは実行開始時のHEADとローカル差分を記録するため、後続のHEADと異なる場合がある。こちらからcommit／pushは実行していない。現在のgit diffだけでは本依頼で作成した全ファイルを列挙できない。
+
 ## 証拠と1.2.0への引継ぎ
 
 最新の実行数・32/64ケース表は[自動生成レポート](../reports/campaign-integration/README.md)、ブラウザ確認は[別記録](../reports/campaign-integration/browser-check.md)。Node成功をブラウザ全編成功と扱わない。正常な前景FPSは今回測定せず、Node実行速度をFPSへ換算しない。

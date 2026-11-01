@@ -1,9 +1,11 @@
 import {chromium} from '../../019_bomber-lab/tests/node_modules/playwright/index.mjs';
 import {createServer} from 'node:http';import {readFile,writeFile} from 'node:fs/promises';import {fileURLToPath} from 'node:url';import assert from 'node:assert/strict';
-const root=new URL('../',import.meta.url),dir=new URL('reports/final-voyage/',root),routes=JSON.parse(await readFile(new URL('routes.json',dir),'utf8')),results=[];
+const balanceReference=process.argv.includes('--balance-reference');
+const root=new URL('../',import.meta.url),dir=new URL(balanceReference?'reports/game-balance/':'reports/final-voyage/',root),routes=JSON.parse(await readFile(new URL('reports/final-voyage/routes.json',root),'utf8')),results=[];
+if(balanceReference){const {FINAL_COURSES}=await import('../js/final-courses.js'),r=routes.find(r=>r.from==='origin'&&r.target==='earth'),[angleDeg,speed,time]=FINAL_COURSES['origin>earth'];Object.assign(r,{angleDeg,speed,time});}
 const server=createServer(async(req,res)=>{try{if(req.url==='/setup'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><title>Isolated final voyage</title>');return;}const u=new URL('.'+new URL(req.url,'http://localhost').pathname,root),file=u.pathname.endsWith('/')?new URL('index.html',u):u;if(!fileURLToPath(file).startsWith(fileURLToPath(root)))throw Error();res.setHeader('Content-Type',file.pathname.endsWith('.js')?'text/javascript':file.pathname.endsWith('.css')?'text/css':'text/html');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'chrome',headless:true}),url=`http://127.0.0.1:${server.address().port}`;
-const requested=process.argv.find(a=>a.startsWith('--ending='))?.slice(9).split(',');
+const requested=process.argv.find(a=>a.startsWith('--ending='))?.slice(9).split(',')??(balanceReference?['END-01']:undefined);
 const scenarios=[{id:'END-01',decision:'home',targets:['earth']},{id:'END-02',decision:'rescue',targets:['rescue','earth']},{id:'END-03',decision:'truth',informed:true,targets:['network','earth']},{id:'END-04',decision:'other',targets:['network','passage']},{id:'END-05',decision:'continue',targets:['observatory']}].filter(s=>!requested||requested.includes(s.id));
 try{
  for(const scenario of scenarios){console.log('BROWSER',scenario.id);const context=await browser.newContext({viewport:{width:375,height:667},hasTouch:true,isMobile:true}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack));await page.goto(url+'/setup');

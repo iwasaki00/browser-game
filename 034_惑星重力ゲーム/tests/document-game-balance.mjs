@@ -30,6 +30,8 @@ for(const r of m.results)for(const [key,b]of Object.entries(r.refined))text+=`|$
 text+='\n## 操作幅の変更前後（同じ物理）\n\n|航路|従来ボタン幅°|新しい微調整幅°|基準からの試験（角度差:成否）|\n|---|---:|---:|---|\n';
 for(const c of controls)text+=`|${c.id}|${c.oldStep}|${c.newStep}|${c.probes.map(p=>`${p.offset}: ${!p.legal?'範囲外':p.success?'CLEAR':'FAIL'}`).join(' / ')}|\n`;
 text+='\n## 失敗原因（格子、範囲内）\n\n|原因|件数|\n|---|---:|\n';const causes={};for(const s of valid.filter(s=>!s.success))causes[s.reason]=(causes[s.reason]??0)+1;for(const [k,v]of Object.entries(causes))text+=`|${k}|${v}|\n`;
+text+='\n## CLASSIC成功・星評価条件（変更なし）\n\n全ステージで実物理によるゴール到達が★1条件。★2/3は以下の時間以下、ライブ重力の★3には総移動距離30以下も必要。衝突・危険領域・逸脱・時間切れは失敗。\n\n|Stage|惑星種類|個数|精密角度範囲°|推力範囲|ゴール半径|★2秒|★3秒|\n|---|---|---:|---|---|---:|---:|---:|\n';
+for(const r of routes.filter(r=>r.group==='CLASSIC')){const s=r.stage;text+=`|${r.id}|${s.planets.map(p=>p.type).join(', ')}|${s.planets.length}|${(s.launchConditions?.precisionAngleRange??s.launch.angleRange).join('〜')}|${(s.launchConditions?.speedRange??s.launch.speedRange).join('〜')}|${s.goal.radius}|${s.rating.two.maxTime}|${s.rating.three.maxTime}|\n`;}
 text+='\n## 航行時間と倍率\n\nPC Nodeで60Hz相当の時刻入力を与えたスケジューラ測定。固定ステップ数・終端は一致。scheduledWallSeconds は仮想フレームの合計であり、実機での待ち時間やFPSの測定ではありません。cpuMs は描画・記録・通信UIを含まない、各飛行1回のPC測定値です。\n\n|航路|飛行秒|1倍 仮想秒 / CPU ms|10倍 仮想秒 / CPU ms|100倍 仮想秒 / CPU ms|\n|---|---:|---|---|---|\n';
 for(const t of JSON.parse(readFileSync(new URL('timings.json',dir),'utf8')))text+=`|${t.id}|${f(t.flightSeconds)}|${t.times.map(x=>`${f(x.scheduledWallSeconds)} / ${x.cpuMs.toFixed(2)}`).join('|')}|\n`;
 writeFileSync(new URL('MEASUREMENTS.md',dir),text);

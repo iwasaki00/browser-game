@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "startedAt": "2026-11-01T00:13:06.243Z",
+  "startedAt": "2026-11-01T00:17:48.095Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -5784,8 +5784,23 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "status": "FAIL",
-      "error": "Error: Command failed: C:\\Program Files\\nodejs\\node.exe --test --test-reporter=spec --test-reporter-destination=reports/campaign-integration/related-tests.txt tests/campaign-integration.test.mjs tests/mission02.test.mjs tests/boss-polish.test.mjs tests/fortress-balance.test.mjs tests/sky-fortress.test.mjs tests/mobile-fortress.test.mjs tests/living-colossus.test.mjs tests/mothership.test.mjs tests/final-defense.test.mjs tests/weapons.test.mjs tests/campaign.test.mjs tests/challenges.test.mjs\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at checkExecSyncError (node:child_process:925:11)\n    at execFileSync (node:child_process:961:15)\n    at file:///C:/_wk/github/browser-game/031_%E3%83%95%E3%82%A1%E3%83%9F%E3%82%B3%E3%83%B3%E9%A2%A8%E5%9C%B0%E7%90%83%E9%98%B2%E8%A1%9B%E8%BB%8D/tools/campaign-integration.mjs:52:278\n    at check (file:///C:/_wk/github/browser-game/031_%E3%83%95%E3%82%A1%E3%83%9F%E3%82%B3%E3%83%B3%E9%A2%A8%E5%9C%B0%E7%90%83%E9%98%B2%E8%A1%9B%E8%BB%8D/tools/campaign-integration.mjs:13:86)\n    at main (file:///C:/_wk/github/browser-game/031_%E3%83%95%E3%82%A1%E3%83%9F%E3%82%B3%E3%83%B3%E9%A2%A8%E5%9C%B0%E7%90%83%E9%98%B2%E8%A1%9B%E8%BB%8D/tools/campaign-integration.mjs:52:3)\n    at file:///C:/_wk/github/browser-game/031_%E3%83%95%E3%82%A1%E3%83%9F%E3%82%B3%E3%83%B3%E9%A2%A8%E5%9C%B0%E7%90%83%E9%98%B2%E8%A1%9B%E8%BB%8D/tools/campaign-integration.mjs:63:70\n    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)\n    at async node:internal/modules/esm/loader:639:26"
+      "assertions": 477,
+      "files": [
+        "tests/campaign-integration.test.mjs",
+        "tests/mission02.test.mjs",
+        "tests/boss-polish.test.mjs",
+        "tests/fortress-balance.test.mjs",
+        "tests/sky-fortress.test.mjs",
+        "tests/mobile-fortress.test.mjs",
+        "tests/living-colossus.test.mjs",
+        "tests/mothership.test.mjs",
+        "tests/final-defense.test.mjs",
+        "tests/weapons.test.mjs",
+        "tests/campaign.test.mjs",
+        "tests/challenges.test.mjs"
+      ],
+      "coverage": "B02 weak core/nests, B03 phases/warnings, B04 parts, B05 free order, B06 reconnect, B07 controls, B08 transitions; weapon safety, campaign stats and 30 achievements",
+      "status": "PASS"
     },
     {
       "id": "HUMAN-M01",
@@ -5844,26 +5859,20 @@
       "reason": "1.2.0 manual normal-difficulty/device review"
     }
   ],
-  "issues": [
-    {
-      "severity": "HIGH",
-      "case": "RELATED-ENGINE-SUITES",
-      "description": "Command failed: C:\\Program Files\\nodejs\\node.exe --test --test-reporter=spec --test-reporter-destination=reports/campaign-integration/related-tests.txt tests/campaign-integration.test.mjs tests/mission02.test.mjs tests/boss-polish.test.mjs tests/fortress-balance.test.mjs tests/sky-fortress.test.mjs tests/mobile-fortress.test.mjs tests/living-colossus.test.mjs tests/mothership.test.mjs tests/final-defense.test.mjs tests/weapons.test.mjs tests/campaign.test.mjs tests/challenges.test.mjs"
-    }
-  ],
+  "issues": [],
   "unperformed": [
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T00:15:29.697Z",
+  "finishedAt": "2026-11-01T00:19:45.041Z",
   "summary": {
     "total": 156,
-    "pass": 139,
-    "fail": 1,
+    "pass": 140,
+    "fail": 0,
     "notCleared": 8,
     "unperformed": 8,
     "blocker": 0,
-    "high": 1,
+    "high": 0,
     "medium": 0,
     "low": 0
   }

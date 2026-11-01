@@ -1,6 +1,15 @@
 # ドット防衛戦線 — PIXEL DEFENSE FRONT
 
-Version 1.0.0 — FINAL DEFENSE。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+Version 1.1.0 — CAMPAIGN INTEGRATION QA。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+
+## キャンペーン統合QA（1.1.0）
+
+- `npm run qa:campaign` で、隔離メモリ保存からM01〜M08の通常出撃・実射撃・ギミック・ボス・リザルト・報酬・保存・再読込・完結まで検証します。唯一の通し戦闘補助は無敵時間で、通常難易度の攻略認定ではありません。
+- 全4兵科×8作戦の32到達ケースと、初期武器A-01/S-02の64ボス攻撃ケースを個別記録。20武器の実ダメージ・統計・設置物清掃、旧保存S01〜10、LABと通常攻略QAの保存API書込ゼロを確認します。
+- STRUCTURAL／ASSISTED／NORMAL_SIM／HUMANを明確に区別。無敵なし代表8ケースは実行済み未クリアで、自動操作能力不足の暫定分類。人手全編・iPhone実機・美術／UI最終品質・FPSは1.2.0へ引継ぎます。
+- 既存実績30件、武器20、兵科4、M01〜M08、アート・AI・性能・保存形式・Arcade031を維持。変更はQA基盤、既存controller共通化、現行仕様と合わない古いテスト期待値とバージョン表示です。
+
+[最新の自動結果・32/64ケース一覧](reports/campaign-integration/README.md) · [QA手順と試験区分](docs/CAMPAIGN_INTEGRATION_QA.md) · [実ブラウザの確認範囲](reports/campaign-integration/browser-check.md)。Sitesのローカル手順とComputer Useを使用し、公開・commit・push・デプロイは行っていません。ユーザーの通常セーブを初期化・上書きしない方式です。
 
 ## M08 地球最終防衛戦（1.0.0）
 
