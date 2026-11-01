@@ -1,5 +1,9 @@
 # MOBILE ACCEPTANCE / 1.2.0-A — Phase A
 
+## Cで受領した実機結果
+
+ユーザーよりB1の移動感復旧・コ字形マーカー除去、A1のM03 WINGリザルト遷移がiPhone実機OKとの報告あり（USER_REPORTED/PASS）。下記の「原因未確定／再確認待ち」は当時の記録。これをSafariの全操作・全8作戦通常攻略・実機FPSの合格へ広げない。現行Cのチェックリストは[FINAL_ACCEPTANCE](FINAL_ACCEPTANCE.md)、実行集計は[最終受入レポート](../reports/final-acceptance/README.md)。
+
 ## A1：M03リザルト停止の再確認
 
 iPhone通常プレイのM03/WINGで「結果表示後に進めない」とのHIGH報告あり。1.2.0-A1では、再現できた戦闘入力残留・キャプチャ解放漏れを修正し、保存失敗の明示／再試行・結果内の最大24件遷移ログを追加した。Chromeでは修正前も遷移でき、Safariの完全停止原因は未確定。問題を自動でRESOLVEDにしない。

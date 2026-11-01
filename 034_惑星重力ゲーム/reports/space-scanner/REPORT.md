@@ -56,7 +56,17 @@ CLASSIC19、FREE SPACEのHUGE配置、HOMEWARD02、DEEP SPACE、FINAL VOYAGEを�
 測定はPC Windows Chrome、375×667、DPR3。rAF回数、renderer TaskDuration、GC後のJSヒープを採取する。iPhoneのFPS・発熱・GPUメモリを表さない。比較数値は以下の実測表を参照。
 
 <!-- PERFORMANCE -->
-測定の最終結果は modes-performance.json に保存する。
+Environment: win32 / 13th Gen Intel(R) Core(TM) i7-1355U / Chrome 156.0.8078.76 / 375x667 DPR3.
+
+|Condition|Wall seconds|FPS|Renderer task %|GC-sampled JS heap MiB (start -> end)|
+|---|---:|---:|---:|---|
+|SCAN OFF (overview)|10.132|56.26|95.02|19.67 -> 17.40|
+|SCAN ON (overview)|10.126|52.83|97.35|18.72 -> 18.25|
+
+- SCAN ON / 100x: 2.850 wall seconds, 38.25 FPS, CLEAR at 57.108333333 simulation seconds, 1144 recorded frames.
+- SCAN OFF / 100x: 2.773 wall seconds, 41.83 FPS, CLEAR at 57.108333333 simulation seconds, 1144 recorded frames.
+
+Reference before DOM throttling: OFF 29.27 FPS / ON 23.93 FPS. Each is a short PC sample; load and GC variation are included.
 <!-- /PERFORMANCE -->
 
 同じ開始セーブfixture・ANGLE −37.69°／THRUST 220で実際に100倍航行し、SCAN ON／OFFの終端、航行時間、保存した全座標列を比較する。寄港後のチェックポイントを比較元にせず、各試行の前に隔離コンテキスト内で同一の開始状態を読み直す。途中で位置を補正しない。

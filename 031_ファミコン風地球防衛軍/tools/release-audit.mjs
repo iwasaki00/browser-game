@@ -72,6 +72,7 @@ export async function auditRelease(){
  const arcade={status:entry.includes('href: "./031_ファミコン風地球防衛軍/index.html"')&&entry.includes('assets/game-icon.svg')?'PASS':'FAIL',menuSha256:hash(menu),descriptionOutdated:entry.includes('8種類の武器')};
  if(arcade.status==='FAIL')issues.push({rule:'ARCADE031_LINK',severity:'HIGH',path:'../menu.js'});
  const packageData=JSON.parse(readFileSync(resolve(root,'package.json'),'utf8'));
+ const hostingPath=resolve(root,'../.openai/hosting.json'),sitesDirectory=existsSync(hostingPath)?JSON.parse(readFileSync(hostingPath,'utf8')).static?.directory??null:null;
  if(external.length)issues.push({rule:'EXTERNAL_RUNTIME_REFERENCE',severity:'MEDIUM',path:'runtime graph'});
  const sensitive=sourceFindings.filter(f=>f.rule!=='LOCAL_ABSOLUTE_PATH');
  return {version:VERSION,generatedAt:new Date().toISOString(),method:'local static graph + exported image registries + isolated VM; no HTTP/device/remote Pages check',
@@ -79,7 +80,7 @@ export async function auditRelease(){
   runtimeFiles:[...files.values()].sort((a,b)=>a.path.localeCompare(b.path)),referenceCount:references.length,externalRuntimeReferences:external,
   normalDebugMutationAPI:normalHook,lab:'debug=1 opt-in local-only test environment; NOT authentication; ordinary URL hides UI',
   dependencies:packageData.dependencies??{},devDependencies:packageData.devDependencies??{},arcade,
-  publication:{localDocumentedMethod:'parent README: main branch / repository root',remoteSettings:'NOT RUN',workflowPresent:existsSync(resolve(root,'../.github/workflows')),nojekyllPresent:existsSync(resolve(root,'../.nojekyll')),
+  publication:{localDocumentedMethod:'parent README: main branch / repository root',remoteSettings:'NOT RUN',workflowPresent:existsSync(resolve(root,'../.github/workflows')),nojekyllPresent:existsSync(resolve(root,'../.nojekyll')),sitesStaticDirectory:sitesDirectory,sitesOutputPresent:sitesDirectory?existsSync(resolve(root,'..',sitesDirectory)):null,
    sourceExposure:'Root publishing may also expose docs/reports/tests/tools. Runtime allowlist is runtimeFiles; no deploy configuration changed.',nonRuntimeFiles:nonRuntime.sort()},
   limitations:['Pattern-based secret scan is not a proof of absence or full Git-history scan','Image existence/signature/dimensions, not device decode/visual QA','No remote Pages setting or live URL/404 check','Asset authorship/licensing needs owner confirmation; local provenance only']};
 }

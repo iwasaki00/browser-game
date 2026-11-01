@@ -57,34 +57,34 @@
   "performance": [
     {
       "scan": false,
-      "seconds": 10.186,
-      "fps": 25.721578637345377,
-      "rendererTaskPercent": 100.55069703514627,
-      "heapBefore": 20715644,
-      "heapAfter": 18922604
+      "seconds": 10.132,
+      "fps": 56.25740228977497,
+      "rendererTaskPercent": 95.02384524279512,
+      "heapBefore": 20620896,
+      "heapAfter": 18248196
     },
     {
       "scan": true,
-      "seconds": 10.241,
-      "fps": 19.529342837613516,
-      "rendererTaskPercent": 99.44815935943755,
-      "heapBefore": 12358652,
-      "heapAfter": 6231640
+      "seconds": 10.126,
+      "fps": 52.83428797155837,
+      "rendererTaskPercent": 97.35461189018369,
+      "heapBefore": 19624192,
+      "heapAfter": 19135468
     }
   ],
   "flights": [
     {
       "scan": true,
-      "seconds": 5.078,
-      "fps": 16.54194564789287,
+      "seconds": 2.85,
+      "fps": 38.24561403508772,
       "result": "clear",
       "flightSeconds": 57.108333333330734,
       "recordedFrames": 1144
     },
     {
       "scan": false,
-      "seconds": 4.725,
-      "fps": 17.77777777777778,
+      "seconds": 2.773,
+      "fps": 41.831950955643705,
       "result": "clear",
       "flightSeconds": 57.108333333330734,
       "recordedFrames": 1144

@@ -1,0 +1,9 @@
+id,status,evidence_type,mission,class,weapon1,weapon2,density,invincible,outcome,reached_area,elapsed_seconds,damage_taken,death_cause,boss_problem,control_problem,difficulty_1to5,difficulty_notes,device,os_browser,version,evidence
+HUMAN-M01,NOT RUN,HUMAN,M01,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M02,NOT RUN,HUMAN,M02,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M03,NOT RUN,HUMAN,M03,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M04,NOT RUN,HUMAN,M04,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M05,NOT RUN,HUMAN,M05,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M06,NOT RUN,HUMAN,M06,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M07,NOT RUN,HUMAN,M07,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,
+HUMAN-M08,NOT RUN,HUMAN,M08,,,,STANDARD,false,,,,,,,,,,,,1.2.0-C,

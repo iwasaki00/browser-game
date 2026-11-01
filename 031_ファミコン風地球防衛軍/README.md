@@ -1,6 +1,14 @@
 # ドット防衛戦線 — PIXEL DEFENSE FRONT
 
-Version 1.2.0-B1 — MOVEMENT & SPRITE REGRESSION FIX。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+Version 1.2.0-C — FINAL ACCEPTANCE。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+
+## 最終受入・公開前監査（1.2.0-C）
+
+- B1の移動感・コ字形マーカー除去と、A1のM03 WINGリザルト遷移は、今回ユーザーからiPhone実機OKの報告あり。Codex独立確認や全実機項目合格とは区別して記録しています。
+- `npm run qa`で既存の8作戦統合、32到達／64攻撃／20武器・保存・LAB・実績・結末を再確認。`npm run audit:release`はローカルの参照・画像寸法・秘密候補・外部依存・Arcade031を検査します。公開操作はしません。
+- 通常URLの旧QA用進行変更APIを`debug=1`時だけへ制限。LAB5タブ・司令部4タブ・通常保存・ゲーム性能は維持しています。
+- [受入手順・通常攻略記録・iPhone／性能チェック](docs/FINAL_ACCEPTANCE.md)／[結果・残存リスク・公開判断](reports/final-acceptance/README.md)。人手通常全編攻略、iPhone全項目、前景FPS、実際のPages配信確認は未完了です。
+- 公開・commit・push・デプロイは実施していません。以下の版別レポートにある「実機再確認待ち」は当時の履歴で、上記3件の現在の状況はCの受入記録を優先します。
 
 ## 移動・スプライト回帰の調査と修正（1.2.0-B1）
 

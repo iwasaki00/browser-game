@@ -1,0 +1,192 @@
+{
+  "version": "1.2.0-C",
+  "generatedAt": "2026-11-01T13:57:22.036Z",
+  "decision": "CONDITIONAL",
+  "rationale": "Automated checks pass; human normal-difficulty clears, final iPhone matrix, foreground performance and remote publication scope remain unverified",
+  "qa": {
+    "total": 156,
+    "pass": 140,
+    "fail": 0,
+    "notCleared": 8,
+    "unperformed": 8,
+    "blocker": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "relatedTests": 700,
+    "relatedFailed": 0
+  },
+  "checks": [
+    {
+      "id": "CHAIN_M01_M08",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "8/8; 8 recorded"
+    },
+    {
+      "id": "ROUTES_32",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "32/32; 32 recorded"
+    },
+    {
+      "id": "STARTER_ATTACKS_64",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "64/64; 64 recorded"
+    },
+    {
+      "id": "WEAPONS_20",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "20/20; 20 recorded"
+    },
+    {
+      "id": "SAVES_10",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "10/10; 10 recorded"
+    },
+    {
+      "id": "LAB_ISOLATION",
+      "status": "PASS",
+      "source": "npm run qa",
+      "detail": "2/2; 2 recorded"
+    },
+    {
+      "id": "RELATED_NODE",
+      "status": "PASS",
+      "source": "related-tests.txt",
+      "detail": "700 tests; 0 failures"
+    },
+    {
+      "id": "RELEASE_STATIC",
+      "status": "PASS",
+      "source": "release-audit.json",
+      "detail": "254 runtime files / 334 references; local, not HTTP"
+    },
+    {
+      "id": "B1_MOVEMENT_FEEL",
+      "status": "PASS",
+      "source": "USER_REPORTED",
+      "detail": "B1 iPhone feel restored, reported in current request; no independent device measurement"
+    },
+    {
+      "id": "B1_LOCATOR_REMOVAL",
+      "status": "PASS",
+      "source": "USER_REPORTED",
+      "detail": "B1 brackets absent, reported in current request"
+    },
+    {
+      "id": "A1_M03_RESULT",
+      "status": "PASS",
+      "source": "USER_REPORTED",
+      "detail": "A1 M03 WING result transition confirmed by user; input details/OS version not supplied"
+    },
+    {
+      "id": "HUMAN_M01",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M02",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M03",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M04",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M05",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M06",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M07",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "HUMAN_M08",
+      "status": "NOT RUN",
+      "source": "manual template",
+      "detail": "No normal-difficulty human full-clear evidence supplied"
+    },
+    {
+      "id": "IPHONE_FINAL_MATRIX",
+      "status": "NOT RUN",
+      "source": "device checklist",
+      "detail": "Only the three specific user-confirmed regression items above are PASS"
+    },
+    {
+      "id": "FOREGROUND_PERFORMANCE",
+      "status": "BLOCKED",
+      "source": "performance.json",
+      "detail": "Browser skill file unavailable; no foreground/device samples"
+    },
+    {
+      "id": "LIVE_PAGES_CONFIGURATION",
+      "status": "NOT RUN",
+      "source": "local repository only",
+      "detail": "No remote settings or live-site HTTP check, no publishing"
+    },
+    {
+      "id": "ASSET_RIGHTS_OWNER_CONFIRMATION",
+      "status": "NOT RUN",
+      "source": "local source provenance",
+      "detail": "Original generators present, external asset imports not detected; owner sign-off not inferred"
+    }
+  ],
+  "issues": [
+    {
+      "id": "C-M01",
+      "severity": "MEDIUM",
+      "status": "RESOLVED",
+      "description": "Normal URL exposed legacy QA mutation API; now DEBUG gated, with normal/debug regression tests"
+    },
+    {
+      "id": "C-L01",
+      "severity": "LOW",
+      "status": "OPEN",
+      "description": "Branch/root publication can expose development reports with local path strings. Runtime allowlist supplied; remote deployment scope unverified"
+    },
+    {
+      "id": "C-L02",
+      "severity": "LOW",
+      "status": "OPEN",
+      "description": "Arcade031 description still says eight weapons. Link/icon unchanged; parent directory not edited"
+    },
+    {
+      "id": "C-L03",
+      "severity": "LOW",
+      "status": "OPEN",
+      "description": "Legacy tests/data.test.mjs and tests/runtime.test.mjs still contain M07 COMING SOON expectations by source review; not in the executed related suite. Full npm test not run; do not claim it passes"
+    }
+  ],
+  "performanceSource": "performance.json",
+  "notes": [
+    "USER_REPORTED is not independent Codex device evidence",
+    "NORMAL_SIM NOT_CLEARED does not establish impossible normal difficulty",
+    "No publish/commit/push/deploy; only isolated in-memory saves used",
+    "Actual Safari save data never accessed or reset"
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "version": "1.2.0-C",
+  "rows": [
+    {
+      "id": "30_ENEMIES",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "50_ENEMIES",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "100_ENEMIES",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "LAB_200_ENEMIES",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "EXPLOSION_BURST",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "PIERCE_MULTI_HIT",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    },
+    {
+      "id": "B08_FORM3",
+      "status": "BLOCKED",
+      "source": "NO_BROWSER_MEASUREMENT",
+      "effectiveFps": null,
+      "frameMs": null,
+      "samples": 0,
+      "excludedSamples": 0,
+      "enemies": null,
+      "shots": null,
+      "effects": null,
+      "zoom": null,
+      "reason": "No foreground/browser/device run; zero is not 0 FPS or 0 enemies"
+    }
+  ]
+}

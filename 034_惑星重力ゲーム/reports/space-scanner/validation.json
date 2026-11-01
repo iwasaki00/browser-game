@@ -1,0 +1,72 @@
+{
+  "version": "1.9.4",
+  "allTests": {
+    "tests": 429,
+    "pass": 429,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "modes": [
+    {
+      "mode": "CLASSIC",
+      "status": "PASS",
+      "planets": 2
+    },
+    {
+      "mode": "FREE SPACE",
+      "status": "PASS",
+      "planets": 3
+    },
+    {
+      "mode": "HOMEWARD",
+      "status": "PASS",
+      "planets": 3
+    },
+    {
+      "mode": "DEEP SPACE",
+      "status": "PASS",
+      "planets": 3
+    },
+    {
+      "mode": "FINAL VOYAGE",
+      "status": "PASS",
+      "planets": 3
+    }
+  ],
+  "mobileSizes": [
+    [
+      320,
+      568
+    ],
+    [
+      375,
+      667
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      430,
+      932
+    ]
+  ],
+  "pcTouch": "PASS",
+  "additional": {
+    "browser": "156.0.8078.76",
+    "maskedDeepTargets": "PASS",
+    "edgeArrows": "PASS",
+    "lightMode": "PASS",
+    "liveFlightPermissions": "3 movable / no deletion PASS",
+    "errors": [],
+    "iPhone": "UNVERIFIED"
+  },
+  "physics": "unchanged; scan ON/OFF recorded coordinates identical; Node prediction / 1x / 100x comparison PASS",
+  "saveSchema": "unchanged; isolated old progress / favorite / protected record comparison PASS",
+  "criticalOpen": 0,
+  "highOpen": 0,
+  "iPhone": "UNVERIFIED",
+  "pushPublishDeploy": "not performed"
+}

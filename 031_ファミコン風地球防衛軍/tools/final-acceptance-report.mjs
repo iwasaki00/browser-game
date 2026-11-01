@@ -7,6 +7,8 @@ const root=fileURLToPath(new URL('../',import.meta.url)),dir=resolve(root,'repor
 const qa=JSON.parse(readFileSync(resolve(root,'reports/campaign-integration/results.json'),'utf8'));
 const audit=JSON.parse(readFileSync(resolve(dir,'release-audit.json'),'utf8'));
 const log=readFileSync(resolve(root,'reports/campaign-integration/related-tests.txt'),'utf8');
+const manual=readFileSync(resolve(dir,'manual-playthrough.csv'),'utf8').trim().split(/\r?\n/).map(line=>line.split(','));
+if(manual.length!==9||manual.some(line=>line.length!==22)||manual.slice(1).some(line=>line[1]!=='NOT RUN'||line[20]!==VERSION))throw Error('Manual template schema/status/version mismatch; do not certify incomplete rows');
 const count=Number(log.match(/ℹ tests (\d+)/)?.[1]??0),failed=Number(log.match(/ℹ fail (\d+)/)?.[1]??-1);
 const row=(id,status,source,detail)=>({id,status,source,detail});
 const group=(id,pattern,expected)=>{const rows=qa.cases.filter(c=>pattern.test(c.id));return row(id,qa.version===VERSION&&rows.length===expected&&rows.every(r=>r.status==='PASS')?'PASS':'FAIL','npm run qa',`${rows.filter(r=>r.status==='PASS').length}/${expected}; ${rows.length} recorded`)};
@@ -26,7 +28,8 @@ const performance=scenarios.map(id=>({id,status:'BLOCKED',source:'NO_BROWSER_MEA
 writeFileSync(resolve(dir,'performance.json'),JSON.stringify({version:VERSION,rows:performance},null,2)+'\n');
 const issues=[{id:'C-M01',severity:'MEDIUM',status:'RESOLVED',description:'Normal URL exposed legacy QA mutation API; now DEBUG gated, with normal/debug regression tests'},
  {id:'C-L01',severity:'LOW',status:'OPEN',description:'Branch/root publication can expose development reports with local path strings. Runtime allowlist supplied; remote deployment scope unverified'},
- ...(audit.arcade.descriptionOutdated?[{id:'C-L02',severity:'LOW',status:'OPEN',description:'Arcade031 description still says eight weapons. Link/icon unchanged; parent directory not edited'}]:[])];
+ ...(audit.arcade.descriptionOutdated?[{id:'C-L02',severity:'LOW',status:'OPEN',description:'Arcade031 description still says eight weapons. Link/icon unchanged; parent directory not edited'}]:[]),
+ {id:'C-L03',severity:'LOW',status:'OPEN',description:'Legacy tests/data.test.mjs and tests/runtime.test.mjs still contain M07 COMING SOON expectations by source review; not in the executed related suite. Full npm test not run; do not claim it passes'}];
 const autoFailed=qa.version!==VERSION||qa.summary.fail>0||checks.some(c=>c.status==='FAIL');
 const result={version:VERSION,generatedAt:new Date().toISOString(),decision:autoFailed?'NOT READY':'CONDITIONAL',
  rationale:autoFailed?'Mandatory automatic verification failed or evidence version mismatch':'Automated checks pass; human normal-difficulty clears, final iPhone matrix, foreground performance and remote publication scope remain unverified',

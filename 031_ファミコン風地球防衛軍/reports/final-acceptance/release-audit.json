@@ -1,6 +1,6 @@
 {
   "version": "1.2.0-C",
-  "generatedAt": "2026-11-01T13:46:00.597Z",
+  "generatedAt": "2026-11-01T13:57:21.910Z",
   "method": "local static graph + exported image registries + isolated VM; no HTTP/device/remote Pages check",
   "status": "PASS",
   "runtimeIssues": [],
@@ -10,14 +10,14 @@
       "rule": "LOCAL_ABSOLUTE_PATH",
       "severity": "LOW",
       "path": "docs/MOBILE_ACCEPTANCE.md",
-      "line": 21,
+      "line": 25,
       "scope": "SOURCE_ONLY"
     },
     {
       "rule": "LOCAL_ABSOLUTE_PATH",
       "severity": "LOW",
       "path": "docs/MOBILE_ACCEPTANCE.md",
-      "line": 68,
+      "line": 72,
       "scope": "SOURCE_ONLY"
     },
     {
@@ -3009,6 +3009,8 @@
     "remoteSettings": "NOT RUN",
     "workflowPresent": false,
     "nojekyllPresent": true,
+    "sitesStaticDirectory": "dist",
+    "sitesOutputPresent": false,
     "sourceExposure": "Root publishing may also expose docs/reports/tests/tools. Runtime allowlist is runtimeFiles; no deploy configuration changed.",
     "nonRuntimeFiles": [
       ".gitkeep",
@@ -3071,6 +3073,7 @@
       "docs/CHALLENGE_OPERATIONS.md",
       "docs/COMBAT_BALANCE.md",
       "docs/DEBUG_PLAYGROUND.md",
+      "docs/FINAL_ACCEPTANCE.md",
       "docs/FINAL_GAME_POLISH.md",
       "docs/FORTRESS_BALANCE.md",
       "docs/GAMEPLAY_POLISH.md",
@@ -3391,7 +3394,11 @@
       "reports/combat-balance/lab-phase-780x360.jpg",
       "reports/combat-balance/lab-phase-844x390.jpg",
       "reports/combat-balance/performance.json",
+      "reports/final-acceptance/README.md",
+      "reports/final-acceptance/manual-playthrough.csv",
+      "reports/final-acceptance/performance.json",
       "reports/final-acceptance/release-audit.json",
+      "reports/final-acceptance/results.json",
       "reports/final-defense/README.md",
       "reports/final-defense/b08-form1-844x390.jpg",
       "reports/final-defense/ending-390x844.jpg",
