@@ -1,0 +1,42 @@
+{
+  "version": "1.9.3",
+  "node": {
+    "tests": 405,
+    "pass": 405,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "pcMobile": {
+    "viewports": [
+      [
+        320,
+        568
+      ],
+      [
+        375,
+        667
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        430,
+        932
+      ]
+    ],
+    "orientationsAndInsets": "12 conditions PASS",
+    "touch": "CDP touch PASS",
+    "navigationAndProtectedReplay": "PASS",
+    "nativeAudio": "PASS: graph only; audible output unverified",
+    "pngAndShareBranches": "PASS; OS sharing unverified",
+    "performance": "PASS within measured 120-second interval"
+  },
+  "syntaxFiles": 10,
+  "saveSchemaChanged": false,
+  "physicsChanged": false,
+  "iphone": "UNVERIFIED: see IPHONE_CHECKLIST.md",
+  "publishPushDeploy": "not performed"
+}

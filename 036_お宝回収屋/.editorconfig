@@ -1,0 +1,9 @@
+root = false
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+
+[dist/**]
+end_of_line = lf

@@ -1,0 +1,2145 @@
+{
+  "summary": {
+    "seeds": 100,
+    "blind": {
+      "digs": 296.11,
+      "attempts": 302.11,
+      "scans": 0,
+      "finds": 6.07,
+      "seconds": 33.23,
+      "qualityRetention": 92,
+      "averageEvaluationFN": 502.07
+    },
+    "detector": {
+      "digs": 43.82,
+      "attempts": 53.26,
+      "scans": 63,
+      "finds": 6.06,
+      "seconds": 15.31,
+      "qualityRetention": 97.33,
+      "averageEvaluationFN": 506.85
+    },
+    "sorting": [
+      {
+        "method": "hand",
+        "calls": 51,
+        "units": 153,
+        "found": 6,
+        "seconds": 30.6,
+        "requiredStamina": 306
+      },
+      {
+        "method": "sieve",
+        "calls": 10,
+        "units": 150,
+        "found": 6,
+        "seconds": 6,
+        "requiredStamina": 40
+      }
+    ],
+    "naturalJackpots": 4,
+    "method": "同一100シード・大型所持条件で6個回収を目標。未探知は全面走査、探知側は40px格子を走査し公開された粗い反応の強い順に掘る。個体の隠れ座標は操舵に使わない。品質は実際に回収した品の保持率。選別は同一150単位・6個体。時間は操作モデルで人間の計測ではない。"
+  },
+  "rows": [
+    {
+      "seed": 1,
+      "blind": {
+        "digs": 380,
+        "attempts": 386,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.45999999999984,
+        "retention": 0.92,
+        "evaluation": 1983
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 63,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.379999999999978,
+        "retention": 0.9700000000000001,
+        "evaluation": 2536.1666666666665
+      }
+    },
+    {
+      "seed": 2,
+      "blind": {
+        "digs": 229,
+        "attempts": 235,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.84999999999992,
+        "retention": 0.92,
+        "evaluation": 457.5
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 509.6666666666667
+      }
+    },
+    {
+      "seed": 3,
+      "blind": {
+        "digs": 172,
+        "attempts": 178,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.579999999999952,
+        "retention": 0.92,
+        "evaluation": 827.3333333333334
+      },
+      "detector": {
+        "digs": 41,
+        "attempts": 54,
+        "scans": 63,
+        "found": 6,
+        "seconds": 15.389999999999981,
+        "retention": 0.9700000000000001,
+        "evaluation": 1023
+      }
+    },
+    {
+      "seed": 4,
+      "blind": {
+        "digs": 285,
+        "attempts": 291,
+        "scans": 0,
+        "found": 6,
+        "seconds": 32.00999999999989,
+        "retention": 0.92,
+        "evaluation": 28
+      },
+      "detector": {
+        "digs": 28,
+        "attempts": 32,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.969999999999994,
+        "retention": 0.9700000000000001,
+        "evaluation": 116.33333333333333
+      }
+    },
+    {
+      "seed": 5,
+      "blind": {
+        "digs": 223,
+        "attempts": 229,
+        "scans": 0,
+        "found": 7,
+        "seconds": 25.189999999999923,
+        "retention": 0.92,
+        "evaluation": 191.85714285714286
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 194
+      }
+    },
+    {
+      "seed": 6,
+      "blind": {
+        "digs": 266,
+        "attempts": 272,
+        "scans": 0,
+        "found": 6,
+        "seconds": 29.9199999999999,
+        "retention": 0.92,
+        "evaluation": 125.16666666666667
+      },
+      "detector": {
+        "digs": 43,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 741.6666666666666
+      }
+    },
+    {
+      "seed": 7,
+      "blind": {
+        "digs": 223,
+        "attempts": 229,
+        "scans": 0,
+        "found": 7,
+        "seconds": 25.189999999999923,
+        "retention": 0.92,
+        "evaluation": 29.428571428571427
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 46.166666666666664
+      }
+    },
+    {
+      "seed": 8,
+      "blind": {
+        "digs": 498,
+        "attempts": 504,
+        "scans": 0,
+        "found": 6,
+        "seconds": 55.43999999999977,
+        "retention": 0.92,
+        "evaluation": 79
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 130.83333333333334
+      }
+    },
+    {
+      "seed": 9,
+      "blind": {
+        "digs": 322,
+        "attempts": 328,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.07999999999987,
+        "retention": 0.9199999999999999,
+        "evaluation": 49.5
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 33,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.079999999999993,
+        "retention": 0.9800000000000001,
+        "evaluation": 478.1666666666667
+      }
+    },
+    {
+      "seed": 10,
+      "blind": {
+        "digs": 280,
+        "attempts": 286,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.45999999999989,
+        "retention": 0.92,
+        "evaluation": 457.8333333333333
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.96,
+        "evaluation": 561
+      }
+    },
+    {
+      "seed": 11,
+      "blind": {
+        "digs": 432,
+        "attempts": 438,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.17999999999981,
+        "retention": 0.92,
+        "evaluation": 125.33333333333333
+      },
+      "detector": {
+        "digs": 62,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 134
+      }
+    },
+    {
+      "seed": 12,
+      "blind": {
+        "digs": 329,
+        "attempts": 335,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.849999999999866,
+        "retention": 0.92,
+        "evaluation": 57
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 617.5
+      }
+    },
+    {
+      "seed": 13,
+      "blind": {
+        "digs": 277,
+        "attempts": 283,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.129999999999892,
+        "retention": 0.92,
+        "evaluation": 824.1666666666666
+      },
+      "detector": {
+        "digs": 41,
+        "attempts": 47,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.619999999999985,
+        "retention": 0.9700000000000001,
+        "evaluation": 878.5
+      }
+    },
+    {
+      "seed": 14,
+      "blind": {
+        "digs": 171,
+        "attempts": 177,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.469999999999953,
+        "retention": 0.92,
+        "evaluation": 28.166666666666668
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 56.666666666666664
+      }
+    },
+    {
+      "seed": 15,
+      "blind": {
+        "digs": 320,
+        "attempts": 326,
+        "scans": 0,
+        "found": 6,
+        "seconds": 35.85999999999987,
+        "retention": 0.92,
+        "evaluation": 486.8333333333333
+      },
+      "detector": {
+        "digs": 47,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 562
+      }
+    },
+    {
+      "seed": 16,
+      "blind": {
+        "digs": 161,
+        "attempts": 167,
+        "scans": 0,
+        "found": 6,
+        "seconds": 18.36999999999996,
+        "retention": 0.92,
+        "evaluation": 87.5
+      },
+      "detector": {
+        "digs": 36,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.96,
+        "evaluation": 159
+      }
+    },
+    {
+      "seed": 17,
+      "blind": {
+        "digs": 110,
+        "attempts": 116,
+        "scans": 0,
+        "found": 6,
+        "seconds": 12.759999999999986,
+        "retention": 0.92,
+        "evaluation": 544.8333333333334
+      },
+      "detector": {
+        "digs": 34,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9800000000000001,
+        "evaluation": 563.5
+      }
+    },
+    {
+      "seed": 18,
+      "blind": {
+        "digs": 387,
+        "attempts": 393,
+        "scans": 0,
+        "found": 7,
+        "seconds": 43.22999999999983,
+        "retention": 0.92,
+        "evaluation": 353.42857142857144
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 7,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000002,
+        "evaluation": 393.42857142857144
+      }
+    },
+    {
+      "seed": 19,
+      "blind": {
+        "digs": 439,
+        "attempts": 445,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.949999999999804,
+        "retention": 0.92,
+        "evaluation": 85.5
+      },
+      "detector": {
+        "digs": 41,
+        "attempts": 49,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.839999999999984,
+        "retention": 0.9700000000000001,
+        "evaluation": 90.83333333333333
+      }
+    },
+    {
+      "seed": 20,
+      "blind": {
+        "digs": 166,
+        "attempts": 172,
+        "scans": 0,
+        "found": 6,
+        "seconds": 18.919999999999956,
+        "retention": 0.92,
+        "evaluation": 401.6666666666667
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 7,
+        "seconds": 16.15999999999998,
+        "retention": 0.9714285714285715,
+        "evaluation": 757.2857142857143
+      }
+    },
+    {
+      "seed": 21,
+      "blind": {
+        "digs": 488,
+        "attempts": 494,
+        "scans": 0,
+        "found": 6,
+        "seconds": 54.339999999999776,
+        "retention": 0.9199999999999999,
+        "evaluation": 115.83333333333333
+      },
+      "detector": {
+        "digs": 50,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 185
+      }
+    },
+    {
+      "seed": 22,
+      "blind": {
+        "digs": 375,
+        "attempts": 381,
+        "scans": 0,
+        "found": 6,
+        "seconds": 41.90999999999984,
+        "retention": 0.9199999999999999,
+        "evaluation": 27
+      },
+      "detector": {
+        "digs": 42,
+        "attempts": 48,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.729999999999984,
+        "retention": 0.9800000000000001,
+        "evaluation": 28
+      }
+    },
+    {
+      "seed": 23,
+      "blind": {
+        "digs": 332,
+        "attempts": 338,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.179999999999865,
+        "retention": 0.92,
+        "evaluation": 73.83333333333333
+      },
+      "detector": {
+        "digs": 64,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9699999999999999,
+        "evaluation": 668.3333333333334
+      }
+    },
+    {
+      "seed": 24,
+      "blind": {
+        "digs": 332,
+        "attempts": 338,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.179999999999865,
+        "retention": 0.92,
+        "evaluation": 504.1666666666667
+      },
+      "detector": {
+        "digs": 44,
+        "attempts": 50,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.949999999999983,
+        "retention": 0.9700000000000001,
+        "evaluation": 540.3333333333334
+      }
+    },
+    {
+      "seed": 25,
+      "blind": {
+        "digs": 271,
+        "attempts": 277,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.469999999999896,
+        "retention": 0.92,
+        "evaluation": 38.333333333333336
+      },
+      "detector": {
+        "digs": 53,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 486.1666666666667
+      }
+    },
+    {
+      "seed": 26,
+      "blind": {
+        "digs": 329,
+        "attempts": 335,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.849999999999866,
+        "retention": 0.92,
+        "evaluation": 290.8333333333333
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 320
+      }
+    },
+    {
+      "seed": 27,
+      "blind": {
+        "digs": 269,
+        "attempts": 275,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.249999999999897,
+        "retention": 0.92,
+        "evaluation": 20.166666666666668
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 62.5
+      }
+    },
+    {
+      "seed": 28,
+      "blind": {
+        "digs": 218,
+        "attempts": 224,
+        "scans": 0,
+        "found": 6,
+        "seconds": 24.639999999999926,
+        "retention": 0.9199999999999999,
+        "evaluation": 123.33333333333333
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 356
+      }
+    },
+    {
+      "seed": 29,
+      "blind": {
+        "digs": 323,
+        "attempts": 329,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.18999999999987,
+        "retention": 0.92,
+        "evaluation": 22.5
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9799999999999999,
+        "evaluation": 44.666666666666664
+      }
+    },
+    {
+      "seed": 30,
+      "blind": {
+        "digs": 216,
+        "attempts": 222,
+        "scans": 0,
+        "found": 6,
+        "seconds": 24.419999999999927,
+        "retention": 0.9199999999999999,
+        "evaluation": 108.66666666666667
+      },
+      "detector": {
+        "digs": 47,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 130
+      }
+    },
+    {
+      "seed": 31,
+      "blind": {
+        "digs": 118,
+        "attempts": 124,
+        "scans": 0,
+        "found": 6,
+        "seconds": 13.639999999999981,
+        "retention": 0.92,
+        "evaluation": 313.5
+      },
+      "detector": {
+        "digs": 25,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 330.5
+      }
+    },
+    {
+      "seed": 32,
+      "blind": {
+        "digs": 383,
+        "attempts": 389,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.789999999999836,
+        "retention": 0.92,
+        "evaluation": 84.83333333333333
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 50,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.949999999999983,
+        "retention": 0.9800000000000001,
+        "evaluation": 183.66666666666666
+      }
+    },
+    {
+      "seed": 33,
+      "blind": {
+        "digs": 379,
+        "attempts": 385,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.34999999999984,
+        "retention": 0.9199999999999999,
+        "evaluation": 147
+      },
+      "detector": {
+        "digs": 52,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9699999999999999,
+        "evaluation": 196.5
+      }
+    },
+    {
+      "seed": 34,
+      "blind": {
+        "digs": 268,
+        "attempts": 274,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.139999999999898,
+        "retention": 0.92,
+        "evaluation": 110.66666666666667
+      },
+      "detector": {
+        "digs": 26,
+        "attempts": 32,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.969999999999994,
+        "retention": 0.9700000000000001,
+        "evaluation": 525.8333333333334
+      }
+    },
+    {
+      "seed": 35,
+      "blind": {
+        "digs": 335,
+        "attempts": 341,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.50999999999986,
+        "retention": 0.92,
+        "evaluation": 490.6666666666667
+      },
+      "detector": {
+        "digs": 60,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 588.1666666666666
+      }
+    },
+    {
+      "seed": 36,
+      "blind": {
+        "digs": 375,
+        "attempts": 381,
+        "scans": 0,
+        "found": 6,
+        "seconds": 41.90999999999984,
+        "retention": 0.92,
+        "evaluation": 610
+      },
+      "detector": {
+        "digs": 25,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.9700000000000001,
+        "evaluation": 1109.5
+      }
+    },
+    {
+      "seed": 37,
+      "blind": {
+        "digs": 282,
+        "attempts": 288,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.67999999999989,
+        "retention": 0.9199999999999999,
+        "evaluation": 2353.6666666666665
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 486.8333333333333
+      }
+    },
+    {
+      "seed": 38,
+      "blind": {
+        "digs": 332,
+        "attempts": 338,
+        "scans": 0,
+        "found": 7,
+        "seconds": 37.179999999999865,
+        "retention": 0.92,
+        "evaluation": 58.142857142857146
+      },
+      "detector": {
+        "digs": 26,
+        "attempts": 32,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.969999999999994,
+        "retention": 0.9500000000000002,
+        "evaluation": 47.166666666666664
+      }
+    },
+    {
+      "seed": 39,
+      "blind": {
+        "digs": 327,
+        "attempts": 333,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.62999999999987,
+        "retention": 0.9199999999999999,
+        "evaluation": 172.66666666666666
+      },
+      "detector": {
+        "digs": 58,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 274.6666666666667
+      }
+    },
+    {
+      "seed": 40,
+      "blind": {
+        "digs": 179,
+        "attempts": 185,
+        "scans": 0,
+        "found": 6,
+        "seconds": 20.349999999999948,
+        "retention": 0.9199999999999999,
+        "evaluation": 541
+      },
+      "detector": {
+        "digs": 36,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 209.16666666666666
+      }
+    },
+    {
+      "seed": 41,
+      "blind": {
+        "digs": 170,
+        "attempts": 176,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.359999999999953,
+        "retention": 0.92,
+        "evaluation": 52.333333333333336
+      },
+      "detector": {
+        "digs": 26,
+        "attempts": 32,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.969999999999994,
+        "retention": 0.9700000000000001,
+        "evaluation": 625
+      }
+    },
+    {
+      "seed": 42,
+      "blind": {
+        "digs": 171,
+        "attempts": 177,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.469999999999953,
+        "retention": 0.9199999999999999,
+        "evaluation": 454.6666666666667
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 633
+      }
+    },
+    {
+      "seed": 43,
+      "blind": {
+        "digs": 168,
+        "attempts": 174,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.139999999999954,
+        "retention": 0.92,
+        "evaluation": 94.16666666666667
+      },
+      "detector": {
+        "digs": 62,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.98,
+        "evaluation": 165.5
+      }
+    },
+    {
+      "seed": 44,
+      "blind": {
+        "digs": 305,
+        "attempts": 311,
+        "scans": 0,
+        "found": 6,
+        "seconds": 34.20999999999988,
+        "retention": 0.92,
+        "evaluation": 43.666666666666664
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 7,
+        "seconds": 14.509999999999986,
+        "retention": 0.9628571428571429,
+        "evaluation": 31.857142857142858
+      }
+    },
+    {
+      "seed": 45,
+      "blind": {
+        "digs": 225,
+        "attempts": 231,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.409999999999922,
+        "retention": 0.92,
+        "evaluation": 1029.1666666666667
+      },
+      "detector": {
+        "digs": 62,
+        "attempts": 76,
+        "scans": 63,
+        "found": 7,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000002,
+        "evaluation": 870
+      }
+    },
+    {
+      "seed": 46,
+      "blind": {
+        "digs": 380,
+        "attempts": 386,
+        "scans": 0,
+        "found": 7,
+        "seconds": 42.45999999999984,
+        "retention": 0.9199999999999999,
+        "evaluation": 2074.4285714285716
+      },
+      "detector": {
+        "digs": 64,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 2538.5
+      }
+    },
+    {
+      "seed": 47,
+      "blind": {
+        "digs": 273,
+        "attempts": 279,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.689999999999895,
+        "retention": 0.92,
+        "evaluation": 35
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 106.66666666666667
+      }
+    },
+    {
+      "seed": 48,
+      "blind": {
+        "digs": 216,
+        "attempts": 222,
+        "scans": 0,
+        "found": 6,
+        "seconds": 24.419999999999927,
+        "retention": 0.92,
+        "evaluation": 112.33333333333333
+      },
+      "detector": {
+        "digs": 36,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 191.5
+      }
+    },
+    {
+      "seed": 49,
+      "blind": {
+        "digs": 378,
+        "attempts": 384,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.23999999999984,
+        "retention": 0.92,
+        "evaluation": 603
+      },
+      "detector": {
+        "digs": 25,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 615.5
+      }
+    },
+    {
+      "seed": 50,
+      "blind": {
+        "digs": 272,
+        "attempts": 278,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.579999999999895,
+        "retention": 0.9199999999999999,
+        "evaluation": 2031.3333333333333
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 111.16666666666667
+      }
+    },
+    {
+      "seed": 51,
+      "blind": {
+        "digs": 385,
+        "attempts": 391,
+        "scans": 0,
+        "found": 6,
+        "seconds": 43.009999999999835,
+        "retention": 0.92,
+        "evaluation": 453.8333333333333
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.9800000000000001,
+        "evaluation": 913.1666666666666
+      }
+    },
+    {
+      "seed": 52,
+      "blind": {
+        "digs": 233,
+        "attempts": 239,
+        "scans": 0,
+        "found": 6,
+        "seconds": 26.289999999999917,
+        "retention": 0.9199999999999999,
+        "evaluation": 40
+      },
+      "detector": {
+        "digs": 48,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 1780.1666666666667
+      }
+    },
+    {
+      "seed": 53,
+      "blind": {
+        "digs": 278,
+        "attempts": 284,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.239999999999892,
+        "retention": 0.92,
+        "evaluation": 488.5
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 63,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.379999999999978,
+        "retention": 0.9800000000000001,
+        "evaluation": 510.3333333333333
+      }
+    },
+    {
+      "seed": 54,
+      "blind": {
+        "digs": 434,
+        "attempts": 440,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.39999999999981,
+        "retention": 0.9199999999999999,
+        "evaluation": 2183.3333333333335
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 119.66666666666667
+      }
+    },
+    {
+      "seed": 55,
+      "blind": {
+        "digs": 331,
+        "attempts": 337,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.069999999999865,
+        "retention": 0.92,
+        "evaluation": 1903
+      },
+      "detector": {
+        "digs": 39,
+        "attempts": 47,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.619999999999985,
+        "retention": 0.9800000000000001,
+        "evaluation": 129.33333333333334
+      }
+    },
+    {
+      "seed": 56,
+      "blind": {
+        "digs": 119,
+        "attempts": 125,
+        "scans": 0,
+        "found": 6,
+        "seconds": 13.74999999999998,
+        "retention": 0.92,
+        "evaluation": 554.3333333333334
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 1015.8333333333334
+      }
+    },
+    {
+      "seed": 57,
+      "blind": {
+        "digs": 493,
+        "attempts": 499,
+        "scans": 0,
+        "found": 6,
+        "seconds": 54.88999999999977,
+        "retention": 0.92,
+        "evaluation": 417.6666666666667
+      },
+      "detector": {
+        "digs": 60,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.98,
+        "evaluation": 52.833333333333336
+      }
+    },
+    {
+      "seed": 58,
+      "blind": {
+        "digs": 388,
+        "attempts": 394,
+        "scans": 0,
+        "found": 6,
+        "seconds": 43.33999999999983,
+        "retention": 0.92,
+        "evaluation": 487.1666666666667
+      },
+      "detector": {
+        "digs": 29,
+        "attempts": 33,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.079999999999993,
+        "retention": 0.9700000000000001,
+        "evaluation": 99.83333333333333
+      }
+    },
+    {
+      "seed": 59,
+      "blind": {
+        "digs": 278,
+        "attempts": 284,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.239999999999892,
+        "retention": 0.92,
+        "evaluation": 94.33333333333333
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 104.5
+      }
+    },
+    {
+      "seed": 60,
+      "blind": {
+        "digs": 460,
+        "attempts": 466,
+        "scans": 0,
+        "found": 6,
+        "seconds": 51.25999999999979,
+        "retention": 0.92,
+        "evaluation": 1657.8333333333333
+      },
+      "detector": {
+        "digs": 52,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 1863.1666666666667
+      }
+    },
+    {
+      "seed": 61,
+      "blind": {
+        "digs": 223,
+        "attempts": 229,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.189999999999923,
+        "retention": 0.92,
+        "evaluation": 705.1666666666666
+      },
+      "detector": {
+        "digs": 61,
+        "attempts": 77,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.91999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 265.1666666666667
+      }
+    },
+    {
+      "seed": 62,
+      "blind": {
+        "digs": 281,
+        "attempts": 287,
+        "scans": 0,
+        "found": 6,
+        "seconds": 31.56999999999989,
+        "retention": 0.92,
+        "evaluation": 391.6666666666667
+      },
+      "detector": {
+        "digs": 29,
+        "attempts": 33,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.079999999999993,
+        "retention": 0.9700000000000001,
+        "evaluation": 504.8333333333333
+      }
+    },
+    {
+      "seed": 63,
+      "blind": {
+        "digs": 189,
+        "attempts": 195,
+        "scans": 0,
+        "found": 6,
+        "seconds": 21.449999999999942,
+        "retention": 0.9199999999999999,
+        "evaluation": 23.833333333333332
+      },
+      "detector": {
+        "digs": 30,
+        "attempts": 34,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.189999999999992,
+        "retention": 0.9699999999999999,
+        "evaluation": 112
+      }
+    },
+    {
+      "seed": 64,
+      "blind": {
+        "digs": 267,
+        "attempts": 273,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.029999999999898,
+        "retention": 0.92,
+        "evaluation": 100.16666666666667
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.9800000000000001,
+        "evaluation": 211
+      }
+    },
+    {
+      "seed": 65,
+      "blind": {
+        "digs": 430,
+        "attempts": 436,
+        "scans": 0,
+        "found": 6,
+        "seconds": 47.95999999999981,
+        "retention": 0.9199999999999999,
+        "evaluation": 2047.6666666666667
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9800000000000001,
+        "evaluation": 1030.6666666666667
+      }
+    },
+    {
+      "seed": 66,
+      "blind": {
+        "digs": 331,
+        "attempts": 337,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.069999999999865,
+        "retention": 0.92,
+        "evaluation": 390
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 427.3333333333333
+      }
+    },
+    {
+      "seed": 67,
+      "blind": {
+        "digs": 124,
+        "attempts": 130,
+        "scans": 0,
+        "found": 6,
+        "seconds": 14.299999999999978,
+        "retention": 0.92,
+        "evaluation": 178.33333333333334
+      },
+      "detector": {
+        "digs": 49,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9799999999999999,
+        "evaluation": 211.83333333333334
+      }
+    },
+    {
+      "seed": 68,
+      "blind": {
+        "digs": 385,
+        "attempts": 391,
+        "scans": 0,
+        "found": 6,
+        "seconds": 43.009999999999835,
+        "retention": 0.9199999999999999,
+        "evaluation": 385.3333333333333
+      },
+      "detector": {
+        "digs": 50,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 56.666666666666664
+      }
+    },
+    {
+      "seed": 69,
+      "blind": {
+        "digs": 225,
+        "attempts": 231,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.409999999999922,
+        "retention": 0.9199999999999999,
+        "evaluation": 82.66666666666667
+      },
+      "detector": {
+        "digs": 41,
+        "attempts": 47,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.619999999999985,
+        "retention": 0.96,
+        "evaluation": 93.66666666666667
+      }
+    },
+    {
+      "seed": 70,
+      "blind": {
+        "digs": 218,
+        "attempts": 224,
+        "scans": 0,
+        "found": 6,
+        "seconds": 24.639999999999926,
+        "retention": 0.92,
+        "evaluation": 503.5
+      },
+      "detector": {
+        "digs": 29,
+        "attempts": 33,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.079999999999993,
+        "retention": 0.9700000000000001,
+        "evaluation": 117.83333333333333
+      }
+    },
+    {
+      "seed": 71,
+      "blind": {
+        "digs": 330,
+        "attempts": 336,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.959999999999866,
+        "retention": 0.9199999999999999,
+        "evaluation": 95.5
+      },
+      "detector": {
+        "digs": 28,
+        "attempts": 32,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.969999999999994,
+        "retention": 0.96,
+        "evaluation": 1046
+      }
+    },
+    {
+      "seed": 72,
+      "blind": {
+        "digs": 275,
+        "attempts": 281,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.909999999999894,
+        "retention": 0.92,
+        "evaluation": 620.5
+      },
+      "detector": {
+        "digs": 62,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9700000000000001,
+        "evaluation": 670
+      }
+    },
+    {
+      "seed": 73,
+      "blind": {
+        "digs": 325,
+        "attempts": 331,
+        "scans": 0,
+        "found": 7,
+        "seconds": 36.40999999999987,
+        "retention": 0.92,
+        "evaluation": 786.7142857142857
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 519
+      }
+    },
+    {
+      "seed": 74,
+      "blind": {
+        "digs": 435,
+        "attempts": 441,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.509999999999806,
+        "retention": 0.92,
+        "evaluation": 590
+      },
+      "detector": {
+        "digs": 61,
+        "attempts": 77,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.91999999999997,
+        "retention": 0.98,
+        "evaluation": 658.5
+      }
+    },
+    {
+      "seed": 75,
+      "blind": {
+        "digs": 374,
+        "attempts": 380,
+        "scans": 0,
+        "found": 6,
+        "seconds": 41.79999999999984,
+        "retention": 0.9199999999999999,
+        "evaluation": 1852.1666666666667
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 109.16666666666667
+      }
+    },
+    {
+      "seed": 76,
+      "blind": {
+        "digs": 267,
+        "attempts": 273,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.029999999999898,
+        "retention": 0.92,
+        "evaluation": 518.1666666666666
+      },
+      "detector": {
+        "digs": 48,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 624.6666666666666
+      }
+    },
+    {
+      "seed": 77,
+      "blind": {
+        "digs": 332,
+        "attempts": 338,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.179999999999865,
+        "retention": 0.92,
+        "evaluation": 22.666666666666668
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 7,
+        "seconds": 16.15999999999998,
+        "retention": 0.9714285714285715,
+        "evaluation": 114
+      }
+    },
+    {
+      "seed": 78,
+      "blind": {
+        "digs": 326,
+        "attempts": 332,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.51999999999987,
+        "retention": 0.9199999999999999,
+        "evaluation": 43.833333333333336
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.96,
+        "evaluation": 99.16666666666667
+      }
+    },
+    {
+      "seed": 79,
+      "blind": {
+        "digs": 232,
+        "attempts": 238,
+        "scans": 0,
+        "found": 6,
+        "seconds": 26.179999999999918,
+        "retention": 0.92,
+        "evaluation": 2117.6666666666665
+      },
+      "detector": {
+        "digs": 64,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.98,
+        "evaluation": 2283.5
+      }
+    },
+    {
+      "seed": 80,
+      "blind": {
+        "digs": 268,
+        "attempts": 274,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.139999999999898,
+        "retention": 0.92,
+        "evaluation": 524.8333333333334
+      },
+      "detector": {
+        "digs": 42,
+        "attempts": 48,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.729999999999984,
+        "retention": 0.9700000000000001,
+        "evaluation": 645.1666666666666
+      }
+    },
+    {
+      "seed": 81,
+      "blind": {
+        "digs": 433,
+        "attempts": 439,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.28999999999981,
+        "retention": 0.92,
+        "evaluation": 23.166666666666668
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 7,
+        "seconds": 14.509999999999986,
+        "retention": 0.9714285714285715,
+        "evaluation": 2684
+      }
+    },
+    {
+      "seed": 82,
+      "blind": {
+        "digs": 170,
+        "attempts": 176,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.359999999999953,
+        "retention": 0.92,
+        "evaluation": 911.6666666666666
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 550.1666666666666
+      }
+    },
+    {
+      "seed": 83,
+      "blind": {
+        "digs": 326,
+        "attempts": 332,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.51999999999987,
+        "retention": 0.92,
+        "evaluation": 466.5
+      },
+      "detector": {
+        "digs": 62,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 185
+      }
+    },
+    {
+      "seed": 84,
+      "blind": {
+        "digs": 302,
+        "attempts": 308,
+        "scans": 0,
+        "found": 6,
+        "seconds": 33.87999999999988,
+        "retention": 0.9199999999999999,
+        "evaluation": 40.5
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 425.6666666666667
+      }
+    },
+    {
+      "seed": 85,
+      "blind": {
+        "digs": 433,
+        "attempts": 439,
+        "scans": 0,
+        "found": 6,
+        "seconds": 48.28999999999981,
+        "retention": 0.92,
+        "evaluation": 197.83333333333334
+      },
+      "detector": {
+        "digs": 66,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 224.16666666666666
+      }
+    },
+    {
+      "seed": 86,
+      "blind": {
+        "digs": 270,
+        "attempts": 276,
+        "scans": 0,
+        "found": 6,
+        "seconds": 30.359999999999896,
+        "retention": 0.92,
+        "evaluation": 437.5
+      },
+      "detector": {
+        "digs": 38,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9800000000000001,
+        "evaluation": 475.6666666666667
+      }
+    },
+    {
+      "seed": 87,
+      "blind": {
+        "digs": 172,
+        "attempts": 178,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.579999999999952,
+        "retention": 0.9199999999999999,
+        "evaluation": 24.166666666666668
+      },
+      "detector": {
+        "digs": 66,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.98,
+        "evaluation": 25.833333333333332
+      }
+    },
+    {
+      "seed": 88,
+      "blind": {
+        "digs": 320,
+        "attempts": 326,
+        "scans": 0,
+        "found": 6,
+        "seconds": 35.85999999999987,
+        "retention": 0.92,
+        "evaluation": 553.3333333333334
+      },
+      "detector": {
+        "digs": 54,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 206
+      }
+    },
+    {
+      "seed": 89,
+      "blind": {
+        "digs": 222,
+        "attempts": 228,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.079999999999924,
+        "retention": 0.92,
+        "evaluation": 1940.5
+      },
+      "detector": {
+        "digs": 42,
+        "attempts": 48,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.729999999999984,
+        "retention": 0.9700000000000001,
+        "evaluation": 96.33333333333333
+      }
+    },
+    {
+      "seed": 90,
+      "blind": {
+        "digs": 334,
+        "attempts": 340,
+        "scans": 0,
+        "found": 6,
+        "seconds": 37.399999999999864,
+        "retention": 0.92,
+        "evaluation": 550.6666666666666
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 586.6666666666666
+      }
+    },
+    {
+      "seed": 91,
+      "blind": {
+        "digs": 141,
+        "attempts": 147,
+        "scans": 0,
+        "found": 6,
+        "seconds": 16.16999999999997,
+        "retention": 0.9199999999999999,
+        "evaluation": 49.666666666666664
+      },
+      "detector": {
+        "digs": 46,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9800000000000001,
+        "evaluation": 189.5
+      }
+    },
+    {
+      "seed": 92,
+      "blind": {
+        "digs": 328,
+        "attempts": 334,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.73999999999987,
+        "retention": 0.92,
+        "evaluation": 251.33333333333334
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9800000000000001,
+        "evaluation": 799
+      }
+    },
+    {
+      "seed": 93,
+      "blind": {
+        "digs": 170,
+        "attempts": 176,
+        "scans": 0,
+        "found": 6,
+        "seconds": 19.359999999999953,
+        "retention": 0.9199999999999999,
+        "evaluation": 2082
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.9800000000000001,
+        "evaluation": 466.8333333333333
+      }
+    },
+    {
+      "seed": 94,
+      "blind": {
+        "digs": 226,
+        "attempts": 232,
+        "scans": 0,
+        "found": 6,
+        "seconds": 25.51999999999992,
+        "retention": 0.92,
+        "evaluation": 783
+      },
+      "detector": {
+        "digs": 40,
+        "attempts": 46,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.509999999999986,
+        "retention": 0.9700000000000001,
+        "evaluation": 1343
+      }
+    },
+    {
+      "seed": 95,
+      "blind": {
+        "digs": 331,
+        "attempts": 337,
+        "scans": 0,
+        "found": 7,
+        "seconds": 37.069999999999865,
+        "retention": 0.92,
+        "evaluation": 74.28571428571429
+      },
+      "detector": {
+        "digs": 27,
+        "attempts": 31,
+        "scans": 63,
+        "found": 6,
+        "seconds": 12.859999999999994,
+        "retention": 0.96,
+        "evaluation": 97.33333333333333
+      }
+    },
+    {
+      "seed": 96,
+      "blind": {
+        "digs": 330,
+        "attempts": 336,
+        "scans": 0,
+        "found": 6,
+        "seconds": 36.959999999999866,
+        "retention": 0.92,
+        "evaluation": 83
+      },
+      "detector": {
+        "digs": 39,
+        "attempts": 47,
+        "scans": 63,
+        "found": 6,
+        "seconds": 14.619999999999985,
+        "retention": 0.9700000000000001,
+        "evaluation": 157.5
+      }
+    },
+    {
+      "seed": 97,
+      "blind": {
+        "digs": 319,
+        "attempts": 325,
+        "scans": 0,
+        "found": 6,
+        "seconds": 35.74999999999987,
+        "retention": 0.92,
+        "evaluation": 650.5
+      },
+      "detector": {
+        "digs": 60,
+        "attempts": 76,
+        "scans": 63,
+        "found": 6,
+        "seconds": 17.80999999999997,
+        "retention": 0.9800000000000001,
+        "evaluation": 1079.5
+      }
+    },
+    {
+      "seed": 98,
+      "blind": {
+        "digs": 429,
+        "attempts": 435,
+        "scans": 0,
+        "found": 6,
+        "seconds": 47.84999999999981,
+        "retention": 0.9199999999999999,
+        "evaluation": 157.5
+      },
+      "detector": {
+        "digs": 32,
+        "attempts": 37,
+        "scans": 63,
+        "found": 6,
+        "seconds": 13.51999999999999,
+        "retention": 0.9800000000000001,
+        "evaluation": 103.66666666666667
+      }
+    },
+    {
+      "seed": 99,
+      "blind": {
+        "digs": 384,
+        "attempts": 390,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.899999999999835,
+        "retention": 0.92,
+        "evaluation": 119.83333333333333
+      },
+      "detector": {
+        "digs": 51,
+        "attempts": 61,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.15999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 216.16666666666666
+      }
+    },
+    {
+      "seed": 100,
+      "blind": {
+        "digs": 376,
+        "attempts": 382,
+        "scans": 0,
+        "found": 6,
+        "seconds": 42.01999999999984,
+        "retention": 0.92,
+        "evaluation": 589.6666666666666
+      },
+      "detector": {
+        "digs": 50,
+        "attempts": 62,
+        "scans": 63,
+        "found": 6,
+        "seconds": 16.26999999999998,
+        "retention": 0.9700000000000001,
+        "evaluation": 1172.6666666666667
+      }
+    }
+  ]
+}

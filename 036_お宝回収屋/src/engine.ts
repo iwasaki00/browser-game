@@ -1,10 +1,11 @@
 import { CONFIG, income, treasure, tool, weights, combinations } from './data';
+import {scanReading,finishQuality,recordRecovery,initializeBatch,batchRemaining,tiny,type SurveyMark,type ScanReading,type SortEvent,type RecoveryEvent} from './tool-value';
 import type {HandFeedback} from './feedback';
-export interface Find { uid:string; id:string; x:number; y:number; depth?:number; quality:number; state:'buried'|'batch'|'stored'|'paid'; tool:string; }
-export interface Plot { id:string; seed:number; mask:number[]; items:Find[]; }
-export interface Batch { id:string; plotId:string; items:string[]; processed:boolean; cells:number; }
+export interface Find { uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'stored'|'paid'; tool:string; }
+export interface Plot { id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
+export interface Batch { id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
 export interface State {
- handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
+ lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
  explorationAreas:Plot[]; currentPlot:number; exploredPlots:number; retainedFinds:Find[]; sandSampled:boolean;
@@ -30,7 +31,8 @@ export function generate(seed:number,tutorial=false,noJackpot=false):Plot {
   }
   const x=tutorial&&i<6?30+i*60:15+Math.floor(r()*33)*10;
   const depth=tutorial&&i<6?(i===0?20:25+(i%2)*20):(i<6?25+Math.floor(r()*4)*10:25+Math.floor(r()*24)*10);
-  items.push({uid:`${seed}:${i}`,id,x,y:surfaceY(seed,i,tutorial),depth,quality:tutorial?1:0.8+r()*0.4,state:'buried',tool:'hand'});
+  const quality=tutorial?1:0.8+r()*.4;
+  items.push({uid:`${seed}:${i}`,id,x,y:surfaceY(seed,i,tutorial),depth,quality,initialQuality:quality,state:'buried',tool:'hand'});
  }
  return {id:`BA-${seed}`,seed,mask:Array(1008).fill(0),items};
 }
@@ -83,37 +85,49 @@ export function dig(s:State,id:string,x:number,y:number,dx:number) {
  }
  if(!removed)return 0;
  cost(s,id);s.digs++;s.cells+=removed;s.playerStats.xp[0]+=removed;s.playerStats.xp[1]+=.5;
+ for(const f of p.items)if(f.state==='buried'&&!f.qualityFinalized&&exposure(p,f)>=CONFIG.exposure)finishQuality(s,f,id);
  if(id==='B101'||id==='B105') {
   s.sandSampled=true;
   let b=s.sandBatches.find(b=>b.plotId===p.id&&!b.processed&&b.cells<CONFIG.batchCells);
   if(!b){b={id:`${p.id}:batch-${s.digs}`,plotId:p.id,items:[],processed:false,cells:0};s.sandBatches.push(b);}
   b.cells+=removed;
-  for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&['B001','B002','B003','B004'].includes(f.id)){f.state='batch';f.tool=id;b.items.push(f.uid);}
+  for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&['B001','B002','B003','B004'].includes(f.id)){finishQuality(s,f,id);f.state='batch';f.tool=id;b.items.push(f.uid);b.allocations??={};b.allocations[f.uid]=b.cells;}
  }
  refresh(s);return removed;
 }
-export function detect(s:State,x:number,y:number) {
- if(!s.ownedTools.includes('B201'))return 0;cost(s,'B201');s.playerStats.xp[1]++;
- return Math.max(0,...plot(s).items.filter(f=>f.state==='buried'&&treasure(f.id).material==='metal').map(f=>1-Math.hypot(f.x-x,f.y-y)/(95+Math.min(15,Math.floor(s.playerStats.xp[1]/CONFIG.xpPerLevel)))));
-}
+export function scan(s:State,x:number,y:number){if(!s.ownedTools.includes('B201'))return {strength:0,band:'未装備',depthHint:'',character:''};cost(s,'B201');s.playerStats.xp[1]++;return scanReading(s,x,y);}
+export function detect(s:State,x:number,y:number){return scan(s,x,y).strength;}
 export function recover(s:State,uid:string,usedTool='hand') {
  const p=plot(s),f=p.items.find(f=>f.uid===uid);
  if(!f||f.state!=='buried'||exposure(p,f)<CONFIG.exposure||stored(s).length>=CONFIG.capacity)return false;
- f.state='stored';f.tool=usedTool;s.playerStats.xp[2]++;return true;
+ finishQuality(s,f,usedTool);f.state='stored';f.tool=usedTool;recordRecovery(s,f);s.playerStats.xp[2]++;return true;
 }
-export function sift(s:State,withSieve:boolean) {
- if(withSieve&&!s.ownedTools.includes('B104'))return 0;
- const b=s.sandBatches.find(b=>!b.processed);if(!b)return 0;
- const limit=withSieve?8+Math.min(2,Math.floor(s.playerStats.xp[2]/CONFIG.xpPerLevel/5)):1;let n=0;
- for(const uid of [...b.items]){
-  const f=allFinds(s).find(f=>f.uid===uid);
-  if(!f||f.state!=='batch'){b.items=b.items.filter(x=>x!==uid);continue;}
-  if(stored(s).length>=CONFIG.capacity)break;
-  f.state='stored';f.tool=withSieve?'B104':f.tool;n++;b.items=b.items.filter(x=>x!==uid);if(n>=limit)break;
+export interface SortResult {units:number;found:number;method:'hand'|'sieve';}
+export function sortSand(s:State,method:'hand'|'sieve'):SortResult {
+ const result:SortResult={units:0,found:0,method};if(method==='sieve'&&!s.ownedTools.includes('B104'))return result;
+ let budget=method==='sieve'?15:3;
+ for(const batch of s.sandBatches){if(batch.processed||budget<1e-8)continue;const r=sortBatch(s,batch,method,budget);result.units+=r.units;result.found+=r.found;budget-=r.units;}
+ if(result.units>0){const stamina=method==='sieve'?4:6;s.playerStats.stamina=Math.max(0,s.playerStats.stamina-stamina);s.playerStats.xp[2]+=result.found;s.playerStats.xp[3]++;(s.sortHistory??=[]).push({time:s.playTime,...result,stamina});}
+ return result;
+}
+function sortBatch(s:State,b:Batch,method:'hand'|'sieve',capacity:number):SortResult {
+ const result:SortResult={units:0,found:0,method};initializeBatch(b);
+ let budget=capacity;const beforeResidue=new Set(Object.keys(b.residueWork!));
+ const amount=Math.min(budget,Math.max(0,b.cells-b.screenedUnits!));b.screenedUnits!+=amount;budget-=amount;result.units+=amount;
+ const finds=allFinds(s);const due=b.items.filter(uid=>b.residueWork![uid]===undefined&&b.screenedUnits!+1e-8>=b.allocations![uid]);
+ for(const uid of due){const f=finds.find(f=>f.uid===uid);if(!f||f.state!=='batch'){b.items=b.items.filter(x=>x!==uid);continue;}
+  if((method==='hand'&&tiny(f))||stored(s).length>=CONFIG.capacity){const work=Math.min(1,amount/Math.max(1,due.length));if(work>0){b.residueWork![uid]=work;}continue;}
+  finishQuality(s,f,f.tool);f.state='stored';if(method==='sieve')f.tool='B104';recordRecovery(s,f);result.found++;b.items=b.items.filter(x=>x!==uid);
  }
- if(!b.items.length)b.processed=true;
- cost(s,withSieve?'B104':'hand');s.playerStats.xp[2]+=n;return n;
+ for(const uid of Object.keys(b.residueWork!)){if(budget<=0)break;if(method==='hand'&&!beforeResidue.has(uid))continue;
+  const f=finds.find(f=>f.uid===uid);if(!f||f.state!=='batch'){delete b.residueWork![uid];b.items=b.items.filter(x=>x!==uid);continue;}
+  if(stored(s).length>=CONFIG.capacity)break;const n=Math.min(budget,b.residueWork![uid]);b.residueWork![uid]-=n;budget-=n;result.units+=n;
+  if(b.residueWork![uid]<1e-8){delete b.residueWork![uid];finishQuality(s,f,f.tool);f.state='stored';if(method==='sieve')f.tool='B104';recordRecovery(s,f);result.found++;b.items=b.items.filter(x=>x!==uid);}
+ }
+ b.processed=batchRemaining(b)<1e-8&&b.items.length===0;
+ return result;
 }
+export function sift(s:State,withSieve:boolean){return sortSand(s,withSieve?'sieve':'hand').found;}
 export const stored=(s:State)=>allFinds(s).filter(f=>f.state==='stored');
 export function reward(s:State,uid:string) {
  const f=stored(s).find(f=>f.uid===uid);if(!f||s.collectedTreasures.includes(uid))return 0;
@@ -127,7 +141,7 @@ export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false) {
  const old=plot(s);if(seed===old.seed)seed=(seed+1)>>>0;
  s.retainedFinds=allFinds(s).filter(f=>f.state==='stored'||f.state==='batch');
  s.sandSampled ||= s.sandBatches.length>0;s.sandBatches=s.sandBatches.filter(b=>!b.processed);
- s.handFeedback=[];s.exploredPlots++;const next=generate(seed,false,noJackpot);
+ s.handFeedback=[];delete s.lastScan;s.exploredPlots++;const next=generate(seed,false,noJackpot);
  next.id=`BA-${seed}-${s.exploredPlots}`;next.items.forEach((f,i)=>f.uid=`${s.playerId}:${s.exploredPlots}:${seed}:${i}`);
  s.explorationAreas=[next];s.currentPlot=0;
  s.activeContracts=s.activeContracts.filter(uid=>s.retainedFinds.some(f=>f.uid===uid));refresh(s);

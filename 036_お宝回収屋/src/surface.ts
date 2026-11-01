@@ -27,6 +27,8 @@ export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,de
  ctx.lineWidth=.6;for(let row=0;row<28;row++){ctx.strokeStyle='rgba(149,112,61,.065)';ctx.beginPath();for(let x=0;x<=360;x+=12){const q=project(x,row*10+Math.sin(x/34+row)*2);x?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}ctx.stroke();}
  for(let y=0;y<28;y++)for(let x=0;x<36;x++){const h=((x*71+y*43+p.seed)%97)/97,q=project(x*10+2+h*5,y*10+3);ctx.fillStyle=`rgba(109,79,37,${.07+h*.11})`;ctx.fillRect(q.x,q.y,1,1);}
  drawPits(ctx,p);
+ for(const m of p.surveyMarks??[]){if(!m.targets.some(uid=>p.items.some(f=>f.uid===uid&&f.state==='buried')))continue;const q=project(m.x,m.y);ctx.save();ctx.strokeStyle=m.strength>.7?'#9f7139aa':'#2c827b99';ctx.lineWidth=1.1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,24,16,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#365f54';ctx.font='7px sans-serif';ctx.fillText(m.deep?'深そう':'金属反応',q.x-14,q.y-19);ctx.restore();}
+
  if(tutorialHint){const q=project(50,150);ctx.strokeStyle='rgba(255,251,215,.55)';ctx.lineWidth=1;ctx.setLineDash([2,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,29,18,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#7e6845';ctx.font='8px sans-serif';ctx.textAlign='left';ctx.fillText('この辺りを掘ってみよう',Math.max(8,q.x-20),q.y-25);}
  for(const f of visibleFinds(p)){
   const ex=exposure(p,f),q=project(f.x,f.y);ctx.globalAlpha=Math.min(1,ex*1.6);ctx.shadowColor='#fff3a8';ctx.shadowBlur=ex>=CONFIG.exposure?12:0;ctx.fillStyle=ex>=CONFIG.exposure?'#ffed9b':'#9c8050';

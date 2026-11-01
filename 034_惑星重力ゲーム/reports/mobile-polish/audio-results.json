@@ -1,5 +1,5 @@
 {
-  "browser": "156.0.8078.48",
+  "browser": "156.0.8078.76",
   "status": "PASS",
   "context": "native Chrome Web Audio, not a mocked AudioContext; CDP touch gestures",
   "first": "AudioContext: running\n開始待ち: なし / 再開試行: 0\nテスト音: sent / 出力要求: 1\n音声時計: 進行\nAudioSession: unsupported\nエラー: なし",

@@ -23,7 +23,13 @@ export function migrate(raw:unknown):State {
  s.exploredPlots=Math.max(1,r.exploredPlots??plots.length);s.sandSampled ||= s.sandBatches.length>0;
  s.retainedFinds=[...(s.retainedFinds??[]),...plots.filter((_,i)=>i!==s.currentPlot).flatMap(p=>p.items).filter(f=>f.state==='stored'||f.state==='batch')];
  s.explorationAreas=[plots[s.currentPlot]];s.currentPlot=0;s.saveVersion=2;
- s.sandBatches=s.sandBatches.filter(b=>!b.processed);const ids=new Set([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state!=='paid').map(f=>f.uid));s.activeContracts=s.activeContracts.filter(uid=>ids.has(uid));refresh(s);return s;
+ s.sandBatches=s.sandBatches.filter(b=>!b.processed);const ids=new Set([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state!=='paid').map(f=>f.uid));s.activeContracts=s.activeContracts.filter(uid=>ids.has(uid));
+ for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(f.initialQuality!==undefined&&(!Number.isFinite(f.initialQuality)||f.initialQuality<0))throw Error('品質データが不正です');}
+ for(const p of s.explorationAreas)for(const m of p.surveyMarks??[])if(!Number.isFinite(m.x)||!Number.isFinite(m.y)||!Number.isFinite(m.strength)||m.strength<0||m.strength>1||!Array.isArray(m.targets))throw Error('探知データが不正です');
+ for(const b of s.sandBatches)if(!Number.isFinite(b.cells)||b.cells<0||Object.values(b.residueWork??{}).some(n=>!Number.isFinite(n)||n<0))throw Error('砂の残量データが不正です');
+ for(const b of s.sandBatches)if(b.screenedUnits!==undefined&&(!Number.isFinite(b.screenedUnits)||b.screenedUnits<0||b.screenedUnits>b.cells+1e-6))throw Error('砂の選別データが不正です');
+ // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
+ refresh(s);return s;
 }
 export async function load():Promise<State|null>{const backupRaw=localStorage.getItem(key);let backup:State|null=null,backupError:unknown;try{backup=backupRaw?migrate(JSON.parse(backupRaw)):null;}catch(e){backupError=e;}try{const db=await open();const raw=await new Promise<unknown>((resolve,reject)=>{const tx=db.transaction('saves');const r=tx.objectStore('saves').get('current');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();});const primary=raw?migrate(raw):null;if(backup&&(!primary||backup.lastSavedAt>=primary.lastSavedAt))return backup;if(primary)return primary;if(backupError)throw backupError;return null;}catch(e){if(backup)return backup;throw e;}}
 let queue:Promise<unknown>=Promise.resolve();

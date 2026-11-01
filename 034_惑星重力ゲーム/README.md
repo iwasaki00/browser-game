@@ -1,5 +1,13 @@
 # ORBIT MAKER（オービットメーカー）
 
+Version 1.9.3 — MOBILE POLISH
+
+短い画面のタッチ領域、セーフエリア内の設定パネル、再生画面の内部スクロールを調整しました。既存の物理演算・ステージ・保存形式は維持しています。
+
+[モバイル検証レポート・画面比較・PC性能測定](reports/mobile-polish/REPORT.md)／[iPhone最終受入確認表 IP-01〜14](reports/mobile-polish/IPHONE_CHECKLIST.md)。全Node405件とPC Chromeのモバイル試験を実施。iPhone実機での音声・共有・操作感・発熱は未確認です。公開・push・デプロイは行っていません。
+
+以下は以前の実装記録です。
+
 Version 1.9.0 — FINAL VOYAGE
 
 HOMEWARDのメインストーリーに5章と5種類の結末を追加しました。DEEP SPACEの帰還中継点へ到達すると、宇宙マップから「FINAL VOYAGE」を選べます。観測網・72時間の通信・消えた調査船をつなぐ最後の航路を、自分で調整して飛行します。

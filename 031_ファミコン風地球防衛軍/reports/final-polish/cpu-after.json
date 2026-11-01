@@ -1,0 +1,39 @@
+{
+  "phase": "after",
+  "at": "2026-11-01T12:00:45.502Z",
+  "environment": "Node VM / Canvas proxy, NO browser/GPU/FPS measurement",
+  "rows": [
+    {
+      "enemies": 30,
+      "effects": 80,
+      "drawProxyMedianMs": 0.4002391666666663,
+      "minMs": 0.3736908333333337,
+      "maxMs": 0.4964624999999998,
+      "stateUnchanged": true
+    },
+    {
+      "enemies": 50,
+      "effects": 80,
+      "drawProxyMedianMs": 0.3286091666666664,
+      "minMs": 0.24847250000000068,
+      "maxMs": 0.5307458333333329,
+      "stateUnchanged": true
+    },
+    {
+      "enemies": 100,
+      "effects": 80,
+      "drawProxyMedianMs": 0.37055666666666603,
+      "minMs": 0.33749166666666686,
+      "maxMs": 0.5279125000000003,
+      "stateUnchanged": true
+    },
+    {
+      "enemies": 200,
+      "effects": 80,
+      "drawProxyMedianMs": 0.722164166666666,
+      "minMs": 0.6550066666666681,
+      "maxMs": 0.9365216666666678,
+      "stateUnchanged": true
+    }
+  ]
+}

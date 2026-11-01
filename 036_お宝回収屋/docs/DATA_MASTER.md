@@ -27,3 +27,8 @@
 ## 0.1.2の追加
 
 マスター数・価格・報酬は変更なし。CONFIGに手応え確率0.3・再試行間隔12秒・対象距離18px・同じ穴の距離28px・限界付近の許容差0.5を追加。保存形式はv2のまま、任意のhandFeedback配列（plotId/x/y/attemptedAt/hinted）を追加。旧版では未存在でも空配列で読み込む。mask・個体depthの値は一切再スケールしない。
+
+
+## 0.1.3
+
+36お宝・126道具・16連携・価格・固定FN報酬を維持。道具用のサイズ初期プロファイルで反応の特徴を補完。個体にinitialQuality/qualityFinalized/qualityLoss/damagePrevented/surveyed/plannedRecovery/excavationTool/recoveryRecorded、区画にsurveyMarks、砂バッチにscreenedUnits/allocations/residueWork、状態にlastScan/sortHistory/recoveryHistoryを任意追加。マスター名称・説明・価格は保存へ複製しない。

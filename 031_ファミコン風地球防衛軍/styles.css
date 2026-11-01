@@ -50,6 +50,8 @@ button, a { font: inherit; }
 
 .site-bar a { color: var(--cyan); text-decoration: none; }
 .site-bar b { color: var(--yellow); }
+.site-bar #pauseButton { min-height: 32px; min-width: 44px; touch-action: manipulation; color: var(--yellow); }
+.site-bar #pauseButton[hidden] { display: none; }
 .site-bar .title-button { color: var(--cyan); border-color: transparent; padding-left: 0; white-space: nowrap; }
 .orientation-note { display: none; color: var(--muted); font-size: 9px; letter-spacing: 0; white-space: nowrap; }
 .site-bar button {

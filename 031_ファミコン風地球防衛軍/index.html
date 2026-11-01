@@ -7,15 +7,16 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=1.2.0-A1">
+  <link rel="stylesheet" href="styles.css?v=1.2.0-B">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v1.2.0-A1</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v1.2.0-B</b></span>
       <output id="acceptanceHUD" class="acceptance-hud" aria-label="実機診断HUD" aria-live="off" hidden></output>
       <small class="orientation-note">横向き推奨</small>
+      <button id="pauseButton" type="button" data-action="pause-game" aria-label="一時停止（再開できます）" hidden>Ⅱ PAUSE</button>
       <button id="soundToggle" type="button" aria-label="音声のオン・オフ">SOUND: ON</button>
     </header>
     <aside id="achievementToast" class="achievement-toast" role="status" aria-live="polite" hidden><i id="achievementToastBadge" class="achievement-badge" aria-hidden="true"></i><span><small>ACHIEVEMENT UNLOCKED</small><strong id="achievementToastName"></strong></span><button type="button" data-action="achievement-skip" aria-label="実績通知をスキップ">×</button></aside>
@@ -239,6 +240,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=1.2.0-A1"></script>
+  <script type="module" src="js/game.js?v=1.2.0-B"></script>
 </body>
 </html>

@@ -28,6 +28,7 @@ export function aimTarget(input,origin,camera,zoom){
 }
 
 export const damp = (current,target,rate,dt) => target+(current-target)*Math.exp(-rate*Math.max(0,dt));
+export const CAMERA_STABILITY=Object.freeze({directionHold:.12});
 
 export function createBattleCamera(player){
   const bands=Math.ceil(BATTLE_CAMERA.evaluationDistance/BATTLE_CAMERA.bandWidth)*2;
@@ -35,7 +36,7 @@ export function createBattleCamera(player){
     x:followCamera(player.x,BATTLE_CAMERA.idleZoom,player.face||1,player.world??WORLD),zoom:BATTLE_CAMERA.idleZoom,
     targetZoom:BATTLE_CAMERA.idleZoom,candidateZoom:BATTLE_CAMERA.idleZoom,
     rawZoom:BATTLE_CAMERA.idleZoom,mode:"idle",candidateMode:"idle",focusX:player.x,
-    direction:player.face||1,lookAhead:(player.face||1)*BATTLE_CAMERA.lookAhead,frameLeft:player.x-12,frameRight:player.x+12,
+    direction:player.face||1,directionCandidate:player.face||1,directionAge:0,lookAhead:(player.face||1)*BATTLE_CAMERA.lookAhead,frameLeft:player.x-12,frameRight:player.x+12,
     elapsed:0,stableTime:0,evaluatedEnemies:0,weightedDistance:0,spread:0,
     counts:new Uint32Array(bands),distances:new Float64Array(bands),
     lefts:new Float64Array(bands),rights:new Float64Array(bands)
@@ -112,7 +113,13 @@ export function evaluateBattleCamera(camera,player,enemies,battle,elapsed=BATTLE
 
 export function updateBattleCamera(camera,player,enemies,battle,dt){
   const c=BATTLE_CAMERA;
-  if(Math.abs(player.vx||0)>1)camera.direction=Math.sign(player.vx);
+  // Confirm a turn in real time; one-frame collision/input jitter must not flip look-ahead.
+  if(Math.abs(player.vx||0)>1){
+    const direction=Math.sign(player.vx);
+    camera.directionAge=camera.directionCandidate===direction?(camera.directionAge||0)+dt:dt;
+    camera.directionCandidate=direction;
+    if(camera.directionAge+1e-9>=CAMERA_STABILITY.directionHold)camera.direction=direction;
+  }else camera.directionAge=0;
   camera.elapsed+=dt;
   if(camera.elapsed+1e-9>=c.evaluationInterval){
     const elapsed=camera.elapsed;camera.elapsed=Math.max(0,camera.elapsed-c.evaluationInterval);

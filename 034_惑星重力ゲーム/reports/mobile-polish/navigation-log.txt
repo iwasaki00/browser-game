@@ -1,0 +1,12 @@
+map
+DOCKED DS01
+return launch
+return CLEAR
+archive ready
+replay opened
+archive snap
+advance replay
+paused
+resume checked
+replay seeked
+NAVIGATION / PROTECTED REPLAY PASS

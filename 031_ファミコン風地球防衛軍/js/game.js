@@ -2,11 +2,12 @@ import {reconcileAchievements,selectAchievementTitle,AchievementNotices} from ".
 import {ACHIEVEMENT_BY_ID} from "./achievement-master.js?v=0.8.0";
 import {CampaignRun} from "./campaign-stats.js?v=0.8.0";
 import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.8.0";
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-A1";
+import {READABILITY,playerOpacity,drawPlayerLocator,drawEnemyShotAccent,drawDangerAccents,crowdedVisuals} from "./readability.js?v=1.2.0-B";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-B";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.7.0";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
-import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=0.6.0";
+import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=1.2.0-B";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.6.0";
 import {FrameProfiler,LiveProfiler,RunProfiler} from "./profiler.js?v=0.6.0";
 import {LAB_CHECKPOINTS,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=0.6.0";
@@ -186,7 +187,7 @@ document.querySelector('#campaignWeaponSearch').addEventListener('input',e=>{if(
 document.querySelector('#campaignWeaponFilter').addEventListener('change',e=>{if(state==='mission'){campaign.category=Object.hasOwn(WEAPON_CATEGORIES,e.target.value)?e.target.value:'ALL';renderMissionList()}});
 document.querySelector('#campaignAnimation').addEventListener('change',e=>{campaign.animation=e.target.checked;campaign.lastPreview=-Infinity});
 document.querySelector('#screenMission').addEventListener('keydown',e=>{const tab=e.target?.dataset?.tab;if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const i=CAMPAIGN_TABS.indexOf(tab);campaign.tab=CAMPAIGN_TABS[e.key==='Home'?0:e.key==='End'?CAMPAIGN_TABS.length-1:(i+(e.key==='ArrowRight'?1:CAMPAIGN_TABS.length-1))%CAMPAIGN_TABS.length];renderMissionList();document.querySelector('#campaignTab-'+campaign.tab).focus()});
-window.addEventListener('pagehide',()=>flushCampaign());
+window.addEventListener('pagehide',()=>{resetInput();flushCampaign()});
 document.querySelector('#achievementCategory').addEventListener('change',e=>{if(state!=='mission')return;campaign.challenges.category=['ALL','C','K','W','B','S','T'].includes(e.target.value)?e.target.value:'ALL';campaign.challenges.render(save,campaign.selected)});
 document.querySelector('#achievementStatus').addEventListener('change',e=>{if(state!=='mission')return;campaign.challenges.status=['ALL','OPEN','DONE'].includes(e.target.value)?e.target.value:'ALL';campaign.challenges.render(save,campaign.selected)});
 function weapon(id){return WEAPON_BY_ID.get(id)}
@@ -281,24 +282,27 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden){flushCampa
 
 document.querySelectorAll("#touchControls [data-touch]").forEach(b=>{const key=b.dataset.touch;
   b.addEventListener('pointerdown',e=>{e.preventDefault();if(state!=='play'||!game||game.player.dead)return;initAudio();
-    if(key==='switch'){if(remotePointer!==null)return;remotePointer=e.pointerId;setPressed(b,true);b.setPointerCapture(e.pointerId);
+    if(key==='switch'){if(remotePointer!==null)return;remotePointer=e.pointerId;setPressed(b,true);try{b.setPointerCapture(e.pointerId)}catch{remotePointer=null;setPressed(b,false);return}
       if(!mineCount(game)){switchWeapon();return}
       remoteHeld=false;const current=game;remoteTimer=setTimeout(()=>{remoteTimer=null;if(game===current&&state==='play'&&remotePointer!==null){remoteHeld=true;useRemoteMines();syncRemoteControl()}},WEAPON_LIMITS.remoteHoldMs);return;
     }
-    touchPointers.set(e.pointerId,{key,element:b});setPressed(b,true);b.setPointerCapture(e.pointerId);input[key]=true;
+    touchPointers.set(e.pointerId,{key,element:b});setPressed(b,true);try{b.setPointerCapture(e.pointerId)}catch{releaseTouch(e);return}input[key]=true;
   });
   for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,e=>{e.preventDefault();
     if(key!=='switch'){releaseTouch(e);return}if(remotePointer!==e.pointerId)return;
     if(remoteTimer!==null){clearTimeout(remoteTimer);remoteTimer=null;if(ev==='pointerup'&&!remoteHeld)switchWeapon()}remotePointer=null;remoteHeld=false;setPressed(b,false);
   });
 });
+document.querySelector('#touchControls').addEventListener('touchcancel',e=>{if(e.touches?.length===0)resetInput()},{passive:true});
+document.querySelector('#touchControls').addEventListener('contextmenu',e=>e.preventDefault());
 function syncRemoteControl(){const count=mineCount(game);if(game?.arsenal.lastMineCount===count)return;if(game)game.arsenal.lastMineCount=count;gameShell.dataset.mines=String(count);document.querySelector(".switch-button small").textContent=count?`HOLD ${count}`:"WEAPON";document.querySelector(".switch-button").setAttribute("aria-label",count?`武器切替。長押しでマイン${count}個を起爆`:"武器切替")}
 const aimPad=document.querySelector("#aimPad");function touchAim(e){if(state!=="play"||!game)return;const r=aimPad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),len=Math.hypot(x,y);input.aimMode="touch";if(len>8){input.touchDx=x/len;input.touchDy=y/len}else{input.touchDx=game.player.face;input.touchDy=0}input.fire=true}
-aimPad.addEventListener('pointerdown',e=>{e.preventDefault();if(state!=='play'||!game||game.player.dead||aimPointer!==null)return;aimPointer=e.pointerId;setPressed(aimPad,true);aimPad.setPointerCapture(e.pointerId);touchAim(e);initAudio()});
+aimPad.addEventListener('pointerdown',e=>{e.preventDefault();if(state!=='play'||!game||game.player.dead||aimPointer!==null)return;aimPointer=e.pointerId;setPressed(aimPad,true);try{aimPad.setPointerCapture(e.pointerId)}catch{aimPointer=null;setPressed(aimPad,false);return}touchAim(e);initAudio()});
 aimPad.addEventListener('pointermove',e=>{if(e.pointerId===aimPointer)touchAim(e)});
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])aimPad.addEventListener(ev,e=>{if(e.pointerId!==aimPointer)return;aimPointer=null;input.fire=false;setPressed(aimPad,false)});
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");if(!a)return;initAudio();tone(620,.05);const action=a.dataset.action;
+  if(action==='pause-game'){if(state==='play')pause();return}
   if(action==='retry-save'){if(!game?.lab){const ok=storeSave();if(ok&&game?.campaignRun)game.campaignRun.dirty=false;traceResult(ok?'save-retry-ok':'save-retry-failed')}return}
   if(action==='campaign-tab'){if(state==="mission"&&CAMPAIGN_TABS.includes(a.dataset.tab)){campaign.tab=a.dataset.tab;renderMissionList()}return}
   if(action==='campaign-select'){if(state==="mission"&&MISSIONS.some(m=>m.id===a.dataset.mission)){campaign.selected=a.dataset.mission;renderMissionList()}return}
@@ -675,7 +679,7 @@ function draw(){
   ctx.translate(Math.round(shake)+origin.x,Math.round(shake)+origin.y);
   ctx.scale(view.zoom,view.zoom);
   activeArt()?.prepare(view.zoom);
-  drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);if(g.coast)drawCoastalWarnings(ctx,g);if(g.sky)drawSkyWarnings(ctx,g);if(g.mobile)drawMobileWarnings(ctx,g);if(g.living)drawLivingWarnings(ctx,g);if(g.mothership)drawMothershipWarnings(ctx,g,viewBounds(g.camera,view.zoom));if(g.finalDefense)drawFinalWarnings(ctx,g,viewBounds(g.camera,view.zoom));drawShots(g);drawPlayer(g.player);drawEffects(g);
+  drawBackdrop(g);drawWorld(g);drawItems(g);drawEnemies(g);drawEffects(g);drawShots(g);if(g.coast)drawCoastalWarnings(ctx,g);if(g.sky)drawSkyWarnings(ctx,g);if(g.mobile)drawMobileWarnings(ctx,g);if(g.living)drawLivingWarnings(ctx,g);if(g.mothership)drawMothershipWarnings(ctx,g,viewBounds(g.camera,view.zoom));if(g.finalDefense)drawFinalWarnings(ctx,g,viewBounds(g.camera,view.zoom));drawDangerAccents(ctx,g,viewBounds(g.camera,view.zoom),view.zoom);drawPlayer(g.player);
   ctx.restore();drawHud(g);drawImpactHud(g);
 }
 function drawBackdrop(g){
@@ -727,7 +731,8 @@ function drawUnderground(g,bounds){
   ctx.font='8px monospace';ctx.fillStyle='#8fe2ac';
   for(const [x,y,label] of [[2020,58,'UPPER →'],[2290,106,'LOWER →'],[3180,46,'MERGE →']])if(x>bounds.left&&x<bounds.right)ctx.fillText(label,x,y);
 }
-function drawPlayer(p){if(p.invuln>0&&!p.hitPose&&Math.floor(p.invuln*12)%2)return;if(drawStudyPlayer(ctx,activeStudy(),p,weapon(activeEquipment()[p.weaponSlot]),images.heldWeapons))return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
+function drawPlayer(p){ctx.save();ctx.globalAlpha=playerOpacity(p);drawPlayerSprite(p);ctx.restore();drawPlayerLocator(ctx,p,view.zoom)}
+function drawPlayerSprite(p){if(drawStudyPlayer(ctx,activeStudy(),p,weapon(activeEquipment()[p.weaponSlot]),images.heldWeapons))return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
     const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;
     if(e.dead&&e.deathTrail){const profile=DESTRUCTION_LEVELS[e.deathLevel];
@@ -736,7 +741,7 @@ function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=
         drawDeathGhost(e,e.deathTrail[i],e.deathTrail[i+1],e.deathTrail[i+2],profile.trailAlpha*(1-age/IMPACT.trailLife)*clamp(e.death/.12,0,1),deaths<INVASION.maxDeathSprites);trails++;
       }
     }
-    if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
+    if(e.dead){ctx.globalAlpha=clamp(e.death/.12,0,1);if(deaths>=INVASION.maxDeathSprites&&!e.fixedDevice&&!isBoss(e)){ctx.fillStyle=e.deathColor||"#ff4f6d";ctx.fillRect(x-3,Math.round(e.y+e.h/2),6,2);ctx.fillRect(x-1,Math.round(e.y+e.h/2)-2,2,5);ctx.globalAlpha=1;continue}deaths++;ctx.save();ctx.translate(x,Math.round(e.y+e.h/2));ctx.rotate(e.deathAngle||0)}
     const localX=e.dead?0:x,localY=e.dead?-e.h/2:e.y;
     if(drawFinalEnemy(ctx,finalArt,e,localX,localY,activeArt()?.far,g.time)){}
     else if(drawMothershipEnemy(ctx,mothershipArt,e,localX,localY,activeArt()?.far,g.time)){}
@@ -774,7 +779,7 @@ function drawShots(g){
   const study=activeStudy();
   drawExpanded(ctx,g,images,viewBounds(g.camera,view.zoom),study?{projectile:(c,s,x,y,size)=>drawStudyProjectile(c,study,s.weapon.id,x,y,size,size),installation:(c,i)=>(study._u?.icons||i.weapon.id==='D-19')&&drawStudyIcon(c,study,i.weapon.id,Math.round(i.x)-12,i.y-(study._u?.icons&&i.weapon.type==='mine'?21:22.5),24,24),storm:(c,j)=>drawUnifiedSpecial(c,study,j.weapon.id,(g.time%1),j.x,j.y-48,64,32),trail:(c,s)=>drawUnifiedTrail(c,study,s)}:null);
   for(const s of g.shots){if(s.expanded||s.x<g.camera-16||s.x>g.camera+view.width+16)continue;const i=s.weapon.assetIndex,x=Math.round(s.x),y=Math.round(s.y);if(study){ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(s.vy,s.vx));const drawn=drawStudyProjectile(ctx,study,s.weapon.id,-8,-8);ctx.restore();if(drawn)continue}ctx.drawImage(images.shots,i*16,0,16,16,x-8,y-8,16,16)}
-  for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;
+  for(const s of g.enemyShots){if(s.x<g.camera-32||s.x>g.camera+view.width+32)continue;drawEnemyShotAccent(ctx,s,view.zoom);
     if(s.kind==='finalSpore'&&finalArt?.finalSpore){ctx.drawImage(finalArt.finalSpore,Math.floor(g.time*12)%8*64,0,64,64,s.x-6,s.y-6,12,12);continue}
     if(s.kind==='livingSpore'&&livingArt?.livingSpore){ctx.drawImage(livingArt.livingSpore,Math.floor(g.time*12)%8*64,0,64,64,s.x-6,s.y-6,12,12);continue}
     if(s.kind==='skyOrb'&&skyArt?.skyOrb){ctx.drawImage(skyArt.skyOrb,Math.floor(g.time*12)%8*64,0,64,64,s.x-6,s.y-6,12,12);continue}
@@ -785,17 +790,17 @@ function drawShots(g){
   }
 }
 function drawItems(g){for(const it of g.items){if(!it.alive||it.x<g.camera-24||it.x>g.camera+view.width+24)continue;ctx.drawImage(images.items,it.type==="heal"?0:32,0,32,32,Math.round(it.x)-12,it.y-16,24,24)}}
-function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;const x=f.x,a=f.life/f.max;
-    if(drawFinalFX(ctx,finalArt,f,1-a))continue;
-    if(drawMothershipFX(ctx,mothershipArt,f,1-a))continue;
-    if(drawLivingFX(ctx,livingArt,f,1-a))continue;
-    if(drawMobileFX(ctx,mobileArt,f,1-a))continue;
-    if(drawSkyFX(ctx,skyArt,f,1-a))continue;
-    if(drawCoastalFX(ctx,coastalArt,f,1-a))continue;
+function drawEffects(g){const crowded=crowdedVisuals(g);let decor=0,particles=0;for(const f of g.effects){const margin=f.kind==="explosion"?Math.max(100,(f.r||24)*1.6*(f.visualScale||1)):100;if(Math.max(f.x,f.x2??f.x)<g.camera-margin||Math.min(f.x,f.x2??f.x)>g.camera+view.width+margin)continue;if(crowded&&(f.kind==="hit"||f.kind==="muzzle")&&decor++>=READABILITY.decorDraws)continue;const x=f.x,a=f.life/f.max;
+    if(f.kind.startsWith("final")&&drawFinalFX(ctx,finalArt,f,1-a))continue;
+    if(f.kind.startsWith("mothership")&&drawMothershipFX(ctx,mothershipArt,f,1-a))continue;
+    if(f.kind.startsWith("living")&&drawLivingFX(ctx,livingArt,f,1-a))continue;
+    if(f.kind.startsWith("mobile")&&drawMobileFX(ctx,mobileArt,f,1-a))continue;
+    if(f.kind.startsWith("sky")&&drawSkyFX(ctx,skyArt,f,1-a))continue;
+    if(f.kind.startsWith("coast")&&drawCoastalFX(ctx,coastalArt,f,1-a))continue;
     if(f.kind==="explosion"){
-      const scale=f.visualScale||1,fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6)*scale,radius=(f.r||24)*(.3+(1-a)*1.3)*scale;
+      ctx.globalAlpha=crowded?.72:1;const scale=f.visualScale||1,fr=Math.min(7,Math.floor((1-a)*8)),sz=Math.max(30,(f.r||24)*2.6)*scale,radius=(f.r||24)*(.3+(1-a)*1.3)*scale;
       if(!drawStudyEffect(ctx,activeStudy(),f.artWeaponId,1-a,x,f.y,sz))ctx.drawImage(images.explosion,fr*32,0,32,32,x-sz/2,f.y-sz/2,sz,sz);
-      ctx.globalAlpha=a;ctx.strokeStyle=a>.65?"#fff7d5":"#ffab56";ctx.lineWidth=2;ctx.beginPath();
+      ctx.globalAlpha=a*(crowded?.72:1);ctx.strokeStyle=a>.65?"#fff7d5":"#ffab56";ctx.lineWidth=2;ctx.beginPath();
       for(let i=0;i<=8;i++){const angle=i*Math.PI/4,px=Math.round(x+Math.cos(angle)*radius),py=Math.round(f.y+Math.sin(angle)*radius);if(!i)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.stroke();
       ctx.fillStyle="#fff1a8";if(a>.8)ctx.fillRect(x-8*scale,f.y-7*scale,16*scale,14*scale);
       for(let i=0;i<6;i++){const angle=i*Math.PI/3;ctx.fillRect(Math.round(x+Math.cos(angle)*radius*1.1),Math.round(f.y+Math.sin(angle)*radius*1.1),3,2)}ctx.globalAlpha=1;
@@ -807,7 +812,7 @@ function drawEffects(g){for(const f of g.effects){const margin=f.kind==="explosi
     else if(f.kind==="lightning"){if(!drawStudyLightning(ctx,activeStudy(),f)){ctx.strokeStyle="#c8a8ff";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke()}}
     else{ctx.fillStyle=f.kind==="muzzle"?"#fff08b":"#fff";ctx.fillRect(x-4,f.y-3,8,6)}
   }
-  for(const f of g.impact.particles){if(f.x<g.camera-8||f.x>g.camera+view.width+8)continue;ctx.globalAlpha=Math.min(1,f.life/.1);ctx.fillStyle=f.color;ctx.fillRect(Math.round(f.x),Math.round(f.y),f.size,f.flame?f.size+2:f.size)}ctx.globalAlpha=1;
+  for(const f of g.impact.particles){if(f.x<g.camera-8||f.x>g.camera+view.width+8)continue;if(crowded&&particles++>=READABILITY.particleDraws)continue;ctx.globalAlpha=Math.min(1,f.life/.1);ctx.fillStyle=f.color;ctx.fillRect(Math.round(f.x),Math.round(f.y),f.size,f.flame?f.size+2:f.size)}ctx.globalAlpha=1;
 }
 function drawHitEffect(f,rays){
   const a=f.life/f.max,progress=1-a,angle=Math.atan2(f.vy,f.vx),burn=f.type==="flame";
@@ -952,7 +957,7 @@ function startLab(openPanel=true,terrain='M01'){
   if(openPanel)openLabPanel();return true;
 }
 function syncLabUI(){
-  syncMobileUI();syncAcceptanceUI();
+  syncMobileUI();syncAcceptanceUI();document.querySelector('#pauseButton').hidden=state!=='play';
   syncClassControls();
   applyPreviewResolution();document.querySelector('#pauseArtControls').hidden=!DEBUG||!game?.lab;
   if(artPreview)for(const prefix of ['lab','pause']){

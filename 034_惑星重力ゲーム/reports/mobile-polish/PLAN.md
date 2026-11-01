@@ -11,3 +11,14 @@
 初期：v1.9.2、対象内の未コミット変更なし。プロジェクトのUTF-8/LF方針を継承。実機のノッチ・Safariバー・音声出力・発熱はPC再現で合格としない。
 
 BGMは現行版に存在しない。新機能を追加する回ではないため実装せず、NOT APPLICABLEとして仕様を明記する。一時停止は既存のメニュー・設定・マップ表示による停止を使う。
+
+## Build ? Test ? Docs
+
+- [x] Minimal scoped UI / gesture / audio-stop fixes
+- [x] All 405 Node tests; preserve initial 404/1 failure evidence
+- [x] Native Chrome audio and PNG / share branch tests
+- [x] Real-time 120-second protected replay / DEEP performance sampling
+- [x] Isolated old-save and protected-record preservation
+- [x] IP-01?14 acceptance checklist and verification report
+
+The final browser logs and JSON files are the evidence; iPhone acceptance remains UNVERIFIED.

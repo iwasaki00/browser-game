@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-A1",
-  "startedAt": "2026-11-01T05:20:15.756Z",
+  "version": "1.2.0-B",
+  "startedAt": "2026-11-01T12:03:01.325Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "0ede9276b15b383594803512575fc2e963955f80",
-    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tools/campaign-integration.mjs\n?? reports/result-freeze/\n?? tests/result-freeze.test.mjs\n?? tools/result-freeze-preview.mjs"
+    "commit": "08e15488cd9372091f3aab9290ffc129821c1a1d",
+    "worktree": "M index.html\n M js/camera.js\n M js/data.js\n M js/game.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tests/helpers/runtime.mjs\n M tools/campaign-integration.mjs\n?? js/readability.js\n?? reports/final-polish/\n?? tests/final-polish.test.mjs\n?? tests/helpers/polish-scenes.js\n?? tools/final-polish-preview.mjs\n?? tools/polish-render-benchmark.mjs"
   },
   "cases": [
     {
@@ -5784,8 +5784,10 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 587,
+      "assertions": 613,
       "files": [
+        "tests/final-polish.test.mjs",
+        "tests/camera.test.mjs",
         "tests/result-freeze.test.mjs",
         "tests/gameplay-polish.test.mjs",
         "tests/mobile-acceptance.test.mjs",
@@ -5870,7 +5872,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T05:22:10.571Z",
+  "finishedAt": "2026-11-01T12:03:57.192Z",
   "summary": {
     "total": 156,
     "pass": 140,
