@@ -39,10 +39,11 @@ READYは必須の自動・実機・通常人手受入がすべて完了した場
 ```text
 npm run qa
 npm run audit:release
+node tools/acceptance-http-smoke.mjs
 node tools/final-acceptance-report.mjs
 ```
 
-順序はQA→静的監査→集計。集計は版不一致や自動FAILを検出し、READYを自動生成しない。監査はファイル読取と隔離VMのみで、HTTP配信・公開・Git更新はしない。既存の`benchmark`系はNode CPU参考値であり、実FPSの代用ではない。
+順序はQA→静的監査→ローカルHTTP→集計。集計は版不一致や自動FAILを検出し、READYを自動生成しない。静的監査はファイル読取と隔離VMのみ。HTTPスモークは一時的なNodeループバックサーバーで日本語サブディレクトリ・版クエリ・254ファイルのバイト／MIMEと404を検証し終了する。実配信設定・JS実行・描画・入力・CDNの試験ではなく、公開・Git更新も行わない。既存の`benchmark`系はNode CPU参考値であり、実FPSの代用ではない。
 
 ## 通常難易度の人手試験
 

@@ -22,7 +22,7 @@ Codexが端末を操作した／Safari保存を参照したという意味では
 | --- | --- |
 | 既存本体 | `js/game.js`（旧QA APIのDEBUG制限、dataキャッシュ版）, `js/data.js`（VERSIONのみ）, `index.html`（表示版・mainキャッシュ） |
 | コマンド | `package.json`（版・audit:release）, `tools/campaign-integration.mjs`（既存関連スイートへ最終受入試験追加） |
-| 新規試験・監査 | `tests/final-acceptance.test.mjs`, `tools/release-audit.mjs`, `tools/final-acceptance-report.mjs` |
+| 新規試験・監査 | `tests/final-acceptance.test.mjs`, `tools/release-audit.mjs`, `tools/final-acceptance-report.mjs`, `tools/acceptance-http-smoke.mjs` |
 | 既存試験 | `tests/campaign-integration.test.mjs`（版の整合のみ） |
 | 文書 | `README.md`, `docs/MOBILE_ACCEPTANCE.md`, `docs/FINAL_ACCEPTANCE.md`, 本README |
 | 実行記録・テンプレート | 本フォルダの`results.json`, `release-audit.json`, `performance.json`, `manual-playthrough.csv`、`reports/campaign-integration/`のREADME・results.json・related-tests.txt |
@@ -96,7 +96,7 @@ debug=1は公開しても誰でも入れるローカルLABで、認証ではな�
 
 ## 11. 性能
 
-30／50／100／LAB200体、連続爆発、貫通・多段、B-08第3形態はすべて**BLOCKED／有効サンプル0**。ブラウザ操作スキルの参照ファイルが実環境に存在せず、前景／実機試験を実行できなかった。FPS／フレーム時間／実描画CPUはnull（未取得）、0FPSではない。除外数0も処理未実行であり「中断なしの正常測定」とは扱わない。
+30／50／100／LAB200体、連続爆発、貫通・多段、B-08第3形態はすべて**BLOCKED／有効サンプル0**。前回はブラウザ操作スキルの参照ファイルが存在しなかった。続行時には参照でき、Computer Useの手順に従って再確認したが、ブラウザ接続ホストが利用不能、Windows経由のChrome選択もアプリ承認タイムアウトとなり停止。実ゲームのブラウザ画面へ到達していない。FPS／フレーム時間／実描画CPUはnull（未取得）、0FPSではない。除外数0も処理未実行であり「中断なしの正常測定」とは扱わない。
 
 既存AcceptanceMeter／30秒計測／BENCHを維持。[未計測表](performance.json)／[実測手順](../../docs/FINAL_ACCEPTANCE.md#性能試験)。Node VM高速処理時間や異常なrAFからiPhone性能を評価しない。実測不足のため性能最適化・敵数削減・演出変更はしていない。
 
@@ -117,7 +117,8 @@ debug=1は公開しても誰でも入れるローカルLABで、認証ではな�
 | 不要ファイル | root公開ならdocs/reports/tests/tools・比較画像等も出せる。JSONのruntimeFilesを配信用許可リストとして準備。ファイル削除・dist生成・公開範囲変更はしていない |
 | Arcade031 | href・アイコン・参照先ファイルを確認。親menu.jsのSHA256を記録。こちらから変更なし |
 | キャッシュ・旧保存 | main/dataのC参照を更新。未変更CSS／カメラ／画像は既存版参照を維持。save key/schemaは不変、service workerなし。実際のCDN混在／キャッシュ更新はNOT RUN |
-| HTTP | 実サーバーの200/404、MIME、HTTPS、ライブPages確認はNOT RUN。静的に参照が解決したことだけをPASS |
+| ローカルHTTP | 一時的なNodeループバックサーバーで254実行用ファイルの200・MIME・バイト長・SHA256、存在しない素材の404を確認し255/255 PASS。日本語プロジェクトのURLエンコード済みサブディレクトリと版クエリを使用。[実行記録](local-http.json)。サーバーは終了済み |
+| 実配信HTTP | 上記はツール自身の配信シミュレーション。既存の実配信サーバー設定・HTTPS・ライブPages・CDN・ブラウザキャッシュの確認はNOT RUN。JS実行・描画・入力の証拠ではない |
 
 公開対象全リポジトリの他ゲームは監査対象外。最終的な素材権利確認と配信方式・対象は所有者側で確定する。
 
@@ -150,4 +151,6 @@ debug=1は公開しても誰でも入れるローカルLABで、認証ではな�
 
 **CONDITIONAL**：必須自動QA・静的監査の範囲は合格、確認した実機回帰3項目もユーザー申告PASS。一方、通常人手・iPhone全体・実測性能・実配信対象の未確認が残るためREADYとはしない。既知LOW項目も次の受入で整理する。
 
-再実行順：`npm run qa` → `npm run audit:release` → `node tools/final-acceptance-report.mjs`。新しいFAILが出た場合は原因を調査し、実装不具合とテスト準備の問題を区別する。最終公開は今回の作業外で、別の明示的な指示が必要。
+再実行順：`npm run qa` → `npm run audit:release` → `node tools/acceptance-http-smoke.mjs` → `node tools/final-acceptance-report.mjs`。新しいFAILが出た場合は原因を調査し、実装不具合とテスト準備の問題を区別する。最終公開は今回の作業外で、別の明示的な指示が必要。
+
+続行分ではゲーム本体を変更せず、ローカルHTTPの255項目と最終受入Node試験7件を追加実行した。既存の統合QA700件は前回実行の証拠を維持し、今回のブラウザ確認を合格へ読み替えていない。ブラウザ操作の成功・ゲーム画面の取得は0件で、タイムアウトの無意味な反復は行っていない。
