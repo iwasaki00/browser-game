@@ -1,4 +1,4 @@
-﻿import test from 'node:test';import assert from 'node:assert/strict';
+import test from 'node:test';import assert from 'node:assert/strict';
 import {createState,plot,scan,detect,dig,recover,reward,sortSand,stored,addPlot,type State,type Find} from '../src/engine';
 import {finishQuality,sandRemaining,toolReport} from '../src/tool-value';import {migrate} from '../src/save';
 function item(id='B007'):Find{return {uid:'target',id,x:185,y:155,depth:220,quality:1,initialQuality:1,state:'buried',tool:'hand'};}

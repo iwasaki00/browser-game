@@ -1,0 +1,38 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "handDragAndWash": "PASS",
+    "touchCastAndPull": "PASS",
+    "pulleyRecovery": "PASS",
+    "debugTabs": 7,
+    "normalSaveIsolation": "PASS",
+    "resetAndReloadIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "handDragAndWash": "PASS",
+    "touchCastAndPull": "PASS",
+    "pulleyRecovery": "PASS",
+    "debugTabs": 7,
+    "normalSaveIsolation": "PASS",
+    "resetAndReloadIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "handDragAndWash": "PASS",
+    "touchCastAndPull": "PASS",
+    "pulleyRecovery": "PASS",
+    "debugTabs": 7,
+    "normalSaveIsolation": "PASS",
+    "resetAndReloadIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  }
+]

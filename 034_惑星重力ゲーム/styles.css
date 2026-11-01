@@ -426,6 +426,7 @@ input:not([type='range']),textarea { -webkit-user-select:text; user-select:text;
 .scan-markers { position:absolute; inset:0; pointer-events:none; z-index:2; overflow:hidden; }
 .scan-marker { position:absolute; top:0; left:0; height:44px; min-height:44px; border:1px solid #4f9aab; border-radius:6px; padding:2px 5px; white-space:pre-line; overflow:hidden; text-overflow:ellipsis; background:#082132ed; color:#d8fff5; font-size:10px; line-height:18px; text-align:left; pointer-events:auto; touch-action:manipulation; }
 .scan-marker.offscreen { border-style:dashed; border-color:#d4c27a; color:#fff0b2; }
+.scan-marker span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .scanning #minimap { opacity:.25; }
 .scanning .result { z-index:5; }
 @media(max-height:500px) { .scan-panel { bottom:58px; } .scan-toolbar button { font-size:11px; padding-inline:6px; } }

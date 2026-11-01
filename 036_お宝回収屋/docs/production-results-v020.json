@@ -1,0 +1,24 @@
+[
+  {
+    "channel": "chrome",
+    "build": "production",
+    "devFeatures": "absent",
+    "debugBundleMarkers": "absent",
+    "hiddenGesture": "disabled",
+    "saveKey": "finders-v1",
+    "digAndReload": "PASS",
+    "riverRetrieveAndWash": "PASS",
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "build": "production",
+    "devFeatures": "absent",
+    "debugBundleMarkers": "absent",
+    "hiddenGesture": "disabled",
+    "saveKey": "finders-v1",
+    "digAndReload": "PASS",
+    "riverRetrieveAndWash": "PASS",
+    "errors": []
+  }
+]

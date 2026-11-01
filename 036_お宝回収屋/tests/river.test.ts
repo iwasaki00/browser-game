@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import {createState,plot,addPlot,buy,refresh,reward,stored,dig,recover,maxStamina} from '../src/engine';
 import {treasures,tools,treasure,income} from '../src/data';
 import {generateRiver,riverCapabilities,riverCheck,riverStart,riverPull,areaUnlocked,beachCount} from '../src/river';
-import {migrate} from '../src/save';
+import {migrate,saveKey} from '../src/save';
 import {setMoney,setStats,grant,equip,spawn,applyScenario,scenarios} from '../src/dev-actions';
 import {logEvent} from '../src/events';
+import {toolIcon,toolCursor} from '../src/surface';
 const setup=(id='hand')=>{const s=createState(99);const r=applyScenario(s,id);return {s,f:r.find,id:r.tool};};
 function finish(s:ReturnType<typeof createState>){let n=0;while(s.riverSession?.uid&&n++<100){const r=riverPull(s,70);if(!r.ok)break;}return n;}
 test('R01 素手で軽い鉄をドラッグ回収・共通洗浄報酬は一度だけ',()=>{const {s,f}=setup();assert.ok(riverStart(s,'hand',f.x,f.y).ok);finish(s);assert.equal(f.state,'stored');assert.equal(reward(s,f.uid),14);assert.equal(reward(s,f.uid),0);assert.equal(riverStart(s,'hand',f.x,f.y).ok,false);assert.deepEqual(s.discoveredTreasures.R001.locations,['R-B']);});
@@ -31,6 +32,8 @@ test('R20 川底道具も通常の購入条件とFN消費を使用',()=>{const s
 test('R21 毎区画に素手回収物があり、将来お宝は通常生成しない（100シード）',()=>{for(let seed=0;seed<100;seed++)for(const area of ['R-A','R-B']){const s=createState(seed);s.explorationAreas=[generateRiver(seed,area)];assert.ok(plot(s).items.filter(f=>!riverCheck(s,'hand',f)).length>=6);assert.ok(plot(s).items.every(f=>!['R008','R010','R011','R012'].includes(f.id)));}});
 test('R22 川底で砂浜掘削・直接回収の抜け道を拒否',()=>{const {s,f}=setup();plot(s).mask.fill(1);assert.equal(dig(s,'hand',f.x,f.y,10),0);assert.equal(recover(s,f.uid),false);});
 test('R23 保管満杯でも回収物は失われない',()=>{const {s,f}=setup();s.retainedFinds=Array.from({length:24},(_,i)=>({...f,uid:'retained'+i,state:'stored'}));riverStart(s,'hand',f.x,f.y);finish(s);assert.equal(f.state,'buried');s.retainedFinds=[];finish(s);assert.equal(f.state,'stored');});
+test('R24 小型磁石はトング・フックでは重い近距離の鉄製チェーンを回収できる',()=>{const {s}=setup('magnetic');grant(s,'R101');grant(s,'R106');const f=spawn(s,'R005',{x:180,y:200});plot(s).items=[f];assert.match(riverCheck(s,'R101',f),/重く/);assert.match(riverCheck(s,'R106',f),/重く/);assert.equal(riverCheck(s,'R103',f),'');assert.ok(riverStart(s,'R103',f.x,f.y).ok);finish(s);assert.equal(f.state,'stored');});
+test('R25 素手と川底7道具のSVG・カーソルは区別できる',()=>{const ids=['hand','R101','R106','R103','R104','R110','R201','R206'];assert.equal(new Set(ids.map(toolIcon)).size,8);assert.equal(new Set(ids.map(toolCursor)).size,8);});
 test('D01 DEBUGのFN設定・加算・非有限値検証',()=>{const s=createState();setMoney(s,1000);setMoney(s,100,true);assert.equal(s.currentFN,1100);setMoney(s,Infinity);assert.equal(s.currentFN,0);assert.equal(s.totalEarnedFN,0);});
 test('D02 体力と能力を制限内で変更',()=>{const s=createState();setStats(s,500,200,[3,5,7]);assert.equal(s.playerStats.stamina,200);assert.equal(maxStamina(s),200);assert.deepEqual(s.playerStats.xp.slice(0,3),[240,480,720]);});
 test('D03 未実装道具は付与・装備不可',()=>{const s=createState();assert.ok(grant(s,'R101'));assert.ok(equip(s,'R101'));assert.equal(grant(s,'R402'),false);assert.equal(equip(s,'R402'),false);assert.deepEqual(s.ownedTools,['R101']);});
@@ -39,3 +42,5 @@ test('D05 指定シードは同じ川底配置・重量・磁性を再現',()=>{
 test('D06 全10シナリオは期待した成功・失敗を再現',()=>{for(const scenario of scenarios){const {s,f,id}=setup(scenario.id);const start=riverStart(s,id,f.x,f.y,riverCapabilities(s,id).rope);if(['brass','weak','short'].includes(scenario.id)){assert.equal(start.ok,false,scenario.id);}else {assert.ok(start.ok,scenario.id);finish(s);assert.equal(f.state,scenario.id==='heavy'?'buried':'stored',scenario.id);}}});
 test('D07 テスト状態は元のプレイヤー状態を変更しない',()=>{const normal=createState(99),before=structuredClone(normal),debug=structuredClone(normal);setMoney(debug,100000);applyScenario(debug,'pulley');spawn(debug,'B012',{state:'paid'});assert.deepEqual(normal,before);});
 test('D08 重要イベントのログは100件上限',()=>{const s=createState();for(let i=0;i<120;i++)logEvent(s,'test',String(i));assert.equal(s.events?.length,100);assert.equal(s.events?.[0].detail,'20');});
+test('D09 開発ビルド以外ではデバッグ保存先の利用を拒否',()=>{assert.equal(saveKey(),'finders-v1');assert.throws(()=>saveKey('debug'),/本番版/);});
+test('D10 同じ指定シードで再生成しても配置は同一・個体IDは一意',()=>{const s=createState(1);addPlot(s,42,false,'R-A');const a=structuredClone(plot(s));addPlot(s,42,false,'R-A');const b=plot(s);assert.equal(a.seed,b.seed);assert.deepEqual(a.items.map(({uid,...f})=>f),b.items.map(({uid,...f})=>f));assert.notEqual(a.items[0].uid,b.items[0].uid);});

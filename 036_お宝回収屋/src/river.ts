@@ -16,7 +16,7 @@ export function generateRiver(seed:number,area='R-A'):Plot {
  const r=random(seed),items:Find[]=[];
  // Every free plot contains reachable, unobstructed earnings even with bare hands.
  for(let i=0;i<14;i++){
-  const shallow=i<6,ids=area==='R-A'?['R001','R002','R003','R004','R009']:['R004','R005','R006','R007','R009'];
+  const shallow=i<6,ids=area==='R-A'?['R001','R002','R003','R004','R005','R009']:['R004','R005','R006','R007','R009'];
   const id=shallow?['R001','R002','R003'][i%3]:ids[Math.floor(r()*ids.length)],t=treasure(id),quality=.8+r()*.4;
   items.push({uid:`${area}:${seed}:${i}`,id,x:25+r()*310,y:shallow?235+r()*28:35+r()*180,depth:shallow?15:50+r()*150,weight:t.weight,magnetic:t.magnetic,material:t.material,difficulty:shallow?1:area==='R-B'?2:1,obstacle:!shallow&&area==='R-B'&&(i%3===0),areaId:area,initialQuality:quality,quality,state:'buried',tool:'hand'});
  }
@@ -31,11 +31,11 @@ export function riverCapabilities(s:State,id:string){
   reach:rope?265:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
   radius:magnetic?(strong?32:24):id==='R101'?24:18,
   adhesion:magnetic?(strong?18:id==='R104'?4:3):Infinity,
-  lift:(pulley?22:strong?8:id==='hand'?.75:id==='R101'?2:id==='R106'?5:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
-  speed:reel?2.6:1,hook:id==='R106',combos:[...(reel?['C05']:[]),...(pulley?['C06']:[])]};
+  lift:(pulley?22:strong?8:id==='hand'?.75:id==='R101'?2:id==='R106'?2.2:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
+  speed:(reel?2.6:1)*(id==='R103'?1.35:1),hook:id==='R106',combos:[...(reel?['C05']:[]),...(pulley?['C06']:[])]};
 }
 export function metrics(s:State){return s.riverMetrics??={attempts:0,successes:0,operations:0,uses:{},failures:{},bottleneck:'なし'};}
-function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;logEvent(s,'回収失敗',reason);return {ok:false,reason};}
+function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;logEvent(s,/磁石が弱く|磁石に付かない/.test(reason)?'吸着失敗':/重く/.test(reason)?'引き上げ失敗':'回収失敗',reason);return {ok:false,reason};}
 export function riverCheck(s:State,id:string,f:Find,includeLift=true){
  const c=riverCapabilities(s,id),weight=f.weight??treasure(f.id).weight;
  if(!c.valid)return '回収道具を選んでください。巻取り器・滑車は装備枠で組み合わせます。';
@@ -67,10 +67,10 @@ export function riverPull(s:State,amount=50){
  const reason=riverCheck(s,r.tool,f);if(reason){s.riverSession=undefined;return {...failure(s,reason),recovered:false};}
  const c=riverCapabilities(s,r.tool),weight=f.weight??treasure(f.id).weight;
  r.operations++;metrics(s).operations++;r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
- s.playerStats.stamina=Math.max(0,s.playerStats.stamina-2);s.playerStats.xp[0]+=.3;s.playerStats.xp[3]++;
+ s.playerStats.stamina=Math.max(0,s.playerStats.stamina-2*Math.min(100,amount)/70);s.playerStats.xp[0]+=.3*Math.min(100,amount)/70;s.playerStats.xp[3]+=Math.min(100,amount)/70;
  if(r.progress<1)return {ok:true,reason:r.phase==='lifting'?'重みを感じる…もう少し引き上げよう。':'手応えあり。正体はまだ分からない…',recovered:false};
  if([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state==='stored').length>=CONFIG.capacity){r.progress=.99;return {ok:false,reason:'保管がいっぱいです。先に洗浄しよう。',recovered:false};}
- finishQuality(s,f,r.tool);f.state='stored';f.tool=r.tool;f.recoveryOperations=r.operations;recordRecovery(s,f);s.playerStats.xp[2]++;metrics(s).successes++;metrics(s).bottleneck='なし';logEvent(s,'引き上げ成功',f.uid);s.riverSession=undefined;
+ finishQuality(s,f,r.tool);f.evaluationFN=Math.round(treasure(f.id).baseValueFN*f.quality);f.damageState=f.quality<.95?'scratched':'worn';f.state='stored';f.tool=r.tool;f.recoveryOperations=r.operations;recordRecovery(s,f);s.playerStats.xp[2]++;metrics(s).successes++;metrics(s).bottleneck='なし';logEvent(s,'引き上げ成功',f.uid);s.riverSession=undefined;
  return {ok:true,reason:'水面まで引き上げた！ 洗浄して正体を確かめよう。',recovered:true};
 }
 export function riverTick(s:State,seconds:number){if(s.riverSession)s.riverSession.elapsed+=seconds;}

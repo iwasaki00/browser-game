@@ -1,0 +1,3617 @@
+{
+  "version": "1.2.0-C",
+  "generatedAt": "2026-11-01T13:46:00.597Z",
+  "method": "local static graph + exported image registries + isolated VM; no HTTP/device/remote Pages check",
+  "status": "PASS",
+  "runtimeIssues": [],
+  "sourceSensitiveFindings": [],
+  "sourceAbsolutePathFindings": [
+    {
+      "rule": "LOCAL_ABSOLUTE_PATH",
+      "severity": "LOW",
+      "path": "docs/MOBILE_ACCEPTANCE.md",
+      "line": 21,
+      "scope": "SOURCE_ONLY"
+    },
+    {
+      "rule": "LOCAL_ABSOLUTE_PATH",
+      "severity": "LOW",
+      "path": "docs/MOBILE_ACCEPTANCE.md",
+      "line": 68,
+      "scope": "SOURCE_ONLY"
+    },
+    {
+      "rule": "LOCAL_ABSOLUTE_PATH",
+      "severity": "LOW",
+      "path": "tests/final-acceptance.test.mjs",
+      "line": 17,
+      "scope": "SOURCE_ONLY"
+    }
+  ],
+  "runtimeFiles": [
+    {
+      "path": "assets/art-refresh/study-01-b/backgrounds/city.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5077,
+      "sha256": "5224a834bd1f03f87b0c82696d843249bfd369378f48280ec638184fdd182e72",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/backgrounds/underground.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4749,
+      "sha256": "9953939e8413b2f4485d0aaf3248c8960b4b819d23f254ae28ddf46f9510e038",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/crawler.png",
+      "size": [
+        256,
+        192
+      ],
+      "bytes": 5109,
+      "sha256": "c6f613666439029139ddb67b480ff9bab6bd17807274410146b498f7d417afe7",
+      "dimensions": [
+        256,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/mother_crawler.png",
+      "size": [
+        768,
+        128
+      ],
+      "bytes": 6958,
+      "sha256": "c2570da592dd31f2ceaefe5e10027c6ef7cdbed52d12f92b77d0590216aa9451",
+      "dimensions": [
+        768,
+        128
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/needle.png",
+      "size": [
+        256,
+        192
+      ],
+      "bytes": 6218,
+      "sha256": "7f75476be5c6c3255af13f4415ca587a2a1ce770ca48340797704a582a4e5210",
+      "dimensions": [
+        256,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/ranger.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 3472,
+      "sha256": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/sprites/wing.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 4023,
+      "sha256": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/tiles/city.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 999,
+      "sha256": "027074d8ae5740fdb052675d9ef73339792e08ed8aff23afdee926cc356eff46",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01-b/tiles/underground.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 881,
+      "sha256": "24355a08665b6d54b94ce0315505dfc2ef5b7852df5d84f49548947346d5bd4a",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/backgrounds/city.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5105,
+      "sha256": "673b06f6278f76e40f077a7cee1444b9c87e8ff201ee6040b635c5a8f061868b",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/backgrounds/underground.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4646,
+      "sha256": "b884b55638f097f75f170ce5b770d5f3c990f4215d2f7f3524d77d25eedf046e",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/in-game/ranger_body.png",
+      "size": [
+        96,
+        64
+      ],
+      "bytes": 1238,
+      "sha256": "c071d95830afdfb05f921a9fc70f0772e8e1271a5a5884a555161f2fb7953f7f",
+      "dimensions": [
+        96,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/in-game/wing_body.png",
+      "size": [
+        96,
+        64
+      ],
+      "bytes": 1236,
+      "sha256": "82d4f477781981dfb9b62fd05ea46c616831c82255e30eb22c1206e06356f360",
+      "dimensions": [
+        96,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/crawler.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 1155,
+      "sha256": "e97bc8a70c293cbaa90a587197a02359d545f39926bd29cd9493baf352295a1f",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/mother_crawler.png",
+      "size": [
+        384,
+        128
+      ],
+      "bytes": 5217,
+      "sha256": "2d5b1b03592e883656bf1f20c4071b1165f7452f7d985b68408138af063739b3",
+      "dimensions": [
+        384,
+        128
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/sprites/needle.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 1429,
+      "sha256": "573d12370af8d1f552e547036dddc4f646d9a11684a65c7b8f0fe8cde266c9d4",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/tiles/city.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 999,
+      "sha256": "b807b46067ab795eb645c2e6f465e497dabbeb0711124c24a5a81798c7aaa794",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/tiles/underground.png",
+      "size": [
+        128,
+        64
+      ],
+      "bytes": 870,
+      "sha256": "4856b1b29b0e6ac40acf87b2bdbcfdbac63607dbb5fb93e47ba7cca752852f58",
+      "dimensions": [
+        128,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/equipped.png",
+      "size": [
+        160,
+        32
+      ],
+      "bytes": 1457,
+      "sha256": "1568cf5d10857695fbc5f4c047168a269df99f7b9dad25a5b84948da76549f3f",
+      "dimensions": [
+        160,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/icons.png",
+      "size": [
+        160,
+        32
+      ],
+      "bytes": 1457,
+      "sha256": "1568cf5d10857695fbc5f4c047168a269df99f7b9dad25a5b84948da76549f3f",
+      "dimensions": [
+        160,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/impacts.png",
+      "size": [
+        256,
+        320
+      ],
+      "bytes": 4892,
+      "sha256": "444f0c35c2a481b057d4ea7778e189e18464322181559b4197584780ede21382",
+      "dimensions": [
+        256,
+        320
+      ]
+    },
+    {
+      "path": "assets/art-refresh/study-01/weapons/projectiles.png",
+      "size": [
+        160,
+        32
+      ],
+      "bytes": 927,
+      "sha256": "27171238e380abbee09d5e00602a1c27b530c0348032dbfafbd58f1c989dcee8",
+      "dimensions": [
+        160,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/backgrounds/city.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5077,
+      "sha256": "5224a834bd1f03f87b0c82696d843249bfd369378f48280ec638184fdd182e72",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/backgrounds/underground.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4749,
+      "sha256": "9953939e8413b2f4485d0aaf3248c8960b4b819d23f254ae28ddf46f9510e038",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/acid.png",
+      "size": [
+        128,
+        32
+      ],
+      "bytes": 569,
+      "sha256": "8fbf6015056328c943817830d632ea32491fefd2b3cdb164e1a4257dc41ad249",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/bossBreak.png",
+      "size": [
+        2048,
+        192
+      ],
+      "bytes": 4063,
+      "sha256": "e448ee1d851a0289ec263fae8c3b8d77ebcd5a265cef99dc8d9b348e7e7f6cfb",
+      "dimensions": [
+        2048,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/nestBreak.png",
+      "size": [
+        1024,
+        128
+      ],
+      "bytes": 2624,
+      "sha256": "11a564c7c420a994dace45d923489d76164c71bf84b4d57becac07d4fba345e0",
+      "dimensions": [
+        1024,
+        128
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/effects/wave.png",
+      "size": [
+        256,
+        48
+      ],
+      "bytes": 1509,
+      "sha256": "30cb4a133258f434ab9c8f4076768046ed411fbe7247bf84c94532c06c3dcde4",
+      "dimensions": [
+        256,
+        48
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/barrier.png",
+      "size": [
+        288,
+        64
+      ],
+      "bytes": 1071,
+      "sha256": "d0c62fd78ee4acf2a26e0c7c2408fdadaf3f486fe0838ceeb79245dff1686a13",
+      "dimensions": [
+        288,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/beetle.png",
+      "size": [
+        576,
+        288
+      ],
+      "bytes": 6751,
+      "sha256": "7301b004dfdcab43a01ee137414589a8938098bbc23d55b58d822d19fbb24736",
+      "dimensions": [
+        576,
+        288
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/boss.png",
+      "size": [
+        1152,
+        128
+      ],
+      "bytes": 6034,
+      "sha256": "4f79bf57bb79d2e337ee0f50c1411523460152949a212e0c95301a49e4f741a5",
+      "dimensions": [
+        1152,
+        128
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/crawler.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 4534,
+      "sha256": "f1689b591ef3eed64d87d56edcf4fd8c5fce28d683e74a89d9ca40ec42c19df9",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/guardian.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 2467,
+      "sha256": "36ffbb230ade85c85d3c1015059cd938d212f03f6a94577211a8e517df141c9f",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/needle.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 5570,
+      "sha256": "cfb69c2154781eae5e8209d97a60c0169356f09644803fa90939ac1cd649b345",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/nest.png",
+      "size": [
+        576,
+        96
+      ],
+      "bytes": 2062,
+      "sha256": "3cf3ffe20ed1191ab537e830537a9f3d19cd3de81189b2fe7fd4b7c2d8e482a0",
+      "dimensions": [
+        576,
+        96
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/queen.png",
+      "size": [
+        1440,
+        192
+      ],
+      "bytes": 8631,
+      "sha256": "3506387ab5423cdf585fa1c13c921bcc8670ac3fcad13aabfa486eae2a18542f",
+      "dimensions": [
+        1440,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/ranger.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 2763,
+      "sha256": "b15ff463f4c6bd2a781a05561875eae343f43a99696909dbe3d9160e4e4bb8d9",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/scout.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 2532,
+      "sha256": "35ecc702769e5e366b1f35ede296b86151f7c4ad57ec17fecda1a303eac9a2fe",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/spider.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 5307,
+      "sha256": "c485fc9d3ba69fbe914566b2ccbd36e3ca050035da458a1b1f1b08b8fc0b5e79",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/spitter.png",
+      "size": [
+        336,
+        144
+      ],
+      "bytes": 3164,
+      "sha256": "d3397b4eae2dec3bbf654e4d225541ee783cf28d7b58688928bd952402891d16",
+      "dimensions": [
+        336,
+        144
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/wing.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 3193,
+      "sha256": "d521301cf2eef7ab1d0d2f6a455d4da8d0a070970ce20cffc2930b4fe78e4eb0",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/far/worm.png",
+      "size": [
+        384,
+        120
+      ],
+      "bytes": 3182,
+      "sha256": "71ea61c092215808ec9e13a7c1b03d3f0f8c8f3130e6b0d766e6c1538c733709",
+      "dimensions": [
+        384,
+        120
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/barrier.png",
+      "size": [
+        288,
+        64
+      ],
+      "bytes": 1368,
+      "sha256": "0bd69cbcf698a28e35cc5511e0b8c86bd1b2c434ee6d1a23164482d302b39b20",
+      "dimensions": [
+        288,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/beetle.png",
+      "size": [
+        576,
+        288
+      ],
+      "bytes": 7908,
+      "sha256": "97340dff39d9ab42a12b6a257f02e0967d00fc2f16816e2149d407cb4065110e",
+      "dimensions": [
+        576,
+        288
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/boss.png",
+      "size": [
+        1152,
+        128
+      ],
+      "bytes": 8294,
+      "sha256": "2e0f8e2983dea4f4289cf267e91e5cdd356894b5bb6881fd70d6821e2185f6d2",
+      "dimensions": [
+        1152,
+        128
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/crawler.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 6071,
+      "sha256": "70a3aee844dcd685bd88163eb323f5a306e1f8a31c2f50da0b8895affdabff91",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/guardian.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 2770,
+      "sha256": "468c65f417ac778a184ee4def86e8f998373a796eaddf7f180bb79e2c0c9fa7c",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/needle.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 7354,
+      "sha256": "89267eef9371597e4f8ea6aed15e2f40fac3e2ea54dfb80fe767f90806de26cf",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/nest.png",
+      "size": [
+        576,
+        96
+      ],
+      "bytes": 2537,
+      "sha256": "887d4b3febd20d65890c37679f31e6ceeed008ef106f36568028fab692e37018",
+      "dimensions": [
+        576,
+        96
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/queen.png",
+      "size": [
+        1440,
+        192
+      ],
+      "bytes": 10819,
+      "sha256": "63a3cce62ee6c40287d816cb2f5a4b6dcef2a77c2a50d287ededbef67b279c2f",
+      "dimensions": [
+        1440,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/ranger.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 3472,
+      "sha256": "161607a4aaba8387f8f38cf165d251699943142d056262607731a5a332d7c1b2",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/scout.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 2980,
+      "sha256": "34ff3d1c9d8dd8649c2f6f8ed3ae34024e73a17530e1dd92a5a16268ccea853a",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/spider.png",
+      "size": [
+        384,
+        192
+      ],
+      "bytes": 6156,
+      "sha256": "d41f9d3b28c2c10ecc3ef949735e44e5ac0d7ff209681d458fb184455a87bd04",
+      "dimensions": [
+        384,
+        192
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/spitter.png",
+      "size": [
+        336,
+        144
+      ],
+      "bytes": 4065,
+      "sha256": "36871cb0653b11001dfe3e36dc2ee5593311bb742c010c5e0929c6439e5b3010",
+      "dimensions": [
+        336,
+        144
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/wing.png",
+      "size": [
+        576,
+        64
+      ],
+      "bytes": 4023,
+      "sha256": "e5329cd6caab55613432bc3c00aba74c0a1e0caea6ac71cd352c3bb230b76d6e",
+      "dimensions": [
+        576,
+        64
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/sprites/worm.png",
+      "size": [
+        384,
+        120
+      ],
+      "bytes": 4130,
+      "sha256": "8aff0493ebe05f7d4ef9e2f11c27c61412294bb8368437ff22d289e5e39a3b47",
+      "dimensions": [
+        384,
+        120
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/tiles/city.png",
+      "size": [
+        256,
+        256
+      ],
+      "bytes": 6599,
+      "sha256": "36cd0ee11e999d08a9ecf393f3ad892ab3dbaf338085f730a3b90150f43fcac8",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/tiles/underground.png",
+      "size": [
+        256,
+        256
+      ],
+      "bytes": 8895,
+      "sha256": "a1088d942d600e266ed9a9e827c5855c8db3c7f42953f3033ba4674e88b359a9",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/equipped.png",
+      "size": [
+        640,
+        32
+      ],
+      "bytes": 2333,
+      "sha256": "152fcd9d9796ec85e77cd301cb6ebb521650b968741288fd8bd918fec380d547",
+      "dimensions": [
+        640,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/icons.png",
+      "size": [
+        640,
+        32
+      ],
+      "bytes": 2655,
+      "sha256": "d6628d33979d645a4c60da05b3558a7be039ae840baa937cace1f41a2d81cb73",
+      "dimensions": [
+        640,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/impacts.png",
+      "size": [
+        256,
+        1280
+      ],
+      "bytes": 16691,
+      "sha256": "a331f85f5356e67cade021bef52ab0313151d49c40152b86bfd1927bdc0e0743",
+      "dimensions": [
+        256,
+        1280
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/projectiles.png",
+      "size": [
+        640,
+        32
+      ],
+      "bytes": 3006,
+      "sha256": "44ed51227ce4ce93c01299e3a93f3b6df6f771660ef8d77535248eb941e530c7",
+      "dimensions": [
+        640,
+        32
+      ]
+    },
+    {
+      "path": "assets/art-refresh/unified-01/weapons/special.png",
+      "size": [
+        256,
+        1280
+      ],
+      "bytes": 19004,
+      "sha256": "b09f6d3331ff6a0206437d00521a23d2dbcd9b7de45734ea6e8e833660464448",
+      "dimensions": [
+        256,
+        1280
+      ]
+    },
+    {
+      "path": "assets/backgrounds/city.png",
+      "size": null,
+      "bytes": 1459,
+      "sha256": "652410357f163154605a905a708409ce6a095e597a974308d45183d89c77f2b7",
+      "dimensions": [
+        320,
+        180
+      ]
+    },
+    {
+      "path": "assets/backgrounds/underground.png",
+      "size": null,
+      "bytes": 2226,
+      "sha256": "8b39709d83c7608970b970dfc4f659c5fee7d48543e7a4465197fa12b67e3ebc",
+      "dimensions": [
+        320,
+        180
+      ]
+    },
+    {
+      "path": "assets/coastal-01/backgrounds/coast.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5059,
+      "sha256": "cfe323e3a5b0ae87cee1451252f96be056373c0f1fea9494edbbf03de9786168",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/coastal-01/effects/artillery.png",
+      "size": [
+        128,
+        32
+      ],
+      "bytes": 344,
+      "sha256": "979c1ec2929d02836753627b59cd104886979c47e89f2157eb8b705628ed5411",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "assets/coastal-01/effects/bossBreak.png",
+      "size": [
+        2560,
+        192
+      ],
+      "bytes": 11480,
+      "sha256": "00d637fd7b377b84284b6c7897e2dbd9de8f5510971f35cf16662e6d722e65d1",
+      "dimensions": [
+        2560,
+        192
+      ]
+    },
+    {
+      "path": "assets/coastal-01/effects/splash.png",
+      "size": [
+        128,
+        32
+      ],
+      "bytes": 557,
+      "sha256": "5228785a86d39223e919e4eb1c90f3cbb2a6421f4c84d4ff662138100b213a8a",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "assets/coastal-01/effects/tentacle.png",
+      "size": [
+        512,
+        128
+      ],
+      "bytes": 2495,
+      "sha256": "02737807944f908700b686d20a9225d8298ac2fd7670fa0d34b30c10da76a2cb",
+      "dimensions": [
+        512,
+        128
+      ]
+    },
+    {
+      "path": "assets/coastal-01/effects/warning.png",
+      "size": [
+        128,
+        32
+      ],
+      "bytes": 640,
+      "sha256": "26cc60b35ed65a79e3c3877249990efc3e0bf4a0b152921df82d4a3683c27bf5",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "assets/coastal-01/far/leviathan.png",
+      "size": [
+        1920,
+        192
+      ],
+      "bytes": 11525,
+      "sha256": "77c43797e2033441b1b193edf90b9b26691cc3fe4c01a249bb57493085fa3957",
+      "dimensions": [
+        1920,
+        192
+      ]
+    },
+    {
+      "path": "assets/coastal-01/far/shorecrab.png",
+      "size": [
+        480,
+        144
+      ],
+      "bytes": 4855,
+      "sha256": "6567fc19d51e212e6bc4704a6631d58c4d38ecab86460d47c5651155712ef022",
+      "dimensions": [
+        480,
+        144
+      ]
+    },
+    {
+      "path": "assets/coastal-01/far/siegebeetle.png",
+      "size": [
+        576,
+        240
+      ],
+      "bytes": 6817,
+      "sha256": "b0ba49f4a2bc6668525478c45f1bfa226d958c7ec29f674c319f1c9cf4d29266",
+      "dimensions": [
+        576,
+        240
+      ]
+    },
+    {
+      "path": "assets/coastal-01/far/skyray.png",
+      "size": [
+        480,
+        144
+      ],
+      "bytes": 4801,
+      "sha256": "68c5ac65c09823e83e0314b72e9e04f835cf311313b12ae9d6e989852a5fa00d",
+      "dimensions": [
+        480,
+        144
+      ]
+    },
+    {
+      "path": "assets/coastal-01/sprites/aa.png",
+      "size": [
+        384,
+        64
+      ],
+      "bytes": 1605,
+      "sha256": "6085debfa830be31719ff449b056f520ef5c2583ecd15797246b19ae4ceeecdc",
+      "dimensions": [
+        384,
+        64
+      ]
+    },
+    {
+      "path": "assets/coastal-01/sprites/leviathan.png",
+      "size": [
+        1920,
+        192
+      ],
+      "bytes": 15272,
+      "sha256": "8bb0779627dd5cfedf723c9d190cb91798467a45f99ed314b74206b47881320c",
+      "dimensions": [
+        1920,
+        192
+      ]
+    },
+    {
+      "path": "assets/coastal-01/sprites/shorecrab.png",
+      "size": [
+        480,
+        144
+      ],
+      "bytes": 6350,
+      "sha256": "7da04d8c8f9e0b5815e9243212bca6c626de42e0a340d7dc2ccf51b4a09e8a18",
+      "dimensions": [
+        480,
+        144
+      ]
+    },
+    {
+      "path": "assets/coastal-01/sprites/siegebeetle.png",
+      "size": [
+        576,
+        240
+      ],
+      "bytes": 8697,
+      "sha256": "e28646af7299977a7b33a41331ce55c9fc4bba144fe9c1ea6f6d59978c57fd65",
+      "dimensions": [
+        576,
+        240
+      ]
+    },
+    {
+      "path": "assets/coastal-01/sprites/skyray.png",
+      "size": [
+        480,
+        144
+      ],
+      "bytes": 6493,
+      "sha256": "78e180b19e978fc7a33824ee25c052f741e290ec19995ae4e84b8dbb94f2d4fe",
+      "dimensions": [
+        480,
+        144
+      ]
+    },
+    {
+      "path": "assets/coastal-01/tiles/coast.png",
+      "size": [
+        256,
+        256
+      ],
+      "bytes": 7750,
+      "sha256": "6b710ca564ea10a032c3257d9c2b3922b6daae7587d2217d00ebeae0c374eb38",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "assets/effects/acid.png",
+      "size": null,
+      "bytes": 316,
+      "sha256": "b275e2278d18daa41f42183b55cf143c1fe13b5ab5a61e09887cad7389acefa6",
+      "dimensions": [
+        64,
+        16
+      ]
+    },
+    {
+      "path": "assets/effects/boss_break.png",
+      "size": null,
+      "bytes": 3566,
+      "sha256": "92149abecac48970fb19b99c55667d12dd675f69d12c9fdda5751ada163dc6c3",
+      "dimensions": [
+        1024,
+        96
+      ]
+    },
+    {
+      "path": "assets/effects/explosion.png",
+      "size": null,
+      "bytes": 363,
+      "sha256": "915ac7c47db1d28d36d80b0e3a5562875432b42eb32b6688a064a8c2eac616d3",
+      "dimensions": [
+        256,
+        32
+      ]
+    },
+    {
+      "path": "assets/effects/ground_wave.png",
+      "size": null,
+      "bytes": 584,
+      "sha256": "d8cec2d8232f8ced55a10a5ea2459da5112d7d8ce0661536d2cc6b4c34d61e92",
+      "dimensions": [
+        128,
+        24
+      ]
+    },
+    {
+      "path": "assets/effects/nest_break.png",
+      "size": null,
+      "bytes": 2716,
+      "sha256": "be2e8a41b7adcaed43e4a9b9d0b74987f932d63f9b0e28fd194f562946c7e390",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/effects/weapon_fx.png",
+      "size": null,
+      "bytes": 8061,
+      "sha256": "a732c93b8fe8afcad74500b870f3194c1e1f54316bc7b7dce4d24778d37ea4ae",
+      "dimensions": [
+        256,
+        384
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/arsenal.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5662,
+      "sha256": "5c64ddef7fd349c568a45d4ccbeaaa94d287a40e41f4fc6162e4ed774ed70dbe",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/deep.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4678,
+      "sha256": "7bf6bda0c596be4101a7709f590af76c9298fe83c403c45494d4bac3867f5619",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/earth.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5136,
+      "sha256": "24b7613bb9a05248275c5644974db91f88a0a28dc3199d4bd7be50880037cbc9",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/escape.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4250,
+      "sha256": "4e6a89298a13ca6f94b5244afa5d8a43985b116810cf55f3bc93e045fd8ae8dc",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/final.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 13458,
+      "sha256": "93ea8b9292464278e7240f74a04565b0b3c3953fd057e751bfbd2ceea9bff4e8",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/network.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 7853,
+      "sha256": "532c472f88031dffcc4d2ed9ce935f5430be0d5e70e66a6bbc48c5672cb4fba8",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/silence.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5380,
+      "sha256": "5de0b500ee43484da4415654ce34dc4e59515315a3f970b872be942bba877774",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/backgrounds/source.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 10751,
+      "sha256": "b800687f59350f9a53fddea3130e8b2b1a50bf460531f324816d4d06916341a4",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalBeam.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1129,
+      "sha256": "78aba981b89d869299e71e016e0f77a17b23a45062979b2f0633850573af92d9",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalCollapse.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 2187,
+      "sha256": "964d91e5c2b354bba7559fb8367c4d915fa15cf5bd5728efb2931c9895b4a6eb",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalPulse.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1932,
+      "sha256": "265797811bcda1b9969bbd950aa9f60cf9b3a43deecdc7727c0bfdb8cab52d82",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalShield.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1427,
+      "sha256": "fbf4a0fe20fcc383c5c5c7478e98ae9f3f2b390fda866859b8c9b7304355a57d",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalSpore.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 942,
+      "sha256": "6232360b7f294e5bfd3d966526cec0541e68bc6e7fcd889051a3171505deb70d",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/effects/finalTransition.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1768,
+      "sha256": "d2507feeef7cf97e6279336522118c8ea0baf9ede45b3e2a86bd602eae4bae0c",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/biobreaker.png",
+      "size": [
+        768,
+        84
+      ],
+      "bytes": 2788,
+      "sha256": "7ce1924df0c76aa179408220a040995810756d71f8d0deff5150f3d1c757f6b9",
+      "dimensions": [
+        768,
+        84
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/coreguard.png",
+      "size": [
+        576,
+        68
+      ],
+      "bytes": 1925,
+      "sha256": "ed7dc0320e10ec2e0eb379ec3a90ee9242d87dbbd7be3fb6c4e65a5a2386e008",
+      "dimensions": [
+        576,
+        68
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/defensenode.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1482,
+      "sha256": "3181bae187bddfcbf55fd7fef7728c1e4b06d8046bf5d36ba1f504b562d6649c",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind1.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 16806,
+      "sha256": "f04a65d4e446727dce070684cf968b7f56452e2baf4756ad5d81b95638464e5e",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind2.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 16548,
+      "sha256": "5846a374dfcb497cf0d3329b059fd032db9f489e1babe903a7955ed934d07d71",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/overmind3.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 16960,
+      "sha256": "6e59f9f4ec5364c6c6eafc7a4f84d987670ee53490ae3d2f90dab707edaafb57",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/far/overseer.png",
+      "size": [
+        512,
+        56
+      ],
+      "bytes": 1703,
+      "sha256": "e9e682740b198f8355f8b945b9a0fd42aced907f86b33f8792326d9337faeb60",
+      "dimensions": [
+        512,
+        56
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/biobreaker.png",
+      "size": [
+        768,
+        84
+      ],
+      "bytes": 3601,
+      "sha256": "e5eaad56d28810c9068ab31a259acfb34ac44428fb260800391f5888ae8817c9",
+      "dimensions": [
+        768,
+        84
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/coreguard.png",
+      "size": [
+        576,
+        68
+      ],
+      "bytes": 2442,
+      "sha256": "76bbfd86ef25adef330b72622d4ec6709fbbc3217b4273ebd974de9571ac0ba9",
+      "dimensions": [
+        576,
+        68
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/defensenode.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1983,
+      "sha256": "b749e44ba16786bfbd24cc4a94940139fba6250e4092157590f723f36ac2bd5c",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind1.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 20815,
+      "sha256": "fbf94230ae6ca2d92b97d30edb115fddf4b0f6ede31ad0d99f856483f5fdf45b",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind2.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 20380,
+      "sha256": "8b2118a629edad99e9d2944a88925453966c6c31b069d6952e0bb968c9653ba3",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overmind3.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 21228,
+      "sha256": "9057cc7505758c81470b3443c0c0180756129dd74b0547939fde5cd665739463",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/sprites/overseer.png",
+      "size": [
+        512,
+        56
+      ],
+      "bytes": 2068,
+      "sha256": "dc3b8e6862dd7bd13673e3f0bf9abceba40f2a5cce3995c1ca6dc1482a11556f",
+      "dimensions": [
+        512,
+        56
+      ]
+    },
+    {
+      "path": "assets/final-defense-01/tiles/final-defense.png",
+      "size": [
+        256,
+        64
+      ],
+      "bytes": 1800,
+      "sha256": "2192f6459a8336be82ecbe0a07a5ba101e8ddc311965218d1e41d8a07bda6195",
+      "dimensions": [
+        256,
+        64
+      ]
+    },
+    {
+      "path": "assets/game-icon.svg",
+      "size": null,
+      "bytes": 1222,
+      "sha256": "84e7faa0e36873e8e5390fa10f763b9e0233b10e06f9754158514139d3c43b28"
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/entrance.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 12860,
+      "sha256": "6098b7f35abeb2c8e39233c77d101ffb559c964207c872c5279dee6b2297095e",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/fluid.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 10410,
+      "sha256": "8ce909ea50bb1a05b9756cbc9c1c436a71b8f379c8cccddcd042b3e5fc5ccdde",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/heart.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 16017,
+      "sha256": "eb93ce512ead9028f7cf4daafea4ec9ab6200f92f240e814c86461583d56c13c",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/neural.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 14125,
+      "sha256": "bced0baff6d5fb07ce907c3b57dfe9906e259577d482349099a8d28612b6c352",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/backgrounds/pulse.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 13088,
+      "sha256": "d83f5919b8bce4317c9c10ed3dd866c202c3145df0608ae97e5333a7ceefba04",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/collapse.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 2356,
+      "sha256": "6969d88696ce3d522d70dd2871265bb31d6614087a7b89f0b3bb79107103de02",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/flow.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 574,
+      "sha256": "68793be0bc34e34fd23ce6c6105d723f69f29741d7e35b35af5fe631636f628b",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/foam.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 377,
+      "sha256": "c9eb0783585607ba466e34d15437f6b4f0b8ad542e3b919abce52cc830189251",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/pulse.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1844,
+      "sha256": "efe7efe0a97a5ae0289c1a2a5294ab03e7245694b9dbbe35613344bef1d68c5f",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/shield.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1367,
+      "sha256": "5090470c139f97e5ea2b5e5a370bed28d85296a7e552f17752f8ef8c9ea30226",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/signal.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 498,
+      "sha256": "77d30508b4c082a58b401bdc4e6c599a4ca8eced4cc897006c7f63ee3528f716",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/effects/spore.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1072,
+      "sha256": "57f1afdbb67a99424045ab961184a5780bb9a7d7983254f366f56eac159908d0",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/bioshell.png",
+      "size": [
+        448,
+        128
+      ],
+      "bytes": 2886,
+      "sha256": "a63db8cad3543d39020c48256041e80bebe304ad5f3dffde6215aa2c060f0de2",
+      "dimensions": [
+        448,
+        128
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/guardiancell.png",
+      "size": [
+        672,
+        76
+      ],
+      "bytes": 2381,
+      "sha256": "1df5ce2782cf46b54e9944bef3f3a75ba50a345eecfc1da9c72e0c6bff0cca18",
+      "dimensions": [
+        672,
+        76
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/neuralheart.png",
+      "size": [
+        2560,
+        208
+      ],
+      "bytes": 14982,
+      "sha256": "adc194d19c35e3e14b81c1743132d9f3e8ff05bddf7b5bfffa1cccef8cb0a823",
+      "dimensions": [
+        2560,
+        208
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/neuralnode.png",
+      "size": [
+        384,
+        56
+      ],
+      "bytes": 1368,
+      "sha256": "44b70f5067c1471ef7ad7f4df5f3e4539a7b2dcb2971a93b441050c35d31b9fd",
+      "dimensions": [
+        384,
+        56
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/pulseworm.png",
+      "size": [
+        576,
+        48
+      ],
+      "bytes": 1532,
+      "sha256": "a8e80e49c677ce8beda5b1b5f42e7fa15593d051c41e92102eb36de0bd5e425d",
+      "dimensions": [
+        576,
+        48
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/far/sporefly.png",
+      "size": [
+        480,
+        48
+      ],
+      "bytes": 1735,
+      "sha256": "da680bee5f8a3b5b7ff1301ec5a8a53807d585176bb387383e131a2f42e304d5",
+      "dimensions": [
+        480,
+        48
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/bioshell.png",
+      "size": [
+        448,
+        128
+      ],
+      "bytes": 4321,
+      "sha256": "5519010a871c12c3bd06c091e0ee265f4ba58e99207d531d2609176f76625b73",
+      "dimensions": [
+        448,
+        128
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/guardiancell.png",
+      "size": [
+        672,
+        76
+      ],
+      "bytes": 3243,
+      "sha256": "9dd9df1285467d45cebc2ab5e718bdc682d5fa8b579066208b65015233831b58",
+      "dimensions": [
+        672,
+        76
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/neuralheart.png",
+      "size": [
+        2560,
+        208
+      ],
+      "bytes": 19816,
+      "sha256": "1a47f65d3bf7a36bee314e1ef33dab56eb06e3b24368c27997e5daadb4e38f2c",
+      "dimensions": [
+        2560,
+        208
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/neuralnode.png",
+      "size": [
+        384,
+        56
+      ],
+      "bytes": 1785,
+      "sha256": "dbf889687c02fc8c2f02db837c0b0a1085a07d555330c50d798a4149ff5cb3e4",
+      "dimensions": [
+        384,
+        56
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/pulseworm.png",
+      "size": [
+        576,
+        48
+      ],
+      "bytes": 2071,
+      "sha256": "25117b755792373680f26e20813ba638f30973f6849fc8573b22371c2c2fdb2e",
+      "dimensions": [
+        576,
+        48
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/sprites/sporefly.png",
+      "size": [
+        480,
+        48
+      ],
+      "bytes": 2303,
+      "sha256": "c052adc5b2518d516b7383fbb3d937db3fe4dbf45c7b2a5f2f0e14fa66999936",
+      "dimensions": [
+        480,
+        48
+      ]
+    },
+    {
+      "path": "assets/living-colossus-01/tiles/living.png",
+      "size": [
+        256,
+        64
+      ],
+      "bytes": 1706,
+      "sha256": "2cef713cb540b58012e1a257004814f383b6b420cbeff6a3884dcf987f70acac",
+      "dimensions": [
+        256,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/control.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 3283,
+      "sha256": "9b598f871999d072ce1b4b6cda1ef9e13d0178102b963a7b8e49993e9a1c2ebd",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/deck.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4373,
+      "sha256": "ad3f9ff59f94958e7b7fe4c4047fb686b7e8a0fd12c6470aa5427f15ee045f05",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/distant-base.png",
+      "size": [
+        430,
+        164
+      ],
+      "bytes": 3079,
+      "sha256": "80753eeec92b8129a5b425214a47a2af1bd416ecce7644308257115d39bfba15",
+      "dimensions": [
+        430,
+        164
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/interior.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 7145,
+      "sha256": "5124fc41d30349f527e1506f9d8cdf19eccf5d8f53faf03248ecd84e9fd63442",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/reactor.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4644,
+      "sha256": "67e157115d6e4aaed8f3ff167fb72d1169add783548386a3903f78ebdc69278f",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/backgrounds/wilderness.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 2755,
+      "sha256": "6638e6cd2eadddf35f7e0c2fc98c99a509307f1f4493c673cfb31d9721334aa5",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/break.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1507,
+      "sha256": "9abdac5ac08b2d8b4bed00e8909c0632ac60ff2b1e7b17f7a09e244eac3a64d5",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/dust.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 549,
+      "sha256": "ac952a0b13e0debab90a78e89a1da38241aabfabbb2a4233a03bde70ae1cc573",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/exhaust.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 547,
+      "sha256": "d2c810724a28402095a24fd62f019053753ffad0cbbb5cad1b27d3394d96de3a",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/fire.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1501,
+      "sha256": "3295fd577f755b4a05fa28f6f00b9ed12123d2a44faa5c10a7faa8b18f42267e",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/heal.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1506,
+      "sha256": "f0fe0efbe3659d3c675fac1f8047df344e97d6cf1643e90a68705c41a809cc62",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/effects/warning.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 994,
+      "sha256": "dec976929db942a2cf11afb05fcd645977e6cfb2b7c44ead6029481e852443ba",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/assaultroller.png",
+      "size": [
+        576,
+        48
+      ],
+      "bytes": 1641,
+      "sha256": "3bc2dfc74cb0eaa157308f144c8d81fd2082f5c2be9e7a118384bc86640c5763",
+      "dimensions": [
+        576,
+        48
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/basedevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1006,
+      "sha256": "0147c3b5ca708191d69790432d43b2ddee86cf54038ae41b0d5a2802ff72e8d8",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/reactor.png",
+      "size": [
+        2560,
+        192
+      ],
+      "bytes": 8195,
+      "sha256": "1204202d41d05ebfa1ef2ac936330ca4f3e0cde006774e269338a5632abd75b4",
+      "dimensions": [
+        2560,
+        192
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/repairdrone.png",
+      "size": [
+        480,
+        44
+      ],
+      "bytes": 1156,
+      "sha256": "0a8fa131b7a5d5e35ed88f8efbde4ea28bbea42f2c816e273ec8db1b468a07ea",
+      "dimensions": [
+        480,
+        44
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/far/sentrywalker.png",
+      "size": [
+        704,
+        76
+      ],
+      "bytes": 2024,
+      "sha256": "1204ab0aea61fc6bc1c9b83dd666fff9d7236bb40fae016719478f5e789b69ba",
+      "dimensions": [
+        704,
+        76
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/assaultroller.png",
+      "size": [
+        576,
+        48
+      ],
+      "bytes": 1934,
+      "sha256": "42328bf594c79baa896a9709b2e69b86534a337101b9c5ce7b32efde16b0e9d4",
+      "dimensions": [
+        576,
+        48
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/basedevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1175,
+      "sha256": "e35545d0a4dc72454dde2cd9c779933960070ced6ed1c4cb74e7799f773d7eca",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/reactor.png",
+      "size": [
+        2560,
+        192
+      ],
+      "bytes": 11426,
+      "sha256": "6205159f1906c5da87c9f6c5427f532170086a2d1718dd0d8b7083e745582864",
+      "dimensions": [
+        2560,
+        192
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/repairdrone.png",
+      "size": [
+        480,
+        44
+      ],
+      "bytes": 1329,
+      "sha256": "b6e4fc31ff02cef62bc3d1ccb653259a6b44d8bd5fd429575a2c40d98c2abd0d",
+      "dimensions": [
+        480,
+        44
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/sprites/sentrywalker.png",
+      "size": [
+        704,
+        76
+      ],
+      "bytes": 2409,
+      "sha256": "459260c255dbca9af159d20862b4ca53ab0d1f115d97dfd679434fa6f22be176",
+      "dimensions": [
+        704,
+        76
+      ]
+    },
+    {
+      "path": "assets/mobile-fortress-01/tiles/mobile.png",
+      "size": [
+        256,
+        64
+      ],
+      "bytes": 857,
+      "sha256": "af4eed77a9518ad285cd968841899ad983ac3efb9bb079efc9c885a667fa1fbd",
+      "dimensions": [
+        256,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/command.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 8605,
+      "sha256": "e95583ec0a2f3713be0e43387c2b448f3c43cb1508a02eeb895f895b9ff4ddb1",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/fusion.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4343,
+      "sha256": "d550c2ff7888312c42079424420d55175aeddea0930ad27a23411548ab9b0a04",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/hangar.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 4611,
+      "sha256": "fbd9ffc7161f408d81fca876dd40e180cd0da1e6479639d19ed6d42088b56209",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/network.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 6565,
+      "sha256": "2dcea1487bcaeca16728eb0115eff489ea79f5bebd9290c5fe544714dfd35001",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/shell.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 5433,
+      "sha256": "56af923a3ee5088fa8849716e7f0e675069c9425738b0dede94310d1a6b47480",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/backgrounds/signal.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 7859,
+      "sha256": "114a218996a14962f87afd098cbca96442e45788ffde9a266f15f4d89527ec10",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/break.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 2199,
+      "sha256": "75773a80dbb5845926e03a62648086d3008cbe611e92d4027d6cfb316951a790",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/command.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 965,
+      "sha256": "6d8788faab46b742c3575354edb47b3ff62dcb388a0d1f14e82b8a770c76c847",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/phase.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 573,
+      "sha256": "5e08f5b86c73be22e422efe715e02b8b5508b5cc0d3ac569d876d60f0d8c0018",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/shield.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1422,
+      "sha256": "90876cb0ddb7e519f71c773b09d094d3f8b8ab7890768bda9e988b03ec30352b",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/signal.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 533,
+      "sha256": "9ee7eae3d2bc3095694b4d31ca3531469882e9dda04e39d28740cb69bc230d87",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/effects/strike.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 653,
+      "sha256": "c7fe6a88062861993b6e1b930934f72dbcdeab09b75a09d0130c3dfd65625c63",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/far/assaulttitan.png",
+      "size": [
+        896,
+        96
+      ],
+      "bytes": 3288,
+      "sha256": "05be0da85fdd63c9bf522174631f455361a58aee6d9218e702660418d180a9e1",
+      "dimensions": [
+        896,
+        96
+      ]
+    },
+    {
+      "path": "assets/mothership-01/far/commandcore.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 16421,
+      "sha256": "cab6dffb58760cb05b841256a8da657cbec28694fafe53b3ac919bc275543f10",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/mothership-01/far/commanddevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1387,
+      "sha256": "5ca14f6d81d8d4b5513aa8f98585ac56ae77145d055ada166e808d47b8beb8ff",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/far/commanddrone.png",
+      "size": [
+        512,
+        52
+      ],
+      "bytes": 1594,
+      "sha256": "6ef5afac49ef0c6e3c4123705691605a7c9f041c6301019782cc1d5720112660",
+      "dimensions": [
+        512,
+        52
+      ]
+    },
+    {
+      "path": "assets/mothership-01/far/phasestalker.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1918,
+      "sha256": "7400f64250590fafe1d8e3a4d03b9a293c77d56c84fd1374fb490e0d09f71183",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/sprites/assaulttitan.png",
+      "size": [
+        896,
+        96
+      ],
+      "bytes": 4330,
+      "sha256": "28a2bd3a135002266983fafe100c4b0eba009e2eef45d3b62f61262f8ffe4735",
+      "dimensions": [
+        896,
+        96
+      ]
+    },
+    {
+      "path": "assets/mothership-01/sprites/commandcore.png",
+      "size": [
+        2816,
+        224
+      ],
+      "bytes": 21055,
+      "sha256": "ef99b5b8c44a77eadda2d1c57900774f023dec267c1ca726f2b750bf29e99084",
+      "dimensions": [
+        2816,
+        224
+      ]
+    },
+    {
+      "path": "assets/mothership-01/sprites/commanddevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1852,
+      "sha256": "dac86086441ec068ae7b66ded923686fdf8509539589b8db794edfa47450a08e",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/sprites/commanddrone.png",
+      "size": [
+        512,
+        52
+      ],
+      "bytes": 1950,
+      "sha256": "e63797143410fdf7845d8b58383979c99acb222c1b155249f44d793ba4da828a",
+      "dimensions": [
+        512,
+        52
+      ]
+    },
+    {
+      "path": "assets/mothership-01/sprites/phasestalker.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 2236,
+      "sha256": "8e919377e3b0ba6d40a6a85bc654049613e27db313ab99d4bfa7765842e2c917",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/mothership-01/tiles/mothership.png",
+      "size": [
+        256,
+        64
+      ],
+      "bytes": 1683,
+      "sha256": "35cafba4eb8f8110eb93dacc394c3a0b3095f9c4f030dbf4c5b19f802183e541",
+      "dimensions": [
+        256,
+        64
+      ]
+    },
+    {
+      "path": "assets/sky-01/backgrounds/sky.png",
+      "size": [
+        640,
+        360
+      ],
+      "bytes": 3753,
+      "sha256": "9b5717dc00fee9bd1d22ba561ad320caf1ef375be9628d4cacc377d4013fb8e1",
+      "dimensions": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "assets/sky-01/effects/break.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1826,
+      "sha256": "12f929b38e6a1314090df7dd6c0c3606dce42b4a7312f5139a17d8e96b8a7702",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/sky-01/effects/shot.png",
+      "size": [
+        512,
+        64
+      ],
+      "bytes": 1503,
+      "sha256": "8f52b02d14a1f7efb16a755cbb82345c7cc41bc5c41614d4df63d1104707cc92",
+      "dimensions": [
+        512,
+        64
+      ]
+    },
+    {
+      "path": "assets/sky-01/far/fortress.png",
+      "size": [
+        2560,
+        192
+      ],
+      "bytes": 13556,
+      "sha256": "fe865118a5cc5635e8458b1a750f74c0bd25e937b6b130915b25d721574bb73f",
+      "dimensions": [
+        2560,
+        192
+      ]
+    },
+    {
+      "path": "assets/sky-01/far/heavygunner.png",
+      "size": [
+        640,
+        72
+      ],
+      "bytes": 2608,
+      "sha256": "f3bc687da0dd75292e06a7386224a4ed1caa18d2c1edb0267e000c113f846d4a",
+      "dimensions": [
+        640,
+        72
+      ]
+    },
+    {
+      "path": "assets/sky-01/far/interceptor.png",
+      "size": [
+        576,
+        44
+      ],
+      "bytes": 2041,
+      "sha256": "c23fd119e65845194d0e3cde409afcf9505c30773a5a21ba87d24899cb452084",
+      "dimensions": [
+        576,
+        44
+      ]
+    },
+    {
+      "path": "assets/sky-01/far/shielddrone.png",
+      "size": [
+        512,
+        56
+      ],
+      "bytes": 2025,
+      "sha256": "bd5f016f46caa57f4069d606ed122bc2658a05155163efce96a70e3fbbb9e097",
+      "dimensions": [
+        512,
+        56
+      ]
+    },
+    {
+      "path": "assets/sky-01/far/skydevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1336,
+      "sha256": "e4ea6209f9a501a4267798a61dda0c60541dacfcf7bdc3baa8c9e12a61bc5421",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/sky-01/sprites/fortress.png",
+      "size": [
+        2560,
+        192
+      ],
+      "bytes": 16701,
+      "sha256": "735f7be01b2ba51ebf84601ae2e0d0b1a3941bb2b60b7f790544e9b426599042",
+      "dimensions": [
+        2560,
+        192
+      ]
+    },
+    {
+      "path": "assets/sky-01/sprites/heavygunner.png",
+      "size": [
+        640,
+        72
+      ],
+      "bytes": 3043,
+      "sha256": "3334330d37282ef57e3f6e28a52fcfd09c6fb60a838a5325419c52f4db1e249d",
+      "dimensions": [
+        640,
+        72
+      ]
+    },
+    {
+      "path": "assets/sky-01/sprites/interceptor.png",
+      "size": [
+        576,
+        44
+      ],
+      "bytes": 2449,
+      "sha256": "b51a30c6db92ef0bc43a5ede5fce6458e8842a2cbc0acefcb28bc7c27ccdabfa",
+      "dimensions": [
+        576,
+        44
+      ]
+    },
+    {
+      "path": "assets/sky-01/sprites/shielddrone.png",
+      "size": [
+        512,
+        56
+      ],
+      "bytes": 2134,
+      "sha256": "2db608089fe2e12640308ed22602d4626a6af07b7fe316313c97c725d0cd50c6",
+      "dimensions": [
+        512,
+        56
+      ]
+    },
+    {
+      "path": "assets/sky-01/sprites/skydevice.png",
+      "size": [
+        448,
+        64
+      ],
+      "bytes": 1479,
+      "sha256": "52608486c58709db3ae22f76691bfe9555f73a3afc84dedd4d211d43d4a7aaca",
+      "dimensions": [
+        448,
+        64
+      ]
+    },
+    {
+      "path": "assets/sky-01/tiles/sky.png",
+      "size": [
+        256,
+        64
+      ],
+      "bytes": 709,
+      "sha256": "aa61bc0bb4a6ad95923923eda04cd020f6e4409d1b47bb6c6380751a0dccdcde",
+      "dimensions": [
+        256,
+        64
+      ]
+    },
+    {
+      "path": "assets/sprites/bosses/abyss_queen.png",
+      "size": null,
+      "bytes": 3466,
+      "sha256": "075d114dd5a71ec25fbde0472563b21f53ce1ee5249e6d2a6af35ee9b8dffdb8",
+      "dimensions": [
+        480,
+        96
+      ]
+    },
+    {
+      "path": "assets/sprites/bosses/mother_crawler.png",
+      "size": null,
+      "bytes": 2404,
+      "sha256": "6385aec1c5c9535f426c5237551354ce364cab28ab7d27c4f5fd8367a319323d",
+      "dimensions": [
+        384,
+        64
+      ]
+    },
+    {
+      "path": "assets/sprites/enemies/ceiling_spitter.png",
+      "size": null,
+      "bytes": 479,
+      "sha256": "ffe0824595a8f2347371ae3385145019e962fd421f1a3825357da570a61f43d9",
+      "dimensions": [
+        112,
+        24
+      ]
+    },
+    {
+      "path": "assets/sprites/enemies/enemies.png",
+      "size": null,
+      "bytes": 3302,
+      "sha256": "4ca1087b1d0fae0e2bd843ef0d6fb6cba3caa52480838939da4f1a4e8e4e4b03",
+      "dimensions": [
+        192,
+        192
+      ]
+    },
+    {
+      "path": "assets/sprites/enemies/spawn_nest.png",
+      "size": null,
+      "bytes": 1293,
+      "sha256": "cb7efc069d71abb163d90b6b5dc6725c81d7d658390160fba306fc998bbe31f7",
+      "dimensions": [
+        192,
+        48
+      ]
+    },
+    {
+      "path": "assets/sprites/enemies/tunnel_worm.png",
+      "size": null,
+      "bytes": 727,
+      "sha256": "6b5b0074f206f528986ca828b3bdc675e7f3907ed9c270197596ee54a29f98a1",
+      "dimensions": [
+        128,
+        20
+      ]
+    },
+    {
+      "path": "assets/sprites/player/classes.png",
+      "size": null,
+      "bytes": 4219,
+      "sha256": "d2e04cdb08f1d05c76dfaa86c0cb8ec470591f3100f4bc68ac5be103cfd5d231",
+      "dimensions": [
+        288,
+        128
+      ]
+    },
+    {
+      "path": "assets/sprites/player/player.png",
+      "size": null,
+      "bytes": 822,
+      "sha256": "bbbfc3011b460220a379d3e2cad76b5b128c57502e5388450c5ec5cf2145b61f",
+      "dimensions": [
+        192,
+        32
+      ]
+    },
+    {
+      "path": "assets/sprites/ui/items.png",
+      "size": null,
+      "bytes": 243,
+      "sha256": "8bd88a6938b1d4122511322f277f49a9efb11dd271ca1fb536ccd500d4c4b23e",
+      "dimensions": [
+        64,
+        32
+      ]
+    },
+    {
+      "path": "assets/sprites/weapons/equipped.png",
+      "size": null,
+      "bytes": 1212,
+      "sha256": "b9c79d0ad101cbe85b91a11e352128130d3712772a081faa991337926e48e35e",
+      "dimensions": [
+        320,
+        16
+      ]
+    },
+    {
+      "path": "assets/sprites/weapons/projectiles.png",
+      "size": null,
+      "bytes": 1152,
+      "sha256": "53906fc9e6027f65b09de5af84c2822fd163e98237b7a87127b46afc39ca12b8",
+      "dimensions": [
+        320,
+        16
+      ]
+    },
+    {
+      "path": "assets/sprites/weapons/weapon_icons.png",
+      "size": null,
+      "bytes": 2049,
+      "sha256": "f99dc5cefbb7f4c8b4e1b4f1ab8f7bc0ed6bccbcb51b9ec5edbb7c4d7a546abf",
+      "dimensions": [
+        640,
+        32
+      ]
+    },
+    {
+      "path": "assets/tiles/city_tiles.png",
+      "size": null,
+      "bytes": 314,
+      "sha256": "e8110235cb1a4f158c41fa563507566fa572482f65eeee45203b005013ae33b0",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "assets/tiles/underground_tiles.png",
+      "size": null,
+      "bytes": 1096,
+      "sha256": "9c1df894e42dc767c29c20a795810432090315a5a7fb4122b25e5b071e8d55da",
+      "dimensions": [
+        128,
+        32
+      ]
+    },
+    {
+      "path": "index.html",
+      "size": null,
+      "bytes": 53651,
+      "sha256": "ca2c26e89078a10e9ca6a5d27ce0f8f2e91a7318dfa86995e7b66d8f1ebc37ba"
+    },
+    {
+      "path": "js/achievement-master.js",
+      "size": null,
+      "bytes": 4386,
+      "sha256": "b60301479f252faf6ac590fedb156d26e6c2e40f5fce0dc77665b96ec067228c"
+    },
+    {
+      "path": "js/art-preview.js",
+      "size": null,
+      "bytes": 13862,
+      "sha256": "a5be81cc51c1dba430af6e78f1d2b4f7d98e1825b86c8ed8306cff41177d6489"
+    },
+    {
+      "path": "js/camera.js",
+      "size": null,
+      "bytes": 8649,
+      "sha256": "44e17d4dcbf4c1f7efce5260336e1df16661841ae294c0c9f990c8ad7fb528df"
+    },
+    {
+      "path": "js/campaign-ending.js",
+      "size": null,
+      "bytes": 3583,
+      "sha256": "d772ab3215d3494c9191624574de9a4b02348314a3cee36ef3e48275cc04d469"
+    },
+    {
+      "path": "js/campaign-stats.js",
+      "size": null,
+      "bytes": 4083,
+      "sha256": "d657256ef35a93e7ec3be3b74f46aa81a7bfa8f039a4c3487b93cb360b5b2eb0"
+    },
+    {
+      "path": "js/campaign.js",
+      "size": null,
+      "bytes": 10764,
+      "sha256": "53b43cb9accbb8d4db07e1ea861a190da4142394c5e37a189764a5faccf7a6dc"
+    },
+    {
+      "path": "js/challenge-ui.js",
+      "size": null,
+      "bytes": 4642,
+      "sha256": "643bdecd3b116f70f355d216f0e5dfb1a8bf323430d43a41569a05160fe8a065"
+    },
+    {
+      "path": "js/challenges.js",
+      "size": null,
+      "bytes": 8454,
+      "sha256": "e7262bc63aca36699aca1a023ba5c3dbd3208b550a24e0a2e8aece129c2baf86"
+    },
+    {
+      "path": "js/coastal-art.js",
+      "size": null,
+      "bytes": 5365,
+      "sha256": "f0aed484289e3439319818470ed4f1cef7e155f4c97cb86fbb94e0fa1b1f0f17"
+    },
+    {
+      "path": "js/combat-audio.js",
+      "size": null,
+      "bytes": 2465,
+      "sha256": "f5bc7659767a5adb6cd7a04096a99c76f7ff2ed6a0b4c59e29fbdb775ba8e872"
+    },
+    {
+      "path": "js/data.js",
+      "size": null,
+      "bytes": 20486,
+      "sha256": "40b276a8a6b1773749affe42408f531990c4d145592fbfe2bcdfe54ba8c14fe8"
+    },
+    {
+      "path": "js/final-art.js",
+      "size": null,
+      "bytes": 7172,
+      "sha256": "a9ab9cb38acb0b54059198346b4bb39deece879f50966796fa3782421b64c3fd"
+    },
+    {
+      "path": "js/fortress-ui.js",
+      "size": null,
+      "bytes": 3970,
+      "sha256": "9a38f9e6cdb904bea6136aa41a5e4fe734cb3d7f4801fbb1f9cc9d3e1550d532"
+    },
+    {
+      "path": "js/game.js",
+      "size": null,
+      "bytes": 179163,
+      "sha256": "a5df906f1ac8a7c0bd95ab26e6262a803f4943dc1ef2424ea3d2a4f8e21cd4d3"
+    },
+    {
+      "path": "js/gameplay-ui.js",
+      "size": null,
+      "bytes": 3735,
+      "sha256": "eda71222a0f0809d34a14bbe9a2df3de1e59432251d02a0450ce5237f45d654f"
+    },
+    {
+      "path": "js/impact.js",
+      "size": null,
+      "bytes": 10841,
+      "sha256": "fa89191415a6197540b952f685a5c8610ddf2ac83ce80fa78c611032840e7023"
+    },
+    {
+      "path": "js/invasion.js",
+      "size": null,
+      "bytes": 7260,
+      "sha256": "1809e444016031350726993c2eced70d54438d12ac897c6dc8f4b3b34d462ea8"
+    },
+    {
+      "path": "js/living-art.js",
+      "size": null,
+      "bytes": 8869,
+      "sha256": "a37f4b4ea6faeca13de0bd720149222b1a68d4a662eaeeb5f615f9206a89f99b"
+    },
+    {
+      "path": "js/mission-lab.js",
+      "size": null,
+      "bytes": 10496,
+      "sha256": "16db1aa43f3fe44125e3dce476e94c2a36ff0146efae3b6e4df2da9d55cf5064"
+    },
+    {
+      "path": "js/mission02.js",
+      "size": null,
+      "bytes": 6903,
+      "sha256": "6e7dbdd521a5b7af04f788b2c9c6902637c368e9e608965ae5aefdda99529da1"
+    },
+    {
+      "path": "js/mission03.js",
+      "size": null,
+      "bytes": 11827,
+      "sha256": "535236efa842c50186ab8a95111428d90fba961a8e40d85911cb61c5832991bd"
+    },
+    {
+      "path": "js/mission04.js",
+      "size": null,
+      "bytes": 13587,
+      "sha256": "f691af6d16d7b66d9ae35bbbd6d62e162ae33474535e55cdc4700b0c13306546"
+    },
+    {
+      "path": "js/mission05.js",
+      "size": null,
+      "bytes": 15473,
+      "sha256": "97bcd3a5d67398fae29ea515329d0c93f5095f83f5b89f5430179af57b7941d8"
+    },
+    {
+      "path": "js/mission06.js",
+      "size": null,
+      "bytes": 15675,
+      "sha256": "714b0adc7f12dac7ff6c3ccc2b1b7171bde377bd6d53b51337f3f9696332dc16"
+    },
+    {
+      "path": "js/mission07.js",
+      "size": null,
+      "bytes": 22627,
+      "sha256": "c820d71c479de7f1ad0b55c9a68f4cf018f4ed1be722962fa7d8ef0d68934eae"
+    },
+    {
+      "path": "js/mission08.js",
+      "size": null,
+      "bytes": 20892,
+      "sha256": "29a8124272c35a1d08ce85e16c9a34b4089cd65fc63b228fdb5d15e0ce98a944"
+    },
+    {
+      "path": "js/mobile-acceptance.js",
+      "size": null,
+      "bytes": 13650,
+      "sha256": "e0c32803b5bf3ab9ced2d007c4115fe876aad7f3be6271a0206b3e2cb7edfa01"
+    },
+    {
+      "path": "js/mobile-art.js",
+      "size": null,
+      "bytes": 9241,
+      "sha256": "dc2e87f696b6458a714f6829ba57584f7f216a003cfc6fabdcd25c9c29c7d785"
+    },
+    {
+      "path": "js/mobile-playtest.js",
+      "size": null,
+      "bytes": 9574,
+      "sha256": "e96abcf59a2f3136fe43113a1b6ebeada5d8c935c43e860b14029ad876176a44"
+    },
+    {
+      "path": "js/mothership-art.js",
+      "size": null,
+      "bytes": 9516,
+      "sha256": "1004a2274273e4c3d5e75d4a3f8195b54f33e3eeb5c0ac3b670906c8104bc50f"
+    },
+    {
+      "path": "js/player.js",
+      "size": null,
+      "bytes": 3791,
+      "sha256": "66d70bad5857d10b4889eb5566617924ec8feab9d0a70f72033673659996258a"
+    },
+    {
+      "path": "js/playground.js",
+      "size": null,
+      "bytes": 3262,
+      "sha256": "0563538f2b94de07a343fcf7798b82a3eb792b0d5dd9b968843a2169e56c095f"
+    },
+    {
+      "path": "js/profiler.js",
+      "size": null,
+      "bytes": 9096,
+      "sha256": "ef4299ecce1db213db54e9b1cc9d021dc36aec0f527330d120f435f002183664"
+    },
+    {
+      "path": "js/readability.js",
+      "size": null,
+      "bytes": 2358,
+      "sha256": "34e2dd974ac68ac36e32caeb5d3903ca9779b1ecf3e5bd1fe26b1fc47f34eae7"
+    },
+    {
+      "path": "js/sky-art.js",
+      "size": null,
+      "bytes": 4219,
+      "sha256": "bdc804af066b2f18cba5236ed5ec802e59ca9d0fe9ff6d6897e89967043ed0ef"
+    },
+    {
+      "path": "js/weapons.js",
+      "size": null,
+      "bytes": 12946,
+      "sha256": "3f1097ed3dfd5c5d8ef1848e1a20251d88aeb824557113f12d0d17f399251045"
+    },
+    {
+      "path": "styles.css",
+      "size": null,
+      "bytes": 56075,
+      "sha256": "ce0158bcf56e8c3e4db2ab08faef54b42643aff8fa01d861acb3e258256b980d"
+    }
+  ],
+  "referenceCount": 334,
+  "externalRuntimeReferences": [],
+  "normalDebugMutationAPI": false,
+  "lab": "debug=1 opt-in local-only test environment; NOT authentication; ordinary URL hides UI",
+  "dependencies": {},
+  "devDependencies": {},
+  "arcade": {
+    "status": "PASS",
+    "menuSha256": "8e77560f935544d5ee772c485c56f24221076f69372e181d6005e259883f8e9e",
+    "descriptionOutdated": true
+  },
+  "publication": {
+    "localDocumentedMethod": "parent README: main branch / repository root",
+    "remoteSettings": "NOT RUN",
+    "workflowPresent": false,
+    "nojekyllPresent": true,
+    "sourceExposure": "Root publishing may also expose docs/reports/tests/tools. Runtime allowlist is runtimeFiles; no deploy configuration changed.",
+    "nonRuntimeFiles": [
+      ".gitkeep",
+      "README.md",
+      "assets/art-refresh/study-01-b/backgrounds/city_far.png",
+      "assets/art-refresh/study-01-b/backgrounds/city_middle.png",
+      "assets/art-refresh/study-01-b/backgrounds/city_near.png",
+      "assets/art-refresh/study-01-b/backgrounds/underground_far.png",
+      "assets/art-refresh/study-01-b/backgrounds/underground_middle.png",
+      "assets/art-refresh/study-01-b/backgrounds/underground_near.png",
+      "assets/art-refresh/study-01-b/manifest.json",
+      "assets/art-refresh/study-01/backgrounds/city_far.png",
+      "assets/art-refresh/study-01/backgrounds/city_middle.png",
+      "assets/art-refresh/study-01/backgrounds/city_near.png",
+      "assets/art-refresh/study-01/backgrounds/underground_far.png",
+      "assets/art-refresh/study-01/backgrounds/underground_middle.png",
+      "assets/art-refresh/study-01/backgrounds/underground_near.png",
+      "assets/art-refresh/study-01/comparison.png",
+      "assets/art-refresh/study-01/in-game/anchors.json",
+      "assets/art-refresh/study-01/manifest.json",
+      "assets/art-refresh/study-01/preview/city_scene.png",
+      "assets/art-refresh/study-01/preview/underground_scene.png",
+      "assets/art-refresh/study-01/sprites/ranger.png",
+      "assets/art-refresh/study-01/sprites/wing.png",
+      "assets/art-refresh/unified-01/backgrounds/city_far.png",
+      "assets/art-refresh/unified-01/backgrounds/city_middle.png",
+      "assets/art-refresh/unified-01/backgrounds/city_near.png",
+      "assets/art-refresh/unified-01/backgrounds/underground_far.png",
+      "assets/art-refresh/unified-01/backgrounds/underground_middle.png",
+      "assets/art-refresh/unified-01/backgrounds/underground_near.png",
+      "assets/art-refresh/unified-01/contact-sheet.png",
+      "assets/art-refresh/unified-01/manifest.json",
+      "assets/coastal-01/backgrounds/coast_far.png",
+      "assets/coastal-01/backgrounds/coast_front.png",
+      "assets/coastal-01/backgrounds/coast_mid.png",
+      "assets/coastal-01/contact-sheet.png",
+      "assets/coastal-01/manifest.json",
+      "assets/final-defense-01/catalog.json",
+      "assets/final-defense-01/contact-sheet.png",
+      "assets/living-colossus-01/catalog.json",
+      "assets/living-colossus-01/contact-sheet.png",
+      "assets/mobile-fortress-01/catalog.json",
+      "assets/mobile-fortress-01/contact-sheet.png",
+      "assets/mothership-01/catalog.json",
+      "assets/mothership-01/contact-sheet.png",
+      "assets/sky-01/backgrounds/layer-0.png",
+      "assets/sky-01/backgrounds/layer-1.png",
+      "assets/sky-01/backgrounds/layer-2.png",
+      "assets/sky-01/catalog.json",
+      "assets/sky-01/effects/shield.png",
+      "assets/sky-01/effects/warning.png",
+      "assets/ui/bars.png",
+      "assets/underground.json",
+      "docs/ART_DIRECTION.md",
+      "docs/ART_UNIFICATION.md",
+      "docs/ASSET_MANIFEST.md",
+      "docs/CAMPAIGN_COMMAND.md",
+      "docs/CAMPAIGN_ENDING.md",
+      "docs/CAMPAIGN_INTEGRATION_QA.md",
+      "docs/CHALLENGE_OPERATIONS.md",
+      "docs/COMBAT_BALANCE.md",
+      "docs/DEBUG_PLAYGROUND.md",
+      "docs/FINAL_GAME_POLISH.md",
+      "docs/FORTRESS_BALANCE.md",
+      "docs/GAMEPLAY_POLISH.md",
+      "docs/GAME_SPEC.md",
+      "docs/IMPACT_EFFECTS.md",
+      "docs/INVASION_SPEC.md",
+      "docs/LAYOUT_SPEC.md",
+      "docs/MISSION_01.md",
+      "docs/MISSION_02.md",
+      "docs/MISSION_03.md",
+      "docs/MISSION_04.md",
+      "docs/MISSION_05.md",
+      "docs/MISSION_06.md",
+      "docs/MISSION_07.md",
+      "docs/MISSION_08.md",
+      "docs/MISSION_BALANCE.md",
+      "docs/MOBILE_ACCEPTANCE.md",
+      "docs/MOBILE_PLAYTEST.md",
+      "docs/PERFORMANCE_0.1.4.md",
+      "docs/PERFORMANCE_MEASUREMENT.md",
+      "docs/PLAYER_CLASSES.md",
+      "docs/TEST_LAB_UI.md",
+      "docs/WEAPON_EXPANSION.md",
+      "docs/WEAPON_SPEC.md",
+      "docs/art-preview/index.html",
+      "docs/art-preview/preview.css",
+      "docs/art-preview/preview.js",
+      "docs/art-preview/verified-844x390.jpg",
+      "docs/screenshots/m02-abyss-queen-844x390.jpg",
+      "docs/screenshots/mission-qa-844x390.jpg",
+      "docs/screenshots/weapon-picker-0.2.1-844x390.jpg",
+      "package.json",
+      "reports/art-comparison/README.md",
+      "reports/art-comparison/build_index.py",
+      "reports/art-comparison/m01-boss-390x844-comparison.png",
+      "reports/art-comparison/m01-boss-390x844-original-320.jpg",
+      "reports/art-comparison/m01-boss-390x844-original-640.jpg",
+      "reports/art-comparison/m01-boss-390x844-study01-320.jpg",
+      "reports/art-comparison/m01-boss-390x844-study01-640.jpg",
+      "reports/art-comparison/m01-boss-780x360-comparison.png",
+      "reports/art-comparison/m01-boss-780x360-original-320.jpg",
+      "reports/art-comparison/m01-boss-780x360-original-640.jpg",
+      "reports/art-comparison/m01-boss-780x360-study01-320.jpg",
+      "reports/art-comparison/m01-boss-780x360-study01-640.jpg",
+      "reports/art-comparison/m01-boss-844x390-comparison.png",
+      "reports/art-comparison/m01-boss-844x390-original-320.jpg",
+      "reports/art-comparison/m01-boss-844x390-original-640.jpg",
+      "reports/art-comparison/m01-boss-844x390-study01-320.jpg",
+      "reports/art-comparison/m01-boss-844x390-study01-640.jpg",
+      "reports/art-comparison/m01-boss-detail.png",
+      "reports/art-comparison/m01-ranger-390x844-comparison.png",
+      "reports/art-comparison/m01-ranger-390x844-original-320.jpg",
+      "reports/art-comparison/m01-ranger-390x844-original-640.jpg",
+      "reports/art-comparison/m01-ranger-390x844-study01-320.jpg",
+      "reports/art-comparison/m01-ranger-390x844-study01-640.jpg",
+      "reports/art-comparison/m01-ranger-780x360-comparison.png",
+      "reports/art-comparison/m01-ranger-780x360-original-320.jpg",
+      "reports/art-comparison/m01-ranger-780x360-original-640.jpg",
+      "reports/art-comparison/m01-ranger-780x360-study01-320.jpg",
+      "reports/art-comparison/m01-ranger-780x360-study01-640.jpg",
+      "reports/art-comparison/m01-ranger-844x390-comparison.png",
+      "reports/art-comparison/m01-ranger-844x390-original-320.jpg",
+      "reports/art-comparison/m01-ranger-844x390-original-640.jpg",
+      "reports/art-comparison/m01-ranger-844x390-study01-320.jpg",
+      "reports/art-comparison/m01-ranger-844x390-study01-640.jpg",
+      "reports/art-comparison/m01-ranger-detail.png",
+      "reports/art-comparison/m02-wing-390x844-comparison.png",
+      "reports/art-comparison/m02-wing-390x844-original-320.jpg",
+      "reports/art-comparison/m02-wing-390x844-original-640.jpg",
+      "reports/art-comparison/m02-wing-390x844-study01-320.jpg",
+      "reports/art-comparison/m02-wing-390x844-study01-640.jpg",
+      "reports/art-comparison/m02-wing-780x360-comparison.png",
+      "reports/art-comparison/m02-wing-780x360-original-320.jpg",
+      "reports/art-comparison/m02-wing-780x360-original-640.jpg",
+      "reports/art-comparison/m02-wing-780x360-study01-320.jpg",
+      "reports/art-comparison/m02-wing-780x360-study01-640.jpg",
+      "reports/art-comparison/m02-wing-844x390-comparison.png",
+      "reports/art-comparison/m02-wing-844x390-original-320.jpg",
+      "reports/art-comparison/m02-wing-844x390-original-640.jpg",
+      "reports/art-comparison/m02-wing-844x390-study01-320.jpg",
+      "reports/art-comparison/m02-wing-844x390-study01-640.jpg",
+      "reports/art-comparison/m02-wing-detail.png",
+      "reports/art-comparison/overview.png",
+      "reports/art-comparison/performance-insufficient-samples.jpg",
+      "reports/art-comparison/study-01-b/README.md",
+      "reports/art-comparison/study-01-b/asset-catalogue.png",
+      "reports/art-comparison/study-01-b/build_index.py",
+      "reports/art-comparison/study-01-b/m01-boss-z035-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z035-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z035-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-boss-z050-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z050-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-boss-z050-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-e03-z050-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z035-844x390-focus.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-ranger-z050-844x390-focus.png",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-swarm50-z035-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m01-swarm50-z050-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m02-wing-z035-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z035-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m02-wing-z035-844x390-focus.png",
+      "reports/art-comparison/study-01-b/m02-wing-z050-390x844-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-390x844-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-390x844-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-390x844-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-390x844-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z050-780x360-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-780x360-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-780x360-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-780x360-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-780x360-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-A.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-B.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-C.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-D.jpg",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-comparison.png",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-detail.png",
+      "reports/art-comparison/study-01-b/m02-wing-z050-844x390-focus.png",
+      "reports/art-comparison/study-01-b/overview-z035.png",
+      "reports/art-comparison/study-01-b/overview-z050.png",
+      "reports/art-comparison/study-01-b/verification.json",
+      "reports/art-comparison/unified-01/README.md",
+      "reports/art-comparison/unified-01/all-weapons-fired.jpg",
+      "reports/art-comparison/unified-01/animation-atlas.png",
+      "reports/art-comparison/unified-01/bench200-320.jpg",
+      "reports/art-comparison/unified-01/bench200-640.jpg",
+      "reports/art-comparison/unified-01/build_index.py",
+      "reports/art-comparison/unified-01/index.html",
+      "reports/art-comparison/unified-01/m01-b01-z050-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m01-b01-z050-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m01-b01-z050-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m01-b01-z050-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m01-guardian-beetle-z085-780x360-A.jpg",
+      "reports/art-comparison/unified-01/m01-guardian-beetle-z085-780x360-C.jpg",
+      "reports/art-comparison/unified-01/m01-guardian-beetle-z085-780x360-D.jpg",
+      "reports/art-comparison/unified-01/m01-guardian-beetle-z085-780x360-comparison.png",
+      "reports/art-comparison/unified-01/m01-ranger-z050-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m01-ranger-z050-844x390-B.jpg",
+      "reports/art-comparison/unified-01/m01-ranger-z050-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m01-ranger-z050-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m01-ranger-z050-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m01-scout-crawler50-z035-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m01-scout-crawler50-z035-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m01-scout-crawler50-z035-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m01-scout-crawler50-z035-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m01-scout-spider10-z050-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m01-scout-spider10-z050-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m01-scout-spider10-z050-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m01-scout-spider10-z050-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m01-wing-needle10-z050-780x360-A.jpg",
+      "reports/art-comparison/unified-01/m01-wing-needle10-z050-780x360-C.jpg",
+      "reports/art-comparison/unified-01/m01-wing-needle10-z050-780x360-D.jpg",
+      "reports/art-comparison/unified-01/m01-wing-needle10-z050-780x360-comparison.png",
+      "reports/art-comparison/unified-01/m02-b02-z050-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m02-b02-z050-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m02-b02-z050-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m02-b02-z050-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m02-branch-z035-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m02-branch-z035-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m02-branch-z035-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m02-branch-z035-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m02-wing-spitter10-z050-844x390-A.jpg",
+      "reports/art-comparison/unified-01/m02-wing-spitter10-z050-844x390-C.jpg",
+      "reports/art-comparison/unified-01/m02-wing-spitter10-z050-844x390-D.jpg",
+      "reports/art-comparison/unified-01/m02-wing-spitter10-z050-844x390-comparison.png",
+      "reports/art-comparison/unified-01/m02-wing-worm30-z035-390x844-A.jpg",
+      "reports/art-comparison/unified-01/m02-wing-worm30-z035-390x844-C.jpg",
+      "reports/art-comparison/unified-01/m02-wing-worm30-z035-390x844-D.jpg",
+      "reports/art-comparison/unified-01/m02-wing-worm30-z035-390x844-comparison.png",
+      "reports/art-comparison/unified-01/overview.png",
+      "reports/art-comparison/unified-01/verification.json",
+      "reports/art-comparison/unified-01/weapon-atlas.png",
+      "reports/art-comparison/unified-01/weapon-picker-390x844.jpg",
+      "reports/art-comparison/unified-01/weapon-picker-780x360.jpg",
+      "reports/art-comparison/unified-01/weapon-picker-844x390.jpg",
+      "reports/art-comparison/verification.json",
+      "reports/art-release/README.md",
+      "reports/art-release/index.html",
+      "reports/art-release/lab-b01-unified320.jpg",
+      "reports/art-release/lab-b02-unified320.jpg",
+      "reports/art-release/lab-m02-wing-original640.jpg",
+      "reports/art-release/lab-m02-wing-unified640.jpg",
+      "reports/art-release/normal-after-lab-844x390.jpg",
+      "reports/art-release/normal-equipment-844x390.jpg",
+      "reports/art-release/normal-m01-ranger-844x390.jpg",
+      "reports/art-release/verification.json",
+      "reports/campaign-command/README.md",
+      "reports/campaign-command/classes-844x390.jpg",
+      "reports/campaign-command/classes-recorded-844x390.jpg",
+      "reports/campaign-command/mission-m06-844x390.jpg",
+      "reports/campaign-command/missions-390x844.jpg",
+      "reports/campaign-command/missions-667x375.jpg",
+      "reports/campaign-command/missions-780x360.jpg",
+      "reports/campaign-command/missions-844x390.jpg",
+      "reports/campaign-command/preview-M01-844x390.jpg",
+      "reports/campaign-command/preview-M02-844x390.jpg",
+      "reports/campaign-command/preview-M03-844x390.jpg",
+      "reports/campaign-command/preview-M04-844x390.jpg",
+      "reports/campaign-command/preview-M05-844x390.jpg",
+      "reports/campaign-command/preview-M06-844x390.jpg",
+      "reports/campaign-command/weapon-search-390x844.jpg",
+      "reports/campaign-command/weapon-search-844x390.jpg",
+      "reports/campaign-command/weapons-390x844.jpg",
+      "reports/campaign-command/weapons-667x375.jpg",
+      "reports/campaign-command/weapons-780x360.jpg",
+      "reports/campaign-command/weapons-844x390.jpg",
+      "reports/campaign-integration/README.md",
+      "reports/campaign-integration/browser-check.md",
+      "reports/campaign-integration/chain.json",
+      "reports/campaign-integration/m01-pause.png",
+      "reports/campaign-integration/matrix.json",
+      "reports/campaign-integration/normal.json",
+      "reports/campaign-integration/related-tests.txt",
+      "reports/campaign-integration/results.json",
+      "reports/campaign-integration/saves.json",
+      "reports/campaign-integration/weapons.json",
+      "reports/challenge-operations/README.md",
+      "reports/challenge-operations/achievements-390x844.jpg",
+      "reports/challenge-operations/achievements-667x375.jpg",
+      "reports/challenge-operations/achievements-780x360.jpg",
+      "reports/challenge-operations/achievements-844x390.jpg",
+      "reports/challenge-operations/last-achievement-390x844.jpg",
+      "reports/challenge-operations/recorded-zero-844x390.jpg",
+      "reports/challenge-operations/strategy-844x390.jpg",
+      "reports/combat-balance/README.md",
+      "reports/combat-balance/b03-phase3-844x390.jpg",
+      "reports/combat-balance/browser-verification.json",
+      "reports/combat-balance/e08-50-844x390.jpg",
+      "reports/combat-balance/lab-metrics-844x390.jpg",
+      "reports/combat-balance/lab-phase-390x844.jpg",
+      "reports/combat-balance/lab-phase-780x360.jpg",
+      "reports/combat-balance/lab-phase-844x390.jpg",
+      "reports/combat-balance/performance.json",
+      "reports/final-acceptance/release-audit.json",
+      "reports/final-defense/README.md",
+      "reports/final-defense/b08-form1-844x390.jpg",
+      "reports/final-defense/ending-390x844.jpg",
+      "reports/final-defense/related-tests.txt",
+      "reports/final-polish/README.md",
+      "reports/final-polish/cpu-after.json",
+      "reports/final-polish/cpu-before.json",
+      "reports/fortress-balance/README.md",
+      "reports/fortress-balance/guardian-qa-844x390.jpg",
+      "reports/fortress-balance/phase1-844x390.jpg",
+      "reports/fortress-balance/phase2-780x360.jpg",
+      "reports/fortress-balance/phase3-390x844.jpg",
+      "reports/fortress-balance/phase3-667x375.jpg",
+      "reports/fortress-balance/platform-direction-844x390.jpg",
+      "reports/fortress-balance/platforms-844x390.jpg",
+      "reports/fortress-balance/shields50-844x390.jpg",
+      "reports/gameplay-polish/README.md",
+      "reports/gameplay-polish/b03-qa-844x390.jpg",
+      "reports/gameplay-polish/b03-wing-844x390.jpg",
+      "reports/gameplay-polish/bench-200-844x390.jpg",
+      "reports/gameplay-polish/gameover-qa-844x390.jpg",
+      "reports/gameplay-polish/gameplay-qa-preset-844x390.jpg",
+      "reports/gameplay-polish/normal-m01-844x390.jpg",
+      "reports/gameplay-polish/rocket-50-finish-844x390.jpg",
+      "reports/gameplay-polish/scout-667x375.jpg",
+      "reports/gameplay-polish/wing-390x844.jpg",
+      "reports/gameplay-polish/wing-667x375.jpg",
+      "reports/gameplay-polish/wing-780x360.jpg",
+      "reports/gameplay-polish/wing-844x390.jpg",
+      "reports/living-colossus/README.md",
+      "reports/living-colossus/m06-boss-390x844.jpg",
+      "reports/living-colossus/m06-boss-667x375.jpg",
+      "reports/living-colossus/m06-boss-780x360.jpg",
+      "reports/living-colossus/m06-boss-open-844x390.jpg",
+      "reports/living-colossus/m06-boss-shielded-844x390.jpg",
+      "reports/living-colossus/m06-entrance-844x390.jpg",
+      "reports/living-colossus/m06-fluid-844x390.jpg",
+      "reports/living-colossus/m06-lab-844x390.jpg",
+      "reports/living-colossus/m06-measurement-844x390.jpg",
+      "reports/living-colossus/m06-neural-844x390.jpg",
+      "reports/living-colossus/m06-pulse-844x390.jpg",
+      "reports/mission-art-comparison/README.md",
+      "reports/mission-art-comparison/browser-verification.json",
+      "reports/mission-art-comparison/comparison-settings.json",
+      "reports/mission-art-comparison/index.html",
+      "reports/mission-art-comparison/lab-m03-390x844.jpg",
+      "reports/mission-art-comparison/lab-m03-844x390.jpg",
+      "reports/mission-art-comparison/m01-ranger-unified640.jpg",
+      "reports/mission-art-comparison/m02-ranger-unified640.jpg",
+      "reports/mission-art-comparison/m03-boss-unified640.jpg",
+      "reports/mission-art-comparison/m03-ranger-unified640.jpg",
+      "reports/mission-art-comparison/m03-rays200.jpg",
+      "reports/mission-art-comparison/m03-sea-invasion.jpg",
+      "reports/mission-art-comparison/missions-side-by-side.png",
+      "reports/mission-art-comparison/performance-observations.json",
+      "reports/mobile-acceptance/README.md",
+      "reports/mobile-acceptance/chrome-390x844-metrics.png",
+      "reports/mobile-acceptance/chrome-780x360-metrics.png",
+      "reports/mobile-acceptance/chrome-844x390-hud.png",
+      "reports/mobile-acceptance/chrome-normal-url.png",
+      "reports/mobile-acceptance/chrome-reference.json",
+      "reports/mobile-fortress/README.md",
+      "reports/mobile-fortress/area01-844x390.jpg",
+      "reports/mobile-fortress/area02-844x390.jpg",
+      "reports/mobile-fortress/area03-844x390.jpg",
+      "reports/mobile-fortress/area04-844x390.jpg",
+      "reports/mobile-fortress/area05-844x390.jpg",
+      "reports/mobile-fortress/boss-full-844x390.jpg",
+      "reports/mobile-fortress/boss-left-780x360.jpg",
+      "reports/mobile-fortress/boss-open-390x844.jpg",
+      "reports/mobile-fortress/boss-open-640-844x390.jpg",
+      "reports/mobile-fortress/boss-right-667x375.jpg",
+      "reports/mobile-fortress/lab-boss-result-844x390.jpg",
+      "reports/mobile-fortress/normal-mission-select-844x390.jpg",
+      "reports/mobile-playtest/README.md",
+      "reports/mobile-playtest/checklist-844x390.jpg",
+      "reports/mobile-playtest/interrupted-844x390.jpg",
+      "reports/mobile-playtest/metrics-320x568.jpg",
+      "reports/mobile-playtest/metrics-390x844.jpg",
+      "reports/mobile-playtest/metrics-667x375.jpg",
+      "reports/mobile-playtest/metrics-780x360.jpg",
+      "reports/mobile-playtest/metrics-844x390.jpg",
+      "reports/mobile-playtest/start-844x390.jpg",
+      "reports/mothership/README.md",
+      "reports/mothership/b07-844x390.jpg",
+      "reports/mothership/b07-open-780x360.jpg",
+      "reports/mothership/network-390x844.jpg",
+      "reports/mothership/related-tests.txt",
+      "reports/movement-regression/README.md",
+      "reports/movement-regression/art-fixtures.json",
+      "reports/movement-regression/measurements.json",
+      "reports/movement-regression/sprite-alpha-audit.json",
+      "reports/result-freeze/README.md",
+      "reports/result-freeze/command-m04-844x390.png",
+      "reports/result-freeze/result-390x844.png",
+      "reports/result-freeze/result-780x360.png",
+      "reports/result-freeze/result-844x390.png",
+      "reports/sky-fortress/README.md",
+      "reports/sky-fortress/lab-390x844.jpg",
+      "reports/sky-fortress/lab-780x360.jpg",
+      "reports/sky-fortress/m04-area01-844x390.jpg",
+      "reports/sky-fortress/m04-b04-phase1-844x390.jpg",
+      "reports/sky-fortress/m04-b04-phase2-844x390.jpg",
+      "reports/sky-fortress/m04-b04-phase3-844x390.jpg",
+      "reports/sky-fortress/m04-b04-unified-844x390.jpg",
+      "reports/sky-fortress/m04-transport-unified-780x360.jpg",
+      "reports/test-lab-ui/320x568-enemies.jpg",
+      "reports/test-lab-ui/320x568-loadout.jpg",
+      "reports/test-lab-ui/320x568-m20.jpg",
+      "reports/test-lab-ui/320x568-metrics.jpg",
+      "reports/test-lab-ui/320x568-stage.jpg",
+      "reports/test-lab-ui/320x568-visual.jpg",
+      "reports/test-lab-ui/390x844-enemies.jpg",
+      "reports/test-lab-ui/390x844-loadout.jpg",
+      "reports/test-lab-ui/390x844-m20.jpg",
+      "reports/test-lab-ui/390x844-metrics.jpg",
+      "reports/test-lab-ui/390x844-stage.jpg",
+      "reports/test-lab-ui/390x844-visual.jpg",
+      "reports/test-lab-ui/667x375-enemies.jpg",
+      "reports/test-lab-ui/667x375-loadout.jpg",
+      "reports/test-lab-ui/667x375-m20.jpg",
+      "reports/test-lab-ui/667x375-metrics.jpg",
+      "reports/test-lab-ui/667x375-stage.jpg",
+      "reports/test-lab-ui/667x375-visual.jpg",
+      "reports/test-lab-ui/780x360-enemies.jpg",
+      "reports/test-lab-ui/780x360-loadout.jpg",
+      "reports/test-lab-ui/780x360-m20.jpg",
+      "reports/test-lab-ui/780x360-metrics.jpg",
+      "reports/test-lab-ui/780x360-stage.jpg",
+      "reports/test-lab-ui/780x360-visual.jpg",
+      "reports/test-lab-ui/844x390-enemies.jpg",
+      "reports/test-lab-ui/844x390-loadout.jpg",
+      "reports/test-lab-ui/844x390-m20.jpg",
+      "reports/test-lab-ui/844x390-metrics.jpg",
+      "reports/test-lab-ui/844x390-stage.jpg",
+      "reports/test-lab-ui/844x390-visual.jpg",
+      "reports/test-lab-ui/README.md",
+      "reports/test-lab-ui/configured-844x390.jpg",
+      "reports/test-lab-ui/index.html",
+      "reports/test-lab-ui/metrics-result-844x390.jpg",
+      "reports/test-lab-ui/verification.json",
+      "tests/art-preview.test.mjs",
+      "tests/art-release.test.mjs",
+      "tests/boss-polish.test.mjs",
+      "tests/browser-m02.html",
+      "tests/camera.test.mjs",
+      "tests/campaign-integration.test.mjs",
+      "tests/campaign.test.mjs",
+      "tests/challenges.test.mjs",
+      "tests/class-movement.test.mjs",
+      "tests/classes.test.mjs",
+      "tests/coastal.test.mjs",
+      "tests/data.test.mjs",
+      "tests/destruction.test.mjs",
+      "tests/final-acceptance.test.mjs",
+      "tests/final-defense.test.mjs",
+      "tests/final-polish.test.mjs",
+      "tests/fortress-balance.test.mjs",
+      "tests/gameplay-polish.test.mjs",
+      "tests/helpers/campaign-routes.mjs",
+      "tests/helpers/movement-comparison.mjs",
+      "tests/helpers/polish-scenes.js",
+      "tests/helpers/runtime.mjs",
+      "tests/impact.test.mjs",
+      "tests/invasion.test.mjs",
+      "tests/lab-ui.test.mjs",
+      "tests/lab-weapon-picker.test.mjs",
+      "tests/living-colossus.test.mjs",
+      "tests/mission-lab.test.mjs",
+      "tests/mission02.test.mjs",
+      "tests/mobile-acceptance.test.mjs",
+      "tests/mobile-fortress.test.mjs",
+      "tests/mobile-playtest.test.mjs",
+      "tests/mothership.test.mjs",
+      "tests/movement-sprite-regression.test.mjs",
+      "tests/playground.test.mjs",
+      "tests/readability.test.mjs",
+      "tests/result-freeze.test.mjs",
+      "tests/runtime.test.mjs",
+      "tests/sky-fortress.test.mjs",
+      "tests/test_art_direction.py",
+      "tests/test_art_readability.py",
+      "tests/test_art_unification.py",
+      "tests/test_coastal_assets.py",
+      "tests/test_final_defense_assets.py",
+      "tests/test_living_colossus_assets.py",
+      "tests/test_mobile_fortress_assets.py",
+      "tests/test_mothership_assets.py",
+      "tests/test_sky_assets.py",
+      "tests/unification.test.mjs",
+      "tests/weapons.test.mjs",
+      "tools/art-fixture-audit.mjs",
+      "tools/art_direction_samples.py",
+      "tools/art_readability.py",
+      "tools/art_unification.py",
+      "tools/benchmark-impact.mjs",
+      "tools/benchmark-weapons.mjs",
+      "tools/benchmark.mjs",
+      "tools/build_mission_comparison.py",
+      "tools/campaign-integration.mjs",
+      "tools/coastal_assets.py",
+      "tools/final-acceptance-report.mjs",
+      "tools/final-polish-preview.mjs",
+      "tools/final_defense_assets.py",
+      "tools/generate_assets.py",
+      "tools/living_colossus_assets.py",
+      "tools/mobile_fortress_assets.py",
+      "tools/mothership_assets.py",
+      "tools/movement-regression-report.mjs",
+      "tools/polish-render-benchmark.mjs",
+      "tools/release-audit.mjs",
+      "tools/result-freeze-preview.mjs",
+      "tools/sky_assets.py",
+      "tools/sprite-regression-audit.py"
+    ]
+  },
+  "limitations": [
+    "Pattern-based secret scan is not a proof of absence or full Git-history scan",
+    "Image existence/signature/dimensions, not device decode/visual QA",
+    "No remote Pages setting or live URL/404 check",
+    "Asset authorship/licensing needs owner confirmation; local provenance only"
+  ]
+}

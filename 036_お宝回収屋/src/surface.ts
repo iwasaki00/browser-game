@@ -1,4 +1,4 @@
-﻿import {exposure,MAX_DEPTH,type Plot} from './engine';
+import {exposure,MAX_DEPTH,type Plot} from './engine';
 import {CONFIG} from './data';
 export const VIEW={width:360,height:325};
 export function project(x:number,y:number){return {x:180+(x-180)*(.8+.2*y/280),y:48+.88*y};}

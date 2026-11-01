@@ -1,4 +1,4 @@
-﻿import {writeFileSync} from 'node:fs';import {createState,generate,plot,dig,scan,recover,reward,stored,sortSand,exposure,tick} from '../src/engine';import {CONFIG,treasure} from '../src/data';import {sandRemaining} from '../src/tool-value';
+import {writeFileSync} from 'node:fs';import {createState,generate,plot,dig,scan,recover,reward,stored,sortSand,exposure,tick} from '../src/engine';import {CONFIG,treasure} from '../src/data';import {sandRemaining} from '../src/tool-value';
 const rows=[];
 function explore(seed:number,detector:boolean){const s=createState(seed);s.explorationAreas=[generate(seed,false,true)];s.ownedTools=['B101','B104','B105','B201'];let attempts=0,scans=0;
  const collect=()=>{for(const f of plot(s).items)if(f.state==='buried'&&exposure(plot(s),f)>=CONFIG.exposure)recover(s,f.uid,'B105');for(let k=0;k<3&&sandRemaining(s)>0;k++)sortSand(s,'sieve');for(const f of stored(s))reward(s,f.uid);};

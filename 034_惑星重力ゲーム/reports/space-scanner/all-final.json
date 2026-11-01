@@ -39,11 +39,11 @@
     "special-planets.test.mjs"
   ],
   "exitCode": 0,
-  "elapsedMs": 33964,
-  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-9ZtLoC\\game",
+  "elapsedMs": 50695,
+  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-hjMJDy\\game",
   "counts": {
-    "tests": 426,
-    "pass": 426,
+    "tests": 429,
+    "pass": 429,
     "fail": 0,
     "skipped": 0,
     "cancelled": 0,

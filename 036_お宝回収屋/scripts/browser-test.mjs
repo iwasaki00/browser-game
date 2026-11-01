@@ -1,4 +1,4 @@
-﻿import {chromium} from 'playwright';
+import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 const browser=await chromium.launch({channel:'chrome',headless:true});const results=[];

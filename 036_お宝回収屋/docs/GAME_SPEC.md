@@ -1,4 +1,10 @@
-﻿# GAME_SPEC — Version 0.1.3 / TOOL VALUE & REVEAL UX
+# GAME_SPEC
+
+## Version 0.2.0
+
+砂浜の既存仕様を維持し、川底の独立回収処理と開発専用DEBUG LABを追加しました。川底解放は砂浜累計回収10/20個。R-A/R-Bのみ通常探索に対応し、初回は素手です。7道具・磁性と重量の判定・C05/C06・共通報酬とセーブの詳細は [RIVER_RECOVERY_DEBUG_LAB](RIVER_RECOVERY_DEBUG_LAB.md) を参照してください。
+
+## 引き継いだ砂浜仕様（0.1.3）
 
 ## 探索表示と操作
 

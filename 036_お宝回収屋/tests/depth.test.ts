@@ -1,4 +1,4 @@
-﻿import test from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CONFIG} from '../src/data';
 import {createState,plot,dig,depthAt,diggingLimit,recover,exposure,buy,refresh,combos,type State} from '../src/engine';

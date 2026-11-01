@@ -1,8 +1,8 @@
-﻿# お宝回収屋 — THE FINDERS
+# お宝回収屋 — THE FINDERS
 
-**Version 0.1.3 — TOOL VALUE & REVEAL UX**
+**Version 0.2.0 — RIVER RECOVERY & DEBUG LAB**
 
-少し斜めから見下ろす砂浜をなぞって掘り、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。素手からスコップ、熊手、砂ふるいへ。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。素手からスコップ、熊手、砂ふるいへ。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
 
 ## Windows / VSCodeで起動
 
@@ -17,6 +17,14 @@ npm.cmd run dev
 ```
 
 ターミナルに出る `http://localhost:5173/` をブラウザで開きます。使用中のポートがあれば、表示された別の番号を使ってください。停止はCtrl+Cです。`npm.cmd` を使うとPowerShellのスクリプト実行ポリシーの影響を避けられます。
+
+## 0.2.0の変更
+
+- 砂浜累計回収10個で岸辺の浅瀬、20個で石だまりを解放。川底の初回は素手。資金・道具・図鑑・荷物は共通です。
+- トング、フック、小型磁石、ロープ付き磁石、巻取り器、強力磁石、滑車の7道具を実装。道具が届く場所、磁性・重量、必要操作が変わります。
+- 対象をつかんで手前へドラッグ。ロープ付き磁石は岸から水底へスワイプして離すと投擲。回収失敗の個体は同区画で再挑戦できます。
+- 開発版は設定のVERSION表示を素早く5回タップするとDEBUG LAB。7タブ、10シナリオ、専用セーブ、可視化とJSONログを使用できます。通常状態を退避してテストします。
+- 本番ではLABのJS・CSS・生成操作を除外。詳しい操作・道具・保存仕様は [川底とDEBUG LABの説明書](docs/RIVER_RECOVERY_DEBUG_LAB.md)。
 
 ## 0.1.3の変更
 
@@ -73,9 +81,12 @@ npm.cmd run test:browser
 npm.cmd run test:depth-browser
 npm.cmd run test:reveal-browser
 npm.cmd run balance:tools
+npm.cmd run balance:river
+npm.cmd run test:river-browser
+npm.cmd run test:production
 ```
 
-ブラウザ試験はインストール済みGoogle Chromeを利用します。開発版と本番版のセーブは別です。開発版は設定からFN変更・道具付与・お宝出現等を利用できます。
+ブラウザ試験はインストール済みGoogle Chromeを利用します。開発版と本番版のセーブは別です。開発版は設定のVERSIONを5回タップしてDEBUG LABを開き、専用テストセーブでFN変更・道具付与・お宝出現等を利用できます。
 
 ## ファイル
 
@@ -86,8 +97,10 @@ npm.cmd run balance:tools
 - `src/main.ts`, `src/style.css`: 入力・UI・上部トースト・タッチアイコン
 - `src/tool-value.ts`: 探知情報・品質保護・道具実測レポート
 - `src/reveal.ts`: 洗浄演出と完了状態
-- `src/dev.ts`: 開発専用テスト画面
+- `src/river.ts`, `src/river-view.ts`: 川底の独立回収処理と水面描画
+- `src/dev.ts`, `src/dev-actions.ts`, `src/dev.css`: 開発専用DEBUG LAB
+- `src/events.ts`: 上限100件の重要イベント
 - `tests/`, `scripts/`: 自動テスト・模擬プレイ・ブラウザ試験
 - `docs/`: 仕様・判断・試験結果・今後の計画
 
-将来エリア・121道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。
+R-C/R-Dなどの将来エリア・114道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。

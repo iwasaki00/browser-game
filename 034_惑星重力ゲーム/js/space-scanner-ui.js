@@ -1,4 +1,4 @@
-import {scanObjects,filterScan,searchPlanets,cycleTarget,relativeTarget,scanLayout,ScannerCamera,SCAN_FILTERS} from './space-scanner.js';
+import {scanObjects,filterScan,searchPlanets,cycleTarget,relativeTarget,scanLayout,ScannerCamera,SCAN_FILTERS,scanPulse} from './space-scanner.js';
 import {encounterPosition} from './encounters.js';
 
 export function createSpaceScanner({root,camera,getContext,onCamera=()=>{},onSelect=()=>{},onDestination=()=>{},onPrepare=()=>{}}){
@@ -13,6 +13,7 @@ export function createSpaceScanner({root,camera,getContext,onCamera=()=>{},onSel
  for(const [value,text]of Object.entries(SCAN_FILTERS)){const option=document.createElement('option');option.value=value;option.textContent=text;$('#scanFilter').append(option);}
  let active=false,expanded=false,filter='all',search=false,selected=null,rows=[],lastBuild=-Infinity,lastUI=-Infinity,started=0,oldStage=null,signature='',markers=[];
  const motion=new ScannerCamera(camera);
+ document.addEventListener('pointerdown',event=>{if(!event.target.closest?.('#scanShow,#scanBack,#scanReturn'))motion.cancel();},true);
  function refresh(time=performance.now(),force=false){
   const context=getContext(),key=[context.phase,context.gameMode,context.playType,context.stage.planets.length,context.stage.encounters?.length??0].join(':');
   if(context.stage!==oldStage){oldStage=context.stage;motion.clear();selected=null;lastBuild=-Infinity;}
@@ -63,14 +64,14 @@ export function createSpaceScanner({root,camera,getContext,onCamera=()=>{},onSel
   const filtered=search?searchPlanets(rows,camera.center):filterScan(rows,filter),dpr=Math.min(window.devicePixelRatio||1,3);
   ctx.save();ctx.setTransform(dpr,0,0,dpr,0,0);
   const light=getContext().quality==='light';
-  if(!light&&time-started<800){const f=(time-started)/800;ctx.strokeStyle=`rgba(102,242,221,${.35*(1-f)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(camera.width/2,camera.height/2,f*Math.hypot(camera.width,camera.height),0,Math.PI*2);ctx.stroke();}
+  if(!light&&time-started<800){const f=scanPulse(time,started);ctx.strokeStyle=`rgba(102,242,221,${.35*(1-f)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(camera.width/2,camera.height/2,f*Math.hypot(camera.width,camera.height),0,Math.PI*2);ctx.stroke();}
   for(const o of filtered){const p=camera.toScreen(o),r=Math.max(14,Math.min(110,o.radius*camera.scale+5));if(p.x+r<0||p.y+r<0||p.x-r>camera.width||p.y-r>camera.height)continue;ctx.strokeStyle=o.color;ctx.lineWidth=o.permission.editable?2:1;ctx.setLineDash(o.permission.editable?[]:[3,4]);ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=o.color;ctx.font='bold 13px sans-serif';ctx.fillText(o.permission.editable?'✥':o.icon,p.x+r-2,p.y-r+6);}
   ctx.restore();
   const blocked=[...root.querySelectorAll('.scan-panel,.camera-controls,.flight-speed,.destination-control,.selection-bar,.frontier-notice,.homeward-coach,.result')].filter(e=>!e.hidden).map(e=>{const a=e.getBoundingClientRect(),b=root.getBoundingClientRect();return{x:a.x-b.x,y:a.y-b.y,width:a.width,height:a.height};});
-  const layout=scanLayout(filtered,camera,{top:58,bottom:74,max:6}).filter(r=>blocked.every(b=>r.x+r.width<b.x||b.x+b.width<r.x||r.y+r.height<b.y||b.y+b.height<r.y));
+  const layout=scanLayout(filtered,camera,{top:58,bottom:74,max:6,blocked,selected});
   const ids=layout.map(o=>o.id).join('|');
-  if(layer.dataset.ids!==ids){layer.replaceChildren();markers=[];for(const item of layout){const b=document.createElement('button');b.type='button';b.className='scan-marker';b.dataset.scanId=item.id;b.addEventListener('click',()=>{selected=item.id;expand();});layer.append(b);markers.push(b);}layer.dataset.ids=ids;}
-  layout.forEach((item,i)=>{const b=markers[i],text=`${item.label}\n${item.detail}`;if(b.textContent!==text)b.textContent=text;b.classList.toggle('offscreen',item.outside);b.style.transform=`translate(${item.x}px,${item.y}px)`;b.style.width=item.width+'px';b.title=text;});
+  if(layer.dataset.ids!==ids){layer.replaceChildren();markers=[];for(const item of layout){const b=document.createElement('button');b.type='button';b.className='scan-marker';b.dataset.scanId=item.id;b.append(document.createElement('span'),document.createElement('span'));b.addEventListener('click',()=>{selected=item.id;const target=rows.find(o=>o.id===selected);if(target?.category==='planet')onSelect(target.sourceId);expand();});layer.append(b);markers.push(b);}layer.dataset.ids=ids;}
+  layout.forEach((item,i)=>{const b=markers[i],text=`${item.label}\n${item.detail}`;if(b.title!==text){b.children[0].textContent=item.label;b.children[1].textContent=item.detail;b.setAttribute('aria-label',text);}b.classList.toggle('offscreen',item.outside);b.style.transform=`translate(${item.x}px,${item.y}px)`;b.style.width=item.width+'px';b.title=text;});
  }
  return {update,render,manual,tap,close};
 }

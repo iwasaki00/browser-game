@@ -2,7 +2,7 @@ import {createState,surfaceY,refresh,type State,type Plot} from './engine';
 // Keep the existing keys so 0.1.0 saves remain discoverable.
 const normalKey=import.meta.env?.DEV?'finders-dev-v1':'finders-v1';
 export type SaveScope='normal'|'debug';
-export const saveKey=(scope:SaveScope='normal')=>import.meta.env?.DEV&&scope==='debug'?'finders-debug-v1':normalKey;
+export function saveKey(scope:SaveScope='normal'){if(scope==='debug'){if(!import.meta.env?.DEV)throw Error('開発専用セーブは本番版では使用できません');return 'finders-debug-v1';}return normalKey;}
 function open(key:string):Promise<IDBDatabase>{return new Promise((resolve,reject)=>{const r=indexedDB.open(key,1);r.onupgradeneeded=()=>r.result.createObjectStore('saves');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 function convertPlot(p:Plot,tutorial:boolean):Plot {
  const old=p.mask;const items=p.items.map((f,i)=>({...f,depth:f.depth??f.y,y:f.depth===undefined?surfaceY(p.seed,i,tutorial):f.y}));

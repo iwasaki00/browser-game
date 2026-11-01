@@ -1,11 +1,12 @@
-﻿import {tools,treasures,treasure,CONFIG} from './data';
+import './dev.css';
+import {tools,treasures,treasure,CONFIG} from './data';
 import {createState,plot,addPlot,rate,combos,maxStamina,depthAt,exposure,type State} from './engine';
 import {save,load} from './save';
 import {areaId,isRiver,riverCheck,riverCapabilities,metrics} from './river';
 import {project} from './surface';
 import {setMoney,setStats,grant,equip,spawn,scenarios,applyScenario,debugSnapshot,bounded} from './dev-actions';
 import {logEvent} from './events';
-interface Context {get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
+interface Context {get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;active:()=>string;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
 const escape=(x:unknown)=>String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const pre=(x:unknown)=>`<pre>${escape(JSON.stringify(x,null,2))}</pre>`;
 const input=(id:string,label:string,value:number,min=0,max=1e9)=>`<label>${label}<input id="${id}" type="number" min="${min}" max="${max}" value="${value}"></label>`;
@@ -16,8 +17,8 @@ let pointer={x:0,y:0},hooked=false;
 export function openDebugLab(c:Context){
  if(!import.meta.env.DEV)return;
  restore??=structuredClone(c.get());
- if(!hooked){hooked=true;document.addEventListener('pointermove',e=>{const r=document.querySelector('canvas')?.getBoundingClientRect();if(r)pointer={x:(e.clientX-r.left)/r.width*360,y:(e.clientY-r.top)/r.height*325};});}
- c.overlay(ctx=>drawOverlay(ctx,c.get()));
+ if(!hooked){hooked=true;window.addEventListener('error',e=>logEvent(c.get(),'エラー',e.message));window.addEventListener('unhandledrejection',e=>logEvent(c.get(),'エラー',String(e.reason)));document.addEventListener('pointermove',e=>{const r=document.querySelector('canvas')?.getBoundingClientRect();if(r)pointer={x:(e.clientX-r.left)/r.width*360,y:(e.clientY-r.top)/r.height*325};});}
+ c.overlay(ctx=>drawOverlay(ctx,c.get(),c.active()));
  const tabs=['状態','道具','お宝','探索','シナリオ','収益','保存・ログ'];
  const render=()=>{
   const s=c.get();c.show('DEBUG LAB / テスト専用セーブ',`<section id="debug-lab"><p class="lab-note">通常プレイは退避済み。変更は finders-debug-v1 に保存します。</p><div class="lab-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" aria-selected="${tab===i}" data-tab="${i}">${t}</button>`).join('')}</div><div id="lab-body"></div><button id="lab-exit">通常プレイへ戻る</button></section>`);
@@ -26,7 +27,7 @@ export function openDebugLab(c:Context){
   const num=(id:string)=>Number((el(id) as HTMLInputElement).value);
   const action=(id:string,fn:()=>void)=>el(id).onclick=()=>{try{fn();c.changed();render();}catch(e){logEvent(c.get(),'エラー',String(e));body.append(Object.assign(document.createElement('p'),{textContent:String(e)}));}};
   document.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(b=>b.onclick=()=>{tab=+b.dataset.tab!;render();});el('lab-exit').onclick=c.exit;
-  if(tab===0){body.innerHTML=`<div class="lab-form">${input('lab-fn','所持FN',s.currentFN)}<button id="lab-set-fn">FN変更</button><button id="lab-add-fn">FN追加</button><div class="lab-presets">${[100,1000,10000,100000].map(n=>`<button data-money="${n}">${n.toLocaleString()}</button>`).join('')}</div>${input('lab-max','最大体力',maxStamina(s),1,10000)}${input('lab-stamina','体力',s.playerStats.stamina,0,10000)}${['筋力','観察力','器用さ'].map((n,i)=>input('lab-level-'+i,n,1+Math.floor(s.playerStats.xp[i]/CONFIG.xpPerLevel),1,10000)).join('')}<button id="lab-stats">能力を反映</button><button id="lab-stats-reset">全能力初期化</button></div>`;
+  if(tab===0){body.innerHTML=`<div class="lab-form">${input('lab-fn','所持FN',s.currentFN)}<button id="lab-set-fn">FN変更</button><button id="lab-add-fn">FN追加</button><div class="lab-presets">${[100,1000,10000,100000].map(n=>`<button data-money="${n}">${n.toLocaleString()}</button>`).join('')}</div>${input('lab-max','最大体力',maxStamina(s),1,10000)}${input('lab-stamina','体力',Math.round(s.playerStats.stamina*10)/10,0,10000)}${['筋力','観察力','器用さ'].map((n,i)=>input('lab-level-'+i,n,1+Math.floor(s.playerStats.xp[i]/CONFIG.xpPerLevel),1,10000)).join('')}<button id="lab-stats">能力を反映</button><button id="lab-stats-reset">全能力初期化</button></div>`;
    action('lab-set-fn',()=>setMoney(s,num('lab-fn')));action('lab-add-fn',()=>setMoney(s,num('lab-fn'),true));document.querySelectorAll<HTMLButtonElement>('[data-money]').forEach(b=>b.onclick=()=>{setMoney(s,+b.dataset.money!);c.changed();render();});action('lab-stats',()=>setStats(s,num('lab-stamina'),num('lab-max'),[0,1,2].map(i=>num('lab-level-'+i))));action('lab-stats-reset',()=>{if(confirm('テスト状態の全能力を初期化しますか？')){s.playerStats={stamina:100,xp:[0,0,0,0]};delete s.maxStamina;}});
   }else if(tab===1){body.innerHTML=`<select id="lab-tool">${options(tools)}</select><button id="lab-grant">個別付与</button><button id="lab-grant-all">購入可能道具を一括入手</button><button id="lab-equip">選択道具を装備・使用</button><button id="lab-unlock">解放条件を無視</button><div id="lab-tool-info"></div><h3>所持道具</h3><p>${s.ownedTools.join(', ')||'素手のみ'}</p><h3>購入可能商品</h3><p>${tools.filter(t=>t.implementationStatus==='available'&&s.unlockedTools.includes(t.id)&&!s.ownedTools.includes(t.id)).map(t=>`${t.id} ${t.priceFN} FN`).join(' / ')}</p><h3>装備中の組み合わせ候補</h3>${pre(combos(s.equippedTools))}<h3>作業時の能力</h3>${pre(riverCapabilities(s,s.quickSlots[0]||'hand'))}`;
    const info=()=>el('lab-tool-info').innerHTML=pre({...tools.find(t=>t.id===(el('lab-tool') as HTMLSelectElement).value),performance:riverCapabilities(s,(el('lab-tool') as HTMLSelectElement).value)});info();el('lab-tool').onchange=info;
@@ -43,8 +44,8 @@ export function openDebugLab(c:Context){
   }
  };render();
 }
-function drawOverlay(ctx:CanvasRenderingContext2D,s:State){ctx.save();ctx.setTransform(2,0,0,2,0,0);ctx.font='7px monospace';ctx.fillStyle='#fff';ctx.strokeStyle='#fff8';
+function drawOverlay(ctx:CanvasRenderingContext2D,s:State,active:string){ctx.save();ctx.setTransform(2,0,0,2,0,0);ctx.font='7px monospace';ctx.fillStyle='#fff';ctx.strokeStyle='#fff8';
  if(flags.区画)ctx.fillText(`${areaId(s)} ${plot(s).id} seed=${plot(s).seed}`,8,30);
- for(const f of plot(s).items){if(!flags.お宝&&!flags.回収判定&&!flags.深度)break;const p=project(f.x,f.y);ctx.strokeRect(p.x-6,p.y-6,12,12);let label='';if(flags.お宝)label=`${f.id} ${f.weight??treasure(f.id).weight}kg M:${f.magnetic??treasure(f.id).magnetic}`;if(flags.深度&&!isRiver(s))label+=` depth:${depthAt(plot(s),f.x,f.y).toFixed(0)}/${f.depth}`;if(flags.回収判定)label+=' '+(isRiver(s)?riverCheck(s,s.riverSession?.tool??s.quickSlots[0]??'hand',f)||'回収可能':exposure(plot(s),f).toFixed(2));ctx.fillText(label,Math.min(225,Math.max(4,p.x)),p.y-9);}
- const id=s.riverSession?.tool??s.quickSlots[0]??'hand',c=riverCapabilities(s,id);const ring=(radius:number,color:string)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.ellipse(pointer.x,pointer.y,radius,radius*.88,0,0,Math.PI*2);ctx.stroke();};
- if(flags.道具範囲)ring(id==='B105'?26:id==='B102'?34:id==='hand'?7:15,'#ffff77');if(flags.探知範囲)ring(65,'#77ffff');if(flags.磁石範囲)ring(c.radius,'#ff77ff');if(flags.ロープ範囲){const o=project(180,278);ctx.strokeStyle='#ffeeaa';ctx.beginPath();ctx.ellipse(o.x,o.y,c.reach,c.reach*.88,0,Math.PI,Math.PI*2);ctx.stroke();}if(flags.座標)ctx.fillText(`pointer:${pointer.x.toFixed(1)},${pointer.y.toFixed(1)}`,8,42);ctx.restore();}
+ for(const f of plot(s).items){if(!flags.お宝&&!flags.回収判定&&!flags.深度)break;const p=project(f.x,f.y);ctx.strokeRect(p.x-6,p.y-6,12,12);let label='';if(flags.お宝)label=`${f.id} ${f.weight??treasure(f.id).weight}kg M:${f.magnetic??treasure(f.id).magnetic}`;if(flags.深度&&!isRiver(s))label+=` depth:${depthAt(plot(s),f.x,f.y).toFixed(0)}/${f.depth}`;if(flags.回収判定)label+=' '+(isRiver(s)?riverCheck(s,active,f)||'回収可能':exposure(plot(s),f).toFixed(2));ctx.fillText(label,Math.min(225,Math.max(4,p.x)),p.y-9);}
+ const id=active,c=riverCapabilities(s,id);const ring=(radius:number,color:string)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.ellipse(pointer.x,pointer.y,radius,radius*.88,0,0,Math.PI*2);ctx.stroke();};
+ if(flags.道具範囲)ring(id==='B105'?26:id==='B102'?34:id==='hand'?7:15,'#ffff77');if(flags.探知範囲)ring(95,'#77ffff');if(flags.磁石範囲)ring(c.radius,'#ff77ff');if(flags.ロープ範囲){const o=project(180,278);ctx.strokeStyle='#ffeeaa';ctx.beginPath();ctx.ellipse(o.x,o.y,c.reach,c.reach*.88,0,Math.PI,Math.PI*2);ctx.stroke();}if(flags.座標)ctx.fillText(`pointer:${pointer.x.toFixed(1)},${pointer.y.toFixed(1)}`,8,42);ctx.restore();}

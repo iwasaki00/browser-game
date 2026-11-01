@@ -1,4 +1,35 @@
-﻿# TEST_RESULTS — Version 0.1.3 / TOOL VALUE & REVEAL UX
+# TEST_RESULTS — Version 0.2.0 / RIVER RECOVERY & DEBUG LAB
+
+## 自動テスト
+
+`npm.cmd test`：**99件成功、失敗0**。砂浜の既存64件を維持し、川底25件、DEBUG操作・再現性・保存保護10件を追加しました。磁性・距離・吸着・引き上げの個別判定、7道具、C05/C06の装備条件、重量不足後の同一個体再挑戦、品質・報酬、二重回収防止、引き寄せ途中の保存復元、区画切替の荷物維持を確認しています。
+
+## ブラウザと本番
+
+|コマンド|結果|
+|---|---|
+|`npm.cmd run test:browser`|320×568、390×844、1280×900。砂浜操作、カーソル、実タッチ、通知、ショップ、図鑑、区画、保存、ジャックポット成功|
+|`npm.cmd run test:depth-browser`|390×844。同じ穴を80→180→280、色、手応え、保存、深い品の回収成功|
+|`npm.cmd run test:reveal-browser`|320／390。洗浄とスキップ、連打、モーダル固定、背景遮断、閉じる・再読込成功|
+|`npm.cmd run test:river-browser`|3サイズ。通常のR-A初回素手、ドラッグ・洗浄、7タブ、全実装道具付与、磁性指定生成、実タッチで投擲・引き上げ、滑車重量物、通常セーブ分離・復元・初期化・途中再開成功|
+|`npm.cmd run test:production`|Chrome／Edge。通常セーブ、砂浜掘削・再読込、川底回収・洗浄成功。隠し操作を5回タップしてもLABなし。window.__findersなし。開発JS／CSS・FN強制操作・生成・専用保存キーの成果物除外成功|
+|`npm.cmd run build`|TypeScript検証＋Vite productionビルド成功|
+
+保存分離は通常セーブのFNと区画内容をLAB操作の前後で比較し、テスト初期化後にも通常状態が維持されることを確認しています。通常プレイで回収途中にLABへ出入りした場合、および再読込した場合も対象IDと進捗を保持します。
+
+結果：`ui-results-v020.json`、`depth-ui-results-v020.json`、`reveal-ui-results-v020.json`、`river-ui-results-v020.json`、`production-results-v020.json`。画像：`v020-river-*`、`v020-debug-lab-*`、`v020-production-river-*`。
+
+## バランス
+
+川底FN0開始100シード、砂浜資金1000FN持込み100シード、装備8構成×同じ100シード、砂浜回帰100シード。進行停止0・ジャックポット0。方法と数値は [BALANCE](BALANCE.md)、`river-balance-v020.json`、`balance-results-v020.json`。
+
+## 未確認
+
+**iPhone Safari実機は未確認**です。Chromeの実タッチイベントはSafari実機試験の代用ではありません。Safe Area、キーボードとLABスクロール、長押し・ダブルタップ、バックグラウンド保存を実機で確認してください。
+
+---
+
+# TEST_RESULTS — Version 0.1.3 / TOOL VALUE & REVEAL UX
 
 ## 自動テスト
 

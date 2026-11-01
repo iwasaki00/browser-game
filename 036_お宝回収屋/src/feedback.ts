@@ -1,4 +1,4 @@
-﻿import {CONFIG} from './data';
+import {CONFIG} from './data';
 import {depthAt,diggingLimit,plot,reachedFind,type State} from './engine';
 export interface HandFeedback {plotId:string;x:number;y:number;attemptedAt:number;hinted:boolean;}
 export type HandReaction={kind:'limit'|'hint';text:string};
