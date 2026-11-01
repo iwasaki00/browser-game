@@ -15,7 +15,9 @@
     "balance:tools": "tsx scripts/tool-balance.ts",
     "test:river-browser": "node scripts/river-browser-test.mjs",
     "test:production": "node scripts/production-test.mjs",
-    "balance:river": "tsx scripts/river-balance.ts"
+    "balance:river": "tsx scripts/river-balance.ts",
+    "test:gold-browser": "node scripts/gold-browser-test.mjs",
+    "balance:gold": "tsx scripts/gold-balance.ts"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

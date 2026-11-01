@@ -1,6 +1,6 @@
 {
   "version": "1.2.0-C",
-  "generatedAt": "2026-11-01T14:31:44.952Z",
+  "generatedAt": "2026-11-01T14:33:20.731Z",
   "status": "PASS",
   "method": "Temporary Node loopback allowlist server; URL-encoded Japanese project subdirectory + version queries; every runtime file byte/hash/MIME checked",
   "runtimeFileCount": 254,

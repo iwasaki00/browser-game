@@ -1,6 +1,6 @@
 {
   "version": "1.2.0-C",
-  "generatedAt": "2026-11-01T13:57:22.036Z",
+  "generatedAt": "2026-11-01T14:33:22.587Z",
   "decision": "CONDITIONAL",
   "rationale": "Automated checks pass; human normal-difficulty clears, final iPhone matrix, foreground performance and remote publication scope remain unverified",
   "qa": {
@@ -64,6 +64,12 @@
       "status": "PASS",
       "source": "release-audit.json",
       "detail": "254 runtime files / 334 references; local, not HTTP"
+    },
+    {
+      "id": "LOCAL_HTTP",
+      "status": "PASS",
+      "source": "local-http.json",
+      "detail": "254 runtime files / 255 checks; temporary loopback subdirectory simulation, NOT browser/production hosting"
     },
     {
       "id": "B1_MOVEMENT_FEEL",
@@ -141,7 +147,7 @@
       "id": "FOREGROUND_PERFORMANCE",
       "status": "BLOCKED",
       "source": "performance.json",
-      "detail": "Browser skill file unavailable; no foreground/device samples"
+      "detail": "Browser access host unavailable; native Chrome app approval timed out; no foreground/device samples"
     },
     {
       "id": "LIVE_PAGES_CONFIGURATION",

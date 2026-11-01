@@ -1,6 +1,6 @@
 {
   "version": "1.2.0-C",
-  "generatedAt": "2026-11-01T13:57:21.910Z",
+  "generatedAt": "2026-11-01T14:33:18.505Z",
   "method": "local static graph + exported image registries + isolated VM; no HTTP/device/remote Pages check",
   "status": "PASS",
   "runtimeIssues": [],
@@ -3395,6 +3395,7 @@
       "reports/combat-balance/lab-phase-844x390.jpg",
       "reports/combat-balance/performance.json",
       "reports/final-acceptance/README.md",
+      "reports/final-acceptance/local-http.json",
       "reports/final-acceptance/manual-playthrough.csv",
       "reports/final-acceptance/performance.json",
       "reports/final-acceptance/release-audit.json",
@@ -3590,6 +3591,7 @@
       "tests/test_sky_assets.py",
       "tests/unification.test.mjs",
       "tests/weapons.test.mjs",
+      "tools/acceptance-http-smoke.mjs",
       "tools/art-fixture-audit.mjs",
       "tools/art_direction_samples.py",
       "tools/art_readability.py",
