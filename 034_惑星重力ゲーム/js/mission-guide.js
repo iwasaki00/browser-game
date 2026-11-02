@@ -9,7 +9,8 @@ export function destinationInfo(context,id=context.stage.goal.id){
 }
 const guide=(code,title,description,steps,selector,label,reason,after,focus=null)=>({code,title,description,steps,selector,label,reason,after,focus});
 export function missionGuide(context){
- const {stage,phase='editing',playType='free',progress={},launchMode='precision',adjusted=false,ending=null,canNext=true}=context;
+ const {stage,phase='editing',playType='free',progress={},launchMode='precision',adjusted=false,ending:suppliedEnding=null,canNext=true}=context;
+ const ending=stage.finalVoyage?suppliedEnding:null;
  const home=playType==='homeward',wide=home&&Boolean(stage.openVoyage||stage.deepSpace||stage.finalVoyage),info=destinationInfo(context);
  const navigation=wide?'#openDestinations':'#openHomeward';
  const raw=stage.finalVoyage?progress.finalVoyage:stage.deepSpace?progress.deep:progress.voyage;

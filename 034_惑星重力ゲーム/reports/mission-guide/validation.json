@@ -1,0 +1,94 @@
+{
+  "version": "2.0.0-rc.2",
+  "tests": {
+    "tests": 456,
+    "pass": 456,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "protectedFiles": [
+    {
+      "file": "js/physics.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/live-gravity.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/stages.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/challenges.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/homeward-data.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/open-voyage.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/deep-space.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/final-voyage.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/flight-record.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/gallery-store.js",
+      "unchanged": true
+    },
+    {
+      "file": "js/homeward-progress.js",
+      "unchanged": true
+    }
+  ],
+  "browser": "PASS",
+  "endings": [
+    {
+      "id": "END-01",
+      "status": "PASS"
+    },
+    {
+      "id": "END-02",
+      "status": "PASS"
+    },
+    {
+      "id": "END-03",
+      "status": "PASS"
+    },
+    {
+      "id": "END-04",
+      "status": "PASS"
+    },
+    {
+      "id": "END-05",
+      "status": "PASS"
+    }
+  ],
+  "analysis": "PASS",
+  "scanPerformance": {
+    "baseline": 35.550031075201986,
+    "candidate": 36.194029850746276,
+    "ratio": 1.0181152802421463,
+    "stableGuideDomMutations": 0
+  },
+  "saveFormat": "unchanged",
+  "iPhone": "UNVERIFIED",
+  "acceptance": "CONDITIONAL",
+  "push": false,
+  "publish": false,
+  "deploy": false,
+  "reportLinks": "PASS"
+}

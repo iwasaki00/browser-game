@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "fixture": "old save with CLUE-05 acquired; no new flight asserted here",
+  "checks": [
+    "unknown analysis result hidden",
+    "guide navigates to real identity button",
+    "one persistent highlight",
+    "next timestamp button after identity",
+    "existing analysis logic acquires 06/07/08",
+    "reload and classic sentinel"
+  ],
+  "errors": [],
+  "iPhone": "UNVERIFIED"
+}
