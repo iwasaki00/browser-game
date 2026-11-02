@@ -8,7 +8,7 @@ import {SAVE_KEY,DEFAULT_SAVE,VERSION} from '../js/data.js';
 
 test('integration runner uses genuine engine input controllers and never writes progress, target HP or positions',()=>{
  for(let n=1;n<=8;n++){const route=routeFor('M0'+n);assert.ok(route.includes('input.fire=true'));assert.doesNotMatch(route,/(?:player|target|boss|p|b)\.(?:x|y|hp|energy)\s*=(?!=)/);assert.doesNotMatch(route,/completeMission\(|damageEnemy\(|startBoss\(/)}
- const source=readFileSync(new URL('../tools/campaign-integration.mjs',import.meta.url),'utf8');assert.doesNotMatch(source,/\.clearedMissions\.push|completeMission\(|damageEnemy\(/);assert.equal(VERSION,'1.2.0-C4');
+ const source=readFileSync(new URL('../tools/campaign-integration.mjs',import.meta.url),'utf8');assert.doesNotMatch(source,/\.clearedMissions\.push|completeMission\(|damageEnemy\(/);assert.equal(VERSION,'1.2.0-C5');
 });
 test('new save normal UI deploy, real M01 kill/result and isolated persisted reload do not touch a sentinel save',()=>{
  const sentinel=runtime({...structuredClone(DEFAULT_SAVE),unlocked:['A-01','S-02','R-04']},{recordDraw:false});const original=sentinel.storage.get(SAVE_KEY),writes=sentinel.writes.length;

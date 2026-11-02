@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {transitionCase,missionIds} from './helpers/release-transitions.mjs';
+import {runtime} from './helpers/runtime.mjs';
+import {deploy} from '../tools/campaign-integration.mjs';
+import {DEFAULT_SAVE,SAVE_KEY,PLAYER_CLASSES,sanitizeSave} from '../js/data.js';
+for(const debug2 of [false,true])for(const id of missionIds)test(`${debug2?'URL_INVINCIBLE':'ASSISTED'} ${id} death -> result -> next sortie -> RAF movement/fire`,()=>{assert.equal(transitionCase(id,debug2).status,'PASS')});
+for(const debug2 of [false,true])for(const classId of Object.keys(PLAYER_CLASSES))test(`${debug2?'debug2':'normal'} ${classId} M04 clears 300 live parked projectiles during M20 kill`,()=>{
+ const seed=sanitizeSave({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01','M02','M03'],unlocked:['A-01','S-02','T-16','M-20']}),key=SAVE_KEY+(debug2?'-debug2':''),r=runtime(seed,{recordDraw:false,search:debug2?'?debug=2':'',...(debug2?{storageEntries:[[key,JSON.stringify(seed)]]}:{})}),baseline=r.storage.get(SAVE_KEY);deploy(r,'M04',classId,['T-16','M-20']);
+ r.run("game.player.x=6580;startBoss();var b=game.enemies.find(e=>e.type==='fortress');resetSkyBossPhase(game,b,3);b.hp=1;fireExpanded(game,weapon('M-20'),game.player,{x:b.x,y:b.y+32},weaponAPI);update(1/60);var example=game.shots[0];for(let n=0;n<300;n++)game.shots.push({...example,uid:10000+n,x:7000,y:0,vx:0,vy:0,gravity:0,life:5,rehit:{}});var shotsAtKill=0,previousDamage=damageEnemy;damageEnemy=function(e,d,s){if(e===b&&e.hp>0&&d>=e.hp)shotsAtKill=game.shots.length;return previousDamage(e,d,s)};for(let n=0;n<180&&!b.dead;n++)animationFrame(last+1000/60);damageEnemy=previousDamage;");
+ assert.ok(r.run('shotsAtKill')>=300);assert.equal(r.run('b.dead'),true);assert.equal(r.run('frameFault'),false);assert.equal(r.run('game.shots.length'),0);r.run('updateExpanded(game,1/60,weaponAPI)');r.flush();r.flush();assert.equal(r.run('state'),'result');r.click('mission-select');r.click('select-mission','M05');r.click('deploy');r.run("input.right=input.fire=true;input.aimMode='touch';input.touchDx=1;input.touchDy=0;for(let n=0;n<60;n++)animationFrame(last+1000/60)");assert.ok(r.run('game.player.x')>100);assert.ok(r.run('game.arsenal.jobs.length+game.shots.length')>0);assert.equal(r.run('frameFault'),false);if(debug2)assert.equal(r.storage.get(SAVE_KEY),baseline);
+});
+test('an already empty projectile/job/installation list remains safe on repeated engine updates',()=>{const r=runtime(null,{recordDraw:false});deploy(r,'M01');r.run('for(let n=0;n<100;n++){updateShots(1/60);updateExpanded(game,1/60,weaponAPI)}');assert.equal(r.run('game.shots.length+game.arsenal.jobs.length+game.arsenal.installations.length'),0)});

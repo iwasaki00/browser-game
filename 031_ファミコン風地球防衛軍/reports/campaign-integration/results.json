@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-C4",
-  "startedAt": "2026-11-02T07:34:39.419Z",
+  "version": "1.2.0-C5",
+  "startedAt": "2026-11-02T11:07:59.138Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "4837049a483b1c43853e4d589a241d1bef04e42b",
-    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M js/weapons.js\n M package.json\n M tests/campaign-integration.test.mjs\n M tools/campaign-integration.mjs\n?? tests/projectile-completion.test.mjs"
+    "commit": "c94c39cf9df04c4f679881ac768739dda14d8b53",
+    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M tests/campaign-integration.test.mjs\n M tools/campaign-integration.mjs\n?? tests/helpers/release-transitions.mjs\n?? tests/public-candidate.test.mjs\n?? tests/release-transitions.test.mjs\n?? tools/final-release-audit.mjs\n?? tools/public-candidate.mjs"
   },
   "cases": [
     {
@@ -5784,8 +5784,11 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 803,
+      "assertions": 846,
       "files": [
+        "tests/array-safety.test.mjs",
+        "tests/public-candidate.test.mjs",
+        "tests/release-transitions.test.mjs",
         "tests/projectile-completion.test.mjs",
         "tests/url-invincible-debug.test.mjs",
         "tests/boss-sortie-transition.test.mjs",
@@ -5882,7 +5885,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-02T07:35:57.552Z",
+  "finishedAt": "2026-11-02T11:09:33.714Z",
   "summary": {
     "total": 156,
     "pass": 140,

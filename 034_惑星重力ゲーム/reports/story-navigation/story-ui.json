@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "browser": "156.0.8078.76",
+  "environment": "PC Chrome CDP touch; not iPhone",
+  "rows": [
+    {
+      "width": 320,
+      "height": 568,
+      "status": "PASS",
+      "checks": "3 hint levels / log privacy / stored dates only / progression / SCAN view and return / ship and storage unchanged / reload / real launch"
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "status": "PASS",
+      "checks": "3 hint levels / log privacy / stored dates only / progression / SCAN view and return / ship and storage unchanged / reload / real launch"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "status": "PASS",
+      "checks": "3 hint levels / log privacy / stored dates only / progression / SCAN view and return / ship and storage unchanged / reload / real launch"
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "status": "PASS",
+      "checks": "3 hint levels / log privacy / stored dates only / progression / SCAN view and return / ship and storage unchanged / reload / real launch"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "status": "PASS",
+      "checks": "3 hint levels / log privacy / stored dates only / progression / SCAN view and return / ship and storage unchanged / reload / real launch"
+    }
+  ],
+  "errors": []
+}

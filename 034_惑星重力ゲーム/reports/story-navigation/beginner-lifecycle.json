@@ -1,0 +1,863 @@
+{
+  "status": "PASS",
+  "environment": "PC Chrome mobile emulation; not iPhone",
+  "rows": [
+    {
+      "width": 320,
+      "height": 568,
+      "status": "PASS",
+      "views": [
+        {
+          "label": "step1",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            320,
+            568
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 306,
+            "height": 429.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerNext",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            }
+          ]
+        },
+        {
+          "label": "step5",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            320,
+            568
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 306,
+            "height": 429.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerNext",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            }
+          ]
+        },
+        {
+          "label": "step6",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            320,
+            568
+          ],
+          "frame": {
+            "x": 7,
+            "y": 250.6875,
+            "width": 306,
+            "height": 262.3125
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            },
+            {
+              "id": "beginnerNext",
+              "width": 73.5,
+              "height": 44,
+              "top": 517,
+              "bottom": 561
+            }
+          ]
+        }
+      ],
+      "resume": "STEP2 restored; skips not successes",
+      "interruption": "pan / pinch / pointer cancel then exit; main launch available"
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "status": "PASS",
+      "views": [
+        {
+          "label": "step1",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            375,
+            667
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 361,
+            "height": 528.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerNext",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            }
+          ]
+        },
+        {
+          "label": "step5",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            375,
+            667
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 361,
+            "height": 528.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerNext",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            }
+          ]
+        },
+        {
+          "label": "step6",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            375,
+            667
+          ],
+          "frame": {
+            "x": 7,
+            "y": 231.84375,
+            "width": 361,
+            "height": 380.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            },
+            {
+              "id": "beginnerNext",
+              "width": 87.25,
+              "height": 44,
+              "top": 616,
+              "bottom": 660
+            }
+          ]
+        }
+      ],
+      "resume": "STEP2 restored; skips not successes",
+      "interruption": "pan / pinch / pointer cancel then exit; main launch available"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "status": "PASS",
+      "views": [
+        {
+          "label": "step1",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            390,
+            844
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 376,
+            "height": 705.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerNext",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            }
+          ]
+        },
+        {
+          "label": "step5",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            390,
+            844
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 376,
+            "height": 705.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerNext",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            }
+          ]
+        },
+        {
+          "label": "step6",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            390,
+            844
+          ],
+          "frame": {
+            "x": 7,
+            "y": 231.84375,
+            "width": 376,
+            "height": 557.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            },
+            {
+              "id": "beginnerNext",
+              "width": 91,
+              "height": 44,
+              "top": 793,
+              "bottom": 837
+            }
+          ]
+        }
+      ],
+      "resume": "STEP2 restored; skips not successes",
+      "interruption": "pan / pinch / pointer cancel then exit; main launch available"
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "status": "PASS",
+      "views": [
+        {
+          "label": "step1",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            430,
+            932
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 416,
+            "height": 793.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerNext",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            }
+          ]
+        },
+        {
+          "label": "step5",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            430,
+            932
+          ],
+          "frame": {
+            "x": 7,
+            "y": 83.84375,
+            "width": 416,
+            "height": 793.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerNext",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            }
+          ]
+        },
+        {
+          "label": "step6",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            430,
+            932
+          ],
+          "frame": {
+            "x": 7,
+            "y": 231.84375,
+            "width": 416,
+            "height": 645.15625
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            },
+            {
+              "id": "beginnerNext",
+              "width": 101,
+              "height": 44,
+              "top": 881,
+              "bottom": 925
+            }
+          ]
+        }
+      ],
+      "resume": "STEP2 restored; skips not successes",
+      "interruption": "pan / pinch / pointer cancel then exit; main launch available"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "status": "PASS",
+      "views": [
+        {
+          "label": "step1",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            844,
+            390
+          ],
+          "frame": {
+            "x": 326.390625,
+            "y": 7,
+            "width": 510.609375,
+            "height": 376
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 75.859375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerNext",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            }
+          ]
+        },
+        {
+          "label": "step5",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            844,
+            390
+          ],
+          "frame": {
+            "x": 326.390625,
+            "y": 7,
+            "width": 510.609375,
+            "height": 376
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 75.859375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerNext",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            }
+          ]
+        },
+        {
+          "label": "step6",
+          "scroll": [
+            0,
+            0
+          ],
+          "dialog": [
+            844,
+            390
+          ],
+          "frame": {
+            "x": 326.390625,
+            "y": 7,
+            "width": 510.609375,
+            "height": 376
+          },
+          "buttons": [
+            {
+              "id": "beginnerExit",
+              "width": 44,
+              "height": 44,
+              "top": 7,
+              "bottom": 51
+            },
+            {
+              "id": "beginnerHint",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerAgain",
+              "width": 75.859375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerSkip",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            },
+            {
+              "id": "beginnerNext",
+              "width": 75.84375,
+              "height": 44,
+              "top": 339,
+              "bottom": 383
+            }
+          ]
+        }
+      ],
+      "resume": "STEP2 restored; skips not successes",
+      "interruption": "pan / pinch / pointer cancel then exit; main launch available"
+    }
+  ],
+  "quota": "PASS: memory progress and exit continue",
+  "errors": []
+}

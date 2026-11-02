@@ -1,7 +1,9 @@
 import {missionGuide} from './mission-guide.js';
-export function createMissionGuide({getContext,onOpen=()=>{}}){
+import {createStoryNavigation} from './story-navigation-ui.js';
+export function createMissionGuide({getContext,onOpen=()=>{},onInspect=()=>false,onRecord=()=>{}}){
  const $=s=>document.querySelector(s),button=$('#missionGuideButton'),dialog=$('#missionGuideDialog');
  let view=null,key='',last=-Infinity,updates=0;
+ const story=createStoryNavigation({getContext,onInspect,onRecord});
  function clear(){document.querySelectorAll('.mission-target').forEach(e=>e.classList.remove('mission-target'));}
  function refresh(time=performance.now(),force=false){
   if(!force&&time-last<200)return;last=time;
@@ -12,6 +14,7 @@ export function createMissionGuide({getContext,onOpen=()=>{}}){
    $('#missionGuideSteps').replaceChildren(...view.steps.map(text=>{const li=document.createElement('li');li.textContent=text;return li;}));
    $('#missionGuideReason').textContent=`理由：${view.reason} 成功すると：${view.after}`;
    $('#missionGuideAction').textContent=view.label;dialog.dataset.state=view.code;
+   story.update(view);
   }
   // Existing tutorial owns its own single focus. Never add a competing one.
   const target=$(view.selector),modal=document.querySelector('dialog[open]');
@@ -21,7 +24,7 @@ export function createMissionGuide({getContext,onOpen=()=>{}}){
   const wanted=detail&&!detail.disabled&&detail.getClientRects().length?detail:!modal&&!document.querySelector('.tutorial-target')&&permitted?target:null;
   const previous=document.querySelector('.mission-target');if(previous!==wanted){clear();wanted?.classList.add('mission-target');}
  }
- button.addEventListener('click',()=>{onOpen();refresh(performance.now(),true);dialog.showModal();clear();});
+ button.addEventListener('click',()=>{onOpen();refresh(performance.now(),true);story.open();dialog.showModal();clear();});
  $('#missionGuideClose').addEventListener('click',()=>dialog.close());
  $('#missionGuideAction').addEventListener('click',()=>{
   const target=$(view.selector);if(!target||target.disabled||target.hidden||!target.getClientRects().length)return;

@@ -76,5 +76,11 @@ export function createSpaceScanner({root,camera,getContext,onCamera=()=>{},onSel
   if(layer.dataset.ids!==ids){layer.replaceChildren();markers=[];for(const item of layout){const b=document.createElement('button');b.type='button';b.className='scan-marker';b.dataset.scanId=item.id;b.append(document.createElement('span'),document.createElement('span'));b.addEventListener('click',()=>{selected=item.id;const target=rows.find(o=>o.id===selected);if(target?.category==='planet')onSelect(target.sourceId);expand();});layer.append(b);markers.push(b);}layer.dataset.ids=ids;}
   layout.forEach((item,i)=>{const b=markers[i],text=`${item.label}\n${item.detail}`;if(b.title!==text){b.children[0].textContent=item.label;b.children[1].textContent=item.detail;b.setAttribute('aria-label',text);b.title=text;}b.classList.toggle('offscreen',item.outside);const transform=`translate(${item.x}px,${item.y}px)`,width=item.width+'px';if(b.style.transform!==transform)b.style.transform=transform;if(b.style.width!==width)b.style.width=width;});
  }
- return {update,render,manual,tap,close};
+ function inspect(id,{move=false}={}){
+  refresh(performance.now(),true);const target=rows.find(o=>o.id===id);if(!target)return false;
+  if(!active)open();search=false;filter='all';$('#scanFilter').value=filter;selected=id;
+  if(move){onPrepare();motion.show(target,performance.now());expanded=false;panel.hidden=true;root.classList.remove('scan-expanded');}else expand();
+  return true;
+ }
+ return {update,render,manual,tap,close,inspect};
 }

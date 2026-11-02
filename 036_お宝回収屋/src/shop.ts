@@ -1,3 +1,4 @@
+import {machines,auto,type MachineId} from './automation';
 import {fieldProfiles} from './field-tools';
 import {fieldComparisonText} from './field-shop';
 import {tools,tool} from './data';
@@ -5,7 +6,7 @@ import {beachProfiles,beachComparisonText,type BeachKind} from './beach-tools';
 import type {State} from './engine';
 import {toolIcon} from './surface';
 export function shopKind(id:string):BeachKind{const t=tool(id);return beachProfiles[id]?.kind??fieldProfiles[id]?.kind??(t?.capabilities.some(c=>['pan','screen','sluice','largePan'].includes(c))?'選別':t?.capabilities.some(c=>['gravel','dig'].includes(c))?'掘削':t?.capabilities.some(c=>['reel','lift','strongMagnet'].includes(c))?'補助':'回収');}
-export function shopState(s:State,id:string){const t=tool(id);return t?.implementationStatus!=='available'?'将来実装予定':s.equippedTools.includes(id)?'装備中':s.ownedTools.includes(id)?'所持済み':!s.unlockedTools.includes(id)?'未解放':'購入可能';}
+export function shopState(s:State,id:string){if(machines.some(m=>m.id===id))return auto(s).machines[id as MachineId]?'設備所持':'設備画面で購入';const t=tool(id);return t?.implementationStatus!=='available'?'将来実装予定':s.equippedTools.includes(id)?'装備中':s.ownedTools.includes(id)?'所持済み':!s.unlockedTools.includes(id)?'未解放':'購入可能';}
 export function shopItems(s:State,category='すべて',field='すべて',future=false){return tools.filter(t=>(future||t.implementationStatus==='available')&&(category==='すべて'||shopKind(t.id)===category)&&(field==='すべて'||t.category===field)).sort((a,b)=>Number(s.ownedTools.includes(a.id))-Number(s.ownedTools.includes(b.id))||a.priceFN-b.priceFN);}
 export function mountShop(host:HTMLElement,s:State,active:string,buy:(id:string)=>void){let category='すべて',field='すべて',future=false,page=0;
  const render=()=>{const items=shopItems(s,category,field,future),pages=Math.max(1,Math.ceil(items.length/8));page=Math.min(page,pages-1);

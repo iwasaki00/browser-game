@@ -1,10 +1,10 @@
 {
-  "version": "1.2.0-C",
-  "generatedAt": "2026-11-01T14:33:20.731Z",
+  "version": "1.2.0-C5",
+  "generatedAt": "2026-11-02T11:09:26.896Z",
   "status": "PASS",
   "method": "Temporary Node loopback allowlist server; URL-encoded Japanese project subdirectory + version queries; every runtime file byte/hash/MIME checked",
-  "runtimeFileCount": 254,
-  "checks": 255,
+  "runtimeFileCount": 255,
+  "checks": 256,
   "rows": [
     {
       "path": "assets/art-refresh/study-01-b/backgrounds/city.png",
@@ -1523,7 +1523,7 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/html",
-      "bytes": 53651
+      "bytes": 57077
     },
     {
       "path": "js/achievement-master.js",
@@ -1538,6 +1538,13 @@
       "httpStatus": 200,
       "contentType": "text/javascript",
       "bytes": 13862
+    },
+    {
+      "path": "js/boss-defeat.js",
+      "status": "PASS",
+      "httpStatus": 200,
+      "contentType": "text/javascript",
+      "bytes": 1691
     },
     {
       "path": "js/camera.js",
@@ -1600,7 +1607,7 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/javascript",
-      "bytes": 20486
+      "bytes": 20487
     },
     {
       "path": "js/final-art.js",
@@ -1621,7 +1628,7 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/javascript",
-      "bytes": 179163
+      "bytes": 188520
     },
     {
       "path": "js/gameplay-ui.js",
@@ -1635,7 +1642,7 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/javascript",
-      "bytes": 10841
+      "bytes": 10901
     },
     {
       "path": "js/invasion.js",
@@ -1656,7 +1663,7 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/javascript",
-      "bytes": 10496
+      "bytes": 10873
     },
     {
       "path": "js/mission02.js",
@@ -1775,14 +1782,14 @@
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/javascript",
-      "bytes": 12946
+      "bytes": 13490
     },
     {
       "path": "styles.css",
       "status": "PASS",
       "httpStatus": 200,
       "contentType": "text/css",
-      "bytes": 56075
+      "bytes": 57405
     },
     {
       "path": "missing-acceptance-fixture.png",

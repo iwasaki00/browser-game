@@ -1,3 +1,4 @@
+import {purchaseMachine,type MachineId} from './automation';
 // Pure, development-only simulations. No save/storage APIs or normal-player references.
 import {VERSION,tools,CONFIG} from './data';
 import {createState,plot,addPlot,buy,refresh,dig,recover,reward,stored,scan,depthAt,tick,type State} from './engine';
@@ -9,7 +10,7 @@ export type RouteField='B'|'R'|'G';export type RouteName='A'|'B'|'C'|'D';
 export type RouteGoal='fourth'|'fifth'|'income'|'all'|'smallMagnet'|'strongMagnet'|'heavy'|'pan'|'sluice'|'gravel';
 export const routeNames={A:'最短目標型',B:'低価格組み合わせ型',C:'バランス型',D:'全道具購入型'};
 export const routeGoals:Record<RouteField,{id:RouteGoal;name:string}[]>={B:[{id:'fourth',name:'第4層到達'},{id:'fifth',name:'第5層到達'},{id:'income',name:'通常FN獲得'},{id:'all',name:'全砂浜道具購入'}],R:[{id:'smallMagnet',name:'小型磁石購入'},{id:'strongMagnet',name:'強力磁石購入'},{id:'heavy',name:'12kg重量物の回収'},{id:'all',name:'全川底道具購入'}],G:[{id:'pan',name:'パンニング皿購入'},{id:'sluice',name:'スルース購入'},{id:'gravel',name:'砂利の比重選別'},{id:'all',name:'全河原道具購入'}]};
-export interface RouteOptions {seed:number;field:RouteField;goal:RouteGoal;initialFN?:number;target?:number;maxSeconds?:number;}
+export interface RouteOptions {equipmentTarget?:MachineId;seed:number;field:RouteField;goal:RouteGoal;initialFN?:number;target?:number;maxSeconds?:number;}
 export interface RouteResult {version:string;seed:number;field:RouteField;route:RouteName;goal:RouteGoal;conditions:object;seconds:number;achieved:boolean;stalled:boolean|null;reason:string;purchased:string[];purchaseCost:number;purchases:{id:string;seconds:number;cost:number}[];operations:number;successes:number;failures:number;stamina:number;earned:number;fnPerMinute:number;processed:number;heavy:number;uses:Record<string,number>;jackpots:number;milestones:Record<string,number>;initialLayout:object[];}
 const beachBase=['B101','B102','B104','B105','B201'];
 export function purchaseOrder(field:RouteField,route:RouteName,goal:RouteGoal){
@@ -21,20 +22,20 @@ export function purchaseOrder(field:RouteField,route:RouteName,goal:RouteGoal){
  if(goal==='all')order.push(...all);return [...new Set(order)];
 }
 export function simulateRoute(options:RouteOptions,route:RouteName):RouteResult {
- const {seed,field,goal}=options;if(!Number.isInteger(seed)||seed<0||seed>4294967295||!routeGoals[field]?.some(g=>g.id===goal))throw Error('比較条件が不正です');
+ const {seed,field,goal}=options;if(!Number.isInteger(seed)||seed<0||seed>4294967295||!(options.equipmentTarget?{B:'B301',R:'R301',G:'G304'}[field]===options.equipmentTarget:routeGoals[field]?.some(g=>g.id===goal)))throw Error('比較条件が不正です');
  const initialFN=options.initialFN??0,target=options.target??(goal==='gravel'?100:1000),maxSeconds=options.maxSeconds??36000;
  if(![initialFN,target,maxSeconds].every(Number.isFinite)||initialFN<0||target<=0||maxSeconds<=0||maxSeconds>72000)throw Error('資金・目標量・時間上限が不正です');
  const s=createState(seed);s.currentFN=initialFN;if(field!=='B'){s.discoveredTreasures.B001={count:20,first:'',best:0,locations:['B-A'],tools:['hand']};addPlot(s,seed,true,field==='R'?'R-A':'G-A');}
  for(const f of plot(s).items)if(f.id==='B012')f.id='B007';
- const initialLayout=plot(s).items.map(f=>({id:f.id,x:f.x,y:f.y,depth:f.depth,quality:f.quality})),order=purchaseOrder(field,route,goal),purchases:RouteResult['purchases']=[],uses:Record<string,number>={},milestones:Record<string,number>={};
+ const initialLayout=plot(s).items.map(f=>({id:f.id,x:f.x,y:f.y,depth:f.depth,quality:f.quality})),order=options.equipmentTarget?(field==='B'?['B101','B104','B105']:field==='R'?['R104','R110']:['G101','G103','G102','G203']):purchaseOrder(field,route,goal),purchases:RouteResult['purchases']=[],uses:Record<string,number>={},milestones:Record<string,number>={};
  let operations=0,successes=0,failures=0,stamina=0,processed=0,heavy=0,serial=0,first=0;
  const advance=(seconds:number,idle=false)=>{tick(s,seconds,idle);if(field==='G')goldTick(s,seconds);};
  const operation=<T>(id:string,fn:()=>T,seconds:number,idle=false)=>{const before=s.playerStats.stamina;operations++;uses[id]=(uses[id]??0)+1;const value=fn();stamina+=Math.max(0,before-s.playerStats.stamina);advance(seconds,idle);return value;};
  const equip=(ids:string[])=>{s.equippedTools=[...new Set(ids)].filter(id=>s.ownedTools.includes(id)).slice(0,4);};
- const shop=()=>{refresh(s);for(const id of order){if(s.ownedTools.includes(id))continue;const t=tools.find(t=>t.id===id)!;if(s.currentFN>=t.priceFN&&s.unlockedTools.includes(id)&&buy(s,id)){purchases.push({id,seconds:s.playTime,cost:t.priceFN});milestones[id]??=s.playTime;operations++;advance(2,true);}else if(route!=='D')break;}};
+ const shop=()=>{refresh(s);for(const id of order){if(s.ownedTools.includes(id))continue;const t=tools.find(t=>t.id===id)!;if(s.currentFN>=t.priceFN&&s.unlockedTools.includes(id)&&buy(s,id)){purchases.push({id,seconds:s.playTime,cost:t.priceFN});milestones[id]??=s.playTime;operations++;advance(2,true);}else if(route!=='D')break;}if(options.equipmentTarget&&purchaseMachine(s,options.equipmentTarget)){purchases.push({id:options.equipmentTarget,seconds:s.playTime,cost:tools.find(t=>t.id===options.equipmentTarget)!.priceFN});operations++;advance(2,true);}};
  const wash=()=>{for(const f of stored(s)){if(field==='R'&&(f.weight??0)>=10)heavy++;operation('洗浄',()=>reward(s,f.uid),1.4,true);if(!first){first=s.playTime;milestones.first=first;}}};
  const all=()=>tools.filter(t=>t.category===field&&t.implementationStatus==='available').every(t=>s.ownedTools.includes(t.id));
- const reached=()=>goal==='all'?all():goal==='income'?s.totalEarnedFN>=target:goal==='fourth'?!!milestones.fourth:goal==='fifth'?!!milestones.fifth:goal==='smallMagnet'?s.ownedTools.includes('R103'):goal==='strongMagnet'?s.ownedTools.includes('R201'):goal==='heavy'?heavy>0:goal==='pan'?s.ownedTools.includes('G102'):goal==='sluice'?s.ownedTools.includes('G203'):processed>=target;
+ const reached=()=>options.equipmentTarget?!!s.automation?.machines[options.equipmentTarget]:goal==='all'?all():goal==='income'?s.totalEarnedFN>=target:goal==='fourth'?!!milestones.fourth:goal==='fifth'?!!milestones.fifth:goal==='smallMagnet'?s.ownedTools.includes('R103'):goal==='strongMagnet'?s.ownedTools.includes('R201'):goal==='heavy'?heavy>0:goal==='pan'?s.ownedTools.includes('G102'):goal==='sluice'?s.ownedTools.includes('G203'):processed>=target;
  if(field==='B'){
   let step=0;shop();
   while(s.playTime<maxSeconds&&!reached()){
@@ -89,6 +90,6 @@ export function simulateRoute(options:RouteOptions,route:RouteName):RouteResult 
    if(reached())break;serial++;addPlot(s,seed*10000+serial,true,goldAreaUnlocked(s,'G-B')?'G-B':'G-A');advance(4,true);
   }
  }
- const achieved=reached();return {version:VERSION,seed,field,route,goal,conditions:{initialFN,target,maxSeconds,initialStamina:100,initialXP:[0,0,0,0],initialArea:field==='B'?'B-A':field==='R'?'R-A':'G-A',eligibility:field==='B'?'初期状態':'砂浜回収20個の実績のみ',jackpots:false,model:'grid-041',time:{dig:.32,search:2,cast:.5,pull:.75,wash:1.4,gather:1.2,load:1,work:.6,pick:.45,purchase:2}},seconds:s.playTime,achieved,stalled:achieved?false:null,reason:achieved?'達成':s.playTime>=maxSeconds?'計測時間上限（進行不能とは未確定）':'試行上限',purchased:[...s.ownedTools],purchaseCost:purchases.reduce((n,p)=>n+p.cost,0),purchases,operations,successes,failures,stamina,earned:s.totalEarnedFN,fnPerMinute:s.totalEarnedFN/Math.max(1,s.playTime)*60,processed,heavy,uses,jackpots:s.jackpotHistory.length+(s.goldStats?.specialSites.length??0),milestones,initialLayout};
+ const achieved=reached();return {version:VERSION,seed,field,route,goal,conditions:{initialFN,target,maxSeconds,equipmentTarget:options.equipmentTarget,initialStamina:100,initialXP:[0,0,0,0],initialArea:field==='B'?'B-A':field==='R'?'R-A':'G-A',eligibility:field==='B'?'初期状態':'砂浜回収20個の実績のみ',jackpots:false,model:'grid-041',time:{dig:.32,search:2,cast:.5,pull:.75,wash:1.4,gather:1.2,load:1,work:.6,pick:.45,purchase:2}},seconds:s.playTime,achieved,stalled:achieved?false:null,reason:achieved?'達成':s.playTime>=maxSeconds?'計測時間上限（進行不能とは未確定）':'試行上限',purchased:[...s.ownedTools],purchaseCost:purchases.reduce((n,p)=>n+p.cost,0),purchases,operations,successes,failures,stamina,earned:s.totalEarnedFN,fnPerMinute:s.totalEarnedFN/Math.max(1,s.playTime)*60,processed,heavy,uses,jackpots:s.jackpotHistory.length+(s.goldStats?.specialSites.length??0),milestones,initialLayout};
 }
 export function compareRoutes(options:RouteOptions){return {version:VERSION,options,results:(['A','B','C','D'] as RouteName[]).map(route=>simulateRoute(options,route))};}

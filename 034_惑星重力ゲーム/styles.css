@@ -478,6 +478,19 @@ input:not([type='range']),textarea { -webkit-user-select:text; user-select:text;
 #beginnerSpace { min-height:0; overflow:hidden; }
 #beginnerFrame { width:100%; height:100%; border:0; display:block; }
 .beginner-target { outline:2px solid #ffe6a1!important; outline-offset:1px; }
+#missionGuideButton.story-card { flex-basis:clamp(145px,48vw,205px); width:clamp(145px,48vw,205px); max-width:205px; }
+#missionGuideButton.story-card small { font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#missionGuideButton.story-card span { font-size:11px; }
+#storyTabs { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
+#storyTabs[hidden],#storyHints[hidden],#storyContent[hidden],#missionGuideCurrent[hidden] { display:none; }
+#storyTabs button,#storyHints button,#storyContent button,#storyContent select { min-height:44px; min-width:44px; touch-action:manipulation; }
+#storyTabs button[aria-pressed="true"] { border-color:#85dfbd; color:#bdfce2; }
+#storyContent details { border-bottom:1px solid #355268; padding-block:4px; }
+#storyContent summary { min-height:44px; padding:10px 2px; font-size:14px; line-height:1.5; overflow-wrap:anywhere; }
+#storyContent p,#storyHintText { overflow-wrap:anywhere; line-height:1.65; font-size:14px; }
+#storyContent time { font-size:12px; color:#a5c4d5; }
+#storyContent button { max-width:100%; white-space:normal; margin:4px 3px 4px 0; }
+#storyContent select { font-size:16px; max-width:100%; color:#e6fff4; background:#123047; }
 body.beginner-practice { min-height:0; }
 .beginner-practice .app { width:100%; min-height:0; height:100dvh; padding:2px; grid-template-rows:minmax(0,1fr) auto; }
 .beginner-practice .topbar,.beginner-practice #openPlanetSettings,.beginner-practice #selectionBar,.beginner-practice #statusText,.beginner-practice #editHint { display:none!important; }

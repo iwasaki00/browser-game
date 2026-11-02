@@ -36,7 +36,7 @@ export const goldFinds=(s:State)=>[...s.explorationAreas[0].items,...s.retainedF
 export const gravelRemaining=(s:State)=>(s.gravelBatches??[]).reduce((n,b)=>n+Math.max(0,b.amount-b.processed),0);
 export const availableGrains=(s:State,b:GravelBatch)=>b.separated.map(uid=>goldFinds(s).find(f=>f.uid===uid)).filter((f):f is Find=>!!f&&f.state==='batch'&&!b.recovered.includes(f.uid));
 const owns=(s:State,id:string)=>id==='hand'||GOLD_TOOLS.includes(id)&&s.ownedTools.includes(id);
-function spend(s:State,n:number){const before=s.playerStats.stamina;s.playerStats.stamina=Math.max(0,before-n);s.playerStats.xp[3]+=.2;return before-s.playerStats.stamina;}
+function spend(s:State,n:number){if(s.automationAccess)return 0;const before=s.playerStats.stamina;s.playerStats.stamina=Math.max(0,before-n);s.playerStats.xp[3]+=.2;return before-s.playerStats.stamina;}
 export function storeGold(s:State,b:GravelBatch,f:Find,id:string){
  if(f.state!=='batch'||b.recovered.includes(f.uid)||!b.separated.includes(f.uid)||goldFinds(s).filter(f=>f.state==='stored').length>=CONFIG.capacity)return false;
  finishQuality(s,f,id);f.state='stored';f.tool=id;recordRecovery(s,f);b.recovered.push(f.uid);const stats=goldStats(s);if(!stats.found.includes(f.uid))stats.found.push(f.uid);s.playerStats.xp[2]+=.5;logEvent(s,'鉱物回収',f.uid);return true;
