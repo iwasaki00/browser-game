@@ -12,6 +12,7 @@
     "deepToolsAndSave": "PASS",
     "cameraArmAndNewGold": "PASS",
     "semiAutomationAndReload": "PASS",
+    "automationLineAndReload": "PASS",
     "errors": []
   },
   {
@@ -27,6 +28,7 @@
     "deepToolsAndSave": "PASS",
     "cameraArmAndNewGold": "PASS",
     "semiAutomationAndReload": "PASS",
+    "automationLineAndReload": "PASS",
     "errors": []
   }
 ]

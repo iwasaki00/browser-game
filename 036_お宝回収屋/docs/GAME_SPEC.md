@@ -1,3 +1,11 @@
+# Version 0.6.0 — AUTOMATION LINE
+
+3分野の基本工程を型付きプリセットで接続する。既存設備キューの予約と個体を再利用し、未知の探索・自動洗浄・自動売却・オフライン進行は行わない。工程間に容量と処理速度を設け、整理前品はtransit、濃縮物は手動精密回収待ちで保持。詳細は[AUTOMATION_LINE](AUTOMATION_LINE.md)。
+
+保存は任意のlinesとrewardLedgerを追加。単一タブのリース、保存連番・CAS・同期クローンを使用。大量履歴は詳細と資格判定を分離し、累計値を保持。[SAVE_OPTIMIZATION](SAVE_OPTIMIZATION.md)参照。
+
+---
+
 # Version 0.5.0 — SEMI AUTOMATION
 
 現行の設備・工程・保存・非表示停止・DEBUG LABは [SEMI_AUTOMATION](SEMI_AUTOMATION.md)。手動46道具と3分野を維持し、砂の選別、指定した川底対象の巻上げ、採取済み砂利の供給を設備へ任せます。完全自動探索・自動売却・新エリアは追加しません。

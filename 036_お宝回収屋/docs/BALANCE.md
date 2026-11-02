@@ -1,3 +1,9 @@
+# Version 0.6.0 比較
+
+既存の価格と通常報酬を維持する。自動化は操作を減らす一方で、搬送・選別・整理・精密回収の待ちを持つ。A手動、B個別設備、Cライン、D改善ラインを同じ初期100,000 FN・シード・能力で15モデル分継続採取し比較。[LINE_BALANCE](LINE_BALANCE.md)参照。追加収益がない場合は回収時間を算出せず、操作負担の改善として示す。人間の実プレイ時間とは異なる。
+
+---
+
 # Version 0.5.0 — SEMI AUTOMATION
 
 最新の1,500処理比較・300設備購入・24ゲーム時間の連続処理は [AUTOMATION_BALANCE](AUTOMATION_BALANCE.md)。生データはautomation-results-v050.json。

@@ -8,6 +8,7 @@
       "field": "B",
       "mode": "A",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000001,
       "operations": 2017,
       "gathered": 2842.658000000003,
@@ -168,6 +169,7 @@
       "field": "B",
       "mode": "B",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000001,
       "operations": 2214,
       "gathered": 3607.326750000004,
@@ -330,6 +332,31 @@
       "field": "B",
       "mode": "C",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "B104",
+        "tools": [
+          "B104"
+        ],
+        "support": [],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "transport",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "screen",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "organize",
+            "mode": "auto",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900.0000000000001,
       "operations": 2440,
       "gathered": 4671.815500000012,
@@ -505,6 +532,34 @@
       "field": "B",
       "mode": "D",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "B208",
+        "tools": [
+          "B208"
+        ],
+        "support": [
+          "B108",
+          "B110"
+        ],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "transport",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "screen",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "organize",
+            "mode": "auto",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900,
       "operations": 2562,
       "gathered": 5038.866750000011,
@@ -683,6 +738,7 @@
       "field": "R",
       "mode": "A",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000001,
       "operations": 1030,
       "gathered": 342,
@@ -843,6 +899,7 @@
       "field": "R",
       "mode": "B",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000001,
       "operations": 843,
       "gathered": 276,
@@ -1005,6 +1062,27 @@
       "field": "R",
       "mode": "C",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "R104",
+        "tools": [
+          "R104",
+          "R110"
+        ],
+        "support": [],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "pull",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "organize",
+            "mode": "auto",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900,
       "operations": 719,
       "gathered": 285,
@@ -1176,6 +1254,31 @@
       "field": "R",
       "mode": "D",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "R201",
+        "tools": [
+          "R201",
+          "R104",
+          "R110",
+          "R206"
+        ],
+        "support": [
+          "R101"
+        ],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "pull",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "organize",
+            "mode": "auto",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900.0000000000001,
       "operations": 859,
       "gathered": 378,
@@ -1351,6 +1454,7 @@
       "field": "G",
       "mode": "A",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000001,
       "operations": 1650,
       "gathered": 1517,
@@ -1513,6 +1617,7 @@
       "field": "G",
       "mode": "B",
       "initialFN": 100000,
+      "configuration": null,
       "seconds": 900.0000000000003,
       "operations": 1450,
       "gathered": 1619,
@@ -1677,6 +1782,37 @@
       "field": "G",
       "mode": "C",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "G203",
+        "tools": [
+          "G103",
+          "G203"
+        ],
+        "support": [],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "transport",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "screen",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "separate",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "precision",
+            "mode": "manual",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900.0000000000002,
       "operations": 1229,
       "gathered": 1823,
@@ -1858,6 +1994,45 @@
       "field": "G",
       "mode": "D",
       "initialFN": 100000,
+      "configuration": {
+        "primary": "G203",
+        "tools": [
+          "G202",
+          "G203",
+          "G205"
+        ],
+        "support": [
+          "G108"
+        ],
+        "policy": "fifo",
+        "stages": [
+          {
+            "id": "transport",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "magnet",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "screen",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "separate",
+            "mode": "auto",
+            "paused": false
+          },
+          {
+            "id": "precision",
+            "mode": "manual",
+            "paused": false
+          }
+        ]
+      },
       "seconds": 900.0000000000002,
       "operations": 1229,
       "gathered": 2167,

@@ -1,3 +1,23 @@
+# Version 0.6.0 — 検証結果
+
+- 自動テスト：351件成功、失敗0。既存282件を維持（区画移動の1件は新仕様の予約解除へ期待値更新）、保存9件、ライン33件、LAB・境界条件27件。
+- 型検査・本番ビルド成功。JS約181.7kB / gzip約66.0kB、CSS約20.2kB。
+- 既存ブラウザ7系統：探索UI、深層、露出・洗浄、川底、河原、砂浜道具、川底／河原道具すべて成功。[結果](regression-browser-results-v060.json)
+- 既存3設備：320/390/1280px、購入・予約・停止復元・別分野継続・非表示停止・タッチ対象指定・精密回収・旧LAB/Worker。[結果](automation-ui-results-v060.json)
+- ラインUI：320/390/1280px、タッチ、個別停止、中間在庫、川底移動確認、手動精密回収、8タブ・44旧＋15 AUTO＋20 LINE、加速比較、Worker比較／中止・JSON。LABを閉じた際のWorker終了も確認。[結果](line-ui-results-v060.json)
+- 重量物：390px、弱い磁石で失敗→R201/R104/R110/R206へ構成変更→明示的再指示→回収成功。[結果](line-retry-ui-v060.json)
+- 保存Phase 0：10,000履歴圧縮、進行中保存、最新緊急スナップショット、2タブ単一進行、所有権移動／再読込。[結果](save-phase0-v060.json)
+- 24ゲーム時間：3分野、毎時再読込24回、9,150件、履歴200、キュー最大5、保存約144kBで安定。非表示進行なし、二重移行同一。キュー64件上限と出力満杯は別の自動テストでも確認。[結果](line-stress-v060.json)
+- 本番Chrome/Edge：探索・回収・洗浄・保存復元・既存設備・本番ライン接続と整理成功。LINE/AUTOシナリオ・強制操作・比較Worker・デバッグ保存キーが本番バンドルにないことを検査。[結果](production-results-v060.json)
+- 継続採取100シード×3分野×4構成の測定条件・結果は[LINE_BALANCE](LINE_BALANCE.md)。実際の人間のプレイ時間ではない。
+- iPhone Safari実機は未確認。Chromiumのタッチ・縦画面による代替検証。
+
+## 再実行
+
+`npm.cmd test` / `npm.cmd run build` / `npm.cmd run balance:lines` / `npm.cmd run test:line-stress`。ブラウザ試験はlocalhost:5176で開発サーバーを起動し、`npm.cmd run test:line-browser` / `npm.cmd run test:automation-browser` / `npm.cmd run test:regression-browser` / `npm.cmd run test:save-browser`。`npm.cmd run test:production`はdistを独自のローカルサーバーで確認する。
+
+---
+
 # TEST_RESULTS — Version 0.5.0 / SEMI AUTOMATION
 
 ## 自動テスト

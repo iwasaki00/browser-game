@@ -1,8 +1,16 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.5.0 — SEMI AUTOMATION**
+**Version 0.6.0 — AUTOMATION LINE**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## 自動化ライン
+
+設備画面の「工程を接続・ライン管理」から、砂浜の搬送→選別→整理、川底の指定対象→引き上げ→整理、河原の搬送→粒径→比重→手動精密回収を接続できます。工程単位の停止、道具構成、優先順位、実在庫に基づく滞留表示に対応。洗浄・探索は手動です。保存履歴を集計し、複数タブの二重進行を防ぎます。
+
+[操作とライン仕様](docs/AUTOMATION_LINE.md) / [比較・投資効果](docs/LINE_BALANCE.md) / [保存最適化](docs/SAVE_OPTIMIZATION.md)。
+
+追加検証：`npm.cmd run balance:lines` / `npm.cmd run test:line-stress` / `npm.cmd run test:line-browser` / `npm.cmd run test:save-browser`。
 
 ## 半自動設備
 

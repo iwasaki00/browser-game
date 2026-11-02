@@ -1,3 +1,11 @@
+# Version 0.6.0 DEBUG LAB追補
+
+開発版で設定のバージョン表示を5回タップし、「探索」または「シナリオ」のAUTOMATION LINEを開く。既存8タブ・44通常シナリオ・15 AUTOシナリオを維持し、20 LINEシナリオ、工程・予約・個体・報酬確定状態のJSON、1/2/10倍比較、継続採取のA/B/C/D比較、中止、JSON/CSV保存を追加。
+
+LINE-17は加速比較、18/19は比較Workerを起動。比較は通常状態を変更しない。長時間完全試験はnpm.cmd run test:line-stress。[操作説明](AUTOMATION_LINE.md#debug-lab)参照。本番版のDEVモジュール除外と通常／テスト保存の分離を維持する。
+
+---
+
 # Version 0.5.0 DEBUG LAB追補
 
 設備試験・1/2/10倍・AUTO-01〜15・数値統計・Worker比較・コピー/保存は [SEMI_AUTOMATION](SEMI_AUTOMATION.md#debug-lab)。既存8タブ/44シナリオ、通常とテストの保存分離、開発版限定の開き方を維持します。

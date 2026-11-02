@@ -1,3 +1,9 @@
+# Version 0.6.0 追補
+
+新しい道具ID・価格の変更はない。使用可能46道具、126道具マスター、3設備B301/R301/G304を維持する。ラインIDはLINE-B/LINE-R/LINE-G、工程IDはtransport/screen/magnet/separate/pull/organize/precision。Find.stateにtransitを追加。設備IDとDEBUGシナリオIDのLINE-01〜20は別名前空間。工程はマスター材料の再抽選を行わない。
+
+---
+
 # Version 0.5.0 — 設備マスター連携
 
 126種のID・名称・価格は変更なし。手動道具availableは46種。B301/R301/G304をequipmentType=facilityとして別在庫・別購入経路で実装し、手動4枠へは入りません。catalogOnlyのうち3つが設備画面実装となり、純粋な未実装は77種です。
