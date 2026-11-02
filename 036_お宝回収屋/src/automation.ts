@@ -72,7 +72,7 @@ export function automationTick(s:State,seconds:number,visible=true){if(!visible|
  else if(j.stage==='screen'){if(b.screened>=b.amount-1e-8)j.stage='separate';else{if(!c.goldWork)beginGoldWork(c,b.id,screen);if(c.goldWork)goldMotion(c,dt/autoScreenSeconds*24,dt);}}
  else if(j.stage==='magnet'){if((b.magnetized??0)>=b.amount-1e-8)j.stage='screen';else{if(!c.goldWork)beginGoldWork(c,b.id,'G205');if(c.goldWork)goldMotion(c,dt/.6*24,dt);}}
  else{if(b.processed>=b.amount-1e-8){j.remaining=0;j.processed=j.amount;}else{if(!c.goldWork)beginGoldWork(c,b.id,j.primary);if(c.goldWork){if(c.goldWork.mode==='sluice')goldTick(c,dt);else goldMotion(c,dt/.6*24,dt);}}}
- j.goldWork=c.goldWork;s.goldStats=c.goldStats;j.processed=Math.max(0,b.processed-(b.amount-j.amount));j.remaining=Math.max(0,j.amount-j.processed);j.progress=Math.min(1,(j.fed/j.amount+Math.min(1,b.screened/b.amount)+j.processed/j.amount)/3);
+ if(c.goldWork)c.goldWork.work=Math.min(c.goldWork.required,c.goldWork.work);j.goldWork=c.goldWork;s.goldStats=c.goldStats;j.processed=Math.max(0,b.processed-(b.amount-j.amount));j.remaining=Math.max(0,j.amount-j.processed);j.progress=Math.min(1,(j.fed/j.amount+Math.min(1,b.screened/b.amount)+j.processed/j.amount)/3);
  for(const f of availableGrains(s,b))if(!j.outputs.includes(f.uid)){j.outputs.push(f.uid);f.automationMachine=d.id;m.found++;}
  }
  for(const f of allAutoFinds(s))if(f.state==='stored'&&!before.has(f.uid)){f.automationMachine=d.id;if(!j.outputs.includes(f.uid)){j.outputs.push(f.uid);m.found++;}}
@@ -80,7 +80,8 @@ export function automationTick(s:State,seconds:number,visible=true){if(!visible|
  m.processed+=Math.max(0,j.processed-previous);if(j.field==='B'?s.sandBatches.find(b=>b.id===j.source)?.processed:j.remaining<1e-7)complete(s,j,m);
  }}}
 export function automationReport(s:State,id:MachineId){const m=auto(s).machines[id],jobs=liveJobs(s,id),out=machineOutput(s,id).length,waiting=queuedAmount(s,id),d=definition(id);let bottleneck='データ不足',advice='材料と処理の実績を集めよう';
- if(out>=d.output||stored(s).length>=CONFIG.capacity){bottleneck=id==='G304'?'精密回収待ちが増えています':'回収品の洗浄待ちが増えています';advice=id==='G304'?'選別台で粒を回収しよう。吸引瓶は反復回収を減らせます':'洗浄して次の出力を受け取ろう';}
+ if(stored(s).length>=CONFIG.capacity){bottleneck='回収品の洗浄待ちが増えています';advice='洗浄して保管を空けよう';}
+ else if(out>=d.output){bottleneck=id==='G304'?'精密回収待ちが増えています':'回収品の洗浄待ちが増えています';advice=id==='G304'?'選別台で粒を回収しよう。吸引瓶は反復回収を減らせます':'洗浄して次の出力を受け取ろう';}
  else if(jobs.some(j=>j.state==='failed')){bottleneck='回収条件が不足しています';advice='失敗理由に合う道具構成で再指示しよう';}
  else if(m&&m.elapsed+1e-7>=10){if(waiting>0){bottleneck=id==='B301'?'砂の選別待ちがあります':id==='R301'?'川底の引き上げ待ちがあります':'砂利の工程待ちがあります';advice=id==='G304'?'進行中の工程を確認。多段ふるい・スルースで該当工程を改善できます':'ほかの探索を進めながら処理を待てます';}else{bottleneck='材料の供給が不足しています';advice='手作業で採取、または対象を指定しよう';}}
  const capacities=automationCapacities(s,id);if(id==='G304'&&waiting>0&&m&&m.elapsed+1e-7>=10&&out<d.output&&!jobs.some(j=>j.state==='failed')){const stage=Object.entries(capacities).filter((r):r is [string,number]=>typeof r[1]==='number').sort((a,b)=>a[1]-b[1])[0]?.[0];bottleneck=stage==='粒径選別'?'粒径選別が供給に追いついていません':stage==='比重選別'?'比重選別の処理待ちがあります':'砂利の供給工程待ちがあります';advice=stage==='粒径選別'&&!jobs.some(j=>j.tools.includes('G202'))?'多段ふるいを構成に入れると粒径選別が速くなります':stage==='比重選別'&&jobs.some(j=>j.primary!=='G203')?'スルースの水流処理能力と比較しよう':'実際の工程能力を確認し、ほかの探索中に処理を進めよう';}
