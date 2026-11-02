@@ -1,3 +1,6 @@
+import type {StageId} from './lines';
+import {sieveSettings} from './beach-tools';
+import {recoveryCount} from './ledger';
 import {tool,CONFIG} from './data';
 import {plot,stored,sortBatch,type State,type Plot,type Find} from './engine';
 import {batchRemaining} from './tool-value';
@@ -15,7 +18,7 @@ export const machines:MachineDefinition[]=[
  {id:'G304',field:'G',role:'採取済み砂利を粒径・比重選別へ搬送。粒の精密回収は手作業',requires:[['G103','G202'],['G102','G201','G203']],rate:180,input:240,output:12,unit:'供給単位/分'}
 ];
 export interface Machine {id:MachineId;running:boolean;status:MachineStatus;reason:string;active?:string;processed:number;uptime:number;elapsed:number;stopped:number;found:number;input:number;fn:number;}
-export interface AutoJob {id:string;order:number;field:'B'|'R'|'G';machine:MachineId;source:string;amount:number;processed:number;remaining:number;progress:number;state:'queued'|'working'|'failed'|'done';reason:string;outputs:string[];tools:string[];primary:string;plot?:Plot;session?:RiverSession;goldWork?:GoldWork;sandStart?:number;stage:'feed'|'screen'|'magnet'|'separate'|'pull';fed:number;}
+export interface AutoJob {lineId?:string;lineStage?:StageId;id:string;order:number;field:'B'|'R'|'G';machine:MachineId;source:string;amount:number;processed:number;remaining:number;progress:number;state:'queued'|'working'|'failed'|'done';reason:string;outputs:string[];tools:string[];primary:string;plot?:Plot;session?:RiverSession;goldWork?:GoldWork;sandStart?:number;stage:'feed'|'screen'|'magnet'|'separate'|'pull';fed:number;}
 export interface Automation {version:1;next:number;machines:Partial<Record<MachineId,Machine>>;jobs:AutoJob[];history:{id:string;machine:MachineId;amount:number;outputs:number;state:string;reason:string}[];}
 export const auto=(s:State):Automation=>s.automation??={version:1,next:1,machines:{},jobs:[],history:[]};
 export const definition=(id:MachineId)=>machines.find(m=>m.id===id)!;
@@ -23,12 +26,12 @@ export const machineName=(id:MachineId)=>tool(id)!.name;
 // The feeder's compact shaker takes 3 seconds per normal work unit. Hand shaking remains faster.
 export const autoScreenSeconds=3;
 export function requirement(s:State,id:MachineId){const d=definition(id);return d.requires.every(group=>group.some(t=>s.ownedTools.includes(t)));}
-export function machineUnlocked(s:State,id:MachineId){return id==='B301'?s.sandSampled||s.collectedTreasures.length>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
+export function machineUnlocked(s:State,id:MachineId){return id==='B301'?s.sandSampled||recoveryCount(s)>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
 export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||s.currentFN<tool(id)!.priceFN)return false;s.currentFN-=tool(id)!.priceFN;auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};logEvent(s,'設備購入',id);return true;}
-export function setMachineRunning(s:State,id:MachineId,running:boolean){const m=auto(s).machines[id];if(!m)return false;m.running=running;m.status=running?'材料待ち':'停止中';m.reason=running?'登録された作業を待っています':'進捗を保持して一時停止';return true;}
+export function setMachineRunning(s:State,id:MachineId,running:boolean){const m=auto(s).machines[id];if(!m)return false;m.running=running;const line=s.lines?.[definition(id).field];if(line)line.running=running;m.status=running?'材料待ち':'停止中';m.reason=running?'登録された作業を待っています':'進捗を保持して一時停止';return true;}
 export const liveJobs=(s:State,id?:MachineId)=>auto(s).jobs.filter(j=>j.state!=='done'&&(!id||j.machine===id));
 export const allAutoFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
-export function machineOutput(s:State,id:MachineId){const uids=new Set(auto(s).jobs.filter(j=>j.machine===id).flatMap(j=>j.outputs));for(const f of allAutoFinds(s))if(f.automationMachine===id&&(f.state==='stored'||f.state==='batch'))uids.add(f.uid);return allAutoFinds(s).filter(f=>uids.has(f.uid)&&(id==='G304'?f.state==='batch':f.state==='stored'));}
+export function machineOutput(s:State,id:MachineId){const uids=new Set(auto(s).jobs.filter(j=>j.machine===id).flatMap(j=>j.outputs));for(const f of allAutoFinds(s))if(f.automationMachine===id&&(f.state==='stored'||f.state==='transit'||f.state==='batch'))uids.add(f.uid);return allAutoFinds(s).filter(f=>uids.has(f.uid)&&(id==='G304'?f.state==='batch':f.state==='stored'||f.state==='transit'));}
 function queuedAmount(s:State,id:MachineId){if(id==='R301')return liveJobs(s,id).length;return liveJobs(s,id).reduce((n,j)=>n+j.remaining,0);}
 export function enqueueMaterial(s:State,id:MachineId,source:string,primary='',tools:string[]=[]){
  if(!machines.some(m=>m.id===id)||new Set([primary,...tools].filter(Boolean)).size>4)return {ok:false,reason:'設備または道具構成が不正です。道具は最大4種です'};
@@ -41,7 +44,7 @@ export function enqueueMaterial(s:State,id:MachineId,source:string,primary='',to
  tools=[...new Set([primary,...tools])].filter(t=>s.ownedTools.includes(t)).slice(0,4);if(!tools.includes(primary))return {ok:false,reason:'必要な道具を所持していません'};
  const order=a.next++,job:AutoJob={id:`${s.playerId}:auto:${order}`,order,field:d.field,machine:id,source,amount,processed:0,remaining:amount,progress:0,state:'queued',reason:'作業待ち',outputs:[],tools,primary,...(id==='B301'?{sandStart:s.sandBatches.find(b=>b.id===source)!.screenedUnits??0}:{}),stage:id==='G304'?'feed':'pull',fed:0,...(riverPlot?{plot:riverPlot}:{})};
  if(id==='B301')s.sandBatches.find(b=>b.id===source)!.automationJob=job.id;else if(id==='G304')s.gravelBatches!.find(b=>b.id===source)!.automationJob=job.id;else plot(s).items.find(f=>f.uid===source)!.automationJob=job.id;
- a.jobs.push(job);m.input+=amount;logEvent(s,'設備作業登録',job.id);return {ok:true,reason:'作業キューへ登録しました',job};
+ const line=s.lines?.[d.field];if(line){job.lineId=line.id;job.lineStage=id==='G304'?'transport':id==='R301'?'pull':'transport';}a.jobs.push(job);m.input+=amount;logEvent(s,'設備作業登録',job.id);return {ok:true,reason:'作業キューへ登録しました',job};
 }
 export function enqueueMaterials(s:State,id:'B301'|'G304',sources:string[],primary='',tools:string[]=[]){let count=0;for(const source of sources)if(enqueueMaterial(s,id,source,primary,tools).ok)count++;return {count,reason:count?`${count}袋を投入しました。容量を超える袋は在庫に残ります`:'投入可能な材料または入力の空きがありません'};}
 function release(s:State,j:AutoJob){const b=j.field==='B'?s.sandBatches.find(b=>b.id===j.source):j.field==='G'?s.gravelBatches?.find(b=>b.id===j.source):allAutoFinds(s).find(f=>f.uid===j.source);if(b?.automationJob===j.id)delete b.automationJob;}
@@ -54,15 +57,15 @@ function complete(s:State,j:AutoJob,m:Machine){j.state='done';j.progress=1;j.rem
 // No wall-clock timestamps are used: callers provide visible-session game seconds only.
 export function automationTick(s:State,seconds:number,visible=true){if(!visible||!Number.isFinite(seconds)||seconds<=0)return;
  // Fixed small slices make 1x / 2x / 10x independent of scheduling and output capacity.
- let remaining=seconds;while(remaining>1e-8){const dt=Math.min(.1,remaining);remaining-=dt;for(const d of machines){const m=auto(s).machines[d.id];if(!m)continue;m.elapsed+=dt;
- const jobs=liveJobs(s,d.id),j=jobs.find(j=>j.state!=='failed');m.active=j?.id;
+ let remaining=seconds;while(remaining>1e-8){const dt=Math.min(.1,remaining);remaining-=dt;for(const d of machines){const m=auto(s).machines[d.id];if(!m||s.lines?.[d.field]&&!s.lineAccess)continue;m.elapsed+=dt;
+ const jobs=liveJobs(s,d.id).filter(j=>!j.lineId||j.lineId===s.lineAccess),j=jobs.find(j=>j.state!=='failed');m.active=j?.id;
  if(!m.running){m.status='停止中';m.reason='進捗を保持して一時停止';m.stopped+=dt;continue;}
  if(!requirement(s,d.id)){m.status='処理不能';m.reason='前提道具が不足しています';m.stopped+=dt;continue;}
  if(!j){m.status=jobs.length?'処理不能':'材料待ち';m.reason=jobs.length?'失敗した作業は道具を変更して再指示してください':'材料・登録対象を待っています';m.stopped+=dt;continue;}
  if(machineOutput(s,d.id).length>=d.output||d.id!=='G304'&&stored(s).length>=CONFIG.capacity){m.status='出力満杯';m.reason=d.id==='G304'?'選別台で粒を精密回収してください':'洗浄して保管を空けてください';m.stopped+=dt;continue;}
  m.status='稼働中';m.reason=j.field==='G'?({feed:'砂利を供給中',screen:'粒径選別中',magnet:'砂鉄分離中',separate:'比重選別中',pull:'処理中'}[j.stage]):j.field==='R'?'指定対象を巻上げ中':'砂を選別中';j.state='working';m.uptime+=dt;
  const before=new Set(allAutoFinds(s).filter(f=>f.state==='stored').map(f=>f.uid)),previous=j.processed;
- if(j.field==='B'){const b=s.sandBatches.find(b=>b.id===j.source);if(!b){failure(j,m,'砂バッチの参照がありません');continue;}const c=context(s,j),r=sortBatch(c,b,'sieve',d.rate/60*dt,'B104',1);j.processed=Math.max(0,(b.screenedUnits??0)-(j.sandStart??0));j.remaining=Math.max(0,j.amount-j.processed);j.progress=j.amount?Math.min(1,j.processed/j.amount):0;}
+ if(j.field==='B'){const b=s.sandBatches.find(b=>b.id===j.source);if(!b){failure(j,m,'砂バッチの参照がありません');continue;}const c=context(s,j),r=sortBatch(c,b,'sieve',d.rate/60*dt,s.lineScreenTool??'B104',s.lineScreenTool?sieveSettings(c,s.lineScreenTool,'fine').fine:1);j.processed=Math.max(0,(b.screenedUnits??0)-(j.sandStart??0));j.remaining=Math.max(0,j.amount-j.processed);j.progress=j.amount?Math.min(1,j.processed/j.amount):0;}
  else if(j.field==='R'){const c=context(s,j),f=j.plot!.items[0];if(f.state!=='buried'){if(f.state==='stored'||f.state==='paid'){j.processed=1;j.remaining=0;}else failure(j,m,'対象の状態が変わっています');}
  else{const reason=riverCheck(c,j.primary,f);if(reason){failure(j,m,reason);continue;}if(!c.riverSession){const r=riverStart(c,j.primary,f.x,f.y,riverCapabilities(c,j.primary).rope);if(!r.ok){failure(j,m,r.reason);continue;}}
  const r=riverPull(c,d.rate*dt);j.session=c.riverSession;s.riverMetrics=c.riverMetrics;j.progress=r.recovered?1:j.session?.progress??0;j.processed=j.progress;j.remaining=1-j.progress;if(!r.ok){failure(j,m,r.reason);continue;}}

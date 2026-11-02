@@ -33,5 +33,5 @@ try{for(const [width,height]of [[320,568],[375,667],[390,844],[430,932]]){
   await page.screenshot({path:fileURLToPath(new URL(`after-${width}-game.png`,dir))});
  }
  assert.deepEqual(errors,[]);results.push({size:[width,height],phases,touch:before?'not run':'CDP touch PASS',save:before?'fixture only':'old progress / favorite / protected record unchanged',errors});await context.close();console.log(width,before?'BASELINE':'PASS');
- }await writeFile(new URL(before?'before.json':process.argv.includes('--acceptance')?'mobile-ui-results.json':'ui-results.json',dir),JSON.stringify({browser:h.browser.version(),type:'PC Chrome; emulated safe insets and viewport changes; not iPhone Safari',results},null,2));
+ }await writeFile(new URL(before?'before.json':(process.argv.includes('--acceptance')||process.argv.includes('--final-audit'))?'mobile-ui-results.json':'ui-results.json',dir),JSON.stringify({browser:h.browser.version(),type:'PC Chrome; emulated safe insets and viewport changes; not iPhone Safari',results},null,2));
 }finally{await h.close();}

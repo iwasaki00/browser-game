@@ -1,3 +1,4 @@
+import {issueUID} from './ledger';
 import {isGold,grainProfile,storeGold,type GravelBatch} from './gold';
 // Loaded exclusively through the development-only DEBUG LAB import.
 import {tools,treasure,CONFIG} from './data';
@@ -13,7 +14,7 @@ export function equip(s:State,id:string){if(id!=='hand'&&!grant(s,id))return fal
 let serial=0;
 export function spawn(s:State,id:string,options:Partial<Find>={}){
  const t=treasure(id);if(!t)throw Error('未知のお宝ID');const state=options.state??'buried';
- const f:Find={...options,id,uid:`lab:${s.playerId}:${Date.now()}:${++serial}`,x:bounded(options.x??180,0,359),y:bounded(options.y??245,0,279),depth:bounded(options.depth??20,0,plot(s).beachDepthVersion===1?600:280),weight:bounded(options.weight??t.weight,.01,10000),material:options.material??t.material,magnetic:options.magnetic??t.magnetic,quality:bounded(options.quality??1,.01,2),initialQuality:bounded(options.quality??1,.01,2),rarity:options.rarity??t.rarity,areaId:plot(s).areaId??'B-A',state:'buried',tool:'hand'};
+ const f:Find={...options,id,uid:s.rewardLedger?issueUID(s):`lab:${s.playerId}:${Date.now()}:${++serial}`,x:bounded(options.x??180,0,359),y:bounded(options.y??245,0,279),depth:bounded(options.depth??20,0,plot(s).beachDepthVersion===1?600:280),weight:bounded(options.weight??t.weight,.01,10000),material:options.material??t.material,magnetic:options.magnetic??t.magnetic,quality:bounded(options.quality??1,.01,2),initialQuality:bounded(options.quality??1,.01,2),rarity:options.rarity??t.rarity,areaId:plot(s).areaId??'B-A',state:'buried',tool:'hand'};
  if(isGold(s)){f.grain??=grainProfile[id]?.grain??1;f.density??=grainProfile[id]?.density??2.7;f.captureRank??=.5;f.goldCapture??=0;
   if(state==='buried'){const p=plot(s);let site=p.goldSites?.find(t=>t.id===f.goldSite);if(!site){site={id:'lab-site:'+f.uid,x:f.x,y:f.y,total:8,collected:0,coarse:.5,items:[],rich:false};(p.goldSites??=[]).push(site);}f.goldSite=site.id;f.goldOffset??=site.collected+.3;if(!site.items.includes(f.uid))site.items.push(f.uid);}
  }

@@ -1,3 +1,4 @@
+import {compactHistory} from './ledger';
 import {beachProfiles,equippedBeach} from './beach-tools';
 import {treasure} from './data';
 import type {Find,State,Batch} from './engine';
@@ -38,7 +39,7 @@ export function finishQuality(s:State,f:Find,id:string){
 export function recordRecovery(s:State,f:Find){
  if(f.recoveryRecorded)return;f.recoveryRecorded=true;
  const history=s.recoveryHistory??(s.recoveryHistory=[]),last=history.at(-1)?.digsAt;
- history.push({time:s.playTime,surveyed:!!(f.plannedRecovery??f.surveyed),tool:f.excavationTool??f.tool,digs:last===undefined?null:Math.max(0,s.digs-last),digsAt:s.digs,evaluation:Math.round(treasure(f.id).baseValueFN*f.quality),loss:f.qualityLoss??0,protected:!!f.damagePrevented});
+ history.push({time:s.playTime,surveyed:!!(f.plannedRecovery??f.surveyed),tool:f.excavationTool??f.tool,digs:last===undefined?null:Math.max(0,s.digs-last),digsAt:s.digs,evaluation:Math.round(treasure(f.id).baseValueFN*f.quality),loss:f.qualityLoss??0,protected:!!f.damagePrevented});compactHistory(s);
 }
 export function batchRemaining(b:Batch){if(b.processed)return 0;return Math.max(0,b.cells-(b.screenedUnits??0))+Object.values(b.residueWork??{}).reduce((a,v)=>a+v,0);}
 export const sandRemaining=(s:State)=>s.sandBatches.reduce((a,b)=>a+batchRemaining(b),0);

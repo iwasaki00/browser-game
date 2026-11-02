@@ -1,0 +1,132 @@
+{
+  "version": "2.0.0-rc.4",
+  "browser": "156.0.8078.76",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "environment": "PC Chrome headless 375x667 DPR3; real wall time; not iPhone",
+  "phases": [
+    {
+      "kind": "normal",
+      "samples": [
+        {
+          "phaseSeconds": 30.298,
+          "seconds": 30.295,
+          "fps": 59.94388512955933,
+          "drawFps": 59.94388512955933,
+          "rendererTaskPercent": 16.77104472685261,
+          "heap": 1929464,
+          "documents": 1,
+          "nodes": 1692,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 60.652,
+          "seconds": 30.324,
+          "fps": 59.95251286110012,
+          "drawFps": 59.95251286110012,
+          "rendererTaskPercent": 16.102654662973222,
+          "heap": 1948636,
+          "documents": 1,
+          "nodes": 1694,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 90.958,
+          "seconds": 30.274,
+          "fps": 59.95243443218603,
+          "drawFps": 59.95243443218603,
+          "rendererTaskPercent": 16.509912796459005,
+          "heap": 1981564,
+          "documents": 1,
+          "nodes": 1694,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 121.314,
+          "seconds": 30.317,
+          "fps": 59.96635551010984,
+          "drawFps": 59.96635551010984,
+          "rendererTaskPercent": 15.814137282712672,
+          "heap": 2009436,
+          "documents": 1,
+          "nodes": 1694,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 151.627,
+          "seconds": 30.276,
+          "fps": 59.94847403884265,
+          "drawFps": 59.94847403884265,
+          "rendererTaskPercent": 14.307821376667984,
+          "heap": 2009684,
+          "documents": 1,
+          "nodes": 1694,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 181.957,
+          "seconds": 30.293,
+          "fps": 59.9478427359456,
+          "drawFps": 59.9478427359456,
+          "rendererTaskPercent": 14.776341068893801,
+          "heap": 2010576,
+          "documents": 1,
+          "nodes": 1692,
+          "jsEventListeners": 165
+        },
+        {
+          "phaseSeconds": 212.356,
+          "seconds": 30.375,
+          "fps": 59.91769547325103,
+          "drawFps": 59.91769547325103,
+          "rendererTaskPercent": 13.030485596707813,
+          "heap": 1956432,
+          "documents": 1,
+          "nodes": 1690,
+          "jsEventListeners": 165
+        }
+      ],
+      "actions": 0,
+      "initial": {
+        "heap": 1772496,
+        "documents": 1,
+        "nodes": 1692,
+        "jsEventListeners": 165
+      },
+      "final": {
+        "heap": 1964828,
+        "documents": 1,
+        "nodes": 1692,
+        "jsEventListeners": 165
+      },
+      "heapDelta": 192332,
+      "domDelta": 0,
+      "favorite": "PRESERVED",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "current": {
+    "kind": "scan",
+    "samples": [
+      {
+        "phaseSeconds": 30.462,
+        "seconds": 30.457,
+        "fps": 59.78921101881341,
+        "drawFps": 58.96838165282201,
+        "rendererTaskPercent": 23.431434481400007,
+        "heap": 5847860,
+        "documents": 1,
+        "nodes": 1797,
+        "jsEventListeners": 181
+      }
+    ],
+    "actions": 3,
+    "initial": {
+      "heap": 5457436,
+      "documents": 1,
+      "nodes": 1784,
+      "jsEventListeners": 178
+    }
+  },
+  "elapsedSeconds": 259.123
+}

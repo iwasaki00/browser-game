@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "browser": "156.0.8078.76",
+  "rows": [
+    "8 SCAN / CLASSIC / FREE transitions and 10 menu cycles PASS",
+    "7 type/size configurations: actual add / select / delete PASS",
+    "rapid launch / real pause-resume / flight rotation / real failure / restore input / relaunch / RESET PASS",
+    "HUGE / overview / zoom / 100x / RESET PASS",
+    "malformed legacy JSON preserved; temporary play, input and draw loop continue PASS"
+  ],
+  "errors": [],
+  "scope": "isolated browser contexts; no user saves; arbitrary uncaught engine exceptions not injected"
+}

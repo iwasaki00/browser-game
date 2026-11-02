@@ -4,7 +4,7 @@ const h=await harness();
 try{
  const context=await h.browser.newContext({viewport:{width:375,height:667},isMobile:true,hasTouch:true}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack));const cdp=await context.newCDPSession(page);
  await page.addInitScript(()=>{window.realAudioContexts=[];const Native=window.AudioContext;if(Native)window.AudioContext=class extends Native{constructor(...args){super(...args);realAudioContexts.push(this);}};});
- await page.goto(h.url);assert.equal(await page.evaluate(()=>realAudioContexts.length),0);
+ await page.goto(h.url);if(await page.locator('#beginnerOffer').isVisible())await page.locator('#beginnerLater').click();assert.equal(await page.evaluate(()=>realAudioContexts.length),0);
  await tap(page,cdp,'#openMenuSettings');await tap(page,cdp,'#openDisplaySettings');assert.equal(await page.locator('#soundToggle').getAttribute('aria-pressed'),'false');await tap(page,cdp,'#soundToggle');
  await page.waitForFunction(()=>document.querySelector('#audioDiagnostics').textContent.includes('AudioContext: running')&&document.querySelector('#audioDiagnostics').textContent.includes('音声時計: 進行'));
  const first=await page.locator('#audioDiagnostics').textContent();assert.match(first,/テスト音: sent/);assert.equal(await page.evaluate(()=>realAudioContexts.length),1);

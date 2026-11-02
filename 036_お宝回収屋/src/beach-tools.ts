@@ -1,3 +1,4 @@
+import {recoveryCount} from './ledger';
 import type {State,Plot} from './engine';
 export const BEACH_ADDED=['B103','B106','B107','B108','B109','B110','B202','B203','B204','B205','B206','B207','B208','B209','B302'];
 export type BeachKind='掘削'|'探知'|'回収'|'選別'|'補助';
@@ -30,7 +31,7 @@ export const sieveTool=(id:string)=>beachProfiles[id]?.kind==='選別';
 export const equippedBeach=(s:State,id:string)=>s.equippedTools.includes(id)&&s.ownedTools.includes(id);
 export const plotDepthScale=(p:Plot)=>p.beachDepthVersion===1?600:280;
 export const beachCapacity=(s:State)=>equippedBeach(s,'B110')?48:24;
-export function beachUnlocks(s:State){const n=s.collectedTreasures.length;return Object.fromEntries(BEACH_ADDED.map(id=>[id,id==='B106'?n>=2:['B107','B109'].includes(id)?n>=5:id==='B108'?s.sandSampled||n>=8:id==='B103'?n>=12:id==='B203'?n>=30||s.digs>=80:id==='B302'?n>=50||s.digs>=180:['B204','B209'].includes(id)?n>=30:['B205','B206'].includes(id)?n>=35:n>=20]));}
+export function beachUnlocks(s:State){const n=recoveryCount(s);return Object.fromEntries(BEACH_ADDED.map(id=>[id,id==='B106'?n>=2:['B107','B109'].includes(id)?n>=5:id==='B108'?s.sandSampled||n>=8:id==='B103'?n>=12:id==='B203'?n>=30||s.digs>=80:id==='B302'?n>=50||s.digs>=180:['B204','B209'].includes(id)?n>=30:['B205','B206'].includes(id)?n>=35:n>=20]));}
 export function sieveSettings(s:State,id:string,mesh:'fine'|'coarse'='fine'){
  const p=beachProfiles[id];let units=p?.units??3,cost=p?.cost??6,fine=id==='B208'&&mesh==='fine'?.5:1;
  if(id==='B208'&&mesh==='coarse')units=40;

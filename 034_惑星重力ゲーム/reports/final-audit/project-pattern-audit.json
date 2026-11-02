@@ -1,0 +1,6 @@
+{
+  "scope": "project text sources and reports; excludes .git, node_modules and old release-preview; no matched values logged",
+  "files": 569,
+  "findings": [],
+  "limitations": "pattern scan only, not a proof of no secrets"
+}

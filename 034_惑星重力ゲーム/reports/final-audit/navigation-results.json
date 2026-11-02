@@ -1,0 +1,13 @@
+{
+  "browser": "156.0.8078.76",
+  "device": "PC Chrome CDP touch; iPhone UNVERIFIED",
+  "results": [
+    {
+      "navigation": "CDP touch: masked destinations, 100x target changes, DS01 arrival, checkpoint reload, return CLEAR",
+      "camera": "FOLLOW release / resume",
+      "replay": "protected CINEMATIC, pause / resume / 4x / seek / restart / manual / rotation / end / close / reload",
+      "archive": "unchanged by playback",
+      "errors": []
+    }
+  ]
+}

@@ -17,6 +17,7 @@ try{
   await page.setViewportSize({width,height});await page.clock.runFor(100);const board=await page.locator('#spaceFrame').boundingBox();for(const id of ['launchButton','resetButton','openPlanetSettings','openMenuSettings']){const b=await page.locator('#'+id).boundingBox();assert.ok(b&&b.x>=0&&b.y>=0&&b.x+b.width<=width+1&&b.y+b.height<=height+1,id);}
   await page.locator('#openMenuSettings').click();const panel=await page.locator('#menuPanel').boundingBox();assert.ok(panel.y>=0&&panel.y+panel.height<=height);await page.locator('#closeMenuSettings').click();const scroll=await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.scrollHeight]);assert.ok(scroll[0]<=width&&scroll[1]<=height+1);await page.screenshot({path:fileURLToPath(new URL(`qa-${width}x${height}.png`,dir))});result.screens.push({width,height,board,panel,status:'PASS'});
  }
+ await page.clock.resume();
  result.storage=await page.evaluate(async()=>{
   const {GalleryStore}=await import('./js/gallery-store.js'),{HomewardArchive}=await import('./js/homeward-archive.js');const gallery=new GalleryStore(),archive=new HomewardArchive(),record=(await gallery.list())[0];assertAvailable(record);
   const now=Date.now();for(let i=0;i<30;i++){const id='qa-favorite-'+i;await gallery.save({...record,id,createdAt:now+i});if(!await gallery.setFavorite(id,true))throw Error('favorite limit early');}

@@ -1,0 +1,21 @@
+{
+  "browser": "156.0.8078.76",
+  "status": "PASS",
+  "context": "native Chrome Web Audio, not a mocked AudioContext; CDP touch gestures",
+  "first": "AudioContext: running\n開始待ち: なし / 再開試行: 0\nテスト音: sent / 出力要求: 1\n音声時計: 進行\nAudioSession: unsupported\nエラー: なし",
+  "resumed": "AudioContext: running\n開始待ち: なし / 再開試行: 1\nテスト音: sent / 出力要求: 2\n音声時計: 未計測\nAudioSession: unsupported\nエラー: なし",
+  "checks": [
+    "initial OFF / no context before gesture",
+    "test sound sent and clock advancing",
+    "suspend / gesture resume",
+    "synthetic visibility interruption / gesture recovery",
+    "closed native context recreation",
+    "mute / unmute",
+    "settings and menu pause",
+    "saved ON survives reload; no automatic context creation before gesture"
+  ],
+  "bgm": "NOT APPLICABLE: existing game has synthesized effects only; no BGM added",
+  "audibleOutput": "UNVERIFIED: headless output graph only",
+  "iPhone": "UNVERIFIED",
+  "errors": []
+}

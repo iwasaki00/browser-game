@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "browser": "156.0.8078.76",
+  "checks": "subdirectory modules / native launch / RESET / saved-record replay screen / PNG Worker 1080 / runtime allowlist excludes tests and reports",
+  "runtimeFiles": 68,
+  "requests": 77,
+  "externalRequests": 0,
+  "errors": [],
+  "deployment": "NOT PERFORMED; local Pages-like prefix only"
+}

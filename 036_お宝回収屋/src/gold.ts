@@ -1,3 +1,4 @@
+import {compactHistory,retiredUID} from './ledger';
 import {GOLD_ADDED,goldScreen,goldProcessing} from './field-tools';
 import {CONFIG,treasure} from './data';
 import type {State,Plot,Find} from './engine';
@@ -9,7 +10,7 @@ export const GOLD_TOOLS=[...GOLD_ADDED,'G101','G102','G103','G105','G110','G201'
 export interface GravelSite {id:string;x:number;y:number;total:number;collected:number;coarse:number;items:string[];rich:boolean;announced?:boolean;}
 export interface GravelBatch {automationJob?:string;fineScreened?:number;magnetized?:number;magnetRecovered?:string[]; id:string;plotId:string;siteId:string;x:number;y:number;amount:number;coarse:number;collectedTool:string;screened:number;processed:number;handProcessed:number;contents:string[];separated:string[];recovered:string[];losses:Record<string,number>;passes:number;reprocessCursor?:number;}
 export interface GoldWork {prepared?:boolean;fineFraction?:number;magneticFraction?:number; batchId:string;tool:string;mode:'pan'|'screen'|'sluice'|'magnet';start:number;load:number;work:number;required:number;rough:number;strokes:number;reprocess:boolean;}
-export interface GoldStatistics {found:string[];panCompleted:number;specialSites:{plotId:string;siteId:string;time:number}[];}
+export interface GoldStatistics {totalFound?:number;totalSpecialSites?:number;found:string[];panCompleted:number;specialSites:{plotId:string;siteId:string;time:number}[];}
 export const isGold=(s:State)=>s.explorationAreas[0].areaId?.startsWith('G-')??false;
 export function goldStats(s:State){return s.goldStats??={found:[],panCompleted:0,specialSites:[]};}
 const bookCount=(s:State,prefix:string)=>Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith(prefix)).reduce((n,[,d])=>n+d.count,0);
@@ -39,7 +40,7 @@ const owns=(s:State,id:string)=>id==='hand'||GOLD_TOOLS.includes(id)&&s.ownedToo
 function spend(s:State,n:number){if(s.automationAccess)return 0;const before=s.playerStats.stamina;s.playerStats.stamina=Math.max(0,before-n);s.playerStats.xp[3]+=.2;return before-s.playerStats.stamina;}
 export function storeGold(s:State,b:GravelBatch,f:Find,id:string){
  if(f.state!=='batch'||b.recovered.includes(f.uid)||!b.separated.includes(f.uid)||goldFinds(s).filter(f=>f.state==='stored').length>=CONFIG.capacity)return false;
- finishQuality(s,f,id);f.state='stored';f.tool=id;recordRecovery(s,f);b.recovered.push(f.uid);const stats=goldStats(s);if(!stats.found.includes(f.uid))stats.found.push(f.uid);s.playerStats.xp[2]+=.5;logEvent(s,'鉱物回収',f.uid);return true;
+ finishQuality(s,f,id);f.state='stored';f.tool=id;if(f.lineId&&s.lines?.G?.id===f.lineId){s.lines.G.completed++;const stage=s.lines.G.stages.find(x=>x.id==='precision');if(stage)stage.processed++;}recordRecovery(s,f);b.recovered.push(f.uid);const stats=goldStats(s);if(!stats.found.includes(f.uid)){if(stats.totalFound!==undefined)stats.totalFound++;stats.found.push(f.uid);}compactHistory(s);s.playerStats.xp[2]+=.5;logEvent(s,'鉱物回収',f.uid);return true;
 }
 export function collectGravel(s:State,id:string,x:number,y:number,stroke:number){
  const result={amount:0,found:0,reason:''};if(!isGold(s)||!owns(s,id)||!['hand','G101','G106'].includes(id)||!Number.isFinite(stroke)||stroke<12)return result;
@@ -55,7 +56,7 @@ export function collectGravel(s:State,id:string,x:number,y:number,stroke:number)
  if(id==='hand'){b.handProcessed=amount;for(const uid of b.contents){const f=p.items.find(f=>f.uid===uid)!;if((f.grain??1)>=.6){b.separated.push(uid);if(storeGold(s,b,f,id))result.found++;}}}
  if(id==='hand'&&(!b.contents.length||b.contents.every(uid=>b.recovered.includes(uid))))b.processed=amount;
  const used=spend(s,id==='G106'?6:id==='G101'?4:1.5);measure(s,id,'採取',amount,used,result.found);s.playerStats.xp[0]+=.2*amount;
- if(site.rich&&!site.announced){site.announced=true;goldStats(s).specialSites.push({plotId:p.id,siteId:site.id,time:s.playTime});result.reason='砂金が集まる特別な採取地点を発見！';logEvent(s,'特別採取地点',`${p.id}/${site.id}`);}
+ if(site.rich&&!site.announced){site.announced=true;if(goldStats(s).totalSpecialSites!==undefined)goldStats(s).totalSpecialSites!++;goldStats(s).specialSites.push({plotId:p.id,siteId:site.id,time:s.playTime});result.reason='砂金が集まる特別な採取地点を発見！';logEvent(s,'特別採取地点',`${p.id}/${site.id}`);}
  return result;
 }
 export function handSortGravel(s:State,b:GravelBatch){if(!s.gravelBatches?.includes(b)||b.automationJob)return 0;const previous=b.handProcessed,amount=Math.min(2,b.amount-b.handProcessed);if(amount<=0)return 0;b.handProcessed+=amount;let found=0;
@@ -119,7 +120,7 @@ export function validateGold(s:State){
  for(const b of s.gravelBatches??[]){if(seen.has(b.id)||![b.amount,b.screened,b.processed,b.handProcessed,b.coarse].every(Number.isFinite)||b.amount<=0||[b.screened,b.processed,b.handProcessed].some(v=>v<0||v>b.amount+1e-6)||b.coarse<0||b.coarse>1||new Set(b.contents).size!==b.contents.length)throw Error('砂利バッチが不正です');seen.add(b.id);
   if((b.magnetRecovered??[]).some(uid=>!b.separated.includes(uid))||new Set(b.magnetRecovered??[]).size!==(b.magnetRecovered??[]).length)throw Error('砂鉄回収の参照が不正です');
   for(const n of [b.fineScreened,b.magnetized])if(n!==undefined&&(!Number.isFinite(n)||n<0||n>b.amount+1e-6))throw Error('砂利の前処理量が不正です');
-  if(b.contents.some(uid=>!ids.has(uid)&&!s.collectedTreasures.includes(uid))||[...b.separated,...b.recovered].some(uid=>!b.contents.includes(uid)))throw Error('砂利個体の参照が不正です');for(const uid of b.contents){if(assigned.has(uid))throw Error('砂利個体が重複しています');assigned.add(uid);}if(new Set(b.separated).size!==b.separated.length||new Set(b.recovered).size!==b.recovered.length)throw Error('砂利の回収記録が重複しています');}
+  if(b.contents.some(uid=>!ids.has(uid)&&!retiredUID(s,uid))||[...b.separated,...b.recovered].some(uid=>!b.contents.includes(uid)))throw Error('砂利個体の参照が不正です');for(const uid of b.contents){if(assigned.has(uid))throw Error('砂利個体が重複しています');assigned.add(uid);}if(new Set(b.separated).size!==b.separated.length||new Set(b.recovered).size!==b.recovered.length)throw Error('砂利の回収記録が重複しています');}
  const w=s.goldWork;if(w&&([w.fineFraction,w.magneticFraction].some(v=>v!==undefined&&(!Number.isFinite(v)||v<0||v>1))||w.prepared!==undefined&&typeof w.prepared!=='boolean'))throw Error('前処理中の状態が不正です');
  if(w&&(!s.gravelBatches?.some(b=>b.id===w.batchId)||![w.start,w.load,w.work,w.required].every(Number.isFinite)||w.start<0||w.load<=0||w.start+w.load>(s.gravelBatches!.find(b=>b.id===w.batchId)!.amount)+1e-6||!goldProcessing(w.tool)||!['pan','screen','sluice','magnet'].includes(w.mode)||w.required<=0||w.work<0||w.work>w.required+1e-6||!owns(s,w.tool)))throw Error('選別中の状態が不正です');
  s.sluiceFeed=(s.sluiceFeed??[]).filter(id=>s.gravelBatches?.some(b=>b.id===id));
