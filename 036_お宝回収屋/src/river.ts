@@ -1,3 +1,4 @@
+import {worldUnlocked,environment} from './world-rules';
 import {RIVER_ADDED,riverObservation,fieldProfiles} from './field-tools';
 import {CONFIG,treasure,tool} from './data';
 import type {Find,Plot,State} from './engine';
@@ -13,7 +14,7 @@ export interface RiverMetrics {attempts:number;successes:number;operations:numbe
 export const areaId=(s:State)=>s.explorationAreas[0].areaId??'B-A';
 export const isRiver=(s:State)=>areaId(s).startsWith('R-');
 export function beachCount(s:State){return Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,d])=>n+d.count,0);}
-export function areaUnlocked(s:State,id:string){return goldAreaUnlocked(s,id)||id==='B-A'||id==='R-A'&&beachCount(s)>=10||id==='R-B'&&beachCount(s)>=20;}
+export function areaUnlocked(s:State,id:string){return worldUnlocked(s,id)||goldAreaUnlocked(s,id)||id==='B-A'||id==='R-A'&&beachCount(s)>=10||id==='R-B'&&beachCount(s)>=20;}
 function random(seed:number){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 export function generateRiver(seed:number,area='R-A'):Plot {
  const r=random(seed),items:Find[]=[];
@@ -32,11 +33,11 @@ export function riverCapabilities(s:State,id:string){
  const reel=rope&&equipped.has('R110'),pulley=rope&&strong&&equipped.has('R206');
  const camera=equipped.has('R204')&&id==='R205',meter=equipped.has('R210');
  return {camera,meter,valid:valid&&!['R110','R206','R204','R210'].includes(id),magnetic,rope,strong,reel,pulley,
-  reach:id==='R205'?330:rope?265:id==='R102'?190:id==='R203'?245:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
+  reach:id==='R205'?330:rope?265+(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&s.ownedTools.includes('R301')?75:0):id==='R102'?190:id==='R203'?245:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
   radius:id==='R202'?48:magnetic?(strong?32:24):id==='R101'?24:18,
   adhesion:magnetic?(strong?18:id==='R202'?12:id==='R104'?4:3):Infinity,
-  lift:(pulley?22:strong?8:id==='R202'?6:id==='R205'?(camera?4.5:3.2):id==='R203'?7:id==='R102'?1.5:id==='hand'?.75:id==='R101'?2:id==='R106'?2.2:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
-  speed:(reel?2.6:1)*(id==='R103'?1.35:1),hook:['R106','R203'].includes(id),combos:[...(reel?['C05']:[]),...(pulley?['C06']:[]),...(camera?['C07']:[])]};
+  lift:(pulley?22*(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&s.ownedTools.includes('R301')?2.3:1):strong?8:id==='R202'?6:id==='R205'?(camera?4.5:3.2):id==='R203'?7:id==='R102'?1.5:id==='hand'?.75:id==='R101'?2:id==='R106'?2.2:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
+  speed:(reel?2.6:1)*(id==='R103'?1.35:1)/(s.explorationAreas[0].worldVersion?environment(s.explorationAreas[0]).current:1),hook:['R106','R203'].includes(id),combos:[...(reel?['C05']:[]),...(pulley?['C06']:[]),...(camera?['C07']:[])]};
 }
 export function metrics(s:State){return s.riverMetrics??={attempts:0,successes:0,operations:0,uses:{},failures:{},bottleneck:'なし'};}
 function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m.failures[reason]??0)+1;m.bottleneck=reason;measure(s,s.riverSession?.tool??'hand','引上げ失敗',0,0,0,false);logEvent(s,/磁石が弱く|磁石に付かない/.test(reason)?'吸着失敗':/重く/.test(reason)?'引き上げ失敗':'回収失敗',reason);return {ok:false,reason};}

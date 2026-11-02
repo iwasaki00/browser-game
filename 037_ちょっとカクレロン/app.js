@@ -1,7 +1,9 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.1.0";
+  const VERSION = "0.2.0";
+  const Paint = globalThis.KakureronPaint;
+  const MAX_PHOTO_EDGE = 2048;
   const INITIAL = Object.freeze({ x: 0.5, y: 0.5, size: 0.18, angle: 0 });
   const MIN_SIZE = 0.05;
   const MAX_SIZE = 0.6;
@@ -15,6 +17,22 @@
   const status = document.querySelector("#status");
   const characterImage = new Image();
   const pointers = new Map();
+  const paint = Paint.createLayer(() => document.createElement("canvas"));
+  const photo = document.createElement("canvas");
+  const photoCtx = photo.getContext("2d", { willReadFrequently: true });
+  const loupe = document.querySelector("#loupe");
+  const loupeCtx = loupe.getContext("2d");
+  const modeButtons = [...document.querySelectorAll("[data-mode]")];
+  const brushButtons = [...document.querySelectorAll("[data-brush]")];
+  const modeHints = {
+    place: "1本指で移動 ／ 2本指でサイズ・角度を調整",
+    pick: "写真をタップ・なぞって色を取得。白いキャラの下も拾えます。",
+    paint: "カクレロンをなぞって現在色で塗ります。",
+    erase: "塗装をなぞって消し、白い下地に戻します。"
+  };
+  let mode = "place";
+  let brush = "medium";
+  let currentColor = "#FFFFFF";
   let background = null;
   let character = { ...INITIAL };
   let fit = { x: 0, y: 0, width: 1, height: 1 };
@@ -27,9 +45,9 @@
   // Positions and width are relative to the fitted background, independent of device pixels.
   function updateFit() {
     if (!background) return;
-    const scale = Math.min(stage.clientWidth / background.naturalWidth, stage.clientHeight / background.naturalHeight);
-    const width = background.naturalWidth * scale;
-    const height = background.naturalHeight * scale;
+    const scale = Math.min(stage.clientWidth / background.width, stage.clientHeight / background.height);
+    const width = background.width * scale;
+    const height = background.height * scale;
     fit = { x: (stage.clientWidth - width) / 2, y: (stage.clientHeight - height) / 2, width, height };
   }
 
@@ -39,8 +57,9 @@
     ctx.save();
     ctx.translate(fit.x + character.x * fit.width, fit.y + character.y * fit.height);
     ctx.rotate(character.angle);
-    // White base / silhouette source. Future paint layers can use this same transform.
+    // The SVG supplies the silhouette and white base. Paint has its own local raster layer.
     ctx.drawImage(characterImage, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
+    ctx.drawImage(paint.canvas, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
     ctx.restore();
   }
 
@@ -67,21 +86,79 @@
     document.querySelector("#angle-value").textContent = `${Math.round(character.angle * 180 / Math.PI)}°`;
     document.querySelector("#smaller").disabled = character.size <= MIN_SIZE;
     document.querySelector("#larger").disabled = character.size >= MAX_SIZE;
+    updateHistory();
+  }
+
+  function updateHistory() {
+    const history = paint.history();
+    document.querySelector("#undo").disabled = !background || !history.undo;
+    document.querySelector("#redo").disabled = !background || !history.redo;
   }
 
   function clearGesture() {
-    for (const id of pointers.keys()) {
+    paint.finish();
+    loupe.hidden = true;
+    const ids = [...pointers.keys()];
+    pointers.clear();
+    for (const id of ids) {
       if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
     }
-    pointers.clear();
     gesture = null;
     canvas.classList.remove("dragging");
+    updateHistory();
   }
 
   function reset() {
     clearGesture();
     character = { ...INITIAL };
+    paint.reset();
     render();
+  }
+
+  function setMode(next) {
+    clearGesture();
+    mode = next;
+    canvas.dataset.mode = mode;
+    modeButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === mode)));
+    document.querySelector("#placement-controls").hidden = mode !== "place";
+    document.querySelector("#brush-controls").hidden = mode !== "paint" && mode !== "erase";
+    document.querySelector("#gesture-help").textContent = modeHints[mode];
+    if (background) document.querySelector("#hint").textContent = modeHints[mode];
+    canvas.setAttribute("aria-label", `カクレロン編集。${modeHints[mode]}`);
+    if (background) document.querySelector("#workspace-state").textContent = { place: "配置を調整中", pick: "背景から色を取得", paint: "擬態ペイント中", erase: "塗装を消去中" }[mode];
+  }
+
+  function pickColor(point) {
+    const pixel = Paint.backgroundPoint(point, fit, photo.width, photo.height);
+    if (!pixel) { loupe.hidden = true; return; }
+    try {
+      currentColor = Paint.toHex(photoCtx.getImageData(pixel.x, pixel.y, 1, 1).data);
+      document.querySelector("#color-value").textContent = currentColor;
+      document.querySelector("#color-swatch").style.backgroundColor = currentColor;
+      loupe.hidden = false;
+      // Keep the loupe on the opposite side from the finger; show only the original photo.
+      loupe.style.left = point.x < stage.clientWidth / 2 ? "auto" : "12px";
+      loupe.style.right = point.x < stage.clientWidth / 2 ? "12px" : "auto";
+      loupeCtx.fillStyle = "#fff";
+      loupeCtx.fillRect(0, 0, 120, 120);
+      loupeCtx.imageSmoothingEnabled = false;
+      const region = Math.max(8, Math.round(photo.width / fit.width * 24));
+      loupeCtx.drawImage(photo, pixel.x - region / 2, pixel.y - region / 2, region, region, 0, 0, 120, 120);
+      loupeCtx.strokeStyle = "#fff";
+      loupeCtx.lineWidth = 3;
+      loupeCtx.strokeRect(56, 56, 8, 8);
+      loupeCtx.strokeStyle = "#243721";
+      loupeCtx.lineWidth = 1;
+      loupeCtx.strokeRect(56, 56, 8, 8);
+      status.textContent = "";
+    } catch {
+      status.textContent = "色を取得できませんでした。静的Web配信で開き直してお試しください。";
+    }
+  }
+
+  function editPoint(point) {
+    if (mode === "pick") pickColor(point);
+    else if (paint.dab(Paint.screenToLocal(point, character, fit))) render();
   }
 
   function localPoint(event) {
@@ -112,18 +189,25 @@
 
   canvas.addEventListener("pointerdown", (event) => {
     if (!background || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
+    if (mode !== "place" && pointers.size) return;
     const point = localPoint(event);
-    if (!pointers.size && !hitsCharacter(point)) return;
+    if (mode === "place" && !pointers.size && !hitsCharacter(point)) return;
     event.preventDefault();
     pointers.set(event.pointerId, point);
     canvas.setPointerCapture(event.pointerId);
-    beginGesture();
+    if (mode === "place") beginGesture();
+    else {
+      if (mode !== "pick") paint.begin(mode, currentColor, brush);
+      editPoint(point);
+    }
   });
 
   canvas.addEventListener("pointermove", (event) => {
-    if (!pointers.has(event.pointerId) || !gesture) return;
+    if (!pointers.has(event.pointerId)) return;
     event.preventDefault();
     pointers.set(event.pointerId, localPoint(event));
+    if (mode !== "place") { editPoint(localPoint(event)); return; }
+    if (!gesture) return;
     const current = pointers.size === 1 ? [...pointers.values()][0] : pairMetrics();
     const start = gesture.start;
     character.x = clamp(start.x + (current.x - gesture.point.x) / fit.width, 0, 1);
@@ -136,6 +220,11 @@
   });
 
   function endPointer(event) {
+    if (mode !== "place" && pointers.has(event.pointerId)) {
+      if (event.type === "pointerup") editPoint(localPoint(event));
+      clearGesture();
+      return;
+    }
     if (!pointers.delete(event.pointerId)) return;
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
     beginGesture();
@@ -166,7 +255,11 @@
       });
       if (sequence !== loadSequence) return;
       clearGesture();
-      background = image;
+      const scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
+      photo.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      photo.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      photoCtx.drawImage(image, 0, 0, photo.width, photo.height);
+      background = photo;
       document.querySelector("#empty-state").hidden = true;
       canvas.hidden = false;
       document.querySelector("#change-image").hidden = false;
@@ -174,6 +267,7 @@
       document.querySelector("#workspace-state").textContent = "配置を調整中";
       document.querySelector("#hint").textContent = "カクレロンをドラッグ。2本指で大きさと角度を変えられます。";
       reset();
+      setMode("place");
       status.textContent = "";
     } catch {
       if (sequence === loadSequence) status.textContent = "この画像は読み込めませんでした。JPEG・PNGなど別の画像を選んでください。";
@@ -194,8 +288,21 @@
   document.querySelector("#rotate-left").addEventListener("click", () => adjust(0, -ROTATION_STEP));
   document.querySelector("#rotate-right").addEventListener("click", () => adjust(0, ROTATION_STEP));
   document.querySelector("#reset").addEventListener("click", reset);
+  modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
+  brushButtons.forEach(button => button.addEventListener("click", () => {
+    clearGesture();
+    brush = button.dataset.brush;
+    brushButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+  }));
+  for (const action of ["undo", "redo"]) {
+    document.querySelector(`#${action}`).addEventListener("click", () => {
+      clearGesture();
+      paint[action]();
+      render();
+    });
+  }
   canvas.addEventListener("keydown", (event) => {
-    if (!background) return;
+    if (!background || mode !== "place") return;
     const moves = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, -0.01], ArrowDown: [0, 0.01] };
     if (!moves[event.key]) return;
     event.preventDefault();
@@ -205,7 +312,7 @@
     render();
   });
   new ResizeObserver(() => { clearGesture(); render(); }).observe(stage);
-  characterImage.onload = render;
+  characterImage.onload = () => { paint.setMask(characterImage); render(); };
   characterImage.src = "assets/kakureron.svg";
   document.documentElement.dataset.version = VERSION;
 })();

@@ -1,3 +1,5 @@
+import {generateWorld} from './world-generation';
+import {environment,recordVisit,collectionMilestones,worldUnlocked,type Environment} from './world-rules';
 import {clearRiverBeforeMove,type Line,type Field,type StageId} from './lines';
 import {recoveryCount,rewardEligible,confirmReward,compactHistory,issueUID,retireUID,type RewardLedger} from './ledger';
 import type {Automation,MachineId} from './automation';
@@ -11,9 +13,9 @@ import {rememberEquipment,restoreEquipment,assignPurchased} from './equipment';
 import {measure,type OperationMetric} from './measure';
 import type {HandFeedback} from './feedback';
 export interface Find {lineId?:string;automationJob?:string;automationMachine?:MachineId;riverObserved?:boolean;riverCameraObserved?:boolean;riverLoadMeasured?:boolean;riverProtected?:boolean; identified?:boolean; grain?:number;density?:number;goldSite?:string;goldOffset?:number;goldAllocation?:number;goldCapture?:number;captureRank?:number;goldRich?:boolean;observed?:boolean;pickWork?:number;  evaluationFN?:number; rewardFN?:number; damageState?:'worn'|'scratched'; areaId?:string; weight?:number; magnetic?:boolean; material?:string; difficulty?:number; obstacle?:boolean; rarity?:string; recoveryOperations?:number; uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'transit'|'stored'|'paid'; tool:string; }
-export interface Plot {beachDepthVersion?:number; goldSites?:GravelSite[]; areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
-export interface Batch {automationJob?:string; id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
-export interface State {lines?:Partial<Record<Field,Line>>;lineAccess?:string;lineScreenTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
+export interface Plot {environment?:Environment;worldVersion?:number;beachDepthVersion?:number; goldSites?:GravelSite[]; areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
+export interface Batch {resistance?:number;automationJob?:string; id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
+export interface State {world?:{version:1;unlocked:string[];visits:Record<string,number>;milestones:Record<string,number[]>};lines?:Partial<Record<Field,Line>>;lineAccess?:string;lineScreenTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationSandEnd?:number;automationGoldStart?:number;automationGoldEnd?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
  goldVersion?:number;goldUnlockedAreas?:string[];gravelBatches?:GravelBatch[];goldWork?:GoldWork;sluiceFeed?:string[];goldStats?:GoldStatistics;loadouts?:Record<string,string[]>;selectedTools?:Record<string,string>;operationMetrics?:Record<string,OperationMetric>;lastOperationKey?:string; events?:GameEvent[]; riverSession?:RiverSession; riverMetrics?:RiverMetrics; maxStamina?:number; lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
@@ -52,7 +54,7 @@ export function createState(seed=Date.now()>>>0):State {
 export const plot=(s:State)=>s.explorationAreas[0];
 const allFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
 export function refresh(s:State) {
- const n=recoveryCount(s);
+ const n=recoveryCount(s);if(s.world){for(const id of ['B-B','B-C','B-D','R-C','R-D','G-C','G-D'])if(worldUnlocked(s,id)&&!s.world.unlocked.includes(id))s.world.unlocked.push(id);}
  const conditions:Record<string,boolean>={...beachUnlocks(s),B101:n>=2,B102:n>=5,B104:n>=8||s.sandSampled||s.sandBatches.length>0,B105:s.exploredPlots>=3||n>=15,B201:n>=20};
  if(beachCount(s)>=10)for(const id of RIVER_TOOLS)conditions[id]=true;
  for(const area of ['G-A','G-B'])if(goldAreaUnlocked(s,area)&&!s.goldUnlockedAreas?.includes(area))(s.goldUnlockedAreas??=[]).push(area);
@@ -85,7 +87,7 @@ export const diggingLimit=(id:string)=>beachProfiles[id]?.limit??0;
 export function dig(s:State,id:string,x:number,y:number,dx:number) {
  if((id!=='hand'&&!s.ownedTools.includes(id))||id==='B201'||id==='B104'||Math.abs(dx)<2||x<0||x>=360||y<0||y>=280)return 0;
  if(!diggingLimit(id))return 0;
- if(areaId(s)!=='B-A')return 0;
+ if(!areaId(s).startsWith('B-'))return 0;
  const p=plot(s),profile=beachProfiles[id],scale=plotDepthScale(p),maxDepth=Math.min(diggingLimit(id),scale),limit=maxDepth/scale,radius=profile.radius??7,ry=profile.ry??radius;
  const low=s.playerStats.stamina<10?.5:1;let removed=0;
  for(let yy=Math.max(0,Math.floor((y-ry-4)/10));yy<=Math.min(27,Math.floor((y+ry+4)/10));yy++)for(let xx=Math.max(0,Math.floor((x-radius-4)/10));xx<=Math.min(35,Math.floor((x+radius+4)/10));xx++){
@@ -93,7 +95,8 @@ export function dig(s:State,id:string,x:number,y:number,dx:number) {
   if(p.mask[i]>=limit||((xx*10+5-x)/(radius+4))**2+((yy*10+5-y)/(ry+4))**2>1)continue;
   const currentDepth=p.mask[i]*scale;
   const hard=currentDepth>420?2.1:currentDepth>280?1.5:1,precision=id==='B106'&&equippedBeach(s,'B206')&&p.items.some(f=>f.identified&&Math.hypot(f.x-x,f.y-y)<35)?1.8:1;
-  const strokeDepth=(profile.stroke??.85)*precision*(currentDepth>280?Math.min(1,(profile.hard??1)/hard):1)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*maxDepth;
+  const env=environment(p),resist=env.hardness>1?(1+(env.hardness-1)*((id==='B106'||id==='B207'||id==='B302')?.2:id==='B105'?.8:1)):1;
+  const strokeDepth=(profile.stroke??.85)/resist*precision*(currentDepth>280?Math.min(1,(profile.hard??1)/hard):1)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*maxDepth;
   const nextDepth=Math.min(maxDepth,currentDepth+strokeDepth);
   p.mask[i]=nextDepth/scale;removed+=(nextDepth-currentDepth)/maxDepth;
  }
@@ -103,14 +106,14 @@ export function dig(s:State,id:string,x:number,y:number,dx:number) {
  if(profile.sample) {
   s.sandSampled=true;
   let b=s.sandBatches.find(b=>b.plotId===p.id&&!b.processed&&!b.automationJob&&b.cells<(equippedBeach(s,'B108')?72:CONFIG.batchCells));
-  if(!b){b={id:`${p.id}:batch-${s.digs}`,plotId:p.id,items:[],processed:false,cells:0};s.sandBatches.push(b);}
+  if(!b){b={id:`${p.id}:batch-${s.digs}`,plotId:p.id,items:[],processed:false,cells:0,...(p.worldVersion?{resistance:1+environment(p).stones*.5}:{})};s.sandBatches.push(b);}
   b.cells+=removed;
-  for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&['B001','B002','B003','B004'].includes(f.id)){finishQuality(s,f,id);f.state='batch';f.tool=id;b.items.push(f.uid);b.allocations??={};b.allocations[f.uid]=b.cells;}
+  for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&(['B001','B002','B003','B004'].includes(f.id)||Number(f.id.slice(1))>=13&&treasure(f.id).size==='小')){finishQuality(s,f,id);f.state='batch';f.tool=id;b.items.push(f.uid);b.allocations??={};b.allocations[f.uid]=b.cells;}
   if(id==='B203')sortBatch(s,b,'sieve',Math.min(5,removed),'B203',1);
  }
  refresh(s);return removed;
 }
-export function scan(s:State,x:number,y:number,id='B201'){if(!detectorTool(id)||!s.ownedTools.includes(id)||areaId(s)!=='B-A')return {strength:0,band:'未装備',depthHint:'',character:''};const before=s.playerStats.stamina;cost(s,id);measure(s,id,'探知',1,before-s.playerStats.stamina);s.playerStats.xp[1]++;return scanReading(s,x,y,id);}
+export function scan(s:State,x:number,y:number,id='B201'){if(!detectorTool(id)||!s.ownedTools.includes(id)||!areaId(s).startsWith('B-'))return {strength:0,band:'未装備',depthHint:'',character:''};const before=s.playerStats.stamina;cost(s,id);measure(s,id,'探知',1,before-s.playerStats.stamina);s.playerStats.xp[1]++;return scanReading(s,x,y,id);}
 export function detect(s:State,x:number,y:number){return scan(s,x,y).strength;}
 export function recover(s:State,uid:string,usedTool='hand') {
  const p=plot(s),f=p.items.find(f=>f.uid===uid);
@@ -130,7 +133,7 @@ export function sortSand(s:State,method:'hand'|'sieve',usedTool='B104'):SortResu
 export function sortBatch(s:State,b:Batch,method:'hand'|'sieve',capacity:number,usedTool='B104',fine=1):SortResult {
  const result:SortResult={units:0,found:0,method};initializeBatch(b);
  let budget=capacity;const beforeResidue=new Set(Object.keys(b.residueWork!));
- const amount=Math.min(budget,Math.max(0,b.cells-b.screenedUnits!));b.screenedUnits!+=amount;budget-=amount;result.units+=amount;
+ const amount=Math.min(budget,Math.max(0,Math.min(b.cells,s.automationSandEnd??b.cells)-b.screenedUnits!));b.screenedUnits!+=amount;budget-=amount;result.units+=amount;
  const finds=allFinds(s);const due=b.items.filter(uid=>b.residueWork![uid]===undefined&&b.screenedUnits!+1e-8>=b.allocations![uid]);
  for(const uid of due){const f=finds.find(f=>f.uid===uid);if(!f||f.state!=='batch'){b.items=b.items.filter(x=>x!==uid);continue;}
   if(((method==='hand'||usedTool==='B208'&&s.beachMesh==='coarse')&&tiny(f))||stored(s).length>=Math.min(beachCapacity(s),s.automationStoreLimit??Infinity)){const work=Math.min(1,amount/Math.max(1,due.length));if(work>0){b.residueWork![uid]=work;}continue;}
@@ -151,17 +154,18 @@ export function reward(s:State,uid:string) {
  const t=treasure(f.id),fn=income[f.id]??0;f.evaluationFN=Math.round(t.baseValueFN*f.quality);f.rewardFN=fn;f.state='paid';s.collectedTreasures.push(uid);s.currentFN+=fn;s.totalEarnedFN+=fn;
  const d=s.discoveredTreasures[f.id]??={count:0,first:new Date().toISOString(),best:0,locations:[],tools:[]};d.count++;d.best=Math.max(d.best,Math.round(t.baseValueFN*f.quality));
  const location=f.areaId??(f.id.startsWith('R')?'R-A':f.id.startsWith('G')?'G-A':'B-A');if(!d.locations.includes(location))d.locations.push(location);if(!d.tools.includes(f.tool))d.tools.push(f.tool);
- if(t.contractOnly){s.completedContracts.push(uid);s.activeContracts=s.activeContracts.filter(x=>x!==uid);}if(f.id==='B012')s.jackpotHistory.push(uid);
+ if(t.contractOnly){s.completedContracts.push(uid);s.activeContracts=s.activeContracts.filter(x=>x!==uid);}if(t.rarity==='J')s.jackpotHistory.push(uid);
  if(f.lineId){const line=Object.values(s.lines??{}).find(l=>l?.id===f.lineId);if(line)line.fn+=fn;}
- confirmReward(s,f,t.contractOnly,f.id==='B012');
+ confirmReward(s,f,t.contractOnly,t.rarity==='J');
  if(f.automationMachine&&s.automation?.machines[f.automationMachine])s.automation.machines[f.automationMachine]!.fn+=fn;
- s.revenueHistory.push({time:s.playTime,fn,jackpot:f.id==='B012'||!!f.goldRich,area:location,item:f.id});logEvent(s,'報酬獲得',`${f.id} / ${fn} FN`);s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');compactHistory(s);refresh(s);return fn;
+ if(s.world)s.world.milestones=collectionMilestones(s);
+ s.revenueHistory.push({time:s.playTime,fn,jackpot:t.rarity==='J'||!!f.goldRich,area:location,item:f.id});logEvent(s,'報酬獲得',`${f.id} / ${fn} FN`);s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');compactHistory(s);refresh(s);return fn;
 }
 export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false,area=areaId(s)) {
  const old=plot(s);clearRiverBeforeMove(s);rememberEquipment(s);for(const f of old.items)if(f.state==='buried'&&!f.automationJob)retireUID(s,f.uid);
  s.retainedFinds=allFinds(s).filter(f=>f.state==='stored'||f.state==='batch'||f.state==='transit'||!!f.automationJob);
  s.sandSampled ||= s.sandBatches.length>0;s.sandBatches=s.sandBatches.filter(b=>!b.processed);
- s.handFeedback=[];delete s.lastScan;s.exploredPlots++;delete s.riverSession;const next=area.startsWith('G-')?generateGold(seed,area,noJackpot):area.startsWith('R-')?generateRiver(seed,area):generate(seed,false,noJackpot,true);
+ s.handFeedback=[];delete s.lastScan;s.exploredPlots++;delete s.riverSession;const next=generateWorld(seed,area,noJackpot);recordVisit(s,area);
  next.id=`${area}-${seed}-${s.exploredPlots}`;const remap=new Map<string,string>();next.items.forEach((f,i)=>{const uid=s.rewardLedger?issueUID(s):`${s.playerId}:${s.exploredPlots}:${seed}:${i}`;remap.set(f.uid,uid);f.uid=uid;});next.goldSites?.forEach(site=>site.items=site.items.map(uid=>remap.get(uid)!));
  s.explorationAreas=[next];s.currentPlot=0;restoreEquipment(s);s.gravelBatches=s.gravelBatches?.filter(b=>b.id===s.goldWork?.batchId||b.contents.some(uid=>!b.recovered.includes(uid))||b.processed<b.amount);
  s.activeContracts=s.activeContracts.filter(uid=>s.retainedFinds.some(f=>f.uid===uid));refresh(s);

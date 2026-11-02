@@ -1,3 +1,4 @@
+import {worldUnlocked,environment} from './world-rules';
 import {compactHistory,retiredUID} from './ledger';
 import {GOLD_ADDED,goldScreen,goldProcessing} from './field-tools';
 import {CONFIG,treasure} from './data';
@@ -14,7 +15,7 @@ export interface GoldStatistics {totalFound?:number;totalSpecialSites?:number;fo
 export const isGold=(s:State)=>s.explorationAreas[0].areaId?.startsWith('G-')??false;
 export function goldStats(s:State){return s.goldStats??={found:[],panCompleted:0,specialSites:[]};}
 const bookCount=(s:State,prefix:string)=>Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith(prefix)).reduce((n,[,d])=>n+d.count,0);
-export function goldAreaUnlocked(s:State,id:string){return s.goldUnlockedAreas?.includes(id)||id==='G-A'&&(bookCount(s,'B')>=20||bookCount(s,'R')>=5)||id==='G-B'&&(Math.max(bookCount(s,'G'),s.goldStats?.found.length??0)>=10||(s.goldStats?.panCompleted??0)>=5);}
+export function goldAreaUnlocked(s:State,id:string){return worldUnlocked(s,id)||s.goldUnlockedAreas?.includes(id)||id==='G-A'&&(bookCount(s,'B')>=20||bookCount(s,'R')>=5)||id==='G-B'&&(Math.max(bookCount(s,'G'),s.goldStats?.found.length??0)>=10||(s.goldStats?.panCompleted??0)>=5);}
 function random(seed:number){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 export const grainProfile:Record<string,{grain:number;density:number}>={G001:{grain:2.4,density:2.65},G002:{grain:.7,density:5.2},G003:{grain:1,density:5},G004:{grain:4,density:2.7},G005:{grain:3,density:2.6},G006:{grain:2,density:2.65},G007:{grain:.12,density:19.3},G008:{grain:.45,density:19.3},G009:{grain:1.6,density:19.3},G010:{grain:8,density:2.65},G011:{grain:4,density:19.3},G012:{grain:12,density:19.3}};
 export function generateGold(seed:number,area='G-A',noJackpot=false):Plot {
@@ -44,10 +45,10 @@ export function storeGold(s:State,b:GravelBatch,f:Find,id:string){
 }
 export function collectGravel(s:State,id:string,x:number,y:number,stroke:number){
  const result={amount:0,found:0,reason:''};if(!isGold(s)||!owns(s,id)||!['hand','G101','G106'].includes(id)||!Number.isFinite(stroke)||stroke<12)return result;
- const p=s.explorationAreas[0],site=p.goldSites?.filter(t=>t.collected<t.total-1e-8&&Math.hypot(t.x-x,t.y-y)<(id==='G106'?52:38)).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];
+ const p=s.explorationAreas[0],site=p.goldSites?.filter(t=>t.collected<t.total-1e-8&&Math.hypot(t.x-x,t.y-y)<(environment(p).crevice?(id==='G106'?16:26):(id==='G106'?52:38))).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];
  if(!site){result.reason='採取できる砂利の輪をなぞろう。';return result;}
  if((s.gravelBatches?.filter(b=>b.processed<b.amount||availableGrains(s,b).length).length??0)>=300){result.reason='砂利袋がいっぱい。選別台で処理しよう。';return result;}
- const bucket=s.equippedTools.includes('G108')&&s.ownedTools.includes('G108'),from=site.collected,amount=Math.min(site.total-from,id==='G106'?10:id==='G101'?6:1);site.collected+=amount;
+ const bucket=s.equippedTools.includes('G108')&&s.ownedTools.includes('G108'),from=site.collected,amount=Math.min(site.total-from,environment(p).crevice?(id==='G106'?2:id==='G101'?4:1):id==='G106'?10:id==='G101'?6:1);site.collected+=amount;
  const existing=['G101','G106'].includes(id)?s.gravelBatches?.find(b=>b.plotId===p.id&&(bucket||b.siteId===site.id)&&b.collectedTool===id&&!b.automationJob&&b.processed===0&&b.screened===0&&b.amount<(bucket?86:42)&&b.id!==s.goldWork?.batchId&&!s.sluiceFeed?.includes(b.id)):undefined;
  const b:GravelBatch=existing??{id:`${p.id}:${site.id}:${from.toFixed(3)}`,plotId:p.id,siteId:site.id,x:site.x,y:site.y,amount:0,coarse:site.coarse,collectedTool:id,screened:0,processed:0,handProcessed:0,contents:[],separated:[],recovered:[],losses:{},passes:0};
  const priorAmount=b.amount;b.amount+=amount;if(bucket){b.coarse=(b.coarse*priorAmount+site.coarse*amount)/b.amount;if(b.siteId!==site.id)b.siteId='mixed';}
@@ -73,7 +74,7 @@ export function beginGoldWork(s:State,batchId:string,id:string){
  if(s.goldWork)return s.goldWork.batchId===batchId&&s.goldWork.tool===id;
  const screen=goldScreen(id),magnet=id==='G205',reprocess=!screen&&!magnet&&b.processed>=b.amount-1e-8;
  if(magnet&&(b.magnetized??0)>=b.amount-1e-8||screen&&(id==='G202'?(b.fineScreened??0):b.screened)>=b.amount-1e-8||reprocess&&!b.contents.some(uid=>{const f=goldFinds(s).find(f=>f.uid===uid);return f?.state==='batch'&&!b.separated.includes(uid);}))return false;
- const start=magnet?(b.magnetized??0):screen?(id==='G202'?(b.fineScreened??0):b.screened):reprocess?(b.reprocessCursor??0):b.processed,baseCapacity=magnet?12:id==='G202'?16:screen?8:id==='G201'?14:id==='G203'?20:4,screenedLoad=Math.min(Math.max(0,b.screened-start),baseCapacity/(1-b.coarse*.65)),load=Math.min(!screen&&!magnet&&id!=='G203'?Math.max(baseCapacity,screenedLoad):baseCapacity,b.amount-start);if(load<=0)return false;
+ const rawStart=magnet?(b.magnetized??0):screen?(id==='G202'?(b.fineScreened??0):b.screened):reprocess?(b.reprocessCursor??0):b.processed,start=Math.max(rawStart,s.automationGoldStart??0),baseCapacity=magnet?12:id==='G202'?16:screen?8:id==='G201'?14:id==='G203'?20:4,screenedLoad=Math.min(Math.max(0,b.screened-start),baseCapacity/(1-b.coarse*.65)),load=Math.min(!screen&&!magnet&&id!=='G203'?Math.max(baseCapacity,screenedLoad):baseCapacity,Math.min(b.amount,s.automationGoldEnd??b.amount)-start);if(load<=0)return false;
  const screened=Math.max(0,Math.min(1,(b.screened-start)/load));
  const magneticFraction=(b.magnetRecovered??[]).some(uid=>{const f=goldFinds(s).find(f=>f.uid===uid),at=f?.goldAllocation??-1;return at>=start&&at<start+load;})?Math.max(0,Math.min(1,((b.magnetized??0)-start)/load)):0;
  s.goldWork={batchId,tool:id,prepared:s.equippedTools.includes('G108')&&s.ownedTools.includes('G108'),fineFraction:Math.max(0,Math.min(1,((b.fineScreened??0)-start)/load)),magneticFraction,mode:magnet?'magnet':screen?'screen':id==='G203'?'sluice':'pan',start,load,work:0,required:magnet?Math.max(.6,load*.16):screen?Math.max(.8,load*(id==='G202'?.24:.3)):id==='G203'?load*(.45+b.coarse*.25*(1-screened))*(1-.18*magneticFraction):load*(1-screened*b.coarse*.65)*(id==='G201'?1.12:1)*(1+(1-screened)*b.coarse*4),rough:0,strokes:0,reprocess};

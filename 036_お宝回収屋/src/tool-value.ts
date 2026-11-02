@@ -7,10 +7,10 @@ export interface ScanReading {strength:number;band:string;depthHint:string;chara
 export interface SortEvent {time:number;method:'hand'|'sieve';units:number;found:number;stamina:number;}
 export interface RecoveryEvent {time:number;surveyed:boolean;tool:string;digs:number|null;digsAt:number;evaluation:number;loss:number;protected:boolean;}
 const sizes:Record<string,number>={B001:.55,B002:.35,B003:.5,B004:1.5,B005:.8,B006:.3,B007:1.1,B008:1.4,B009:.9,B010:.8,B011:.6,B012:1.7};
-export function tiny(f:Find){return ['B002','B003','B006'].includes(f.id);}
+export function tiny(f:Find){return ['B002','B003','B006'].includes(f.id)||Number(f.id.slice(1))>=13&&treasure(f.id).size==='小';}
 export function scanReading(s:State,x:number,y:number,id='B201'):ScanReading {
  const p=s.explorationAreas[0],profile=beachProfiles[id],coil=equippedBeach(s,'B209'),range=(profile?.range??95)*(coil?1.2:1)*(id==='B202'&&equippedBeach(s,'B201')&&p.surveyMarks?.some(m=>Math.hypot(m.x-x,m.y-y)<60)?1.7:1),grid=id==='B202'&&!equippedBeach(s,'B201')?20:profile?.grid??40;let strength=0,selected:Find|undefined;
- for(const f of p.items){if(f.state!=='buried'||treasure(f.id).material!=='metal'||(f.depth??f.y)>(profile?.senseDepth??280))continue;
+ for(const f of p.items){if(f.state!=='buried'||!['metal','iron','brass','silver','gold','gold-plated','copper','aluminum','stainless'].includes(treasure(f.id).material)||(f.depth??f.y)>(profile?.senseDepth??280))continue;
   const distance=Math.hypot(f.x-x,f.y-y),size=sizes[f.id]??1,deep=(f.depth??f.y)>180;
   const value=Math.max(0,1-distance/range)*Math.min(1,.5+size*.4+(coil&&size<.75?.3:0))*(deep?.85:1);
   const wet=f.y<75&&id!=='B204'&&id!=='B201'?.85:1;if(value*wet>strength){strength=value*wet;selected=f;}

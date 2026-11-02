@@ -1,0 +1,8760 @@
+[
+  {
+    "id": "B013",
+    "name": "サクラガイの両殻",
+    "description": "薄い左右の殻が揃った標本。表層を丁寧に払う。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B013",
+    "rewardFN": 24
+  },
+  {
+    "id": "B014",
+    "name": "タカラガイの殻",
+    "description": "滑らかな背と細い開口部を持つ貝。潮の寄せる縁を探す。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B014",
+    "rewardFN": 24
+  },
+  {
+    "id": "B015",
+    "name": "巻貝の蓋",
+    "description": "螺旋の跡が残る小さな蓋。細目のふるいで見分ける。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B015",
+    "rewardFN": 24
+  },
+  {
+    "id": "B016",
+    "name": "ウニの殻",
+    "description": "棘が抜けた軽い殻。強く掘ると欠けやすい。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B016",
+    "rewardFN": 24
+  },
+  {
+    "id": "B017",
+    "name": "タコノマクラの殻",
+    "description": "平たい殻に花模様が残る。浅い砂を広く探す。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B017",
+    "rewardFN": 24
+  },
+  {
+    "id": "B018",
+    "name": "イカの甲",
+    "description": "白く軽い多孔質の漂着物。流木の近くに溜まる。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B018",
+    "rewardFN": 24
+  },
+  {
+    "id": "B019",
+    "name": "穿孔された貝殻",
+    "description": "生物が開けた小孔が観察できる標本。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B019",
+    "rewardFN": 24
+  },
+  {
+    "id": "B020",
+    "name": "サンゴ礫",
+    "description": "丸く磨耗した骨格片。砂粒を優しく落とす。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B020",
+    "rewardFN": 60
+  },
+  {
+    "id": "B021",
+    "name": "軽石の漂着片",
+    "description": "小さな気泡が多い軽量な石。潮の境目に集まる。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "rock",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B021",
+    "rewardFN": 24
+  },
+  {
+    "id": "B022",
+    "name": "珪化木の漂着片",
+    "description": "木目の形を残した石質の漂着物。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "rock",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B022",
+    "rewardFN": 60
+  },
+  {
+    "id": "B023",
+    "name": "カシパンの殻",
+    "description": "薄い円盤状の殻。精密回収で縁を守る。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B023",
+    "rewardFN": 60
+  },
+  {
+    "id": "B024",
+    "name": "フジツボの付いた小石",
+    "description": "付着した殻と石を一緒に観察できる。",
+    "category": "B",
+    "kind": "自然物",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "depth": [
+      5,
+      80
+    ],
+    "material": "shell",
+    "weight": 0.03,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B024",
+    "rewardFN": 24
+  },
+  {
+    "id": "B025",
+    "name": "丸く磨かれた瓶底",
+    "description": "波で角が丸くなった厚いガラス片。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "glass",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B025",
+    "rewardFN": 24
+  },
+  {
+    "id": "B026",
+    "name": "気泡入りの古瓶片",
+    "description": "製造時の気泡が残る瓶の破片。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "glass",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B026",
+    "rewardFN": 60
+  },
+  {
+    "id": "B027",
+    "name": "陶器の取っ手",
+    "description": "曲線だけが残った生活陶器の一部。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "ceramic",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B027",
+    "rewardFN": 24
+  },
+  {
+    "id": "B028",
+    "name": "陶製のおはじき",
+    "description": "小さな円形の遊び道具。砂に紛れやすい。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "ceramic",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B028",
+    "rewardFN": 24
+  },
+  {
+    "id": "B029",
+    "name": "碍子の破片",
+    "description": "溝のある白い陶製部品。漂着物の下に隠れる。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "ceramic",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B029",
+    "rewardFN": 24
+  },
+  {
+    "id": "B030",
+    "name": "ガラス製浮き玉の首片",
+    "description": "口を閉じた跡の残る漁具の部片。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "glass",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B030",
+    "rewardFN": 60
+  },
+  {
+    "id": "B031",
+    "name": "模様のあるタイル片",
+    "description": "焼き付けた模様が残る建材片。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "ceramic",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B031",
+    "rewardFN": 24
+  },
+  {
+    "id": "B032",
+    "name": "ガラス製ボタン",
+    "description": "中央の穴に砂が詰まった小さな留め具。",
+    "category": "B",
+    "kind": "ガラス・陶片",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      150
+    ],
+    "material": "glass",
+    "weight": 0.06,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B032",
+    "rewardFN": 60
+  },
+  {
+    "id": "B033",
+    "name": "銀製イヤーカフ",
+    "description": "切れ目のある耳飾り。石の脇で精密に掘る。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B033",
+    "rewardFN": 180
+  },
+  {
+    "id": "B034",
+    "name": "真鍮のカフスボタン",
+    "description": "衣服を留める対の片方。金属探知に反応する。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "brass",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B034",
+    "rewardFN": 60
+  },
+  {
+    "id": "B035",
+    "name": "ペンダントの空枠",
+    "description": "石が外れた装飾枠。変形させず回収する。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B035",
+    "rewardFN": 60
+  },
+  {
+    "id": "B036",
+    "name": "銀製の指ぬき",
+    "description": "細かな凹点が付いた裁縫道具。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B036",
+    "rewardFN": 180
+  },
+  {
+    "id": "B037",
+    "name": "銅製の髪留め",
+    "description": "薄く曲がった装身具。岩間に挟まりやすい。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "copper",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B037",
+    "rewardFN": 60
+  },
+  {
+    "id": "B038",
+    "name": "錫製ブローチ",
+    "description": "柔らかい金属の小さな飾り。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B038",
+    "rewardFN": 60
+  },
+  {
+    "id": "B039",
+    "name": "銀製チェーンの切れ端",
+    "description": "細い輪が連なる装飾鎖。砂を少しずつ払う。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B039",
+    "rewardFN": 180
+  },
+  {
+    "id": "B040",
+    "name": "真珠風ビーズの留め具",
+    "description": "留め具と人工ビーズが残った小物。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B040",
+    "rewardFN": 60
+  },
+  {
+    "id": "B041",
+    "name": "七宝のピンバッジ",
+    "description": "金属の縁に焼き付けた釉薬が残る。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B041",
+    "rewardFN": 180
+  },
+  {
+    "id": "B042",
+    "name": "貝細工の帯留め",
+    "description": "磨いた貝を組み合わせた飾り。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "shell",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B042",
+    "rewardFN": 180
+  },
+  {
+    "id": "B043",
+    "name": "時計の巻き芯",
+    "description": "小さな軸とつまみ。細目選別で回収する。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "silver",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B043",
+    "rewardFN": 60
+  },
+  {
+    "id": "B044",
+    "name": "金張りロケット",
+    "description": "開閉する小さな写真入れ。依頼品として返却する。",
+    "category": "B",
+    "kind": "装飾品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "depth": [
+      45,
+      420
+    ],
+    "material": "gold-plated",
+    "weight": 0.025,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B044",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B045",
+    "name": "銅製の遊技トークン",
+    "description": "穴のない小円盤に刻印が残る。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "copper",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B045",
+    "rewardFN": 60
+  },
+  {
+    "id": "B046",
+    "name": "穴あき銅銭",
+    "description": "中央の穴に固い砂が詰まった古い銭。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "copper",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B046",
+    "rewardFN": 60
+  },
+  {
+    "id": "B047",
+    "name": "アルミ製記念コイン",
+    "description": "軽い記念品。広域探知で候補を拾う。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "aluminum",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B047",
+    "rewardFN": 60
+  },
+  {
+    "id": "B048",
+    "name": "真鍮の乗船トークン",
+    "description": "船の意匠が刻まれた小円盤。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "brass",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B048",
+    "rewardFN": 180
+  },
+  {
+    "id": "B049",
+    "name": "銀製記念章",
+    "description": "記念の文字が残る円形の依頼回収品。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "silver",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B049",
+    "rewardFN": 180
+  },
+  {
+    "id": "B050",
+    "name": "銅製の商店札",
+    "description": "商店の名が刻まれた代用貨幣。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "copper",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B050",
+    "rewardFN": 60
+  },
+  {
+    "id": "B051",
+    "name": "打刻ずれの記念メダル",
+    "description": "模様がずれた製造上の特徴を持つ。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "copper",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B051",
+    "rewardFN": 180
+  },
+  {
+    "id": "B052",
+    "name": "古い船舶通行章",
+    "description": "深い砂に眠る許可章。深層探知と掘削を使う。",
+    "category": "B",
+    "kind": "硬貨・メダル",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      25,
+      580
+    ],
+    "material": "copper",
+    "weight": 0.02,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B052",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B053",
+    "name": "釣り用スイベル",
+    "description": "糸のよじれを防ぐ小型の連結部。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B053",
+    "rewardFN": 24
+  },
+  {
+    "id": "B054",
+    "name": "ルアーの金属リップ",
+    "description": "水の抵抗を受ける薄い板状の部品。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B054",
+    "rewardFN": 24
+  },
+  {
+    "id": "B055",
+    "name": "リールの糸巻き軸",
+    "description": "細い溝が残る回転部の軸。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B055",
+    "rewardFN": 60
+  },
+  {
+    "id": "B056",
+    "name": "真鍮のサルカン",
+    "description": "回転する接続金具。非鉄反応を示す。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "brass",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B056",
+    "rewardFN": 24
+  },
+  {
+    "id": "B057",
+    "name": "釣り竿のガイド環",
+    "description": "糸を通す小さな輪。広い砂を探す。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B057",
+    "rewardFN": 24
+  },
+  {
+    "id": "B058",
+    "name": "網の補修針",
+    "description": "網目を編む細長い道具。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B058",
+    "rewardFN": 24
+  },
+  {
+    "id": "B059",
+    "name": "金属製ウキの芯",
+    "description": "浮具の中心に入っていた軸。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B059",
+    "rewardFN": 24
+  },
+  {
+    "id": "B060",
+    "name": "仕掛け巻きの金具",
+    "description": "糸をまとめる枠の一部。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B060",
+    "rewardFN": 24
+  },
+  {
+    "id": "B061",
+    "name": "リールのドラグ座金",
+    "description": "薄い円盤状の調整部品。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B061",
+    "rewardFN": 60
+  },
+  {
+    "id": "B062",
+    "name": "銛先の留めピン",
+    "description": "抜け止めの小さな金属棒。",
+    "category": "B",
+    "kind": "釣り具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      15,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.04,
+    "size": "小",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B062",
+    "rewardFN": 60
+  },
+  {
+    "id": "B063",
+    "name": "小さな六角レンチ",
+    "description": "曲げた鋼棒の整備工具。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B063",
+    "rewardFN": 24
+  },
+  {
+    "id": "B064",
+    "name": "精密ドライバーの軸",
+    "description": "細い先端を持つ小型工具の一部。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B064",
+    "rewardFN": 24
+  },
+  {
+    "id": "B065",
+    "name": "折りたたみ定規の金具",
+    "description": "連結部分だけが残った測定具。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B065",
+    "rewardFN": 24
+  },
+  {
+    "id": "B066",
+    "name": "銅製の測量鋲",
+    "description": "地面の目印に使われた小さな鋲。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "copper",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B066",
+    "rewardFN": 60
+  },
+  {
+    "id": "B067",
+    "name": "真鍮の調整ねじ",
+    "description": "細いねじ山を持つ機械部品。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "brass",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B067",
+    "rewardFN": 60
+  },
+  {
+    "id": "B068",
+    "name": "ニッパーの片刃",
+    "description": "工具の片側だけが漂着したもの。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B068",
+    "rewardFN": 24
+  },
+  {
+    "id": "B069",
+    "name": "小型の水平器枠",
+    "description": "気泡管を支えていた金属の枠。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B069",
+    "rewardFN": 60
+  },
+  {
+    "id": "B070",
+    "name": "帆布用ハトメ打ち具",
+    "description": "穴の縁を留めるための工具。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B070",
+    "rewardFN": 24
+  },
+  {
+    "id": "B071",
+    "name": "ステンレスのピンセット",
+    "description": "細い先端のある非磁性の回収候補。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "stainless",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B071",
+    "rewardFN": 60
+  },
+  {
+    "id": "B072",
+    "name": "小型プーラーの爪",
+    "description": "部品を引き抜く工具の爪。",
+    "category": "B",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      35,
+      450
+    ],
+    "material": "iron",
+    "weight": 0.16,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B072",
+    "rewardFN": 60
+  },
+  {
+    "id": "B073",
+    "name": "栓抜き",
+    "description": "輪郭が残った金属製の生活道具。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B073",
+    "rewardFN": 24
+  },
+  {
+    "id": "B074",
+    "name": "鈴の片割れ",
+    "description": "音を出す空洞の半分が残ったもの。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B074",
+    "rewardFN": 24
+  },
+  {
+    "id": "B075",
+    "name": "弁当箱の留め金",
+    "description": "薄い板を曲げた開閉部。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B075",
+    "rewardFN": 24
+  },
+  {
+    "id": "B076",
+    "name": "傘の石突き",
+    "description": "傘の先端を保護する小さな部品。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B076",
+    "rewardFN": 24
+  },
+  {
+    "id": "B077",
+    "name": "革鞄のバックル",
+    "description": "帯を通す四角い金具。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B077",
+    "rewardFN": 60
+  },
+  {
+    "id": "B078",
+    "name": "靴ひもの金属飾り",
+    "description": "細い筒に模様が付いた小物。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B078",
+    "rewardFN": 24
+  },
+  {
+    "id": "B079",
+    "name": "自転車ベルの椀",
+    "description": "丸い音響部分。漂着物の下に溜まる。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B079",
+    "rewardFN": 60
+  },
+  {
+    "id": "B080",
+    "name": "船名入りの鍵札",
+    "description": "文字の残る金属札。契約窓口へ引き渡す。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B080",
+    "rewardFN": 60
+  },
+  {
+    "id": "B081",
+    "name": "懐炉の蓋",
+    "description": "通気孔が並ぶ薄い金属板。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B081",
+    "rewardFN": 24
+  },
+  {
+    "id": "B082",
+    "name": "旅行鞄の留め具",
+    "description": "ばね式の小さな閉鎖部。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "C",
+    "baseValueFN": 48,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B082",
+    "rewardFN": 24
+  },
+  {
+    "id": "B083",
+    "name": "笛のマウスピース",
+    "description": "小型の真鍮製部品。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "U",
+    "baseValueFN": 120,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "cleanup",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "B083",
+    "rewardFN": 60
+  },
+  {
+    "id": "B084",
+    "name": "手回しオルゴールの歯車",
+    "description": "小さな歯を持つ精密部品。",
+    "category": "B",
+    "kind": "日用品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "depth": [
+      10,
+      280
+    ],
+    "material": "metal",
+    "weight": 0.08,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "surface"
+    ],
+    "conditions": "対応する海岸の砂を掘削・選別",
+    "difficulty": 1,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B084",
+    "rewardFN": 180
+  },
+  {
+    "id": "B085",
+    "name": "銀製スプーンの柄",
+    "description": "刻印の残る依頼回収品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "silver",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B085",
+    "rewardFN": 180
+  },
+  {
+    "id": "B086",
+    "name": "航海時計の裏蓋",
+    "description": "防水溝のある時計部品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B086",
+    "rewardFN": 180
+  },
+  {
+    "id": "B087",
+    "name": "真鍮製羅針盤の枠",
+    "description": "円環状の計器部品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "brass",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B087",
+    "rewardFN": 180
+  },
+  {
+    "id": "B088",
+    "name": "古いカメラの巻上げノブ",
+    "description": "細かな刻みのある操作部。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B088",
+    "rewardFN": 180
+  },
+  {
+    "id": "B089",
+    "name": "銀細工の帯飾り",
+    "description": "透かし模様を守って回収する。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "silver",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B089",
+    "rewardFN": 180
+  },
+  {
+    "id": "B090",
+    "name": "封蝋印の真鍮ヘッド",
+    "description": "印面に細かな図柄が残る。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "brass",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B090",
+    "rewardFN": 180
+  },
+  {
+    "id": "B091",
+    "name": "小型日時計のプレート",
+    "description": "目盛りが刻まれた薄い板。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B091",
+    "rewardFN": 180
+  },
+  {
+    "id": "B092",
+    "name": "懐中時計のムーブメント",
+    "description": "細かな歯車が残る時計の内部。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B092",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B093",
+    "name": "帆船模型の金属部品",
+    "description": "複雑な形の小型依頼品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B093",
+    "rewardFN": 180
+  },
+  {
+    "id": "B094",
+    "name": "銀製コンパクトの蓋",
+    "description": "装飾を施した薄いケース部品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "silver",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B094",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B095",
+    "name": "金製ネクタイピン",
+    "description": "先端が細い貴金属の依頼品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "gold",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B095",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B096",
+    "name": "古い測量器の目盛板",
+    "description": "深層の固い砂から出る精密な板。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B096",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B097",
+    "name": "金細工のペンダント枠",
+    "description": "変形しやすい高価値の依頼品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B097",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B098",
+    "name": "船用クロノメーターの歯車",
+    "description": "厚い砂層にある精密機構の一部。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "metal",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B098",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B099",
+    "name": "銘入りの銀製ケース",
+    "description": "持主照会を行う契約回収品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "SR",
+    "baseValueFN": 4000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "silver",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B099",
+    "rewardFN": 1000
+  },
+  {
+    "id": "B100",
+    "name": "金側の懐中時計",
+    "description": "依頼契約に基づいて引き渡す特別な回収品。",
+    "category": "B",
+    "kind": "精密・契約品",
+    "rarity": "J",
+    "baseValueFN": 72000,
+    "locations": [
+      "B-C",
+      "B-D"
+    ],
+    "depth": [
+      180,
+      590
+    ],
+    "material": "gold",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "deepDig"
+    ],
+    "conditions": "岩場・漂着帯の深層を掘削",
+    "difficulty": 2,
+    "cleaning": "砂を洗い、形と刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "B100",
+    "rewardFN": 18000
+  },
+  {
+    "id": "R013",
+    "name": "角形ナット",
+    "description": "四角い外形を持つ小さな締結部品。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R013",
+    "rewardFN": 30
+  },
+  {
+    "id": "R014",
+    "name": "蝶ナット",
+    "description": "指で回すための羽根が付いている。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R014",
+    "rewardFN": 30
+  },
+  {
+    "id": "R015",
+    "name": "割りピン",
+    "description": "軸の抜け止めに使う二股の金具。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R015",
+    "rewardFN": 30
+  },
+  {
+    "id": "R016",
+    "name": "平座金",
+    "description": "中央に穴がある薄い円盤。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R016",
+    "rewardFN": 30
+  },
+  {
+    "id": "R017",
+    "name": "ばね座金",
+    "description": "切れ目を持つ緩み止め部品。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R017",
+    "rewardFN": 30
+  },
+  {
+    "id": "R018",
+    "name": "アイボルト",
+    "description": "輪の付いた吊り金具。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R018",
+    "rewardFN": 100
+  },
+  {
+    "id": "R019",
+    "name": "U字ボルト",
+    "description": "二本のねじ部を持つ曲がった鋼材。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R019",
+    "rewardFN": 30
+  },
+  {
+    "id": "R020",
+    "name": "リベット",
+    "description": "丸い頭を持つ接合部品。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R020",
+    "rewardFN": 30
+  },
+  {
+    "id": "R021",
+    "name": "ホースバンド",
+    "description": "輪状の締付け金具。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R021",
+    "rewardFN": 30
+  },
+  {
+    "id": "R022",
+    "name": "金属製アンカー鋲",
+    "description": "固定に使う小さな埋込部品。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R022",
+    "rewardFN": 30
+  },
+  {
+    "id": "R023",
+    "name": "歯付き座金",
+    "description": "周囲に細かい歯のある座金。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R023",
+    "rewardFN": 30
+  },
+  {
+    "id": "R024",
+    "name": "鋼製ヒンジピン",
+    "description": "蝶番の回転軸として使う棒。",
+    "category": "R",
+    "kind": "締結部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B"
+    ],
+    "depth": [
+      10,
+      80
+    ],
+    "material": "iron",
+    "weight": 0.15,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R024",
+    "rewardFN": 30
+  },
+  {
+    "id": "R025",
+    "name": "モンキーレンチ",
+    "description": "可動する顎が残る整備工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R025",
+    "rewardFN": 100
+  },
+  {
+    "id": "R026",
+    "name": "ラジオペンチ",
+    "description": "細長い先端のある工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R026",
+    "rewardFN": 30
+  },
+  {
+    "id": "R027",
+    "name": "万力のハンドル",
+    "description": "両端に止めが付いた鋼棒。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R027",
+    "rewardFN": 100
+  },
+  {
+    "id": "R028",
+    "name": "六角ソケット",
+    "description": "穴のある筒状の工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R028",
+    "rewardFN": 30
+  },
+  {
+    "id": "R029",
+    "name": "ラチェットハンドル",
+    "description": "回転方向を切り替える整備工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R029",
+    "rewardFN": 100
+  },
+  {
+    "id": "R030",
+    "name": "鉄製ハンマーの頭",
+    "description": "柄の抜けた重い頭部。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R030",
+    "rewardFN": 100
+  },
+  {
+    "id": "R031",
+    "name": "小型のバール",
+    "description": "曲がった先端を持つ引抜き工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R031",
+    "rewardFN": 100
+  },
+  {
+    "id": "R032",
+    "name": "金切り鋸の枠",
+    "description": "弓の形をした工具の外枠。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R032",
+    "rewardFN": 30
+  },
+  {
+    "id": "R033",
+    "name": "タガネ",
+    "description": "先端を平たくした切断工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R033",
+    "rewardFN": 30
+  },
+  {
+    "id": "R034",
+    "name": "ポンチ",
+    "description": "位置決めの印を付ける鋼製工具。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R034",
+    "rewardFN": 30
+  },
+  {
+    "id": "R035",
+    "name": "パイプレンチの顎",
+    "description": "歯のあるつかみ部。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R035",
+    "rewardFN": 100
+  },
+  {
+    "id": "R036",
+    "name": "ドリルチャック",
+    "description": "回転工具の先端を固定する部分。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R036",
+    "rewardFN": 180
+  },
+  {
+    "id": "R037",
+    "name": "工具用エクステンションバー",
+    "description": "ソケットを延長する棒。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R037",
+    "rewardFN": 30
+  },
+  {
+    "id": "R038",
+    "name": "差し金",
+    "description": "直角を測る薄い鋼製定規。",
+    "category": "R",
+    "kind": "工具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      20,
+      180
+    ],
+    "material": "iron",
+    "weight": 0.8,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R038",
+    "rewardFN": 30
+  },
+  {
+    "id": "R039",
+    "name": "自転車のクランク",
+    "description": "ペダルの力を伝える腕。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R039",
+    "rewardFN": 100
+  },
+  {
+    "id": "R040",
+    "name": "自転車のチェーンリング",
+    "description": "歯の付いた環状の部品。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R040",
+    "rewardFN": 100
+  },
+  {
+    "id": "R041",
+    "name": "ハブ軸",
+    "description": "車輪中心の細い回転軸。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R041",
+    "rewardFN": 30
+  },
+  {
+    "id": "R042",
+    "name": "自転車のブレーキアーム",
+    "description": "制動機構の短い腕。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R042",
+    "rewardFN": 30
+  },
+  {
+    "id": "R043",
+    "name": "自転車のペダル軸",
+    "description": "踏み面を支える鋼製軸。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R043",
+    "rewardFN": 30
+  },
+  {
+    "id": "R044",
+    "name": "スポークの束",
+    "description": "細長い鋼線が障害物に絡んでいる。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R044",
+    "rewardFN": 30
+  },
+  {
+    "id": "R045",
+    "name": "自転車の荷台脚",
+    "description": "曲がった支持部品。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R045",
+    "rewardFN": 100
+  },
+  {
+    "id": "R046",
+    "name": "変速機のケージ",
+    "description": "鎖を支える薄い枠。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R046",
+    "rewardFN": 100
+  },
+  {
+    "id": "R047",
+    "name": "自転車のベル台座",
+    "description": "ハンドルへ固定する金具。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R047",
+    "rewardFN": 30
+  },
+  {
+    "id": "R048",
+    "name": "サドルのレール",
+    "description": "座面を支える二本の鋼棒。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R048",
+    "rewardFN": 100
+  },
+  {
+    "id": "R049",
+    "name": "自転車の泥除けステー",
+    "description": "薄い支持棒。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R049",
+    "rewardFN": 30
+  },
+  {
+    "id": "R050",
+    "name": "チェーンテンショナー",
+    "description": "鎖の張りを調整する機構。",
+    "category": "R",
+    "kind": "自転車部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "depth": [
+      40,
+      180
+    ],
+    "material": "iron",
+    "weight": 1.4,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R050",
+    "rewardFN": 180
+  },
+  {
+    "id": "R051",
+    "name": "ルアーの連結環",
+    "description": "複数の輪がつながった釣り具部品。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R051",
+    "rewardFN": 30
+  },
+  {
+    "id": "R052",
+    "name": "リールのハンドル軸",
+    "description": "水中で錆びた回転軸。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R052",
+    "rewardFN": 30
+  },
+  {
+    "id": "R053",
+    "name": "竿立ての先端",
+    "description": "岸へ差す細い金属部品。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R053",
+    "rewardFN": 30
+  },
+  {
+    "id": "R054",
+    "name": "投げ釣りの天秤",
+    "description": "枝分かれした仕掛け金具。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R054",
+    "rewardFN": 30
+  },
+  {
+    "id": "R055",
+    "name": "魚籠の留め具",
+    "description": "容器を閉じる小さなばね。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R055",
+    "rewardFN": 30
+  },
+  {
+    "id": "R056",
+    "name": "釣り用プライヤー",
+    "description": "仕掛けを扱う細い工具。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R056",
+    "rewardFN": 100
+  },
+  {
+    "id": "R057",
+    "name": "リールの歯車",
+    "description": "精密な歯を持つ部品。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R057",
+    "rewardFN": 100
+  },
+  {
+    "id": "R058",
+    "name": "網枠のジョイント",
+    "description": "枠を組み立てる接続部。",
+    "category": "R",
+    "kind": "釣り具",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "depth": [
+      10,
+      160
+    ],
+    "material": "iron",
+    "weight": 0.2,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R058",
+    "rewardFN": 30
+  },
+  {
+    "id": "R059",
+    "name": "鉄製部品箱",
+    "description": "小部品を分ける仕切りが残る箱。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R059",
+    "rewardFN": 100
+  },
+  {
+    "id": "R060",
+    "name": "鉄製油差し",
+    "description": "細い注ぎ口を持つ容器。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R060",
+    "rewardFN": 100
+  },
+  {
+    "id": "R061",
+    "name": "鋼製計量カップ",
+    "description": "持ち手の付いた小型容器。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R061",
+    "rewardFN": 30
+  },
+  {
+    "id": "R062",
+    "name": "鉄製弁当箱",
+    "description": "薄い板の容器。泥が内部に溜まる。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R062",
+    "rewardFN": 30
+  },
+  {
+    "id": "R063",
+    "name": "鉄製筆箱",
+    "description": "細長い蓋付きのケース。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R063",
+    "rewardFN": 30
+  },
+  {
+    "id": "R064",
+    "name": "鋼製薬品缶の空容器",
+    "description": "蓋を閉じた回収対象。開けずに引き渡す。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R064",
+    "rewardFN": 100
+  },
+  {
+    "id": "R065",
+    "name": "工具袋の鉄枠",
+    "description": "布が失われた収納具の金具。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R065",
+    "rewardFN": 30
+  },
+  {
+    "id": "R066",
+    "name": "鉄製小物トレー",
+    "description": "平たい作業用の受け皿。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R066",
+    "rewardFN": 30
+  },
+  {
+    "id": "R067",
+    "name": "錆びた貯金箱",
+    "description": "投入口が残る小型の箱。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R067",
+    "rewardFN": 180
+  },
+  {
+    "id": "R068",
+    "name": "施錠された小型書類箱",
+    "description": "所有者照会の対象となる依頼品。",
+    "category": "R",
+    "kind": "容器",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "iron",
+    "weight": 2.5,
+    "size": "中",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R068",
+    "rewardFN": 180
+  },
+  {
+    "id": "R069",
+    "name": "真鍮製エルボ継手",
+    "description": "管を直角につなぐ非磁性の部品。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R069",
+    "rewardFN": 100
+  },
+  {
+    "id": "R070",
+    "name": "真鍮製圧力計の枠",
+    "description": "計器の円形ケース。磁石では回収できない。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R070",
+    "rewardFN": 180
+  },
+  {
+    "id": "R071",
+    "name": "真鍮製船窓の留め金",
+    "description": "開閉部を固定する金具。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R071",
+    "rewardFN": 180
+  },
+  {
+    "id": "R072",
+    "name": "真鍮製ホース口金",
+    "description": "管の先端に付ける接続部。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R072",
+    "rewardFN": 100
+  },
+  {
+    "id": "R073",
+    "name": "真鍮製歯車",
+    "description": "黄色い合金の精密部品。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R073",
+    "rewardFN": 180
+  },
+  {
+    "id": "R074",
+    "name": "真鍮製南京錠の本体",
+    "description": "持主照会に回す小型の錠。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R074",
+    "rewardFN": 100
+  },
+  {
+    "id": "R075",
+    "name": "真鍮製散水ノズル",
+    "description": "先に細い穴がある管部品。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R075",
+    "rewardFN": 100
+  },
+  {
+    "id": "R076",
+    "name": "真鍮製ボビン",
+    "description": "糸や線を巻く小さな筒。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R076",
+    "rewardFN": 100
+  },
+  {
+    "id": "R077",
+    "name": "真鍮製ポンプ羽根",
+    "description": "曲面を持つ非磁性の回転部品。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R077",
+    "rewardFN": 180
+  },
+  {
+    "id": "R078",
+    "name": "真鍮製銘板",
+    "description": "機械の情報が残る依頼回収品。",
+    "category": "R",
+    "kind": "真鍮部品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      40,
+      230
+    ],
+    "material": "brass",
+    "weight": 1.2,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R078",
+    "rewardFN": 180
+  },
+  {
+    "id": "R079",
+    "name": "アルミ製水筒",
+    "description": "蓋の残った軽い容器。磁石は効かない。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "aluminum",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R079",
+    "rewardFN": 30
+  },
+  {
+    "id": "R080",
+    "name": "アルミ製リールスプール",
+    "description": "糸を巻く軽量な筒。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "aluminum",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R080",
+    "rewardFN": 100
+  },
+  {
+    "id": "R081",
+    "name": "ステンレス製カラビナ",
+    "description": "非磁性材の接続具。フックで引く。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "stainless",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R081",
+    "rewardFN": 100
+  },
+  {
+    "id": "R082",
+    "name": "銅管のコイル",
+    "description": "柔らかい管が巻かれたもの。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "copper",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R082",
+    "rewardFN": 100
+  },
+  {
+    "id": "R083",
+    "name": "アルミ製羽根車",
+    "description": "軽い回転部品。障害物に挟まる。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "aluminum",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R083",
+    "rewardFN": 180
+  },
+  {
+    "id": "R084",
+    "name": "陶製の小瓶",
+    "description": "泥に埋まった割れやすい容器。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "ceramic",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R084",
+    "rewardFN": 100
+  },
+  {
+    "id": "R085",
+    "name": "石製の文鎮",
+    "description": "つかんで引き上げる非金属の回収品。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "stone",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R085",
+    "rewardFN": 30
+  },
+  {
+    "id": "R086",
+    "name": "ガラス製インク瓶",
+    "description": "口の小さな古い容器。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "glass",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R086",
+    "rewardFN": 180
+  },
+  {
+    "id": "R087",
+    "name": "ステンレス製定規",
+    "description": "目盛りを残す非磁性の板。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "C",
+    "baseValueFN": 60,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "stainless",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R087",
+    "rewardFN": 30
+  },
+  {
+    "id": "R088",
+    "name": "銅製の小鐘",
+    "description": "内部に泥の詰まった非磁性の依頼品。",
+    "category": "R",
+    "kind": "非磁性回収物",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      30,
+      220
+    ],
+    "material": "copper",
+    "weight": 1.6,
+    "size": "中",
+    "magnetic": false,
+    "requiredToolCapabilities": [
+      "grab",
+      "hook"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 1,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R088",
+    "rewardFN": 180
+  },
+  {
+    "id": "R089",
+    "name": "鋳鉄製ハンドル",
+    "description": "大きな輪を持つ重量部品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R089",
+    "rewardFN": 180
+  },
+  {
+    "id": "R090",
+    "name": "鉄製係留環",
+    "description": "岸に固定されていた厚い輪。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "U",
+    "baseValueFN": 200,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R090",
+    "rewardFN": 100
+  },
+  {
+    "id": "R091",
+    "name": "鋳鉄製ポンプケース",
+    "description": "空洞に泥が溜まる重い部品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R091",
+    "rewardFN": 180
+  },
+  {
+    "id": "R092",
+    "name": "鎖付きの鋼製ブロック",
+    "description": "絡んだ鎖を外して回収する。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R092",
+    "rewardFN": 180
+  },
+  {
+    "id": "R093",
+    "name": "小型の歯車箱",
+    "description": "複数の機構を収納する鉄製ケース。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R093",
+    "rewardFN": 180
+  },
+  {
+    "id": "R094",
+    "name": "産業用軸受の外輪",
+    "description": "厚い環状の鋼製部品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R094",
+    "rewardFN": 180
+  },
+  {
+    "id": "R095",
+    "name": "鋼製ラックギア",
+    "description": "直線状に歯が並ぶ機械部品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "R",
+    "baseValueFN": 720,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R095",
+    "rewardFN": 180
+  },
+  {
+    "id": "R096",
+    "name": "鋳鉄製滑車車輪",
+    "description": "溝のある重い円盤。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "SR",
+    "baseValueFN": 2600,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R096",
+    "rewardFN": 650
+  },
+  {
+    "id": "R097",
+    "name": "船用レバーの基部",
+    "description": "依頼契約で回収する機械部品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "SR",
+    "baseValueFN": 2600,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R097",
+    "rewardFN": 650
+  },
+  {
+    "id": "R098",
+    "name": "密閉された記録保管筒",
+    "description": "開封せず依頼窓口に引き渡す。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "SR",
+    "baseValueFN": 2600,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R098",
+    "rewardFN": 650
+  },
+  {
+    "id": "R099",
+    "name": "古い計測装置の筐体",
+    "description": "識別番号を調べる契約回収品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "SR",
+    "baseValueFN": 2600,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R099",
+    "rewardFN": 650
+  },
+  {
+    "id": "R100",
+    "name": "刻印入り精密機械ユニット",
+    "description": "専門部署へ返却する特別な依頼品。",
+    "category": "R",
+    "kind": "重量・契約品",
+    "rarity": "J",
+    "baseValueFN": 72000,
+    "locations": [
+      "R-C",
+      "R-D"
+    ],
+    "depth": [
+      120,
+      260
+    ],
+    "material": "iron",
+    "weight": 8,
+    "size": "大",
+    "magnetic": true,
+    "requiredToolCapabilities": [
+      "lift"
+    ],
+    "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+    "difficulty": 3,
+    "cleaning": "泥を洗い、刻印を照合",
+    "handlingType": "contract",
+    "contractOnly": true,
+    "spawnWeight": 1,
+    "imageId": "R100",
+    "rewardFN": 18000
+  },
+  {
+    "id": "G013",
+    "name": "正長石の劈開片",
+    "description": "直交に近い割れ面を持つ長石。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.56,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G013",
+    "rewardFN": 18
+  },
+  {
+    "id": "G014",
+    "name": "微斜長石の粒",
+    "description": "アルカリ長石の一種。割れ面を観察する。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 2.56,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G014",
+    "rewardFN": 18
+  },
+  {
+    "id": "G015",
+    "name": "斜長石の小片",
+    "description": "細い条線が見えることのある長石。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G015",
+    "rewardFN": 18
+  },
+  {
+    "id": "G016",
+    "name": "黒雲母の薄片",
+    "description": "薄く剥がれる暗い雲母。水流に流されやすい。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.3,
+    "density": 3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G016",
+    "rewardFN": 18
+  },
+  {
+    "id": "G017",
+    "name": "白雲母の薄片",
+    "description": "透明感のある薄い層を持つ雲母。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.2,
+    "density": 2.8,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G017",
+    "rewardFN": 18
+  },
+  {
+    "id": "G018",
+    "name": "金雲母の小片",
+    "description": "雲母の仲間で薄い板に剥がれる。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0004,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.4,
+    "density": 2.85,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G018",
+    "rewardFN": 65
+  },
+  {
+    "id": "G019",
+    "name": "角閃石の粒",
+    "description": "細長い結晶を作る鉱物群の粒。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G019",
+    "rewardFN": 18
+  },
+  {
+    "id": "G020",
+    "name": "普通輝石の粒",
+    "description": "柱状になりやすい造岩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G020",
+    "rewardFN": 18
+  },
+  {
+    "id": "G021",
+    "name": "かんらん石の粒",
+    "description": "丸く磨耗した粒状の造岩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 3.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G021",
+    "rewardFN": 65
+  },
+  {
+    "id": "G022",
+    "name": "ざくろ石の粒",
+    "description": "比重の高い粒が濃縮物に残る。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 4,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G022",
+    "rewardFN": 65
+  },
+  {
+    "id": "G023",
+    "name": "緑簾石の結晶片",
+    "description": "溝のある柱状結晶の一部。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.4,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G023",
+    "rewardFN": 65
+  },
+  {
+    "id": "G024",
+    "name": "緑泥石の集合片",
+    "description": "薄片が集まった柔らかい鉱物片。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 2.8,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G024",
+    "rewardFN": 18
+  },
+  {
+    "id": "G025",
+    "name": "方解石の劈開片",
+    "description": "斜めの割れ面を持つ炭酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.71,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G025",
+    "rewardFN": 18
+  },
+  {
+    "id": "G026",
+    "name": "苦灰石の小結晶",
+    "description": "炭酸塩鉱物の菱形結晶。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 2.85,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G026",
+    "rewardFN": 65
+  },
+  {
+    "id": "G027",
+    "name": "蛍石の割れ片",
+    "description": "平らな割れ面が組み合わさる鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 3.18,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G027",
+    "rewardFN": 65
+  },
+  {
+    "id": "G028",
+    "name": "燐灰石の粒",
+    "description": "六角柱を作ることのある鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 3.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G028",
+    "rewardFN": 65
+  },
+  {
+    "id": "G029",
+    "name": "トパーズの転石片",
+    "description": "硬い鉱物の磨耗した破片。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.5,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G029",
+    "rewardFN": 110
+  },
+  {
+    "id": "G030",
+    "name": "電気石の柱状片",
+    "description": "柱に細い縦筋を持つ鉱物片。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 3.1,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G030",
+    "rewardFN": 65
+  },
+  {
+    "id": "G031",
+    "name": "藍晶石の板状片",
+    "description": "細長い板の形をした鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 3.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G031",
+    "rewardFN": 110
+  },
+  {
+    "id": "G032",
+    "name": "珪線石の繊維状集合",
+    "description": "細い結晶が集まった標本。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.25,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G032",
+    "rewardFN": 110
+  },
+  {
+    "id": "G033",
+    "name": "紅柱石の柱状片",
+    "description": "角柱形を残す変成鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 3.15,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G033",
+    "rewardFN": 110
+  },
+  {
+    "id": "G034",
+    "name": "十字石の結晶片",
+    "description": "交差する結晶が知られる鉱物の一部。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G034",
+    "rewardFN": 110
+  },
+  {
+    "id": "G035",
+    "name": "ルチルの針状片",
+    "description": "酸化チタンの細い結晶。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.3,
+    "density": 4.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G035",
+    "rewardFN": 65
+  },
+  {
+    "id": "G036",
+    "name": "チタン鉄鉱の粒",
+    "description": "黒砂に混じる重い酸化鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0006,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.6,
+    "density": 4.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G036",
+    "rewardFN": 18
+  },
+  {
+    "id": "G037",
+    "name": "赤鉄鉱の粒",
+    "description": "鉄の酸化鉱物。磁鉄鉱とは磁性が異なる。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 5.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G037",
+    "rewardFN": 18
+  },
+  {
+    "id": "G038",
+    "name": "褐鉄鉱の集合粒",
+    "description": "鉄の水酸化物などが集まった粒。単独鉱物名ではない。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.8,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G038",
+    "rewardFN": 18
+  },
+  {
+    "id": "G039",
+    "name": "クロム鉄鉱の粒",
+    "description": "黒く重い酸化鉱物の粒。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0006,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.6,
+    "density": 4.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G039",
+    "rewardFN": 65
+  },
+  {
+    "id": "G040",
+    "name": "錫石の粒",
+    "description": "スズの酸化鉱物。重い粒として濃縮される。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0007,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.7,
+    "density": 7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G040",
+    "rewardFN": 110
+  },
+  {
+    "id": "G041",
+    "name": "ジルコンの粒",
+    "description": "小さくても比重の大きい鉱物粒。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0004,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.4,
+    "density": 4.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G041",
+    "rewardFN": 110
+  },
+  {
+    "id": "G042",
+    "name": "モナズ石の粒",
+    "description": "重鉱物砂に少量混じるリン酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.0003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.3,
+    "density": 5.1,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G042",
+    "rewardFN": 110
+  },
+  {
+    "id": "G043",
+    "name": "灰重石の小片",
+    "description": "タングステンを含む比重の高い鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G043",
+    "rewardFN": 110
+  },
+  {
+    "id": "G044",
+    "name": "重晶石の板状片",
+    "description": "見かけより重い硫酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 4.5,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G044",
+    "rewardFN": 65
+  },
+  {
+    "id": "G045",
+    "name": "天青石の小結晶",
+    "description": "硫酸塩鉱物の結晶片。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 4,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G045",
+    "rewardFN": 110
+  },
+  {
+    "id": "G046",
+    "name": "菱鉄鉱の粒",
+    "description": "鉄を含む炭酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.9,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G046",
+    "rewardFN": 65
+  },
+  {
+    "id": "G047",
+    "name": "菱マンガン鉱の小片",
+    "description": "マンガンを含む炭酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 3.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G047",
+    "rewardFN": 110
+  },
+  {
+    "id": "G048",
+    "name": "ロードナイトの転石片",
+    "description": "マンガンを含むケイ酸塩鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 3.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G048",
+    "rewardFN": 110
+  },
+  {
+    "id": "G049",
+    "name": "黄銅鉱の粒",
+    "description": "銅と鉄の硫化鉱物。金とは異なる。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 4.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G049",
+    "rewardFN": 18
+  },
+  {
+    "id": "G050",
+    "name": "斑銅鉱の小片",
+    "description": "表面の変色を伴うことのある銅鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 5.1,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G050",
+    "rewardFN": 65
+  },
+  {
+    "id": "G051",
+    "name": "磁硫鉄鉱の粒",
+    "description": "磁性を示すことがある鉄の硫化鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "pyrrhotite",
+    "weight": 0.0007,
+    "size": "細粒",
+    "magnetic": true,
+    "grain": 0.7,
+    "density": 4.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G051",
+    "rewardFN": 65
+  },
+  {
+    "id": "G052",
+    "name": "方鉛鉱の粒",
+    "description": "直角の割れ面を持つ重い硫化鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 7.5,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G052",
+    "rewardFN": 65
+  },
+  {
+    "id": "G053",
+    "name": "閃亜鉛鉱の小片",
+    "description": "亜鉛の硫化鉱物。割れ面に光沢がある。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 4,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G053",
+    "rewardFN": 65
+  },
+  {
+    "id": "G054",
+    "name": "孔雀石の付着片",
+    "description": "銅鉱物が母岩の表面に付着した標本。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 3.8,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G054",
+    "rewardFN": 65
+  },
+  {
+    "id": "G055",
+    "name": "藍銅鉱の付着片",
+    "description": "母岩に結晶が付いた銅鉱物標本。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 3.8,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G055",
+    "rewardFN": 110
+  },
+  {
+    "id": "G056",
+    "name": "自然銅の粒",
+    "description": "金属銅が自然にできた粒。磁石には付かない。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 8.9,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G056",
+    "rewardFN": 110
+  },
+  {
+    "id": "G057",
+    "name": "自然銀の付着片",
+    "description": "母岩に銀が付いた珍しい標本。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 10.5,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G057",
+    "rewardFN": 450
+  },
+  {
+    "id": "G058",
+    "name": "コランダムの粒",
+    "description": "硬い酸化アルミニウムの鉱物粒。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 4,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G058",
+    "rewardFN": 110
+  },
+  {
+    "id": "G059",
+    "name": "スピネルの粒",
+    "description": "八面体を作ることのある硬い鉱物。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.001,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1,
+    "density": 3.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G059",
+    "rewardFN": 110
+  },
+  {
+    "id": "G060",
+    "name": "蛇紋石の集合片",
+    "description": "繊維状とは限らない蛇紋石鉱物の集合体。",
+    "category": "G",
+    "kind": "鉱物",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "mineral",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.6,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G060",
+    "rewardFN": 18
+  },
+  {
+    "id": "G061",
+    "name": "玉髄脈の小片",
+    "description": "微細な石英が集まった脈の一部。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G061",
+    "rewardFN": 18
+  },
+  {
+    "id": "G062",
+    "name": "碧玉の礫",
+    "description": "不透明で緻密な石英質の礫。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G062",
+    "rewardFN": 18
+  },
+  {
+    "id": "G063",
+    "name": "燧石の礫",
+    "description": "貝殻状の割れ口を持つ緻密な石。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G063",
+    "rewardFN": 18
+  },
+  {
+    "id": "G064",
+    "name": "チャートの礫",
+    "description": "主に微細な石英からできた堆積岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 6,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G064",
+    "rewardFN": 18
+  },
+  {
+    "id": "G065",
+    "name": "黒曜石の破片",
+    "description": "火山ガラスの割れ片。角を傷めず回収する。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G065",
+    "rewardFN": 18
+  },
+  {
+    "id": "G066",
+    "name": "軽石の礫",
+    "description": "気泡が多く比重の小さい火山由来の石。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 1.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G066",
+    "rewardFN": 18
+  },
+  {
+    "id": "G067",
+    "name": "玄武岩の礫",
+    "description": "細かな結晶からなる火山岩の礫。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G067",
+    "rewardFN": 18
+  },
+  {
+    "id": "G068",
+    "name": "安山岩の礫",
+    "description": "斑晶が見えることのある火山岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 6,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G068",
+    "rewardFN": 18
+  },
+  {
+    "id": "G069",
+    "name": "花崗岩の礫",
+    "description": "石英や長石などの粒が見える深成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G069",
+    "rewardFN": 18
+  },
+  {
+    "id": "G070",
+    "name": "閃緑岩の礫",
+    "description": "粗い鉱物粒が組み合わさる深成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G070",
+    "rewardFN": 18
+  },
+  {
+    "id": "G071",
+    "name": "斑れい岩の礫",
+    "description": "暗色鉱物を多く含む深成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G071",
+    "rewardFN": 18
+  },
+  {
+    "id": "G072",
+    "name": "片麻岩の礫",
+    "description": "鉱物が帯状に並ぶ変成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 6,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G072",
+    "rewardFN": 18
+  },
+  {
+    "id": "G073",
+    "name": "結晶片岩の礫",
+    "description": "鉱物の並びによる片理を持つ変成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G073",
+    "rewardFN": 18
+  },
+  {
+    "id": "G074",
+    "name": "砂岩の礫",
+    "description": "砂粒が固まった堆積岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G074",
+    "rewardFN": 18
+  },
+  {
+    "id": "G075",
+    "name": "礫岩の小片",
+    "description": "丸い礫を含む堆積岩の一部。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G075",
+    "rewardFN": 18
+  },
+  {
+    "id": "G076",
+    "name": "珪岩の礫",
+    "description": "石英質の硬い変成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 6,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G076",
+    "rewardFN": 18
+  },
+  {
+    "id": "G077",
+    "name": "角礫岩の小片",
+    "description": "角張った岩片を含む岩石。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G077",
+    "rewardFN": 18
+  },
+  {
+    "id": "G078",
+    "name": "石灰岩の礫",
+    "description": "主に炭酸カルシウムからできた岩石。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G078",
+    "rewardFN": 18
+  },
+  {
+    "id": "G079",
+    "name": "ホルンフェルスの小片",
+    "description": "熱の影響で緻密になった変成岩。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G079",
+    "rewardFN": 18
+  },
+  {
+    "id": "G080",
+    "name": "蛇紋岩の礫",
+    "description": "蛇紋石鉱物を多く含む岩石。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "C",
+    "baseValueFN": 72,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 6,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G080",
+    "rewardFN": 18
+  },
+  {
+    "id": "G081",
+    "name": "石英脈を含む角礫",
+    "description": "割れ目を埋めた白い脈が残る。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.003,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 3,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G081",
+    "rewardFN": 65
+  },
+  {
+    "id": "G082",
+    "name": "長石を含むペグマタイト片",
+    "description": "大きな鉱物粒を持つ火成岩の一部。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.004,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 4,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G082",
+    "rewardFN": 65
+  },
+  {
+    "id": "G083",
+    "name": "石英と黄鉄鉱の共生標本",
+    "description": "異なる鉱物が接して成長した標本。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "rock",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 2.7,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G083",
+    "rewardFN": 65
+  },
+  {
+    "id": "G084",
+    "name": "磁鉄鉱を含む黒砂の塊",
+    "description": "磁性の粒が集まる濃集物。",
+    "category": "G",
+    "kind": "岩石・共生標本",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-A",
+      "G-B",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "magnetite",
+    "weight": 0.006,
+    "size": "粗粒",
+    "magnetic": true,
+    "grain": 6,
+    "density": 5.2,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G084",
+    "rewardFN": 65
+  },
+  {
+    "id": "G085",
+    "name": "石英脈付き自然金",
+    "description": "石英の脈に金が付いた産状を保つ。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0014,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1.4,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G085",
+    "rewardFN": 110
+  },
+  {
+    "id": "G086",
+    "name": "石英空洞の自然金",
+    "description": "母岩の小さな空洞に金が見える。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0012,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1.2,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G086",
+    "rewardFN": 450
+  },
+  {
+    "id": "G087",
+    "name": "鉄酸化物に付着した自然金",
+    "description": "風化した母岩に金が残る標本。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0008,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.8,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G087",
+    "rewardFN": 110
+  },
+  {
+    "id": "G088",
+    "name": "板状砂金",
+    "description": "水流で平たくなった金の粒。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.00025,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.25,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G088",
+    "rewardFN": 65
+  },
+  {
+    "id": "G089",
+    "name": "鱗片状砂金",
+    "description": "薄く広がった粒。精密回収が必要。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.00011999999999999999,
+    "size": "微粒",
+    "magnetic": false,
+    "grain": 0.12,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "precision"
+    ],
+    "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+    "difficulty": 3,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G089",
+    "rewardFN": 65
+  },
+  {
+    "id": "G090",
+    "name": "折り畳まれた砂金",
+    "description": "変形して層状になった金の粒。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.2,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G090",
+    "rewardFN": 110
+  },
+  {
+    "id": "G091",
+    "name": "丸みのある砂金",
+    "description": "運搬中に縁が磨耗した粒。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.00035,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.35,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G091",
+    "rewardFN": 65
+  },
+  {
+    "id": "G092",
+    "name": "多孔質自然金",
+    "description": "小孔を持つ複雑な形の標本。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0015,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1.5,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G092",
+    "rewardFN": 450
+  },
+  {
+    "id": "G093",
+    "name": "樹枝状自然金",
+    "description": "枝分かれした成長形を残す標本。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.002,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 2,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G093",
+    "rewardFN": 450
+  },
+  {
+    "id": "G094",
+    "name": "線状自然金",
+    "description": "細く伸びた金属の形を残す。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0006,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 0.6,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G094",
+    "rewardFN": 450
+  },
+  {
+    "id": "G095",
+    "name": "結晶面のある自然金",
+    "description": "結晶の平面が見える珍しい標本。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "SR",
+    "baseValueFN": 1800,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0018,
+    "size": "細粒",
+    "magnetic": false,
+    "grain": 1.8,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G095",
+    "rewardFN": 450
+  },
+  {
+    "id": "G096",
+    "name": "薄膜状自然金",
+    "description": "母岩に薄く付着した金。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.00008,
+    "size": "微粒",
+    "magnetic": false,
+    "grain": 0.08,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "precision"
+    ],
+    "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+    "difficulty": 3,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G096",
+    "rewardFN": 110
+  },
+  {
+    "id": "G097",
+    "name": "重鉱物に挟まった砂金",
+    "description": "黒砂を分けると見つかる微粒。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0001,
+    "size": "微粒",
+    "magnetic": false,
+    "grain": 0.1,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "precision"
+    ],
+    "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+    "difficulty": 3,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G097",
+    "rewardFN": 65
+  },
+  {
+    "id": "G098",
+    "name": "微細砂金の集合",
+    "description": "小さな粒が濃縮物に集まっている。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "U",
+    "baseValueFN": 260,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.000059999999999999995,
+    "size": "微粒",
+    "magnetic": false,
+    "grain": 0.06,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "precision"
+    ],
+    "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+    "difficulty": 3,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G098",
+    "rewardFN": 65
+  },
+  {
+    "id": "G099",
+    "name": "石英粒に付いた微小金",
+    "description": "小さな母岩から慎重に回収する。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "R",
+    "baseValueFN": 440,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.0001,
+    "size": "微粒",
+    "magnetic": false,
+    "grain": 0.1,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "precision"
+    ],
+    "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+    "difficulty": 3,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G099",
+    "rewardFN": 110
+  },
+  {
+    "id": "G100",
+    "name": "扁平な天然金ナゲット",
+    "description": "大きく平たい特別採取品。",
+    "category": "G",
+    "kind": "天然金",
+    "rarity": "J",
+    "baseValueFN": 72000,
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "depth": [
+      0,
+      0
+    ],
+    "material": "gold",
+    "weight": 0.005,
+    "size": "粗粒",
+    "magnetic": false,
+    "grain": 5,
+    "density": 19.3,
+    "requiredToolCapabilities": [
+      "pan"
+    ],
+    "conditions": "対応する地質の砂利を採取し比重選別",
+    "difficulty": 1,
+    "cleaning": "水洗いし粒径・形・光沢を鑑定",
+    "handlingType": "mineral",
+    "contractOnly": false,
+    "spawnWeight": 1,
+    "imageId": "G100",
+    "rewardFN": 18000
+  }
+]

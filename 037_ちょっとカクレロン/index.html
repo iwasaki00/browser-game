@@ -6,23 +6,25 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=0.2.0">
+  <script src="paint.js?v=0.2.0" defer></script>
+  <script src="app.js?v=0.2.0" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">ちょっと、かくれる準備。</p><h1>ちょっとカクレロン</h1><p class="version">v0.1.0 <span>BASE</span></p></div>
+      <div><p class="eyebrow">ちょっと、背景になじんでみよう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.2.0 <span>CAMOUFLAGE / 擬態ペイント</span></p></div>
       <button id="change-image" class="secondary" hidden>画像変更</button>
     </header>
     <section class="workspace" aria-label="画像編集エリア">
-      <div class="workspace-heading"><span><i></i> 配置スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
+      <div class="workspace-heading"><span><i></i> 擬態スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
       <div id="stage" class="stage">
         <canvas id="canvas" tabindex="0" aria-label="カクレロンの配置。ドラッグで移動。矢印キーでも移動できます。" hidden></canvas>
+        <canvas id="loupe" class="loupe" width="120" height="120" aria-hidden="true" hidden></canvas>
         <div id="empty-state" class="empty-state">
           <img src="assets/kakureron.svg" alt="顔のない白い人型のカクレロン" width="100" height="150" draggable="false">
           <h2>ここから、かくれよう。</h2>
-          <p>好きな写真にカクレロンを置いて、<br>ぴったりの場所を探してみよう。</p>
+          <p>写真の色を集めて、カクレロンを塗ろう。<br>背景になじむ、自分だけの擬態ペイント。</p>
           <button id="choose-image" class="primary"><span aria-hidden="true">＋</span> 画像を選ぶ</button>
           <p class="privacy">写真はサーバーへ送信されません</p>
         </div>
@@ -31,11 +33,22 @@
     </section>
     <section class="controls" aria-label="配置の調整">
       <div class="control-heading"><h2>カクレロンを調整</h2><button id="reset" class="reset" disabled>↺ リセット</button></div>
-      <div class="control-grid">
+      <div class="mode-bar" role="group" aria-label="編集モード">
+        <button data-mode="place" aria-pressed="true" disabled>配置</button>
+        <button data-mode="pick" aria-pressed="false" disabled>スポイト</button>
+        <button data-mode="paint" aria-pressed="false" disabled>ペイント</button>
+        <button data-mode="erase" aria-pressed="false" disabled>消しゴム</button>
+      </div>
+      <div class="paint-toolbar">
+        <span class="current-color">現在色 <i id="color-swatch"></i><output id="color-value">#FFFFFF</output></span>
+        <div class="history-buttons"><button id="undo" disabled>戻す</button><button id="redo" disabled>やり直す</button></div>
+      </div>
+      <div id="placement-controls" class="control-grid">
         <div class="control-group"><span class="control-label">サイズ <output id="size-value">18%</output></span><div class="stepper"><button id="smaller" aria-label="小さくする" disabled>−</button><span>サイズ</span><button id="larger" aria-label="大きくする" disabled>＋</button></div></div>
         <div class="control-group"><span class="control-label">角度 <output id="angle-value">0°</output></span><div class="stepper"><button id="rotate-left" aria-label="左に5度回転" disabled>↶</button><span>回転</span><button id="rotate-right" aria-label="右に5度回転" disabled>↷</button></div></div>
       </div>
-      <p class="gesture-help">1本指で移動 <span>／</span> 2本指でサイズ・角度を調整</p>
+      <div id="brush-controls" class="brush-controls" role="group" aria-label="ブラシサイズ" hidden><span>ブラシ</span><button data-brush="small" aria-pressed="false" disabled>小</button><button data-brush="medium" aria-pressed="true" disabled>中</button><button data-brush="large" aria-pressed="false" disabled>大</button></div>
+      <p id="gesture-help" class="gesture-help">1本指で移動 ／ 2本指でサイズ・角度を調整</p>
     </section>
     <footer>写真も、作業も、このブラウザの中だけ。</footer>
     <p id="status" class="status" role="status" aria-live="polite"></p>
