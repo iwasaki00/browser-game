@@ -1,0 +1,91 @@
+import {tool,CONFIG} from './data';
+import {plot,stored,sortBatch,type State,type Plot,type Find} from './engine';
+import {batchRemaining} from './tool-value';
+import {riverCheck,riverCapabilities,riverStart,riverPull,type RiverSession} from './river';
+import {beginGoldWork,goldMotion,goldTick,availableGrains,type GoldWork} from './gold';
+import {logEvent} from './events';
+
+export type MachineId='B301'|'R301'|'G304';
+export type MachineStatus='未購入'|'停止中'|'稼働中'|'材料待ち'|'出力満杯'|'処理不能';
+export interface MachineDefinition {id:MachineId;field:'B'|'R'|'G';role:string;requires:string[][];rate:number;input:number;output:number;unit:string;}
+// Prices and names remain those of the original 126-entry master. These occupy no quick slot.
+export const machines:MachineDefinition[]=[
+ {id:'B301',field:'B',role:'採取済みの砂を自動選別。発見品の洗浄は手作業',requires:[['B104','B208']],rate:180,input:240,output:8,unit:'砂単位/分'},
+ {id:'R301',field:'R',role:'指定済み対象を構成した道具で順番に巻上げ。探索と洗浄は手作業',requires:[['R104','R106','R203'],['R110']],rate:70/0.75,input:12,output:8,unit:'引き量/秒'},
+ {id:'G304',field:'G',role:'採取済み砂利を粒径・比重選別へ搬送。粒の精密回収は手作業',requires:[['G103','G202'],['G102','G201','G203']],rate:180,input:240,output:12,unit:'供給単位/分'}
+];
+export interface Machine {id:MachineId;running:boolean;status:MachineStatus;reason:string;active?:string;processed:number;uptime:number;elapsed:number;stopped:number;found:number;input:number;fn:number;}
+export interface AutoJob {id:string;order:number;field:'B'|'R'|'G';machine:MachineId;source:string;amount:number;processed:number;remaining:number;progress:number;state:'queued'|'working'|'failed'|'done';reason:string;outputs:string[];tools:string[];primary:string;plot?:Plot;session?:RiverSession;goldWork?:GoldWork;stage:'feed'|'screen'|'magnet'|'separate'|'pull';fed:number;}
+export interface Automation {version:1;next:number;machines:Partial<Record<MachineId,Machine>>;jobs:AutoJob[];history:{id:string;machine:MachineId;amount:number;outputs:number;state:string;reason:string}[];}
+export const auto=(s:State):Automation=>s.automation??={version:1,next:1,machines:{},jobs:[],history:[]};
+export const definition=(id:MachineId)=>machines.find(m=>m.id===id)!;
+export const machineName=(id:MachineId)=>tool(id)!.name;
+export function requirement(s:State,id:MachineId){const d=definition(id);return d.requires.every(group=>group.some(t=>s.ownedTools.includes(t)));}
+export function machineUnlocked(s:State,id:MachineId){return id==='B301'?s.sandSampled||s.collectedTreasures.length>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
+export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||s.currentFN<tool(id)!.priceFN)return false;s.currentFN-=tool(id)!.priceFN;auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};logEvent(s,'設備購入',id);return true;}
+export function setMachineRunning(s:State,id:MachineId,running:boolean){const m=auto(s).machines[id];if(!m)return false;m.running=running;m.status=running?'材料待ち':'停止中';m.reason=running?'登録された作業を待っています':'進捗を保持して一時停止';return true;}
+export const liveJobs=(s:State,id?:MachineId)=>auto(s).jobs.filter(j=>j.state!=='done'&&(!id||j.machine===id));
+export const allAutoFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
+export function machineOutput(s:State,id:MachineId){const uids=new Set(auto(s).jobs.filter(j=>j.machine===id).flatMap(j=>j.outputs));for(const f of allAutoFinds(s))if(f.automationMachine===id&&(f.state==='stored'||f.state==='batch'))uids.add(f.uid);return allAutoFinds(s).filter(f=>uids.has(f.uid)&&(id==='G304'?f.state==='batch':f.state==='stored'));}
+function queuedAmount(s:State,id:MachineId){return liveJobs(s,id).reduce((n,j)=>n+j.remaining,0);}
+export function enqueueMaterial(s:State,id:MachineId,source:string,primary='',tools:string[]=[]){
+ const a=auto(s),d=definition(id),m=a.machines[id];if(!m||liveJobs(s).length>=64)return {ok:false,reason:'未購入、または作業キューが満杯です'};
+ let amount=0,riverPlot:Plot|undefined;
+ if(id==='B301'){const b=s.sandBatches.find(b=>b.id===source);if(!b||b.processed||b.automationJob)return {ok:false,reason:'投入できる砂がありません'};amount=batchRemaining(b);primary=s.ownedTools.includes('B208')?'B208':'B104';}
+ else if(id==='G304'){const b=s.gravelBatches?.find(b=>b.id===source);if(!b||b.processed>=b.amount||b.automationJob||s.goldWork?.batchId===source||s.sluiceFeed?.includes(source))return {ok:false,reason:'投入できる未処理砂利がありません'};amount=b.amount-b.processed;if(!primary)primary=s.ownedTools.includes('G203')?'G203':s.ownedTools.includes('G201')?'G201':'G102';if(!['G102','G201','G203'].includes(primary)||!s.ownedTools.includes(primary))return {ok:false,reason:'比重選別道具を選んでください'};}
+ else{const f=plot(s).items.find(f=>f.uid===source);if(!f||f.state!=='buried'||f.automationJob||!plot(s).areaId?.startsWith('R-'))return {ok:false,reason:'現在の川底で未登録の影を指定してください'};if(!['R103','R104','R106','R201','R202','R203'].includes(primary))return {ok:false,reason:'磁石かフックを選んでください'};amount=1;riverPlot={...plot(s),mask:[],items:[f]};}
+ if(amount<=1e-8||queuedAmount(s,id)+amount>d.input+1e-7)return {ok:false,reason:`入力容量 ${d.input} を超えます。空きを待ってください`};
+ tools=[...new Set([primary,...tools])].filter(t=>s.ownedTools.includes(t)).slice(0,4);if(!tools.includes(primary))return {ok:false,reason:'必要な道具を所持していません'};
+ const order=a.next++,job:AutoJob={id:`${s.playerId}:auto:${order}`,order,field:d.field,machine:id,source,amount,processed:0,remaining:amount,progress:0,state:'queued',reason:'作業待ち',outputs:[],tools,primary,stage:id==='G304'?'feed':'pull',fed:0,...(riverPlot?{plot:riverPlot}:{})};
+ if(id==='B301')s.sandBatches.find(b=>b.id===source)!.automationJob=job.id;else if(id==='G304')s.gravelBatches!.find(b=>b.id===source)!.automationJob=job.id;else plot(s).items.find(f=>f.uid===source)!.automationJob=job.id;
+ a.jobs.push(job);m.input+=amount;logEvent(s,'設備作業登録',job.id);return {ok:true,reason:'作業キューへ登録しました',job};
+}
+function release(s:State,j:AutoJob){const b=j.field==='B'?s.sandBatches.find(b=>b.id===j.source):j.field==='G'?s.gravelBatches?.find(b=>b.id===j.source):allAutoFinds(s).find(f=>f.uid===j.source);if(b?.automationJob===j.id)delete b.automationJob;}
+export function retryJob(s:State,id:string,primary?:string,tools?:string[]){const j=auto(s).jobs.find(j=>j.id===id);if(!j||j.state!=='failed')return false;if(primary){if(!['R103','R104','R106','R201','R202','R203'].includes(primary)||!s.ownedTools.includes(primary))return false;j.primary=primary;j.tools=[...new Set([primary,...(tools??[])])].filter(t=>s.ownedTools.includes(t)).slice(0,4);}j.state='queued';j.reason='再指示待ちを解除';delete j.session;return true;}
+export function cancelJob(s:State,id:string){const a=auto(s),j=a.jobs.find(j=>j.id===id);if(!j)return false;if(j.goldWork)return false;release(s,j);a.jobs=a.jobs.filter(x=>x!==j);archive(a,j,'cancelled');return true;}
+function archive(a:Automation,j:AutoJob,state:string=j.state){a.history.push({id:j.id,machine:j.machine,amount:j.processed,outputs:j.outputs.length,state,reason:j.reason});a.history=a.history.slice(-100);}
+function context(s:State,j:AutoJob):State {const p=j.plot??plot(s);s.recoveryHistory??=[];s.events??=[];s.operationMetrics??={};const free=definition(j.machine).output-machineOutput(s,j.machine).length;return {...s,automationAccess:j.id,automationStoreLimit:stored(s).length+free,automationOutputLimit:free+(j.field==='G'?availableGrains(s,s.gravelBatches!.find(b=>b.id===j.source)!).length:0),equippedTools:j.tools,quickSlots:j.tools,explorationAreas:[{...p,mask:p.mask.length?p.mask:Array(1008).fill(0),items:j.plot?j.plot.items:plot(s).items}],retainedFinds:s.retainedFinds.filter(f=>!p.items.some(x=>x.uid===f.uid)),goldWork:j.goldWork,sluiceFeed:[],riverSession:j.session,playerStats:{...s.playerStats,stamina:100,xp:[...s.playerStats.xp]}};}
+function failure(j:AutoJob,m:Machine,reason:string){j.state='failed';j.reason=reason;m.status='処理不能';m.reason=reason;delete j.session;}
+function complete(s:State,j:AutoJob,m:Machine){j.state='done';j.progress=1;j.remaining=0;j.reason='完了';release(s,j);archive(auto(s),j);auto(s).jobs=auto(s).jobs.filter(x=>x!==j);m.active=undefined;}
+// No wall-clock timestamps are used: callers provide visible-session game seconds only.
+export function automationTick(s:State,seconds:number,visible=true){if(!visible||!Number.isFinite(seconds)||seconds<=0)return;
+ // Fixed small slices make 1x / 2x / 10x independent of scheduling and output capacity.
+ let remaining=seconds;while(remaining>1e-8){const dt=Math.min(.1,remaining);remaining-=dt;for(const d of machines){const m=auto(s).machines[d.id];if(!m)continue;m.elapsed+=dt;
+ const jobs=liveJobs(s,d.id),j=jobs.find(j=>j.state!=='failed');m.active=j?.id;
+ if(!m.running){m.status='停止中';m.reason='進捗を保持して一時停止';m.stopped+=dt;continue;}
+ if(!requirement(s,d.id)){m.status='処理不能';m.reason='前提道具が不足しています';m.stopped+=dt;continue;}
+ if(!j){m.status=jobs.length?'処理不能':'材料待ち';m.reason=jobs.length?'失敗した作業は道具を変更して再指示してください':'材料・登録対象を待っています';m.stopped+=dt;continue;}
+ if(machineOutput(s,d.id).length>=d.output||d.id!=='G304'&&stored(s).length>=CONFIG.capacity){m.status='出力満杯';m.reason=d.id==='G304'?'選別台で粒を精密回収してください':'洗浄して保管を空けてください';m.stopped+=dt;continue;}
+ m.status='稼働中';m.reason=j.field==='G'?({feed:'砂利を供給中',screen:'粒径選別中',magnet:'砂鉄分離中',separate:'比重選別中',pull:'処理中'}[j.stage]):j.field==='R'?'指定対象を巻上げ中':'砂を選別中';j.state='working';m.uptime+=dt;
+ const before=new Set(allAutoFinds(s).filter(f=>f.state==='stored').map(f=>f.uid)),previous=j.processed;
+ if(j.field==='B'){const b=s.sandBatches.find(b=>b.id===j.source);if(!b){failure(j,m,'砂バッチの参照がありません');continue;}const c=context(s,j),r=sortBatch(c,b,'sieve',d.rate/60*dt,'B104',1);j.processed+=r.units;j.remaining=Math.max(0,batchRemaining(b));j.progress=Math.min(1,j.processed/Math.max(j.amount,j.processed+j.remaining));if(b.processed)j.remaining=0;}
+ else if(j.field==='R'){const c=context(s,j),f=j.plot!.items[0];if(f.state!=='buried'){if(f.state==='stored'||f.state==='paid'){j.processed=1;j.remaining=0;}else failure(j,m,'対象の状態が変わっています');}
+ else{const reason=riverCheck(c,j.primary,f);if(reason){failure(j,m,reason);continue;}if(!c.riverSession){const r=riverStart(c,j.primary,f.x,f.y,riverCapabilities(c,j.primary).rope);if(!r.ok){failure(j,m,r.reason);continue;}}
+ const r=riverPull(c,d.rate*dt);j.session=c.riverSession;j.progress=r.recovered?1:j.session?.progress??0;j.processed=j.progress;j.remaining=1-j.progress;if(!r.ok){failure(j,m,r.reason);continue;}}
+ }
+ else{const b=s.gravelBatches?.find(b=>b.id===j.source);if(!b){failure(j,m,'砂利バッチの参照がありません');continue;}const c=context(s,j);const screen=j.tools.includes('G202')?'G202':'G103';
+ if(j.stage==='feed'){j.fed=Math.min(j.amount,j.fed+d.rate/60*dt);if(j.fed>=j.amount-1e-8)j.stage=j.tools.includes('G205')?'magnet':'screen';}
+ else if(j.stage==='screen'){if(b.screened>=b.amount-1e-8)j.stage='separate';else{if(!c.goldWork)beginGoldWork(c,b.id,screen);if(c.goldWork)goldMotion(c,dt/.6*24,dt);}}
+ else if(j.stage==='magnet'){if((b.magnetized??0)>=b.amount-1e-8)j.stage='screen';else{if(!c.goldWork)beginGoldWork(c,b.id,'G205');if(c.goldWork)goldMotion(c,dt/.6*24,dt);}}
+ else{if(b.processed>=b.amount-1e-8){j.remaining=0;j.processed=j.amount;}else{if(!c.goldWork)beginGoldWork(c,b.id,j.primary);if(c.goldWork){if(c.goldWork.mode==='sluice')goldTick(c,dt);else goldMotion(c,dt/.6*24,dt);}}}
+ j.goldWork=c.goldWork;j.processed=Math.max(0,b.processed-(b.amount-j.amount));j.remaining=Math.max(0,j.amount-j.processed);j.progress=Math.min(1,(j.fed/j.amount+Math.min(1,b.screened/b.amount)+j.processed/j.amount)/3);
+ for(const f of availableGrains(s,b))if(!j.outputs.includes(f.uid)){j.outputs.push(f.uid);f.automationMachine=d.id;m.found++;}
+ }
+ for(const f of allAutoFinds(s))if(f.state==='stored'&&!before.has(f.uid)){f.automationMachine=d.id;if(!j.outputs.includes(f.uid)){j.outputs.push(f.uid);m.found++;}}
+ if(j.goldWork&&j.goldWork.work>=j.goldWork.required-1e-8){m.status='出力満杯';m.reason='次の処理結果の場所が不足。選別台で粒を精密回収してください';}
+ m.processed+=Math.max(0,j.processed-previous);if(j.remaining<1e-7)complete(s,j,m);
+ }}}
+export function automationReport(s:State,id:MachineId){const m=auto(s).machines[id],jobs=liveJobs(s,id),out=machineOutput(s,id).length,waiting=queuedAmount(s,id),d=definition(id);let bottleneck='データ不足',advice='材料と処理の実績を集めよう';
+ if(out>=d.output||stored(s).length>=CONFIG.capacity){bottleneck=id==='G304'?'精密回収待ちが増えています':'回収品の洗浄待ちが増えています';advice=id==='G304'?'選別台で粒を回収しよう。吸引瓶は反復回収を減らせます':'洗浄して次の出力を受け取ろう';}
+ else if(jobs.some(j=>j.state==='failed')){bottleneck='回収条件が不足しています';advice='失敗理由に合う道具構成で再指示しよう';}
+ else if(m&&m.elapsed>=10){if(waiting>0){bottleneck=id==='B301'?'砂の選別待ちがあります':id==='R301'?'川底の引き上げ待ちがあります':'砂利の工程待ちがあります';advice=id==='G304'?'進行中の工程を確認。多段ふるい・スルースで該当工程を改善できます':'ほかの探索を進めながら処理を待てます';}else{bottleneck='材料の供給が不足しています';advice='手作業で採取、または対象を指定しよう';}}
+ const minutes=(m?.elapsed??0)/60;return {status:m?.status??'未購入',reason:m?.reason??'設備画面で購入',waiting,output:out,rate:d.rate,unit:d.unit,bottleneck,advice,inputRate:minutes?m!.input/minutes:0,processingRate:minutes?m!.processed/minutes:0,outputRate:minutes?m!.found/minutes:0,utilization:m?.elapsed?m.uptime/m.elapsed:0,stopped:m?.stopped??0,processed:m?.processed??0,found:m?.found??0,fn:m?.fn??0};}
+export function restoreAutomation(s:State){if(!s.automation)return;const a=s.automation;if(a.version!==1||!Number.isSafeInteger(a.next)||a.next<1||!Array.isArray(a.jobs)||a.jobs.length>64||!Array.isArray(a.history))throw Error('設備セーブが不正です');const ids=new Set<string>(),sources=new Set<string>();
+ for(const j of a.jobs){if(ids.has(j.id)||sources.has(j.field+':'+j.source)||!machines.some(m=>m.id===j.machine)||!a.machines[j.machine]||![j.amount,j.processed,j.remaining,j.progress,j.fed,j.order].every(Number.isFinite)||j.amount<=0||j.processed<0||j.remaining<0||j.progress<0||j.progress>1||!['queued','working','failed'].includes(j.state)||j.tools.length>4||j.order>=a.next)throw Error('作業キューが不正です');ids.add(j.id);sources.add(j.field+':'+j.source);
+ const b=j.field==='B'?s.sandBatches.find(b=>b.id===j.source):j.field==='G'?s.gravelBatches?.find(b=>b.id===j.source):allAutoFinds(s).find(f=>f.uid===j.source);if(!b||b.automationJob!==j.id)throw Error('設備の材料予約が不正です');if(j.plot){const f=allAutoFinds(s).find(f=>f.uid===j.source);if(!f)throw Error('設備対象がありません');j.plot.items=[f];}
+ if(j.goldWork){const c=context(s,j);if(c.goldWork!.batchId!==j.source||!Number.isFinite(c.goldWork!.work)||!Number.isFinite(c.goldWork!.required)||c.goldWork!.work<0||c.goldWork!.work>c.goldWork!.required||c.goldWork!.required<=0)throw Error('設備の工程進捗が不正です');}
+ }
+ for(const [id,m] of Object.entries(a.machines)){if(!machines.some(d=>d.id===id)||!m||![m.processed,m.uptime,m.elapsed,m.stopped,m.found,m.input,m.fn].every(n=>Number.isFinite(n)&&n>=0))throw Error('設備の統計が不正です');m.running=false;m.status='停止中';m.reason='保存した進捗から再開できます。閉じていた時間は処理しません';}a.history=a.history.slice(-100);
+}
+// Visibility changes reset the clock; no suspended interval is ever credited.
+export class SessionClock {private previous:number|undefined;sample(now:number,visible:boolean,speed=1){if(!visible){this.previous=undefined;return 0;}if(this.previous===undefined){this.previous=now;return 0;}const dt=Math.max(0,Math.min(.1,(now-this.previous)/1000));this.previous=now;return dt*speed;}reset(){this.previous=undefined;}}

@@ -43,6 +43,7 @@ function failure(s:State,reason:string){const m=metrics(s);m.failures[reason]=(m
 export function riverCheck(s:State,id:string,f:Find,includeLift=true){
  const c=riverCapabilities(s,id),weight=f.weight??treasure(f.id).weight;
  if(!c.valid)return '回収道具を選んでください。巻取り器・滑車は装備枠で組み合わせます。';
+ if(f.automationJob&&s.automationAccess!==f.automationJob)return '設備に登録中です。設備パネルで作業を確認してください';
  if(!isRiver(s)||f.state!=='buried')return '回収済みです。';
  if((c.rope?Math.hypot(f.x-180,278-f.y):280-f.y)>c.reach)return c.rope?'ロープが届かない。岸に近い場所を狙おう。':'届かない。もっと長い道具が必要そうだ。';
  if(f.obstacle&&!(c.hook||c.camera&&f.riverCameraObserved))return '岩の隙間に引っかかっている。回収フックが必要そうだ。';
@@ -59,7 +60,7 @@ export function riverStart(s:State,id:string,x:number,y:number,cast=false){
  if(c.rope&&!cast)return failure(s,'岸から水底へスワイプして磁石を投げよう。');
  const distance=Math.hypot(x-180,y-278),ratio=Math.min(1,c.reach/Math.max(1,distance));
  const target=c.rope?{x:180+(x-180)*ratio,y:278+(y-278)*ratio}:{x,y};
- const candidates=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&Math.hypot(f.x-target.x,f.y-target.y)<=c.radius).sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y));
+ const candidates=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&(!f.automationJob||f.automationJob===s.automationAccess)&&Math.hypot(f.x-target.x,f.y-target.y)<=c.radius).sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y));
  const f=candidates[0];logEvent(s,c.rope?'磁石投擲':'対象選択',`${id} / ${target.x.toFixed(0)},${target.y.toFixed(0)}`);
  s.riverSession={tool:id,...target,originX:180,originY:278,progress:0,phase:'empty',elapsed:0,magnetic:c.magnetic,operations:0};
  if(!f)return failure(s,c.rope&&distance>c.reach?'ロープが届かない。もう少し近くを狙おう。':'手応えなし。違う場所を探そう。');
@@ -82,7 +83,7 @@ export function riverTick(s:State,seconds:number){if(s.riverSession)s.riverSessi
 
 export function riverObserve(s:State,id:string,x:number,y:number){
  if(!isRiver(s)||!riverObservation(id)||!s.ownedTools.includes(id))return {ok:false,reason:'観察道具を選んでください。'};
- const f=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&Math.hypot(f.x-x,f.y-y)<22).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];
+ const f=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&(!f.automationJob||f.automationJob===s.automationAccess)&&Math.hypot(f.x-x,f.y-y)<22).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];
  if(!f||Math.hypot(f.x-180,278-f.y)>330)return {ok:false,reason:'観察できる影がありません。'};
  f.riverObserved=true;if(id==='R204')f.riverCameraObserved=true;else f.riverLoadMeasured=true;const before=s.playerStats.stamina;s.playerStats.stamina=Math.max(0,before-fieldProfiles[id].cost);measure(s,id,'川底観察',1,before-s.playerStats.stamina,1);logEvent(s,'川底観察',id);
  return {ok:true,reason:id==='R210'?'荷重の目安 '+(f.weight??treasure(f.id).weight).toFixed(1)+'kg。引き上げ能力を確認しよう。':(f.magnetic??treasure(f.id).magnetic)?'鉄系の反応'+(f.obstacle?'・隙間にある':'・障害物なし'):'磁石に付かない反応'+(f.obstacle?'・隙間にある':'・障害物なし')};

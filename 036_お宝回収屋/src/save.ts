@@ -1,3 +1,4 @@
+import {restoreAutomation} from './automation';
 import {createState,surfaceY,refresh,type State,type Plot} from './engine';
 import {plotDepthScale} from './beach-tools';
 import {validateGold} from './gold';
@@ -37,7 +38,7 @@ export function migrate(raw:unknown):State {
  if(s.riverSession&&(!s.explorationAreas[0].areaId?.startsWith('R-')||!Number.isFinite(s.riverSession.progress)||s.riverSession.progress<0||s.riverSession.progress>1))delete s.riverSession;
  for(const f of [...s.explorationAreas[0].items,...s.retainedFinds])if(f.weight!==undefined&&(!Number.isFinite(f.weight)||f.weight<=0))throw Error('重量データが不正です');
  // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
- validateGold(s);migrateEquipment(s);refresh(s);return s;
+ validateGold(s);restoreAutomation(s);migrateEquipment(s);refresh(s);return s;
 }
 export async function load(scope:SaveScope='normal'):Promise<State|null>{const key=saveKey(scope);const backupRaw=localStorage.getItem(key);let backup:State|null=null,backupError:unknown;try{backup=backupRaw?migrate(JSON.parse(backupRaw)):null;}catch(e){backupError=e;}try{const db=await open(key);const raw=await new Promise<unknown>((resolve,reject)=>{const tx=db.transaction('saves');const r=tx.objectStore('saves').get('current');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();});const primary=raw?migrate(raw):null;if(backup&&(!primary||backup.lastSavedAt>=primary.lastSavedAt))return backup;if(primary)return primary;if(backupError)throw backupError;return null;}catch(e){if(backup)return backup;throw e;}}
 let queue:Promise<unknown>=Promise.resolve();

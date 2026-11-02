@@ -7,7 +7,7 @@ import {measure,measureSeconds} from './measure';
 
 export const GOLD_TOOLS=[...GOLD_ADDED,'G101','G102','G103','G105','G110','G201','G203'];
 export interface GravelSite {id:string;x:number;y:number;total:number;collected:number;coarse:number;items:string[];rich:boolean;announced?:boolean;}
-export interface GravelBatch {fineScreened?:number;magnetized?:number;magnetRecovered?:string[]; id:string;plotId:string;siteId:string;x:number;y:number;amount:number;coarse:number;collectedTool:string;screened:number;processed:number;handProcessed:number;contents:string[];separated:string[];recovered:string[];losses:Record<string,number>;passes:number;reprocessCursor?:number;}
+export interface GravelBatch {automationJob?:string;fineScreened?:number;magnetized?:number;magnetRecovered?:string[]; id:string;plotId:string;siteId:string;x:number;y:number;amount:number;coarse:number;collectedTool:string;screened:number;processed:number;handProcessed:number;contents:string[];separated:string[];recovered:string[];losses:Record<string,number>;passes:number;reprocessCursor?:number;}
 export interface GoldWork {prepared?:boolean;fineFraction?:number;magneticFraction?:number; batchId:string;tool:string;mode:'pan'|'screen'|'sluice'|'magnet';start:number;load:number;work:number;required:number;rough:number;strokes:number;reprocess:boolean;}
 export interface GoldStatistics {found:string[];panCompleted:number;specialSites:{plotId:string;siteId:string;time:number}[];}
 export const isGold=(s:State)=>s.explorationAreas[0].areaId?.startsWith('G-')??false;
@@ -47,7 +47,7 @@ export function collectGravel(s:State,id:string,x:number,y:number,stroke:number)
  if(!site){result.reason='採取できる砂利の輪をなぞろう。';return result;}
  if((s.gravelBatches?.filter(b=>b.processed<b.amount||availableGrains(s,b).length).length??0)>=300){result.reason='砂利袋がいっぱい。選別台で処理しよう。';return result;}
  const bucket=s.equippedTools.includes('G108')&&s.ownedTools.includes('G108'),from=site.collected,amount=Math.min(site.total-from,id==='G106'?10:id==='G101'?6:1);site.collected+=amount;
- const existing=['G101','G106'].includes(id)?s.gravelBatches?.find(b=>b.plotId===p.id&&(bucket||b.siteId===site.id)&&b.collectedTool===id&&b.processed===0&&b.screened===0&&b.amount<(bucket?86:42)&&b.id!==s.goldWork?.batchId&&!s.sluiceFeed?.includes(b.id)):undefined;
+ const existing=['G101','G106'].includes(id)?s.gravelBatches?.find(b=>b.plotId===p.id&&(bucket||b.siteId===site.id)&&b.collectedTool===id&&!b.automationJob&&b.processed===0&&b.screened===0&&b.amount<(bucket?86:42)&&b.id!==s.goldWork?.batchId&&!s.sluiceFeed?.includes(b.id)):undefined;
  const b:GravelBatch=existing??{id:`${p.id}:${site.id}:${from.toFixed(3)}`,plotId:p.id,siteId:site.id,x:site.x,y:site.y,amount:0,coarse:site.coarse,collectedTool:id,screened:0,processed:0,handProcessed:0,contents:[],separated:[],recovered:[],losses:{},passes:0};
  const priorAmount=b.amount;b.amount+=amount;if(bucket){b.coarse=(b.coarse*priorAmount+site.coarse*amount)/b.amount;if(b.siteId!==site.id)b.siteId='mixed';}
  for(const f of p.items)if(f.goldSite===site.id&&f.state==='buried'&&(f.goldOffset??0)>=from-1e-8&&(f.goldOffset??0)<site.collected+1e-8){f.state='batch';f.tool=id;f.goldAllocation=priorAmount+(f.goldOffset??from)-from;b.contents.push(f.uid);}
@@ -58,7 +58,7 @@ export function collectGravel(s:State,id:string,x:number,y:number,stroke:number)
  if(site.rich&&!site.announced){site.announced=true;goldStats(s).specialSites.push({plotId:p.id,siteId:site.id,time:s.playTime});result.reason='砂金が集まる特別な採取地点を発見！';logEvent(s,'特別採取地点',`${p.id}/${site.id}`);}
  return result;
 }
-export function handSortGravel(s:State,b:GravelBatch){if(!s.gravelBatches?.includes(b))return 0;const previous=b.handProcessed,amount=Math.min(2,b.amount-b.handProcessed);if(amount<=0)return 0;b.handProcessed+=amount;let found=0;
+export function handSortGravel(s:State,b:GravelBatch){if(!s.gravelBatches?.includes(b)||b.automationJob)return 0;const previous=b.handProcessed,amount=Math.min(2,b.amount-b.handProcessed);if(amount<=0)return 0;b.handProcessed+=amount;let found=0;
  for(const uid of b.contents){const f=goldFinds(s).find(f=>f.uid===uid);if(f&&((f.goldAllocation??0)<previous||(f.goldAllocation??0)>=b.handProcessed))continue;if(f&&f.state==='batch'&&(f.grain??1)>=.6&&!b.separated.includes(uid))b.separated.push(uid);if(f&&storeGold(s,b,f,'hand'))found++;}
  if(b.handProcessed>=b.amount-1e-8&&b.contents.every(uid=>b.recovered.includes(uid)))b.processed=b.amount;measure(s,'hand','手選別',amount,spend(s,2),found);return amount;
 }
@@ -68,7 +68,7 @@ export function goldProcessingRate(tool:string,screened:number,coarse:number,gra
  return Math.max(.3,Math.min(.99,(base+.15*screened)*(density>=10?1:.9)-coarse*(1-screened)*.08-Math.min(.05,rough*.05)));
 }
 export function beginGoldWork(s:State,batchId:string,id:string){
- const b=s.gravelBatches?.find(b=>b.id===batchId);if(!b||!owns(s,id)||!goldProcessing(id))return false;
+ const b=s.gravelBatches?.find(b=>b.id===batchId);if(!b||b.automationJob&&b.automationJob!==s.automationAccess||!owns(s,id)||!goldProcessing(id))return false;
  if(s.goldWork)return s.goldWork.batchId===batchId&&s.goldWork.tool===id;
  const screen=goldScreen(id),magnet=id==='G205',reprocess=!screen&&!magnet&&b.processed>=b.amount-1e-8;
  if(magnet&&(b.magnetized??0)>=b.amount-1e-8||screen&&(id==='G202'?(b.fineScreened??0):b.screened)>=b.amount-1e-8||reprocess&&!b.contents.some(uid=>{const f=goldFinds(s).find(f=>f.uid===uid);return f?.state==='batch'&&!b.separated.includes(uid);}))return false;
@@ -79,6 +79,7 @@ export function beginGoldWork(s:State,batchId:string,id:string){
  measure(s,id,magnet?'砂鉄分離':screen?'粒径選別':id==='G203'?'水流選別':'比重選別',0,0,0,false);logEvent(s,'選別開始',`${id}/${batchId}`);return true;
 }
 function finishGoldWork(s:State){const w=s.goldWork,b=s.gravelBatches?.find(b=>b.id===w?.batchId);if(!w||!b)return false;
+ if(s.automationOutputLimit!==undefined&&availableGrains(s,b).length+b.contents.filter(uid=>!b.separated.includes(uid)&&!b.recovered.includes(uid)&&(()=>{const f=goldFinds(s).find(f=>f.uid===uid);return f?.state==='batch'&&(f.goldAllocation??0)>=w.start&&(f.goldAllocation??0)<w.start+w.load;})()).length>s.automationOutputLimit)return false;
  const screened=Math.max(0,Math.min(1,(b.screened-w.start)/w.load));
  if(w.mode==='magnet')b.magnetized=Math.max(b.magnetized??0,w.start+w.load);else if(w.mode==='screen'){b.screened=Math.max(b.screened,w.start+w.load);if(w.tool==='G202')b.fineScreened=Math.max(b.fineScreened??0,w.start+w.load);}
  else{if(!w.reprocess)b.processed=Math.max(b.processed,w.start+w.load);else b.reprocessCursor=w.start+w.load>=b.amount-1e-8?0:w.start+w.load;b.passes++;if(!w.reprocess&&w.mode==='pan')goldStats(s).panCompleted++;}
@@ -96,7 +97,7 @@ function finishGoldWork(s:State){const w=s.goldWork,b=s.gravelBatches?.find(b=>b
 export function goldMotion(s:State,distance:number,seconds:number){const w=s.goldWork;if(!w||w.mode==='sluice'||!Number.isFinite(distance)||distance<=0)return false;
  const d=Math.min(120,distance),rough=seconds>0&&d/seconds>1500?1:0;w.work+=d/24;w.rough+=rough;w.strokes++;measureSeconds(s,Math.max(0,Math.min(.25,seconds)),`G:${w.tool}:${w.mode==='magnet'?'砂鉄分離':w.mode==='screen'?'粒径選別':'比重選別'}`);if(w.work+1e-8>=w.required)return finishGoldWork(s);return false;
 }
-export function feedSluice(s:State,batchId:string){if(!owns(s,'G203'))return false;const b=s.gravelBatches?.find(b=>b.id===batchId);if(!b||b.processed>=b.amount-1e-8)return false;const q=s.sluiceFeed??=[];if(!q.includes(batchId))q.push(batchId);if(!s.goldWork)beginGoldWork(s,batchId,'G203');return true;}
+export function feedSluice(s:State,batchId:string){if(!owns(s,'G203'))return false;const b=s.gravelBatches?.find(b=>b.id===batchId);if(!b||b.automationJob||b.processed>=b.amount-1e-8)return false;const q=s.sluiceFeed??=[];if(!q.includes(batchId))q.push(batchId);if(!s.goldWork)beginGoldWork(s,batchId,'G203');return true;}
 export function goldTick(s:State,seconds:number){if(!Number.isFinite(seconds)||seconds<=0)return;let remaining=Math.min(10,seconds);for(let i=0;i<40&&remaining>0;i++){
  if(!s.goldWork){const q=s.sluiceFeed??=[];while(q.length){const b=s.gravelBatches?.find(b=>b.id===q[0]);if(b&&b.processed<b.amount-1e-8)break;q.shift();}if(q.length)beginGoldWork(s,q[0],'G203');else break;}
  const w=s.goldWork;if(!w||w.mode!=='sluice')break;const used=Math.min(remaining,w.required-w.work);w.work+=used;remaining-=used;measureSeconds(s,used,`G:${w.tool}:水流選別`);if(w.work+1e-8>=w.required)finishGoldWork(s);else break;
