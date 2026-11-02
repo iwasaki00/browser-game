@@ -9,7 +9,7 @@
 |全自動515件|PASS（FAIL0／SKIP0）|
 |CLASSIC20・5結末・6STEP・保存・物理回帰|PC PASS|
 |画面・タッチ・SCAN・日誌・再生・PNG|PC PASS。OS固有機能は未確認|
-|継続性能|PERFORMANCE.mdとendurance.json参照|
+|継続性能|同一ページ908.242秒・4条件PASS、例外0。PERFORMANCE.md参照|
 |Critical／High|今回検出0件|
 |iPhone Safari最終受入|UNVERIFIED|
 |公開ライセンス・作者権利確認|UNVERIFIED|

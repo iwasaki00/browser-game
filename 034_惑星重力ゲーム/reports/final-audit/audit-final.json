@@ -1,0 +1,135 @@
+{
+  "version": "2.0.0-rc.4",
+  "verdict": "CONDITIONAL",
+  "tests": {
+    "tests": 515,
+    "pass": 515,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "classic": "20 real UI clears, all 3 stars",
+  "endings": "5 real UI arrivals",
+  "runtime": "unchanged from audit start",
+  "enduranceSeconds": 908.242,
+  "performance": [
+    {
+      "kind": "normal",
+      "actions": 0,
+      "fps": [
+        59.43246461172112,
+        59.964318752477865
+      ],
+      "drawFps": [
+        59.43246461172112,
+        59.964318752477865
+      ],
+      "heapDelta": 147400,
+      "domDelta": 0,
+      "initial": {
+        "heap": 4958832,
+        "documents": 1,
+        "nodes": 1795,
+        "jsEventListeners": 178
+      },
+      "final": {
+        "heap": 5106232,
+        "documents": 1,
+        "nodes": 1795,
+        "jsEventListeners": 178
+      }
+    },
+    {
+      "kind": "scan",
+      "actions": 20,
+      "fps": [
+        59.012946047184066,
+        59.813576627910805
+      ],
+      "drawFps": [
+        57.337188670565816,
+        59.319521754882906
+      ],
+      "heapDelta": -93436,
+      "domDelta": -23,
+      "initial": {
+        "heap": 6234576,
+        "documents": 1,
+        "nodes": 1989,
+        "jsEventListeners": 203
+      },
+      "final": {
+        "heap": 6141140,
+        "documents": 1,
+        "nodes": 1966,
+        "jsEventListeners": 200
+      }
+    },
+    {
+      "kind": "exploration",
+      "actions": 16,
+      "fps": [
+        59.876943005181346,
+        59.958672177043056
+      ],
+      "drawFps": [
+        59.142989601960394,
+        59.521883997023906
+      ],
+      "heapDelta": 642656,
+      "domDelta": 9,
+      "initial": {
+        "heap": 5805236,
+        "documents": 1,
+        "nodes": 2071,
+        "jsEventListeners": 213
+      },
+      "final": {
+        "heap": 6447892,
+        "documents": 1,
+        "nodes": 2080,
+        "jsEventListeners": 219
+      }
+    },
+    {
+      "kind": "mixed",
+      "actions": 20,
+      "fps": [
+        59.931677224636,
+        59.96889781636752
+      ],
+      "drawFps": [
+        55.32908146492208,
+        57.16329583143656
+      ],
+      "heapDelta": 613332,
+      "domDelta": 334,
+      "initial": {
+        "heap": 6337748,
+        "documents": 1,
+        "nodes": 2078,
+        "jsEventListeners": 224
+      },
+      "final": {
+        "heap": 6951080,
+        "documents": 1,
+        "nodes": 2412,
+        "jsEventListeners": 307
+      }
+    }
+  ],
+  "unverified": [
+    "iPhone final acceptance",
+    "OS audio/share and heat",
+    "ownership and public license"
+  ],
+  "documents": [
+    "AUDIT_REPORT.md",
+    "TEST_RESULTS.md",
+    "PERFORMANCE.md",
+    "IPHONE_CHECKLIST.md",
+    "OPEN_ISSUES.md",
+    "RELEASE_READINESS.md"
+  ]
+}

@@ -26,7 +26,8 @@
 |final-audit-operations|PASS|連打・複数モード遷移・実失敗・再発射・不正保存 / operations.json|
 |final-audit-pages|PASS|サブパス、相対参照、実PNG Worker、外部要求0 / pages.json|
 |final-audit-release|STATIC CHECKS PASS|実行ファイル68件、構文・相対参照・パターン監査 / release-audit.json|
-|final-audit-endurance|結果はPERFORMANCE.md参照|同一ページの実時間15分、4条件 / endurance.json|
+|final-audit-endurance|PASS|同一ページ908.242秒、4条件、例外0 / endurance.json|
+|final-audit-summary|PASS|515件・20ステージ・5結末・15分完了・本体不変・資料参照の照合 / audit-final.json|
 
 ## 保存・異常系
 
