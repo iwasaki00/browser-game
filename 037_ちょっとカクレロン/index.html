@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5ed">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>ちょっとカクレロン</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div><p class="eyebrow">ちょっと、かくれる準備。</p><h1>ちょっとカクレロン</h1><p class="version">v0.1.0 <span>BASE</span></p></div>
+      <button id="change-image" class="secondary" hidden>画像変更</button>
+    </header>
+    <section class="workspace" aria-label="画像編集エリア">
+      <div class="workspace-heading"><span><i></i> 配置スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
+      <div id="stage" class="stage">
+        <canvas id="canvas" tabindex="0" aria-label="カクレロンの配置。ドラッグで移動。矢印キーでも移動できます。" hidden></canvas>
+        <div id="empty-state" class="empty-state">
+          <img src="assets/kakureron.svg" alt="顔のない白い人型のカクレロン" width="100" height="150" draggable="false">
+          <h2>ここから、かくれよう。</h2>
+          <p>好きな写真にカクレロンを置いて、<br>ぴったりの場所を探してみよう。</p>
+          <button id="choose-image" class="primary"><span aria-hidden="true">＋</span> 画像を選ぶ</button>
+          <p class="privacy">写真はサーバーへ送信されません</p>
+        </div>
+      </div>
+      <p id="hint" class="hint">写真を1枚選ぶと、白いカクレロンが登場します。</p>
+    </section>
+    <section class="controls" aria-label="配置の調整">
+      <div class="control-heading"><h2>カクレロンを調整</h2><button id="reset" class="reset" disabled>↺ リセット</button></div>
+      <div class="control-grid">
+        <div class="control-group"><span class="control-label">サイズ <output id="size-value">18%</output></span><div class="stepper"><button id="smaller" aria-label="小さくする" disabled>−</button><span>サイズ</span><button id="larger" aria-label="大きくする" disabled>＋</button></div></div>
+        <div class="control-group"><span class="control-label">角度 <output id="angle-value">0°</output></span><div class="stepper"><button id="rotate-left" aria-label="左に5度回転" disabled>↶</button><span>回転</span><button id="rotate-right" aria-label="右に5度回転" disabled>↷</button></div></div>
+      </div>
+      <p class="gesture-help">1本指で移動 <span>／</span> 2本指でサイズ・角度を調整</p>
+    </section>
+    <footer>写真も、作業も、このブラウザの中だけ。</footer>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <input id="image-input" type="file" accept="image/*" hidden>
+  </main>
+</body>
+</html>

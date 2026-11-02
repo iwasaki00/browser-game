@@ -1,0 +1,1576 @@
+{
+  "version": "0.6.0",
+  "gameHours": 24,
+  "concurrentFields": 3,
+  "reloads": 24,
+  "peakQueue": 5,
+  "peakBytes": 144074,
+  "elapsedMs": 33676.4435,
+  "hiddenUnchanged": true,
+  "idempotentMigration": true,
+  "recentHistory": 200,
+  "paid": 9150,
+  "fn": 332578,
+  "samples": [
+    {
+      "hour": 1,
+      "bytes": 141731,
+      "ms": 1225.9775,
+      "paid": 379,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 2,
+      "bytes": 141309,
+      "ms": 2571.9793,
+      "paid": 754,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 21,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 21,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 3,
+      "bytes": 142191,
+      "ms": 3505.3003,
+      "paid": 1128,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 4,
+      "bytes": 142299,
+      "ms": 4184.1462,
+      "paid": 1512,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 21,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 21,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 5,
+      "bytes": 142483,
+      "ms": 4874.795800000001,
+      "paid": 1892,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 19,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 19,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 6,
+      "bytes": 143155,
+      "ms": 5496.5542000000005,
+      "paid": 2271,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 7,
+      "bytes": 142924,
+      "ms": 6046.7907000000005,
+      "paid": 2657,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 21,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 21,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 8,
+      "bytes": 142925,
+      "ms": 6614.2723000000005,
+      "paid": 3038,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 9,
+      "bytes": 143452,
+      "ms": 7284.975600000001,
+      "paid": 3427,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 23,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 23,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 10,
+      "bytes": 142793,
+      "ms": 8065.471500000001,
+      "paid": 3799,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 11,
+      "bytes": 143590,
+      "ms": 9329.8247,
+      "paid": 4174,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 20,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 20,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 12,
+      "bytes": 143527,
+      "ms": 10279.928899999999,
+      "paid": 4562,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 13,
+      "bytes": 143532,
+      "ms": 11653.9923,
+      "paid": 4937,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 20,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 20,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 14,
+      "bytes": 143630,
+      "ms": 13346.9795,
+      "paid": 5322,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 20,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 20,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 15,
+      "bytes": 143183,
+      "ms": 15132.0677,
+      "paid": 5698,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 16,
+      "bytes": 143683,
+      "ms": 17452.333899999998,
+      "paid": 6086,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 21,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 21,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 17,
+      "bytes": 143647,
+      "ms": 19364.7657,
+      "paid": 6468,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 23,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 23,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 18,
+      "bytes": 143220,
+      "ms": 21297.5644,
+      "paid": 6851,
+      "jobs": 0,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 19,
+      "bytes": 143700,
+      "ms": 22951.0072,
+      "paid": 7240,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 24,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 24,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 20,
+      "bytes": 143340,
+      "ms": 24913.6388,
+      "paid": 7628,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 19,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 19,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 21,
+      "bytes": 143981,
+      "ms": 27313.0037,
+      "paid": 8012,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 22,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 22,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 22,
+      "bytes": 143977,
+      "ms": 30017.2612,
+      "paid": 8385,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 21,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 21,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 23,
+      "bytes": 144074,
+      "ms": 31877.7568,
+      "paid": 8762,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 19,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 19,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    },
+    {
+      "hour": 24,
+      "bytes": 143831,
+      "ms": 33640.3798,
+      "paid": 9150,
+      "jobs": 1,
+      "recent": 200,
+      "history": 100,
+      "stocks": [
+        {
+          "field": "B",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "R",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 0,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 0,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        },
+        {
+          "field": "G",
+          "stock": {
+            "transport": 0,
+            "pull": 0,
+            "screen": 0,
+            "magnet": 0,
+            "separate": 18,
+            "organize": 0,
+            "precision": 0
+          },
+          "input": 0,
+          "middle": 18,
+          "inTransit": 0,
+          "hopper": 0,
+          "concentrate": 0,
+          "output": 0
+        }
+      ]
+    }
+  ]
+}
