@@ -1,3 +1,7 @@
+# Version 0.4.1 — RIVER & GOLD TOOL EXPANSION
+
+現行の追加道具・操作・組み合わせ・保存仕様は [RIVER_GOLD_TOOL_EXPANSION](RIVER_GOLD_TOOL_EXPANSION.md)。4購入ルートの定義と1400試行は [PURCHASE_ROUTE_ANALYSIS](PURCHASE_ROUTE_ANALYSIS.md)。川底/河原を各13道具へ拡張し、砂浜20道具・五層を維持。126道具、36お宝、16レシピ、12エリアの登録数は変えず、新規エリアや半自動設備は実装しません。以下は過去版の記録です。
+
 # Version 0.4.0 — BEACH TOOL EXPANSION
 
 現行仕様は [BEACH_TOOL_EXPANSION](BEACH_TOOL_EXPANSION.md)、深層と旧保存の扱いは [DEPTH_EXPANSION](DEPTH_EXPANSION.md)。新規砂浜は第5層まで、初回チュートリアル・旧区画は従来の深度を保持。36お宝・126道具・16レシピ・12エリアの登録数は維持し、砂浜20＋川底7＋河原7道具を使用できます。新しい分野・エリアは追加していません。

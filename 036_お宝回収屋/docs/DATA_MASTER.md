@@ -5,8 +5,8 @@
 | マスター | 数 | 実装状態 |
 |---|---:|---|
 | お宝 | 36 | 砂浜・川底R001〜R007/R009・河原G001〜G008（各エリアの対応種）が通常生成対象 |
-| 道具 | 126 | 砂浜20件＋川底7件＋河原7件がavailable、92件はcatalogOnly |
-| 組み合わせ | 16 | C01/C16と条件付きC02/C03/C04/C05/C06/C09が通常プレイで成立。C02はB108実装後 |
+| 道具 | 126 | 砂浜20件＋川底13件＋河原13件がavailable、80件はcatalogOnly |
+| 組み合わせ | 16 | C01/C16と条件付きC02/C03/C04/C05/C06/C07/C09/C10が通常プレイで成立。C02はB108実装後 |
 | エリア | 12 | B-A/R-A/R-B/G-A/G-Bがavailable |
 
 お宝属性：id/name/description/category/rarity/baseValueFN/locations/depth/material/weight/requiredToolCapabilities/handlingType/contractOnly/spawnWeight/imageId。
@@ -44,3 +44,8 @@
 ## 0.4.0
 
 既存126件のID・名称・価格を維持。採用15件の性能はbeach-tools.tsへ分離し、data.tsのcapabilities・unlockConditions・staminaCost・implementationStatusへ反映します。全件の調査は [tool-master-audit-v040.json](tool-master-audit-v040.json)。区画にbeachDepthVersion:1、個体にidentified、探知跡にprecise、状態にbeachMeshを任意追加。旧maskを再スケールしません。詳細は [BEACH_TOOL_EXPANSION](BEACH_TOOL_EXPANSION.md)、[DEPTH_EXPANSION](DEPTH_EXPANSION.md)。
+
+
+## 0.4.1
+
+field-tools.tsに12道具の補足性能を分離。ID・名称・価格は原文マスターのまま。G002は砂鉄の磁性を補足し、天然金を磁石対象にしません。FindへriverObserved/riverCameraObserved/riverLoadMeasured/riverProtected、GravelBatchへfineScreened/magnetized/magnetRecovered、GoldWorkへprepared/fineFraction/magneticFractionとmagnet工程を任意追加。旧形式v2/goldVersion1と保存キーを維持。未知・不正な前処理量は拒否します。全件調査は [tool-master-audit-v041.json](tool-master-audit-v041.json)。

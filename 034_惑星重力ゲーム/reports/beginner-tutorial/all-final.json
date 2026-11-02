@@ -2,9 +2,10 @@
   "version": "2.0.0-rc.3",
   "node": "v25.9.0",
   "platform": "win32",
-  "files": 34,
+  "files": 35,
   "testFiles": [
     "balance.test.mjs",
+    "beginner-tutorial.test.mjs",
     "camera.test.mjs",
     "challenges.test.mjs",
     "cinematic.test.mjs",
@@ -40,11 +41,11 @@
     "special-planets.test.mjs"
   ],
   "exitCode": 0,
-  "elapsedMs": 27978,
-  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-hyxE1D\\game",
+  "elapsedMs": 28390,
+  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-tkpTbE\\game",
   "counts": {
-    "tests": 456,
-    "pass": 456,
+    "tests": 482,
+    "pass": 482,
     "fail": 0,
     "skipped": 0,
     "cancelled": 0,

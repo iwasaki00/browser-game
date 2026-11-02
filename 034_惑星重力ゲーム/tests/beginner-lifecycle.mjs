@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {harness,dir,tap,touch,swipe} from './mobile-polish-harness.mjs';
+const h=await harness(),rows=[],errors=[];
+try{
+ for(const [width,height]of [[320,568],[375,667],[390,844],[430,932],[844,390]]){
+  const context=await h.browser.newContext({viewport:{width,height},isMobile:true,hasTouch:true}),page=await context.newPage(),cdp=await context.newCDPSession(page);
+  page.on('pageerror',e=>errors.push(e.stack));await page.goto(h.url);await page.locator('#beginnerStart').click();await page.frameLocator('#beginnerFrame').locator('#launchButton').waitFor();await page.waitForTimeout(450);
+  const check=async(label)=>{
+   const sizes=await page.evaluate(()=>{const d=document.querySelector('#beginnerDialog'),f=document.querySelector('#beginnerFrame'),b=f.getBoundingClientRect();return{scroll:[document.documentElement.scrollWidth-innerWidth,document.documentElement.scrollHeight-innerHeight],dialog:[d.getBoundingClientRect().width,d.getBoundingClientRect().height],frame:{x:b.x,y:b.y,width:b.width,height:b.height},buttons:[...d.querySelectorAll('header button,footer button')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom}))};});
+   assert.ok(sizes.scroll.every(n=>n<=1),JSON.stringify(sizes));assert.ok(sizes.frame.height>=120);for(const b of sizes.buttons){assert.ok(b.width>=44&&b.height>=44,b.id);assert.ok(b.top>=0&&b.bottom<=height+1,b.id);}return{label,...sizes};
+  };
+  const views=[await check('step1')];await tap(page,cdp,'#beginnerHint');assert.equal(await page.locator('#beginnerHintText').isVisible(),true);await tap(page,cdp,'#beginnerAgain');assert.equal(await page.locator('#beginnerDialog').getAttribute('data-result'),'pending');
+  // A message sent by the host (instead of the bound practice frame) is ignored.
+  await page.evaluate(()=>postMessage({kind:'orbit-beginner',event:'launch',epoch:1,session:'wrong'},location.origin));assert.equal(await page.locator('#beginnerNext').isDisabled(),true);
+  await tap(page,cdp,'#beginnerSkip');await page.reload();await page.locator('#beginnerOffer').waitFor();await page.locator('#beginnerStart').click();await page.waitForFunction(()=>document.querySelector('#beginnerDialog').dataset.step==='2');let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('orbit-maker.beginner.v1')));assert.equal(state.steps[0],'skipped');assert.equal(state.steps[1],'pending');assert.equal(state.completed,false);
+  for(let step=2;step<5;step++)await tap(page,cdp,'#beginnerSkip');views.push(await check('step5'));const frame=page.frames().find(f=>f.url().includes('practice=beginner'));await frame.locator('#scanButton').click();await page.waitForTimeout(250);await page.screenshot({path:fileURLToPath(new URL(`scan-${width}x${height}.png`,dir))});await frame.locator('#scanEnd').click();await tap(page,cdp,'#beginnerSkip');views.push(await check('step6'));
+  await page.locator('#beginnerPolicy').selectOption('direct');await page.locator('#beginnerDestination').selectOption('gate');await page.waitForTimeout(350);await page.screenshot({path:fileURLToPath(new URL(`tutorial-${width}x${height}.png`,dir))});
+  const canvas=await frame.locator('#gameCanvas').boundingBox();await swipe(cdp,{x:canvas.x+15,y:canvas.y+30},{x:canvas.x+45,y:canvas.y+45});await touch(cdp,'touchStart',[{x:canvas.x+60,y:canvas.y+40},{x:canvas.x+100,y:canvas.y+40}]);await touch(cdp,'touchMove',[{x:canvas.x+50,y:canvas.y+40},{x:canvas.x+110,y:canvas.y+40}]);await touch(cdp,'touchCancel');assert.equal(await page.locator('#beginnerDialog').getAttribute('data-result'),'pending');await tap(page,cdp,'#beginnerExit');assert.equal(await page.locator('#beginnerFrame').count(),0);await page.locator('#launchButton').click();assert.equal(await page.locator('#launchButton').isDisabled(),true);
+  rows.push({width,height,status:'PASS',views,resume:'STEP2 restored; skips not successes',interruption:'pan / pinch / pointer cancel then exit; main launch available'});await context.close();
+ }
+ // Quota error is isolated to the new key and must not stop practice.
+ const context=await h.browser.newContext(),page=await context.newPage();await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='orbit-maker.beginner.v1')throw new DOMException('test quota','QuotaExceededError');return original.call(this,k,v);};});await page.goto(h.url);await page.locator('#beginnerStart').click();await page.frameLocator('#beginnerFrame').locator('#launchButton').click();await page.waitForFunction(()=>!document.querySelector('#beginnerNext').disabled);assert.ok(await page.locator('#beginnerNotice').textContent());await page.locator('#beginnerExit').click();assert.equal(await page.locator('#beginnerFrame').count(),0);await context.close();
+ assert.deepEqual(errors,[]);await writeFile(new URL('lifecycle.json',dir),JSON.stringify({status:'PASS',environment:'PC Chrome mobile emulation; not iPhone',rows,quota:'PASS: memory progress and exit continue',errors},null,2)+'\n');console.log('LIFECYCLE / FIVE VIEWPORTS / QUOTA PASS');
+}finally{await h.close();}

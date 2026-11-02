@@ -4,7 +4,7 @@ export const PRACTICE_DESTINATIONS={gate:{id:'practice-gate',name:'帰還中継�
 export function practiceStage(step=0,target='gate'){
  const s=getStage();s.id=`beginner-${step+1}`;s.name='本編とは別の練習宙域';s.description='惑星の重力と予測線を使って航路を試します。';
  s.goal={...PRACTICE_DESTINATIONS[target]??PRACTICE_DESTINATIONS.gate};
- s.rules={minPlanets:1,maxPlanets:1,types:['earth'],sizes:['medium']};
+ s.rules={minPlanets:1,maxPlanets:1,types:['earth'],sizes:['medium'],placement:{left:0,top:0,right:s.world.width,bottom:s.world.height}};
  if(step>=2){s.launch.angleDeg=-62;s.launch.speed=220;}
  if(step===5)s.encounters=[createEncounter('station','practice-station',130,320,{fixed:true})];
  return s;

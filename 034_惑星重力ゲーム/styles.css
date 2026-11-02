@@ -457,7 +457,7 @@ input:not([type='range']),textarea { -webkit-user-select:text; user-select:text;
 .route-step>button { margin:3px 3px 3px 0; }
 .route-map-details { margin-block:10px; }
 
-.beginner-dialog { width:100%; max-width:1000px; height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); margin:auto; padding:6px; border:1px solid #568a99; border-radius:9px; background:#071321; color:#ecf8ff; overflow:hidden; }
+.beginner-dialog { position:fixed; inset:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); width:calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right)); max-width:1000px; height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); margin:auto; padding:6px; border:1px solid #568a99; border-radius:9px; background:#071321; color:#ecf8ff; overflow:hidden; }
 .beginner-dialog[open] { display:grid; grid-template-rows:auto auto minmax(120px,1fr) auto; gap:4px; }
 .beginner-dialog>header { display:flex; align-items:center; justify-content:space-between; gap:4px; }
 .beginner-dialog h2 { margin:0; font-size:14px; }

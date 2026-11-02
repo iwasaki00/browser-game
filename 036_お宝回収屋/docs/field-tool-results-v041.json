@@ -3359,15 +3359,15 @@
               "grain": 2.4
             }
           ],
-          "operations": 89,
+          "operations": 91,
           "successes": 3,
           "failures": 0,
-          "seconds": 26.00399999999996,
+          "seconds": 26.403999999999957,
           "stamina": 6,
           "recovered": 3,
           "processed": 24,
           "fn": 360,
-          "fnPerMinute": 830.6414397784969,
+          "fnPerMinute": 818.0578700196953,
           "bags": 1,
           "quality": [
             0.985,
@@ -3397,7 +3397,7 @@
               "stamina": 1,
               "finds": 0,
               "successes": 2,
-              "seconds": 12.545999999999994
+              "seconds": 13.004999999999992
             },
             "G:hand:精密回収": {
               "uses": 6,
@@ -3414,20 +3414,20 @@
   ],
   "riverComparison": [
     {
-      "active": "R203",
+      "active": "R106",
       "ids": [
-        "R203",
+        "R106",
         "R210"
       ],
       "targets": 158,
-      "recovered": 158,
-      "operations": 790,
-      "fn": 17380
+      "recovered": 126,
+      "operations": 662,
+      "fn": 13860
     },
     {
-      "active": "R201",
+      "active": "R202",
       "ids": [
-        "R201"
+        "R202"
       ],
       "targets": 158,
       "recovered": 0,
@@ -3445,6 +3445,27 @@
       "recovered": 0,
       "operations": 158,
       "fn": 0
+    }
+  ],
+  "coarseIronComparison": [
+    {
+      "active": "R106",
+      "ids": [
+        "R106",
+        "R210"
+      ],
+      "recovered": 208,
+      "operations": 1663,
+      "fn": 4826
+    },
+    {
+      "active": "R202",
+      "ids": [
+        "R202"
+      ],
+      "recovered": 574,
+      "operations": 2544,
+      "fn": 18131
     }
   ]
 }

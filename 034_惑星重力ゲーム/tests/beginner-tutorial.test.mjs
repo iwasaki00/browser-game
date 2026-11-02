@@ -4,6 +4,8 @@ import {practiceStage,gravityTurn,previewDigest} from '../js/beginner-data.js';
 import {createSimulation,stepSimulation} from '../js/physics.js';
 import {createPreview,advancePreview} from '../js/preview.js';
 import {velocityFromAngleSpeed} from '../js/launch.js';
+import {placementAllowed} from '../js/planets.js';
+test('全練習宙域は既存の配置判定で惑星を移動できる',()=>{for(let i=0;i<6;i++){const s=practiceStage(i);assert.equal(placementAllowed({...s.planets[0],x:211},s),true);assert.equal(placementAllowed({...s.planets[0],x:-1},s),false);}});
 test('初回 / あとで / 再開 / 再実行は専用キーだけ使用',()=>{const s=new PracticeStorage();s.setItem('orbit-maker.homeward.v1','KEEP');const p=new BeginnerProgress(s);assert.equal(p.state.offered,false);p.later();assert.equal(p.state.active,false);p.start();p.result('success');p.next();assert.equal(new BeginnerProgress(s).state.current,1);p.start(true);assert.equal(p.state.current,0);assert.ok(p.state.steps.every(x=>x==='pending'));assert.equal(s.getItem('orbit-maker.homeward.v1'),'KEEP');assert.ok(s.getItem(BEGINNER_KEY));});
 test('スキップを成功扱いしない / 未操作の次へ禁止',()=>{const p=new BeginnerProgress(new PracticeStorage());p.start();assert.equal(p.next(),false);p.result('skipped');assert.equal(p.next(),true);assert.equal(p.state.steps[0],'skipped');assert.equal(p.state.completed,false);});
 test('全6成功 / 完了後の再実行 / 過去完了を保持',()=>{const p=new BeginnerProgress(new PracticeStorage());p.start();for(let i=0;i<6;i++){p.result('success');p.next();}assert.equal(p.state.completed,true);assert.equal(p.state.active,false);p.start(true);assert.equal(p.state.completed,false);assert.equal(p.state.everCompleted,true);});

@@ -1,3 +1,5 @@
+> 現行Versionは0.4.1です。LABは8タブ・44シナリオ。[追加道具の操作説明](RIVER_GOLD_TOOL_EXPANSION.md)と[購入ルート比較](PURCHASE_ROUTE_ANALYSIS.md)を参照してください。
+
 # Version 0.4.0 — BEACH TOOL EXPANSION
 
 ## マスター調査と採用方針

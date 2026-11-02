@@ -1,0 +1,183 @@
+{
+  "version": "0.4.1",
+  "seed": 42,
+  "area": "B-A",
+  "condition": "bulk",
+  "passes": 1,
+  "operation": {
+    "grid": 20,
+    "strokeSeconds": 0.32,
+    "scanSeconds": 0.3,
+    "pickupSeconds": 0.45,
+    "washSeconds": 1.4,
+    "idleRecovery": false
+  },
+  "layout": [
+    {
+      "uid": "42:0",
+      "id": "B004",
+      "x": 35,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:1",
+      "id": "B003",
+      "x": 90,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:2",
+      "id": "B004",
+      "x": 145,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:3",
+      "id": "B003",
+      "x": 200,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:4",
+      "id": "B004",
+      "x": 255,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:5",
+      "id": "B003",
+      "x": 310,
+      "y": 65,
+      "depth": 140
+    },
+    {
+      "uid": "42:6",
+      "id": "B004",
+      "x": 35,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:7",
+      "id": "B003",
+      "x": 90,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:8",
+      "id": "B004",
+      "x": 145,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:9",
+      "id": "B003",
+      "x": 200,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:10",
+      "id": "B004",
+      "x": 255,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:11",
+      "id": "B003",
+      "x": 310,
+      "y": 130,
+      "depth": 140
+    },
+    {
+      "uid": "42:12",
+      "id": "B004",
+      "x": 35,
+      "y": 195,
+      "depth": 140
+    },
+    {
+      "uid": "42:deep:0",
+      "id": "B003",
+      "x": 90,
+      "y": 195,
+      "depth": 140
+    },
+    {
+      "uid": "42:deep:1",
+      "id": "B004",
+      "x": 145,
+      "y": 195,
+      "depth": 140
+    }
+  ],
+  "results": [
+    {
+      "tools": [
+        "B302"
+      ],
+      "uses": 334,
+      "excavation": 147157.56000000256,
+      "legacyWork": 245.26259999999928,
+      "maxDepth": 396,
+      "area": 100800,
+      "stamina": 100,
+      "finds": 0,
+      "quality": 0,
+      "processed": 245.26260000000002,
+      "sortCalls": 82,
+      "fn": 0,
+      "seconds": 129.83999999999924,
+      "fnPerMinute": 0,
+      "capacity": 24
+    },
+    {
+      "tools": [
+        "B207"
+      ],
+      "uses": 252,
+      "excavation": 80633.70000000001,
+      "legacyWork": 1007.9212499999998,
+      "maxDepth": 80,
+      "area": 100800,
+      "stamina": 100,
+      "finds": 0,
+      "quality": 0,
+      "processed": 0,
+      "sortCalls": 0,
+      "fn": 0,
+      "seconds": 80.63999999999969,
+      "fnPerMinute": 0,
+      "capacity": 24
+    },
+    {
+      "tools": [
+        "B105",
+        "B104",
+        "B108"
+      ],
+      "uses": 286,
+      "excavation": 281449.28,
+      "legacyWork": 1005.176,
+      "maxDepth": 280,
+      "area": 100800,
+      "stamina": 100,
+      "finds": 15,
+      "quality": 0.92,
+      "processed": 1005.176,
+      "sortCalls": 34,
+      "fn": 605,
+      "seconds": 122.03999999999958,
+      "fnPerMinute": 297.44346116027634,
+      "capacity": 24
+    }
+  ]
+}

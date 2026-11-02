@@ -1,6 +1,6 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.4.0 — BEACH TOOL EXPANSION**
+**Version 0.4.1 — RIVER & GOLD TOOL EXPANSION**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
 
@@ -17,6 +17,14 @@ npm.cmd run dev
 ```
 
 ターミナルに出る `http://localhost:5173/` をブラウザで開きます。使用中のポートがあれば、表示された別の番号を使ってください。停止はCtrl+Cです。`npm.cmd` を使うとPowerShellのスクリプト実行ポリシーの影響を避けられます。
+
+## 0.4.1の変更
+
+- 川底6・河原6道具を追加。距離・磁性・重量・観察、採取・前処理・微細回収に役割を分けました。
+- カメラ＋アームのC07、砂鉄分離＋水流のC10を実装。所有だけの固定FNボーナスはありません。
+- ショップの比較と12道具のアイコンを追加。分野別クイック4枠を維持します。
+- DEBUG LABは8タブ・44シナリオ。購入前後計測と4購入ルート比較、Workerの中止、JSON出力に対応。
+- [新道具の価格・使い方](docs/RIVER_GOLD_TOOL_EXPANSION.md)／[購入ルートの100シード結果](docs/PURCHASE_ROUTE_ANALYSIS.md)。
 
 ## 0.4.0の変更
 
@@ -99,6 +107,8 @@ npm.cmd run test:depth-browser
 npm.cmd run test:reveal-browser
 npm.cmd run balance:tools
 npm.cmd run balance:river
+npm.cmd run balance:routes
+npm.cmd run test:field-browser
 npm.cmd run balance:beach
 npm.cmd run test:beach-browser
 npm.cmd run balance:gold
@@ -125,8 +135,10 @@ npm.cmd run test:production
 - `src/dev-gold.ts`: 開発専用の河原シナリオ
 - `src/beach-tools.ts`, `src/shop.ts`: 砂浜の性能・解放・ショップ比較
 - `src/dev-beach.ts`, `src/dev-beach-ui.ts`: 開発専用の固定条件比較・深度シナリオ
+- `src/field-tools.ts`, `src/field-shop.ts`: 川底・河原の追加性能と比較
+- `src/dev-field.ts`, `src/dev-routes.ts`, `src/dev-route-ui.ts`, `src/dev-route-worker.ts`: 購入前後・購入ルートの開発専用比較
 - `src/events.ts`: 上限100件の重要イベント
 - `tests/`, `scripts/`: 自動テスト・模擬プレイ・ブラウザ試験
 - `docs/`: 仕様・判断・試験結果・今後の計画
 
-R-C/R-D、G-C/G-Dなどの将来エリア・92道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。
+R-C/R-D、G-C/G-Dなどの将来エリア・80道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。
