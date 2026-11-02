@@ -1,4 +1,9 @@
 export const BEGINNER_KEY='orbit-maker.beginner.v1';
+export function practiceSession(provider=globalThis.crypto){
+ if(provider?.randomUUID)return provider.randomUUID();
+ if(provider?.getRandomValues)return Array.from(provider.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join('');
+ return `practice-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 export class PracticeStorage {
  constructor(){this.values=new Map();}
  getItem(key){return this.values.get(key)??null;}

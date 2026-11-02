@@ -1,0 +1,43 @@
+{
+  "browser": "156.0.8078.76",
+  "environment": "PC Chrome headless 375x667 DPR3; not iPhone",
+  "seconds": 8.02,
+  "fps": 59.97506234413965,
+  "rendererTaskPercent": 15.238142144638406,
+  "stableCoachMutations": 0,
+  "baselineHeapWithFrame": 3369116,
+  "closedCycleSamples": [
+    {
+      "cycle": 1,
+      "heap": 2934456,
+      "nodes": 1706
+    },
+    {
+      "cycle": 2,
+      "heap": 2916136,
+      "nodes": 1706
+    },
+    {
+      "cycle": 3,
+      "heap": 2877500,
+      "nodes": 1697
+    },
+    {
+      "cycle": 4,
+      "heap": 2845276,
+      "nodes": 1695
+    },
+    {
+      "cycle": 5,
+      "heap": 2881432,
+      "nodes": 1695
+    },
+    {
+      "cycle": 6,
+      "heap": 3785636,
+      "nodes": 1695
+    }
+  ],
+  "errors": [],
+  "limits": "8 second sample / six reopen cycles only; no claim of long term leak freedom or iPhone performance"
+}

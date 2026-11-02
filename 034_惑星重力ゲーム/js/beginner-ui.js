@@ -1,4 +1,4 @@
-import {BeginnerProgress,BEGINNER_STEPS,freshEvidence,tutorialSucceeded,tutorialFocus} from './beginner-tutorial.js';
+import {BeginnerProgress,BEGINNER_STEPS,freshEvidence,tutorialSucceeded,tutorialFocus,practiceSession} from './beginner-tutorial.js';
 const POLICY={direct:'最短帰還',safe:'安全重視',explore:'探索重視'};
 export function createBeginnerTutorial({storage,onOpen=()=>{}}){
  const $=s=>document.querySelector(s),progress=new BeginnerProgress(storage),offer=$('#beginnerOffer'),dialog=$('#beginnerDialog');
@@ -10,7 +10,7 @@ export function createBeginnerTutorial({storage,onOpen=()=>{}}){
  function open(restart=false){
   onOpen();offer.close();progress.start(restart);hint=false;policy='';destination='';ready=false;epoch=0;key='';
   $('#beginnerPolicy').value='';$('#beginnerDestination').value='';$('#beginnerFlow').open=true;
-  session=crypto.randomUUID();iframe=document.createElement('iframe');iframe.id='beginnerFrame';iframe.title='本編から独立した操作練習';iframe.src=`./index.html?practice=beginner&session=${encodeURIComponent(session)}`;iframe.setAttribute('allow','');
+  session=practiceSession();iframe=document.createElement('iframe');iframe.id='beginnerFrame';iframe.title='本編から独立した操作練習';iframe.src=`./index.html?practice=beginner&session=${encodeURIComponent(session)}`;iframe.setAttribute('allow','');
   $('#beginnerSpace').replaceChildren(iframe);dialog.showModal();render();
  }
  function showOffer(){

@@ -10,7 +10,7 @@ export type RouteGoal='fourth'|'fifth'|'income'|'all'|'smallMagnet'|'strongMagne
 export const routeNames={A:'最短目標型',B:'低価格組み合わせ型',C:'バランス型',D:'全道具購入型'};
 export const routeGoals:Record<RouteField,{id:RouteGoal;name:string}[]>={B:[{id:'fourth',name:'第4層到達'},{id:'fifth',name:'第5層到達'},{id:'income',name:'通常FN獲得'},{id:'all',name:'全砂浜道具購入'}],R:[{id:'smallMagnet',name:'小型磁石購入'},{id:'strongMagnet',name:'強力磁石購入'},{id:'heavy',name:'12kg重量物の回収'},{id:'all',name:'全川底道具購入'}],G:[{id:'pan',name:'パンニング皿購入'},{id:'sluice',name:'スルース購入'},{id:'gravel',name:'砂利の比重選別'},{id:'all',name:'全河原道具購入'}]};
 export interface RouteOptions {seed:number;field:RouteField;goal:RouteGoal;initialFN?:number;target?:number;maxSeconds?:number;}
-export interface RouteResult {version:string;seed:number;field:RouteField;route:RouteName;goal:RouteGoal;conditions:object;seconds:number;achieved:boolean;stalled:boolean;reason:string;purchased:string[];purchaseCost:number;purchases:{id:string;seconds:number;cost:number}[];operations:number;successes:number;failures:number;stamina:number;earned:number;fnPerMinute:number;processed:number;heavy:number;uses:Record<string,number>;jackpots:number;milestones:Record<string,number>;initialLayout:object[];}
+export interface RouteResult {version:string;seed:number;field:RouteField;route:RouteName;goal:RouteGoal;conditions:object;seconds:number;achieved:boolean;stalled:boolean|null;reason:string;purchased:string[];purchaseCost:number;purchases:{id:string;seconds:number;cost:number}[];operations:number;successes:number;failures:number;stamina:number;earned:number;fnPerMinute:number;processed:number;heavy:number;uses:Record<string,number>;jackpots:number;milestones:Record<string,number>;initialLayout:object[];}
 const beachBase=['B101','B102','B104','B105','B201'];
 export function purchaseOrder(field:RouteField,route:RouteName,goal:RouteGoal){
  const all=tools.filter(t=>t.category===field&&t.implementationStatus==='available').map(t=>t.id);
@@ -58,7 +58,7 @@ export function simulateRoute(options:RouteOptions,route:RouteName):RouteResult 
    for(const f of [...plot(s).items]){if(f.state!=='buried')continue;advance(2,true);operations++;
     for(const observer of ['R204','R210'].filter(id=>s.ownedTools.includes(id)))operation(observer,()=>riverObserve(s,observer,f.x,f.y),.4);
     const candidates=['R201','R202','R104','R103','R203','R205','R106','R102','R101'].filter(id=>s.ownedTools.includes(id));candidates.push('hand');
-    for(const id of candidates){if(id==='R205')equip(['R205','R204','R210']);else if(id==='R203')equip(['R203','R210']);else equip(['R104','R110','R201','R206']);
+    for(const id of candidates){if(id==='R205')equip(['R205','R204','R210']);else if(id==='R203')equip(['R203','R210']);else equip([id,'R104','R110','R201','R206']);
      const r=operation(id,()=>riverStart(s,id,f.x,f.y,riverCapabilities(s,id).rope),.5);if(!r.ok){failures++;continue;}
      for(let n=0;n<100&&s.riverSession?.uid;n++){const r=operation(id,()=>riverPull(s,70),.75);if(!r.ok){failures++;break;}}
      if(String(f.state)==='stored'){successes++;gained++;wash();shop();break;}
@@ -89,6 +89,6 @@ export function simulateRoute(options:RouteOptions,route:RouteName):RouteResult 
    if(reached())break;serial++;addPlot(s,seed*10000+serial,true,goldAreaUnlocked(s,'G-B')?'G-B':'G-A');advance(4,true);
   }
  }
- const achieved=reached();return {version:VERSION,seed,field,route,goal,conditions:{initialFN,target,maxSeconds,initialStamina:100,initialXP:[0,0,0,0],initialArea:field==='B'?'B-A':field==='R'?'R-A':'G-A',eligibility:field==='B'?'初期状態':'砂浜回収20個の実績のみ',jackpots:false,model:'grid-041',time:{dig:.32,search:2,cast:.5,pull:.75,wash:1.4,gather:1.2,load:1,work:.6,pick:.45,purchase:2}},seconds:s.playTime,achieved,stalled:!achieved,reason:achieved?'達成':s.playTime>=maxSeconds?'計測時間上限（進行不能とは未確定）':'試行上限',purchased:[...s.ownedTools],purchaseCost:purchases.reduce((n,p)=>n+p.cost,0),purchases,operations,successes,failures,stamina,earned:s.totalEarnedFN,fnPerMinute:s.totalEarnedFN/Math.max(1,s.playTime)*60,processed,heavy,uses,jackpots:s.jackpotHistory.length+(s.goldStats?.specialSites.length??0),milestones,initialLayout};
+ const achieved=reached();return {version:VERSION,seed,field,route,goal,conditions:{initialFN,target,maxSeconds,initialStamina:100,initialXP:[0,0,0,0],initialArea:field==='B'?'B-A':field==='R'?'R-A':'G-A',eligibility:field==='B'?'初期状態':'砂浜回収20個の実績のみ',jackpots:false,model:'grid-041',time:{dig:.32,search:2,cast:.5,pull:.75,wash:1.4,gather:1.2,load:1,work:.6,pick:.45,purchase:2}},seconds:s.playTime,achieved,stalled:achieved?false:null,reason:achieved?'達成':s.playTime>=maxSeconds?'計測時間上限（進行不能とは未確定）':'試行上限',purchased:[...s.ownedTools],purchaseCost:purchases.reduce((n,p)=>n+p.cost,0),purchases,operations,successes,failures,stamina,earned:s.totalEarnedFN,fnPerMinute:s.totalEarnedFN/Math.max(1,s.playTime)*60,processed,heavy,uses,jackpots:s.jackpotHistory.length+(s.goldStats?.specialSites.length??0),milestones,initialLayout};
 }
 export function compareRoutes(options:RouteOptions){return {version:VERSION,options,results:(['A','B','C','D'] as RouteName[]).map(route=>simulateRoute(options,route))};}

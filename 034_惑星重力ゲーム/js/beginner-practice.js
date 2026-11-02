@@ -24,7 +24,7 @@ export function createPracticeBridge({getContext,configure,cancel}){
   const next=JSON.stringify(data);if(force||key!==next){key=next;send({event:'snapshot',data});}highlight();
  }
  // Only explicit selection/search gestures count, not the default info on SCAN.
- const inspect=event=>{if(!event.target.closest?.('#scanSearch,#scanNext,#scanPrev,#scanTargets,.scan-marker'))return;queueMicrotask(()=>{const panel=document.querySelector('#scanPanel'),target=document.querySelector('#scanTargets');if(panel&&!panel.hidden&&target?.value&&document.querySelector('#scanInfo').textContent)send({event:'inspection',id:target.value});});};
+ const inspect=event=>{if(!event.target.closest?.('#scanSearch,#scanNext,#scanPrev,#scanTargets,.scan-marker'))return;if(event.target.closest('#scanTargets')&&event.type!=='change')return;queueMicrotask(()=>{const panel=document.querySelector('#scanPanel'),target=document.querySelector('#scanTargets');if(panel&&!panel.hidden&&target?.value&&document.querySelector('#scanInfo').textContent)send({event:'inspection',id:target.value});});};
  document.addEventListener('click',inspect);document.addEventListener('change',inspect);
  window.addEventListener('blur',()=>send({event:'interrupted'}));
  send({event:'ready'});

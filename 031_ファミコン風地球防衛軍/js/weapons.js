@@ -150,7 +150,9 @@ export function updateExpanded(g,dt,api){
   updateJobs(g,dt,api);updateInstallations(g,dt);
   // Newly split/installed shots enter only after this bounded pass, never recursively.
   const length=g.shots.length;
-  for(let index=0;index<length;index++){
+  // Damage callbacks can clear shots on boss defeat. Keep the original cap,
+  // but never read beyond the live list after one of those callbacks returns.
+  for(let index=0;index<length&&index<g.shots.length;index++){
     const s=g.shots[index];if(!s.expanded||s.dead)continue;const w=s.weapon;s.age+=dt;s.life-=dt;s.oldX=s.x;s.oldY=s.y;
     const cluster=w.type==="cluster",parent=s.generation===0;
     if((cluster&&parent&&s.age>=w.fuse)||(w.type==="split"&&parent&&(s.age>=w.splitAfter||nearest(g,s.x,s.y,w.proximity)))){splitShot(g,s,cluster);continue}
