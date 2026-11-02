@@ -1,6 +1,6 @@
 {
   "type": "result",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "options": {
     "field": "R",
     "goal": "smallMagnet",
@@ -11,7 +11,7 @@
   "count": 2,
   "runs": [
     {
-      "version": "0.5.0",
+      "version": "0.6.0",
       "options": {
         "field": "R",
         "goal": "smallMagnet",
@@ -21,7 +21,7 @@
       },
       "results": [
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 1,
           "field": "R",
           "route": "A",
@@ -188,7 +188,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 1,
           "field": "R",
           "route": "B",
@@ -371,7 +371,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 1,
           "field": "R",
           "route": "C",
@@ -554,7 +554,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 1,
           "field": "R",
           "route": "D",
@@ -747,7 +747,7 @@
       ]
     },
     {
-      "version": "0.5.0",
+      "version": "0.6.0",
       "options": {
         "field": "R",
         "goal": "smallMagnet",
@@ -757,7 +757,7 @@
       },
       "results": [
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 2,
           "field": "R",
           "route": "A",
@@ -924,7 +924,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 2,
           "field": "R",
           "route": "B",
@@ -1107,7 +1107,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 2,
           "field": "R",
           "route": "C",
@@ -1290,7 +1290,7 @@
           ]
         },
         {
-          "version": "0.5.0",
+          "version": "0.6.0",
           "seed": 2,
           "field": "R",
           "route": "D",
