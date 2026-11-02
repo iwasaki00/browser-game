@@ -1,3 +1,33 @@
+# TEST_RESULTS — Version 0.5.0 / SEMI AUTOMATION
+
+## 自動テスト
+
+npm.cmd test：**282件成功、失敗0・スキップ0**。既存224件を維持し58件追加。購入/前提/4枠、予約/FIFO、物理量保存、出力満杯、停止/再指示、手動競合拒否、旧セーブ/破損参照拒否、二重処理/報酬防止、1/2/10倍、非表示時計、長時間、履歴上限を確認。
+
+## ブラウザ
+
+test:browser / depth-browser / reveal-browser / river-browser / gold-browser / beach-browser / field-browser がすべて成功。深層/探知機/ふるい/磁石/重量/パンニング/スルース/洗浄/図鑑/ジャックポット/FN/ショップ/保存を回帰確認。結果はregression-browser-results-v050.jsonと各v050記録。
+
+test:automation-browser：320×568、390×844、1280×900。通常購入、一括投入、タッチ登録、途中停止/保存復元、分野移動、非表示停止、精密回収、8タブ/旧44＋新15シナリオ、Worker比較/中止/JSON保存、通常セーブ分離、横幅非超過。ブラウザエラー0。小型画面の通常HUDも1画面に収まります。
+
+## 本番ビルド
+
+npm.cmd run build：TypeScript/Vite成功。test:productionはChrome/Edgeで通常掘削/川底/河原/深層/新道具/設備購入/処理/洗浄/再読込を確認。DEVフック、隠し操作、強制FN/出現/設備シナリオ、時間倍率UI、比較Worker/開発セーブキーが本番アセットに含まれないことを確認。
+
+## シード・長時間
+
+100シード×3分野×5構成＝1,500処理試行、設備購入300試行。ジャックポット0、購入成功300/300、失敗以外の進行中作業の上限残り0。川底の能力不足対象は消さず残すため未処理数は0ではありません。
+
+各分野8ゲーム時間、合計24時間、各16回保存復元。履歴100件以下、未受取/残渣保持、二重支払なし、非表示状態不変、復帰0秒加算。計算試験であり、人間が8時間操作した試験ではありません。[AUTOMATION_BALANCE](AUTOMATION_BALANCE.md)に詳細を記録。
+
+## 未確認
+
+実機iPhone Safariのタッチ/複数選択/Safe Area/バックグラウンド復帰/長時間メモリは未確認。Chromiumモバイル試験をSafari実機の合格とは扱いません。
+
+---
+
+以下は過去バージョンの記録です。
+
 # TEST_RESULTS — Version 0.4.1 / RIVER & GOLD TOOL EXPANSION
 
 ## 自動テスト

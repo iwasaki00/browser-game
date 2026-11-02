@@ -1,3 +1,13 @@
+# Version 0.5.0 — SEMI AUTOMATION
+
+現行の設備・工程・保存・非表示停止・DEBUG LABは [SEMI_AUTOMATION](SEMI_AUTOMATION.md)。手動46道具と3分野を維持し、砂の選別、指定した川底対象の巻上げ、採取済み砂利の供給を設備へ任せます。完全自動探索・自動売却・新エリアは追加しません。
+
+通常画面は小型画面でも1画面を維持し、設備入口をQUICK TOOLS行に配置。詳細は折りたたみカードを持つスクロール可能な設備画面にまとめています。
+
+---
+
+以下は過去バージョンの記録です。
+
 # Version 0.4.1 — RIVER & GOLD TOOL EXPANSION
 
 現行の追加道具・操作・組み合わせ・保存仕様は [RIVER_GOLD_TOOL_EXPANSION](RIVER_GOLD_TOOL_EXPANSION.md)。4購入ルートの定義と1400試行は [PURCHASE_ROUTE_ANALYSIS](PURCHASE_ROUTE_ANALYSIS.md)。川底/河原を各13道具へ拡張し、砂浜20道具・五層を維持。126道具、36お宝、16レシピ、12エリアの登録数は変えず、新規エリアや半自動設備は実装しません。以下は過去版の記録です。

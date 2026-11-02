@@ -1,7 +1,37 @@
 [
   {
     "name": "browser",
-    "exitCode": 1,
-    "seconds": 1.275
+    "exitCode": 0,
+    "seconds": 56.411
+  },
+  {
+    "name": "depth-browser",
+    "exitCode": 0,
+    "seconds": 9.199
+  },
+  {
+    "name": "reveal-browser",
+    "exitCode": 0,
+    "seconds": 13.12
+  },
+  {
+    "name": "river-browser",
+    "exitCode": 0,
+    "seconds": 22.125
+  },
+  {
+    "name": "gold-browser",
+    "exitCode": 0,
+    "seconds": 33.852
+  },
+  {
+    "name": "beach-browser",
+    "exitCode": 0,
+    "seconds": 45.672
+  },
+  {
+    "name": "field-browser",
+    "exitCode": 0,
+    "seconds": 34.374
   }
 ]

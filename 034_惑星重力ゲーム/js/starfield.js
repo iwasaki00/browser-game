@@ -20,11 +20,16 @@ export class Starfield {
     return stars;
   }
   visible(a,b,world,scale,light=false){
+    // A wide overview can exceed the 128-tile LRU and otherwise regenerate
+    // every tile on every frame. Retain only one bounded visible star list.
+    const key=[this.seed,a.x,a.y,b.x,b.y,world.width,world.height,scale,light].join(':');
+    if(this.lastVisible?.key===key)return this.lastVisible.stars;
     const stars=[],density=Math.min(1,Math.max(.025,scale*scale*1.7))*(light?.5:1);
     const left=Math.max(0,a.x),top=Math.max(0,a.y),right=Math.min(world.width,b.x),bottom=Math.min(world.height,b.y);
     for(let y=Math.floor(top/TILE);y<=Math.floor(bottom/TILE);y++)for(let x=Math.floor(left/TILE);x<=Math.floor(right/TILE);x++){
       for(const s of this.tile(x,y))if(s.rank<density&&s.x>=left&&s.x<=right&&s.y>=top&&s.y<=bottom)stars.push(s);
     }
+    this.lastVisible=stars.length<=4096?{key,stars}:null;
     return stars;
   }
 }

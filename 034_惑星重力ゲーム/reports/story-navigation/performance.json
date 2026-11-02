@@ -1,0 +1,131 @@
+{
+  "browser": "156.0.8078.76",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "environment": "PC Chrome headless 375x667 DPR3; not iPhone",
+  "method": "frozen actual rc.3 files; alternating two paired 8s trials per mode after 2s warmup; then 36 log/progress cycles with >=180s elapsed",
+  "rows": [
+    {
+      "mode": "HOMEWARD normal",
+      "trial": 1,
+      "candidate": false,
+      "seconds": 8.008,
+      "fps": 59.940059940059946,
+      "rendererTaskPercent": 21.54062187812188,
+      "heap": 4046300
+    },
+    {
+      "mode": "HOMEWARD normal",
+      "trial": 1,
+      "candidate": true,
+      "seconds": 8.011,
+      "fps": 59.917613281737616,
+      "rendererTaskPercent": 17.500374485083015,
+      "heap": 4032120
+    },
+    {
+      "mode": "HOMEWARD normal",
+      "trial": 2,
+      "candidate": true,
+      "seconds": 8.012,
+      "fps": 59.910134797803295,
+      "rendererTaskPercent": 13.883499750374437,
+      "heap": 4036628
+    },
+    {
+      "mode": "HOMEWARD normal",
+      "trial": 2,
+      "candidate": false,
+      "seconds": 8.016,
+      "fps": 59.880239520958085,
+      "rendererTaskPercent": 18.63237275449102,
+      "heap": 4092664
+    },
+    {
+      "mode": "DEEP SCAN",
+      "trial": 1,
+      "candidate": false,
+      "seconds": 8.025,
+      "fps": 45.482866043613704,
+      "rendererTaskPercent": 99.578230529595,
+      "heap": 13295276
+    },
+    {
+      "mode": "DEEP SCAN",
+      "trial": 1,
+      "candidate": true,
+      "seconds": 8.01,
+      "fps": 59.925093632958806,
+      "rendererTaskPercent": 30.3205493133583,
+      "heap": 5571156
+    },
+    {
+      "mode": "DEEP SCAN",
+      "trial": 2,
+      "candidate": true,
+      "seconds": 8.009,
+      "fps": 60.05743538519166,
+      "rendererTaskPercent": 34.151629416905976,
+      "heap": 5489380
+    },
+    {
+      "mode": "DEEP SCAN",
+      "trial": 2,
+      "candidate": false,
+      "seconds": 8.019,
+      "fps": 49.756827534605314,
+      "rendererTaskPercent": 96.40947749095896,
+      "heap": 14743472
+    }
+  ],
+  "comparisons": [
+    {
+      "mode": "HOMEWARD normal",
+      "before": 59.91014973050902,
+      "after": 59.913874039770455,
+      "ratio": 1.0000621649132608,
+      "assessment": "no slowdown over 10% in this sample"
+    },
+    {
+      "mode": "DEEP SCAN",
+      "before": 47.61984678910951,
+      "after": 59.991264509075236,
+      "ratio": 1.2597954120842536,
+      "assessment": "no slowdown over 10% in this sample"
+    }
+  ],
+  "long": [
+    {
+      "seconds": 31.437,
+      "heap": 5761044,
+      "nodes": 1864
+    },
+    {
+      "seconds": 62.655,
+      "heap": 5774176,
+      "nodes": 1864
+    },
+    {
+      "seconds": 93.817,
+      "heap": 5823712,
+      "nodes": 1864
+    },
+    {
+      "seconds": 125.086,
+      "heap": 5950256,
+      "nodes": 1864
+    },
+    {
+      "seconds": 156.42,
+      "heap": 5873940,
+      "nodes": 1864
+    },
+    {
+      "seconds": 187.679,
+      "heap": 5987604,
+      "nodes": 1864
+    }
+  ],
+  "heapDelta": 226560,
+  "errors": [],
+  "limits": "short paired samples and one >=3 minute session; no iPhone heat or leak-free guarantee"
+}

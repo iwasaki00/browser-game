@@ -21,7 +21,10 @@
     "balance:beach": "tsx scripts/beach-balance.ts",
     "test:beach-browser": "node scripts/beach-browser-test.mjs",
     "balance:routes": "tsx scripts/route-balance.ts",
-    "test:field-browser": "node scripts/field-browser-test.mjs"
+    "test:field-browser": "node scripts/field-browser-test.mjs",
+    "balance:automation": "tsx scripts/automation-balance.ts",
+    "test:automation-browser": "node scripts/automation-browser-test.mjs",
+    "test:regression-browser": "node scripts/regression-browser-test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

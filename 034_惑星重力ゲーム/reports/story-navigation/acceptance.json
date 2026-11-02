@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0-rc.4",
+  "status": "CONDITIONAL",
+  "localImplementation": "COMPLETE",
+  "automated": {
+    "tests": 515,
+    "pass": 515,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "storyUi": "PASS",
+  "beginnerRegression": "PASS",
+  "endings": 5,
+  "protectedSources": "UNCHANGED",
+  "starfieldOutput": "EXACT MATCH",
+  "syntaxAndLinks": "PASS",
+  "utf8LF": true,
+  "iPhone": "UNVERIFIED",
+  "publication": "NOT PERFORMED"
+}

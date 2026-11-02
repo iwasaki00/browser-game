@@ -3,6 +3,11 @@
   "summary": {
     "B": {
       "manual": {
+        "utilization": null,
+        "playerBusySeconds": 8.6,
+        "bottlenecks": {
+          "手作業": 1
+        },
         "runs": 1,
         "operations": 9,
         "operationReduction": 0,
@@ -20,6 +25,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "semi": {
+        "utilization": 0.9749999999999998,
+        "playerBusySeconds": 6.6,
+        "bottlenecks": {
+          "砂の選別待ちがあります": 1
+        },
         "runs": 1,
         "operations": 6,
         "operationReduction": 0.33333333333333337,
@@ -37,6 +47,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "combo": {
+        "utilization": 0.9749999999999998,
+        "playerBusySeconds": 6.6,
+        "bottlenecks": {
+          "砂の選別待ちがあります": 1
+        },
         "runs": 1,
         "operations": 6,
         "operationReduction": 0.33333333333333337,
@@ -54,6 +69,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "starved": {
+        "utilization": 0.9250000000000002,
+        "playerBusySeconds": 2.4,
+        "bottlenecks": {
+          "データ不足": 1
+        },
         "runs": 1,
         "operations": 3,
         "operationReduction": 0.6666666666666667,
@@ -71,6 +91,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "screenLimited": {
+        "utilization": 0.9749999999999998,
+        "playerBusySeconds": 6.6,
+        "bottlenecks": {
+          "砂の選別待ちがあります": 1
+        },
         "runs": 1,
         "operations": 6,
         "operationReduction": 0.33333333333333337,
@@ -90,6 +115,11 @@
     },
     "R": {
       "manual": {
+        "utilization": null,
+        "playerBusySeconds": 21.049999999999997,
+        "bottlenecks": {
+          "手作業": 1
+        },
         "runs": 1,
         "operations": 26,
         "operationReduction": 0,
@@ -107,6 +137,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "semi": {
+        "utilization": 0.2499999999999998,
+        "playerBusySeconds": 17.4,
+        "bottlenecks": {
+          "回収条件が不足しています": 1
+        },
         "runs": 1,
         "operations": 20,
         "operationReduction": 0.23076923076923073,
@@ -124,6 +159,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "combo": {
+        "utilization": 0.4776785714285694,
+        "playerBusySeconds": 20.199999999999996,
+        "bottlenecks": {
+          "回収条件が不足しています": 1
+        },
         "runs": 1,
         "operations": 22,
         "operationReduction": 0.15384615384615385,
@@ -141,6 +181,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "starved": {
+        "utilization": 0.23076923076923073,
+        "playerBusySeconds": 2.4,
+        "bottlenecks": {
+          "データ不足": 1
+        },
         "runs": 1,
         "operations": 3,
         "operationReduction": 0.8846153846153846,
@@ -158,6 +203,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "screenLimited": {
+        "utilization": 0.2499999999999998,
+        "playerBusySeconds": 17.4,
+        "bottlenecks": {
+          "回収条件が不足しています": 1
+        },
         "runs": 1,
         "operations": 20,
         "operationReduction": 0.23076923076923073,
@@ -177,6 +227,11 @@
     },
     "G": {
       "manual": {
+        "utilization": null,
+        "playerBusySeconds": 43.90000000000002,
+        "bottlenecks": {
+          "手作業": 1
+        },
         "runs": 1,
         "operations": 97,
         "operationReduction": 0,
@@ -194,6 +249,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "semi": {
+        "utilization": 0.9739910313901355,
+        "playerBusySeconds": 18.099999999999994,
+        "bottlenecks": {
+          "粒径選別が供給に追いついていません": 1
+        },
         "runs": 1,
         "operations": 21,
         "operationReduction": 0.7835051546391752,
@@ -211,6 +271,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "combo": {
+        "utilization": 0.9766555502620304,
+        "playerBusySeconds": 16.749999999999996,
+        "bottlenecks": {
+          "粒径選別が供給に追いついていません": 1
+        },
         "runs": 1,
         "operations": 18,
         "operationReduction": 0.8144329896907216,
@@ -228,6 +293,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "starved": {
+        "utilization": 0.9830713422007255,
+        "playerBusySeconds": 6.549999999999999,
+        "bottlenecks": {
+          "粒径選別が供給に追いついていません": 1
+        },
         "runs": 1,
         "operations": 8,
         "operationReduction": 0.9175257731958762,
@@ -245,6 +315,11 @@
         "paybackReason": "同じ固定材料だけを比較。継続的な追加採取・追加収入の実測がなく算出不可"
       },
       "screenLimited": {
+        "utilization": 0.9739910313901355,
+        "playerBusySeconds": 18.099999999999994,
+        "bottlenecks": {
+          "粒径選別が供給に追いついていません": 1
+        },
         "runs": 1,
         "operations": 21,
         "operationReduction": 0.7835051546391752,
@@ -291,12 +366,13 @@
         "finder-5000:2:5000:4"
       ],
       "utilization": null,
+      "bottlenecks": {},
       "bottleneck": "手作業",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 9666,
-      "playerBusySeconds": 5.3999999999999995
+      "playerBusySeconds": 8.6
     },
     {
       "seed": 5000,
@@ -325,12 +401,16 @@
         "finder-5000:2:5000:4"
       ],
       "utilization": 0.9749999999999998,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "砂の選別待ちがあります": 10,
+        "材料の供給が不足しています": 1
+      },
+      "bottleneck": "砂の選別待ちがあります",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 10315,
-      "playerBusySeconds": 3.5999999999999996
+      "playerBusySeconds": 6.6
     },
     {
       "seed": 5000,
@@ -359,12 +439,16 @@
         "finder-5000:2:5000:4"
       ],
       "utilization": 0.9749999999999998,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "砂の選別待ちがあります": 10,
+        "材料の供給が不足しています": 1
+      },
+      "bottleneck": "砂の選別待ちがあります",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 10378,
-      "playerBusySeconds": 3.5999999999999996
+      "playerBusySeconds": 6.6
     },
     {
       "seed": 5000,
@@ -390,12 +474,13 @@
         "finder-5000:2:5000:0"
       ],
       "utilization": 0.9250000000000002,
+      "bottlenecks": {},
       "bottleneck": "データ不足",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 8405,
-      "playerBusySeconds": 1.7999999999999998
+      "playerBusySeconds": 2.4
     },
     {
       "seed": 5000,
@@ -424,12 +509,16 @@
         "finder-5000:2:5000:4"
       ],
       "utilization": 0.9749999999999998,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "砂の選別待ちがあります": 10,
+        "材料の供給が不足しています": 1
+      },
+      "bottleneck": "砂の選別待ちがあります",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 10315,
-      "playerBusySeconds": 3.5999999999999996
+      "playerBusySeconds": 6.6
     },
     {
       "seed": 5000,
@@ -469,12 +558,13 @@
         "finder-5000:2:5000:11"
       ],
       "utilization": null,
+      "bottlenecks": {},
       "bottleneck": "手作業",
       "failures": 5,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 14307,
-      "playerBusySeconds": 15.6
+      "playerBusySeconds": 21.049999999999997
     },
     {
       "seed": 5000,
@@ -514,12 +604,16 @@
         "finder-5000:2:5000:11"
       ],
       "utilization": 0.2499999999999998,
+      "bottlenecks": {
+        "川底の引き上げ待ちがあります": 1,
+        "回収条件が不足しています": 6
+      },
       "bottleneck": "回収条件が不足しています",
       "failures": 5,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 19395,
-      "playerBusySeconds": 12
+      "playerBusySeconds": 17.4
     },
     {
       "seed": 5000,
@@ -561,12 +655,16 @@
         "finder-5000:2:5000:11"
       ],
       "utilization": 0.4776785714285694,
+      "bottlenecks": {
+        "川底の引き上げ待ちがあります": 1,
+        "回収条件が不足しています": 8
+      },
       "bottleneck": "回収条件が不足しています",
       "failures": 3,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 19900,
-      "playerBusySeconds": 13.2
+      "playerBusySeconds": 20.199999999999996
     },
     {
       "seed": 5000,
@@ -600,12 +698,13 @@
         "finder-5000:2:5000:0"
       ],
       "utilization": 0.23076923076923073,
+      "bottlenecks": {},
       "bottleneck": "データ不足",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 9458,
-      "playerBusySeconds": 1.7999999999999998
+      "playerBusySeconds": 2.4
     },
     {
       "seed": 5000,
@@ -645,12 +744,16 @@
         "finder-5000:2:5000:11"
       ],
       "utilization": 0.2499999999999998,
+      "bottlenecks": {
+        "川底の引き上げ待ちがあります": 1,
+        "回収条件が不足しています": 6
+      },
       "bottleneck": "回収条件が不足しています",
       "failures": 5,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 19395,
-      "playerBusySeconds": 12
+      "playerBusySeconds": 17.4
     },
     {
       "seed": 5000,
@@ -689,12 +792,13 @@
         "finder-5000:2:5000:7"
       ],
       "utilization": null,
+      "bottlenecks": {},
       "bottleneck": "手作業",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 24643,
-      "playerBusySeconds": 58.199999999999996
+      "playerBusySeconds": 43.90000000000002
     },
     {
       "seed": 5000,
@@ -733,12 +837,16 @@
         "finder-5000:2:5000:7"
       ],
       "utilization": 0.9739910313901355,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "粒径選別が供給に追いついていません": 90,
+        "材料の供給が不足しています": 2
+      },
+      "bottleneck": "粒径選別が供給に追いついていません",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 25520,
-      "playerBusySeconds": 12.6
+      "playerBusySeconds": 18.099999999999994
     },
     {
       "seed": 5000,
@@ -777,12 +885,16 @@
         "finder-5000:2:5000:7"
       ],
       "utilization": 0.9766555502620304,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "粒径選別が供給に追いついていません": 84,
+        "材料の供給が不足しています": 2
+      },
+      "bottleneck": "粒径選別が供給に追いついていません",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 26246,
-      "playerBusySeconds": 10.799999999999999
+      "playerBusySeconds": 16.749999999999996
     },
     {
       "seed": 5000,
@@ -815,12 +927,15 @@
         "finder-5000:2:5000:2"
       ],
       "utilization": 0.9830713422007255,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "粒径選別が供給に追いついていません": 26
+      },
+      "bottleneck": "粒径選別が供給に追いついていません",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 19476,
-      "playerBusySeconds": 4.8
+      "playerBusySeconds": 6.549999999999999
     },
     {
       "seed": 5000,
@@ -859,12 +974,16 @@
         "finder-5000:2:5000:7"
       ],
       "utilization": 0.9739910313901355,
-      "bottleneck": "材料の供給が不足しています",
+      "bottlenecks": {
+        "粒径選別が供給に追いついていません": 90,
+        "材料の供給が不足しています": 2
+      },
+      "bottleneck": "粒径選別が供給に追いついていません",
       "failures": 0,
       "unfinished": 0,
       "jackpots": 0,
       "saveBytes": 25520,
-      "playerBusySeconds": 12.6
+      "playerBusySeconds": 18.099999999999994
     }
   ],
   "times": "固定操作時間のモデル。人間のプレイ時間ではありません"

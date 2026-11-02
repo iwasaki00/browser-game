@@ -1,0 +1,172 @@
+[
+  {
+    "candidate": true,
+    "top": [
+      [
+        "(anonymous) starfield.js:3",
+        1917257
+      ],
+      [
+        "visible starfield.js:21",
+        1344771
+      ],
+      [
+        "(anonymous) starfield.js:11",
+        1306997
+      ],
+      [
+        "(garbage collector) :-1",
+        665423
+      ],
+      [
+        "(program) :-1",
+        558854
+      ],
+      [
+        "drawBackground game.js:167",
+        102575
+      ],
+      [
+        "fill :-1",
+        73134
+      ],
+      [
+        "previewFeatures voyage-presentation.js:1",
+        39660
+      ],
+      [
+        "drawDeepNavigation game.js:1051",
+        36584
+      ],
+      [
+        "querySelectorAll :-1",
+        29045
+      ],
+      [
+        "scanLayout space-scanner.js:51",
+        25138
+      ],
+      [
+        "drawEncounters encounter-render.js:1",
+        18056
+      ],
+      [
+        "drawGoal game.js:183",
+        17112
+      ],
+      [
+        "drawPrediction game.js:428",
+        15167
+      ],
+      [
+        "tick game.js:595",
+        13108
+      ],
+      [
+        "render space-scanner-ui.js:60",
+        12736
+      ],
+      [
+        "encounterBodies encounters.js:27",
+        12569
+      ],
+      [
+        "(idle) :-1",
+        12491
+      ],
+      [
+        "requestAnimationFrame :-1",
+        12442
+      ],
+      [
+        "update preview.js:36",
+        12339
+      ]
+    ]
+  },
+  {
+    "candidate": false,
+    "top": [
+      [
+        "(anonymous) starfield.js:3",
+        1815644
+      ],
+      [
+        "(anonymous) starfield.js:11",
+        1625206
+      ],
+      [
+        "visible starfield.js:21",
+        1257306
+      ],
+      [
+        "(program) :-1",
+        633296
+      ],
+      [
+        "(garbage collector) :-1",
+        494333
+      ],
+      [
+        "drawBackground game.js:167",
+        138480
+      ],
+      [
+        "previewFeatures voyage-presentation.js:1",
+        67978
+      ],
+      [
+        "fill :-1",
+        50469
+      ],
+      [
+        "drawDeepNavigation game.js:1051",
+        37024
+      ],
+      [
+        "render space-scanner-ui.js:60",
+        23741
+      ],
+      [
+        "getBoundingClientRect :-1",
+        22746
+      ],
+      [
+        "querySelector :-1",
+        20409
+      ],
+      [
+        "update preview.js:36",
+        17417
+      ],
+      [
+        "draw game.js:332",
+        14589
+      ],
+      [
+        "tick game.js:595",
+        12586
+      ],
+      [
+        "drawGoal game.js:183",
+        12291
+      ],
+      [
+        "scanLayout space-scanner.js:51",
+        10483
+      ],
+      [
+        "drawMinimap game.js:405",
+        10273
+      ],
+      [
+        "drawEncounters encounter-render.js:1",
+        10260
+      ],
+      [
+        "requestAnimationFrame :-1",
+        9957
+      ]
+    ]
+  }
+]

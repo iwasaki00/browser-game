@@ -42,11 +42,11 @@
     "story-navigation.test.mjs"
   ],
   "exitCode": 0,
-  "elapsedMs": 25604,
-  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-L3Kvz1\\game",
+  "elapsedMs": 54399,
+  "temporaryCopy": "C:\\Users\\shish\\AppData\\Local\\Temp\\orbit-qa-H2s2Il\\game",
   "counts": {
-    "tests": 513,
-    "pass": 513,
+    "tests": 515,
+    "pass": 515,
     "fail": 0,
     "skipped": 0,
     "cancelled": 0,

@@ -1,0 +1,129 @@
+{
+  "browser": "156.0.8078.76",
+  "method": "additional six alternating DEEP SCAN trials after the long test; 3s warmup / 6s sample; PC only",
+  "rows": [
+    {
+      "candidate": true,
+      "seconds": 6.039,
+      "fps": 33.61483689352542,
+      "taskPercent": 99.63686040735222,
+      "scriptPercent": 93.73426063917867,
+      "layouts": 203,
+      "styles": 609,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    },
+    {
+      "candidate": false,
+      "seconds": 6.04,
+      "fps": 30.29801324503311,
+      "taskPercent": 99.75407284768211,
+      "scriptPercent": 94.0113907284768,
+      "layouts": 183,
+      "styles": 549,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    },
+    {
+      "candidate": false,
+      "seconds": 6.049,
+      "fps": 27.607869069267647,
+      "taskPercent": 99.87078856009256,
+      "scriptPercent": 94.0992230120681,
+      "layouts": 167,
+      "styles": 501,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    },
+    {
+      "candidate": true,
+      "seconds": 6.048,
+      "fps": 26.124338624338623,
+      "taskPercent": 99.67061838624339,
+      "scriptPercent": 93.7539351851852,
+      "layouts": 158,
+      "styles": 474,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    },
+    {
+      "candidate": true,
+      "seconds": 6.066,
+      "fps": 25.88196505110452,
+      "taskPercent": 99.41950214309266,
+      "scriptPercent": 93.75631388064622,
+      "layouts": 157,
+      "styles": 471,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    },
+    {
+      "candidate": false,
+      "seconds": 6.045,
+      "fps": 31.265508684863523,
+      "taskPercent": 99.6897601323408,
+      "scriptPercent": 93.88036393713813,
+      "layouts": 189,
+      "styles": 567,
+      "guideMutations": 0,
+      "dimensions": {
+        "css": [
+          363,
+          499
+        ],
+        "pixels": [
+          1089,
+          1497
+        ]
+      }
+    }
+  ],
+  "beforeMedian": 30.29801324503311,
+  "afterMedian": 26.124338624338623,
+  "ratio": 0.8622459305519414
+}

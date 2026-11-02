@@ -1,8 +1,16 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.4.1 — RIVER & GOLD TOOL EXPANSION**
+**Version 0.5.0 — SEMI AUTOMATION**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## 半自動設備
+
+QUICK TOOLS行の「設備」、またはショップ上部から、B301電動ふるい・R301電動ウインチ・G304電動砂利搬送機を購入・管理できます。実際に採取した砂・砂利、指定した川底対象だけを処理し、洗浄と精密回収は手動です。別分野へ移動しても稼働し、非表示中は停止、再読込後は手動で再開します。
+
+仕様・DEBUG LAB操作は [SEMI_AUTOMATION](docs/SEMI_AUTOMATION.md)、100シード比較は [AUTOMATION_BALANCE](docs/AUTOMATION_BALANCE.md)、検証は [TEST_RESULTS](docs/TEST_RESULTS.md)。設備は4枠と別管理で、既存46道具を維持します。
+
+追加コマンド：npm.cmd run balance:automation / npm.cmd run test:automation-browser / npm.cmd run test:regression-browser。
 
 ## Windows / VSCodeで起動
 

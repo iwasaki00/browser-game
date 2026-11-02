@@ -1,0 +1,83 @@
+{
+  "status": "PASS",
+  "files": [
+    {
+      "file": "js/physics.js",
+      "sha256": "d44963b25598e1667a3009b1455034281ee4f0a708020a1dae04d058c5906d2a",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/live-gravity.js",
+      "sha256": "532422599f78a482e0d1bd66ba98b9491c0ff2a5dfe51d19d2f90b4b316741f7",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/stages.js",
+      "sha256": "91748849f8bbfb222e128cb18b8802adcd6dcf9cdcef60e20bdc202d314d21d1",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/challenges.js",
+      "sha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/homeward-data.js",
+      "sha256": "307e34eb0f8e787db47995fd4e167b7b3cc33f5e1488b93df27d5e8cfca0f7c9",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/open-voyage.js",
+      "sha256": "15308adf63f05a6f48104b7c4707868f3ec948730077bc9aec1bc1dd426838b1",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/deep-space.js",
+      "sha256": "5600fca4c78cc349bcbcc88039d02db6f94e226c3b275a221c7797a6c224259b",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/final-voyage.js",
+      "sha256": "97153ab6fad6649207434982141bbbeeb0cf1a53f2c8dea1819e30f082a0ac2d",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/flight-record.js",
+      "sha256": "7f5e9ad7be02fb40ae940015a70b779ca2da2b06067d013168b4ffdef61f891b",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/gallery-store.js",
+      "sha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244",
+      "status": "UNCHANGED"
+    },
+    {
+      "file": "js/homeward-progress.js",
+      "sha256": "e591eaa06daa59ee7f54ecf3beb16520806f8681c0b580c92a279dd43b33607b",
+      "status": "UNCHANGED"
+    }
+  ],
+  "starfield": [
+    {
+      "name": "standard",
+      "count": 190,
+      "result": "EXACT MATCH"
+    },
+    {
+      "name": "huge",
+      "count": 312,
+      "result": "EXACT MATCH"
+    },
+    {
+      "name": "deep",
+      "count": 1755,
+      "result": "EXACT MATCH"
+    },
+    {
+      "name": "panned light",
+      "count": 108,
+      "result": "EXACT MATCH"
+    }
+  ],
+  "meaning": "protected physics, stage, progression and save source hashes unchanged; star coordinates/colors/radii/alpha/rank/ordering byte-equivalent as JS values"
+}

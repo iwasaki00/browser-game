@@ -1,6 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {storyNavigation,storyLocation,storyHints,sortedStoryEntries} from '../js/story-navigation.js';
 import {getHomewardSector} from '../js/homeward-data.js';import {createOpenVoyage} from '../js/open-voyage.js';import {createDeepSpace} from '../js/deep-space.js';import {createFinalVoyage,ENDINGS} from '../js/final-voyage.js';import {HomewardProgress} from '../js/homeward-progress.js';
+import {Starfield} from '../js/starfield.js';
 const context=(progress={})=>({stage:createOpenVoyage(),playType:'homeward',phase:'editing',progress,launchMode:'precision'});
 test('旧セーブ・新規は未取得CLUE・対象・未来章・結末を公開しない',()=>{const c=context({currentSector:'homeward-01'}),s=storyNavigation(c),text=JSON.stringify(s);for(const hidden of ['CLUE-09','D01','DS06','THE TRUTH','THE LAST SIGNAL','消えた星図以外の未来'])assert.ok(!text.includes(hidden),hidden);assert.equal(s.chapters.length,1);assert.equal(s.entries.length,0);});
 test('非HOMEWARDでは追加案内を作らない',()=>assert.equal(storyNavigation({...context(),playType:'free'}),null));
@@ -23,3 +24,5 @@ test('旧HOMEWARD v1の読み込みと日誌表示は保存し直さない',()=>
 test('不完全な旧通信データでも安全に表示',()=>{const c=context({finalVoyage:{chapters:[1],communications:[null,{}, {chapter:1,message:'old'}]}});assert.doesNotThrow(()=>storyNavigation(c));});
 test('旧宙域説明だけでは遭遇達成を捏造しない',()=>{const c=context({journal:{'homeward-01':{encounter:'saved description'}}}),e=storyNavigation(c).entries[0];assert.equal(e.label,'確認待ち');assert.match(e.text,/達成は未確認/);assert.ok(!e.title.includes('遭遇'));});
 test('任意の解析で現在の帰還目的を上書きしない',()=>{const c=context({echoes:{clues:{'CLUE-05':{}}}}),s=storyNavigation(c);assert.equal(s.nextOptional,true);assert.match(s.objective,/帰還ゲート/);assert.match(s.hints[1],/任意/);});
+test('広域星空は128領域超でも同一視点で再生成しない',()=>{const f=new Starfield(),a={x:0,y:0},b={x:12000,y:10000},world={...b,width:b.x,height:b.y},stars=f.visible(a,b,world,.03),generated=f.generated;assert.ok(generated>128);for(let i=0;i<100;i++)assert.deepEqual(f.visible(a,b,world,.03),stars);assert.equal(f.generated,generated);assert.equal(f.cache.size,128);assert.ok(f.lastVisible.stars.length<=4096);});
+test('星空表示キャッシュはカメラ・ズーム・品質変更で更新し無制限に保持しない',()=>{const f=new Starfield(),world={width:12000,height:10000},a={x:0,y:0},b={x:12000,y:10000},first=structuredClone(f.visible(a,b,world,.03));assert.notDeepEqual(f.visible({x:500,y:500},b,world,.03),first);assert.notDeepEqual(f.visible(a,b,world,.03,true),first);assert.deepEqual(f.visible(a,b,world,.03),first);f.visible(a,b,world,1);assert.equal(f.lastVisible,null);});

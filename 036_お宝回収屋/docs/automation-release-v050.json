@@ -1,0 +1,174 @@
+{
+  "version": "0.5.0",
+  "unitTests": 282,
+  "unitPassed": 282,
+  "legacyTests": 224,
+  "newTests": 58,
+  "browserRegressions": [
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "seconds": 56.411
+    },
+    {
+      "name": "depth-browser",
+      "exitCode": 0,
+      "seconds": 9.199
+    },
+    {
+      "name": "reveal-browser",
+      "exitCode": 0,
+      "seconds": 13.12
+    },
+    {
+      "name": "river-browser",
+      "exitCode": 0,
+      "seconds": 22.125
+    },
+    {
+      "name": "gold-browser",
+      "exitCode": 0,
+      "seconds": 33.852
+    },
+    {
+      "name": "beach-browser",
+      "exitCode": 0,
+      "seconds": 45.672
+    },
+    {
+      "name": "field-browser",
+      "exitCode": 0,
+      "seconds": 34.374
+    }
+  ],
+  "automationUI": [
+    {
+      "width": 320,
+      "height": 568,
+      "purchase": true,
+      "bulkQueue": true,
+      "pauseRestore": true,
+      "crossField": true,
+      "hiddenPause": true,
+      "touchTarget": true,
+      "manualWash": true,
+      "goldPrecision": true,
+      "debugTabs": 8,
+      "oldScenarios": 44,
+      "newScenarios": 15,
+      "workerCompare": true,
+      "workerCancel": true,
+      "normalSaveIsolated": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "purchase": true,
+      "bulkQueue": true,
+      "pauseRestore": true,
+      "crossField": true,
+      "hiddenPause": true,
+      "touchTarget": true,
+      "manualWash": true,
+      "goldPrecision": true,
+      "debugTabs": 8,
+      "oldScenarios": 44,
+      "newScenarios": 15,
+      "workerCompare": true,
+      "workerCancel": true,
+      "normalSaveIsolated": true,
+      "errors": []
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "purchase": true,
+      "bulkQueue": true,
+      "pauseRestore": true,
+      "crossField": true,
+      "hiddenPause": true,
+      "touchTarget": true,
+      "manualWash": true,
+      "goldPrecision": true,
+      "debugTabs": 8,
+      "oldScenarios": 44,
+      "newScenarios": 15,
+      "workerCompare": true,
+      "workerCancel": true,
+      "normalSaveIsolated": true,
+      "errors": []
+    }
+  ],
+  "production": [
+    {
+      "channel": "chrome",
+      "build": "production",
+      "devFeatures": "absent",
+      "debugBundleMarkers": "absent",
+      "hiddenGesture": "disabled",
+      "saveKey": "finders-v1",
+      "digAndReload": "PASS",
+      "riverRetrieveAndWash": "PASS",
+      "goldGatherPanAndWash": "PASS",
+      "deepToolsAndSave": "PASS",
+      "cameraArmAndNewGold": "PASS",
+      "semiAutomationAndReload": "PASS",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "build": "production",
+      "devFeatures": "absent",
+      "debugBundleMarkers": "absent",
+      "hiddenGesture": "disabled",
+      "saveKey": "finders-v1",
+      "digAndReload": "PASS",
+      "riverRetrieveAndWash": "PASS",
+      "goldGatherPanAndWash": "PASS",
+      "deepToolsAndSave": "PASS",
+      "cameraArmAndNewGold": "PASS",
+      "semiAutomationAndReload": "PASS",
+      "errors": []
+    }
+  ],
+  "processingTrials": 1500,
+  "purchaseTrials": 300,
+  "purchased": 300,
+  "identicalInventoryAndManualSemiOutputs": true,
+  "jackpots": 0,
+  "longRun": [
+    {
+      "field": "B",
+      "hours": 8,
+      "reloads": 16,
+      "history": 100,
+      "saveBytes": 235204,
+      "uniquePaid": true,
+      "hiddenUnchanged": true,
+      "resumeCatchupSeconds": 0
+    },
+    {
+      "field": "R",
+      "hours": 8,
+      "reloads": 16,
+      "history": 100,
+      "saveBytes": 333518,
+      "uniquePaid": true,
+      "hiddenUnchanged": true,
+      "resumeCatchupSeconds": 0
+    },
+    {
+      "field": "G",
+      "hours": 8,
+      "reloads": 16,
+      "history": 100,
+      "saveBytes": 554015,
+      "uniquePaid": true,
+      "hiddenUnchanged": true,
+      "resumeCatchupSeconds": 0
+    }
+  ],
+  "iPhoneSafari": "実機未確認",
+  "commitPushPublish": "こちらから未実行"
+}

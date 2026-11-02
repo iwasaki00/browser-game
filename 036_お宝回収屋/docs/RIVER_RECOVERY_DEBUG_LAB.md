@@ -1,3 +1,11 @@
+# Version 0.5.0 DEBUG LAB追補
+
+設備試験・1/2/10倍・AUTO-01〜15・数値統計・Worker比較・コピー/保存は [SEMI_AUTOMATION](SEMI_AUTOMATION.md#debug-lab)。既存8タブ/44シナリオ、通常とテストの保存分離、開発版限定の開き方を維持します。
+
+---
+
+以下は過去バージョンの記録です。
+
 > 現行Versionは0.4.1です。LABは8タブ・44シナリオ。[追加道具の操作説明](RIVER_GOLD_TOOL_EXPANSION.md)と[購入ルート比較](PURCHASE_ROUTE_ANALYSIS.md)を参照してください。
 
 > 0.4.0の現行LABは8タブ・32シナリオです。道具タブに固定シード比較とJSON出力を追加。[砂浜道具とLABの説明](BEACH_TOOL_EXPANSION.md)を参照してください。
