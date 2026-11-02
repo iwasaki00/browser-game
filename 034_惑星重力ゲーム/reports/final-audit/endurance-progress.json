@@ -372,9 +372,20 @@
         "documents": 1,
         "nodes": 2413,
         "jsEventListeners": 307
+      },
+      {
+        "phaseSeconds": 215.017,
+        "seconds": 30.754,
+        "fps": 59.9596800416206,
+        "drawFps": 57.16329583143656,
+        "rendererTaskPercent": 16.782174676464866,
+        "heap": 6987396,
+        "documents": 1,
+        "nodes": 2412,
+        "jsEventListeners": 307
       }
     ],
-    "actions": 17,
+    "actions": 19,
     "initial": {
       "heap": 6337748,
       "documents": 1,
@@ -382,5 +393,5 @@
       "jsEventListeners": 224
     }
   },
-  "elapsedSeconds": 867.081
+  "elapsedSeconds": 897.864
 }
