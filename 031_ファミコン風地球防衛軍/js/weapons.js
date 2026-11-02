@@ -95,11 +95,16 @@ function splitShot(g,s,cluster){
 }
 export function detonateMines(g,api){
   if(!g?.arsenal)return 0;let count=0,write=0;
-  for(const i of g.arsenal.installations){
-    if(i.type==="mine"&&i.ownerId===g.arsenal.ownerId){blast(g,{...i,y:i.y-3,radius:i.weapon.radius,damage:i.weapon.damage},api);count++}
-    else g.arsenal.installations[write++]=i;
+  const arsenal=g.arsenal,list=arsenal.installations;
+  for(const i of list){
+    if(i.type==="mine"&&i.ownerId===arsenal.ownerId){blast(g,{...i,y:i.y-3,radius:i.weapon.radius,damage:i.weapon.damage},api);count++;
+      // Boss death can replace the arsenal; form transitions clear this list.
+      // Do not restore the retained prefix into either newly cleared container.
+      if(g.arsenal!==arsenal||arsenal.installations!==list||list.length===0)return count;
+    }
+    else list[write++]=i;
   }
-  g.arsenal.installations.length=write;return count;
+  list.length=write;return count;
 }
 function nearest(g,x,y,r,hits=null,limit=Infinity){
   const list=g.grid.query(x-r-48,y-r-32,x+r+48,y+r+32,g.arsenal.candidates);
@@ -110,7 +115,8 @@ function nearest(g,x,y,r,hits=null,limit=Infinity){
 }
 function updateJobs(g,dt,api){
   const jobs=g.arsenal.jobs,initial=jobs.length;let blasts=0;
-  for(let i=0;i<initial;i++){
+  // A damage callback may clear jobs in place or replace the whole arsenal.
+  for(let i=0;i<initial&&i<jobs.length&&jobs===g.arsenal.jobs;i++){
     const j=jobs[i],w=j.weapon;j.timer-=dt;
     if(j.kind==="chain"){
       if(j.timer<=0&&blasts<WEAPON_LIMITS.eventsPerTick){blasts++;blast(g,{...j,type:w.type,radius:w.radius,damage:w.damage},api,{depth:j.depth,state:j.state});j.dead=true}
