@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "037",
+      title: "ちょっとカクレロン",
+      genre: "Creative / Photo",
+      description: "好きな写真に白いカクレロンを配置し、移動・拡大縮小・回転で場所を調整する試作版。写真はブラウザ内だけで扱い、外部へ送信しません。",
+      href: "./037_ちょっとカクレロン/index.html",
+      icon: "./037_ちょっとカクレロン/assets/menu-icon.svg",
+      alt: "緑の背景に立つ、白く丸みのあるカクレロンのアイコン",
+      cta: "カクレロンを配置する",
+      ariaLabel: "ちょっとカクレロンを開く"
+    },
+    {
       number: "036",
       title: "お宝回収屋 — THE FINDERS",
       genre: "Exploration / Incremental",
