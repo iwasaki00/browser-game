@@ -1,0 +1,86 @@
+[
+  {
+    "ending": "END-01",
+    "status": "PASS",
+    "route": [
+      "earth"
+    ],
+    "record": {
+      "key": "ending:END-01:first",
+      "id": "ac59c5ec-2796-4eb1-bed5-35916407deb8",
+      "ending": "END-01",
+      "decision": "home",
+      "duration": 56.474999999997436
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  },
+  {
+    "ending": "END-02",
+    "status": "PASS",
+    "route": [
+      "rescue",
+      "earth"
+    ],
+    "record": {
+      "key": "ending:END-02:first",
+      "id": "16c86d4c-b137-41b3-bed0-94405630b92f",
+      "ending": "END-02",
+      "decision": "rescue",
+      "duration": 45.31666666666474
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  },
+  {
+    "ending": "END-03",
+    "status": "PASS",
+    "route": [
+      "network",
+      "earth"
+    ],
+    "record": {
+      "key": "ending:END-03:first",
+      "id": "62873a0b-96e5-4b96-99ad-92ece8a5329b",
+      "ending": "END-03",
+      "decision": "truth",
+      "duration": 33.916666666665385
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  },
+  {
+    "ending": "END-04",
+    "status": "PASS",
+    "route": [
+      "network",
+      "passage"
+    ],
+    "record": {
+      "key": "ending:END-04:first",
+      "id": "bb68b383-11eb-4f48-8105-f53676e8ca19",
+      "ending": "END-04",
+      "decision": "other",
+      "duration": 14.141666666666504
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED"
+  },
+  {
+    "ending": "END-05",
+    "status": "PASS",
+    "route": [
+      "observatory"
+    ],
+    "record": {
+      "key": "ending:END-05:first",
+      "id": "67d9eece-aa76-4dc6-8b9d-b6e61faa663e",
+      "ending": "END-05",
+      "decision": "continue",
+      "duration": 33.84999999999872
+    },
+    "checks": "selection / real flight / card / skip / review / cinematic / reload / old saves and favorites protected",
+    "viewport": "PC Chrome 375x667; iPhone UNVERIFIED",
+    "retry": "ENDLESS -> HOMEWARD -> FREE SPACE PASS"
+  }
+]

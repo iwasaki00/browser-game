@@ -1,0 +1,43 @@
+{
+  "browser": "156.0.8078.76",
+  "type": "PC Chrome CDP touch / not iPhone",
+  "errors": [],
+  "steps": [
+    {
+      "step": 1,
+      "status": "PASS",
+      "evidence": "actual launch"
+    },
+    {
+      "step": 2,
+      "status": "PASS",
+      "evidence": "both inputs changed and real relaunch; no stale launch acceptance"
+    },
+    {
+      "step": 3,
+      "status": "PASS",
+      "degrees": 5.055309334800749,
+      "time": 0.7333333333333332
+    },
+    {
+      "step": 4,
+      "status": "PASS",
+      "prediction": "216:3889621723:cleared",
+      "baseline": "207:1817892269:cleared"
+    },
+    {
+      "step": 5,
+      "status": "PASS",
+      "evidence": "explicit search selection and real info panel"
+    },
+    {
+      "step": 6,
+      "status": "PASS",
+      "evidence": "policy / destination / actual station trigger / real CLEAR / log confirmation"
+    }
+  ],
+  "screens": [],
+  "firstOffer": "PASS: optional / later persists",
+  "mainData": "PASS: exact storage except new key / favorite / archive / input / camera / original menu",
+  "status": "PASS"
+}

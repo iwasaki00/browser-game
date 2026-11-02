@@ -1,0 +1,282 @@
+{
+  "version": "2.0.0-rc.4",
+  "gitStatus": "",
+  "manifest": [
+    {
+      "file": "index.html",
+      "sha256": "6d617075299f41c4730157fd9b4a262a89add48b51b40dea1c170494300e8ba5"
+    },
+    {
+      "file": "styles.css",
+      "sha256": "8a7f357d54dd7d7d3cfd8b7b9f4dfc96efba090cb85f7c183032f77a5a7f58d4"
+    },
+    {
+      "file": "icon.svg",
+      "sha256": "bf55c8dfb02c47820dbbd6b4b27048d4fe716abc80d5ded4af37a065a01c00f2"
+    },
+    {
+      "file": "package.json",
+      "sha256": "31485a3139c82f6b34a7646e27dd8e2c603c00533504dbd97f37c2074022ff83"
+    },
+    {
+      "file": "js/beginner-data.js",
+      "sha256": "4f617752819d18951ee1a7dcb4e9c92946b55a205b53cb7c69ece5a7d3e135fd"
+    },
+    {
+      "file": "js/beginner-practice.js",
+      "sha256": "a094a222e9f91eb6e70d3a1ae4aae5d6e4d6c8df7ea9d10b8a0f170beed78fce"
+    },
+    {
+      "file": "js/beginner-tutorial.js",
+      "sha256": "6b481aa657a2b9787327c8f3489cea973c1a45da047607702000fca9b7ed8aa7"
+    },
+    {
+      "file": "js/beginner-ui.js",
+      "sha256": "5f71562656b45fd5be0934dbaaabaff52213c91fa4192f3a94fe35f7c51642d9"
+    },
+    {
+      "file": "js/camera.js",
+      "sha256": "5918bc067edb0690c08fd0345618033aa9aaee90f81713dcbdb567425d0fa9e5"
+    },
+    {
+      "file": "js/challenges.js",
+      "sha256": "5342baac7e2aba998210fef593e5aead0dba604df9f96b6da9bc53a5718927ca"
+    },
+    {
+      "file": "js/cinematic-camera.js",
+      "sha256": "80cb443c219244e0f00bd320a34d576c15468a1824942c33ae6e66c4260d3f2c"
+    },
+    {
+      "file": "js/deep-courses.js",
+      "sha256": "8f23b5eea3e7737a57b69796d7e6562e5c6efc1d4fa151feeab6aa2b84f84fa9"
+    },
+    {
+      "file": "js/deep-space-ui.js",
+      "sha256": "89f7b4edc2e4ec415d31d8a2c51978828e605a7bfc9759b213ac521d13e0c3dc"
+    },
+    {
+      "file": "js/deep-space.js",
+      "sha256": "5600fca4c78cc349bcbcc88039d02db6f94e226c3b275a221c7797a6c224259b"
+    },
+    {
+      "file": "js/echoes-ui.js",
+      "sha256": "067160951d95cd97cf4cd3137c3526e036a4132b45042fefb86f083a6e434a53"
+    },
+    {
+      "file": "js/echoes.js",
+      "sha256": "8f8430a93fe601be7acf582e32588c80def4a329e24493cf83f320879d19ab89"
+    },
+    {
+      "file": "js/encounter-render.js",
+      "sha256": "ccf14ce4d9dbd6ca8fbcc3d7bc281928191538f385d6b915fe720b89bf4e2009"
+    },
+    {
+      "file": "js/encounter-samples.js",
+      "sha256": "d7604c946c5df44194ed0c6584e4f9300e619cd421f8590e133e75257a3498be"
+    },
+    {
+      "file": "js/encounters.js",
+      "sha256": "d5cacd89ede26afec9035b50609aa5758d3ad09934be9f60010fd0670a472514"
+    },
+    {
+      "file": "js/final-courses.js",
+      "sha256": "cba0bf00bdf256bf72ad3876cd6d4c9e7edf53a5ac008a4484ca5deeca529cdd"
+    },
+    {
+      "file": "js/final-voyage-ui.js",
+      "sha256": "a1a5053fb98b96b5286ac5f7a2eeb08b4cf67dd90119738bf0a8c9bd6dbd52c7"
+    },
+    {
+      "file": "js/final-voyage.js",
+      "sha256": "97153ab6fad6649207434982141bbbeeb0cf1a53f2c8dea1819e30f082a0ac2d"
+    },
+    {
+      "file": "js/flight-checkpoints.js",
+      "sha256": "f97b9b5f28cbb63fafd66c201c34c7d32edca0d23ee58e230e1c6082db2a1dec"
+    },
+    {
+      "file": "js/flight-clock.js",
+      "sha256": "f2b29ae450ec57099b6f5b4bd2ce156b458f007a9e2b03d5f8731d1dd16dfe8f"
+    },
+    {
+      "file": "js/flight-record.js",
+      "sha256": "7f5e9ad7be02fb40ae940015a70b779ca2da2b06067d013168b4ffdef61f891b"
+    },
+    {
+      "file": "js/flight-replay.js",
+      "sha256": "1e4aa66339b085a91f6018c40aabb08d45a99bb850d1cb6102d7e3a1734d3388"
+    },
+    {
+      "file": "js/frontier-ui.js",
+      "sha256": "3f8199c38f8014097d1b6fa14ba11a77cc8bec9130dfb1dc09e801af61e00ec4"
+    },
+    {
+      "file": "js/frontier.js",
+      "sha256": "07199a253a032f82ddf544d989adc85081b8b7331188b4e3e28858e483f9328c"
+    },
+    {
+      "file": "js/gallery-store.js",
+      "sha256": "79306862cdab7f006a764b5f85c6a2c4a86be947427cf7933143ddd4d6bf6244"
+    },
+    {
+      "file": "js/gallery-ui.js",
+      "sha256": "e71803e33da284babfa1099e13411a33352052a066ddea3be608ddf8c1c8e935"
+    },
+    {
+      "file": "js/game.js",
+      "sha256": "d7418bc4a6865d82e4523e569c7b0a647f837ad86a11e31545e74e1c19f00a86"
+    },
+    {
+      "file": "js/homeward-archive.js",
+      "sha256": "420299ba6ffe3d17c1dc5c27bdff0c227014c8819bcca9f4a559b2b6e791ed5b"
+    },
+    {
+      "file": "js/homeward-data.js",
+      "sha256": "307e34eb0f8e787db47995fd4e167b7b3cc33f5e1488b93df27d5e8cfca0f7c9"
+    },
+    {
+      "file": "js/homeward-experience.js",
+      "sha256": "cc88b208c1cbaa1d498a11044c4b72cf1a673b35a517a708f7a46a73ec17e726"
+    },
+    {
+      "file": "js/homeward-mission.js",
+      "sha256": "ae893276a0c7d9647cfda53a6ab1af9f35fad47a902e602000768f5a1a5862ca"
+    },
+    {
+      "file": "js/homeward-progress.js",
+      "sha256": "e591eaa06daa59ee7f54ecf3beb16520806f8681c0b580c92a279dd43b33607b"
+    },
+    {
+      "file": "js/homeward-tutorial.js",
+      "sha256": "571bd5ebcf558f7481045e7b2d9b0fba9ed4cd3a80f93f8d6a013f4004aea24a"
+    },
+    {
+      "file": "js/homeward-ui.js",
+      "sha256": "9d8c0eacf1e5d68df7775d2523bd4b8e49fe675ddd10bdacf5bdc63cbbabe558"
+    },
+    {
+      "file": "js/impossible-signal.js",
+      "sha256": "83996af285d8f64b63b2fe7ee30036237f246e90647b6c49cc4f6c1e4d7cb497"
+    },
+    {
+      "file": "js/impossible-ui.js",
+      "sha256": "adad7b530e50cef204a96048ae151a1031c1b0834ff1dd4e300dd9b030ab4a14"
+    },
+    {
+      "file": "js/launch.js",
+      "sha256": "8c1bfc3f43856aa5d69d5168fa71a5ac853650b66bfab8e711784d4402557cb3"
+    },
+    {
+      "file": "js/live-gravity.js",
+      "sha256": "532422599f78a482e0d1bd66ba98b9491c0ff2a5dfe51d19d2f90b4b316741f7"
+    },
+    {
+      "file": "js/lost-sectors.js",
+      "sha256": "7c7920a79519aa3f79486d72af83754228c9bcf8f992f4ab41be53ed2140c56d"
+    },
+    {
+      "file": "js/mission-guide-ui.js",
+      "sha256": "06222892cf8133fe99243ce99cbae0b5211987d5283927a5bf6166922c7f0b40"
+    },
+    {
+      "file": "js/mission-guide.js",
+      "sha256": "699af63a67b876028bf487c47012acaf467544ff68766345054157fdbdf54aa9"
+    },
+    {
+      "file": "js/navigation-feedback.js",
+      "sha256": "307fa1d01ed7c2ee0bc16711f1a1de4cdad963a19aa115ae129387c9ef2be581"
+    },
+    {
+      "file": "js/open-voyage.js",
+      "sha256": "15308adf63f05a6f48104b7c4707868f3ec948730077bc9aec1bc1dd426838b1"
+    },
+    {
+      "file": "js/orbit-art-worker.js",
+      "sha256": "9904506d8e38c61b52408c05d6987d70c624bf0cb74019701547ec95d84f2da0"
+    },
+    {
+      "file": "js/orbit-art.js",
+      "sha256": "feba552905da4f28275a9f09d457aa394670da2c4f716cbfc3744dc2967d13fe"
+    },
+    {
+      "file": "js/orbit-share-ui.js",
+      "sha256": "9000e4c171ea8e8dbe3b20c4ee646be0f20cc80dae0c6db3bd3439fcf7d6ef78"
+    },
+    {
+      "file": "js/physics.js",
+      "sha256": "d44963b25598e1667a3009b1455034281ee4f0a708020a1dae04d058c5906d2a"
+    },
+    {
+      "file": "js/planets.js",
+      "sha256": "608f7dd5149e8056c83496a6f68163490352e7ac1613885a41154e55b1ce98ed"
+    },
+    {
+      "file": "js/preview.js",
+      "sha256": "fa2aa7c626c101c1688bc99a383efa0119f5d21690f24e330ed53a975c6b3c60"
+    },
+    {
+      "file": "js/progress.js",
+      "sha256": "57b0aa9d160b0c48e8abdb78dcb30e4d056b4c237b27f1f54a156f454f9e8539"
+    },
+    {
+      "file": "js/route-guide-ui.js",
+      "sha256": "062c18b45b7d66727fa99c25e91b92a99024c96f4681557840371147628f9c38"
+    },
+    {
+      "file": "js/settings-ui.js",
+      "sha256": "cf7388ff458d5e4b3e6cc969141c88aded1bf84d2c6ea3faaaa69dfcbcebbac7"
+    },
+    {
+      "file": "js/space-audio.js",
+      "sha256": "3c9d9b09d659a34ebec070f21e1e2c8bc36932f5b03ca8d24186d84127efa5af"
+    },
+    {
+      "file": "js/space-experience.js",
+      "sha256": "8a96be16d9737b24dd2814dc014d843a83f26493b579d65bfd41c6ee98aa61bd"
+    },
+    {
+      "file": "js/space-scanner-ui.js",
+      "sha256": "ace8b86ebc3eaafdd9f3ed1c21a493107b35e388291b49689bfc5de9a660b847"
+    },
+    {
+      "file": "js/space-scanner.js",
+      "sha256": "e3a3e90e32ad47c12627d91d750885c4859643cec99ea1895758f6faff51f620"
+    },
+    {
+      "file": "js/special-challenges.js",
+      "sha256": "e8335bfe88545d6c29330ae177dec80e4454f050f7837c1b220723158a796d3f"
+    },
+    {
+      "file": "js/special-samples.js",
+      "sha256": "91b4cc67eb17269cc25310224608ceaaf04adcffb100dbca5e35597d54da7ec2"
+    },
+    {
+      "file": "js/stages.js",
+      "sha256": "91748849f8bbfb222e128cb18b8802adcd6dcf9cdcef60e20bdc202d314d21d1"
+    },
+    {
+      "file": "js/starfield.js",
+      "sha256": "82f0c04d3d69b14207dab2c30074b0216101708715a6f908b13fe9cd2345e1f2"
+    },
+    {
+      "file": "js/story-navigation-ui.js",
+      "sha256": "598cc4c88e22b40e50335a4c31c7ffe817505a1e71c182f68756e128c3c14201"
+    },
+    {
+      "file": "js/story-navigation.js",
+      "sha256": "f1ae9864964cdd6031754eb73dba7590eccfbdfbd4ba69863dff337fffbcdea6"
+    },
+    {
+      "file": "js/voyage-courses.js",
+      "sha256": "84a8af1b25ce22d2711f0a65e021110d68e2381dd40c00e6388c9166b1a44791"
+    },
+    {
+      "file": "js/voyage-presentation.js",
+      "sha256": "2248a74a7e3d1894c438d7ff6aef42505226ed01e0dc14d953a4d76eceda3ea7"
+    },
+    {
+      "file": "js/worlds.js",
+      "sha256": "b34b74bf45df6db6234298c611158e975118c21de701f0a55fdca486f6e79e51"
+    }
+  ]
+}
