@@ -102,6 +102,7 @@ export function beginDeath(g,e,source={},bounds){
   }
 }
 export function updateDeath(g,e,dt){
+  if(g.bossDefeat?.boss===e&&!g.bossDefeat.finished)return;
   e.death-=dt;e.deathAge=(e.deathAge||0)+dt;
   if(e.death<=0){releaseDeath(g,e);return}
   if(e.deathDelay>0)e.deathDelay=Math.max(0,e.deathDelay-dt);

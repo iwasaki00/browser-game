@@ -1,0 +1,41 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "shopFiltersAndStates": "PASS",
+    "newPlotDepth": "PASS",
+    "touchFourAndFive": "PASS",
+    "depthSaveAndNormalIsolation": "PASS",
+    "fixedSeedCompareAndDownload": "PASS",
+    "deepRecovery": "PASS",
+    "tabs": 8,
+    "scenarios": 32,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "shopFiltersAndStates": "PASS",
+    "newPlotDepth": "PASS",
+    "touchFourAndFive": "PASS",
+    "depthSaveAndNormalIsolation": "PASS",
+    "fixedSeedCompareAndDownload": "PASS",
+    "deepRecovery": "PASS",
+    "tabs": 8,
+    "scenarios": 32,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "shopFiltersAndStates": "PASS",
+    "newPlotDepth": "PASS",
+    "touchFourAndFive": "PASS",
+    "depthSaveAndNormalIsolation": "PASS",
+    "fixedSeedCompareAndDownload": "PASS",
+    "deepRecovery": "PASS",
+    "tabs": 8,
+    "scenarios": 32,
+    "errors": []
+  }
+]

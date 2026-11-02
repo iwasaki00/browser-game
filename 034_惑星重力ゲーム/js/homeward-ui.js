@@ -1,4 +1,5 @@
 import {renderFinalVoyage,appendFinalJournal} from './final-voyage-ui.js';
+import {enhanceRouteGuide,resetRouteGuide} from './route-guide-ui.js';
 import {renderDeepSpace,appendDeepJournal} from './deep-space-ui.js';
 import {renderEchoes} from './echoes-ui.js';
 import {HOMEWARD,HOMEWARD_SECTORS,getHomewardDefinition} from './homeward-data.js';
@@ -10,6 +11,7 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
  const $=s=>document.querySelector(s),dialog=$('#homewardDialog');let pending=null;
  function show(view){for(const id of ['intro','map','event'])$('#homeward-'+id).hidden=id!==view;if(!dialog.open){onOpen();dialog.showModal();}}
  function render(){
+  resetRouteGuide($('#voyageNavigation'));
   const state=progress.state,d=homewardDistance(state);
   $('#homewardDistance').textContent=`地球まで推定 ${d.remaining.toLocaleString('ja-JP')} 航路単位 · 帰還 ${d.percent.toFixed(1)}%`;
   $('#homewardMeter').value=d.percent;$('#homewardSaveNotice').textContent=progress.notice;
@@ -54,6 +56,17 @@ export function createHomewardUI({progress,onEnter,onOpen=()=>{},onChange=()=>{}
    const detail=document.createElement('p');detail.textContent=[entry.information??'正体は未確認。接近して調査するか、今の航路を続けるか選べます。',entry.firstDetectedAt!=null?`初回検出：${new Date(entry.firstDetectedAt).toLocaleString('ja-JP')}`:entry.legacy?'旧記録から引継ぎ・日時不明':'',entry.investigatedAt!=null?`調査完了：${new Date(entry.investigatedAt).toLocaleString('ja-JP')}`:''].filter(Boolean).join(' ／ ');item.append(detail);
    const used=new Set();for(const [label,id]of [['調査航行',entry.investigatedFlightId],['発見航行',entry.detectedFlightId]])if(typeof id==='string'&&!used.has(id)){used.add(id);const button=document.createElement('button');button.type='button';button.textContent=`${t.id} ${label}をCINEMATIC再生（専用保護）`;button.addEventListener('click',()=>onRecord(id));item.append(button);}
    journal.append(item);
+  }
+  const navigation=getNavigation();
+  if(navigation.active&&navigation.stage){
+   const context={stage:navigation.stage,phase:navigation.flying?'flying':'editing',flying:navigation.flying,playType:'homeward',progress:state,position:navigation.position};
+   for(const [id,policy,destination,raw,label]of [
+    ['voyageNavigation','[data-echo-route]','[data-destination]',state.voyage,document.querySelector('#echoesStory [aria-pressed="true"]')?.textContent],
+    ['deepNavigation','[data-deep-policy]','[data-deep-destination]',state.deep,document.querySelector('#deepNavigation [data-deep-policy][aria-pressed="true"]')?.textContent],
+    ['finalNavigation','[data-final-choice]','[data-final-destination]',state.finalVoyage,document.querySelector('#finalNavigation [data-final-choice][aria-pressed="true"]')?.textContent],
+   ]){
+    const section=$('#'+id);enhanceRouteGuide({section,policies:[...section.querySelectorAll(policy)],targets:section.querySelector(destination)?.parentElement,context,checkpoint:raw?.checkpoint,policyText:label,onClose:()=>dialog.close()});
+   }
   }
  }
  function renderVoyage(){

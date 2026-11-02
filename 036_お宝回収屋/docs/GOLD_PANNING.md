@@ -1,3 +1,5 @@
+> 河原の仕様は維持しています。現行Versionは0.4.0で、LABは8タブ・32シナリオです。[砂浜追加道具](BEACH_TOOL_EXPANSION.md)も利用できます。
+
 # Version 0.3.0 — GOLD PANNING
 
 ## 河原へ出かける

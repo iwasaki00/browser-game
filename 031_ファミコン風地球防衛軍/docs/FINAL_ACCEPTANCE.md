@@ -1,5 +1,7 @@
 # 1.2.0-C — FINAL ACCEPTANCE
 
+> C2更新：RAF停止機構とB-04撃破表示の不整合を修正し、全8ボス直前LAB・次の出撃診断を追加しました。ただし実Safariの例外発生元・生存中の画像消失は未確定で、現在のNOT READY判定は維持。[C2結果・再確認手順](../reports/boss-defeat-transition/README.md)を参照。
+
 > 更新：C1でM04クリア後の進行不能が再報告されています。下記は再発報告前のC受入記録です。現在の判断は**NOT READY（報告されたBLOCKERの原因未確定・実機再確認待ち）**。[C1調査・診断版](../reports/campaign-progression/README.md)を優先してください。
 
 ## 範囲・判定

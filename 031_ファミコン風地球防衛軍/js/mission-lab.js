@@ -33,6 +33,11 @@ export const LAB_CHECKPOINTS=Object.freeze([
   checkpoint('M01',4,4160,116,'MAIN',true),checkpoint('M02',4,4800,116,'MAIN',true)
 ]);
 export function findCheckpoint(mission,area,route='LOWER',boss=false){return LAB_CHECKPOINTS.find(c=>c.missionId===mission&&c.areaIndex===Number(area)&&(c.boss.state==='active')===boss&&(mission!=='M02'||Number(area)!==2||c.route===route))}
+// Separate from area/direct-boss checkpoints: boss is NOT spawned or weakened.
+export const LAB_BOSS_APPROACHES=Object.freeze([
+ ['M01',4100],['M02',M02.bossX],['M03',M03.bossX],['M04',M04.bossX],
+ ['M05',M05.bossX],['M06',M06.bossX],['M07',M07.bossX],['M08',M08.bossX]
+].map(([id,entryX])=>Object.freeze({...checkpoint(id,4,entryX-36,116,'PRE_BOSS'),entryX,preBoss:true})));
 export function validationClass(requested,lab,save){
   if(!Object.hasOwn(VALIDATION_MODES,requested))throw new Error('検証区分を選択してください');
   if(requested==='D'){

@@ -1,14 +1,18 @@
 # ORBIT MAKER（オービットメーカー）
 
-Version 2.0.0-rc.1 — FINAL ACCEPTANCE（最終受入候補）
+Version 2.0.0-rc.2 — MISSION GUIDE & BEGINNER UX（受入候補）
 
-正式完成の判定は保留中です。SPACE SCANNERのv1.9.4実機評価OKはユーザー申告として引き継ぎ、ゲーム全体のiPhone最終受入は別に実施します。ゲームの物理・ステージ・保存形式は変更していません。
+ヘッダーの「現在の任務」を押すと、現在の目的・次にする操作・その理由を確認できます。通常時は短い任務名だけを表示し、盤面の高さを保ちます。既存の初回ガイドは優先し、強調する操作は原則1か所です。詳細表示中はメニュー同様に一時停止し、閉じると続きます。
 
-[最終QA・完成判定](reports/final-acceptance/REPORT.md) ／ [iPhone最終確認表](reports/final-acceptance/IPHONE_CHECKLIST.md) ／ [公開前監査](reports/final-acceptance/RELEASE_AUDIT.md)
+[rc.2 仕様・操作手順](reports/mission-guide/SPEC.md) ／ [画面遷移・現状分析](reports/mission-guide/PLAN.md) ／ [QA・画面キャプチャ](reports/mission-guide/REPORT.md)
 
-ローカル確認はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0 --directory release-preview` を実行し、PCでは `http://localhost:8000/`、同じWi-FiのiPhoneでは `http://＜PCのIPv4アドレス＞:8000/` を開きます。停止はCtrl+Cです。新しいURLは既存URLと別の保存領域になるため、以前の記録が見えなくても削除されたとは限りません。受入時は既存の正式URL・同じSafariプロファイルを優先してください。候補版の公開はまだ行っていません。
+メニュー上部で「はじめて遊ぶ」「CLASSIC」「HOMEWARD」「FREE」「CINEMATIC」を説明付きで選べます。HOMEWARDの広域航路は、STEP 1 方針・判断 → STEP 2 目的地 → STEP 3 距離・状態・説明 → STEP 4 航行画面へ、の順に確認します。選択だけでは発射しません。ANGLE・THRUSTまたはスリングで自分の航路を設計してください。DEEPの「安全重視」は自動回避や安全保証ではありません。
 
-全自動テストは `npm test`。使い捨てコピーで実施し、結果は `reports/final-acceptance/` に保存します。ブラウザ検証も独立環境を使用します。公開・push・デプロイは行いません。
+rc.2のローカル確認はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0` を実行し、PCでは `http://localhost:8000/`、同じWi-FiのiPhoneでは `http://＜PCのIPv4アドレス＞:8000/` を開きます。停止はCtrl+Cです。メニューのv2.0.0-rc.2を確認してください。`release-preview/`は性能比較用の旧rc.1コピーなので、今回の起動先には使いません。別URLでは保存領域も別です。記録が見えなくても削除・初期化しないでください。
+
+全自動テストは `npm test`。使い捨てコピーで実施し、結果は `reports/mission-guide/` に保存します。ブラウザ検証も独立環境を使用します。物理・ステージ・分岐・保存形式は変更せず、公開・push・デプロイは行いません。正式完成とiPhone全体の受入は保留中です。SPACE SCANNERのv1.9.4実機OKは引き継ぎ、今回の新UIは実機未確認です。
+
+前回の資料：[rc.1 最終QA](reports/final-acceptance/REPORT.md) ／ [iPhone最終確認表](reports/final-acceptance/IPHONE_CHECKLIST.md) ／ [公開前監査](reports/final-acceptance/RELEASE_AUDIT.md)
 
 以下は過去の実装履歴です。実機未確認の記述は各版の検証時点を示します。
 

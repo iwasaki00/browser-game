@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="惑星の重力でロケットの軌道を曲げ、ゲートを目指す2D物理パズルゲーム">
-  <title>ORBIT MAKER — Final Acceptance Candidate</title>
+  <title>ORBIT MAKER — Mission Guide</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -19,6 +19,7 @@
 
         <h1>ORBIT <span>MAKER</span></h1><small id="modeSummary" class="mode-summary"></small><div class="mission"><strong>最初のスイングバイ</strong></div><output id="homewardProgress" class="homeward-progress" hidden></output>
       </div>
+      <button id="missionGuideButton" type="button" aria-haspopup="dialog" aria-controls="missionGuideDialog"><small>現在の任務</small><span>航路を準備</span></button>
       <button id="openMenuSettings" type="button" aria-haspopup="dialog" aria-controls="menuPanel" aria-label="メニュー（飛行中は一時停止）" title="メニューを開くと飛行を一時停止">☰ メニュー</button>
     </header>
 
@@ -73,11 +74,10 @@
       </div>
     </section>
   </main>
-<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v2.0.0-rc.1</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content">
+<dialog id="menuPanel" class="settings-dialog" aria-labelledby="menuTitle"><header><div><small>ORBIT MAKER / v2.0.0-rc.2</small><h2 id="menuTitle">メニュー</h2></div><button id="closeMenuSettings" type="button">閉じる</button></header><div class="settings-content menu-content"><section class="mode-entry"><h3>遊び方を選ぶ</h3><div class="play-modes" role="group" aria-label="遊ぶモード"><button id="startExperience" type="button">はじめて遊ぶ<small>基本操作を覚える · 約3分の体験航路</small></button><button id="chooseClassic" type="button">CLASSIC<small>全20ステージの重力パズル</small></button><button id="openHomeward" type="button">HOMEWARD<small>迷子になった宇宙船の帰還物語</small></button><button id="chooseFreeSpace" type="button">FREE<small>惑星を自由に配置して重力実験</small></button><button id="openGallery" type="button">CINEMATIC<small>保存した航行記録の再生</small></button></div></section>
       <label>＋／−の調整幅 <select id="adjustmentMode"><option value="fine">微調整：角度0.01° / 推力1</option><option value="coarse">通常：角度1° / 推力10</option></select></label>
       <button id="restoreLastInput" type="button" disabled>直前の配置・入力を復元</button><small>この画面での直前の失敗・中断が対象。発射は自動で行いません。</small>
-      <div class="play-modes" role="group" aria-label="遊ぶモード"><button id="chooseClassic" type="button">CLASSIC</button><button id="chooseFreeSpace" type="button">FREE SPACE</button><button id="openHomeward" type="button">HOMEWARD</button></div>
-      <button id="startExperience" type="button">HOMEWARD EXPERIENCE · 約3分の体験航路</button>
+      
       <label class="world-option">フリープレイの広さ<select id="worldSize"><option value="standard">STANDARD / 375×500</option><option value="large">LARGE / 1125×1500</option><option value="huge">HUGE / 3750×5000</option></select></label>
       <label class="world-option">HUGE体験航行<select id="hugeSample"><option value="">配置を選択</option><option value="voyage">LONG VOYAGE</option><option value="swing">MULTI SWING-BY</option><option value="deep">DEEP SPACE</option></select></label>
       <label class="world-option">カメラ<select id="cameraMode"><option value="fixed">FIXED / 視点固定</option><option value="follow">FOLLOW / ロケット追従</option><option value="overview">OVERVIEW / ワールド全体</option><option value="cinematic">CINEMATIC / 自動演出</option></select></label>
@@ -94,7 +94,8 @@
         <button type="button" data-launch-mode="slingshot" aria-pressed="false"><span>B</span> スリングショット</button>
       </div>
 
-<button id="openStages" type="button">ステージ選択・フリープレイ</button><button id="openGallery" type="button">軌道ギャラリー</button>      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>      <details class="settings-help"><summary>遊び方・ステージ条件</summary><p class="settings-note">惑星はタップして選択、ドラッグで移動。2本指でズーム・カメラ移動。「全体」で元の表示へ。精密発射はANGLE・THRUSTを調整してLAUNCH。スリングショットはロケットを引いて離します。元へ戻すとキャンセル。惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details><p class="settings-note">メニュー・設定中は飛行を一時停止します。</p></div></dialog>
+<button id="openStages" type="button">ステージ選択・フリープレイ</button>      <label class="sample-label">体験配置 <select id="specialSample"><option value="">サンプルを選択</option><option value="blackhole">ブラックホール</option><option value="repulsor">反重力惑星</option><option value="star">恒星</option><option value="dense">高密度惑星</option></select></label>      <details class="settings-help"><summary>遊び方・ステージ条件</summary><p class="settings-note">惑星はタップして選択、ドラッグで移動。2本指でズーム・カメラ移動。「全体」で元の表示へ。精密発射はANGLE・THRUSTを調整してLAUNCH。スリングショットはロケットを引いて離します。元へ戻すとキャンセル。惑星・ゲート・発射地点に重なる配置はできません。飛行中の追加・削除・種類・サイズ変更はできません。</p><p id="challengeConditions" class="planet-feature"></p></details><p class="settings-note">メニュー・設定中は飛行を一時停止します。</p></div></dialog>
+<dialog id="missionGuideDialog" class="settings-dialog" aria-labelledby="missionGuideTitle"><header><div><small>MISSION GUIDE · 現在のミッション</small><h2 id="missionGuideTitle"></h2></div><button id="missionGuideClose" type="button">閉じる</button></header><div class="settings-content"><p id="missionGuideDescription"></p><h3>次にすること</h3><ol id="missionGuideSteps"></ol><button id="missionGuideAction" class="homeward-primary" type="button"></button><details><summary>なぜこの操作？</summary><p id="missionGuideReason"></p></details><p class="settings-note">案内を開いている間は航行を一時停止します。閉じると同じ状態から続きます。正解入力や自動操縦ではありません。</p></div></dialog>
   <dialog id="homewardDialog" class="settings-dialog" aria-labelledby="homewardTitle">
     <header><div><small>ORIGINAL VOYAGE / HOMEWARD</small><h2 id="homewardTitle">帰還航路</h2></div><button id="closeHomeward" type="button">閉じる</button></header>
     <div class="settings-content">

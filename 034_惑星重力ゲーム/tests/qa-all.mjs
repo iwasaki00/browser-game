@@ -1,7 +1,7 @@
 // A complete test run in a disposable copy: legacy tests write reports.
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';
 const report=process.argv.find(a=>a.startsWith('--report='))?.slice(9)??'quality-assurance';
-if(!['quality-assurance','mobile-polish','space-scanner','final-acceptance'].includes(report))throw Error('Unknown QA report directory');
+if(!['quality-assurance','mobile-polish','space-scanner','final-acceptance','mission-guide'].includes(report))throw Error('Unknown QA report directory');
 const root=fileURLToPath(new URL('../',import.meta.url)),out=path.join(root,'reports',report);fs.mkdirSync(out,{recursive:true});
 const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'orbit-qa-')),copy=path.join(temporary,'game');
 fs.cpSync(root,copy,{recursive:true,filter:src=>!src.startsWith(out)});

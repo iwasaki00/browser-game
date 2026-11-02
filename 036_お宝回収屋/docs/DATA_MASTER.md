@@ -5,8 +5,8 @@
 | マスター | 数 | 実装状態 |
 |---|---:|---|
 | お宝 | 36 | 砂浜・川底R001〜R007/R009・河原G001〜G008（各エリアの対応種）が通常生成対象 |
-| 道具 | 126 | 砂浜5件＋川底7件＋河原7件がavailable、107件はcatalogOnly |
-| 組み合わせ | 16 | C01/C16と条件付きC05/C06/C09が通常プレイで成立。C02はB108実装後 |
+| 道具 | 126 | 砂浜20件＋川底7件＋河原7件がavailable、92件はcatalogOnly |
+| 組み合わせ | 16 | C01/C16と条件付きC02/C03/C04/C05/C06/C09が通常プレイで成立。C02はB108実装後 |
 | エリア | 12 | B-A/R-A/R-B/G-A/G-Bがavailable |
 
 お宝属性：id/name/description/category/rarity/baseValueFN/locations/depth/material/weight/requiredToolCapabilities/handlingType/contractOnly/spawnWeight/imageId。
@@ -39,3 +39,8 @@
 河原の実FNはG001〜G008順に8/10/18/25/65/100/90/260。元のbaseValueFNは維持し、評価値と分離します。gold.tsの固定プロファイルgrain/densityは順に2.4/2.65、0.7/5.2、1/5、4/2.7、3/2.6、2/2.65、0.12/19.3、0.45/19.3です。
 
 個体へgrain/density/goldSite/goldOffset/goldAllocation/captureRank/goldCapture/goldRich/observed/pickWork、区画へgoldSites、状態へgoldVersion:1/gravelBatches/goldWork/sluiceFeed/goldStats/goldUnlockedAreas/loadouts/selectedTools/operationMetricsを追加。個体ID・品質・捕捉判定値を再抽選せず、共通保存v2から不足項目を移行します。詳細は [GOLD_PANNING](GOLD_PANNING.md)。
+
+
+## 0.4.0
+
+既存126件のID・名称・価格を維持。採用15件の性能はbeach-tools.tsへ分離し、data.tsのcapabilities・unlockConditions・staminaCost・implementationStatusへ反映します。全件の調査は [tool-master-audit-v040.json](tool-master-audit-v040.json)。区画にbeachDepthVersion:1、個体にidentified、探知跡にprecise、状態にbeachMeshを任意追加。旧maskを再スケールしません。詳細は [BEACH_TOOL_EXPANSION](BEACH_TOOL_EXPANSION.md)、[DEPTH_EXPANSION](DEPTH_EXPANSION.md)。

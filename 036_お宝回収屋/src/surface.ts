@@ -1,3 +1,4 @@
+import {plotDepthScale,BEACH_ADDED,detectorTool} from './beach-tools';
 import {exposure,MAX_DEPTH,type Plot} from './engine';
 import {CONFIG} from './data';
 export const VIEW={width:360,height:325};
@@ -26,6 +27,11 @@ const paths:Record<string,string>={
  B105:'<path d="M5 3l9 9M5 3L2 7l8 8 4-3 8 8"/><path d="M18 17l12 12c-11 7-20-2-12-12z" fill="#70968b"/>',
  B201:'<path d="M7 3l5 7 5 12M9 6l7-4 4 6-7 4"/><ellipse cx="21" cy="25" rx="10" ry="5" fill="#5aaba3"/><ellipse cx="21" cy="25" rx="5" ry="2"/>',
 };
+for(const [i,id] of BEACH_ADDED.entries()){const n=i%5;paths[id]=id==='B106'?'<path d="M5 3l17 17M15 22l7-7 10 11-7 7z" fill="#cab889"/>':id==='B109'?'<path d="M5 3l19 21 7-4M5 3l12 28 9-2"/>':id==='B108'?'<path d="M5 12h26l-4 20H9zM8 12C8-1 28-1 28 12" fill="#b0c7bb"/>':id==='B110'?'<path d="M3 4l6 4 3 17h18l3-14H10M14 32h1M27 32h1"/>':id==='B208'?paths.B104+'<path d="M3 30h28M8 27v6M15 27v6M22 27v6"/>':id==='B209'?'<ellipse cx="18" cy="22" rx="15" ry="8"/><path d="M5 16l25 12M9 29l16-14M18 14V3"/>':(detectorTool(id)?paths.B201:paths.B105)+`<circle cx="${4+n*6}" cy="3" r="2" fill="#957342"/><path d="M${3+n} 33h${8+i}"/>`;}
+paths.B302='<path d="M3 7h12v14H3zM7 7V3h5v4M15 12c21-9 1 26 15 13M27 23l6 6-8 4-4-5z" fill="#94b3a2"/>';
+paths.B203='<path d="M4 3l16 17M17 17l15 10c-10 11-23 4-15-10z" fill="#9cbcb0"/><path d="M19 24l8 6M23 22l8 5M17 28l10-5"/>';
+paths.B107='<path d="M5 3l17 20M3 5l5-4 5 5-6 5M19 20l11 12c-10 0-16-4-11-12z" fill="#bad0c4"/>';
+paths.B207='<path d="M3 3l17 18M8 31l24-16M8 31l2 3M13 28l2 3M18 25l2 3M23 22l2 3M28 19l2 3M32 15l2 3"/>';
 export function toolIcon(id:string){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" stroke="#244e47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[id]??paths.hand}</svg>`;}
 export function toolCursor(id:string){return `url("data:image/svg+xml,${encodeURIComponent(toolIcon(id))}") 8 26, crosshair`;}
 export function visibleFinds(p:Plot){return p.items.filter(f=>f.state==='buried'&&exposure(p,f)>.1);}
@@ -41,7 +47,7 @@ export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,de
  ctx.lineWidth=.6;for(let row=0;row<28;row++){ctx.strokeStyle='rgba(149,112,61,.065)';ctx.beginPath();for(let x=0;x<=360;x+=12){const q=project(x,row*10+Math.sin(x/34+row)*2);x?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);}ctx.stroke();}
  for(let y=0;y<28;y++)for(let x=0;x<36;x++){const h=((x*71+y*43+p.seed)%97)/97,q=project(x*10+2+h*5,y*10+3);ctx.fillStyle=`rgba(109,79,37,${.07+h*.11})`;ctx.fillRect(q.x,q.y,1,1);}
  drawPits(ctx,p);
- for(const m of p.surveyMarks??[]){if(!m.targets.some(uid=>p.items.some(f=>f.uid===uid&&f.state==='buried')))continue;const q=project(m.x,m.y);ctx.save();ctx.strokeStyle=m.strength>.7?'#9f7139aa':'#2c827b99';ctx.lineWidth=1.1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,24,16,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#365f54';ctx.font='7px sans-serif';ctx.fillText(m.deep?'深そう':'金属反応',q.x-14,q.y-19);ctx.restore();}
+ for(const m of p.surveyMarks??[]){if(!m.targets.some(uid=>p.items.some(f=>f.uid===uid&&f.state==='buried')))continue;const q=project(m.x,m.y);ctx.save();ctx.strokeStyle=m.strength>.7?'#9f7139aa':'#2c827b99';ctx.lineWidth=1.1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,m.precise?9:24,m.precise?6:16,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#365f54';ctx.font='7px sans-serif';ctx.fillText(m.deep?'深そう':'金属反応',q.x-14,q.y-19);ctx.restore();}
 
  if(tutorialHint){const q=project(50,150);ctx.strokeStyle='rgba(255,251,215,.55)';ctx.lineWidth=1;ctx.setLineDash([2,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,29,18,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#7e6845';ctx.font='8px sans-serif';ctx.textAlign='left';ctx.fillText('この辺りを掘ってみよう',Math.max(8,q.x-20),q.y-25);}
  for(const f of visibleFinds(p)){
@@ -56,11 +62,11 @@ export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,de
 }
 
 export function depthAppearance(depth:number){
- const d=Math.max(0,Math.min(MAX_DEPTH,depth));
- const stops:[number,number[]][]=[[0,[233,207,160]],[80,[215,179,119]],[180,[164,119,72]],[280,[100,66,43]]];
+ const d=Math.max(0,Math.min(600,depth));
+ const stops:[number,number[]][]=[[0,[233,207,160]],[80,[215,179,119]],[180,[164,119,72]],[280,[100,66,43]],[420,[69,57,45]],[600,[38,37,35]]];
  let i=1;while(i<stops.length-1&&d>stops[i][0])i++;
  const [a,ca]=stops[i-1],[b,cb]=stops[i],t=(d-a)/(b-a),color=ca.map((n,k)=>Math.round(n+(cb[k]-n)*t));
- return {color:color as [number,number,number],wall:2+15*Math.pow(d/MAX_DEPTH,.75),shadow:.2+.6*d/MAX_DEPTH};
+ return {color:color as [number,number,number],wall:2+15*Math.pow(d/280,.75),shadow:.2+.6*d/600};
 }
 function drawPits(ctx:CanvasRenderingContext2D,p:Plot){
  const visited=new Set<number>();
@@ -80,11 +86,11 @@ function drawPits(ctx:CanvasRenderingContext2D,p:Plot){
   // Each floor patch uses the same local depth as digging and treasure exposure.
   // Averaging a connected hole would wash out its deep center when a wider tool adds shallows.
   ctx.fillStyle='#4a311f';ctx.fill(path);ctx.save();ctx.clip(path);
-  for(const i of cells){const x=i%36*10,y=Math.floor(i/36)*10,depth=p.mask[i]*MAX_DEPTH,look=depthAppearance(depth);
+  for(const i of cells){const x=i%36*10,y=Math.floor(i/36)*10,depth=p.mask[i]*plotDepthScale(p),look=depthAppearance(depth);
    const patch=new Path2D(),corners=[project(x,y),project(x+10,y),project(x+10,y+10),project(x,y+10)];
    corners.forEach((q,j)=>j?patch.lineTo(q.x,q.y):patch.moveTo(q.x,q.y));patch.closePath();
    ctx.save();ctx.translate(0,look.wall*.28);ctx.fillStyle=`rgb(${look.color.join(',')})`;ctx.fill(patch);ctx.restore();
-   const above=y>0?p.mask[i-36]*MAX_DEPTH:0;
+   const above=y>0?p.mask[i-36]*plotDepthScale(p):0;
    if(depth>above+1){const left=project(x,y),right=project(x+10,y);ctx.strokeStyle=`rgba(64,39,23,${look.shadow})`;ctx.lineWidth=Math.min(5,look.wall-depthAppearance(above).wall+1);ctx.beginPath();ctx.moveTo(left.x,left.y+1);ctx.lineTo(right.x,right.y+1);ctx.stroke();}
   }
   ctx.restore();

@@ -1,3 +1,5 @@
+> 0.4.0の現行LABは8タブ・32シナリオです。道具タブに固定シード比較とJSON出力を追加。[砂浜道具とLABの説明](BEACH_TOOL_EXPANSION.md)を参照してください。
+
 > 現行版はVersion 0.3.0です。DEBUG LABは8タブ・22シナリオになり、河原の情報と時間加速を追加しました。開き方と保存分離は継続しています。[河原とDEBUG LABの現行説明](GOLD_PANNING.md)を参照してください。
 
 # Version 0.2.0 — RIVER RECOVERY & DEBUG LAB

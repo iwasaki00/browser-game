@@ -431,3 +431,28 @@ input:not([type='range']),textarea { -webkit-user-select:text; user-select:text;
 .scanning .result { z-index:5; }
 @media(max-height:500px) { .scan-panel { bottom:58px; } .scan-toolbar button { font-size:11px; padding-inline:6px; } }
 @media(orientation:landscape) and (max-height:500px) { .scan-panel { position:fixed; top:max(8px,env(safe-area-inset-top)); bottom:calc(max(8px,env(safe-area-inset-bottom)) + 100px); left:max(8px,env(safe-area-inset-left)); right:max(8px,env(safe-area-inset-right)); margin-inline:auto; z-index:8; } }
+
+/* Mission guide uses the existing header height; details never resize the board. */
+.topbar>div { flex:1; overflow:hidden; }
+.topbar h1 { white-space:nowrap; font-size:clamp(12px,3.5vw,16px); }
+#missionGuideButton { flex:0 0 78px; width:78px; max-width:78px; min-height:44px; padding:3px 5px; border:1px solid #527b88; border-radius:8px; background:#102a3b; color:#ddf9ee; text-align:left; }
+#missionGuideButton small { display:block; font-size:9px; color:#91cbbb; }
+#missionGuideButton span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
+.mission-target { outline:2px solid #8be3c4!important; outline-offset:1px; }
+#missionGuideDialog p,#missionGuideDialog li { font-size:14px; line-height:1.7; overflow-wrap:anywhere; }
+#missionGuideDialog ol { padding-left:23px; }
+#missionGuideDialog summary,.route-map-details summary { min-height:44px; padding:10px 4px; cursor:pointer; }
+.mode-entry { order:-1; }
+.mode-entry h3 { margin:0 0 8px; font-size:15px; }
+.mode-entry .play-modes { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.mode-entry .play-modes button { padding:9px; min-height:64px; text-align:left; font-size:14px; white-space:normal; }
+.mode-entry .play-modes button:first-child { grid-column:1/-1; border-color:#78b7a5; }
+.mode-entry button small { display:block; color:#b5cbd8; font-size:12px; font-weight:400; line-height:1.5; margin-top:3px; }
+.route-guide { display:grid; gap:10px; }
+.route-step { min-width:0; padding:10px; background:#0a1e2d; border:1px solid #2c5267; border-radius:8px; }
+.route-step h4 { margin:0 0 8px; font-size:14px; color:#bdf0d8; }
+.route-step p { font-size:14px; line-height:1.6; overflow-wrap:anywhere; margin:8px 0; }
+.route-step small { display:block; color:#b5cbd8; line-height:1.5; }
+.route-step button { min-height:44px; max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+.route-step>button { margin:3px 3px 3px 0; }
+.route-map-details { margin-block:10px; }

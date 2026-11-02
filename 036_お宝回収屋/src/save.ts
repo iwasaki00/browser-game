@@ -1,4 +1,5 @@
 import {createState,surfaceY,refresh,type State,type Plot} from './engine';
+import {plotDepthScale} from './beach-tools';
 import {validateGold} from './gold';
 import {migrateEquipment} from './equipment';
 // Keep the existing keys so 0.1.0 saves remain discoverable.
@@ -20,8 +21,9 @@ export function migrate(raw:unknown):State {
  if(s.explorationAreas.some(p=>p.mask.length!==1008||p.mask.some(n=>!Number.isFinite(n)||n<0||n>1)))throw Error('地形データが不正です');
  // v2 uses the same normalized depth representation in 0.1.1 and 0.1.2.
  // Validate it without scaling or resetting any valid excavation progress.
- for(const p of s.explorationAreas)if(!Array.isArray(p.items)||p.items.some(f=>!Number.isFinite(f.x)||!Number.isFinite(f.y)||f.x<0||f.x>=360||f.y<0||f.y>=280||f.depth!==undefined&&(!Number.isFinite(f.depth)||f.depth<0||f.depth>280)))throw Error('お宝の位置・深度データが不正です');
+ for(const p of s.explorationAreas)if(!Array.isArray(p.items)||p.items.some(f=>!Number.isFinite(f.x)||!Number.isFinite(f.y)||f.x<0||f.x>=360||f.y<0||f.y>=((r.saveVersion??0)<2?plotDepthScale(p)+1:280)||f.depth!==undefined&&(!Number.isFinite(f.depth)||f.depth<0||f.depth>plotDepthScale(p))))throw Error('お宝の位置・深度データが不正です');
  s.handFeedback=(Array.isArray(s.handFeedback)?s.handFeedback:[]).filter(h=>h&&typeof h.plotId==='string'&&Number.isFinite(h.x)&&Number.isFinite(h.y)&&Number.isFinite(h.attemptedAt)&&typeof h.hinted==='boolean');
+ for(const p of s.explorationAreas)if(p.beachDepthVersion!==undefined&&p.beachDepthVersion!==1)throw Error('未知の深層形式です');
  const oldVersion=(r.saveVersion??0)<2;
  const plots=oldVersion?s.explorationAreas.map((p,i)=>convertPlot(p,i===0)):s.explorationAreas;
  s.exploredPlots=Math.max(1,r.exploredPlots??plots.length);s.sandSampled ||= s.sandBatches.length>0;

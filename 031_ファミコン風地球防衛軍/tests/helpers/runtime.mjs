@@ -27,6 +27,7 @@ import * as livingArt from "../../js/living-art.js";
 import * as mission05 from "../../js/mission05.js";
 import * as mobileArt from "../../js/mobile-art.js";
 import * as mission04 from "../../js/mission04.js";
+import * as bossDefeat from "../../js/boss-defeat.js";
 import * as fortressUI from "../../js/fortress-ui.js";
 import * as skyArt from "../../js/sky-art.js";
 import * as mission03 from "../../js/mission03.js";
@@ -56,7 +57,7 @@ export function runtime(seed=null,{recordDraw=true,debug=false,randomSeed=12345,
   const writes=[];const math=Object.create(Math);math.random=()=>((randomSeed=(randomSeed*1664525+1013904223)>>>0)/4294967296);
   const sandbox={...data,...challenges,...achievementMaster,...campaign,...campaignStats,...camera,...readability,...invasion,...playground,...impact,...player,...weapons,...mission02,...missionLab,...art,...mission03,...mission08,...finalArt,...campaignEnding,...mission07,...mothershipArt,...mission06,...livingArt,...mission05,...mobileArt,...mission04,...skyArt,...fortressUI,...coastalArt,...combatAudio,...gameplayUI,...mobilePlaytest,...mobileAcceptance,FrameProfiler,LiveProfiler,RunProfiler,Math:math,performance,document,navigator:{maxTouchPoints:0},matchMedia:()=>({matches:false}),localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>{writes.push({key:k,value:v});storage.set(k,v)}},location:{search:debug?"?debug=1":""},URLSearchParams,Image:class{},requestAnimationFrame:()=>++rafCount,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer},clearTimeout:id=>timers.delete(id)};
   sandbox.window={innerHeight:720,addEventListener:(name,fn)=>{(listeners.get(`window:${name}`)||listeners.set(`window:${name}`,[]).get(`window:${name}`)).push(fn)}};
-  Object.assign(sandbox,modules);
+  Object.assign(sandbox,bossDefeat,modules);
   const scope=vm.createContext(sandbox);vm.runInContext(sourceText.replace(/^import .*;\r?\n/gm,""),scope);vm.runInContext("save.settings.sound=false",scope);
   const run=code=>vm.runInContext(code,scope),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
   return {run,json,storage,writes,timers,drawCalls,get,rafCount:()=>rafCount,

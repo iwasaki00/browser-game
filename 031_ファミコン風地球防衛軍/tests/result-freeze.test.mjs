@@ -43,7 +43,7 @@ test('failed clear save is visible, navigation survives, explicit retry saves on
 });
 
 test('normal result trace is bounded, contains lifecycle errors, never changes normal save schema',()=>{
- const r=bossRun();finish(r);const before=r.storage.get(SAVE_KEY);r.run("for(let i=0;i<80;i++)traceResult('test');windowResultError({message:'render test'})");assert.ok(r.run('resultFlow.events.length')<=24);assert.match(r.get('resultFlowLog').textContent,/render test/);assert.equal(r.storage.get(SAVE_KEY),before);assert.equal(JSON.parse(before).resultFlow,undefined);
+ const r=bossRun();finish(r);const before=r.storage.get(SAVE_KEY);r.run("for(let i=0;i<80;i++)traceResult('test');windowResultError({message:'render test'})");assert.ok(r.run('resultFlow.events.length')<=64);assert.match(r.get('resultFlowLog').textContent,/render test/);assert.equal(r.storage.get(SAVE_KEY),before);assert.equal(JSON.parse(before).resultFlow,undefined);
 });
 
 test('a new press during clear presentation delay is also released on result entry',()=>{

@@ -1,6 +1,6 @@
 import {emptyCampaignStats,sanitizeCampaignStats} from "./campaign-stats.js?v=0.8.0";
 import {emptyAchievements,sanitizeAchievements} from "./challenges.js?v=0.8.0";
-export const VERSION = "1.2.0-C1";
+export const VERSION = "1.2.0-C2";
 export const SAVE_KEY = "pixel-defense-front-save-v1";
 export const WORLD = { width: 4800, height: 180, ground: 148, gravity: 620, maxFall: 280 };
 export const VIEW = Object.freeze({

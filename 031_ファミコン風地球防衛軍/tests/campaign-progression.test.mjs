@@ -37,7 +37,7 @@ test('HP4 diagnosis records real damage, lifecycle timers, persisted unlock and 
 });
 test('diagnostic storage/DOM failures cannot prevent clear; callback errors stay visible and are not swallowed',()=>{
  const r=lowCore();r.run("sessionStorage.setItem=()=>{throw Error('quota')};var query=document.querySelector;document.querySelector=s=>s.endsWith('FlowLog')?null:query(s)");assert.doesNotThrow(()=>result(r));assert.equal(r.run('resultFlow.storage'),'UNAVAILABLE');r.click('mission-select');assert.equal(r.run('state'),'mission');
- r.run("scheduleMission(()=>{throw Error('callback-fixture')},10,'fixture')");assert.throws(()=>r.flush(),/callback-fixture/);assert.ok(r.json('resultFlow.events').some(e=>e.stage==='fixture-error'));r.run("windowResultError({reason:{message:'promise-fixture'}});for(let i=0;i<80;i++)traceResult('bounded')");assert.equal(r.run('resultFlow.events.length'),24);
+ r.run("scheduleMission(()=>{throw Error('callback-fixture')},10,'fixture')");assert.throws(()=>r.flush(),/callback-fixture/);assert.ok(r.json('resultFlow.events').some(e=>e.stage==='fixture-error'));r.run("windowResultError({reason:{message:'promise-fixture'}});for(let i=0;i<80;i++)traceResult('bounded')");assert.equal(r.run('resultFlow.events.length'),64);
 });
 test('low living HP does not force victory; pause export and JS-error capture work before defeat',async()=>{
  const r=runtime(sanitizeSave({...structuredClone(DEFAULT_SAVE),clearedMissions:['M01','M02','M03']}),{recordDraw:false});deploy(r,'M04','WING');

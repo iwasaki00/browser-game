@@ -17,7 +17,7 @@ export function renderDeepSpace({container,state,navigation,onDestination,onPoli
   node('text',{x:t.x,y:t.y-240,fill:'#e9f5ff','font-size':240,'text-anchor':'middle'},t.id==='return'?'帰還中継点':v.targets[t.id].state==='INVESTIGATED'?t.name:`? ${t.id}`);
  }
  node('circle',{cx:position.x,cy:position.y,r:95,fill:'#fff'});
- const policies=add('div','');policies.className='deep-actions';for(const[id,p]of Object.entries(DEEP_POLICIES)){const b=document.createElement('button');b.type='button';b.dataset.deepPolicy=id;b.textContent=p.label;b.setAttribute('aria-pressed',String(v.choices.at(-1)?.policy===id));b.addEventListener('click',()=>onPolicy(id));policies.append(b);}
+ const policies=add('div','');policies.className='deep-actions';for(const[id,p]of Object.entries(DEEP_POLICIES)){const b=document.createElement('button');b.type='button';b.dataset.deepPolicy=id;b.textContent=({direct:'最短帰還',safe:'安全重視',explore:'探索重視'}[id])+' / '+p.label;b.setAttribute('aria-pressed',String(v.choices.at(-1)?.policy===id));b.addEventListener('click',()=>onPolicy(id));policies.append(b);}
  add('p',DEEP_POLICIES[v.choices.at(-1)?.policy]?.description??'方針は目標選びの補助です。操縦・危険回避は自動化しません。');
  const course=DEEP_COURSES[v.checkpoint+'>'+v.selected];
  if(course&&v.rewards.includes('deep-charts')&&!navigation.flying)add('p',`回収した星図の参考：ANGLE ${course[0]}° / THRUST ${course[1]} / 約${course[2].toFixed(1)}航行秒。初期惑星配置用。ANGLEの±は0.1°、予測で再確認。自動入力はしません。`);

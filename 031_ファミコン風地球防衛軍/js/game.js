@@ -3,16 +3,16 @@ import {ACHIEVEMENT_BY_ID} from "./achievement-master.js?v=0.8.0";
 import {CampaignRun} from "./campaign-stats.js?v=0.8.0";
 import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.8.0";
 import {READABILITY,playerOpacity,drawEnemyShotAccent,drawDangerAccents,crowdedVisuals} from "./readability.js?v=1.2.0-B1";
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-C1";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-C2";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.7.0";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
 import {worldToScreen,clientToScreen,viewBounds,aimTarget,createBattleCamera,updateBattleCamera} from "./camera.js?v=1.2.0-B1";
 import {SpawnDirector,SpatialGrid,AttackDirector,prepareSeparation,nearestEnemy,isMob,variation} from "./invasion.js?v=0.6.0";
 import {FrameProfiler,LiveProfiler,RunProfiler} from "./profiler.js?v=0.6.0";
-import {LAB_CHECKPOINTS,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=0.6.0";
+import {LAB_CHECKPOINTS,LAB_BOSS_APPROACHES,VALIDATION_MODES,findCheckpoint,validationClass,MissionLabRun} from "./mission-lab.js?v=1.2.0-C2";
 import {PLAYER_PRESETS,LAB_ENEMIES,LAB_COUNTS,createLabState,landLabPlayer,moveFlightPlayer,fixedLabCamera,labSpawnPosition} from "./playground.js?v=0.6.0";
-import {IMPACT,REACTIONS,reducedImpact,impactLevel,createImpactState,pushImpactEffect,hitVisual,feedbackCategory,drawFeedbackAccent,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=0.6.0";
+import {IMPACT,REACTIONS,reducedImpact,impactLevel,createImpactState,pushImpactEffect,hitVisual,feedbackCategory,drawFeedbackAccent,beginDeath,updateDeath,updateParticles,advanceImpact,impactShake} from "./impact.js?v=1.2.0-C2";
 import {M02,NEST,ABYSS,isBoss,createM02Geometry,ceilingAt,floorAt,validEnemyPosition,updateNests,moveTunnelEnemy,weakCore,queenDamage,updateQueen} from "./mission02.js?v=0.6.0";
 import {M03,COAST,createM03Geometry,createCoastalState,coastalFloor,recoverCoastalPlayer,advanceCoastalFormations,updateCoastalEnemy,updateCoastalDevices,coastalWeakCore,coastalDamage,resetCoastalBossPhase} from './mission03.js?v=0.6.0';
 import {M08,FINAL,FINAL_REVEAL,createM08Geometry,createFinalState,initializeFinal,syncFinalGates,finalSurface,safeFinalSpawn,recoverFinalPlayer,finalDamage,finalCore,recordFinalHit,finalPartDestroyed,resetFinalBoss,frameFinalBoss,beginFinalTransition,startFinalCollapse,updateFinalEnemy,updateFinalState,spawnFinalSquad,finalObjective,finalBattleReport,drawFinalHud} from './mission08.js?v=1.0.0';
@@ -27,6 +27,7 @@ import {loadMobileArt,drawMobileBackdrop,drawMobileWorld,drawMobileEnemy,drawMob
 import {M04,SKY,createM04Geometry,createSkyState,skySurface,advanceSkyPlatforms,recoverSkyPlayer,resetSkyBossPhase,frameSkyBoss,SKY_PHASES,FORTRESS_GUIDANCE,refreshSkyVisuals,skyCore,skyTargetOpen,skyDamage,updateSkyEnemy,updateSkyHazards} from './mission04.js?v=0.6.0';
 import {loadSkyArt,drawSkyBackdrop,drawSkyWorld,drawSkyEnemy,drawSkyWarnings,drawSkyFX} from './sky-art.js?v=0.6.0';
 import {fortressObjective,drawFortressHud} from './fortress-ui.js?v=0.6.0';
+import {FORTRESS_DEFEAT,createFortressDefeat,tickFortressDefeat,drawFortressDefeat} from './boss-defeat.js?v=1.2.0-C2';
 import {COAST_FILES,loadCoastalArt,drawCoastalEnemy,drawCoastTile,drawCoastalWorld,drawCoastalFX,drawCoastalWarnings} from './coastal-art.js?v=0.6.0';
 
 import {CombatAudio,AUDIO_LIMITS} from './combat-audio.js?v=0.6.0';
@@ -49,6 +50,8 @@ let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="p
 const campaign=new CampaignCommand(document);const achievementNotices=new AchievementNotices();let noticeLast=0,noticeRendered=null;let campaignSaveError="";
 // Volatile result diagnostics only: never persisted into the player's save.
 let resultFlow=null;
+const RESULT_LOG_LIMIT=64;
+let frameFault=false,frameSequence=0,lastFrameAt=0;
 // Restore justified legacy achievements silently; never replay a burst on boot.
 reconcileAchievements(save);
 let weaponFilter="ALL",activeEquipSlot=0,remoteTimer=null,remoteHeld=false;
@@ -130,7 +133,7 @@ function syncResultSaveStatus(){
   if(resultStatus)resultStatus.textContent=resultFlow?(campaignSaveError||'クリア・報酬・解放記録を保存済み') :'';
 }
 function traceResult(stage,detail=''){
-  if(!resultFlow||game?.lab)return;
+  if(!resultFlow||(game?.lab&&!resultFlow.lab))return;
   // Diagnostics are best-effort and must never interrupt combat or save flow.
   try{const f=resultFlow,p=game?.player,b=game?.enemies.find(e=>isBoss(e));
     f.events.push({stage,state,atMs:Math.round(performance.now()),detail:String(detail).slice(0,180),
@@ -138,22 +141,23 @@ function traceResult(stage,detail=''){
         boss:b?{type:b.type,hp:b.hp,dead:!!b.dead,phase:b.skyPhase??b.form??b.coastPhase??null}:null,
         player:p?{x:p.x,y:p.y,hp:p.hp,dead:!!p.dead,energy:p.energy,weapon:activeEquipment()[p.weaponSlot]}:null,
         input:{left:input.left,right:input.right,up:input.up,hover:input.hover,fire:input.fire,pointers:touchPointers.size,aim:aimPointer!==null},
+        selectedMission:selectedMissionId,selectedClass:save.selectedClass,selectedWeapons:[...selected],frame:{sequence:frameSequence,lastAt:lastFrameAt,fault:frameFault},
         timers:missionTimers.size,deferred:deferredMissionCallbacks.length,hidden:document.hidden,
         cleared:save.clearedMissions.includes(f.mission),unlocked:[...save.unlockedMissions],saveError:!!campaignSaveError}});
-    if(f.events.length>24)f.events.shift();
-    try{sessionStorage.setItem('pdf-result-transition-v1',JSON.stringify({version:VERSION,...f}));f.storage='OK'}catch{f.storage='UNAVAILABLE'}
-    const text=resultDiagnosticText();for(const id of ['resultFlowLog','pauseFlowLog','commandFlowLog']){const log=document.querySelector('#'+id);if(log)log.textContent=text}
+    if(f.events.length>RESULT_LOG_LIMIT)f.events.shift();
+    if(!f.lab)try{sessionStorage.setItem('pdf-result-transition-v1',JSON.stringify({version:VERSION,...f}));f.storage='OK'}catch{f.storage='UNAVAILABLE'}
+    const text=resultDiagnosticText();for(const id of ['resultFlowLog','pauseFlowLog','commandFlowLog','equipFlowLog','labFlowLog']){const log=document.querySelector('#'+id);if(log)log.textContent=text}
   }catch{/* Diagnostic failure must not become a progression failure. */}
 }
-function beginResultTrace(stage){if(!game||game.lab)return;resultFlow={mission:game.missionId,playerClass:game.player.classId,events:[]};traceResult(stage)}
-function resultDiagnosticText(){if(resultFlow)return JSON.stringify({version:VERSION,...resultFlow},null,2);try{return sessionStorage.getItem('pdf-result-transition-v1')||'診断記録はまだありません。通常セーブは変更しません。'}catch{return 'この環境ではタブ内の診断保存を利用できません。'}}
+function beginResultTrace(stage){if(!game||game.lab&&!game.lab.bossApproach)return;resultFlow={mission:game.missionId,playerClass:game.player.classId,lab:!!game.lab,events:[]};traceResult(stage)}
+function resultDiagnosticText(){if(game?.lab&&!resultFlow?.lab)return 'LAB診断は「ボス直前から開始」で採取します。通常記録は変更しません。';if(resultFlow)return JSON.stringify({version:VERSION,...resultFlow},null,2);try{return sessionStorage.getItem('pdf-result-transition-v1')||'診断記録はまだありません。通常セーブは変更しません。'}catch{return 'この環境ではタブ内の診断保存を利用できません。'}}
 async function copyResultDiagnostics(){
   traceResult('diagnostic-export');const text=resultDiagnosticText();
-  for(const id of ['resultFlowOutput','pauseFlowOutput','commandFlowOutput']){const el=document.querySelector('#'+id);if(el){el.value=text;el.hidden=false}}
-  const status=document.querySelector('#'+(state==='result'?'result':state==='mission'?'command':'pause')+'FlowStatus');
+  for(const id of ['resultFlowOutput','pauseFlowOutput','commandFlowOutput','equipFlowOutput','labFlowOutput']){const el=document.querySelector('#'+id);if(el){el.value=text;el.hidden=false}}
+  const status=document.querySelector('#'+(state==='result'?'result':state==='mission'?'command':state==='equip'?'equip':state==='lab'?'lab':'pause')+'FlowStatus');
   try{if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(text);if(status)status.textContent='診断をコピーしました（外部送信なし）。'}catch{if(status)status.textContent='自動コピー不可：下の欄を長押しして手動コピーしてください。'}
 }
-function windowResultError(e){if(resultFlow&&['play','result','mission','ending'].includes(state))traceResult('error',e.message||e.reason?.message||'非同期処理エラー（詳細未取得）')}
+function windowResultError(e){if(resultFlow)traceResult('error',e.message||e.reason?.message||'非同期処理エラー（詳細未取得）')}
 window.addEventListener('error',windowResultError);
 window.addEventListener('unhandledrejection',windowResultError);
 // Keep the original storage key so v1 records migrate in place.
@@ -165,7 +169,7 @@ function scheduleMission(callback,delay,label=''){
  const timer=setTimeout(()=>{missionTimers.delete(timer);if(game!==current)return;if(state==='confirm'){deferredMissionCallbacks.push({current,callback:run});if(label)traceResult(label+'-deferred')}else run()},delay);missionTimers.add(timer);if(label)traceResult(label+'-scheduled',`delay=${delay}ms`);
 }
 function missionScreen(name){if(state==="confirm")returnState=name;else show(name)}
-function discardMission(){if(acceptance?.active)stopAcceptance('ミッション初期化・LAB終了');endingPlayer=null;document.querySelector("#finalRevealSkip").hidden=true;finishCampaign("ABANDONED");mobilePlaytest?.interrupt('LAB終了・ミッション破棄');archiveLabRun();for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;if(profiler)profiler.running=false;liveProfiler?.reset();game=null;acc=0;resetInput();syncCameraView();gameShell.dataset.flight="false";document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss;delete canvas.dataset.density;delete canvas.dataset.enemyLimit;delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode}
+function discardMission(){setBossSkip(false);if(acceptance?.active)stopAcceptance('ミッション初期化・LAB終了');endingPlayer=null;document.querySelector("#finalRevealSkip").hidden=true;finishCampaign("ABANDONED");mobilePlaytest?.interrupt('LAB終了・ミッション破棄');archiveLabRun();for(const timer of missionTimers)clearTimeout(timer);missionTimers.clear();deferredMissionCallbacks.length=0;if(profiler)profiler.running=false;liveProfiler?.reset();game=null;acc=0;resetInput();syncCameraView();gameShell.dataset.flight="false";document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;delete canvas.dataset.playerX;delete canvas.dataset.playerHp;delete canvas.dataset.enemies;delete canvas.dataset.boss;delete canvas.dataset.density;delete canvas.dataset.enemyLimit;delete canvas.dataset.checkpoint;delete canvas.dataset.validationMode}
 function cancelTitle(){resetInput();show(returnState);for(const entry of deferredMissionCallbacks.splice(0))if(entry.current===game)entry.callback();if(state==="play")canvas.focus()}
 function requestTitle(){
   if(state==="confirm")return;
@@ -327,6 +331,9 @@ for(const ev of ['pointerup','pointercancel','lostpointercapture'])aimPad.addEve
 document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");if(!a)return;initAudio();tone(620,.05);const action=a.dataset.action;
   if(action==='pause-game'){if(state==='play')pause();return}
   if(action==='result-diagnostics-copy'){copyResultDiagnostics();return}
+  if(action==='boss-defeat-skip'){finishFortressDefeat();return}
+  if(action==='lab-preboss-start'){runLabApproach();return}
+  if(action==='lab-approach-battle'){if(game?.lab?.bossApproach&&!game.bossStarted){show('play');resetInput();startBoss();game.lab.run.bossStartedAt=game.time}return}
   if(action==='retry-save'){if(!game?.lab){const ok=storeSave();if(ok&&game?.campaignRun)game.campaignRun.dirty=false;traceResult(ok?'save-retry-ok':'save-retry-failed')}return}
   if(action==='campaign-tab'){if(state==="mission"&&CAMPAIGN_TABS.includes(a.dataset.tab)){campaign.tab=a.dataset.tab;renderMissionList()}return}
   if(action==='campaign-select'){if(state==="mission"&&MISSIONS.some(m=>m.id===a.dataset.mission)){campaign.selected=a.dataset.mission;renderMissionList()}return}
@@ -401,12 +408,17 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==="lab-exit"){if(game?.lab){discardMission();show("title")}return}
   if(action==="start"||action==="continue"){campaign.tab="missions";show("mission")}
   if(action==="howto")show("howto");if(action==="close-howto"){resetInput();show("title")}
-  if(action==="select-mission"){if(!canPlayMission(a.dataset.mission,save))return;selectedMissionId=a.dataset.mission;selected=[...save.equipped];renderWeaponGrid();show("equip")}
+  if(action==="select-mission"){traceResult('mission-prepare-request',a.dataset.mission);if(!canPlayMission(a.dataset.mission,save)){traceResult('sortie-rejected','mission-locked-or-unimplemented');return}selectedMissionId=a.dataset.mission;selected=[...save.equipped];renderWeaponGrid();show("equip");traceResult('equipment-ready')}
   if(action==="select-class"&&state==="equip"&&!game?.lab&&Object.hasOwn(PLAYER_CLASSES,a.dataset.playerClass)){save.selectedClass=a.dataset.playerClass;storeSave();renderClassGrid()}
   if(action==="equip-slot"&&state==="equip"){activeEquipSlot=Number(a.dataset.slot)===1?1:0;renderWeaponGrid()}
   if(action==="mission-select"){if(state==='mission')return;traceResult('mission-select-click');if(resultFlow&&campaignSaveError)storeSave();discardMission();show("mission");traceResult('command-active');return}
   if(action==="back-mission")show("mission");
-  if(action==="deploy"){if(selected.length!==2||selected.some(id=>!save.unlocked.includes(id))){equipMessage.textContent="解放済みの武器を2つ選んでください";return}save.equipped=[...selected];storeSave();startMission()}
+  if(action==="deploy"){
+    if(!resultFlow||resultFlow.lab)resultFlow={mission:selectedMissionId,playerClass:save.selectedClass,events:[]};traceResult('sortie-request');
+    const reason=state!=='equip'?'not-equipment-screen':!canPlayMission(selectedMissionId,save)?'mission-locked-or-unimplemented':!Object.hasOwn(PLAYER_CLASSES,save.selectedClass)?'invalid-class':selected.length!==2||selected.some(id=>!save.unlocked.includes(id)||!WEAPON_BY_ID.has(id))?'invalid-equipment':'';
+    if(reason){traceResult('sortie-rejected',reason);if(state==='equip')equipMessage.textContent='出撃不可：ミッション・兵科・解放済み武器2枠を確認してください';return}
+    traceResult('sortie-accepted');save.equipped=[...selected];storeSave();startMission();
+  }
   if(action==="resume")resume();if(action==="retry"){if(game?.lab?.run)startLabCheckpoint(null,game.lab.run.checkpoint.id);else if(game?.lab)startLab(true,game.lab.terrain);else startMission()}
 });
 document.querySelector("#soundToggle").addEventListener("click",e=>{const settings=activeSettings();settings.sound=!settings.sound;e.currentTarget.textContent=`SOUND: ${settings.sound?"ON":"OFF"}`;storeSave();if(settings.sound){initAudio();tone(700,.06)}else audioBus.stop()});
@@ -427,8 +439,9 @@ document.addEventListener("change",e=>{
 });
 
 function startMission(id=selectedMissionId,labOnly=false){
-  resultFlow=null;
-  if(!canPlayMission(id,save)&&!(labOnly&&DEBUG&&['M02','M03','M04','M05','M06','M07','M08'].includes(id)))return false;mobilePlaytest?.interrupt('ミッション初期化');
+  if(labOnly)resultFlow=null;else if(!resultFlow||resultFlow.lab)resultFlow={mission:id,playerClass:save.selectedClass,events:[]};
+  if(!canPlayMission(id,save)&&!(labOnly&&DEBUG&&['M02','M03','M04','M05','M06','M07','M08'].includes(id))){traceResult('sortie-rejected','mission-locked-or-unimplemented');return false}
+  traceResult('initialization-start',id);try{mobilePlaytest?.interrupt('ミッション初期化');
   discardMission();view.renderOffset=0;selectedMissionId=id;
   game={missionId:id,time:0,score:0,kills:0,crates:0,weaponRewards:[],camera:0,shake:0,area:-1,areaText:"",areaTimer:0,nextEnemyId:1,bossStarted:false,midbossAlive:false,clear:false,
     density:save.settings.enemyDensity,enemyLimit:DENSITY_MODES[save.settings.enemyDensity].limit,liveEnemies:0,liveMobs:0,
@@ -452,9 +465,11 @@ function startMission(id=selectedMissionId,labOnly=false){
   if(!labOnly){game.campaignRun=new CampaignRun(save,id,game.player.classId,save.equipped,game.player);flushCampaign()}
   show("play");touchControls.style.visibility="visible";canvas.focus();announceArea(0);
   canvas.setAttribute('aria-label',`ゲーム画面。${id} ${MISSIONS.find(m=>m.id===id).name}を進行中`);
+  resetFrameSurface();game.awaitingFirstFrame=true;traceResult('initialization-done',id);return true;
+  }catch(error){traceResult('initialization-error',error.message);throw error}
 }
 function pause(reason){if(state!=="play")return;pauseLabMeasurement(reason);show("pause");resetInput()}
-function resume(){if(!game)return;show("play");canvas.focus()}
+function resume(){if(!game)return;if(frameFault)resetFrameSurface();show("play");canvas.focus()}
 function switchWeapon(){if(state!=="play"||!game||game.player.switchCd>0)return;game.player.weaponSlot=1-game.player.weaponSlot;game.player.switchCd=.25;game.player.shotCd=.25;tone(440,.05)}
 function announceArea(i){game.area=i;game.lab?.run?.arrive(i,game);game.areaText=`AREA ${i+1}  ${(game.areas??MISSION_AREAS)[i].name}`;game.areaTimer=2.2;tone(520,.1)}
 
@@ -533,7 +548,8 @@ function update(dt){if(state==="ending"){endingPlayer?.tick(dt,!document.hidden&
   canvas.dataset.gameState=state;canvas.dataset.playerX=Math.round(p.x);canvas.dataset.playerHp=Math.ceil(p.hp);canvas.dataset.enemies=g.liveEnemies;canvas.dataset.boss=g.bossStarted?"1":"0";canvas.dataset.density=g.density;canvas.dataset.enemyLimit=g.enemyLimit;
   canvas.dataset.playerClass=p.classId;canvas.dataset.flightEnergy=p.energy.toFixed(1);canvas.dataset.missionId=g.missionId;canvas.dataset.area=String(g.area+1);if(g.time>=(g.nextHudStatus??0)){document.querySelector("#combatStatus").textContent=combatHudText(g,activeEquipment())+(g.finalDefense?` / ${finalObjective(g)}`:g.mothership?` / ${mothershipObjective(g)}`:g.living?` / ${livingObjective(g)}`:g.mobile?` / ${mobileObjective(g)}`:g.sky&&g.bossStarted?` / ${fortressObjective(g)?.text??""}`:"");g.nextHudStatus=g.time+.25}if(g.coast){const b=g.enemies.find(e=>e.type==='leviathan'&&!e.dead);canvas.dataset.bossPhase=String(b?.coastPhase??0);canvas.dataset.bossHp=String(b?.hp??0)}
   if(missionRun&&missionRun.outcome==='RUNNING')missionRun.tick(g,input,dt);
-  if(resultFlow&&!g.lab&&g.time>=(resultFlow.nextSample??0)){resultFlow.nextSample=g.time+1;if(g.enemies.some(e=>isBoss(e)&&e.hp<=10))traceResult('battle-heartbeat')}
+  if(g.bossDefeat&&!g.bossDefeat.finished)tickFortressDefeat(g,dt,pushEffect);
+  if(resultFlow&&(!g.lab||resultFlow.lab)&&g.time>=(resultFlow.nextSample??0)){resultFlow.nextSample=g.time+1;if(g.enemies.some(e=>isBoss(e)&&e.hp<=10))traceResult('battle-heartbeat')}
   if(p.hp<=0&&!p.dead){p.dead=true;finishCampaign("GAME_OVER");if(missionRun){missionRun.gameOver={time:g.time,x:p.x,y:p.y};missionRun.elapsed=g.time;missionRun.finalHp=p.hp;missionRun.outcome='GAME_OVER'}scheduleMission(()=>{renderGameover();missionScreen("gameover")},650)}
 }
 
@@ -542,7 +558,7 @@ function damageEnemy(e,dmg,source={}){
   if(e.dead||e.type==='overmind'&&e.transitionLeft>0)return;if(game.mothership&&hitMothershipControl(game,e,pushEffect))return;if(game.living&&e.type==='neuralnode'){const boss=game.enemies.find(b=>b.type==='neuralheart'&&!b.dead),wasShielded=boss?.shielded;hitLivingNode(game,e,pushEffect);if(wasShielded&&boss&&!boss.shielded)normalCampaignRun()?.challenge.special('core-open');return;}const baseDamage=dmg;if(game.finalDefense){dmg=finalDamage(game,e,dmg);recordFinalHit(game,e,baseDamage,dmg)}if(game.mothership)dmg=mothershipDamage(game,e,dmg);if(game.living)dmg=livingDamage(game,e,dmg);if(game.mobile)dmg=mobileDamage(game,e,dmg);if(game.sky)dmg=skyDamage(game,e,dmg);if(e.type==='queen')dmg=queenDamage(e,dmg,source);if(e.type==='leviathan')dmg=coastalDamage(e,dmg,source);
   if(game.lab?.run?.outcome==='RUNNING'){const id=source.weapon?.id??source.weaponId??WEAPONS[source.assetIndex]?.id??WEAPONS.find(w=>w.type===source.type)?.id;game.lab.run.damage(id,Math.min(Math.max(0,e.hp),Math.max(0,dmg)))}
   if(normalCampaignRun())game.campaignRun.hit(save,campaignSourceId(source),Math.min(Math.max(0,e.hp),Math.max(0,dmg)));
-  const previousHp=e.hp;e.hp-=dmg;if(isBoss(e)&&!game.lab&&e.hp<=10){if(previousHp>10||e.hp!==previousHp||game.time>=(resultFlow?.nextBlockedHit??0)){traceResult('boss-low-hit',`before=${previousHp} damage=${dmg} after=${e.hp} weapon=${campaignSourceId(source)??'unknown'}`);if(resultFlow)resultFlow.nextBlockedHit=game.time+1}}
+  const previousHp=e.hp;e.hp-=dmg;if(isBoss(e)&&(!game.lab||game.lab.bossApproach)&&e.hp<=10){if(previousHp>10||e.hp!==previousHp||game.time>=(resultFlow?.nextBlockedHit??0)){traceResult('boss-low-hit',`before=${previousHp} damage=${dmg} after=${e.hp} weapon=${campaignSourceId(source)??'unknown'}`);if(resultFlow)resultFlow.nextBlockedHit=game.time+1}}
   if(dmg>0)game.score+=Math.max(1,Math.round(dmg));const category=game.sky&&dmg>0&&dmg<baseDamage&&e.hp>0?'SHIELD HIT':feedbackCategory(e,baseDamage,dmg,e.hp<=0),core=dmg>baseDamage?(e.type==='queen'?weakCore(e):e.type==='leviathan'?coastalWeakCore(e):null):null;
   if(hitVisual(game,e,source,category,core)&&e.hp>0)feedbackSound(category);if(core)e.coreHitUntil=game.impact.clock+.16;
   if(game.mothership&&e.type==='commandcore'&&dmg===0)e.shieldedUntil=game.time+.45;
@@ -569,9 +585,16 @@ function damageEnemy(e,dmg,source={}){
   if(e.type==='leviathan'){game.coast.hazards.length=0;for(let i=0;i<6;i++)scheduleMission(()=>{if(game)pushEffect({kind:'coastBreak',x:e.x+(i%3-1)*40,y:e.y+40,life:.65,max:.65})},i*120)}
   if(isBoss(e)&&(!game.lab||game.lab.run)){
     if(normalCampaignRun()){game.campaignRun.combatEnded=true;resultFlow??={mission:game.missionId,playerClass:game.player.classId,events:[]};traceResult('boss-defeated')}
+    else if(game.lab?.bossApproach)traceResult('boss-defeated');
     if(game.lab?.run)game.lab.run.bossDefeatedAt=game.time;else game.score+=Math.max(0,Math.floor(3000-game.time*8));game.enemies.length=0;game.enemies.push(e);game.liveEnemies=game.liveMobs=0;
     game.impact.corpses=1;
-    game.enemyShots.length=0;game.shots.length=0;game.player.invuln=99;if(e.type==='overmind'){resetInput();if(!game.lab)completeMission(true)}scheduleMission(()=>game?.lab?.run?finishLabRun('BOSS_DEFEATED'):e.type==='overmind'?beginEnding('result',false):completeMission(),e.type==='overmind'?3100:e.type==='commandcore'?1900:e.type==='neuralheart'?1900:e.type==='reactor'?1700:e.type==='fortress'?1600:900,'boss-completion');
+    game.enemyShots.length=0;game.shots.length=0;game.player.invuln=99;
+    if(e.type==='fortress'){
+      resetInput();traceResult('DEFEAT_CONFIRMED');game.bossDefeat=createFortressDefeat(e);game.sky.collapseLeft=FORTRESS_DEFEAT.duration;
+      scheduleMission(()=>finishFortressDefeat(),FORTRESS_DEFEAT.duration*1000,'boss-completion');
+      setBossSkip(true);
+      if(!game.lab)completeMission(true);traceResult('DEATH_ANIMATION');
+    }else{if(e.type==='overmind'){resetInput();if(!game.lab)completeMission(true)}scheduleMission(()=>game?.lab?.run?finishLabRun('BOSS_DEFEATED'):e.type==='overmind'?beginEnding('result',false):completeMission(),e.type==='overmind'?3100:e.type==='commandcore'?1900:e.type==='neuralheart'?1900:e.type==='reactor'?1700:900,'boss-completion')}
   }else if(Math.random()<.06)game.items.push({x:e.x,y:e.y+e.h/2,type:"heal",alive:true});
   else if(Math.random()<.02)game.items.push({x:e.x,y:e.y+e.h/2,type:"crate",alive:true});
   if(game.time>=(game.nextDeathSound||0)){tone(isBoss(e)||e.type==='beetle'?65:80,isBoss(e)?.22:.12,"sawtooth",.025,isBoss(e)||e.type==='beetle'?'large':'finish');game.nextDeathSound=game.time+.05}
@@ -587,6 +610,13 @@ function explode(s){
   if(s.assetIndex>=8)pushEffect({x:s.x,y:s.y,kind:"weaponBurst",assetIndex:s.assetIndex,life:.35,max:.35,r:s.radius});
   impactShake(game);tone(65,.18,"sawtooth",.04);
 }
+function finishFortressDefeat(){
+ const d=game?.bossDefeat;if(!d||d.finished)return false;
+ traceResult('result-presentation-fired');
+ d.finished=true;d.state='RESULT_READY';d.boss.death=0;game.sky.collapseLeft=0;resetInput();setBossSkip(false);traceResult('RESULT_READY');
+ if(game.lab?.run)finishLabRun('BOSS_DEFEATED');else show('result');return true;
+}
+function setBossSkip(visible){const button=document.querySelector('#bossDefeatSkip');if(button)button.hidden=!visible}
 function updateShots(dt){for(const s of game.shots){if(s.expanded)continue;const oldX=s.x,oldY=s.y;s.life-=dt;if(s.type==="grenade")s.vy+=330*dt;if(s.type==="homing"){const target=nearestEnemy(game.enemies,s.x,s.y,Infinity,null,true);if(target){const a=Math.atan2(target.y-s.y,target.x-s.x),speed=Math.hypot(s.vx,s.vy),desired={x:Math.cos(a)*speed,y:Math.sin(a)*speed};s.vx+=(desired.x-s.vx)*Math.min(1,3.8*dt);s.vy+=(desired.y-s.vy)*Math.min(1,3.8*dt)}}s.x+=s.vx*dt;s.y+=s.vy*dt;
     const terrain=['M02','M03','M04','M05','M06','M07','M08'].includes(game.missionId)?terrainContact(oldX,oldY,s.x,s.y,game.platforms,s.w/2,false,game.world):null;if(terrain){s.x=terrain.x;s.y=terrain.y}
     if((s.type==="grenade"&&s.y>WORLD.ground-3)||s.life<=0){if(s.radius)explode(s);s.dead=true;continue}
@@ -693,6 +723,7 @@ async function setArtStyle(value){
 function setPreviewResolution(value){if(!DEBUG||!game?.lab||!['lab','pause','play'].includes(state)||!['1','2'].includes(String(value)))return false;previewRenderScale=Number(value);applyPreviewResolution();syncLabUI();return true}
 function beginArtComparison(){if(!DEBUG||!game?.lab||game.player.dead)return;artComparison=true;pauseLabMeasurement();resetInput();show('pause')}
 function draw(){
+  if(frameFault)return;
   const renderScale=applyPreviewResolution();ctx.setTransform(renderScale,0,0,renderScale,0,0);ctx.imageSmoothingEnabled=false;
   view.renderOffset=0;
   if(state==='ending'&&endingPlayer){drawCampaignEnding(ctx,endingPlayer,finalArt,endingHistory,endingSummary());return}
@@ -760,6 +791,7 @@ function drawUnderground(g,bounds){
 function drawPlayer(p){ctx.save();ctx.globalAlpha=playerOpacity(p);drawPlayerSprite(p);ctx.restore()}
 function drawPlayerSprite(p){if(drawStudyPlayer(ctx,activeStudy(),p,weapon(activeEquipment()[p.weaponSlot]),images.heldWeapons))return;const frame=classPlayerFrame(p),row=PLAYER_CLASSES[p.spriteClass||p.classId].row;const x=Math.round(p.x-12),y=Math.round(p.y);ctx.save();if(p.face<0){ctx.translate(x+24,0);ctx.scale(-1,1);ctx.drawImage(images.classes,frame*24,row*32,24,32,0,y,24,32)}else ctx.drawImage(images.classes,frame*24,row*32,24,32,x,y,24,32);const w=weapon(activeEquipment()[p.weaponSlot]);if(w.expanded)ctx.drawImage(images.heldWeapons,w.assetIndex*16,0,16,16,(p.face<0?0:x)+14,y+5,16,16);ctx.restore()}
 function drawEnemies(g){let deaths=0,trails=0;for(const e of g.enemies){const x=Math.round(e.x);if(x<g.camera-110||x>g.camera+view.width+110||e.dead&&e.death<=0)continue;
+    if(e.dead&&g.bossDefeat?.boss===e){drawFortressDefeat(ctx,skyArt,g.bossDefeat,drawSkyEnemy);continue}
     const frame=e.dead?3:e.phase==="charge"?2:e.attackFlash>0?2:Math.floor(e.anim)%2;
     if(e.dead&&e.deathTrail){const profile=DESTRUCTION_LEVELS[e.deathLevel];
       for(let n=0;n<Math.min(e.trailCount,profile.trails)&&trails<IMPACT.maxTrailDraws;n++){
@@ -894,7 +926,20 @@ function loop(ts){
   }
   if(game?.lab&&liveProfiler){const result=liveProfiler.record(ts,updateEnd-begin,drawEnd-updateEnd,frameActive,frameReason);if(result&&game.lab.showFps)publishLabPerformance(result)}
   if(profiler?.running&&game){profiler.record(ts,performance.now()-begin,game.liveEnemies,frameActive,frameReason);if(profiler.result){const clean=game.lab?.benchmarkPerformance?.finish(),result={...profiler.result,destructionLevel:impactLevel(game).id,acceptedPerformance:clean,rawIntervalsIncludeInterruptions:false};canvas.dataset.benchmark=JSON.stringify(result);if(clean){labBenchmarkHistory.push({limit:result.limit,missionId:game.missionId,class:game.lab.preset,weapons:[...game.lab.equipped],density:game.density,destructionLevel:result.destructionLevel,validationMode:'C',performance:clean});if(labBenchmarkHistory.length>12)labBenchmarkHistory.shift()}document.querySelector("#qaResult").textContent=`${clean?.statusLabel??'有効サンプル不足'} / LEVEL ${result.destructionLevel} / ${result.limit}: ${clean?.fps?.toFixed(1)??'計測不足'} FPS（中断除外）/ p95 FRAME ${clean?.p95FrameMs??'—'}ms / UPDATE ${clean?.updateCpuMs?.toFixed(2)??'—'}ms DRAW ${clean?.drawCpuMs?.toFixed(2)??'—'}ms / 中断 ${clean?.excludedInterruptions??0}`;input.fire=false}}
-  requestAnimationFrame(loop);
+  requestAnimationFrame(animationFrame);
+}
+function resetFrameSurface(){canvas.width=canvas.width;ctx.imageSmoothingEnabled=false;frameFault=false;const message=document.querySelector('#frameErrorStatus');if(message)message.textContent=''}
+function animationFrame(ts){
+  frameSequence++;lastFrameAt=ts;
+  if(game?.awaitingFirstFrame)traceResult('frame-enter');
+  try{loop(ts);if(game?.awaitingFirstFrame&&!frameFault){game.awaitingFirstFrame=false;traceResult('frame-ready',`time=${game.time}`)}}
+  catch(error){
+    // A failed render/update must not permanently abandon RAF. Pause visibly;
+    // do not advance progress or retry a possibly half-applied update here.
+    frameFault=true;traceResult('frame-error',error?.message??'描画・更新例外');acc=0;last=ts;
+    try{resetInput();if(state==='play')show('pause');const message=document.querySelector('#frameErrorStatus');if(message)message.textContent='描画・更新エラーを検出しました。遷移診断をコピーしてください。再開で画面を再初期化します。'}catch{}
+    requestAnimationFrame(animationFrame);
+  }
 }
 
 function fillBenchmarkPopulation(){
@@ -912,7 +957,7 @@ function startBenchmark(mode){
 loadAssets().catch(()=>{document.querySelector("#screenTitle h1").textContent="ASSET LOAD ERROR"});
 // Do not block the existing fallback art / game startup on optional new images.
 loadReleaseArt();
-renderWeaponGrid();document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;requestAnimationFrame(loop);
+renderWeaponGrid();document.querySelector("#soundToggle").textContent=`SOUND: ${save.settings.sound?"ON":"OFF"}`;requestAnimationFrame(animationFrame);
 
 // Test/QA hooks intentionally read-only except the explicit debug commands.
 if(DEBUG)window.__PDF_GAME__={version:VERSION,getState:()=>({state,time:game?.time||0,score:game?.score||0,playerHp:game?.player.hp??null,enemies:game?.enemies.length||0,boss:!!game?.bossStarted,unlocked:[...save.unlocked]}),start:startMission,spawnBoss:()=>{if(game&&!game.bossStarted){game.player.x=4200;startBoss()}},complete:()=>game&&completeMission()};
@@ -924,10 +969,10 @@ function archiveLabRun(){
 function pauseLabMeasurement(reason=document.hidden?'タブ非表示':'LAB・ポーズ操作'){mobilePlaytest?.interrupt(reason);liveProfiler?.pause(reason);game?.lab?.run?.profile.pause(reason);game?.lab?.benchmarkPerformance?.pause(reason)}
 function startLabCheckpoint(bossMission=null,checkpointId=null){
   if(!DEBUG||!game?.lab||!['lab','gameover'].includes(state))return false;
-  const previous=game.lab,cp=checkpointId?LAB_CHECKPOINTS.find(c=>c.id===checkpointId):findCheckpoint(bossMission??previous.stageMission,bossMission?4:previous.stageArea,previous.stageRoute,!!bossMission);
-  let mode;try{if(!cp)throw new Error('開始地点を選択してください');mode=validationClass(previous.validationMode,previous,save);if(cp.boss.state==='active'&&mode==='A')throw new Error('ボス戦はB / C / Dを選択してください')}catch(error){document.querySelector('#labStageStatus').textContent=error.message;return false}
+  const previous=game.lab,cp=checkpointId?[...LAB_CHECKPOINTS,...LAB_BOSS_APPROACHES].find(c=>c.id===checkpointId):findCheckpoint(bossMission??previous.stageMission,bossMission?4:previous.stageArea,previous.stageRoute,!!bossMission);
+  let mode;try{if(!cp)throw new Error('開始地点を選択してください');mode=validationClass(previous.validationMode,previous,save);if((cp.preBoss||cp.boss.state==='active')&&mode==='A')throw new Error('ボス戦はB / C / Dを選択してください')}catch(error){document.querySelector('#labStageStatus').textContent=error.message;return false}
   const settings={...previous.settings},equipped=[...previous.equipped],preserved={...previous,settings,equipped};delete preserved.run;delete preserved.benchmarkPerformance;
-  startMission(cp.missionId,true);game.lab={...createLabState(equipped,settings),...preserved,terrain:cp.missionId,stageMission:cp.missionId,stageArea:cp.areaIndex,cameraMode:cp.camera.mode};
+  startMission(cp.missionId,true);game.lab={...createLabState(equipped,settings),...preserved,bossApproach:!!cp.preBoss,terrain:cp.missionId,stageMission:cp.missionId,stageArea:cp.areaIndex,cameraMode:cp.camera.mode};
   const g=game;g.density=previous.stageDensity;g.enemyLimit=DENSITY_MODES[g.density].limit;g.director=cp.missionId==='M08'?new SpawnDirector(g.density,M08.encounters):cp.missionId==='M07'?new SpawnDirector(g.density,M07.encounters):cp.missionId==='M06'?new SpawnDirector(g.density,M06.encounters):cp.missionId==='M05'?new SpawnDirector(g.density,M05.encounters):cp.missionId==='M04'?new SpawnDirector(g.density,M04.encounters):cp.missionId==='M03'?new SpawnDirector(g.density,M03.encounters):cp.missionId==='M02'?new SpawnDirector(g.density,M02.encounters):new SpawnDirector(g.density);
   g.director.progress=cp.x;g.director.midbossSpawned=cp.progression.midbossCleared;g.director.stopped=mode==='A';
   for(const entry of g.director.entries)if(entry.definition.x<cp.progression.completedBeforeX||entry.definition.midbossOnly&&cp.progression.midbossCleared){entry.done=true;entry.spawned=entry.total;entry.wait=0}
@@ -938,6 +983,7 @@ function startLabCheckpoint(bossMission=null,checkpointId=null){
   let write=0;for(const e of g.enemies){const remove=!e.fixedDevice&&(e.x<cp.nests.destroyedBeforeX||mode==='A'&&e.type!=='barrier');if(remove){if(e.platform)e.platform.active=false}else g.enemies[write++]=e}g.enemies.length=write;g.liveEnemies=g.enemies.filter(e=>!e.dead&&!e.fixedDevice).length;g.liveMobs=g.enemies.filter(e=>!e.dead&&isMob(e)).length;
   g.items=g.items.filter(it=>it.x>=cp.x);configureLabPlayer();Object.assign(g.player,{x:cp.x,y:cp.y,vx:0,vy:0,onGround:true,dead:false,invuln:0,shotCd:0,switchCd:0,face:1});
   g.area=cp.areaIndex;g.time=g.score=g.kills=g.crates=0;g.areaText=`${mode} QA / ${cp.missionId} ${cp.areaId} ${cp.route}`;g.areaTimer=3;
+  if(cp.preBoss){g.director.stopped=true;g.enemies.length=0;g.liveEnemies=g.liveMobs=0;g.items.length=0;for(const p of g.platforms)if(p.kind==='barrier')p.active=false;beginResultTrace('lab-preboss-ready')}
   if(cp.boss.state==='active'){startBoss();for(const e of g.enemies)if(isBoss(e))Object.assign(e,{hp:e.maxHp,timer:0,phase:'move',actionIndex:0,actionWait:1.5,chargeTime:0,vx:0,vy:0})}
   if(g.finalDefense){g.finalDefense.safeX=cp.x;g.finalDefense.safeY=cp.y;if(cp.boss.state==='active')resetFinalBoss(g,g.enemies.find(e=>e.type==='overmind'),previous.finalForm??1,previous.finalNodeMask??0)}
   if(g.mothership){g.mothership.safeX=cp.x;g.mothership.safeY=cp.y;if(cp.boss.state==='active')resetMothershipBoss(g,g.enemies.find(e=>e.type==='commandcore'),previous.mothershipPhase??1,previous.mothershipMask??0)}
@@ -1042,6 +1088,11 @@ function applyLabTerrain(force=false){
 function runLabStart(mission=null){
   const ok=startLabCheckpoint(mission);if(ok)labTerrainChoice=null;
   setLabMessage(ok?'指定地点から開始しました。HP・位置・敵・弾・時間等を初期化。':`開始不可：${document.querySelector('#labStageStatus').textContent}`);return ok;
+}
+function runLabApproach(){
+ if(!DEBUG||!game?.lab||state!=='lab')return false;
+ const cp=LAB_BOSS_APPROACHES.find(c=>c.missionId===game.lab.stageMission),ok=cp&&startLabCheckpoint(null,cp.id);
+ setLabMessage(ok?'ボス直前から開始。入口へ進むか、LABの「この入口でボス戦開始」。通常セーブ・報酬なし。':document.querySelector('#labStageStatus').textContent);return !!ok;
 }
 function applyFortressQA(guardian=false){
   if(!game?.lab||state!=='lab')return false;

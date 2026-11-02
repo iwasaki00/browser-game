@@ -1,6 +1,7 @@
 import {FINAL_ID,FINAL_DESTINATIONS,normalizeFinal,finalDestination,endingDefinition,dockFinal} from './final-voyage.js';
 import {createSpaceScanner} from './space-scanner-ui.js';
 import {planetPermissions} from './space-scanner.js';
+import {createMissionGuide} from './mission-guide-ui.js';
 let scanner=null;
 import {observeApproach,adjustInput,inputStep,launchInput,attemptKey,flightFeedback,goalKey} from './navigation-feedback.js';
 let approach=null,lastAttempt=null,previousAttempt=null,fineAdjustment=true,restoredVelocity=null;
@@ -78,6 +79,7 @@ let endingCue=null;
 let recorder=null,lastStaged=-Infinity,stagedEvents=0;
 let trail = [];
 let mode = "editing";
+let missionGuideUI=null;
 const flightClock = new FlightClock({dt:DEFAULT_PHYSICS.fixedTimeStep});
 const flightRate = document.querySelector('#flightRate');
 function resetFlightRate(){flightClock.reset();lastTime=performance.now();flightRate.value='1';document.querySelector('#flightSpeed').hidden=mode!=='flying';document.querySelector('#effectiveRate').textContent='実効 1×';}
@@ -586,7 +588,8 @@ function tick(time) {
   const frameSeconds = Math.max(0,(time - lastTime) / 1000);
   lastTime = time;
   renderTutorial();
-  if(document.hidden||gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()||document.querySelector('#experienceDialog').open){requestAnimationFrame(tick);return;}
+  missionGuideUI?.refresh(time);
+  if(document.hidden||gallery.isOpen()||settingsUI.isOpen()||homewardUI.isOpen()||missionGuideUI?.isOpen()||document.querySelector('#experienceDialog').open){requestAnimationFrame(tick);return;}
   experience.update(Math.min(frameSeconds,.1));voyageFeedback.update(Math.min(frameSeconds,.1));
   if (mode === "flying") {
     flightClock.advance(frameSeconds,dt=>{
@@ -972,7 +975,7 @@ requestAnimationFrame(tick);
 const gallery=createGallery({store:standardGallery,archive:homewardArchive,canOpen:()=>mode!=='flying',onOpen:cancelGesture});
 const frontierUI=createFrontierUI({onDetails:id=>demo?openExperience():homewardUI.open(id)});frontierUI.initialize();
 const endingPresentation=createEndingPresentation({parent:frame,getState:()=>normalizeFinal(homewardProgress.state.finalVoyage),onRecord:id=>void gallery.openRecord(id)});
-const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onDestination:changeDestination,onFinalDestination:changeFinalDestination,onFinalChoice:chooseFinalDecision,onEnding:id=>{homewardUI.close();endingPresentation.show(id);},onDeepDestination:changeDeepDestination,onDeepPolicy:policy=>{const id=homewardProgress.chooseDeep(policy,simulation?.rocket.position??stage.launch.position);if(id)changeDeepDestination(id);},onAnalyze:kind=>{const events=homewardProgress.analyzeSignal(kind,mode==='flying'?simulation.elapsed:0);if(mode==='flying')flightStoryEvents.push(...events);if(events.length){frontierUI.communicate(events.at(-1),events);presentDiscoveries(events);}updateHomewardControls();},onImpossible:choice=>{const id=homewardProgress.chooseImpossible(choice);if(id)changeDestination(id);},onRoute:choice=>{const id=homewardProgress.chooseStory(choice);if(id)changeDestination(id);},getNavigation:()=>({active:playType==='homeward'&&Boolean(stage.openVoyage||stage.deepSpace||stage.finalVoyage),position:simulation?.rocket.position??stage.launch.position,flying:mode==='flying'}),canEnter:()=>mode!=='flying',onRecord:id=>{homewardUI.close();void gallery.openRecord(id);},onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
+const homewardUI=createHomewardUI({progress:homewardProgress,onEnter:enterHomeward,onChange:updateHomewardControls,onDestination:changeDestination,onFinalDestination:changeFinalDestination,onFinalChoice:chooseFinalDecision,onEnding:id=>{homewardUI.close();endingPresentation.show(id);},onDeepDestination:changeDeepDestination,onDeepPolicy:policy=>{const id=homewardProgress.chooseDeep(policy,simulation?.rocket.position??stage.launch.position);if(id)changeDeepDestination(id);},onAnalyze:kind=>{const events=homewardProgress.analyzeSignal(kind,mode==='flying'?simulation.elapsed:0);if(mode==='flying')flightStoryEvents.push(...events);if(events.length){frontierUI.communicate(events.at(-1),events);presentDiscoveries(events);}updateHomewardControls();},onImpossible:choice=>{const id=homewardProgress.chooseImpossible(choice);if(id)changeDestination(id);},onRoute:choice=>{const id=homewardProgress.chooseStory(choice);if(id)changeDestination(id);},getNavigation:()=>({stage,active:playType==='homeward'&&Boolean(stage.openVoyage||stage.deepSpace||stage.finalVoyage),position:simulation?.rocket.position??stage.launch.position,flying:mode==='flying'}),canEnter:()=>mode!=='flying',onRecord:id=>{homewardUI.close();void gallery.openRecord(id);},onOpen:()=>{cancelGesture();clearCameraGesture();settingsUI.closeAll();}});
 void migrateHomewardRecords(homewardProgress,standardGallery,homewardArchive).then(({migrated,missing})=>{if(migrated||missing.length)gallery.notify(`HOMEWARD記録：${migrated}件を専用保護。${missing.length}件は元記録がなく復元できません。`);}).catch(()=>gallery.notify('HOMEWARDの重要記録を保護・確認できませんでした。元の記録は変更していません。'));
 function notifyTutorial(event){
   if(playType!=='homeward')return;
@@ -1009,6 +1012,7 @@ document.querySelector('#tutorialSkip').addEventListener('click',()=>notifyTutor
 document.querySelector('#tutorialNext').addEventListener('click',()=>notifyTutorial('next'));
 document.querySelector('#tutorialHint').addEventListener('click',event=>{const hint=document.querySelector('#tutorialHintText');hint.hidden=!hint.hidden;event.currentTarget.textContent=hint.hidden?'ヒント':'閉じる';event.currentTarget.setAttribute('aria-expanded',String(!hint.hidden));});
 function updateHomewardControls(){
+  document.querySelector('#startExperience').disabled=mode==='flying';
   frame.classList.toggle('open-voyage',playType==='homeward'&&Boolean(stage.openVoyage||stage.deepSpace||stage.finalVoyage));
   document.querySelector('#chooseFreeSpace').disabled=document.querySelector('#chooseClassic').disabled=mode==='flying';
   document.querySelector('#openHomeward').disabled=mode==='flying'&&!stage.openVoyage&&!stage.deepSpace&&!stage.finalVoyage;
@@ -1215,3 +1219,6 @@ scanner=createSpaceScanner({root:frame,camera,
  onSelect:id=>{selectedPlanetId=id;selectedEncounterId=null;updatePlanetEditor();},
  onDestination:id=>{if(stage.finalVoyage)changeFinalDestination(id);else if(stage.deepSpace)changeDeepDestination(id);else if(stage.openVoyage)changeDestination(id);}
 });
+
+missionGuideUI=createMissionGuide({getContext:()=>({stage,phase:mode,playType,missionComplete:playType!=='homeward'||missionSatisfied(stage,missionEvidence,flightChoice),scanExpanded:frame.classList.contains('scan-expanded'),progress:homewardProgress.state,position:simulation?.rocket.position??stage.launch.position,launchMode,adjusted:Number(angleInput.value)!==stage.launch.angleDeg||Number(speedInput.value)!==stage.launch.speed,ending:homewardProgress.lastFinalResult?.ending,canNext:!document.querySelector('#nextStage').hidden,tutorial:document.querySelector('#homewardCoach').hidden?null:{title:document.querySelector('#tutorialTitle').textContent,text:document.querySelector('#tutorialText').textContent,selector:document.querySelector('.tutorial-target')?.id?'#'+document.querySelector('.tutorial-target').id:!document.querySelector('#tutorialNext').hidden?'#tutorialNext':'#gameCanvas'}}),onOpen:()=>{cancelGesture();clearCameraGesture();}});
+for(const input of [angleInput,speedInput])input.addEventListener('input',()=>missionGuideUI.refresh(performance.now(),true));

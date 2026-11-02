@@ -1,28 +1,29 @@
+import {beachProfiles,equippedBeach} from './beach-tools';
 import {treasure} from './data';
 import type {Find,State,Batch} from './engine';
-export interface SurveyMark {x:number;y:number;strength:number;deep:boolean;character:string;targets:string[];}
+export interface SurveyMark {precise?:boolean; x:number;y:number;strength:number;deep:boolean;character:string;targets:string[];}
 export interface ScanReading {strength:number;band:string;depthHint:string;character:string;}
 export interface SortEvent {time:number;method:'hand'|'sieve';units:number;found:number;stamina:number;}
 export interface RecoveryEvent {time:number;surveyed:boolean;tool:string;digs:number|null;digsAt:number;evaluation:number;loss:number;protected:boolean;}
 const sizes:Record<string,number>={B001:.55,B002:.35,B003:.5,B004:1.5,B005:.8,B006:.3,B007:1.1,B008:1.4,B009:.9,B010:.8,B011:.6,B012:1.7};
 export function tiny(f:Find){return ['B002','B003','B006'].includes(f.id);}
-export function scanReading(s:State,x:number,y:number):ScanReading {
- const p=s.explorationAreas[0];let strength=0,selected:Find|undefined;
- for(const f of p.items){if(f.state!=='buried'||treasure(f.id).material!=='metal')continue;
+export function scanReading(s:State,x:number,y:number,id='B201'):ScanReading {
+ const p=s.explorationAreas[0],profile=beachProfiles[id],coil=equippedBeach(s,'B209'),range=(profile?.range??95)*(coil?1.2:1)*(id==='B202'&&equippedBeach(s,'B201')&&p.surveyMarks?.some(m=>Math.hypot(m.x-x,m.y-y)<60)?1.7:1),grid=id==='B202'&&!equippedBeach(s,'B201')?20:profile?.grid??40;let strength=0,selected:Find|undefined;
+ for(const f of p.items){if(f.state!=='buried'||treasure(f.id).material!=='metal'||(f.depth??f.y)>(profile?.senseDepth??280))continue;
   const distance=Math.hypot(f.x-x,f.y-y),size=sizes[f.id]??1,deep=(f.depth??f.y)>180;
-  const value=Math.max(0,1-distance/95)*Math.min(1,.5+size*.4)*(deep?.85:1);
-  if(value>strength){strength=value;selected=f;}
+  const value=Math.max(0,1-distance/range)*Math.min(1,.5+size*.4+(coil&&size<.75?.3:0))*(deep?.85:1);
+  const wet=f.y<75&&id!=='B204'&&id!=='B201'?.85:1;if(value*wet>strength){strength=value*wet;selected=f;}
  }
- const reading:ScanReading={strength,band:strength<.12?'なし':strength<.35?'弱':strength<.7?'中':'強',depthHint:selected?((selected.depth??selected.y)>180?'深そう':'浅そう'):'',character:selected?((sizes[selected.id]??1)<.75?'小さな金属':'まとまった反応'):''};
+ const reading:ScanReading={strength,band:strength<.12?'なし':strength<.35?'弱':strength<.7?'中':'強',depthHint:selected?((selected.depth??selected.y)>420?'かなり深そう':(selected.depth??selected.y)>180?'深そう':'浅そう'):'',character:selected?(id==='B206'?(['B002','B004'].includes(selected.id)?'鉄系の反応':'非鉄系らしい反応'):(sizes[selected.id]??1)<.75?'小さな金属':'まとまった反応'):''};
  s.lastScan=reading;
  if(selected&&strength>=.25){
   // Mark the survey location on a coarse grid, never the treasure's exact location.
-  const mx=Math.max(20,Math.min(340,Math.floor(x/40)*40+20)),my=Math.max(20,Math.min(260,Math.floor(y/40)*40+20));
+  const mx=Math.max(20,Math.min(340,Math.floor(x/grid)*grid+grid/2)),my=Math.max(20,Math.min(260,Math.floor(y/grid)*grid+grid/2));
   const marks=p.surveyMarks??(p.surveyMarks=[]);let m=marks.find(m=>m.targets.includes(selected!.uid))??marks.find(m=>m.x===mx&&m.y===my);
-  if(!m){m={x:mx,y:my,strength,deep:reading.depthHint==='深そう',character:reading.character,targets:[]};marks.push(m);}
-  if(strength>=m.strength){m.x=mx;m.y=my;m.strength=strength;m.deep=reading.depthHint==='深そう';m.character=reading.character;}
+  if(!m){m={x:mx,y:my,strength,deep:reading.depthHint.includes('深'),character:reading.character,targets:[]};marks.push(m);}
+  if(strength>=m.strength){if(id==='B202')m.precise=true;m.x=mx;m.y=my;m.strength=strength;m.deep=reading.depthHint.includes('深');m.character=reading.character;}
   if(!m.targets.includes(selected.uid))m.targets.push(selected.uid);
-  if(Math.hypot(selected.x-x,selected.y-y)<=40)selected.surveyed=true;
+  if(Math.hypot(selected.x-x,selected.y-y)<=40){selected.surveyed=true;if(id==='B202'&&equippedBeach(s,'B201')||id==='B206')selected.identified=true;}
  }
  return reading;
 }
@@ -30,8 +31,8 @@ export function finishQuality(s:State,f:Find,id:string){
  if(f.qualityFinalized)return;
  if(f.initialQuality===undefined&&(f.state==='batch'||f.state==='stored')){f.initialQuality=f.quality;f.qualityFinalized=true;f.qualityLoss=0;return;}
  f.plannedRecovery=!!f.surveyed;f.excavationTool=id;f.initialQuality??=f.quality;
- const base=id==='B105'?.08:id==='B102'?.03:id==='hand'?.015:.01;
- const loss=f.surveyed?(id==='B105'?.02:id==='B101'?0:.005):base;
+ const base=beachProfiles[id]?.damage??(id==='B105'?.08:id==='B102'?.03:id==='hand'?.015:.01);
+ const loss=beachProfiles[id]?.damage===0?0:f.surveyed?Math.min(base,id==='B105'?.02:id==='B101'?0:.005):base;
  const before=Math.min(f.initialQuality,f.quality);f.quality=Math.max(0,before*(1-loss));f.qualityLoss=before-f.quality;f.damagePrevented=!!f.surveyed&&loss<base;f.qualityFinalized=true;
 }
 export function recordRecovery(s:State,f:Find){

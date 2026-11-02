@@ -1,0 +1,88 @@
+{
+  "browser": "156.0.8078.76",
+  "device": "PC Chrome CDP touch / emulated viewport, not iPhone",
+  "screens": [
+    {
+      "width": 320,
+      "height": 568,
+      "board": {
+        "x": 6,
+        "y": 108,
+        "width": 308,
+        "height": 315
+      },
+      "panel": {
+        "x": 12,
+        "y": 71,
+        "width": 296,
+        "height": 451
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "board": {
+        "x": 6,
+        "y": 108,
+        "width": 363,
+        "height": 414
+      },
+      "panel": {
+        "x": 12,
+        "y": 102.09375,
+        "width": 351,
+        "height": 487.8125
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "board": {
+        "x": 6,
+        "y": 108,
+        "width": 378,
+        "height": 591
+      },
+      "panel": {
+        "x": 12,
+        "y": 202.484375,
+        "width": 366,
+        "height": 464.015625
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "board": {
+        "x": 6,
+        "y": 108,
+        "width": 418,
+        "height": 679
+      },
+      "panel": {
+        "x": 15,
+        "y": 246.484375,
+        "width": 400,
+        "height": 464.015625
+      },
+      "status": "PASS"
+    }
+  ],
+  "navigation": [
+    {
+      "sector": "homeward-09",
+      "status": "PASS",
+      "checks": "four steps, actual selection handlers, no duplicates, unknown identity hidden, return to flight, restore guide and destination, classic sentinel"
+    },
+    {
+      "sector": "homeward-deep",
+      "status": "PASS",
+      "checks": "four steps, actual selection handlers, no duplicates, unknown identity hidden, return to flight, restore guide and destination, classic sentinel"
+    }
+  ],
+  "errors": [],
+  "status": "PASS"
+}
