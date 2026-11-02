@@ -1,5 +1,19 @@
 # ORBIT MAKER（オービットメーカー）
 
+Version 2.0.0-rc.4 — STORY NAVIGATION（受入候補）
+
+HOMEWARDのヘッダーに「現在の目的」と「次の操作」を表示します。タップすると、既存MISSION GUIDE内で「現在の目的／航海日誌／進行」を確認できます。「ヒント」は任意の3段階です。解析など任意の行動は帰還の目的と分けて表示し、正解の角度・推力は案内しません。
+
+航海日誌は既存の発見・手掛かり・通信・章・到達記録から生成します。未発見の情報・未到達の章名・未取得の結末は表示しません。日時のない旧記録は「日時不明・記録順」です。現在の宙域にある公開済み対象は、日誌の「天体情報（SCAN）」「場所を見る（SCAN）」から確認できます。場所を見る操作はカメラだけを動かします。「視点を戻す」で元の位置・倍率へ戻れます。
+
+[rc.4 仕様・検証・画面キャプチャ](reports/story-navigation/REPORT.md) ／ [仕様](reports/story-navigation/SPEC.md) ／ [iPhone確認表](reports/story-navigation/IPHONE_CHECKLIST.md)
+
+起動はこのフォルダで `python -m http.server 8000 --bind 0.0.0.0` を実行し、PCは `http://localhost:8000/`、同じWi-FiのiPhoneは `http://＜PCのIPv4アドレス＞:8000/` を開いてメニューのrc.4を確認します。停止はCtrl+Cです。旧比較コピーの`release-preview/`は起動先に使いません。URLを変えると保存領域も変わります。既存のサイトデータを削除しないでください。
+
+全自動テストは `npm test`。今回の結果は `reports/story-navigation/` に保存します。新しい保存項目は追加せず、既存進行・記録・rc.3の6STEPを維持します。iPhone実機の新UI受入は未確認。正式版への移行、push・公開・デプロイは行いません。
+
+以下はrc.3の実装記録です。
+
 Version 2.0.0-rc.3 — BEGINNER TUTORIAL（受入候補）
 
 メニューの「はじめて遊ぶ → 基本操作を練習する」から、実際に発射・調整・重力航行・惑星移動・SCAN・短い探索航行を学べます。成功を確認してから自分で「次のSTEP」を押します。ヒント・もう一度・スキップ・終了は全STEPで利用できます。練習は本編から独立し、終了すると元の画面へ戻ります。既存のHOMEWARD EXPERIENCEも別項目として維持しています。
