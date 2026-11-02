@@ -32,7 +32,7 @@ export function finishQuality(s:State,f:Find,id:string){
  if(f.initialQuality===undefined&&(f.state==='batch'||f.state==='stored')){f.initialQuality=f.quality;f.qualityFinalized=true;f.qualityLoss=0;return;}
  f.plannedRecovery=!!f.surveyed;f.excavationTool=id;f.initialQuality??=f.quality;
  const base=beachProfiles[id]?.damage??(id==='B105'?.08:id==='B102'?.03:id==='hand'?.015:.01);
- const loss=beachProfiles[id]?.damage===0?0:f.surveyed?Math.min(base,id==='B105'?.02:id==='B101'?0:.005):base;
+ const loss=f.riverProtected?0:beachProfiles[id]?.damage===0?0:f.surveyed?Math.min(base,id==='B105'?.02:id==='B101'?0:.005):base;
  const before=Math.min(f.initialQuality,f.quality);f.quality=Math.max(0,before*(1-loss));f.qualityLoss=before-f.quality;f.damagePrevented=!!f.surveyed&&loss<base;f.qualityFinalized=true;
 }
 export function recordRecovery(s:State,f:Find){

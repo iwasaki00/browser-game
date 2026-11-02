@@ -495,6 +495,12 @@ html[data-touch-device="true"] .touch-controls { display: flex; }
 /* TEST LAB is session-local; closed controls never cover the combat pad. */
 [hidden] { display: none !important; }
 .lab-entry { color: var(--cyan); border-color: var(--cyan); }
+.url-invincible-badge { position: absolute; z-index: 24; left: 50%; bottom: 4px; transform: translateX(-50%); max-width: calc(100% - 16px); padding: 2px 5px; background: #041320df; color: var(--yellow); font-size: 9px; white-space: nowrap; pointer-events: none; }
+.url-invincible-badge[hidden], .debug2-setup[hidden] { display: none; }
+.debug2-setup { max-width: 100%; font-size: 11px; }
+.debug2-setup summary { padding: 8px; cursor: pointer; }
+.debug2-setup p { margin: 4px 0; }
+.debug2-setup output { display: block; max-width: 360px; margin: auto; }
 .lab-toggle { position: absolute; z-index: 25; top: 50px; left: 8px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--cyan); background: #041320ed; color: var(--cyan); font-size: 11px; }
 .lab-level { position: absolute; z-index: 24; top: 53px; left: 90px; max-width: calc(100% - 100px); padding: 4px; color: var(--yellow); background: #041320df; font-size: 9px; pointer-events: none; }
 .screen--settings .lab-fields { margin-top: 12px; }

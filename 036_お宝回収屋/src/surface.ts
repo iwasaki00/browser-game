@@ -32,6 +32,19 @@ paths.B302='<path d="M3 7h12v14H3zM7 7V3h5v4M15 12c21-9 1 26 15 13M27 23l6 6-8 4
 paths.B203='<path d="M4 3l16 17M17 17l15 10c-10 11-23 4-15-10z" fill="#9cbcb0"/><path d="M19 24l8 6M23 22l8 5M17 28l10-5"/>';
 paths.B107='<path d="M5 3l17 20M3 5l5-4 5 5-6 5M19 20l11 12c-10 0-16-4-11-12z" fill="#bad0c4"/>';
 paths.B207='<path d="M3 3l17 18M8 31l24-16M8 31l2 3M13 28l2 3M18 25l2 3M23 22l2 3M28 19l2 3M32 15l2 3"/>';
+
+paths.R102='<path d="M3 3l25 25M10 10l3-3M18 18l3-3M24 24l7-1 2 7-7 2"/>';
+paths.R202='<path d="M5 10h26v16H5zM11 10V5h14v5M11 26v5h14v-5" fill="#bc7655"/><path d="M10 18h16"/>';
+paths.R203='<path d="M3 2l17 19c16 19-4 17-5 7M20 21c-1 14 14 15 12 2"/>';
+paths.R204='<rect x="3" y="9" width="24" height="19" rx="4" fill="#91b9a8"/><circle cx="15" cy="18" r="7"/><path d="M27 13l6-3v16l-6-3M8 9V5h9v4"/>';
+paths.R205='<path d="M3 3l15 15 5-4M18 18l8 10 6-5M23 14l8 3 2-6"/><circle cx="18" cy="18" r="3"/>';
+paths.R210='<path d="M15 2v6M8 9h15v17H8zM15 26v5c0 5 9 4 8-1" fill="#a2beac"/><path d="M12 15h7M12 21h7"/>';
+paths.G104='<path d="M6 3l15 28M6 3l23 21M20 31l3-4M29 24l-5 1"/>';
+paths.G106=paths.B207+'<path d="M1 33h8"/>';
+paths.G108=paths.B108+'<path d="M13 19h10M13 25h10"/>';
+paths.G202=paths.G103+'<path d="M3 2h30M3 34h30M8 1v4M24 32v3"/>';
+paths.G204=paths.G110+'<path d="M4 12h6v14l-3 6-3-6zM29 13h5v13l-3 6-2-6z"/>';
+paths.G205=paths.R103+'<path d="M2 32h5M11 34h4M24 33h5M31 30h3"/>';
 export function toolIcon(id:string){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" stroke="#244e47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[id]??paths.hand}</svg>`;}
 export function toolCursor(id:string){return `url("data:image/svg+xml,${encodeURIComponent(toolIcon(id))}") 8 26, crosshair`;}
 export function visibleFinds(p:Plot){return p.items.filter(f=>f.state==='buried'&&exposure(p,f)>.1);}

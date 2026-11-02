@@ -1,0 +1,3 @@
+import {fieldProfiles} from './field-tools';
+const legacy:Record<string,string>={R101:'距離130 / 引上げ2kg',R106:'距離210 / 引上げ2.2kg / 隙間対応',R103:'距離105 / 吸着3kg / 引上げ3kg',R104:'ロープ265 / 吸着4kg / 引上げ3kg',R110:'巻取り2.6倍 / 吸着・引上げは不変',R201:'吸着18kg / 引上げ8kg / ロープ併用',R206:'強力磁石＋ロープ時の引上げ22kg',G101:'採取6単位 / 体力4',G102:'実効容量4 / 微細捕捉82%（前処理で変化）',G103:'粒径選別8単位 / 大石の前処理',G105:'形と光沢の観察 / 体力0.2',G110:'選別後の1粒を1操作 / 体力0.3',G201:'実効容量14 / 微細捕捉64%（前処理で変化）',G203:'水流20単位 / 供給と最終回収は別操作'};
+export function fieldComparisonText(id:string){return fieldProfiles[id]?fieldProfiles[id].performance+' / 基準体力 '+fieldProfiles[id].cost:legacy[id]??'';}

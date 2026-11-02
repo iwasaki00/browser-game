@@ -7,13 +7,13 @@
   <meta name="description" content="ドット防衛戦線 — 8bit風横スクロール防衛アクションシューティング">
   <title>ドット防衛戦線 | PIXEL DEFENSE FRONT</title>
   <link rel="icon" href="assets/game-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=1.2.0-C2">
+  <link rel="stylesheet" href="styles.css?v=1.2.0-C3">
 </head>
 <body>
   <main id="app" aria-label="ドット防衛戦線">
     <header class="site-bar">
       <button id="titleButton" class="title-button" type="button" data-action="title" aria-label="ゲームのタイトル画面へ戻る">← TITLE</button>
-      <span>PIXEL DEFENSE FRONT <b>v1.2.0-C2</b></span>
+      <span>PIXEL DEFENSE FRONT <b>v1.2.0-C3</b></span>
       <output id="acceptanceHUD" class="acceptance-hud" aria-label="実機診断HUD" aria-live="off" hidden></output>
       <small class="orientation-note">横向き推奨</small>
       <button id="pauseButton" type="button" data-action="pause-game" aria-label="一時停止（再開できます）" hidden>Ⅱ PAUSE</button>
@@ -32,6 +32,7 @@
         <button class="menu-button" data-action="howto">操作方法</button>
         <button class="menu-button" data-action="settings">設定</button>
         <button id="testLabButton" class="menu-button lab-entry" data-action="test-lab" hidden>TEST LAB</button>
+        <details id="debug2Setup" class="debug2-setup" hidden><summary>DEBUG 2：試験用ステージ解放</summary><p>専用セーブのみ。クリア・武器・報酬は付与しません。</p><button class="menu-button" data-action="debug2-unlock">M01〜M08を試験用に解放</button><output id="debug2SetupStatus" role="status"></output></details>
         <p class="blink">PRESS ENTER / TAP START</p>
       </div>
       <div id="screenMission" class="screen">
@@ -93,6 +94,7 @@
       <button id="bossDefeatSkip" class="final-reveal-skip" data-action="boss-defeat-skip" hidden>撃破演出をスキップ</button>
       <button id="finalRevealSkip" class="final-reveal-skip" data-action="final-reveal-skip" hidden>通信スキップ</button>
       <button id="labToggle" class="lab-toggle" data-action="lab-open" hidden>LAB / F2</button>
+      <output id="urlInvincibleBadge" class="url-invincible-badge" aria-label="無敵テスト・通常セーブ隔離中" hidden>DEBUG 2 / INVINCIBLE</output>
       <output id="labLevelBadge" class="lab-level" aria-label="現在の撃破演出レベル" hidden>LEVEL 1 · STANDARD</output>
       <output id="labPerformance" class="lab-performance" aria-label="実プレイ計測" hidden>FPS: 計測中…</output>
       <output id="mobileMeasureBadge" class="mobile-measure-badge" aria-label="30秒計測の状態" aria-live="polite" hidden></output>
@@ -243,6 +245,6 @@
     </section>
     <footer class="help-line"><span>MOVE <b>WASD</b></span><span>AIM / FIRE <b>MOUSE</b></span><span>SWITCH <b>Q / E</b></span><span>PAUSE <b>ESC</b></span></footer>
   </main>
-  <script type="module" src="js/game.js?v=1.2.0-C2"></script>
+  <script type="module" src="js/game.js?v=1.2.0-C3"></script>
 </body>
 </html>

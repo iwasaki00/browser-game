@@ -3,7 +3,7 @@ import {ACHIEVEMENT_BY_ID} from "./achievement-master.js?v=0.8.0";
 import {CampaignRun} from "./campaign-stats.js?v=0.8.0";
 import {CampaignCommand,CAMPAIGN_TABS} from "./campaign.js?v=0.8.0";
 import {READABILITY,playerOpacity,drawEnemyShotAccent,drawDangerAccents,crowdedVisuals} from "./readability.js?v=1.2.0-B1";
-import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-C2";
+import {VERSION,SAVE_KEY,WORLD,VIEW,BATTLE_CAMERA,DENSITY_MODES,INVASION,MISSIONS,WEAPONS,WEAPON_BY_ID,WEAPON_CATEGORIES,ENEMY_TYPES,MISSION_AREAS,DEFAULT_SAVE,DESTRUCTION_LEVELS,PLAYER_CLASSES,normalizeClass,normalizeDestructionLevel,clamp,distance,sanitizeSave,pickReward,missionStatus,canPlayMission,recordMissionClear} from "./data.js?v=1.2.0-C3";
 import {WEAPON_LIMITS,createArsenal,clearArsenal,mineCount,fireExpanded,detonateMines,updateExpanded,drawExpanded,terrainContact,segmentEntry} from "./weapons.js?v=0.7.0";
 import {ArtPreview,artStyleLabel,drawStudyIcon,drawStudyProjectile,drawStudyPlayer,drawStudyEnemy,drawStudyTile,drawUnifiedTile,studyTileVariant,studyEffectWeapon,drawStudyEffect,drawStudyLightning,drawUnifiedSpecial,drawUnifiedEnvironmentalEffect,drawUnifiedTrail} from "./art-preview.js?v=0.2.3-C";
 import {applyPlayerClass,moveClassPlayer,movePlayerBody,classPlayerFrame} from "./player.js?v=0.2.2";
@@ -45,6 +45,12 @@ const gameShell=document.querySelector("#gameShell");
 const images={};
 const imageFiles={bg:"assets/backgrounds/city.png",player:"assets/sprites/player/player.png",classes:"assets/sprites/player/classes.png?v=0.1.8",enemies:"assets/sprites/enemies/enemies.png",boss:"assets/sprites/bosses/mother_crawler.png",weapons:"assets/sprites/weapons/weapon_icons.png?v=0.2.0",shots:"assets/sprites/weapons/projectiles.png?v=0.2.0",heldWeapons:"assets/sprites/weapons/equipped.png?v=0.2.0",weaponFx:"assets/effects/weapon_fx.png?v=0.2.0",explosion:"assets/effects/explosion.png",items:"assets/sprites/ui/items.png",tiles:"assets/tiles/city_tiles.png"};
 Object.assign(imageFiles,{underground:'assets/backgrounds/underground.png',undergroundTiles:'assets/tiles/underground_tiles.png',worm:'assets/sprites/enemies/tunnel_worm.png',spitter:'assets/sprites/enemies/ceiling_spitter.png',nest:'assets/sprites/enemies/spawn_nest.png',queen:'assets/sprites/bosses/abyss_queen.png',acid:'assets/effects/acid.png',wave:'assets/effects/ground_wave.png',nestBreak:'assets/effects/nest_break.png',bossBreak:'assets/effects/boss_break.png'});
+// Select the storage scope BEFORE loadSave, including boot-time normalization.
+// DEBUG remains LAB-only; URL invincibility uses the ordinary campaign UI.
+const debugValue=new URLSearchParams(location.search).get('debug');
+const URL_INVINCIBLE=debugValue==='2';
+const activeSaveKey=URL_INVINCIBLE?SAVE_KEY+'-debug2':SAVE_KEY;
+const resultTraceKey=URL_INVINCIBLE?'pdf-result-transition-debug2-v1':'pdf-result-transition-v1';
 let save=loadSave(),state="title",last=0,acc=0,assetsReady=false,audio=null;
 let game=null,selected=[...save.equipped],selectedMissionId="M01",returnState="play",settingsReturn="title";
 const campaign=new CampaignCommand(document);const achievementNotices=new AchievementNotices();let noticeLast=0,noticeRendered=null;let campaignSaveError="";
@@ -72,7 +78,7 @@ const labRunHistory=[],labBenchmarkHistory=[];
 const weaponAPI={damage:damageEnemy,blast:explode,effect:pushEffect};
 const missionTimers=new Set();
 const deferredMissionCallbacks=[];
-const DEBUG=new URLSearchParams(location.search).get("debug")==="1";
+const DEBUG=debugValue==='1';
 const mobilePlaytest=DEBUG?new MobilePlaytest():null,mobileQA=DEBUG?createMobileQA():null;
 const acceptance=DEBUG?new AcceptanceMeter():null,acceptanceArchive=DEBUG?new AcceptanceArchive(localStorage):null;
 let acceptanceTestId='IP-01',acceptanceSeconds=30,acceptanceHud=false,acceptanceReviewId=null,acceptancePublishAt=0,acceptanceSelected=null,acceptanceArchivedSession=null;
@@ -123,8 +129,8 @@ window.addEventListener("orientationchange",()=>{resetInput();mobilePlaytest?.in
 window.visualViewport?.addEventListener("resize",updateViewport,{passive:true});
 window.visualViewport?.addEventListener("scroll",updateViewport,{passive:true});
 
-function loadSave(){try{return sanitizeSave(JSON.parse(localStorage.getItem(SAVE_KEY)))}catch{return sanitizeSave(DEFAULT_SAVE)}}
-function storeSave(){if(game?.lab)return false;try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));campaignSaveError="";syncResultSaveStatus();traceResult('store-ok');return true}catch{campaignSaveError="保存できません（未保存）：このタブには進行を保持しています。ページを閉じず、空き容量・ブラウザ設定を確認して保存を再試行してください。";syncResultSaveStatus();traceResult('store-failed');return false}}
+function loadSave(){try{return sanitizeSave(JSON.parse(localStorage.getItem(activeSaveKey)))}catch{return sanitizeSave(DEFAULT_SAVE)}}
+function storeSave(){if(game?.lab)return false;try{localStorage.setItem(activeSaveKey,JSON.stringify(save));campaignSaveError="";syncResultSaveStatus();traceResult('store-ok');return true}catch{campaignSaveError="保存できません（未保存）：このタブには進行を保持しています。ページを閉じず、空き容量・ブラウザ設定を確認して保存を再試行してください。";syncResultSaveStatus();traceResult('store-failed');return false}}
 function syncResultSaveStatus(){
   const commandRetry=document.querySelector('#campaignSaveRetry'),commandStatus=document.querySelector('#campaignSaveStatus'),resultRetry=document.querySelector('#resultSaveRetry'),resultStatus=document.querySelector('#resultSaveStatus');
   if(commandRetry)commandRetry.hidden=!campaignSaveError;
@@ -145,12 +151,12 @@ function traceResult(stage,detail=''){
         timers:missionTimers.size,deferred:deferredMissionCallbacks.length,hidden:document.hidden,
         cleared:save.clearedMissions.includes(f.mission),unlocked:[...save.unlockedMissions],saveError:!!campaignSaveError}});
     if(f.events.length>RESULT_LOG_LIMIT)f.events.shift();
-    if(!f.lab)try{sessionStorage.setItem('pdf-result-transition-v1',JSON.stringify({version:VERSION,...f}));f.storage='OK'}catch{f.storage='UNAVAILABLE'}
+    if(!f.lab)try{sessionStorage.setItem(resultTraceKey,JSON.stringify({version:VERSION,...f}));f.storage='OK'}catch{f.storage='UNAVAILABLE'}
     const text=resultDiagnosticText();for(const id of ['resultFlowLog','pauseFlowLog','commandFlowLog','equipFlowLog','labFlowLog']){const log=document.querySelector('#'+id);if(log)log.textContent=text}
   }catch{/* Diagnostic failure must not become a progression failure. */}
 }
-function beginResultTrace(stage){if(!game||game.lab&&!game.lab.bossApproach)return;resultFlow={mission:game.missionId,playerClass:game.player.classId,lab:!!game.lab,events:[]};traceResult(stage)}
-function resultDiagnosticText(){if(game?.lab&&!resultFlow?.lab)return 'LAB診断は「ボス直前から開始」で採取します。通常記録は変更しません。';if(resultFlow)return JSON.stringify({version:VERSION,...resultFlow},null,2);try{return sessionStorage.getItem('pdf-result-transition-v1')||'診断記録はまだありません。通常セーブは変更しません。'}catch{return 'この環境ではタブ内の診断保存を利用できません。'}}
+function beginResultTrace(stage){if(!game||game.lab&&!game.lab.bossApproach)return;resultFlow={mission:game.missionId,playerClass:game.player.classId,lab:!!game.lab,saveScope:URL_INVINCIBLE?'DEBUG2':'NORMAL',events:[]};traceResult(stage)}
+function resultDiagnosticText(){if(game?.lab&&!resultFlow?.lab)return 'LAB診断は「ボス直前から開始」で採取します。通常記録は変更しません。';if(resultFlow)return JSON.stringify({version:VERSION,...resultFlow},null,2);try{return sessionStorage.getItem(resultTraceKey)||'診断記録はまだありません。通常セーブは変更しません。'}catch{return 'この環境ではタブ内の診断保存を利用できません。'}}
 async function copyResultDiagnostics(){
   traceResult('diagnostic-export');const text=resultDiagnosticText();
   for(const id of ['resultFlowOutput','pauseFlowOutput','commandFlowOutput','equipFlowOutput','labFlowOutput']){const el=document.querySelector('#'+id);if(el){el.value=text;el.hidden=false}}
@@ -160,8 +166,10 @@ async function copyResultDiagnostics(){
 function windowResultError(e){if(resultFlow)traceResult('error',e.message||e.reason?.message||'非同期処理エラー（詳細未取得）')}
 window.addEventListener('error',windowResultError);
 window.addEventListener('unhandledrejection',windowResultError);
-// Keep the original storage key so v1 records migrate in place.
+// Normal v1 records migrate in place; DEBUG 2 has its own identically shaped save.
 storeSave();
+document.querySelector('#urlInvincibleBadge').hidden=!URL_INVINCIBLE;
+document.querySelector('#debug2Setup').hidden=!URL_INVINCIBLE;
 function loadAssets(){return Promise.all(Object.entries(imageFiles).map(([key,src])=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{images[key]=im;resolve()};im.onerror=reject;im.src=src}))).then(()=>assetsReady=true)}
 function show(name){if(name==='result'||name==='gameover')resetInput();if(name==='result')traceResult('result-screen');if(name!==state&&name!=='play')acceptance?.interrupt(`画面切替:${name}`);if(name!=='play')flushCampaign();if(name!=='play')mobilePlaytest?.interrupt(`画面切替：${name}（継ぎ足しせず終了）`);if(name==="result"||name==="gameover")document.querySelector(`#screen${name==="result"?"Result":"Gameover"}`).classList.toggle("skip-intro",false);if(name!=='pause')artComparison=false;document.querySelector('#screenPause').classList.toggle('is-art-comparison',artComparison);if(name!=="lab")closeLabWeaponPicker(false);if(name==="mission"){campaign.lastPreview=-Infinity;renderMissionList()}screens.forEach(s=>s.classList.toggle("is-active",s.id===`screen${name[0].toUpperCase()+name.slice(1)}`));state=name;gameShell.classList.toggle("is-playing",name==="play"||name==="lab"||name==="ending"||artComparison);touchControls.style.visibility=name==="play"?"visible":"hidden";canvas.dataset.gameState=name;canvas.setAttribute("aria-label",name==="play"?game?.lab?"TEST LABを進行中":`ゲーム画面。${game.missionId} ${MISSIONS.find(m=>m.id===game.missionId)?.name??''}を進行中`:`${name}画面`);syncLabUI()}
 function scheduleMission(callback,delay,label=''){
@@ -335,6 +343,14 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-action]");
   if(action==='lab-preboss-start'){runLabApproach();return}
   if(action==='lab-approach-battle'){if(game?.lab?.bossApproach&&!game.bossStarted){show('play');resetInput();startBoss();game.lab.run.bossStartedAt=game.time}return}
   if(action==='retry-save'){if(!game?.lab){const ok=storeSave();if(ok&&game?.campaignRun)game.campaignRun.dirty=false;traceResult(ok?'save-retry-ok':'save-retry-failed')}return}
+  if(action==='debug2-unlock'){
+    if(!URL_INVINCIBLE||state!=='title')return;
+    // Test preparation only: no clears, weapons, rewards or normal-save writes.
+    save=sanitizeSave({...save,unlockedMissions:[...save.unlockedMissions,...MISSIONS.filter(m=>m.implemented).map(m=>m.id)]});
+    const ok=storeSave();
+    document.querySelector('#debug2SetupStatus').textContent=ok?'専用セーブのM01〜M08を解放しました。MISSION STARTから兵科・出撃先を選択できます。':campaignSaveError;
+    return;
+  }
   if(action==='campaign-tab'){if(state==="mission"&&CAMPAIGN_TABS.includes(a.dataset.tab)){campaign.tab=a.dataset.tab;renderMissionList()}return}
   if(action==='campaign-select'){if(state==="mission"&&MISSIONS.some(m=>m.id===a.dataset.mission)){campaign.selected=a.dataset.mission;renderMissionList()}return}
   if(action==='achievement-select'||action==='achievement-recommend'){
@@ -658,7 +674,7 @@ function updateEnemies(dt){const p=game.player;game.grid.rebuild(game.enemies);p
 function updateBoss(e,dt){const p=game.player;e.timer+=dt;const phase=e.hp>800?0:e.hp>400?1:2;if(e.phase==="charge"){e.x+=e.vx*dt;if(e.x<4130||e.x>4720){e.x=clamp(e.x,4130,4720);e.vx*=-1;e.phase="move";e.timer=0}}else{e.x+=Math.sign((phase===2?p.x:4540)-e.x)*ENEMY_TYPES.boss.speed*(phase===2?.45:.18)*dt;if(e.timer>2.2-phase*.3){e.timer=0;const action=Math.floor(Math.random()*3);if(action===0)enemyBurst(e,5,130);else if(action===1){for(let i=0;i<2+phase;i++)spawnBossMinion(e,i)}else{e.phase="charge";e.vx=Math.sign(p.x-e.x)*(100+phase*25)}}}}
 function enemyFire(e,speed,angleOffset=0){e.attackFlash=.18;const p=game.player,ex=e.x,ey=e.y+e.h/2,a=Math.atan2(p.y+15-ey,p.x-ex)+angleOffset;game.enemyShots.push({kind:e.type==='spitter'||e.type==='queen'?'acid':null,x:ex,y:ey,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,w:5,h:5,life:4,damage:e.type==='spitter'?12:ENEMY_TYPES[e.type].damage*.6,normal:isMob(e)})}
 function enemyBurst(e,count,speed){for(let i=0;i<count;i++)enemyFire(e,speed,(i-(count-1)/2)*.15);tone(120,.08)}
-function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.run?.mode==='A'||game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;const before=p.hp;p.hp=Math.max(0,p.hp-amount*scale);normalCampaignRun()?.challenge.damage(before-p.hp);if(game.lab?.run?.outcome==='RUNNING')game.lab.run.damageTaken+=before-p.hp;p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
+function hurtPlayer(amount,sourceX){const p=game.player;if(game.lab?.run?.mode==='A'||game.lab?.invincible||p.invuln>0||p.dead||game.clear)return;const c=PLAYER_CLASSES[p.classId],scale=formalClass()?c.damageScale:1,kick=formalClass()?c.knockback:1;const before=p.hp;if(!URL_INVINCIBLE)p.hp=Math.max(0,p.hp-amount*scale);normalCampaignRun()?.challenge.damage(before-p.hp);if(game.lab?.run?.outcome==='RUNNING')game.lab.run.damageTaken+=before-p.hp;p.invuln=1;p.hitPose=.16;p.vx=(sourceX<p.x?60:-60)*kick;p.vy=-90*kick;game.shake=4;tone(55,.15,"sawtooth",.04)}
 function updateEnemyShots(dt){const p=game.player;for(const s of game.enemyShots){const x=s.x,y=s.y;s.life-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(['M02','M03','M04','M05','M06','M07','M08'].includes(game.missionId)&&terrainContact(x,y,s.x,s.y,game.platforms,s.kind==='wave'?0:2,false,game.world))s.dead=true;if(!s.dead&&game.coast)for(const t of game.coast.turrets)if(t.hp>0&&Math.abs(s.x-t.x)<16&&s.y>=t.y&&s.y<=148){t.hp=Math.max(0,t.hp-s.damage);s.dead=true;break}if(!s.dead&&hitRect({x:s.x,y:s.y,w:s.w,h:s.h},{x:p.x,y:p.y+16,w:p.w,h:p.h})){hurtPlayer(s.damage,s.x);s.dead=true}}let write=0;for(const s of game.enemyShots)if(!s.dead&&s.life>0&&s.x>-64&&s.x<(game.world??WORLD).width+64&&s.y>-600&&s.y<260)game.enemyShots[write++]=s;game.enemyShots.length=write}
 function updateItems(){const p=game.player;for(const it of game.items){if(!it.alive)continue;if(Math.abs(it.x-p.x)<20&&Math.abs(it.y-(p.y+16))<26){it.alive=false;if(it.type==="heal")p.hp=Math.min(p.maxHp,p.hp+25);else gCrate();tone(880,.12)}}}
 function gCrate(){game.crates++;game.score+=500;game.areaText="WEAPON BOX ACQUIRED";game.areaTimer=1.6;if(game.lab)return;const reward=pickReward(save.unlocked,Math.random,false);if(reward){save.unlocked.push(reward);game.weaponRewards.push(reward);game.areaText=`UNLOCK ${reward}`}else game.areaText="ARSENAL COMPLETE / SCORE +500";refreshAchievements();storeSave()}

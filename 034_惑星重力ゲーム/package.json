@@ -1,9 +1,9 @@
 {
   "name": "orbit-maker",
-  "version": "2.0.0-rc.2",
+  "version": "2.0.0-rc.3",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/qa-all.mjs --final --report=mission-guide"
+    "test": "node tests/qa-all.mjs --final --report=beginner-tutorial"
   }
 }

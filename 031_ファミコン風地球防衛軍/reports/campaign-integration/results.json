@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0-C2",
-  "startedAt": "2026-11-01T23:56:25.974Z",
+  "version": "1.2.0-C3",
+  "startedAt": "2026-11-02T06:48:34.614Z",
   "timezone": "Asia/Tokyo",
   "environment": {
     "node": "v25.9.0",
@@ -9,8 +9,8 @@
     "seed": 11001008,
     "dt": 0.016666666666666666,
     "storage": "isolated per-runtime Map only; no browser/user storage",
-    "commit": "7c36f7f1fc436a764c3f812cfe7aa06effeb5894",
-    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M js/impact.js\n M js/mission-lab.js\n M package.json\n M reports/campaign-integration/README.md\n M reports/campaign-integration/related-tests.txt\n M reports/campaign-integration/results.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tests/campaign-progression.test.mjs\n M tests/helpers/runtime.mjs\n M tests/result-freeze.test.mjs\n M tools/campaign-integration.mjs\n?? js/boss-defeat.js\n?? tests/boss-sortie-transition.test.mjs"
+    "commit": "5645a988206060755414e44ed9e3c98bd10a3d2f",
+    "worktree": "M index.html\n M js/data.js\n M js/game.js\n M package.json\n M styles.css\n M tests/campaign-integration.test.mjs\n M tests/helpers/runtime.mjs\n M tools/campaign-integration.mjs\n?? tests/url-invincible-debug.test.mjs"
   },
   "cases": [
     {
@@ -5784,8 +5784,9 @@
     {
       "id": "RELATED-ENGINE-SUITES",
       "mode": "STRUCTURAL",
-      "assertions": 760,
+      "assertions": 791,
       "files": [
+        "tests/url-invincible-debug.test.mjs",
         "tests/boss-sortie-transition.test.mjs",
         "tests/campaign-progression.test.mjs",
         "tests/final-acceptance.test.mjs",
@@ -5880,7 +5881,7 @@
     "HUMAN: all eight normal-difficulty manual clears",
     "iPhone Safari device / tap positions / FPS / art final review (1.2.0)"
   ],
-  "finishedAt": "2026-11-01T23:57:46.566Z",
+  "finishedAt": "2026-11-02T06:49:43.338Z",
   "summary": {
     "total": 156,
     "pass": 140,

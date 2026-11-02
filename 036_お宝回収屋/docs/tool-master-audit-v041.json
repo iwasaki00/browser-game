@@ -1,0 +1,2995 @@
+{
+  "version": "0.4.1",
+  "count": 126,
+  "tools": [
+    {
+      "id": "B101",
+      "name": "小型スコップ",
+      "priceFN": 150,
+      "description": "小範囲の掘削",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "dig"
+      ],
+      "unlockConditions": "回収2個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 7,
+      "imageId": "B101",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B102",
+      "name": "熊手",
+      "priceFN": 380,
+      "description": "広い表面を探索",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "rake"
+      ],
+      "unlockConditions": "回収5個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "横スワイプ",
+      "staminaCost": 6,
+      "imageId": "B102",
+      "implementationStatus": "available",
+      "recipes": [
+        "C01",
+        "C16"
+      ]
+    },
+    {
+      "id": "B103",
+      "name": "大型スコップ",
+      "priceFN": 900,
+      "description": "掘削量増加",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "回収12個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 11,
+      "imageId": "B103",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B104",
+      "name": "砂ふるい",
+      "priceFN": 650,
+      "description": "小物の選別",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "sift"
+      ],
+      "unlockConditions": "回収8個 または 砂採取",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "左右に振る",
+      "staminaCost": 4,
+      "imageId": "B104",
+      "implementationStatus": "available",
+      "recipes": [
+        "C01",
+        "C02",
+        "C16"
+      ]
+    },
+    {
+      "id": "B105",
+      "name": "大型砂用スコップ",
+      "priceFN": 1250,
+      "description": "砂をまとめて採取",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "dig",
+        "bulk"
+      ],
+      "unlockConditions": "3区画 または 回収15個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 12,
+      "imageId": "B105",
+      "implementationStatus": "available",
+      "recipes": [
+        "C02",
+        "C16"
+      ]
+    },
+    {
+      "id": "B106",
+      "name": "ブラシ",
+      "priceFN": 110,
+      "description": "精密な掘り出し",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "回収2個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 2,
+      "imageId": "B106",
+      "implementationStatus": "available",
+      "recipes": [
+        "C04"
+      ]
+    },
+    {
+      "id": "B107",
+      "name": "園芸用移植ごて",
+      "priceFN": 230,
+      "description": "狭い場所の掘削",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "回収5個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 4,
+      "imageId": "B107",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B108",
+      "name": "バケツ",
+      "priceFN": 200,
+      "description": "運搬容量増加",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "補助"
+      ],
+      "unlockConditions": "採砂 または 回収8個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B108",
+      "implementationStatus": "available",
+      "recipes": [
+        "C02"
+      ]
+    },
+    {
+      "id": "B109",
+      "name": "回収トング",
+      "priceFN": 320,
+      "description": "小物をつかむ",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "回収5個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 1,
+      "imageId": "B109",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B110",
+      "name": "手押しカート",
+      "priceFN": 1400,
+      "description": "運搬効率向上",
+      "category": "B",
+      "stage": 1,
+      "capabilities": [
+        "補助"
+      ],
+      "unlockConditions": "回収20個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B110",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B201",
+      "name": "入門金属探知機",
+      "priceFN": 7800,
+      "description": "埋没金属の探索",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "detect"
+      ],
+      "unlockConditions": "回収20個 または 金属探索実績",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "走査",
+      "staminaCost": 3,
+      "imageId": "B201",
+      "implementationStatus": "available",
+      "recipes": [
+        "C03"
+      ]
+    },
+    {
+      "id": "B202",
+      "name": "ピンポインター",
+      "priceFN": 2800,
+      "description": "発見位置の絞り込み",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "回収20個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 1,
+      "imageId": "B202",
+      "implementationStatus": "available",
+      "recipes": [
+        "C03"
+      ]
+    },
+    {
+      "id": "B203",
+      "name": "大型採砂スクープ",
+      "priceFN": 2300,
+      "description": "砂のまとめ採取・選別",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "回収30個 または 掘削80回",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 14,
+      "imageId": "B203",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B204",
+      "name": "防水金属探知機",
+      "priceFN": 10500,
+      "description": "水際の探索",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "回収30個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 4,
+      "imageId": "B204",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B205",
+      "name": "深度表示探知機",
+      "priceFN": 9800,
+      "description": "深さの推定",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "回収35個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 5,
+      "imageId": "B205",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B206",
+      "name": "金属識別探知機",
+      "priceFN": 12000,
+      "description": "金属反応の選別",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "回収35個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 4,
+      "imageId": "B206",
+      "implementationStatus": "available",
+      "recipes": [
+        "C04"
+      ]
+    },
+    {
+      "id": "B207",
+      "name": "軽量大型熊手",
+      "priceFN": 2600,
+      "description": "低疲労の広域探索",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "回収20個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 3,
+      "imageId": "B207",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B208",
+      "name": "交換式ふるい",
+      "priceFN": 2400,
+      "description": "粒径別の選別",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "選別"
+      ],
+      "unlockConditions": "回収20個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 3,
+      "imageId": "B208",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B209",
+      "name": "高精度探知コイル",
+      "priceFN": 7200,
+      "description": "小さな金属への対応",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [
+        "補助"
+      ],
+      "unlockConditions": "回収30個",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B209",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B210",
+      "name": "探索位置記録端末",
+      "priceFN": 3800,
+      "description": "探索済み地点の記録",
+      "category": "B",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B210",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B301",
+      "name": "電動ふるい",
+      "priceFN": 25000,
+      "description": "選別の省力化",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B301",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B302",
+      "name": "電動砂吸引装置",
+      "priceFN": 39000,
+      "description": "採砂の高速化",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "回収50個 または 掘削180回",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 22,
+      "imageId": "B302",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "B303",
+      "name": "電動運搬カート",
+      "priceFN": 22000,
+      "description": "運搬補助",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B303",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B304",
+      "name": "振動式砂選別機",
+      "priceFN": 45000,
+      "description": "連続的な選別",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B304",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B305",
+      "name": "電動採砂機",
+      "priceFN": 58000,
+      "description": "掘削の機械化",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B305",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C13"
+      ]
+    },
+    {
+      "id": "B306",
+      "name": "探知機付き手押し台車",
+      "priceFN": 49000,
+      "description": "走査の効率化",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B306",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B307",
+      "name": "可搬式選別コンベア",
+      "priceFN": 68000,
+      "description": "設備間の連携",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B307",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B308",
+      "name": "電動砂用レーキ",
+      "priceFN": 33000,
+      "description": "表面探索の省力化",
+      "category": "B",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B308",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B401",
+      "name": "自走式探査ローバー",
+      "priceFN": 280000,
+      "description": "自動探索",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B401",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C13"
+      ]
+    },
+    {
+      "id": "B402",
+      "name": "自動採砂・ふるい機",
+      "priceFN": 360000,
+      "description": "採取・選別の自動化",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B402",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B403",
+      "name": "金属分離ライン",
+      "priceFN": 420000,
+      "description": "金属の連続選別",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B403",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B404",
+      "name": "自動洗浄ライン",
+      "priceFN": 300000,
+      "description": "回収品の洗浄",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B404",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B405",
+      "name": "複数探査機の同時運用",
+      "priceFN": 950000,
+      "description": "探索機の増設",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B405",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B406",
+      "name": "自動運搬システム",
+      "priceFN": 680000,
+      "description": "採取物の自動搬送",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B406",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C13"
+      ]
+    },
+    {
+      "id": "B407",
+      "name": "複数ライン連携設備",
+      "priceFN": 1200000,
+      "description": "設備間の統合",
+      "category": "B",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B407",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B501",
+      "name": "探査ヒートマップ",
+      "priceFN": 1800000,
+      "description": "有望地点の表示",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B501",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B502",
+      "name": "探索ルート最適化",
+      "priceFN": 2500000,
+      "description": "移動ロス削減",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B502",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B503",
+      "name": "複数探査機の配車管理",
+      "priceFN": 3300000,
+      "description": "稼働率改善",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B503",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B504",
+      "name": "選別ライン改良キット",
+      "priceFN": 1500000,
+      "description": "取りこぼし削減",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B504",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B505",
+      "name": "バッテリー交換ステーション",
+      "priceFN": 2100000,
+      "description": "装置停止時間削減",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B505",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B506",
+      "name": "自動保守設備",
+      "priceFN": 4200000,
+      "description": "故障時間削減",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B506",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "B507",
+      "name": "大型探索拠点",
+      "priceFN": 9000000,
+      "description": "複数現場の管理",
+      "category": "B",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "B-A"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "B507",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R101",
+      "name": "回収トング",
+      "priceFN": 180,
+      "description": "離れた物をつかむ",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "grab"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "つかんで引く",
+      "staminaCost": 0,
+      "imageId": "R101",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "R102",
+      "name": "伸縮回収棒",
+      "priceFN": 320,
+      "description": "回収距離延長",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "影をつかんで手前へ引く",
+      "staminaCost": 1.4,
+      "imageId": "R102",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 1.4,
+        "operation": "影をつかんで手前へ引く",
+        "benefit": "トングの届かない軽い非磁性物を回収。重さには弱い",
+        "performance": "距離190 / 引上げ1.5kg / 小物向け"
+      },
+      "recipes": []
+    },
+    {
+      "id": "R103",
+      "name": "小型磁石",
+      "priceFN": 520,
+      "description": "小さな鉄製品の回収",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "magnet"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "吸着して引く",
+      "staminaCost": 0,
+      "imageId": "R103",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "R104",
+      "name": "ロープ付き磁石",
+      "priceFN": 900,
+      "description": "磁石の投擲回収",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "cast",
+        "rope"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "スワイプ投擲 → 引く",
+      "staminaCost": 0,
+      "imageId": "R104",
+      "implementationStatus": "available",
+      "recipes": [
+        "C05"
+      ]
+    },
+    {
+      "id": "R105",
+      "name": "小型回収網",
+      "priceFN": 260,
+      "description": "軽い物のまとめ回収",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R105",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R106",
+      "name": "回収フック",
+      "priceFN": 470,
+      "description": "引っかけて引き寄せる",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "hook"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "引っかけて引く",
+      "staminaCost": 0,
+      "imageId": "R106",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "R107",
+      "name": "泥用スコップ",
+      "priceFN": 680,
+      "description": "水底の泥をすくう",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R107",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R108",
+      "name": "回収バケツ",
+      "priceFN": 240,
+      "description": "運搬容量増加",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R108",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R109",
+      "name": "ハンドライト",
+      "priceFN": 390,
+      "description": "暗い浅瀬の観察",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R109",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R110",
+      "name": "ロープ巻取り器",
+      "priceFN": 1800,
+      "description": "引き上げの省力化",
+      "category": "R",
+      "stage": 1,
+      "capabilities": [
+        "reel"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "装備で巻取り補助",
+      "staminaCost": 0,
+      "imageId": "R110",
+      "implementationStatus": "available",
+      "recipes": [
+        "C05"
+      ]
+    },
+    {
+      "id": "R201",
+      "name": "強力ネオジム磁石",
+      "priceFN": 4500,
+      "description": "重い鉄製品の回収",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "strongMagnet"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "強力吸着 → 引く",
+      "staminaCost": 0,
+      "imageId": "R201",
+      "implementationStatus": "available",
+      "recipes": [
+        "C06",
+        "C08"
+      ]
+    },
+    {
+      "id": "R202",
+      "name": "両面磁石",
+      "priceFN": 5700,
+      "description": "水底を引きずる探索",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "投擲・引きずり → 引く",
+      "staminaCost": 2.4,
+      "imageId": "R202",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 2.4,
+        "operation": "投擲・引きずり → 引く",
+        "benefit": "広い吸着面で鉄を探す。ロープ・巻取り器と併用可能",
+        "performance": "吸着12kg / 引上げ6kg / 範囲48 / ロープ併用"
+      },
+      "recipes": []
+    },
+    {
+      "id": "R203",
+      "name": "大型回収フック",
+      "priceFN": 2100,
+      "description": "大型物品に対応",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "隙間の影に引っかけて引く",
+      "staminaCost": 2,
+      "imageId": "R203",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 2,
+        "operation": "隙間の影に引っかけて引く",
+        "benefit": "普通のフックでは重い非磁性物・障害物を回収",
+        "performance": "距離245 / 引上げ7kg / 隙間対応"
+      },
+      "recipes": []
+    },
+    {
+      "id": "R204",
+      "name": "小型水中カメラ",
+      "priceFN": 6900,
+      "description": "水底の観察",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "影をタップして観察",
+      "staminaCost": 0.4,
+      "imageId": "R204",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "探知",
+        "cost": 0.4,
+        "operation": "影をタップして観察",
+        "benefit": "材質反応と障害物を観察。アームと併用して慎重に回収",
+        "performance": "観察距離330 / C07は観察後のアーム操作"
+      },
+      "recipes": [
+        "C07"
+      ]
+    },
+    {
+      "id": "R205",
+      "name": "伸縮式回収アーム",
+      "priceFN": 3100,
+      "description": "遠方の対象物をつかむ",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "遠い影をつかんで引く",
+      "staminaCost": 2,
+      "imageId": "R205",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 2,
+        "operation": "遠い影をつかんで引く",
+        "benefit": "ロープの届かない遠方の非磁性物へ。カメラと精密回収",
+        "performance": "距離330 / 引上げ3.2kg / C07時4.5kg"
+      },
+      "recipes": [
+        "C07"
+      ]
+    },
+    {
+      "id": "R206",
+      "name": "滑車セット",
+      "priceFN": 7200,
+      "description": "重量物の引き上げ",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "lift"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "装備で引き上げ補助",
+      "staminaCost": 0,
+      "imageId": "R206",
+      "implementationStatus": "available",
+      "recipes": [
+        "C06"
+      ]
+    },
+    {
+      "id": "R207",
+      "name": "防水ライト",
+      "priceFN": 2500,
+      "description": "水中の視認性向上",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R207",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R208",
+      "name": "水中観察スコープ",
+      "priceFN": 3600,
+      "description": "広い水底の観察",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R208",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R209",
+      "name": "水中用金属探知機",
+      "priceFN": 11500,
+      "description": "埋没金属の探索",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R209",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R210",
+      "name": "引き上げ力測定器",
+      "priceFN": 2900,
+      "description": "重量の推定",
+      "category": "R",
+      "stage": 2,
+      "capabilities": [
+        "探知"
+      ],
+      "unlockConditions": "砂浜の累計回収10個",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "対象の負荷をタップで測る",
+      "staminaCost": 0.3,
+      "imageId": "R210",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "探知",
+        "cost": 0.3,
+        "operation": "対象の負荷をタップで測る",
+        "benefit": "荷重を先に調べ、能力不足の無駄引きを回避。大型フックの姿勢制御",
+        "performance": "観察距離330 / 観察済みフックの品質保護"
+      },
+      "recipes": []
+    },
+    {
+      "id": "R301",
+      "name": "電動ウインチ",
+      "priceFN": 30000,
+      "description": "自動巻上げ",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R301",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C08"
+      ]
+    },
+    {
+      "id": "R302",
+      "name": "電動リール",
+      "priceFN": 18000,
+      "description": "ロープ回収の省力化",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R302",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R303",
+      "name": "小型電動クレーン",
+      "priceFN": 72000,
+      "description": "重量物の回収",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R303",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R304",
+      "name": "カメラ付き回収アーム",
+      "priceFN": 60000,
+      "description": "映像を見ながら回収",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R304",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R305",
+      "name": "遠隔操作カメラ台車",
+      "priceFN": 52000,
+      "description": "水底の遠隔調査",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R305",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R306",
+      "name": "バッテリー式回収アーム",
+      "priceFN": 45000,
+      "description": "つかむ作業の電動化",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R306",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R307",
+      "name": "回収物洗浄装置",
+      "priceFN": 23000,
+      "description": "泥落としの省力化",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R307",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R308",
+      "name": "巻上げ速度制御装置",
+      "priceFN": 27000,
+      "description": "安定した回収",
+      "category": "R",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R308",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R401",
+      "name": "定点自動巻上げ装置",
+      "priceFN": 250000,
+      "description": "繰り返し引き上げ",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R401",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R402",
+      "name": "遠隔操作式水中ロボット",
+      "priceFN": 350000,
+      "description": "遠隔調査・回収",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R402",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C14"
+      ]
+    },
+    {
+      "id": "R403",
+      "name": "自動回収クレーン",
+      "priceFN": 550000,
+      "description": "重量物の自動回収",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R403",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C14"
+      ]
+    },
+    {
+      "id": "R404",
+      "name": "水中探査ドローン",
+      "priceFN": 330000,
+      "description": "水底の広域調査",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R404",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R405",
+      "name": "自動仕分け設備",
+      "priceFN": 420000,
+      "description": "回収物の分類",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R405",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C14"
+      ]
+    },
+    {
+      "id": "R406",
+      "name": "自動洗浄・乾燥設備",
+      "priceFN": 310000,
+      "description": "回収後処理の自動化",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R406",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R407",
+      "name": "複数回収装置の集中管理",
+      "priceFN": 1100000,
+      "description": "複数設備の同時運用",
+      "category": "R",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R407",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R501",
+      "name": "水底地形マップ",
+      "priceFN": 1900000,
+      "description": "有望地点の把握",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R501",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R502",
+      "name": "回収ルート最適化",
+      "priceFN": 2400000,
+      "description": "移動時間削減",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R502",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R503",
+      "name": "回収機の稼働管理",
+      "priceFN": 2700000,
+      "description": "稼働率向上",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R503",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R504",
+      "name": "仕分けライン最適化",
+      "priceFN": 2000000,
+      "description": "滞留・詰まり削減",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R504",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R505",
+      "name": "複数回収装置の統合制御",
+      "priceFN": 3000000,
+      "description": "設備の協調動作",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R505",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R506",
+      "name": "装置保守ステーション",
+      "priceFN": 3900000,
+      "description": "故障停止削減",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R506",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "R507",
+      "name": "河川回収拠点",
+      "priceFN": 10000000,
+      "description": "複数現場の統括",
+      "category": "R",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "R-A",
+        "R-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "R507",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G101",
+      "name": "小型スコップ",
+      "priceFN": 150,
+      "description": "砂利をすくう",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "gravel"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞってまとめて採取",
+      "staminaCost": 0,
+      "imageId": "G101",
+      "implementationStatus": "available",
+      "recipes": [
+        "C09"
+      ]
+    },
+    {
+      "id": "G102",
+      "name": "パンニング皿",
+      "priceFN": 280,
+      "description": "砂金の選別",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "pan"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "皿を左右・円形に揺らす",
+      "staminaCost": 0,
+      "imageId": "G102",
+      "implementationStatus": "available",
+      "recipes": [
+        "C09"
+      ]
+    },
+    {
+      "id": "G103",
+      "name": "ふるい",
+      "priceFN": 600,
+      "description": "大きな石の除去",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "screen"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "横に振って粒径選別",
+      "staminaCost": 0,
+      "imageId": "G103",
+      "implementationStatus": "available",
+      "recipes": [
+        "C09"
+      ]
+    },
+    {
+      "id": "G104",
+      "name": "ピンセット",
+      "priceFN": 170,
+      "description": "小さな粒の回収",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "選別済みの粒をつまむ",
+      "staminaCost": 0.2,
+      "imageId": "G104",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 0.2,
+        "operation": "選別済みの粒をつまむ",
+        "benefit": "中粒は1操作。微細粒は2操作で、安価に精密回収を始める",
+        "performance": "中粒1回 / 微細2回 / 選別前は回収不可"
+      },
+      "recipes": []
+    },
+    {
+      "id": "G105",
+      "name": "虫眼鏡",
+      "priceFN": 300,
+      "description": "微細な粒の観察",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "observe"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "粒をタップして観察",
+      "staminaCost": 0,
+      "imageId": "G105",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "G106",
+      "name": "砂利用熊手",
+      "priceFN": 390,
+      "description": "砂利をかき分ける",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "掘削"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "採取地点を広くかき分ける",
+      "staminaCost": 6,
+      "imageId": "G106",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "掘削",
+        "cost": 6,
+        "operation": "採取地点を広くかき分ける",
+        "benefit": "1回10単位を広い範囲から採取。選別の供給を増やす",
+        "performance": "採取10単位 / 範囲52 / 後工程が必要"
+      },
+      "recipes": []
+    },
+    {
+      "id": "G107",
+      "name": "小瓶",
+      "priceFN": 120,
+      "description": "砂金を保管",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G107",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G108",
+      "name": "大型バケツ",
+      "priceFN": 350,
+      "description": "砂利の運搬",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "補助"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "装備して採取・投入を補助",
+      "staminaCost": 0,
+      "imageId": "G108",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "補助",
+        "cost": 0,
+        "operation": "装備して採取・投入を補助",
+        "benefit": "砂利袋を大きく集約。投入・粒径選別の準備を軽くする",
+        "performance": "袋上限96 / 同地点の未処理砂利を集約 / 準備体力軽減"
+      },
+      "recipes": []
+    },
+    {
+      "id": "G109",
+      "name": "隙間かき出し棒",
+      "priceFN": 450,
+      "description": "岩の隙間の探索",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G109",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G110",
+      "name": "スポイト型吸引瓶",
+      "priceFN": 950,
+      "description": "微細な砂金の回収",
+      "category": "G",
+      "stage": 1,
+      "capabilities": [
+        "precision"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "粒を選んで吸い取る",
+      "staminaCost": 0,
+      "imageId": "G110",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "G201",
+      "name": "大型パンニング皿",
+      "priceFN": 1900,
+      "description": "大量の砂利を処理",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [
+        "largePan"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "大きな皿を揺らす",
+      "staminaCost": 0,
+      "imageId": "G201",
+      "implementationStatus": "available",
+      "recipes": []
+    },
+    {
+      "id": "G202",
+      "name": "多段ふるい",
+      "priceFN": 2500,
+      "description": "粒径別の分類",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [
+        "選別"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "多段の網を左右に振る",
+      "staminaCost": 0,
+      "imageId": "G202",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "選別",
+        "cost": 0,
+        "operation": "多段の網を左右に振る",
+        "benefit": "細粒を保持して大石を取り除く。皿での微細金の捕捉率を改善",
+        "performance": "粒径選別16単位 / 微細捕捉+0.06 / 比重選別は別工程"
+      },
+      "recipes": []
+    },
+    {
+      "id": "G203",
+      "name": "携帯型スルース",
+      "priceFN": 6400,
+      "description": "水流による連続選別",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [
+        "sluice"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "投入して水流選別",
+      "staminaCost": 0,
+      "imageId": "G203",
+      "implementationStatus": "available",
+      "recipes": [
+        "C10"
+      ]
+    },
+    {
+      "id": "G204",
+      "name": "吸引瓶セット",
+      "priceFN": 2200,
+      "description": "細粒の回収率改善",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [
+        "回収"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "濃縮粒をまとめて吸い取る",
+      "staminaCost": 0.18,
+      "imageId": "G204",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "回収",
+        "cost": 0.18,
+        "operation": "濃縮粒をまとめて吸い取る",
+        "benefit": "1操作で近い分離粒を最大4個回収。生砂利からは取れない",
+        "performance": "1回最大4粒 / 精密回収体力0.18"
+      },
+      "recipes": []
+    },
+    {
+      "id": "G205",
+      "name": "砂鉄分離用磁石",
+      "priceFN": 2700,
+      "description": "磁性の砂鉄を除去",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [
+        "選別"
+      ],
+      "unlockConditions": "砂浜20個 または 川底5個",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "投入済み砂利へ磁石をかける",
+      "staminaCost": 1,
+      "imageId": "G205",
+      "implementationStatus": "available",
+      "newPerformance": {
+        "kind": "選別",
+        "cost": 1,
+        "operation": "投入済み砂利へ磁石をかける",
+        "benefit": "固定された砂鉄だけを取り除き、水流や皿の処理負担を軽くする",
+        "performance": "1回12単位 / 前処理後の水流時間18%減・微細捕捉+0.04 / C10"
+      },
+      "recipes": [
+        "C10"
+      ]
+    },
+    {
+      "id": "G206",
+      "name": "岩の隙間用工具",
+      "priceFN": 2300,
+      "description": "新しい採取箇所の探索",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G206",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G207",
+      "name": "精密デジタル秤",
+      "priceFN": 3200,
+      "description": "重量の正確な計測",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G207",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G208",
+      "name": "拡大ルーペ",
+      "priceFN": 2400,
+      "description": "小さな金粒の判別",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G208",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G209",
+      "name": "鉱物観察セット",
+      "priceFN": 4200,
+      "description": "地層の調査",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G209",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G210",
+      "name": "採取地点記録端末",
+      "priceFN": 3800,
+      "description": "採取結果の記録",
+      "category": "G",
+      "stage": 2,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G210",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G301",
+      "name": "振動ふるい",
+      "priceFN": 24000,
+      "description": "砂利選別の省力化",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G301",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G302",
+      "name": "ポンプ付きスルース",
+      "priceFN": 34000,
+      "description": "水流の機械供給",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G302",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C11"
+      ]
+    },
+    {
+      "id": "G303",
+      "name": "小型洗浄ドラム",
+      "priceFN": 42000,
+      "description": "砂利のまとめ洗浄",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G303",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G304",
+      "name": "電動砂利搬送機",
+      "priceFN": 48000,
+      "description": "砂利の運搬",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G304",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G305",
+      "name": "選鉱マット装置",
+      "priceFN": 28000,
+      "description": "微細な金粒の捕集",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G305",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C12"
+      ]
+    },
+    {
+      "id": "G306",
+      "name": "循環水タンク",
+      "priceFN": 18000,
+      "description": "水の再利用",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G306",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C11"
+      ]
+    },
+    {
+      "id": "G307",
+      "name": "小型濃縮装置",
+      "priceFN": 59000,
+      "description": "重い粒子の濃縮",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G307",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G308",
+      "name": "振動テーブル",
+      "priceFN": 70000,
+      "description": "重量差による選別",
+      "category": "G",
+      "stage": 3,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G308",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C12"
+      ]
+    },
+    {
+      "id": "G401",
+      "name": "自動砂利供給機",
+      "priceFN": 260000,
+      "description": "砂利の自動投入",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G401",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C15"
+      ]
+    },
+    {
+      "id": "G402",
+      "name": "大型選鉱機",
+      "priceFN": 420000,
+      "description": "大量の砂利の処理",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G402",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C15"
+      ]
+    },
+    {
+      "id": "G403",
+      "name": "回転式トロンメル",
+      "priceFN": 350000,
+      "description": "連続的な粒径選別",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G403",
+      "implementationStatus": "catalogOnly",
+      "recipes": [
+        "C15"
+      ]
+    },
+    {
+      "id": "G404",
+      "name": "自動給水制御装置",
+      "priceFN": 220000,
+      "description": "水量の調整",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G404",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G405",
+      "name": "多段式選鉱ライン",
+      "priceFN": 700000,
+      "description": "選鉱工程の統合",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G405",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G406",
+      "name": "精密濃縮設備",
+      "priceFN": 480000,
+      "description": "取りこぼし削減",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G406",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G407",
+      "name": "自動乾燥・計量装置",
+      "priceFN": 330000,
+      "description": "処理後の自動化",
+      "category": "G",
+      "stage": 4,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G407",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G501",
+      "name": "砂金分布マップ",
+      "priceFN": 1900000,
+      "description": "有望地点の表示",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G501",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G502",
+      "name": "採取ルート計画",
+      "priceFN": 2400000,
+      "description": "移動時間削減",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G502",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G503",
+      "name": "採取機の稼働管理",
+      "priceFN": 3100000,
+      "description": "稼働率向上",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G503",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G504",
+      "name": "ふるい目自動切替",
+      "priceFN": 1700000,
+      "description": "粒径別の自動調整",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G504",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G505",
+      "name": "水循環システム改良",
+      "priceFN": 2100000,
+      "description": "水の使用量削減",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G505",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G506",
+      "name": "摩耗監視装置",
+      "priceFN": 3800000,
+      "description": "故障予防",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G506",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    },
+    {
+      "id": "G507",
+      "name": "選鉱プラント管理棟",
+      "priceFN": 9500000,
+      "description": "複数ライン管理",
+      "category": "G",
+      "stage": 5,
+      "capabilities": [],
+      "unlockConditions": "後続フェーズ",
+      "compatibleAreas": [
+        "G-A",
+        "G-B"
+      ],
+      "compatibleTools": [],
+      "equipmentType": "quick",
+      "operationType": "なぞる",
+      "staminaCost": 0,
+      "imageId": "G507",
+      "implementationStatus": "catalogOnly",
+      "recipes": []
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C01",
+      "tools": [
+        "B102",
+        "B104"
+      ],
+      "description": "表層探索と小物選別"
+    },
+    {
+      "id": "C02",
+      "tools": [
+        "B105",
+        "B104",
+        "B108"
+      ],
+      "description": "大量採取・選別・運搬"
+    },
+    {
+      "id": "C03",
+      "tools": [
+        "B201",
+        "B202"
+      ],
+      "description": "金属位置特定"
+    },
+    {
+      "id": "C04",
+      "tools": [
+        "B206",
+        "B106"
+      ],
+      "description": "識別と精密掘削"
+    },
+    {
+      "id": "C05",
+      "tools": [
+        "R104",
+        "R110"
+      ],
+      "description": "投擲と巻取り"
+    },
+    {
+      "id": "C06",
+      "tools": [
+        "R201",
+        "R206"
+      ],
+      "description": "重量物回収"
+    },
+    {
+      "id": "C07",
+      "tools": [
+        "R204",
+        "R205"
+      ],
+      "description": "映像回収"
+    },
+    {
+      "id": "C08",
+      "tools": [
+        "R201",
+        "R301"
+      ],
+      "description": "電動巻上げ"
+    },
+    {
+      "id": "C09",
+      "tools": [
+        "G101",
+        "G103",
+        "G102"
+      ],
+      "description": "採取と砂金選別"
+    },
+    {
+      "id": "C10",
+      "tools": [
+        "G203",
+        "G205"
+      ],
+      "description": "水流と砂鉄分離"
+    },
+    {
+      "id": "C11",
+      "tools": [
+        "G302",
+        "G306"
+      ],
+      "description": "水流循環"
+    },
+    {
+      "id": "C12",
+      "tools": [
+        "G305",
+        "G308"
+      ],
+      "description": "微細金回収"
+    },
+    {
+      "id": "C13",
+      "tools": [
+        "B401",
+        "B305",
+        "B406"
+      ],
+      "description": "自動探索運搬"
+    },
+    {
+      "id": "C14",
+      "tools": [
+        "R402",
+        "R403",
+        "R405"
+      ],
+      "description": "大型回収ライン"
+    },
+    {
+      "id": "C15",
+      "tools": [
+        "G401",
+        "G403",
+        "G402"
+      ],
+      "description": "連続選鉱"
+    },
+    {
+      "id": "C16",
+      "tools": [
+        "B102",
+        "B105",
+        "B104"
+      ],
+      "description": "熊手 → 大型スコップ → 砂ふるい"
+    }
+  ]
+}

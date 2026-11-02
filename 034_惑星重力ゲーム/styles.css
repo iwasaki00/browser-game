@@ -456,3 +456,30 @@ input:not([type='range']),textarea { -webkit-user-select:text; user-select:text;
 .route-step button { min-height:44px; max-width:100%; white-space:normal; overflow-wrap:anywhere; }
 .route-step>button { margin:3px 3px 3px 0; }
 .route-map-details { margin-block:10px; }
+
+.beginner-dialog { width:100%; max-width:1000px; height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)); margin:auto; padding:6px; border:1px solid #568a99; border-radius:9px; background:#071321; color:#ecf8ff; overflow:hidden; }
+.beginner-dialog[open] { display:grid; grid-template-rows:auto auto minmax(120px,1fr) auto; gap:4px; }
+.beginner-dialog>header { display:flex; align-items:center; justify-content:space-between; gap:4px; }
+.beginner-dialog h2 { margin:0; font-size:14px; }
+.beginner-dialog button,.beginner-dialog select { min-height:44px; min-width:44px; border:1px solid #426c80; border-radius:6px; padding:4px 8px; background:#103246; color:#e4fff3; font-size:12px; touch-action:manipulation; }
+.beginner-dialog button:disabled { opacity:.5; }
+.beginner-dialog footer { display:flex; gap:4px; }
+.beginner-dialog footer button { flex:1; padding-inline:3px; }
+.beginner-coach { max-height:34dvh; overflow-y:auto; touch-action:pan-y; overscroll-behavior:contain; }
+.beginner-coach p { font-size:13px; line-height:1.45; margin:3px 0; }
+.beginner-coach p:empty { display:none; }
+.beginner-coach details { font-size:12px; }
+.beginner-coach summary { min-height:44px; padding:8px 2px; }
+#beginnerFlow>div { display:flex; gap:6px; }
+#beginnerFlow label { flex:1; min-width:0; }
+#beginnerFlow select { width:100%; }
+#beginnerSuccess { color:#b5ffd2; }
+#beginnerNotice { color:#ffd99d; }
+#beginnerSpace { min-height:0; overflow:hidden; }
+#beginnerFrame { width:100%; height:100%; border:0; display:block; }
+.beginner-target { outline:2px solid #ffe6a1!important; outline-offset:1px; }
+body.beginner-practice { min-height:0; }
+.beginner-practice .app { width:100%; min-height:0; height:100dvh; padding:2px; grid-template-rows:minmax(0,1fr) auto; }
+.beginner-practice .topbar,.beginner-practice #openPlanetSettings,.beginner-practice #selectionBar,.beginner-practice #statusText,.beginner-practice #editHint { display:none!important; }
+.beginner-practice .actions { grid-template-columns:1fr 1fr; }
+@media(orientation:landscape) and (max-height:500px) { .beginner-dialog[open] { grid-template-columns:minmax(230px,38%) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; } .beginner-dialog>header,.beginner-coach,.beginner-dialog>footer { grid-column:1; } #beginnerSpace { grid-column:2; grid-row:1/4; } .beginner-coach { max-height:none; } }

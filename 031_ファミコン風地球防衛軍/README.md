@@ -1,6 +1,14 @@
 # ドット防衛戦線 — PIXEL DEFENSE FRONT
 
-Version 1.2.0-C2 — BOSS DEFEAT & SORTIE TRANSITION FIX。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+Version 1.2.0-C3 — URL INVINCIBLE DEBUG MODE。ビルド不要で動く、オリジナルの横スクロール防衛アクションです。
+
+## C3：通常画面での無敵試験（専用セーブ）
+
+- `index.html?debug=2`：通常の司令部・装備・出撃・結果・エンディングを使う無敵試験。隅に`DEBUG 2 / INVINCIBLE`を表示します。HP減少だけを抑え、被弾反応・敵AI・武器・部位破壊は維持します。
+- 初回は専用セーブのM01から開始。すぐM04を試す場合はタイトルの「DEBUG 2：試験用ステージ解放」を開き「M01〜M08を試験用に解放」→MISSION START→M04→WING→出撃。解放だけでクリア・武器・報酬は付与しません。
+- 通常セーブとは別の`pixel-defense-front-save-v1-debug2`へ記録し、リロード後も試験進行を継続。通常URLへ戻れば従来の記録を読みます。セーブの削除・コピー・初期化は不要です。
+- 通常URL／`debug=0`／不正値は通常プレイ、`debug=1`は従来のTEST LAB。2モードにはLAB・640描画・QA用APIを露出しません。
+- [仕様・Safari確認手順](docs/URL_INVINCIBLE_DEBUG.md)／[関連試験結果](reports/url-invincible-debug/README.md)。C3は試験手段の追加であり、実機で報告されたC1/C2の未確定症状の修正完了や公開可能を意味しません。以下は過去版の履歴です。
 
 ## C2：次の出撃・B-04撃破表示・ボス直前LAB
 
