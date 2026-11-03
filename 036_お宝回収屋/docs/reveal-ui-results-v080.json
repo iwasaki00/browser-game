@@ -1,0 +1,32 @@
+[
+  {
+    "width": 320,
+    "animationOpacity": 0.65691,
+    "washSpam": "PASS",
+    "backgroundLocked": "PASS",
+    "stableModal": "PASS",
+    "stableDisplayAndButtons": "PASS",
+    "washEqualsSkip": "PASS",
+    "closeCancelsReward": "PASS",
+    "reloadDuringWash": "PASS",
+    "skipSpam": "PASS",
+    "jackpot18000": "PASS",
+    "surveyAfterSwitch": "PASS",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "animationOpacity": 0.618699,
+    "washSpam": "PASS",
+    "backgroundLocked": "PASS",
+    "stableModal": "PASS",
+    "stableDisplayAndButtons": "PASS",
+    "washEqualsSkip": "PASS",
+    "closeCancelsReward": "PASS",
+    "reloadDuringWash": "PASS",
+    "skipSpam": "PASS",
+    "jackpot18000": "PASS",
+    "surveyAfterSwitch": "PASS",
+    "errors": []
+  }
+]

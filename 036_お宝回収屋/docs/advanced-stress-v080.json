@@ -1,0 +1,188 @@
+{
+  "version": "0.8.0",
+  "mass": {
+    "targets": 1002,
+    "recovered": 1002,
+    "saveBytes": 466091,
+    "heapBefore": 16846016,
+    "heapAfter": 72602120,
+    "ms": 109474.4464
+  },
+  "hours": 24,
+  "lines": 6,
+  "peakQueue": 64,
+  "hiddenUnchanged": true,
+  "history": 200,
+  "samples": [
+    {
+      "hour": 1,
+      "bytes": 175651,
+      "paid": 192,
+      "heap": 88754184,
+      "jobs": 0
+    },
+    {
+      "hour": 2,
+      "bytes": 178488,
+      "paid": 372,
+      "heap": 114121688,
+      "jobs": 0
+    },
+    {
+      "hour": 3,
+      "bytes": 180340,
+      "paid": 552,
+      "heap": 25257120,
+      "jobs": 0
+    },
+    {
+      "hour": 4,
+      "bytes": 181396,
+      "paid": 732,
+      "heap": 37846080,
+      "jobs": 0
+    },
+    {
+      "hour": 5,
+      "bytes": 181566,
+      "paid": 912,
+      "heap": 50251672,
+      "jobs": 0
+    },
+    {
+      "hour": 6,
+      "bytes": 181480,
+      "paid": 1092,
+      "heap": 61798536,
+      "jobs": 0
+    },
+    {
+      "hour": 7,
+      "bytes": 181779,
+      "paid": 1272,
+      "heap": 73106248,
+      "jobs": 0
+    },
+    {
+      "hour": 8,
+      "bytes": 182024,
+      "paid": 1452,
+      "heap": 83944240,
+      "jobs": 0
+    },
+    {
+      "hour": 9,
+      "bytes": 182209,
+      "paid": 1632,
+      "heap": 94844152,
+      "jobs": 0
+    },
+    {
+      "hour": 10,
+      "bytes": 181522,
+      "paid": 1812,
+      "heap": 105365472,
+      "jobs": 0
+    },
+    {
+      "hour": 11,
+      "bytes": 181815,
+      "paid": 1992,
+      "heap": 29663968,
+      "jobs": 0
+    },
+    {
+      "hour": 12,
+      "bytes": 181578,
+      "paid": 2172,
+      "heap": 40799312,
+      "jobs": 0
+    },
+    {
+      "hour": 13,
+      "bytes": 181753,
+      "paid": 2352,
+      "heap": 51608864,
+      "jobs": 0
+    },
+    {
+      "hour": 14,
+      "bytes": 181936,
+      "paid": 2532,
+      "heap": 62085672,
+      "jobs": 0
+    },
+    {
+      "hour": 15,
+      "bytes": 181520,
+      "paid": 2712,
+      "heap": 72242344,
+      "jobs": 0
+    },
+    {
+      "hour": 16,
+      "bytes": 181925,
+      "paid": 2892,
+      "heap": 82400760,
+      "jobs": 0
+    },
+    {
+      "hour": 17,
+      "bytes": 181493,
+      "paid": 3072,
+      "heap": 92216176,
+      "jobs": 0
+    },
+    {
+      "hour": 18,
+      "bytes": 181745,
+      "paid": 3252,
+      "heap": 101350400,
+      "jobs": 0
+    },
+    {
+      "hour": 19,
+      "bytes": 181473,
+      "paid": 3432,
+      "heap": 31050480,
+      "jobs": 0
+    },
+    {
+      "hour": 20,
+      "bytes": 182040,
+      "paid": 3612,
+      "heap": 39385704,
+      "jobs": 0
+    },
+    {
+      "hour": 21,
+      "bytes": 181537,
+      "paid": 3792,
+      "heap": 48046208,
+      "jobs": 0
+    },
+    {
+      "hour": 22,
+      "bytes": 181672,
+      "paid": 3972,
+      "heap": 56229096,
+      "jobs": 0
+    },
+    {
+      "hour": 23,
+      "bytes": 181739,
+      "paid": 4152,
+      "heap": 64419296,
+      "jobs": 0
+    },
+    {
+      "hour": 24,
+      "bytes": 181611,
+      "paid": 4332,
+      "heap": 72716824,
+      "jobs": 0
+    }
+  ],
+  "totalMs": 213105.1442,
+  "memory": "Node.jsプロセスheap。iPhoneのメモリではない"
+}

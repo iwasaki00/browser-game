@@ -1,0 +1,47 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "handGather": "PASS",
+    "goldShopAndEquipment": "PASS",
+    "touchPanning": "PASS",
+    "midPanReload": "PASS",
+    "pyriteObservation": "PASS",
+    "suctionAndReward": "PASS",
+    "sluiceAndTimeScale": "PASS",
+    "debugTabs": 8,
+    "normalSaveIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "handGather": "PASS",
+    "goldShopAndEquipment": "PASS",
+    "touchPanning": "PASS",
+    "midPanReload": "PASS",
+    "pyriteObservation": "PASS",
+    "suctionAndReward": "PASS",
+    "sluiceAndTimeScale": "PASS",
+    "debugTabs": 8,
+    "normalSaveIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "handGather": "PASS",
+    "goldShopAndEquipment": "PASS",
+    "touchPanning": "PASS",
+    "midPanReload": "PASS",
+    "pyriteObservation": "PASS",
+    "suctionAndReward": "PASS",
+    "sluiceAndTimeScale": "PASS",
+    "debugTabs": 8,
+    "normalSaveIsolation": "PASS",
+    "layout": "PASS",
+    "errors": []
+  }
+]

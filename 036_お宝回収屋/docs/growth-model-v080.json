@@ -1,0 +1,70 @@
+[
+  {
+    "mode": 1,
+    "basis": "固定条件モデル：同じ砂100単位・25単位袋4個・同じ抵抗1・内容物なし。採取と洗浄、FNは比較対象外。過去の実測値ではありません",
+    "initial": {
+      "operations": 34,
+      "modelSeconds": 20.400000000000006,
+      "processed": 100,
+      "complete": true
+    },
+    "current": {
+      "operations": 1,
+      "modelSeconds": 30.599999999999923,
+      "processed": 100,
+      "complete": true
+    },
+    "operationReduction": 0.9705882352941176
+  },
+  {
+    "mode": 2,
+    "basis": "固定条件モデル：同じ砂100単位・25単位袋4個・同じ抵抗1・内容物なし。採取と洗浄、FNは比較対象外。過去の実測値ではありません",
+    "initial": {
+      "operations": 34,
+      "modelSeconds": 20.400000000000006,
+      "processed": 100,
+      "complete": true
+    },
+    "current": {
+      "operations": 1,
+      "modelSeconds": 28.39999999999993,
+      "processed": 100,
+      "complete": true
+    },
+    "operationReduction": 0.9705882352941176
+  },
+  {
+    "mode": 3,
+    "basis": "固定条件モデル：同じ砂100単位・25単位袋4個・同じ抵抗1・内容物なし。採取と洗浄、FNは比較対象外。過去の実測値ではありません",
+    "initial": {
+      "operations": 34,
+      "modelSeconds": 20.400000000000006,
+      "processed": 100,
+      "complete": true
+    },
+    "current": {
+      "operations": 2,
+      "modelSeconds": 17.999999999999968,
+      "processed": 100,
+      "complete": true
+    },
+    "operationReduction": 0.9411764705882353
+  },
+  {
+    "mode": 4,
+    "basis": "固定条件モデル：同じ砂100単位・25単位袋4個・同じ抵抗1・内容物なし。採取と洗浄、FNは比較対象外。過去の実測値ではありません",
+    "initial": {
+      "operations": 34,
+      "modelSeconds": 20.400000000000006,
+      "processed": 100,
+      "complete": true
+    },
+    "current": {
+      "operations": 2,
+      "modelSeconds": 15.799999999999976,
+      "processed": 100,
+      "complete": true
+    },
+    "operationReduction": 0.9411764705882353
+  }
+]

@@ -51,6 +51,7 @@ function setup(options = {}) {
       globalCompositeOperation: 'source-over',
       clearRect() { ensurePixels(); pixels.fill(0); operations.push(['clear']); },
       drawImage(image, ...args) {
+        if (image.source === `blob:${options.failPhotoDraw}`) { target.photoFailure=true; throw new Error('Injected photo draw failure'); }
         ensurePixels();
         if (image.source?.startsWith('blob:')) target.source = image.source;
         operations.push(['draw', this.globalCompositeOperation, image, ...args]);
@@ -165,6 +166,35 @@ function setup(options = {}) {
   return { element, draws, load, pointer, offscreens, encodings, downloads, urlBlobs, navigator,
     resize: () => resize(), captures, revoked: () => revoked, frame:nextFrame, frames, windowHandlers, documentHandlers, document };
 }
+
+test('photo draw failure preserves photo, transform, paint/history and pending confirmation', async () => {
+  const options = {}, app = setup(options);
+  await app.load('first');
+  app.element('larger').click();
+  app.element('mode-paint').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerup',1,202,200);
+  const oldPhoto=app.draws[0].image, dimensions=[oldPhoto.width,oldPhoto.height];
+  app.element('toggle-poses').click();await app.element('pose-P04').click();
+  assert.equal(app.element('change-confirm').open,true);
+  const revoked=app.revoked();options.failPhotoDraw='failed';
+  await app.load('failed');
+  assert.match(app.element('status').textContent,/読み込めません/);
+  assert.deepEqual([oldPhoto.width,oldPhoto.height],dimensions);
+  assert.equal(app.element('change-confirm').open,true);
+  assert.equal(app.element('size-value').textContent,'20%');
+  assert.equal(app.revoked(),revoked+1);
+  app.element('cancel-change').click();assert.equal(app.element('undo').disabled,false);
+  await app.element('open-preview').click();
+  const photoDraw=app.encodings.at(-1).operations.find(op=>op[0]==='draw');
+  assert.equal(photoDraw[2],oldPhoto);
+  assert.equal(app.offscreens.filter(c=>c.photoFailure).length,1);
+  assert.ok(app.offscreens.filter(c=>c.photoFailure).every(c=>c.width===1&&c.height===1));
+  const cached=app.element('preview-image').src,revokedBefore=app.revoked();
+  await app.load('failed');
+  assert.equal(app.element('preview-image').src,cached);
+  assert.equal(app.element('preview-screen').hidden,false);
+  assert.equal(app.revoked(),revokedBefore+1);
+});
 
 test('image FIT, size limits, rotation, reset, replacement and decode failure', async () => {
   const app = setup();

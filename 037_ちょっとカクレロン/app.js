@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.6.0";
+  const VERSION = "0.7.0";
   const View = globalThis.KakureronView;
   const Poses = globalThis.KakureronPoses;
   const Copy = globalThis.KakureronCopy;
@@ -23,8 +23,8 @@
   const poseLoads = new Map();
   const pointers = new Map();
   const paint = Paint.createLayer(() => document.createElement("canvas"));
-  const photo = document.createElement("canvas");
-  const photoCtx = photo.getContext("2d", { willReadFrequently: true });
+  let photo = document.createElement("canvas");
+  let photoCtx = photo.getContext("2d", { willReadFrequently: true });
   const loupe = document.querySelector("#loupe");
   const loupeCtx = loupe.getContext("2d");
   const modeButtons = [...document.querySelectorAll("[data-mode]")];
@@ -557,6 +557,7 @@
     if (!file) return;
     const sequence = ++loadSequence;
     const url = URL.createObjectURL(file);
+    let preparedPhoto = null;
     status.textContent = "画像を読み込んでいます…";
     try {
       const image = new Image();
@@ -566,17 +567,27 @@
         image.src = url;
       });
       if (sequence !== loadSequence) return;
+      // Prepare before touching the current photo, paint, dialog or output cache.
+      // Allocation/draw failures must leave the existing edit intact.
+      const scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
+      preparedPhoto = document.createElement("canvas");
+      preparedPhoto.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      preparedPhoto.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const preparedContext = preparedPhoto.getContext("2d", { willReadFrequently: true });
+      if (!preparedContext) throw new Error("Canvasを作成できません。");
+      preparedContext.drawImage(image, 0, 0, preparedPhoto.width, preparedPhoto.height);
       finishPoseAnimation();
       poseSequence++;
       poseBusy = false;
       if (pendingChange) cancelChange();
       if (previewing) leavePreview();
       clearGesture();
-      const scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
-      photo.width = Math.max(1, Math.round(image.naturalWidth * scale));
-      photo.height = Math.max(1, Math.round(image.naturalHeight * scale));
-      photoCtx.drawImage(image, 0, 0, photo.width, photo.height);
+      const oldPhoto = photo;
+      photo = preparedPhoto;
+      photoCtx = preparedContext;
+      preparedPhoto = null;
       background = photo;
+      oldPhoto.width = oldPhoto.height = 1;
       originalSize = { width: image.naturalWidth, height: image.naturalHeight };
       copySource = null;
       copyCandidate = null;
@@ -593,6 +604,7 @@
     } catch {
       if (sequence === loadSequence) status.textContent = "この画像は読み込めませんでした。JPEG・PNGなど別の画像を選んでください。";
     } finally {
+      if (preparedPhoto) preparedPhoto.width = preparedPhoto.height = 1;
       URL.revokeObjectURL(url);
     }
   });

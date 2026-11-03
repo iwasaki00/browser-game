@@ -1,6 +1,6 @@
 {
   "name": "the-finders",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -33,7 +33,11 @@
     "test:world-stress": "tsx scripts/world-stress.ts",
     "test:world-browser": "node scripts/world-browser-test.mjs",
     "data:treasures": "tsx scripts/treasure-manifest.ts",
-    "balance:world-milestones": "tsx scripts/world-milestones.ts"
+    "balance:world-milestones": "tsx scripts/world-milestones.ts",
+    "balance:advanced": "tsx scripts/advanced-balance.ts",
+    "audit:treasures": "tsx scripts/treasure-audit.ts",
+    "test:advanced-stress": "tsx scripts/advanced-stress.ts",
+    "test:advanced-browser": "node scripts/advanced-browser-test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",
