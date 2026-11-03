@@ -95,7 +95,7 @@ export function dig(s:State,id:string,x:number,y:number,dx:number) {
   if(p.mask[i]>=limit||((xx*10+5-x)/(radius+4))**2+((yy*10+5-y)/(ry+4))**2>1)continue;
   const currentDepth=p.mask[i]*scale;
   const hard=currentDepth>420?2.1:currentDepth>280?1.5:1,precision=id==='B106'&&equippedBeach(s,'B206')&&p.items.some(f=>f.identified&&Math.hypot(f.x-x,f.y-y)<35)?1.8:1;
-  const env=environment(p),resist=env.hardness>1?(1+(env.hardness-1)*((id==='B106'||id==='B207'||id==='B302')?.2:id==='B105'?.8:1)):1;
+  const env=environment(p),resist=env.hardness>1?(1+(env.hardness-1)*((id==='B106'||id==='B107'||id==='B302')?.2:id==='B105'?.8:1)):1;
   const strokeDepth=(profile.stroke??.85)/resist*precision*(currentDepth>280?Math.min(1,(profile.hard??1)/hard):1)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*maxDepth;
   const nextDepth=Math.min(maxDepth,currentDepth+strokeDepth);
   p.mask[i]=nextDepth/scale;removed+=(nextDepth-currentDepth)/maxDepth;

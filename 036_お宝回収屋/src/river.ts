@@ -61,7 +61,7 @@ export function riverStart(s:State,id:string,x:number,y:number,cast=false){
  if(c.rope&&!cast)return failure(s,'岸から水底へスワイプして磁石を投げよう。');
  const distance=Math.hypot(x-180,y-278),ratio=Math.min(1,c.reach/Math.max(1,distance));
  const target=c.rope?{x:180+(x-180)*ratio,y:278+(y-278)*ratio}:{x,y};
- const candidates=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&(!f.automationJob||f.automationJob===s.automationAccess)&&Math.hypot(f.x-target.x,f.y-target.y)<=c.radius).sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y));
+ const candidates=s.explorationAreas[0].items.filter(f=>f.state==='buried'&&(!f.automationJob||f.automationJob===s.automationAccess)&&Math.hypot(f.x-target.x,f.y-target.y)<=c.radius*(s.explorationAreas[0].worldVersion&&!f.riverCameraObserved?.75+.25*environment(s.explorationAreas[0]).visibility:1)).sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y));
  const f=candidates[0];logEvent(s,c.rope?'磁石投擲':'対象選択',`${id} / ${target.x.toFixed(0)},${target.y.toFixed(0)}`);
  s.riverSession={tool:id,...target,originX:180,originY:278,progress:0,phase:'empty',elapsed:0,magnetic:c.magnetic,operations:0};
  if(!f)return failure(s,c.rope&&distance>c.reach?'ロープが届かない。もう少し近くを狙おう。':'手応えなし。違う場所を探そう。');
