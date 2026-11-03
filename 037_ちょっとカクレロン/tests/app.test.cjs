@@ -865,3 +865,158 @@ test('copy edit forces a newly encoded preview and lost capture rolls back incom
   assert.equal(app.element('redo').disabled,false);
   assert.equal(app.element('undo').disabled,true);
 });
+
+function inputRange(app,id,value){
+  const input=app.element(id);input.value=String(value);input.handlers.input({target:input});
+}
+function atLocal(app,pose,local){
+  const drawing=app.draws[1],raster=Poses.rasterSize(pose);
+  const x=(local.x/raster.width-0.5)*drawing.rect[2],y=(local.y/raster.height-0.5)*drawing.rect[3];
+  return {x:drawing.position[0]+x*Math.cos(drawing.angle)-y*Math.sin(drawing.angle),
+    y:drawing.position[1]+x*Math.sin(drawing.angle)+y*Math.cos(drawing.angle)};
+}
+
+test('PC mouse, sliders and buttons share normalized size and angle values',async()=>{
+  const app=setup();await app.load();
+  app.pointer('pointerdown',1,200,200,{pointerType:'mouse'});
+  app.pointer('pointermove',1,240,220,{pointerType:'mouse'});
+  app.pointer('pointerup',1,240,220,{pointerType:'mouse'});
+  assert.deepEqual(Array.from(app.draws[1].position),[240,220]);
+  inputRange(app,'size-slider',31);assert.equal(app.element('size-value').textContent,'31%');
+  assert.equal(app.draws[1].rect[2],124);
+  inputRange(app,'angle-slider',-135);assert.equal(app.element('angle-value').textContent,'-135°');
+  app.element('larger').click();assert.equal(app.element('size-slider').value,'33');
+  app.element('rotate-right').click();assert.equal(app.element('angle-slider').value,'-130');
+  inputRange(app,'size-slider',999);assert.equal(app.element('size-value').textContent,'60%');
+  inputRange(app,'size-slider',-5);assert.equal(app.element('size-value').textContent,'5%');
+  inputRange(app,'angle-slider',999);assert.equal(app.element('angle-value').textContent,'180°');
+});
+
+test('mode-specific panels and compact pose chooser open/close without affecting paint',async()=>{
+  const app=setup();await app.load();
+  for(const mode of ['place','pick','paint','erase','copy']){
+    app.element(`mode-${mode}`).click();
+    assert.equal(app.element('placement-controls').hidden,mode!=='place');
+    assert.equal(app.element('color-controls').hidden,mode!=='paint'&&mode!=='pick');
+    assert.equal(app.element('brush-controls').hidden,!['paint','erase','copy'].includes(mode));
+    assert.equal(app.element('copy-controls').hidden,mode!=='copy');
+    assert.equal(app.element('reset').hidden,mode!=='place');
+  }
+  app.element('toggle-poses').click();assert.equal(app.element('pose-options').hidden,false);
+  await app.element('pose-P02').click();assert.equal(app.element('pose-options').hidden,true);
+  app.element('toggle-poses').click();await app.element('pose-P02').click();
+  assert.equal(app.element('pose-options').hidden,true);
+});
+
+for(const pose of Poses.list)test(`${pose.poseId}: direct zoom paint/copy/erase shares local width, history and final PNG`,async()=>{
+  const app=setup();await app.load();await app.element(`pose-${pose.poseId}`).click();
+  inputRange(app,'size-slider',23);inputRange(app,'angle-slider',45);
+  app.element('mode-paint').click();
+  const raster=Poses.rasterSize(pose),local={x:220,y:raster.height*0.4};
+  let point=atLocal(app,pose,local);
+  app.pointer('pointerdown',1,point.x,point.y);app.pointer('pointerup',1,point.x,point.y);
+  const layer=app.offscreens[0],stamp=app.offscreens[2],canvasCount=app.offscreens.length;
+  app.element('open-zoom').click();
+  assert.equal(app.element('app').dataset.zoom,'true');assert.equal(app.element('zoom-4')['aria-pressed'],'true');
+  assert.equal(app.offscreens.length,canvasCount);
+  for(const scale of [2,4,8]){
+    app.element(`zoom-${scale}`).click();point=atLocal(app,pose,local);
+    assert.ok(point.x>=0&&point.x<=400&&point.y>=0&&point.y<=400);
+    app.pointer('pointerdown',1,point.x,point.y);app.pointer('pointerup',1,point.x,point.y);
+    const arc=stamp.operations.filter(op=>op[0]==='arc').at(-1);
+    assert.ok(Math.abs(arc[1]-local.x)<1e-8&&Math.abs(arc[2]-local.y)<1e-8);
+    assert.equal(arc[3],Paint.BRUSHES.medium/2);
+  }
+  for(let i=0;i<4;i++)app.element('undo').click();assert.equal(app.element('undo').disabled,true);
+  for(let i=0;i<4;i++)app.element('redo').click();assert.equal(app.element('redo').disabled,true);
+  await selectCopySource(app,100,200);
+  point=atLocal(app,pose,local);
+  app.pointer('pointerdown',1,point.x,point.y);app.pointer('pointerup',1,point.x,point.y);
+  app.element('mode-erase').click();
+  app.pointer('pointerdown',1,point.x,point.y);app.pointer('pointerup',1,point.x,point.y);
+  assert.ok(layer.operations.some(op=>op[0]==='draw'&&op[1]==='destination-out'));
+  app.element('undo').click(); // retain copied paint
+  app.element('close-zoom').click();
+  assert.equal(app.element('app').dataset.zoom,'false');
+  assert.equal(app.element('size-value').textContent,'23%');assert.equal(app.element('angle-value').textContent,'45°');
+  await app.element('open-preview').click();
+  const encoded=app.encodings.at(-1),paintDraw=encoded.operations.find(op=>op[0]==='draw'&&op[2]===layer);
+  assert.equal(encoded.width,800);assert.equal(encoded.height,400);
+  assert.ok(Math.abs(paintDraw[5]-184)<1e-8);
+  assert.equal(encoded.operations.filter(op=>op[0]==='strokeRect').length,0);
+  app.element('back-to-edit').click();assert.equal(app.element('undo').disabled,false);
+});
+
+test('zoom two-finger, middle-button, Space and pan tool move only the viewport',async()=>{
+  const app=setup();await app.load();app.element('mode-paint').click();app.element('open-zoom').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerdown',2,240,200);
+  app.pointer('pointermove',2,280,240);
+  assert.ok(Math.abs(app.draws[1].position[0]-220)<1e-8);
+  assert.ok(Math.abs(app.draws[1].position[1]-220)<1e-8);
+  app.pointer('pointerup',2,280,240);app.pointer('pointermove',1,210,210);app.pointer('pointerup',1,210,210);
+  assert.equal(app.element('undo').disabled,true); // initial first-finger dab was rolled back
+  app.pointer('pointerdown',1,200,200,{pointerType:'mouse',button:1});
+  app.pointer('pointermove',1,220,210,{pointerType:'mouse',button:1});
+  app.pointer('pointerup',1,220,210,{pointerType:'mouse',button:1});
+  app.element('canvas').handlers.keydown({code:'Space',preventDefault(){}});
+  app.pointer('pointerdown',1,200,200,{pointerType:'mouse'});app.pointer('pointermove',1,210,200,{pointerType:'mouse'});app.pointer('pointerup',1,210,200,{pointerType:'mouse'});
+  app.windowHandlers.keyup({code:'Space'});
+  app.element('pan-zoom').click();assert.equal(app.element('pan-zoom')['aria-pressed'],'true');
+  app.pointer('pointerdown',1,200,200);app.pointer('pointermove',1,210,210);app.pointer('pointerup',1,210,210);
+  app.element('center-zoom').click();assert.deepEqual(Array.from(app.draws[1].position),[200,200]);
+  app.element('close-zoom').click();assert.deepEqual(Array.from(app.draws[1].position),[200,200]);
+  assert.equal(app.element('size-value').textContent,'18%');assert.equal(app.element('angle-value').textContent,'0°');
+  assert.equal(app.element('undo').disabled,true);
+});
+
+test('zoom multiplier preserves focus and view resize does not alter the character',async()=>{
+  const app=setup();await app.load();app.element('open-zoom').click(); // place mode pans, never moves the character
+  app.pointer('pointerdown',1,200,200);app.pointer('pointermove',1,250,220);app.pointer('pointerup',1,250,220);
+  const before=Array.from(app.draws[1].position);
+  app.element('zoom-8').click();
+  assert.ok(Math.abs(app.draws[1].position[0]-(200+(before[0]-200)*2))<1e-8);
+  app.element('stage').clientWidth=200;app.element('stage').clientHeight=200;app.resize();
+  app.element('close-zoom').click();assert.deepEqual(Array.from(app.draws[1].position),[100,100]);
+});
+
+test('pose animation blocks drawing and export, then leaves the exact final SVG and mask',async()=>{
+  const app=setup({reducedMotion:false});await app.load();
+  const pending=app.element('pose-P02').click();for(let i=0;i<8;i++)await Promise.resolve();
+  assert.equal(app.frames.size,1);assert.equal(app.element('editor-controls')['aria-busy'],'true');
+  app.frame(0);app.frame(150);
+  assert.ok(app.draws.some(draw=>draw.image.source===Poses.get('P01').silhouette&&draw.alpha>0&&draw.alpha<1));
+  assert.ok(app.draws.some(draw=>draw.image.source===Poses.get('P02').silhouette&&draw.alpha>0&&draw.alpha<1));
+  const drawCount=app.offscreens[0].operations.length;
+  app.pointer('pointerdown',1,200,200);assert.equal(app.captures.size,0);
+  await app.element('pose-P03').click();await app.element('open-preview').click();
+  assert.equal(app.encodings.length,0);assert.equal(app.offscreens[0].operations.length,drawCount);
+  app.frame(300);await pending;
+  assert.equal(app.element('editor-controls')['aria-busy'],'false');assert.equal(app.frames.size,0);
+  assert.equal(app.draws[1].image.source,Poses.get('P02').silhouette);
+  assert.equal(app.draws[1].alpha,1);assert.equal(app.offscreens[0].height,357);
+  await app.element('open-preview').click();
+  assert.ok(app.encodings.at(-1).operations.some(op=>op[0]==='draw'&&op[2].source===Poses.get('P02').silhouette));
+  assert.ok(!app.encodings.at(-1).operations.some(op=>op[0]==='draw'&&op[2].source===Poses.get('P01').silhouette));
+});
+
+test('all 12 pose transitions complete and reduced-motion skips intermediate frames',async()=>{
+  const app=setup({reducedMotion:false,autoFrames:true});await app.load();
+  for(const from of Poses.list)for(const to of Poses.list.filter(pose=>pose!==from)){
+    await app.element(`pose-${from.poseId}`).click();await app.element(`pose-${to.poseId}`).click();
+    assert.equal(app.draws[1].image.source,to.silhouette);assert.equal(app.frames.size,0);
+    assert.equal(app.offscreens[0].height,Poses.rasterSize(to).height);
+  }
+  const reduced=setup();await reduced.load();await reduced.element('pose-P04').click();
+  assert.equal(reduced.frames.size,0);assert.equal(reduced.draws[1].image.source,Poses.get('P04').silhouette);
+});
+
+test('hiding or replacing the image finishes a committed pose animation without stale frames',async()=>{
+  const app=setup({reducedMotion:false});await app.load();
+  const pending=app.element('pose-P04').click();for(let i=0;i<8;i++)await Promise.resolve();
+  app.document.hidden=true;app.documentHandlers.visibilitychange();await pending;
+  assert.equal(app.frames.size,0);assert.equal(app.element('pose-P04')['aria-pressed'],'true');
+  app.document.hidden=false;
+  const second=app.element('pose-P03').click();for(let i=0;i<8;i++)await Promise.resolve();
+  await app.load('new-photo');await second;
+  assert.equal(app.frames.size,0);assert.equal(app.draws[1].image.source,Poses.get('P01').silhouette);
+});

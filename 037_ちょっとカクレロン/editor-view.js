@@ -22,8 +22,8 @@
     const t = Math.max(0, Math.min(1, progress));
     const phase = Math.max(0, Math.min(1, (t - 0.15) / 0.65));
     const blend = phase * phase * (3 - 2 * phase);
-    const compress = Math.sin(Math.PI * Math.min(t / 0.7, 1));
-    const bounce = t > 0.7 ? Math.sin((t - 0.7) / 0.3 * Math.PI) : 0;
+    const compress = t < 0.7 ? Math.sin(Math.PI * t / 0.7) : 0;
+    const bounce = t > 0.7 && t < 1 ? Math.sin((t - 0.7) / 0.3 * Math.PI) : 0;
     return {
       old: { alpha: 1 - blend, scaleX: 1 + 0.07 * compress, scaleY: 1 - 0.2 * compress, tilt: -0.035 * compress },
       next: { alpha: blend, scaleX: 1 + 0.06 * compress - 0.035 * bounce, scaleY: 1 - 0.16 * compress + 0.06 * bounce, tilt: 0.025 * compress }

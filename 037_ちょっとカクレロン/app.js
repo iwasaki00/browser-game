@@ -297,6 +297,7 @@
     if (editBlocked()) return;
     clearGesture();
     mode = next;
+    closePoses();
     copyPicking = false;
     status.textContent = "";
     canvas.dataset.mode = mode;
@@ -356,7 +357,10 @@
     zoomButtons.forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.zoom) === zoom.scale)));
     canvas.dataset.pan = String(zoom.enabled && (panTool || mode === "place"));
     if (zoom.enabled) {
-      const hint = panTool || mode === "place" ? "表示移動：ドラッグ ／ 閉じると通常表示" : "直接描画 ／ 2本指・中ボタン・移動で表示範囲を移動";
+      const hint = panTool || mode === "place" ? "表示移動：ドラッグ ／ 閉じると通常表示"
+        : mode === "copy" && (copyPicking || !copySource) ? "コピー元を指定して写真をタップ ／ 2本指で表示移動"
+        : mode === "pick" ? "写真をタップして色を取得 ／ 2本指で表示移動"
+        : "直接描画 ／ 2本指・中ボタン・移動で表示範囲を移動";
       document.querySelector("#gesture-help").textContent = hint;
     } else if (mode !== "copy") document.querySelector("#gesture-help").textContent = modeHints[mode];
   }
@@ -462,11 +466,13 @@
   canvas.addEventListener("pointerdown", (event) => {
     const middlePan = zoom.enabled && event.pointerType === "mouse" && event.button === 1;
     if (editBlocked() || !background || !paint.bounds() || (event.pointerType === "mouse" && event.button !== 0 && !middlePan) || pointers.size >= 2) return;
+    if (!document.querySelector("#pose-options").hidden) { closePoses(); event.preventDefault(); return; }
     if (zoom.enabled && (pointers.size || panTool || spacePan || middlePan || mode === "place")) {
       event.preventDefault();
       paint.cancel(); loupe.hidden = true; copyCandidate = null;
       pointers.set(event.pointerId, localPoint(event));
       canvas.setPointerCapture(event.pointerId);
+      canvas.focus({ preventScroll: true });
       beginPan(); render(); return;
     }
     if (mode !== "place" && pointers.size) return;
@@ -638,14 +644,13 @@
   });
   poseButtons.forEach(button => button.addEventListener("click", () => requestPose(button.dataset.pose)));
   document.querySelector("#cancel-change").addEventListener("click", cancelChange);
-  document.querySelector("#confirm-change").addEventListener("click", () => {
+  document.querySelector("#confirm-change").addEventListener("click", async () => {
     const change = pendingChange;
     if (!change) return;
     pendingChange = null;
     confirmDialog.close();
-    const result = applyChange(change);
+    await applyChange(change);
     document.querySelector("#toggle-poses").focus();
-    return result;
   });
   confirmDialog.addEventListener("cancel", event => { event.preventDefault(); cancelChange(); });
   confirmDialog.addEventListener("close", () => { if (pendingChange) cancelChange(); });
