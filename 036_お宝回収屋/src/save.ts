@@ -1,3 +1,4 @@
+import {treasure} from './data';
 import {environments,collectionMilestones} from './world-rules';
 import {validateLines} from './lines';
 import {compactHistory,validateLedger} from './ledger';
@@ -36,13 +37,15 @@ export function migrate(raw:unknown):State {
  s.sandBatches=s.sandBatches.filter(b=>!b.processed);const ids=new Set([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state!=='paid').map(f=>f.uid));s.activeContracts=s.activeContracts.filter(uid=>ids.has(uid));
  for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(f.initialQuality!==undefined&&(!Number.isFinite(f.initialQuality)||f.initialQuality<0))throw Error('品質データが不正です');}
  for(const p of s.explorationAreas)for(const m of p.surveyMarks??[])if(!Number.isFinite(m.x)||!Number.isFinite(m.y)||!Number.isFinite(m.strength)||m.strength<0||m.strength>1||!Array.isArray(m.targets))throw Error('探知データが不正です');
+ const individualIds=new Set<string>();for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(!treasure(f.id)||typeof f.uid!=='string'||individualIds.has(f.uid))throw Error('お宝種類または個体IDが不正です');individualIds.add(f.uid);}
+ for(const b of s.sandBatches)if(b.resistance!==undefined&&(!Number.isFinite(b.resistance)||b.resistance<1||b.resistance>10))throw Error('砂の環境係数が不正です');
  for(const b of s.sandBatches)if(!Number.isFinite(b.cells)||b.cells<0||Object.values(b.residueWork??{}).some(n=>!Number.isFinite(n)||n<0))throw Error('砂の残量データが不正です');
  for(const b of s.sandBatches)if(b.screenedUnits!==undefined&&(!Number.isFinite(b.screenedUnits)||b.screenedUnits<0||b.screenedUnits>b.cells+1e-6))throw Error('砂の選別データが不正です');
  if(s.riverSession&&(!s.explorationAreas[0].areaId?.startsWith('R-')||!Number.isFinite(s.riverSession.progress)||s.riverSession.progress<0||s.riverSession.progress>1))delete s.riverSession;
  for(const f of [...s.explorationAreas[0].items,...s.retainedFinds])if(f.weight!==undefined&&(!Number.isFinite(f.weight)||f.weight<=0))throw Error('重量データが不正です');
  // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
  if(s.world){if(s.world.version!==1||!Array.isArray(s.world.unlocked)||s.world.unlocked.some(id=>!environments[id])||Object.keys(s.world.visits).some(id=>!environments[id])||Object.values(s.world.visits).some(n=>!Number.isSafeInteger(n)||n<0))throw Error('探索進捗が不正です');s.world.milestones=collectionMilestones(s);}
- for(const p of s.explorationAreas)if(p.environment&&Object.values(p.environment).some(n=>!Number.isFinite(n)||n<0))throw Error('環境条件が不正です');
+ for(const p of s.explorationAreas)if(p.environment&&(Object.values(p.environment).some(n=>!Number.isFinite(n)||n<0)||p.environment.current<=0||p.environment.hardness<=0||p.environment.volume<=0))throw Error('環境条件が不正です');
  compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
 }
 const revisions=new Map<string,number>(),sequences=new Map<string,number>();

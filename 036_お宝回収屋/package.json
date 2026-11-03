@@ -31,7 +31,9 @@
     "test:save-browser": "node scripts/save-browser-test.mjs",
     "balance:world": "tsx scripts/world-balance.ts",
     "test:world-stress": "tsx scripts/world-stress.ts",
-    "test:world-browser": "node scripts/world-browser-test.mjs"
+    "test:world-browser": "node scripts/world-browser-test.mjs",
+    "data:treasures": "tsx scripts/treasure-manifest.ts",
+    "balance:world-milestones": "tsx scripts/world-milestones.ts"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

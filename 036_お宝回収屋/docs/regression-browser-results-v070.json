@@ -26,7 +26,12 @@
   },
   {
     "name": "beach-browser",
-    "exitCode": 1,
-    "seconds": 95.125
+    "exitCode": 0,
+    "seconds": 187.263
+  },
+  {
+    "name": "field-browser",
+    "exitCode": 0,
+    "seconds": 67.343
   }
 ]

@@ -6,16 +6,17 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <link rel="stylesheet" href="style.css?v=0.4.0">
-  <script src="poses.js?v=0.4.0" defer></script>
-  <script src="paint.js?v=0.4.0" defer></script>
-  <script src="export.js?v=0.4.0" defer></script>
-  <script src="app.js?v=0.4.0" defer></script>
+  <link rel="stylesheet" href="style.css?v=0.5.0">
+  <script src="poses.js?v=0.5.0" defer></script>
+  <script src="copy-brush.js?v=0.5.0" defer></script>
+  <script src="paint.js?v=0.5.0" defer></script>
+  <script src="export.js?v=0.5.0" defer></script>
+  <script src="app.js?v=0.5.0" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.4.0 <span>POSE / ポーズ変更</span></p></div>
+      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.5.0 <span>COPY BRUSH / 背景模様コピー</span></p></div>
       <button id="change-image" class="secondary" hidden>画像変更</button>
     </header>
     <section id="editor-workspace" class="workspace" aria-label="画像編集エリア">
@@ -23,6 +24,7 @@
       <div id="stage" class="stage">
         <canvas id="canvas" tabindex="0" aria-label="カクレロンの配置。ドラッグで移動。矢印キーでも移動できます。" hidden></canvas>
         <canvas id="loupe" class="loupe" width="120" height="120" aria-hidden="true" hidden></canvas>
+        <div id="copy-marker" class="copy-marker" aria-hidden="true" hidden><span>＋</span></div>
         <div id="empty-state" class="empty-state">
           <img src="assets/kakureron.svg" alt="顔のない白い人型のカクレロン" width="100" height="150" draggable="false">
           <h2>ここから、かくれよう。</h2>
@@ -46,6 +48,7 @@
         <button data-mode="pick" aria-pressed="false" disabled>スポイト</button>
         <button data-mode="paint" aria-pressed="false" disabled>ペイント</button>
         <button data-mode="erase" aria-pressed="false" disabled>消しゴム</button>
+        <button data-mode="copy" aria-pressed="false" disabled>背景コピー</button>
       </div>
       <div class="paint-toolbar">
         <span class="current-color">現在色 <i id="color-swatch"></i><output id="color-value">#FFFFFF</output></span>
@@ -56,6 +59,10 @@
         <div class="control-group"><span class="control-label">角度 <output id="angle-value">0°</output></span><div class="stepper"><button id="rotate-left" aria-label="左に5度回転" disabled>↶</button><span>回転</span><button id="rotate-right" aria-label="右に5度回転" disabled>↷</button></div></div>
       </div>
       <div id="brush-controls" class="brush-controls" role="group" aria-label="ブラシサイズ" hidden><span>ブラシ</span><button data-brush="small" aria-pressed="false" disabled>小</button><button data-brush="medium" aria-pressed="true" disabled>中</button><button data-brush="large" aria-pressed="false" disabled>大</button></div>
+      <div id="copy-controls" class="copy-controls" hidden>
+        <div class="copy-source-row"><button id="select-copy-source" class="secondary" aria-pressed="false" disabled>コピー元を指定</button><output id="copy-source-state">未指定</output></div>
+        <div class="copy-opacity" role="group" aria-label="コピーの濃さ"><span>濃さ</span><button data-opacity="1" aria-pressed="true" disabled>100% 濃い</button><button data-opacity="0.7" aria-pressed="false" disabled>70% 普通</button><button data-opacity="0.4" aria-pressed="false" disabled>40% 薄い</button></div>
+      </div>
       <p id="gesture-help" class="gesture-help">1本指で移動 ／ 2本指でサイズ・角度を調整</p>
       <button id="open-preview" class="primary preview-start" disabled>完成プレビュー <span aria-hidden="true">↗</span></button>
     </section>

@@ -1,8 +1,9 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.4.0";
+  const VERSION = "0.5.0";
   const Poses = globalThis.KakureronPoses;
+  const Copy = globalThis.KakureronCopy;
   const Paint = globalThis.KakureronPaint;
   const Export = globalThis.KakureronExport;
   const MAX_PHOTO_EDGE = 2048;
@@ -28,6 +29,7 @@
   const modeButtons = [...document.querySelectorAll("[data-mode]")];
   const brushButtons = [...document.querySelectorAll("[data-brush]")];
   const poseButtons = [...document.querySelectorAll("[data-pose]")];
+  const opacityButtons = [...document.querySelectorAll("[data-opacity]")];
   const confirmDialog = document.querySelector("#change-confirm");
   let poseBusy = false;
   let pendingChange = null;
@@ -36,8 +38,15 @@
     place: "1本指で移動 ／ 2本指でサイズ・角度を調整",
     pick: "写真をタップ・なぞって色を取得。白いキャラの下も拾えます。",
     paint: "カクレロンをなぞって現在色で塗ります。",
-    erase: "塗装をなぞって消し、白い下地に戻します。"
+    erase: "塗装をなぞって消し、白い下地に戻します。",
+    copy: "写真からコピーする場所を選んでください"
   };
+  let originalSize = null;
+  let copySource = null;
+  let copyCandidate = null;
+  let copyPicking = false;
+  let copyOpacity = 1;
+  let strokeInvalidated = false;
   let mode = "place";
   let brush = "medium";
   let currentColor = "#FFFFFF";
@@ -101,6 +110,7 @@
     document.querySelector("#smaller").disabled = character.size <= MIN_SIZE;
     document.querySelector("#larger").disabled = character.size >= MAX_SIZE;
     updateHistory();
+    updateCopyUI();
   }
 
   function updateHistory() {
@@ -109,9 +119,11 @@
     document.querySelector("#redo").disabled = !background || !history.redo;
   }
 
-  function clearGesture() {
-    paint.finish();
+  function clearGesture(cancel = false) {
+    if (cancel) paint.cancel();
+    else paint.finish();
     loupe.hidden = true;
+    copyCandidate = null;
     const ids = [...pointers.keys()];
     pointers.clear();
     for (const id of ids) {
@@ -120,6 +132,27 @@
     gesture = null;
     canvas.classList.remove("dragging");
     updateHistory();
+    updateCopyUI();
+  }
+
+  function updateCopyUI() {
+    document.querySelector("#copy-controls").hidden = mode !== "copy";
+    document.querySelector("#select-copy-source").setAttribute("aria-pressed", String(copyPicking));
+    document.querySelector("#copy-source-state").textContent = copySource
+      ? `指定済み (${Math.round(copySource.x)}, ${Math.round(copySource.y)})` : "未指定";
+    if (mode === "copy" && background) {
+      const hint = copyPicking || !copySource ? "写真からコピーする場所を選んでください" : "カクレロンをなぞって模様をコピー";
+      document.querySelector("#hint").textContent = hint;
+      document.querySelector("#gesture-help").textContent = hint;
+      canvas.setAttribute("aria-label", `カクレロン編集。${hint}`);
+    }
+    const marker = document.querySelector("#copy-marker");
+    const point = copyCandidate || copySource;
+    marker.hidden = previewing || mode !== "copy" || !point || !originalSize;
+    if (!marker.hidden) {
+      marker.style.left = `${fit.x + point.x / originalSize.width * fit.width}px`;
+      marker.style.top = `${fit.y + point.y / originalSize.height * fit.height}px`;
+    }
   }
 
   function resetState() {
@@ -240,14 +273,17 @@
     if (editBlocked()) return;
     clearGesture();
     mode = next;
+    copyPicking = false;
+    status.textContent = "";
     canvas.dataset.mode = mode;
     modeButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === mode)));
     document.querySelector("#placement-controls").hidden = mode !== "place";
-    document.querySelector("#brush-controls").hidden = mode !== "paint" && mode !== "erase";
+    document.querySelector("#brush-controls").hidden = mode !== "paint" && mode !== "erase" && mode !== "copy";
     document.querySelector("#gesture-help").textContent = modeHints[mode];
     if (background) document.querySelector("#hint").textContent = modeHints[mode];
     canvas.setAttribute("aria-label", `カクレロン編集。${modeHints[mode]}`);
-    if (background) document.querySelector("#workspace-state").textContent = { place: "配置を調整中", pick: "背景から色を取得", paint: "擬態ペイント中", erase: "塗装を消去中" }[mode];
+    if (background) document.querySelector("#workspace-state").textContent = { place: "配置を調整中", pick: "背景から色を取得", paint: "擬態ペイント中", erase: "塗装を消去中", copy: "背景模様をコピー" }[mode];
+    updateCopyUI();
   }
 
   function pickColor(point) {
@@ -257,31 +293,54 @@
       currentColor = Paint.toHex(photoCtx.getImageData(pixel.x, pixel.y, 1, 1).data);
       document.querySelector("#color-value").textContent = currentColor;
       document.querySelector("#color-swatch").style.backgroundColor = currentColor;
-      loupe.hidden = false;
-      // Keep the loupe on the opposite side from the finger; show only the original photo.
-      loupe.style.left = point.x < stage.clientWidth / 2 ? "auto" : "12px";
-      loupe.style.right = point.x < stage.clientWidth / 2 ? "12px" : "auto";
-      loupeCtx.fillStyle = "#fff";
-      loupeCtx.fillRect(0, 0, 120, 120);
-      loupeCtx.imageSmoothingEnabled = false;
-      const region = Math.max(8, Math.round(photo.width / fit.width * 24));
-      loupeCtx.drawImage(photo, pixel.x - region / 2, pixel.y - region / 2, region, region, 0, 0, 120, 120);
-      loupeCtx.strokeStyle = "#fff";
-      loupeCtx.lineWidth = 3;
-      loupeCtx.strokeRect(56, 56, 8, 8);
-      loupeCtx.strokeStyle = "#243721";
-      loupeCtx.lineWidth = 1;
-      loupeCtx.strokeRect(56, 56, 8, 8);
+      showLoupe(point, pixel);
       status.textContent = "";
     } catch {
       status.textContent = "色を取得できませんでした。静的Web配信で開き直してお試しください。";
     }
   }
 
+  function showLoupe(point, pixel) {
+    loupe.hidden = false;
+    // Keep the loupe on the opposite side from the finger; show only the original photo.
+    loupe.style.left = point.x < stage.clientWidth / 2 ? "auto" : "12px";
+    loupe.style.right = point.x < stage.clientWidth / 2 ? "12px" : "auto";
+    loupeCtx.fillStyle = "#fff";
+    loupeCtx.fillRect(0, 0, 120, 120);
+    loupeCtx.imageSmoothingEnabled = false;
+    const region = Math.max(8, Math.round(photo.width / fit.width * 24));
+    loupeCtx.drawImage(photo, pixel.x - region / 2, pixel.y - region / 2, region, region, 0, 0, 120, 120);
+    loupeCtx.strokeStyle = "#fff";
+    loupeCtx.lineWidth = 3;
+    loupeCtx.strokeRect(56, 56, 8, 8);
+    loupeCtx.strokeStyle = "#243721";
+    loupeCtx.lineWidth = 1;
+    loupeCtx.strokeRect(56, 56, 8, 8);
+  }
+
   function editPoint(point) {
     if (mode === "pick") pickColor(point);
-    else if (!insidePhoto(point)) paint.dab({ x: -1, y: -1 });
-    else if (paint.dab(Paint.screenToLocal(point, character, fit))) render();
+    else if (mode === "copy" && copyPicking) {
+      copyCandidate = Copy.screenToImage(point, fit, originalSize);
+      const pixel = Paint.backgroundPoint(point, fit, photo.width, photo.height);
+      if (pixel) showLoupe(point, pixel);
+      else loupe.hidden = true;
+      updateCopyUI();
+    } else if (!insidePhoto(point)) paint.dab({ x: -1, y: -1 });
+    else {
+      try {
+        const changed = paint.dab(Paint.screenToLocal(point, character, fit));
+        if (changed) {
+          if (!strokeInvalidated) { releaseOutputs(); strokeInvalidated = true; }
+          render();
+        }
+        if (mode === "copy") status.textContent = paint.copyOutside() ? "コピー元の画像外は転写しません。" : "";
+      } catch {
+        clearGesture(true);
+        render();
+        status.textContent = "模様をコピーできませんでした。もう一度お試しください。";
+      }
+    }
   }
 
   function localPoint(event) {
@@ -312,14 +371,21 @@
   canvas.addEventListener("pointerdown", (event) => {
     if (editBlocked() || !background || !paint.bounds() || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
     if (mode !== "place" && pointers.size) return;
+    if (mode === "copy" && !copyPicking && !copySource) {
+      status.textContent = "写真からコピーする場所を選んでください";
+      return;
+    }
     const point = localPoint(event);
     if (mode === "place" && !pointers.size && !hitsCharacter(point)) return;
     event.preventDefault();
     pointers.set(event.pointerId, point);
     canvas.setPointerCapture(event.pointerId);
+    strokeInvalidated = false;
     if (mode === "place") beginGesture();
     else {
-      if (mode !== "pick") paint.begin(mode, currentColor, brush);
+      if (mode === "copy" && !copyPicking) paint.beginCopy({ background: photo, imageSize: { ...originalSize },
+        source: copySource, character: { ...character }, pose: currentPose(), brush, opacity: copyOpacity });
+      else if (mode !== "pick" && mode !== "copy") paint.begin(mode, currentColor, brush);
       editPoint(point);
     }
   });
@@ -344,7 +410,13 @@
   function endPointer(event) {
     if (mode !== "place" && pointers.has(event.pointerId)) {
       if (event.type === "pointerup") editPoint(localPoint(event));
-      clearGesture();
+      if (mode === "copy" && copyPicking && event.type === "pointerup" && copyCandidate) {
+        copySource = { ...copyCandidate };
+        copyPicking = false;
+        status.textContent = "";
+      }
+      clearGesture(event.type !== "pointerup");
+      render();
       return;
     }
     if (!pointers.delete(event.pointerId)) return;
@@ -355,8 +427,8 @@
   ["contextmenu", "dragstart", "gesturestart", "gesturechange", "gestureend"].forEach((type) => {
     canvas.addEventListener(type, (event) => event.preventDefault(), { passive: false });
   });
-  window.addEventListener("blur", clearGesture);
-  document.addEventListener("visibilitychange", () => { if (document.hidden) clearGesture(); });
+  window.addEventListener("blur", () => { clearGesture(true); render(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) { clearGesture(true); render(); } });
 
   function chooseImage() { input.click(); }
   document.querySelector("#choose-image").addEventListener("click", chooseImage);
@@ -386,6 +458,10 @@
       photo.height = Math.max(1, Math.round(image.naturalHeight * scale));
       photoCtx.drawImage(image, 0, 0, photo.width, photo.height);
       background = photo;
+      originalSize = { width: image.naturalWidth, height: image.naturalHeight };
+      copySource = null;
+      copyCandidate = null;
+      copyPicking = false;
       document.querySelector("#empty-state").hidden = true;
       canvas.hidden = false;
       document.querySelector("#change-image").hidden = false;
@@ -434,6 +510,19 @@
   confirmDialog.addEventListener("cancel", event => { event.preventDefault(); cancelChange(); });
   confirmDialog.addEventListener("close", () => { if (pendingChange) cancelChange(); });
   modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
+  document.querySelector("#select-copy-source").addEventListener("click", () => {
+    if (editBlocked() || !background || mode !== "copy") return;
+    clearGesture();
+    copyPicking = true;
+    status.textContent = "";
+    updateCopyUI();
+  });
+  opacityButtons.forEach(button => button.addEventListener("click", () => {
+    if (editBlocked()) return;
+    clearGesture();
+    copyOpacity = Number(button.dataset.opacity);
+    opacityButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+  }));
   brushButtons.forEach(button => button.addEventListener("click", () => {
     if (editBlocked()) return;
     clearGesture();
@@ -458,7 +547,7 @@
     character.y = clamp(character.y + moves[event.key][1], 0, 1);
     render();
   });
-  new ResizeObserver(() => { clearGesture(); render(); }).observe(stage);
+  new ResizeObserver(() => { clearGesture(true); render(); }).observe(stage);
   const standImage = characterImage;
   standImage.onload = () => {
     if (characterImage !== standImage) return;
@@ -560,6 +649,7 @@
     clearGesture();
     releaseOutputs();
     previewing = true;
+    updateCopyUI();
     previewKind = "question";
     previewScene = scene();
     previewDate = new Date();

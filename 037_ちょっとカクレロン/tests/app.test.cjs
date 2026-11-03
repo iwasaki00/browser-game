@@ -5,6 +5,7 @@ const vm = require('node:vm');
 const Paint = require('../paint.js');
 const Export = require('../export.js');
 const Poses = require('../poses.js');
+const Copy = require('../copy-brush.js');
 
 function setup(options = {}) {
   const elements = new Map();
@@ -38,6 +39,7 @@ function setup(options = {}) {
         ensurePixels();
         if (image.source?.startsWith('blob:')) target.source = image.source;
         operations.push(['draw', this.globalCompositeOperation, image, ...args]);
+        if (this.globalAlpha !== undefined) operations.push(['alpha', this.globalAlpha]);
         if (Poses.list.some(pose => pose.silhouette === image.source)) {
           // Synthetic mask: a central strip with transparent space on both sides.
           if (image.source !== options.emptyPose) for (let y = 0; y < target.height; y++) for (let x = 80; x < 304; x++) pixels[(y * target.width + x) * 4 + 3] = 255;
@@ -50,10 +52,12 @@ function setup(options = {}) {
       },
       getImageData(x, y, width, height) {
         ensurePixels();
+        target.reads = (target.reads || 0) + 1;
         if (width === 1 && height === 1) return { data: new Uint8ClampedArray([185, 140, 98, 255]) };
         return { data: new Uint8ClampedArray(pixels), width, height };
       },
       putImageData(image) { pixels = new Uint8ClampedArray(image.data); operations.push(['restore', pixels[0]]); },
+      setTransform(...args) { operations.push(['transform', ...args]); },
       save() {}, restore() {}, rect(...args) { operations.push(['clipRect', ...args]); }, clip() {},
       translate(...args) { operations.push(['translate', ...args]); }, rotate(angle) { operations.push(['rotate', angle]); },
       strokeRect(...args) { operations.push(['strokeRect', this.strokeStyle, ...args]); },
@@ -93,10 +97,11 @@ function setup(options = {}) {
     });
     return elements.get(id);
   }
-  const modes = ['place', 'pick', 'paint', 'erase'].map(mode => { const button = element(`mode-${mode}`); button.dataset.mode = mode; return button; });
+  const modes = ['place', 'pick', 'paint', 'erase', 'copy'].map(mode => { const button = element(`mode-${mode}`); button.dataset.mode = mode; return button; });
   const brushes = ['small', 'medium', 'large'].map(brush => { const button = element(`brush-${brush}`); button.dataset.brush = brush; return button; });
   const poses = Poses.list.map(pose => { const button = element(`pose-${pose.poseId}`); button.dataset.pose = pose.poseId; return button; });
-  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo', 'toggle-poses'].map(element).concat(modes, brushes, poses);
+  const opacities = Copy.OPACITIES.map(opacity => { const button = element(`opacity-${opacity}`); button.dataset.opacity = String(opacity); return button; });
+  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo', 'toggle-poses', 'select-copy-source'].map(element).concat(modes, brushes, poses, opacities);
   Object.assign(element('loupe').getContext(), { fillRect() {}, strokeRect() {} });
   const document = {
     documentElement: { dataset: {} }, hidden: false, addEventListener() {},
@@ -109,7 +114,7 @@ function setup(options = {}) {
       return offscreen();
     },
     querySelector(selector) { return element(selector.slice(1)); },
-    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : selector === '[data-pose]' ? poses : buttons; }
+    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : selector === '[data-pose]' ? poses : selector === '[data-opacity]' ? opacities : buttons; }
   };
   let revoked = 0;
   class Image {
@@ -122,7 +127,7 @@ function setup(options = {}) {
     }
   }
   vm.runInNewContext(fs.readFileSync('app.js', 'utf8'), {
-    document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, navigator,
+    document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, KakureronCopy: Copy, navigator,
     Blob, File, isSecureContext: options.secureContext !== false,
     window: { devicePixelRatio: 2, addEventListener() {} },
     URL: { createObjectURL: file => {
@@ -289,7 +294,7 @@ test('outside entry and reentry do not join stray lines, cancellation and replac
   assert.equal(stamp.operations.filter(op => op[0] === 'line').length, 0);
   app.pointer('pointercancel', 1, 200, 200);
   assert.equal(app.captures.size, 0);
-  assert.equal(app.element('undo').disabled, false);
+  assert.equal(app.element('undo').disabled, true); // cancelled drawing rolls back instead of committing
   await app.load('second');
   assert.equal(app.element('undo').disabled, true);
   assert.equal(app.element('redo').disabled, true);
@@ -736,4 +741,110 @@ test('Escape cancels pose change and preserves redo-only paint history', async (
   assert.equal(app.element('redo').disabled, false);
   app.element('redo').click();
   assert.equal(app.element('undo').disabled, false);
+});
+
+test('copy source requires explicit selection, uses original image coordinates and never changes the eyedropper color', async () => {
+  const app = setup({ imageWidth:6000,imageHeight:4000 });
+  await app.load();
+  app.element('mode-copy').click();
+  assert.equal(app.element('copy-controls').hidden,false);
+  assert.equal(app.element('brush-controls').hidden,false);
+  const layer=app.offscreens[0],before=layer.operations.length;
+  app.pointer('pointerdown',1,200,200);
+  app.pointer('pointerup',1,200,200);
+  assert.equal(layer.operations.length,before);
+  assert.equal(app.element('copy-source-state').textContent,'未指定');
+  assert.match(app.element('status').textContent,/写真からコピー/);
+  app.element('select-copy-source').click();
+  app.pointer('pointerdown',1,200,200);
+  assert.equal(app.element('loupe').hidden,false);
+  assert.equal(app.element('copy-source-state').textContent,'未指定');
+  app.pointer('pointerup',1,200,200);
+  assert.equal(app.element('copy-source-state').textContent,'指定済み (3000, 2000)');
+  assert.equal(app.element('color-value').textContent,''); // DOM default is #FFFFFF; sampling has not changed it
+  assert.equal(layer.operations.length,before);
+  assert.equal(app.element('copy-marker').hidden,false);
+  assert.equal(app.element('copy-marker').style.left,'200px');
+  app.pointer('pointerdown',1,100,200);app.pointer('pointerup',1,100,200);
+  assert.equal(app.element('copy-source-state').textContent,'指定済み (3000, 2000)');
+  app.element('stage').clientWidth=200;app.element('stage').clientHeight=200;app.resize();
+  assert.equal(app.element('copy-marker').style.left,'100px');
+});
+
+async function selectCopySource(app,x=200,y=200){
+  app.element('mode-copy').click();app.element('select-copy-source').click();
+  app.pointer('pointerdown',1,x,y);app.pointer('pointerup',1,x,y);
+}
+
+test('copy opacity, bounded working canvases, single snapshot, cancellation and mixed history', async()=>{
+  const app=setup();await app.load();await selectCopySource(app);
+  app.element('opacity-0.7').click();
+  app.pointer('pointerdown',1,200,200);
+  const count=app.offscreens.length,reads=app.offscreens[0].reads;
+  for(let i=0;i<10;i++)app.pointer('pointermove',1,200+i/2,200);
+  assert.equal(app.offscreens.length,count);
+  assert.equal(app.offscreens[0].reads,reads);
+  assert.ok(app.offscreens[0].operations.some(op=>op[0]==='alpha'&&op[1]===0.7));
+  app.pointer('pointercancel',1,205,200);
+  assert.equal(app.element('undo').disabled,true);
+  assert.equal(app.element('copy-source-state').textContent,'指定済み (400, 200)');
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerup',1,200,200);
+  assert.equal(app.element('undo').disabled,false);
+  app.element('mode-paint').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerup',1,200,200);
+  app.element('mode-erase').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerup',1,200,200);
+  for(let i=0;i<3;i++)app.element('undo').click();
+  assert.equal(app.element('undo').disabled,true);
+  for(let i=0;i<3;i++)app.element('redo').click();
+  assert.equal(app.element('redo').disabled,true);
+});
+
+for(const pose of Poses.list)test(`${pose.poseId}: transformed copy, PNG, marker exclusion and pose confirmation`,async()=>{
+  const shared=[];
+  const app=setup({navigator:{canShare:()=>true,share:async data=>shared.push(data.files[0])}});
+  await app.load();await app.element(`pose-${pose.poseId}`).click();
+  for(let i=0;i<9;i++)app.element('rotate-right').click();
+  app.element('larger').click();
+  await selectCopySource(app,100,200);
+  const sourceState=app.element('copy-source-state').textContent;
+  app.element('opacity-0.4').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointermove',1,204,200);app.pointer('pointerup',1,204,200);
+  assert.ok(app.offscreens[0].operations.some(op=>op[0]==='alpha'&&op[1]===0.4));
+  assert.equal(app.element('copy-source-state').textContent,sourceState);
+  const paintLayer=app.offscreens[0];
+  app.element('mode-place').click();
+  app.pointer('pointerdown',1,200,200);app.pointer('pointermove',1,220,210);app.pointer('pointerup',1,220,210);
+  app.element('mode-copy').click();
+  await app.element('open-preview').click();
+  assert.equal(app.element('copy-marker').hidden,true);
+  assert.ok(app.encodings.at(-1).operations.some(op=>op[0]==='draw'&&op[2]===paintLayer));
+  assert.ok(app.encodings.at(-1).operations.some(op=>op[0]==='draw'&&op[2].source===pose.silhouette));
+  assert.equal(app.encodings.at(-1).operations.filter(op=>op[0]==='strokeRect').length,0);
+  await app.element('share-question').click();assert.equal(shared.length,1);
+  await app.element('show-answer').click();
+  assert.equal(app.encodings.at(-1).operations.filter(op=>op[0]==='strokeRect').length,2);
+  app.element('back-to-edit').click();
+  assert.equal(app.element('copy-marker').hidden,false);
+  const next=pose.poseId==='P01'?'P02':'P01';
+  await app.element(`pose-${next}`).click();assert.equal(app.element('change-confirm').open,true);
+  app.element('cancel-change').click();assert.equal(app.element('undo').disabled,false);
+  await app.element(`pose-${next}`).click();app.element('confirm-change').click();
+  assert.equal(app.element('undo').disabled,true);
+  assert.equal(app.element('copy-source-state').textContent,sourceState);
+  await app.load('new-background');assert.equal(app.element('copy-source-state').textContent,'未指定');
+});
+
+test('copy edit forces a newly encoded preview and lost capture rolls back incomplete drawing',async()=>{
+  const app=setup();await app.load();
+  await app.element('open-preview').click();const old=app.element('preview-image').src;
+  app.element('back-to-edit').click();await selectCopySource(app);
+  app.pointer('pointerdown',1,200,200);app.pointer('pointerup',1,200,200);
+  await app.element('open-preview').click();assert.notEqual(app.element('preview-image').src,old);
+  assert.equal(app.encodings.length,2);
+  app.element('back-to-edit').click();
+  app.element('undo').click();assert.equal(app.element('redo').disabled,false);
+  app.pointer('pointerdown',1,200,200);app.pointer('lostpointercapture',1,200,200);
+  assert.equal(app.element('redo').disabled,false);
+  assert.equal(app.element('undo').disabled,true);
 });

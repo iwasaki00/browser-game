@@ -3,6 +3,7 @@
 // Shared by the UI and internal tests; no network or persistent storage.
 ((root) => {
   const Poses = typeof module !== "undefined" && module.exports ? require("./poses.js") : root.KakureronPoses;
+  const Copy = typeof module !== "undefined" && module.exports ? require("./copy-brush.js") : root.KakureronCopy;
   const WIDTH = 384;
   const HEIGHT = 576;
   const HISTORY_LIMIT = 25;
@@ -47,6 +48,7 @@
     let width = WIDTH;
     let height = HEIGHT;
     let bounds = null;
+    let copySurfaces = null;
 
     const snapshot = () => ctx.getImageData(0, 0, width, height);
     function prepareMask(image, pose = Poses.get()) {
@@ -102,14 +104,93 @@
       before = null;
       previous = null;
       stroke = null;
+      clearCopySurfaces();
+    }
+    function cancel() {
+      if (before) ctx.putImageData(before, 0, 0);
+      before = null;
+      previous = null;
+      stroke = null;
+      clearCopySurfaces();
+    }
+    function clearCopySurfaces() {
+      if (copySurfaces) for (const surface of Object.values(copySurfaces)) surface.width = surface.height = 1;
     }
     function begin(mode, color, brush) {
       finish();
       stroke = { mode, color, width: BRUSHES[brush] };
     }
+    function beginCopy(options) {
+      finish();
+      if (!Copy.OPACITIES.includes(options.opacity)) throw new Error("コピーの濃さが正しくありません。");
+      if (!options.source || !Number.isFinite(options.source.x) || !Number.isFinite(options.source.y)
+        || options.source.x < 0 || options.source.y < 0 || options.source.x >= options.imageSize.width || options.source.y >= options.imageSize.height) {
+        throw new Error("コピー元を指定してください。");
+      }
+      stroke = { mode: "copy", width: BRUSHES[options.brush], opacity: options.opacity,
+        copy: { ...options, source: { ...options.source }, character: { ...options.character } }, mapping: null, outside: false };
+    }
+    function trace(context, point, color) {
+      context.strokeStyle = context.fillStyle = color;
+      context.lineWidth = stroke.width;
+      context.lineCap = context.lineJoin = "round";
+      context.beginPath();
+      if (previous) {
+        context.moveTo(previous.x, previous.y);
+        context.lineTo(point.x, point.y);
+        context.stroke();
+      } else {
+        context.arc(point.x, point.y, stroke.width / 2, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+    function dabCopy(point) {
+      if (!stroke.mapping) {
+        const options = stroke.copy;
+        stroke.mapping = Copy.mapping(options.source, point, options.character, options.pose,
+          options.imageSize, { width, height }, options.background);
+        if (!copySurfaces) copySurfaces = { texture: makeCanvas(), coverage: makeCanvas() };
+        for (const surface of Object.values(copySurfaces)) { surface.width = width; surface.height = height; }
+        const textureCtx = copySurfaces.texture.getContext("2d");
+        const m = stroke.mapping.draw;
+        textureCtx.setTransform(m.a, m.b, m.c, m.d, m.e, m.f);
+        // Outside the photo stays transparent: no repeat and no black padding.
+        textureCtx.drawImage(options.background, 0, 0);
+        textureCtx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+      const dirty = Copy.dirtyRect(previous, point, stroke.width, { width, height });
+      const sample = Copy.transform(stroke.mapping.sample, point);
+      const background = stroke.copy.background;
+      stroke.outside = sample.x < 0 || sample.y < 0 || sample.x >= background.width || sample.y >= background.height;
+      if (!Copy.intersectsPhoto(stroke.mapping.sample, dirty, background)) { previous = null; return false; }
+      if (!before) before = snapshot();
+      const coverageCtx = copySurfaces.coverage.getContext("2d");
+      trace(coverageCtx, point, "#FFFFFF");
+      stampCtx.save();
+      stampCtx.beginPath(); stampCtx.rect(dirty.x, dirty.y, dirty.width, dirty.height); stampCtx.clip();
+      stampCtx.clearRect(dirty.x, dirty.y, dirty.width, dirty.height);
+      stampCtx.globalCompositeOperation = "source-over";
+      stampCtx.drawImage(copySurfaces.texture, 0, 0);
+      stampCtx.globalCompositeOperation = "destination-in";
+      stampCtx.drawImage(copySurfaces.coverage, 0, 0);
+      stampCtx.drawImage(mask, 0, 0);
+      stampCtx.restore();
+      stampCtx.globalCompositeOperation = "source-over";
+      // Recompose over the pre-stroke state; overlap cannot exceed the chosen opacity.
+      ctx.putImageData(before, 0, 0, dirty.x, dirty.y, dirty.width, dirty.height);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(dirty.x, dirty.y, dirty.width, dirty.height); ctx.clip();
+      ctx.globalAlpha = stroke.opacity;
+      ctx.drawImage(stamp, 0, 0);
+      ctx.restore();
+      ctx.globalAlpha = 1;
+      previous = { ...point };
+      return true;
+    }
     function dab(point) {
       if (!stroke) return false;
       if (!contains(point)) { previous = null; return false; }
+      if (stroke.mode === "copy") return dabCopy(point);
       if (!before) before = snapshot();
       stampCtx.clearRect(0, 0, width, height);
       stampCtx.globalCompositeOperation = "source-over";
@@ -151,8 +232,10 @@
       undo.length = 0;
       redo.length = 0;
       ctx.clearRect(0, 0, width, height);
+      clearCopySurfaces();
     }
-    return { canvas: paint, setMask, prepareMask, applyMask, hasPaint, bounds: () => bounds && { ...bounds }, contains, begin, dab, finish, reset,
+    return { canvas: paint, setMask, prepareMask, applyMask, hasPaint, bounds: () => bounds && { ...bounds }, contains, begin, beginCopy, dab, finish, cancel, reset,
+      copyOutside: () => !!stroke?.outside,
       undo: () => restore(undo, redo), redo: () => restore(redo, undo),
       history: () => ({ undo: undo.length, redo: redo.length }) };
   }
