@@ -61,22 +61,28 @@
   }
 
   // The editor, question and answer all use exactly the same transform and layers.
-  function drawScene(ctx, scene, rect, answer = false) {
-    const { background, characterImage, paintLayer, character } = scene;
+  function drawCharacter(ctx, scene, rect, appearance = {}) {
+    const { characterImage, paintLayer, character } = scene;
     const pose = scene.pose || Poses.get(character.poseId);
-    ctx.drawImage(background, rect.x, rect.y, rect.width, rect.height);
+    const width = rect.width * character.size;
+    const displayWidth = width * (appearance.scaleX ?? 1), displayHeight = width * pose.ratio * (appearance.scaleY ?? 1);
+    ctx.save();
+    ctx.globalAlpha = appearance.alpha ?? 1;
+    ctx.translate(rect.x + character.x * rect.width, rect.y + character.y * rect.height);
+    ctx.rotate(character.angle + (appearance.tilt ?? 0));
+    ctx.drawImage(characterImage, -displayWidth / 2, -displayHeight / 2, displayWidth, displayHeight);
+    if (paintLayer) ctx.drawImage(paintLayer, -displayWidth / 2, -displayHeight / 2, displayWidth, displayHeight);
+    ctx.restore();
+  }
+  function drawScene(ctx, scene, rect, answer = false) {
+    const pose = scene.pose || Poses.get(scene.character.poseId);
+    ctx.drawImage(scene.background, rect.x, rect.y, rect.width, rect.height);
     ctx.save();
     ctx.beginPath();
     ctx.rect(rect.x, rect.y, rect.width, rect.height);
     ctx.clip();
-    const width = rect.width * character.size;
-    ctx.save();
-    ctx.translate(rect.x + character.x * rect.width, rect.y + character.y * rect.height);
-    ctx.rotate(character.angle);
-    ctx.drawImage(characterImage, -width / 2, -width * pose.ratio / 2, width, width * pose.ratio);
-    ctx.drawImage(paintLayer, -width / 2, -width * pose.ratio / 2, width, width * pose.ratio);
-    ctx.restore();
-    if (answer) drawAnswer(ctx, character, rect, pose, scene.bounds || pose.bounds);
+    drawCharacter(ctx, scene, rect);
+    if (answer) drawAnswer(ctx, scene.character, rect, pose, scene.bounds || pose.bounds);
     ctx.restore();
   }
 
@@ -112,7 +118,7 @@
     try { return navigator.canShare({ files: [file] }); } catch { return false; }
   }
 
-  const api = { MAX_EDGE, outputSize, answerBounds, drawScene, createPNG, fileName, canShareFile };
+  const api = { MAX_EDGE, outputSize, answerBounds, drawCharacter, drawScene, createPNG, fileName, canShareFile };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.KakureronExport = api;
 })(globalThis);

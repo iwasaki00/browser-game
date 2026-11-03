@@ -6,6 +6,7 @@ const Paint = require('../paint.js');
 const Export = require('../export.js');
 const Poses = require('../poses.js');
 const Copy = require('../copy-brush.js');
+const View = require('../editor-view.js');
 
 function setup(options = {}) {
   const elements = new Map();
@@ -15,6 +16,20 @@ function setup(options = {}) {
   const downloads = [];
   const urlBlobs = new Map();
   const navigator = options.navigator || {};
+  const windowHandlers = {};
+  const documentHandlers = {};
+  const frames = new Map();
+  let frameId = 0, frameClock = 0;
+  function nextFrame(delta = 100) {
+    frameClock += delta;
+    const pending = [...frames.values()]; frames.clear();
+    pending.forEach(callback => callback(frameClock));
+  }
+  function requestFrame(callback) {
+    const id = ++frameId; frames.set(id, callback);
+    if (options.autoFrames) queueMicrotask(() => { if (frames.has(id)) { frames.delete(id); frameClock += 16; callback(frameClock); } });
+    return id;
+  }
   let resize;
   let lastTranslation;
   let lastRotation;
@@ -22,7 +37,7 @@ function setup(options = {}) {
     setTransform() {}, clearRect() { draws.length = 0; }, save() {}, restore() {},
     beginPath() {}, rect() {}, clip() {},
     translate(x, y) { lastTranslation = [x, y]; }, rotate(angle) { lastRotation = angle; },
-    drawImage(image, ...rect) { draws.push({ image, rect, position: lastTranslation, angle: lastRotation }); }
+    drawImage(image, ...rect) { draws.push({ image, rect, position: lastTranslation, angle: lastRotation, alpha: this.globalAlpha }); }
   };
   const offscreens = [];
   function offscreen() {
@@ -101,10 +116,11 @@ function setup(options = {}) {
   const brushes = ['small', 'medium', 'large'].map(brush => { const button = element(`brush-${brush}`); button.dataset.brush = brush; return button; });
   const poses = Poses.list.map(pose => { const button = element(`pose-${pose.poseId}`); button.dataset.pose = pose.poseId; return button; });
   const opacities = Copy.OPACITIES.map(opacity => { const button = element(`opacity-${opacity}`); button.dataset.opacity = String(opacity); return button; });
-  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo', 'toggle-poses', 'select-copy-source'].map(element).concat(modes, brushes, poses, opacities);
+  const zooms = View.ZOOM_LEVELS.map(zoom => { const button = element(`zoom-${zoom}`); button.dataset.zoom = String(zoom); return button; });
+  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo', 'toggle-poses', 'select-copy-source', 'open-zoom'].map(element).concat(modes, brushes, poses, opacities);
   Object.assign(element('loupe').getContext(), { fillRect() {}, strokeRect() {} });
   const document = {
-    documentElement: { dataset: {} }, hidden: false, addEventListener() {},
+    documentElement: { dataset: {} }, hidden: false, addEventListener(type,handler) { documentHandlers[type]=handler; },
     body: { append() {} },
     createElement(tag) {
       if (tag === 'a') return { click() {
@@ -114,7 +130,7 @@ function setup(options = {}) {
       return offscreen();
     },
     querySelector(selector) { return element(selector.slice(1)); },
-    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : selector === '[data-pose]' ? poses : selector === '[data-opacity]' ? opacities : buttons; }
+    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : selector === '[data-pose]' ? poses : selector === '[data-opacity]' ? opacities : selector === '[data-zoom]' ? zooms : buttons; }
   };
   let revoked = 0;
   class Image {
@@ -127,9 +143,10 @@ function setup(options = {}) {
     }
   }
   vm.runInNewContext(fs.readFileSync('app.js', 'utf8'), {
-    document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, KakureronCopy: Copy, navigator,
+    document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, KakureronCopy: Copy, KakureronView: View, navigator,
     Blob, File, isSecureContext: options.secureContext !== false,
-    window: { devicePixelRatio: 2, addEventListener() {} },
+    window: { devicePixelRatio: 2, addEventListener(type,handler) { windowHandlers[type]=handler; }, matchMedia: () => ({matches:options.reducedMotion!==false}) },
+    requestAnimationFrame: requestFrame, cancelAnimationFrame: id => frames.delete(id),
     URL: { createObjectURL: file => {
       const url = file.name ? `blob:${file.name}` : `blob:output-${urlBlobs.size + 1}`;
       urlBlobs.set(url, file);
@@ -141,12 +158,12 @@ function setup(options = {}) {
     element('image-input').files = [{ name }];
     await element('image-input').handlers.change();
   }
-  function pointer(type, id, x, y) {
+  function pointer(type, id, x, y, settings = {}) {
     element('canvas').handlers[type]({ type, pointerId: id, clientX: x, clientY: y,
-      pointerType: 'touch', button: 0, preventDefault() {} });
+      pointerType: 'touch', button: 0, preventDefault() {}, ...settings });
   }
   return { element, draws, load, pointer, offscreens, encodings, downloads, urlBlobs, navigator,
-    resize: () => resize(), captures, revoked: () => revoked };
+    resize: () => resize(), captures, revoked: () => revoked, frame:nextFrame, frames, windowHandlers, documentHandlers, document };
 }
 
 test('image FIT, size limits, rotation, reset, replacement and decode failure', async () => {

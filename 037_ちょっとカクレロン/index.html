@@ -6,21 +6,26 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <link rel="stylesheet" href="style.css?v=0.5.0">
-  <script src="poses.js?v=0.5.0" defer></script>
-  <script src="copy-brush.js?v=0.5.0" defer></script>
-  <script src="paint.js?v=0.5.0" defer></script>
-  <script src="export.js?v=0.5.0" defer></script>
-  <script src="app.js?v=0.5.0" defer></script>
+  <meta name="application-version" content="0.6.0">
+  <link rel="stylesheet" href="style.css?v=0.6.0">
+  <script src="poses.js?v=0.6.0" defer></script>
+  <script src="copy-brush.js?v=0.6.0" defer></script>
+  <script src="paint.js?v=0.6.0" defer></script>
+  <script src="editor-view.js?v=0.6.0" defer></script>
+  <script src="export.js?v=0.6.0" defer></script>
+  <script src="app.js?v=0.6.0" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.5.0 <span>COPY BRUSH / 背景模様コピー</span></p></div>
+      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.6.0 <span>POLISH / 1画面編集・拡大ペイント・ポーズ演出</span></p></div>
       <button id="change-image" class="secondary" hidden>画像変更</button>
     </header>
     <section id="editor-workspace" class="workspace" aria-label="画像編集エリア">
       <div class="workspace-heading"><span><i></i> 擬態スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
+      <div id="zoom-tools" class="zoom-tools" role="group" aria-label="拡大編集" hidden>
+        <span>拡大</span><button data-zoom="2" aria-pressed="false">2倍</button><button data-zoom="4" aria-pressed="true">4倍</button><button data-zoom="8" aria-pressed="false">8倍</button><button id="pan-zoom" aria-pressed="false">移動</button><button id="center-zoom">中央</button><button id="close-zoom">閉じる</button>
+      </div>
       <div id="stage" class="stage">
         <canvas id="canvas" tabindex="0" aria-label="カクレロンの配置。ドラッグで移動。矢印キーでも移動できます。" hidden></canvas>
         <canvas id="loupe" class="loupe" width="120" height="120" aria-hidden="true" hidden></canvas>
@@ -36,7 +41,7 @@
       <p id="hint" class="hint">写真を1枚選ぶと、白いカクレロンが登場します。</p>
     </section>
     <section id="editor-controls" class="controls" aria-label="配置の調整">
-      <div class="control-heading"><h2>カクレロンを調整</h2><div class="pose-heading-actions"><button id="toggle-poses" class="pose-toggle" aria-controls="pose-options" aria-expanded="false" disabled>ポーズ：立つ ▾</button><button id="reset" class="reset" disabled>↺ リセット</button></div></div>
+      <div class="control-heading"><h2>カクレロンを調整</h2><div class="pose-heading-actions"><button id="toggle-poses" class="pose-toggle" aria-controls="pose-options" aria-expanded="false" disabled>ポーズ：立つ ▾</button><button id="open-zoom" class="pose-toggle" aria-pressed="false" disabled>拡大編集</button><button id="reset" class="reset" disabled>↺ リセット</button></div><div class="history-buttons"><button id="undo" disabled>戻す</button><button id="redo" disabled>やり直す</button></div></div>
       <div id="pose-options" class="pose-options" role="group" aria-label="ポーズ選択" hidden>
         <button data-pose="P01" aria-pressed="true" disabled><img src="assets/kakureron.svg" alt="" draggable="false"><span>立つ</span><small>STAND</small></button>
         <button data-pose="P02" aria-pressed="false" disabled><img src="assets/poses/crouch.svg" alt="" draggable="false"><span>しゃがむ</span><small>CROUCH</small></button>
@@ -50,18 +55,19 @@
         <button data-mode="erase" aria-pressed="false" disabled>消しゴム</button>
         <button data-mode="copy" aria-pressed="false" disabled>背景コピー</button>
       </div>
-      <div class="paint-toolbar">
+      <div id="mode-settings" class="mode-settings">
+      <div id="color-controls" class="paint-toolbar" hidden>
         <span class="current-color">現在色 <i id="color-swatch"></i><output id="color-value">#FFFFFF</output></span>
-        <div class="history-buttons"><button id="undo" disabled>戻す</button><button id="redo" disabled>やり直す</button></div>
       </div>
       <div id="placement-controls" class="control-grid">
-        <div class="control-group"><span class="control-label">サイズ <output id="size-value">18%</output></span><div class="stepper"><button id="smaller" aria-label="小さくする" disabled>−</button><span>サイズ</span><button id="larger" aria-label="大きくする" disabled>＋</button></div></div>
-        <div class="control-group"><span class="control-label">角度 <output id="angle-value">0°</output></span><div class="stepper"><button id="rotate-left" aria-label="左に5度回転" disabled>↶</button><span>回転</span><button id="rotate-right" aria-label="右に5度回転" disabled>↷</button></div></div>
+        <div class="control-group"><label class="control-label" for="size-slider">サイズ <output id="size-value">18%</output></label><div class="stepper"><button id="smaller" aria-label="小さくする" disabled>−</button><input id="size-slider" type="range" min="5" max="60" step="1" value="18" aria-label="サイズ（写真幅に対するパーセント）" disabled><button id="larger" aria-label="大きくする" disabled>＋</button></div></div>
+        <div class="control-group"><label class="control-label" for="angle-slider">角度 <output id="angle-value">0°</output></label><div class="stepper"><button id="rotate-left" aria-label="左に5度回転" disabled>↶</button><input id="angle-slider" type="range" min="-180" max="180" step="1" value="0" aria-label="回転角度（度）" disabled><button id="rotate-right" aria-label="右に5度回転" disabled>↷</button></div></div>
       </div>
       <div id="brush-controls" class="brush-controls" role="group" aria-label="ブラシサイズ" hidden><span>ブラシ</span><button data-brush="small" aria-pressed="false" disabled>小</button><button data-brush="medium" aria-pressed="true" disabled>中</button><button data-brush="large" aria-pressed="false" disabled>大</button></div>
       <div id="copy-controls" class="copy-controls" hidden>
         <div class="copy-source-row"><button id="select-copy-source" class="secondary" aria-pressed="false" disabled>コピー元を指定</button><output id="copy-source-state">未指定</output></div>
         <div class="copy-opacity" role="group" aria-label="コピーの濃さ"><span>濃さ</span><button data-opacity="1" aria-pressed="true" disabled>100% 濃い</button><button data-opacity="0.7" aria-pressed="false" disabled>70% 普通</button><button data-opacity="0.4" aria-pressed="false" disabled>40% 薄い</button></div>
+      </div>
       </div>
       <p id="gesture-help" class="gesture-help">1本指で移動 ／ 2本指でサイズ・角度を調整</p>
       <button id="open-preview" class="primary preview-start" disabled>完成プレビュー <span aria-hidden="true">↗</span></button>

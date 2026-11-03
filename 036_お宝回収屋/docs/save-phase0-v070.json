@@ -1,12 +1,12 @@
 {
   "phase": 0,
   "largeHistory": {
-    "before": 848340,
-    "after": 28528,
+    "before": 847971,
+    "after": 28079,
     "recent": 200,
     "paid": 10000,
-    "progress": 3.350099999999997,
-    "liveProgress": 3.350099999999997,
+    "progress": 3.3501,
+    "liveProgress": 3.3501,
     "FN": 1234,
     "sequence": 3
   },

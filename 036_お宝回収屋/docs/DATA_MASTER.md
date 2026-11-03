@@ -1,3 +1,13 @@
+# Version 0.7.0 — データ構成
+
+お宝300種＝旧36＋src/treasure-expansion.jsonの264。B001〜B100、R001〜R100、G001〜G100。ID・名称・分野・分類・レア度・評価・場所・材質・重量・磁性・能力条件・難易度・洗浄・画像ID・固定報酬を登録。河原は粒径・比重を追加。
+
+全件表：[TREASURE_MASTER_300](TREASURE_MASTER_300.md)。CSV：[TREASURE_ASSET_MANIFEST](TREASURE_ASSET_MANIFEST.csv)。生成コマンドはnpm.cmd run data:treasures。元の道具126／使用可能46／設備3のID・名称・価格は変更しない。
+
+world-rules.tsが環境と解放、world-generation.tsが固定シード配置を担当。旧36品の保護用データはtreasure-baseline-v060.json。環境と訪問・達成だけを保存し、300件の説明文をセーブへ複製しない。
+
+---
+
 # Version 0.6.0 追補
 
 新しい道具ID・価格の変更はない。使用可能46道具、126道具マスター、3設備B301/R301/G304を維持する。ラインIDはLINE-B/LINE-R/LINE-G、工程IDはtransport/screen/magnet/separate/pull/organize/precision。Find.stateにtransitを追加。設備IDとDEBUGシナリオIDのLINE-01〜20は別名前空間。工程はマスター材料の再抽選を行わない。

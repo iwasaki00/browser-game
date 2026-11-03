@@ -1,7 +1,8 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.5.0";
+  const VERSION = "0.6.0";
+  const View = globalThis.KakureronView;
   const Poses = globalThis.KakureronPoses;
   const Copy = globalThis.KakureronCopy;
   const Paint = globalThis.KakureronPaint;
@@ -30,6 +31,12 @@
   const brushButtons = [...document.querySelectorAll("[data-brush]")];
   const poseButtons = [...document.querySelectorAll("[data-pose]")];
   const opacityButtons = [...document.querySelectorAll("[data-opacity]")];
+  const zoomButtons = [...document.querySelectorAll("[data-zoom]")];
+  const zoom = { enabled: false, scale: 4, center: { x: 0.5, y: 0.5 } };
+  let panTool = false;
+  let spacePan = false;
+  let poseAnimation = null;
+  let animationFrameId = null;
   const confirmDialog = document.querySelector("#change-confirm");
   let poseBusy = false;
   let pendingChange = null;
@@ -71,16 +78,13 @@
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
-  const editBlocked = () => previewing || poseBusy || !!pendingChange;
+  const editBlocked = () => previewing || poseBusy || !!pendingChange || !!poseAnimation;
   const currentPose = () => Poses.get(character.poseId);
 
   // Positions and width are relative to the fitted background, independent of device pixels.
   function updateFit() {
     if (!background) return;
-    const scale = Math.min(stage.clientWidth / background.width, stage.clientHeight / background.height);
-    const width = background.width * scale;
-    const height = background.height * scale;
-    fit = { x: (stage.clientWidth - width) / 2, y: (stage.clientHeight - height) / 2, width, height };
+    fit = View.fitRect(background, { width: stage.clientWidth, height: stage.clientHeight }, zoom);
   }
 
   function scene() {
@@ -89,9 +93,10 @@
 
   function render() {
     if (previewing) return;
-    const density = Math.min(window.devicePixelRatio || 1, 3);
-    const width = Math.round(stage.clientWidth * density);
-    const height = Math.round(stage.clientHeight * density);
+    // Avoid tall letterboxing around landscape photos; the stage can still shrink with the viewport.
+    document.querySelector("#editor-workspace").style.maxHeight = background && !zoom.enabled
+      ? `${Math.max(180, stage.clientWidth * background.height / background.width) + 26}px` : "none";
+    const { width, height, ratio: density } = View.backingSize({ width: stage.clientWidth, height: stage.clientHeight }, window.devicePixelRatio);
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
@@ -101,16 +106,28 @@
     if (!background) return;
     updateFit();
     const ready = characterImage.complete && characterImage.naturalWidth > 0 && !!paint.bounds();
-    if (ready) Export.drawScene(ctx, scene(), fit);
+    if (ready && poseAnimation) {
+      ctx.drawImage(background, fit.x, fit.y, fit.width, fit.height);
+      ctx.save(); ctx.beginPath(); ctx.rect(fit.x, fit.y, fit.width, fit.height); ctx.clip();
+      const frame = View.poseFrame(poseAnimation.progress);
+      Export.drawCharacter(ctx, poseAnimation.oldScene, fit, frame.old);
+      Export.drawCharacter(ctx, { ...scene(), paintLayer: null }, fit, frame.next);
+      ctx.restore();
+    } else if (ready) Export.drawScene(ctx, scene(), fit);
     else ctx.drawImage(background, fit.x, fit.y, fit.width, fit.height);
     document.querySelector("#open-preview").disabled = !ready;
     updatePoseUI();
     document.querySelector("#size-value").textContent = `${Math.round(character.size * 100)}%`;
     document.querySelector("#angle-value").textContent = `${Math.round(character.angle * 180 / Math.PI)}°`;
+    document.querySelector("#size-slider").value = String(Math.round(character.size * 100));
+    document.querySelector("#angle-slider").value = String(Math.round(character.angle * 180 / Math.PI));
+    document.querySelector("#size-slider").disabled = editBlocked();
+    document.querySelector("#angle-slider").disabled = editBlocked();
     document.querySelector("#smaller").disabled = character.size <= MIN_SIZE;
     document.querySelector("#larger").disabled = character.size >= MAX_SIZE;
     updateHistory();
     updateCopyUI();
+    updateZoomUI();
   }
 
   function updateHistory() {
@@ -156,6 +173,7 @@
   }
 
   function resetState() {
+    finishPoseAnimation();
     clearGesture();
     if (character.poseId !== Poses.DEFAULT_ID) {
       const image = poseImages.get(Poses.DEFAULT_ID);
@@ -163,6 +181,8 @@
       characterImage = image;
     }
     character = { ...INITIAL };
+    zoom.enabled = false;
+    zoom.center = { x: character.x, y: character.y };
     paint.reset();
     releaseOutputs();
     render();
@@ -170,10 +190,11 @@
 
   function updatePoseUI() {
     document.querySelector("#toggle-poses").textContent = `ポーズ：${currentPose().name} ▾`;
-    document.querySelector("#toggle-poses").disabled = !background || !paint.bounds() || poseBusy;
-    document.querySelector("#open-preview").disabled ||= poseBusy || !!pendingChange;
+    document.querySelector("#toggle-poses").disabled = !background || !paint.bounds() || poseBusy || !!poseAnimation;
+    document.querySelector("#open-preview").disabled ||= poseBusy || !!pendingChange || !!poseAnimation;
+    document.querySelector("#editor-controls").setAttribute("aria-busy", String(!!poseAnimation));
     poseButtons.forEach(button => {
-      button.disabled = !background || !paint.bounds() || poseBusy;
+      button.disabled = !background || !paint.bounds() || poseBusy || !!poseAnimation;
       button.setAttribute("aria-pressed", String(button.dataset.pose === character.poseId));
     });
   }
@@ -206,15 +227,16 @@
     document.querySelector(change?.kind === "reset" ? "#reset" : "#toggle-poses").focus();
   }
 
-  function applyChange(change) {
+  async function applyChange(change) {
     try {
       if (change.kind === "reset") resetState();
       else {
+        const oldScene = { ...scene(), paintLayer: null };
         paint.applyMask(change.prepared);
         characterImage = change.image;
         character.poseId = change.pose.poseId;
         releaseOutputs();
-        render();
+        await animatePose(oldScene);
       }
       status.textContent = "";
     } catch {
@@ -225,7 +247,7 @@
 
   function confirmOrApply(change) {
     const history = paint.history();
-    if (!history.undo && !history.redo && !paint.hasPaint()) { applyChange(change); return; }
+    if (!history.undo && !history.redo && !paint.hasPaint()) return applyChange(change);
     pendingChange = change;
     document.querySelector("#confirm-title").textContent = change.kind === "reset" ? "リセット" : "ポーズの変更";
     document.querySelector("#confirm-message").textContent = change.kind === "reset"
@@ -239,7 +261,9 @@
   }
 
   async function requestPose(id) {
-    if (editBlocked() || !background || !paint.bounds() || id === character.poseId) return;
+    if (editBlocked() || !background || !paint.bounds()) return;
+    closePoses();
+    if (id === character.poseId) return;
     clearGesture();
     const sequence = ++poseSequence;
     const pose = Poses.get(id);
@@ -254,7 +278,7 @@
       change = { kind: "pose", pose, image, prepared: paint.prepareMask(image, pose) };
       poseBusy = false;
       status.textContent = "";
-      confirmOrApply(change);
+      await confirmOrApply(change);
     } catch {
       discardPrepared(change);
       if (sequence === poseSequence) status.textContent = "ポーズを読み込めませんでした。現在の塗装を残したまま、もう一度お試しください。";
@@ -284,6 +308,73 @@
     canvas.setAttribute("aria-label", `カクレロン編集。${modeHints[mode]}`);
     if (background) document.querySelector("#workspace-state").textContent = { place: "配置を調整中", pick: "背景から色を取得", paint: "擬態ペイント中", erase: "塗装を消去中", copy: "背景模様をコピー" }[mode];
     updateCopyUI();
+    updateZoomUI();
+    document.querySelector("#reset").hidden = mode !== "place";
+    document.querySelector("#color-controls").hidden = mode !== "paint" && mode !== "pick";
+  }
+
+  function closePoses() {
+    document.querySelector("#pose-options").hidden = true;
+    document.querySelector("#toggle-poses").setAttribute("aria-expanded", "false");
+  }
+
+  function finishPoseAnimation() {
+    if (!poseAnimation) return;
+    const resolve = poseAnimation.resolve;
+    poseAnimation = null;
+    if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+    render();
+    resolve();
+  }
+
+  function animatePose(oldScene) {
+    finishPoseAnimation();
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || document.hidden) { render(); return Promise.resolve(); }
+    return new Promise(resolve => {
+      const transition = { oldScene, progress: 0, started: null, resolve };
+      poseAnimation = transition;
+      render();
+      const step = timestamp => {
+        if (poseAnimation !== transition) return;
+        if (transition.started === null) transition.started = timestamp;
+        transition.progress = Math.min(1, (timestamp - transition.started) / View.POSE_DURATION);
+        if (transition.progress >= 1) finishPoseAnimation();
+        else { render(); animationFrameId = requestAnimationFrame(step); }
+      };
+      animationFrameId = requestAnimationFrame(step);
+    });
+  }
+
+  function updateZoomUI() {
+    document.querySelector(".app").dataset.zoom = String(zoom.enabled);
+    document.querySelector("#zoom-tools").hidden = !zoom.enabled;
+    document.querySelector("#open-zoom").disabled = !background || !paint.bounds() || editBlocked();
+    document.querySelector("#open-zoom").textContent = zoom.enabled ? "通常表示" : "拡大編集";
+    document.querySelector("#open-zoom").setAttribute("aria-pressed", String(zoom.enabled));
+    document.querySelector("#pan-zoom").setAttribute("aria-pressed", String(panTool));
+    zoomButtons.forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.zoom) === zoom.scale)));
+    canvas.dataset.pan = String(zoom.enabled && (panTool || mode === "place"));
+    if (zoom.enabled) {
+      const hint = panTool || mode === "place" ? "表示移動：ドラッグ ／ 閉じると通常表示" : "直接描画 ／ 2本指・中ボタン・移動で表示範囲を移動";
+      document.querySelector("#gesture-help").textContent = hint;
+    } else if (mode !== "copy") document.querySelector("#gesture-help").textContent = modeHints[mode];
+  }
+
+  function toggleZoom(enabled) {
+    if (editBlocked() || !background) return;
+    clearGesture(true);
+    closePoses();
+    zoom.enabled = enabled;
+    if (enabled) zoom.center = { x: character.x, y: character.y };
+    panTool = false;
+    render();
+  }
+
+  function beginPan() {
+    const point = pointers.size === 1 ? [...pointers.values()][0] : pairMetrics();
+    gesture = { pan: true, center: { ...zoom.center }, point };
+    canvas.classList.add("dragging");
   }
 
   function pickColor(point) {
@@ -369,7 +460,15 @@
   }
 
   canvas.addEventListener("pointerdown", (event) => {
-    if (editBlocked() || !background || !paint.bounds() || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
+    const middlePan = zoom.enabled && event.pointerType === "mouse" && event.button === 1;
+    if (editBlocked() || !background || !paint.bounds() || (event.pointerType === "mouse" && event.button !== 0 && !middlePan) || pointers.size >= 2) return;
+    if (zoom.enabled && (pointers.size || panTool || spacePan || middlePan || mode === "place")) {
+      event.preventDefault();
+      paint.cancel(); loupe.hidden = true; copyCandidate = null;
+      pointers.set(event.pointerId, localPoint(event));
+      canvas.setPointerCapture(event.pointerId);
+      beginPan(); render(); return;
+    }
     if (mode !== "place" && pointers.size) return;
     if (mode === "copy" && !copyPicking && !copySource) {
       status.textContent = "写真からコピーする場所を選んでください";
@@ -380,6 +479,7 @@
     event.preventDefault();
     pointers.set(event.pointerId, point);
     canvas.setPointerCapture(event.pointerId);
+    canvas.focus({ preventScroll: true });
     strokeInvalidated = false;
     if (mode === "place") beginGesture();
     else {
@@ -394,6 +494,11 @@
     if (editBlocked() || !pointers.has(event.pointerId)) return;
     event.preventDefault();
     pointers.set(event.pointerId, localPoint(event));
+    if (gesture?.pan) {
+      const point = pointers.size === 1 ? [...pointers.values()][0] : pairMetrics();
+      zoom.center = View.panCenter(gesture.center, { x: point.x - gesture.point.x, y: point.y - gesture.point.y }, fit);
+      render(); return;
+    }
     if (mode !== "place") { editPoint(localPoint(event)); return; }
     if (!gesture) return;
     const current = pointers.size === 1 ? [...pointers.values()][0] : pairMetrics();
@@ -408,6 +513,13 @@
   });
 
   function endPointer(event) {
+    if (gesture?.pan && pointers.has(event.pointerId)) {
+      pointers.delete(event.pointerId);
+      if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      if (pointers.size) beginPan();
+      else clearGesture(true);
+      render(); return;
+    }
     if (mode !== "place" && pointers.has(event.pointerId)) {
       if (event.type === "pointerup") editPoint(localPoint(event));
       if (mode === "copy" && copyPicking && event.type === "pointerup" && copyCandidate) {
@@ -427,8 +539,8 @@
   ["contextmenu", "dragstart", "gesturestart", "gesturechange", "gestureend"].forEach((type) => {
     canvas.addEventListener(type, (event) => event.preventDefault(), { passive: false });
   });
-  window.addEventListener("blur", () => { clearGesture(true); render(); });
-  document.addEventListener("visibilitychange", () => { if (document.hidden) { clearGesture(true); render(); } });
+  window.addEventListener("blur", () => { spacePan = false; finishPoseAnimation(); clearGesture(true); render(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) { spacePan = false; finishPoseAnimation(); clearGesture(true); render(); } });
 
   function chooseImage() { input.click(); }
   document.querySelector("#choose-image").addEventListener("click", chooseImage);
@@ -448,6 +560,7 @@
         image.src = url;
       });
       if (sequence !== loadSequence) return;
+      finishPoseAnimation();
       poseSequence++;
       poseBusy = false;
       if (pendingChange) cancelChange();
@@ -489,6 +602,32 @@
   document.querySelector("#larger").addEventListener("click", () => adjust(SIZE_STEP, 0));
   document.querySelector("#rotate-left").addEventListener("click", () => adjust(0, -ROTATION_STEP));
   document.querySelector("#rotate-right").addEventListener("click", () => adjust(0, ROTATION_STEP));
+  document.querySelector("#size-slider").addEventListener("input", event => {
+    if (editBlocked() || !background || mode !== "place") return;
+    const value = Number(event.target.value);
+    if (!Number.isFinite(value)) return;
+    clearGesture(); character.size = clamp(value / 100, MIN_SIZE, MAX_SIZE); releaseOutputs(); render();
+  });
+  document.querySelector("#angle-slider").addEventListener("input", event => {
+    if (editBlocked() || !background || mode !== "place") return;
+    const value = Number(event.target.value);
+    if (!Number.isFinite(value)) return;
+    clearGesture(); character.angle = clamp(value, -180, 180) * Math.PI / 180; releaseOutputs(); render();
+  });
+  document.querySelector("#open-zoom").addEventListener("click", () => toggleZoom(!zoom.enabled));
+  document.querySelector("#close-zoom").addEventListener("click", () => toggleZoom(false));
+  zoomButtons.forEach(button => button.addEventListener("click", () => {
+    if (editBlocked()) return;
+    clearGesture(true); zoom.scale = Number(button.dataset.zoom); render();
+  }));
+  document.querySelector("#pan-zoom").addEventListener("click", () => {
+    if (editBlocked()) return;
+    clearGesture(true); panTool = !panTool; updateZoomUI();
+  });
+  document.querySelector("#center-zoom").addEventListener("click", () => {
+    if (editBlocked()) return;
+    clearGesture(true); zoom.center = { x: character.x, y: character.y }; render();
+  });
   document.querySelector("#reset").addEventListener("click", requestReset);
   document.querySelector("#toggle-poses").addEventListener("click", () => {
     if (editBlocked() || !background) return;
@@ -504,8 +643,9 @@
     if (!change) return;
     pendingChange = null;
     confirmDialog.close();
-    applyChange(change);
+    const result = applyChange(change);
     document.querySelector("#toggle-poses").focus();
+    return result;
   });
   confirmDialog.addEventListener("cancel", event => { event.preventDefault(); cancelChange(); });
   confirmDialog.addEventListener("close", () => { if (pendingChange) cancelChange(); });
@@ -538,6 +678,9 @@
     });
   }
   canvas.addEventListener("keydown", (event) => {
+    if (!editBlocked() && zoom.enabled && event.code === "Space") { event.preventDefault(); spacePan = true; return; }
+    if (!editBlocked() && zoom.enabled && event.key === "Escape") { toggleZoom(false); return; }
+    if (zoom.enabled) return;
     if (editBlocked() || !background || mode !== "place") return;
     const moves = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, -0.01], ArrowDown: [0, 0.01] };
     if (!moves[event.key]) return;
@@ -547,6 +690,7 @@
     character.y = clamp(character.y + moves[event.key][1], 0, 1);
     render();
   });
+  window.addEventListener("keyup", event => { if (event.code === "Space") spacePan = false; });
   new ResizeObserver(() => { clearGesture(true); render(); }).observe(stage);
   const standImage = characterImage;
   standImage.onload = () => {
@@ -647,6 +791,7 @@
     if (!background) { status.textContent = "先に写真を選択してください。"; return; }
     if (!characterImage.complete || !characterImage.naturalWidth) { status.textContent = "カクレロンの読込が終わってからお試しください。"; return; }
     clearGesture();
+    closePoses();
     releaseOutputs();
     previewing = true;
     updateCopyUI();
