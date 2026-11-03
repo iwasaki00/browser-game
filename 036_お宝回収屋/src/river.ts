@@ -28,15 +28,16 @@ export function generateRiver(seed:number,area='R-A'):Plot {
 }
 export function riverCapabilities(s:State,id:string){
  const equipped=new Set(s.equippedTools.filter(t=>s.ownedTools.includes(t)));const valid=id==='hand'||RIVER_TOOLS.includes(id)&&s.ownedTools.includes(id);
- const magnetic=['R103','R104','R201','R202'].includes(id),rope=magnetic&&(id==='R104'||equipped.has('R104'));
+ const rigged=id==='R203'&&['R104','R110','R206'].every(t=>equipped.has(t))&&!!s.automationAccess&&!!s.automation?.machines.R301&&['R-C','R-D'].includes(areaId(s));
+ const magnetic=['R103','R104','R201','R202'].includes(id),rope=rigged||magnetic&&(id==='R104'||equipped.has('R104'));
  const strong=magnetic&&(id==='R201'||equipped.has('R201'));
  const reel=rope&&equipped.has('R110'),pulley=rope&&strong&&equipped.has('R206');
  const camera=equipped.has('R204')&&id==='R205',meter=equipped.has('R210');
  return {camera,meter,valid:valid&&!['R110','R206','R204','R210'].includes(id),magnetic,rope,strong,reel,pulley,
-  reach:id==='R205'?330:rope?265+(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&s.ownedTools.includes('R301')?75:0):id==='R102'?190:id==='R203'?245:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
+  reach:id==='R205'?330:rope?265+(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&!!s.automation?.machines.R301?75:0):id==='R102'?190:id==='R203'?245:id==='hand'?55:id==='R101'?130:id==='R106'?210:105,
   radius:id==='R202'?48:magnetic?(strong?32:24):id==='R101'?24:18,
   adhesion:magnetic?(strong?18:id==='R202'?12:id==='R104'?4:3):Infinity,
-  lift:(pulley?22*(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&s.ownedTools.includes('R301')?2.3:1):strong?8:id==='R202'?6:id==='R205'?(camera?4.5:3.2):id==='R203'?7:id==='R102'?1.5:id==='hand'?.75:id==='R101'?2:id==='R106'?2.2:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
+  lift:(rigged?55:pulley?22*(s.automationAccess&&['R-C','R-D'].includes(areaId(s))&&!!s.automation?.machines.R301?2.3:1):strong?8:id==='R202'?6:id==='R205'?(camera?4.5:3.2):id==='R203'?7:id==='R102'?1.5:id==='hand'?.75:id==='R101'?2:id==='R106'?2.2:3)*(1+Math.min(.25,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)),
   speed:(reel?2.6:1)*(id==='R103'?1.35:1)/(s.explorationAreas[0].worldVersion?environment(s.explorationAreas[0]).current:1),hook:['R106','R203'].includes(id),combos:[...(reel?['C05']:[]),...(pulley?['C06']:[]),...(camera?['C07']:[])]};
 }
 export function metrics(s:State){return s.riverMetrics??={attempts:0,successes:0,operations:0,uses:{},failures:{},bottleneck:'なし'};}

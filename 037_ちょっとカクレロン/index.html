@@ -6,15 +6,16 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <link rel="stylesheet" href="style.css?v=0.3.0">
-  <script src="paint.js?v=0.3.0" defer></script>
-  <script src="export.js?v=0.3.0" defer></script>
-  <script src="app.js?v=0.3.0" defer></script>
+  <link rel="stylesheet" href="style.css?v=0.4.0">
+  <script src="poses.js?v=0.4.0" defer></script>
+  <script src="paint.js?v=0.4.0" defer></script>
+  <script src="export.js?v=0.4.0" defer></script>
+  <script src="app.js?v=0.4.0" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.3.0 <span>SHARE / 画像保存・共有</span></p></div>
+      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.4.0 <span>POSE / ポーズ変更</span></p></div>
       <button id="change-image" class="secondary" hidden>画像変更</button>
     </header>
     <section id="editor-workspace" class="workspace" aria-label="画像編集エリア">
@@ -33,7 +34,13 @@
       <p id="hint" class="hint">写真を1枚選ぶと、白いカクレロンが登場します。</p>
     </section>
     <section id="editor-controls" class="controls" aria-label="配置の調整">
-      <div class="control-heading"><h2>カクレロンを調整</h2><button id="reset" class="reset" disabled>↺ リセット</button></div>
+      <div class="control-heading"><h2>カクレロンを調整</h2><div class="pose-heading-actions"><button id="toggle-poses" class="pose-toggle" aria-controls="pose-options" aria-expanded="false" disabled>ポーズ：立つ ▾</button><button id="reset" class="reset" disabled>↺ リセット</button></div></div>
+      <div id="pose-options" class="pose-options" role="group" aria-label="ポーズ選択" hidden>
+        <button data-pose="P01" aria-pressed="true" disabled><img src="assets/kakureron.svg" alt="" draggable="false"><span>立つ</span><small>STAND</small></button>
+        <button data-pose="P02" aria-pressed="false" disabled><img src="assets/poses/crouch.svg" alt="" draggable="false"><span>しゃがむ</span><small>CROUCH</small></button>
+        <button data-pose="P03" aria-pressed="false" disabled><img src="assets/poses/spread.svg" alt="" draggable="false"><span>大の字</span><small>SPREAD</small></button>
+        <button data-pose="P04" aria-pressed="false" disabled><img src="assets/poses/lie.svg" alt="" draggable="false"><span>寝る</span><small>LIE</small></button>
+      </div>
       <div class="mode-bar" role="group" aria-label="編集モード">
         <button data-mode="place" aria-pressed="true" disabled>配置</button>
         <button data-mode="pick" aria-pressed="false" disabled>スポイト</button>
@@ -73,6 +80,11 @@
     <footer>写真の処理はこのブラウザの中で。共有先は自分で選べます。</footer>
     <p id="status" class="status" role="status" aria-live="polite"></p>
     <input id="image-input" type="file" accept="image/*" hidden>
+    <dialog id="change-confirm" class="change-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <h2 id="confirm-title">ポーズの変更</h2>
+      <p id="confirm-message">ポーズを変更すると、現在の塗装が消去されます。変更しますか？</p>
+      <div><button id="cancel-change" class="secondary" autofocus>キャンセル</button><button id="confirm-change" class="primary">変更する</button></div>
+    </dialog>
   </main>
 </body>
 </html>

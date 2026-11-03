@@ -15,7 +15,7 @@ export function scanReading(s:State,x:number,y:number,id='B201'):ScanReading {
   const value=Math.max(0,1-distance/range)*Math.min(1,.5+size*.4+(coil&&size<.75?.3:0))*(deep?.85:1);
   const wet=f.y<75&&id!=='B204'&&id!=='B201'?.85:1;if(value*wet>strength){strength=value*wet;selected=f;}
  }
- const reading:ScanReading={strength,band:strength<.12?'なし':strength<.35?'弱':strength<.7?'中':'強',depthHint:selected?((selected.depth??selected.y)>420?'かなり深そう':(selected.depth??selected.y)>180?'深そう':'浅そう'):'',character:selected?(id==='B206'?(['B002','B004'].includes(selected.id)?'鉄系の反応':'非鉄系らしい反応'):(sizes[selected.id]??1)<.75?'小さな金属':'まとまった反応'):''};
+ const reading:ScanReading={strength,band:strength<.12?'なし':strength<.35?'弱':strength<.7?'中':'強',depthHint:selected?((selected.depth??selected.y)>420?'かなり深そう':(selected.depth??selected.y)>180?'深そう':'浅そう'):'',character:selected?(id==='B206'?((['B002','B004'].includes(selected.id)||treasure(selected.id).material==='iron')?'鉄系の反応':'非鉄系らしい反応'):(sizes[selected.id]??1)<.75?'小さな金属':'まとまった反応'):''};
  s.lastScan=reading;
  if(selected&&strength>=.25){
   // Mark the survey location on a coarse grid, never the treasure's exact location.

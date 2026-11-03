@@ -1,8 +1,8 @@
 "use strict";
 
 ((root) => {
+  const Poses = typeof module !== "undefined" && module.exports ? require("./poses.js") : root.KakureronPoses;
   const MAX_EDGE = 2048;
-  const CHARACTER_RATIO = 180 / 120;
 
   function outputSize(width, height) {
     if (!(width > 0 && height > 0)) throw new Error("写真を選択してください。");
@@ -10,16 +10,25 @@
     return { width: Math.max(1, Math.round(width * scale)), height: Math.max(1, Math.round(height * scale)) };
   }
 
-  function answerBounds(character, rect) {
+  function answerBounds(character, rect, pose = Poses.get(character.poseId), bounds = pose.bounds) {
     const width = character.size * rect.width;
-    const height = width * CHARACTER_RATIO;
-    const cos = Math.abs(Math.cos(character.angle));
-    const sin = Math.abs(Math.sin(character.angle));
+    const height = width * pose.ratio;
+    const cos = Math.cos(character.angle);
+    const sin = Math.sin(character.angle);
+    const corners = [
+      [bounds.x, bounds.y], [bounds.x + bounds.width, bounds.y],
+      [bounds.x, bounds.y + bounds.height], [bounds.x + bounds.width, bounds.y + bounds.height]
+    ].map(([u, v]) => {
+      const x = (u - 0.5) * width, y = (v - 0.5) * height;
+      return { x: x * cos - y * sin, y: x * sin + y * cos };
+    });
+    const minX = Math.min(...corners.map(p => p.x)), maxX = Math.max(...corners.map(p => p.x));
+    const minY = Math.min(...corners.map(p => p.y)), maxY = Math.max(...corners.map(p => p.y));
     const padding = rect.width * 0.012;
-    const boxWidth = Math.max(width * cos + height * sin + padding * 2, Math.min(24, rect.width));
-    const boxHeight = Math.max(width * sin + height * cos + padding * 2, Math.min(24, rect.height));
-    const cx = rect.x + character.x * rect.width;
-    const cy = rect.y + character.y * rect.height;
+    const boxWidth = Math.max(maxX - minX + padding * 2, Math.min(24, rect.width));
+    const boxHeight = Math.max(maxY - minY + padding * 2, Math.min(24, rect.height));
+    const cx = rect.x + character.x * rect.width + (minX + maxX) / 2;
+    const cy = rect.y + character.y * rect.height + (minY + maxY) / 2;
     const left = Math.max(rect.x, cx - boxWidth / 2);
     const top = Math.max(rect.y, cy - boxHeight / 2);
     const right = Math.min(rect.x + rect.width, cx + boxWidth / 2);
@@ -27,8 +36,8 @@
     return { x: left, y: top, width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
   }
 
-  function drawAnswer(ctx, character, rect) {
-    const box = answerBounds(character, rect);
+  function drawAnswer(ctx, character, rect, pose, bounds) {
+    const box = answerBounds(character, rect, pose, bounds);
     const line = Math.max(2, rect.width * 0.003);
     const inset = Math.min(line, box.width / 4, box.height / 4);
     ctx.lineJoin = "round";
@@ -54,6 +63,7 @@
   // The editor, question and answer all use exactly the same transform and layers.
   function drawScene(ctx, scene, rect, answer = false) {
     const { background, characterImage, paintLayer, character } = scene;
+    const pose = scene.pose || Poses.get(character.poseId);
     ctx.drawImage(background, rect.x, rect.y, rect.width, rect.height);
     ctx.save();
     ctx.beginPath();
@@ -63,10 +73,10 @@
     ctx.save();
     ctx.translate(rect.x + character.x * rect.width, rect.y + character.y * rect.height);
     ctx.rotate(character.angle);
-    ctx.drawImage(characterImage, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
-    ctx.drawImage(paintLayer, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
+    ctx.drawImage(characterImage, -width / 2, -width * pose.ratio / 2, width, width * pose.ratio);
+    ctx.drawImage(paintLayer, -width / 2, -width * pose.ratio / 2, width, width * pose.ratio);
     ctx.restore();
-    if (answer) drawAnswer(ctx, character, rect);
+    if (answer) drawAnswer(ctx, character, rect, pose, scene.bounds || pose.bounds);
     ctx.restore();
   }
 
@@ -102,7 +112,7 @@
     try { return navigator.canShare({ files: [file] }); } catch { return false; }
   }
 
-  const api = { MAX_EDGE, CHARACTER_RATIO, outputSize, answerBounds, drawScene, createPNG, fileName, canShareFile };
+  const api = { MAX_EDGE, outputSize, answerBounds, drawScene, createPNG, fileName, canShareFile };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.KakureronExport = api;
 })(globalThis);

@@ -3,7 +3,7 @@ import {treasure,income} from './data';
 import {reward,type State,type Find} from './engine';
 export function treasureShape(id:string){
  const image=treasureImage(id);if(image)return `<img src="${image}" alt="">`;let shape='';const kind=treasure(id)?.kind??'';
- if(id==='B012')shape='<rect x="43" y="7" width="34" height="106" rx="9" fill="#697f73"/><circle cx="60" cy="60" r="27" fill="#e2c87e"/><circle cx="60" cy="60" r="21" fill="#f0eee0"/><path d="M60 44v17l12 7" stroke="#405957" stroke-width="4"/>';
+ if(id==='B012'||treasure(id)?.name.includes('時計'))shape='<rect x="43" y="7" width="34" height="106" rx="9" fill="#697f73"/><circle cx="60" cy="60" r="27" fill="#e2c87e"/><circle cx="60" cy="60" r="21" fill="#f0eee0"/><path d="M60 44v17l12 7" stroke="#405957" stroke-width="4"/>';
  else if(id==='B011'||id==='B009')shape='<circle cx="60" cy="65" r="29" fill="none" stroke="#dcb95b" stroke-width="13"/><path d="M46 36l14-18 14 18-14 12z" fill="#e9edc0"/>';
  else if(['B007','B010'].includes(id))shape='<circle cx="60" cy="60" r="36" fill="#bc9a51" stroke="#e7d17e" stroke-width="5"/><circle cx="60" cy="60" r="27" fill="none" stroke="#e6ce82" stroke-width="2"/><path d="M60 37l7 15 17 2-12 12 3 17-15-8-15 8 3-17-12-12 17-2z" fill="#e3c775"/>';
  else if(id==='B002')shape='<path d="M70 20v49c0 30-39 32-39 4V60l10 13" fill="none" stroke="#9aa89f" stroke-width="7"/><circle cx="70" cy="20" r="7" fill="none" stroke="#9aa89f" stroke-width="5"/>';
@@ -13,7 +13,7 @@ export function treasureShape(id:string){
  else if(id==='R005')shape='<g fill="none" stroke="#8d9b8c" stroke-width="9"><ellipse cx="40" cy="35" rx="14" ry="23" transform="rotate(-30 40 35)"/><ellipse cx="62" cy="60" rx="14" ry="23" transform="rotate(-30 62 60)"/><ellipse cx="84" cy="85" rx="14" ry="23" transform="rotate(-30 84 85)"/></g>';
  else if(id==='R009')shape='<path d="M20 68h80v20H20zM51 30h18v48H51z" fill="#ab8d51"/><ellipse cx="60" cy="30" rx="29" ry="12" fill="none" stroke="#c7ae68" stroke-width="7"/>';
  else if(id==='R001')shape='<path d="M45 20h30v9H63v75l-6 10V29H45z" fill="#967764"/>';
- else if(id==='B004'||id==='R002')shape='<path d="M36 30l13-15h23l13 15-13 16H49z" fill="#96745d"/><path d="M52 42h16v58H52z" fill="#9c8870"/><path d="M48 53l24-5M48 65l24-5M48 77l24-5M48 89l24-5" stroke="#d5b896" stroke-width="3"/>';
+ else if(id==='B004'||id==='R002'||kind==='締結部品')shape='<path d="M36 30l13-15h23l13 15-13 16H49z" fill="#96745d"/><path d="M52 42h16v58H52z" fill="#9c8870"/><path d="M48 53l24-5M48 65l24-5M48 77l24-5M48 89l24-5" stroke="#d5b896" stroke-width="3"/>';
  else if(id==='B001')shape='<path d="M31 37l5-10 10 2 8-8 8 7 11-5 6 10 11 2-1 11 8 9-8 9 1 11-11 2-6 10-11-5-8 7-8-8-10 2-5-10-10-4 4-11-4-11z" fill="#a9b5a5"/><circle cx="57" cy="54" r="24" fill="#d4d9be"/>';
  else if(['自然物','ガラス・陶片'].includes(kind))shape=kind==='自然物'?'<path d="M20 85Q10 20 60 15Q110 20 100 85L60 105z" fill="#d8cbb0"/><path d="M60 100L30 35M60 100V20M60 100L90 35" stroke="#a7997e" fill="none"/>':'<path d="M36 15h48v20l15 20-8 45H29l-8-45 15-20z" fill="#83b7b0"/>' ;
  else if(kind.includes('工具'))shape='<path d="M30 12l14 23 18-10-1-20c29 12 20 35 3 40L40 104l-17-8 28-56c-18 0-25-9-21-28z" fill="#9daaa4"/>';

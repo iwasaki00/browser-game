@@ -1,22 +1,24 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.3.0";
+  const VERSION = "0.4.0";
+  const Poses = globalThis.KakureronPoses;
   const Paint = globalThis.KakureronPaint;
   const Export = globalThis.KakureronExport;
   const MAX_PHOTO_EDGE = 2048;
-  const INITIAL = Object.freeze({ x: 0.5, y: 0.5, size: 0.18, angle: 0 });
+  const INITIAL = Object.freeze({ x: 0.5, y: 0.5, size: 0.18, angle: 0, poseId: Poses.DEFAULT_ID });
   const MIN_SIZE = 0.05;
   const MAX_SIZE = 0.6;
   const SIZE_STEP = 0.02;
   const ROTATION_STEP = 5 * Math.PI / 180;
-  const CHARACTER_RATIO = 180 / 120;
   const canvas = document.querySelector("#canvas");
   const ctx = canvas.getContext("2d");
   const stage = document.querySelector("#stage");
   const input = document.querySelector("#image-input");
   const status = document.querySelector("#status");
-  const characterImage = new Image();
+  let characterImage = new Image();
+  const poseImages = new Map([[Poses.DEFAULT_ID, characterImage]]);
+  const poseLoads = new Map();
   const pointers = new Map();
   const paint = Paint.createLayer(() => document.createElement("canvas"));
   const photo = document.createElement("canvas");
@@ -25,6 +27,11 @@
   const loupeCtx = loupe.getContext("2d");
   const modeButtons = [...document.querySelectorAll("[data-mode]")];
   const brushButtons = [...document.querySelectorAll("[data-brush]")];
+  const poseButtons = [...document.querySelectorAll("[data-pose]")];
+  const confirmDialog = document.querySelector("#change-confirm");
+  let poseBusy = false;
+  let pendingChange = null;
+  let poseSequence = 0;
   const modeHints = {
     place: "1本指で移動 ／ 2本指でサイズ・角度を調整",
     pick: "写真をタップ・なぞって色を取得。白いキャラの下も拾えます。",
@@ -55,6 +62,8 @@
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+  const editBlocked = () => previewing || poseBusy || !!pendingChange;
+  const currentPose = () => Poses.get(character.poseId);
 
   // Positions and width are relative to the fitted background, independent of device pixels.
   function updateFit() {
@@ -66,7 +75,7 @@
   }
 
   function scene() {
-    return { background, characterImage, paintLayer: paint.canvas, character: { ...character } };
+    return { background, characterImage, paintLayer: paint.canvas, character: { ...character }, pose: currentPose(), bounds: paint.bounds() };
   }
 
   function render() {
@@ -82,10 +91,11 @@
     ctx.clearRect(0, 0, stage.clientWidth, stage.clientHeight);
     if (!background) return;
     updateFit();
-    const ready = characterImage.complete && characterImage.naturalWidth > 0;
+    const ready = characterImage.complete && characterImage.naturalWidth > 0 && !!paint.bounds();
     if (ready) Export.drawScene(ctx, scene(), fit);
     else ctx.drawImage(background, fit.x, fit.y, fit.width, fit.height);
     document.querySelector("#open-preview").disabled = !ready;
+    updatePoseUI();
     document.querySelector("#size-value").textContent = `${Math.round(character.size * 100)}%`;
     document.querySelector("#angle-value").textContent = `${Math.round(character.angle * 180 / Math.PI)}°`;
     document.querySelector("#smaller").disabled = character.size <= MIN_SIZE;
@@ -112,16 +122,122 @@
     updateHistory();
   }
 
-  function reset() {
-    if (previewing) return;
+  function resetState() {
     clearGesture();
+    if (character.poseId !== Poses.DEFAULT_ID) {
+      const image = poseImages.get(Poses.DEFAULT_ID);
+      paint.setMask(image, Poses.get());
+      characterImage = image;
+    }
     character = { ...INITIAL };
     paint.reset();
+    releaseOutputs();
     render();
   }
 
+  function updatePoseUI() {
+    document.querySelector("#toggle-poses").textContent = `ポーズ：${currentPose().name} ▾`;
+    document.querySelector("#toggle-poses").disabled = !background || !paint.bounds() || poseBusy;
+    document.querySelector("#open-preview").disabled ||= poseBusy || !!pendingChange;
+    poseButtons.forEach(button => {
+      button.disabled = !background || !paint.bounds() || poseBusy;
+      button.setAttribute("aria-pressed", String(button.dataset.pose === character.poseId));
+    });
+  }
+
+  function loadPose(pose) {
+    const cached = poseImages.get(pose.poseId);
+    if (cached?.complete && cached.naturalWidth > 0) return Promise.resolve(cached);
+    if (poseLoads.has(pose.poseId)) return poseLoads.get(pose.poseId);
+    const task = new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => { poseImages.set(pose.poseId, image); resolve(image); };
+      image.onerror = () => reject(new Error("ポーズを読み込めません。"));
+      image.src = pose.silhouette;
+    }).finally(() => poseLoads.delete(pose.poseId));
+    poseLoads.set(pose.poseId, task);
+    return task;
+  }
+
+  function discardPrepared(change) {
+    if (change?.prepared) change.prepared.surface.width = change.prepared.surface.height = 1;
+  }
+
+  function cancelChange() {
+    const change = pendingChange;
+    pendingChange = null;
+    discardPrepared(change);
+    if (confirmDialog.open) confirmDialog.close();
+    updatePoseUI();
+    if (background && !previewing) render();
+    document.querySelector(change?.kind === "reset" ? "#reset" : "#toggle-poses").focus();
+  }
+
+  function applyChange(change) {
+    try {
+      if (change.kind === "reset") resetState();
+      else {
+        paint.applyMask(change.prepared);
+        characterImage = change.image;
+        character.poseId = change.pose.poseId;
+        releaseOutputs();
+        render();
+      }
+      status.textContent = "";
+    } catch {
+      status.textContent = "ポーズを変更できませんでした。もう一度お試しください。";
+    }
+    updatePoseUI();
+  }
+
+  function confirmOrApply(change) {
+    const history = paint.history();
+    if (!history.undo && !history.redo && !paint.hasPaint()) { applyChange(change); return; }
+    pendingChange = change;
+    document.querySelector("#confirm-title").textContent = change.kind === "reset" ? "リセット" : "ポーズの変更";
+    document.querySelector("#confirm-message").textContent = change.kind === "reset"
+      ? "リセットすると、現在の塗装が消去されます。リセットしますか？"
+      : "ポーズを変更すると、現在の塗装が消去されます。変更しますか？";
+    document.querySelector("#confirm-change").textContent = change.kind === "reset" ? "リセットする" : "変更する";
+    try { confirmDialog.showModal(); }
+    catch { confirmDialog.setAttribute("open", ""); }
+    document.querySelector("#cancel-change").focus();
+    updatePoseUI();
+  }
+
+  async function requestPose(id) {
+    if (editBlocked() || !background || !paint.bounds() || id === character.poseId) return;
+    clearGesture();
+    const sequence = ++poseSequence;
+    const pose = Poses.get(id);
+    poseBusy = true;
+    updatePoseUI();
+    status.textContent = "ポーズを読み込んでいます…";
+    let change = null;
+    try {
+      const image = await loadPose(pose);
+      if (sequence !== poseSequence) return;
+      // Prepare and validate the new mask without touching the current paint or history.
+      change = { kind: "pose", pose, image, prepared: paint.prepareMask(image, pose) };
+      poseBusy = false;
+      status.textContent = "";
+      confirmOrApply(change);
+    } catch {
+      discardPrepared(change);
+      if (sequence === poseSequence) status.textContent = "ポーズを読み込めませんでした。現在の塗装を残したまま、もう一度お試しください。";
+    } finally {
+      if (sequence === poseSequence) { poseBusy = false; updatePoseUI(); }
+    }
+  }
+
+  function requestReset() {
+    if (editBlocked() || !background) return;
+    clearGesture();
+    confirmOrApply({ kind: "reset" });
+  }
+
   function setMode(next) {
-    if (previewing) return;
+    if (editBlocked()) return;
     clearGesture();
     mode = next;
     canvas.dataset.mode = mode;
@@ -164,6 +280,7 @@
 
   function editPoint(point) {
     if (mode === "pick") pickColor(point);
+    else if (!insidePhoto(point)) paint.dab({ x: -1, y: -1 });
     else if (paint.dab(Paint.screenToLocal(point, character, fit))) render();
   }
 
@@ -185,16 +302,15 @@
   }
 
   function hitsCharacter(point) {
-    const dx = point.x - (fit.x + character.x * fit.width);
-    const dy = point.y - (fit.y + character.y * fit.height);
-    const x = dx * Math.cos(character.angle) + dy * Math.sin(character.angle);
-    const y = -dx * Math.sin(character.angle) + dy * Math.cos(character.angle);
-    const width = character.size * fit.width;
-    return Math.abs(x) <= Math.max(width / 2, 22) && Math.abs(y) <= Math.max(width * CHARACTER_RATIO / 2, 22);
+    return insidePhoto(point) && paint.contains(Paint.screenToLocal(point, character, fit));
+  }
+
+  function insidePhoto(point) {
+    return point.x >= fit.x && point.x <= fit.x + fit.width && point.y >= fit.y && point.y <= fit.y + fit.height;
   }
 
   canvas.addEventListener("pointerdown", (event) => {
-    if (previewing || !background || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
+    if (editBlocked() || !background || !paint.bounds() || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
     if (mode !== "place" && pointers.size) return;
     const point = localPoint(event);
     if (mode === "place" && !pointers.size && !hitsCharacter(point)) return;
@@ -209,7 +325,7 @@
   });
 
   canvas.addEventListener("pointermove", (event) => {
-    if (previewing || !pointers.has(event.pointerId)) return;
+    if (editBlocked() || !pointers.has(event.pointerId)) return;
     event.preventDefault();
     pointers.set(event.pointerId, localPoint(event));
     if (mode !== "place") { editPoint(localPoint(event)); return; }
@@ -260,6 +376,9 @@
         image.src = url;
       });
       if (sequence !== loadSequence) return;
+      poseSequence++;
+      poseBusy = false;
+      if (pendingChange) cancelChange();
       if (previewing) leavePreview();
       clearGesture();
       const scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
@@ -273,7 +392,7 @@
       document.querySelectorAll(".controls button").forEach((button) => { button.disabled = false; });
       document.querySelector("#workspace-state").textContent = "配置を調整中";
       document.querySelector("#hint").textContent = "カクレロンをドラッグ。2本指で大きさと角度を変えられます。";
-      reset();
+      resetState();
       setMode("place");
       status.textContent = "";
     } catch {
@@ -284,7 +403,7 @@
   });
 
   function adjust(sizeDelta, angleDelta) {
-    if (previewing || !background) return;
+    if (editBlocked() || !background) return;
     clearGesture();
     character.size = clamp(character.size + sizeDelta, MIN_SIZE, MAX_SIZE);
     character.angle = normalizeAngle(character.angle + angleDelta);
@@ -294,24 +413,43 @@
   document.querySelector("#larger").addEventListener("click", () => adjust(SIZE_STEP, 0));
   document.querySelector("#rotate-left").addEventListener("click", () => adjust(0, -ROTATION_STEP));
   document.querySelector("#rotate-right").addEventListener("click", () => adjust(0, ROTATION_STEP));
-  document.querySelector("#reset").addEventListener("click", reset);
+  document.querySelector("#reset").addEventListener("click", requestReset);
+  document.querySelector("#toggle-poses").addEventListener("click", () => {
+    if (editBlocked() || !background) return;
+    clearGesture();
+    const panel = document.querySelector("#pose-options");
+    panel.hidden = !panel.hidden;
+    document.querySelector("#toggle-poses").setAttribute("aria-expanded", String(!panel.hidden));
+  });
+  poseButtons.forEach(button => button.addEventListener("click", () => requestPose(button.dataset.pose)));
+  document.querySelector("#cancel-change").addEventListener("click", cancelChange);
+  document.querySelector("#confirm-change").addEventListener("click", () => {
+    const change = pendingChange;
+    if (!change) return;
+    pendingChange = null;
+    confirmDialog.close();
+    applyChange(change);
+    document.querySelector("#toggle-poses").focus();
+  });
+  confirmDialog.addEventListener("cancel", event => { event.preventDefault(); cancelChange(); });
+  confirmDialog.addEventListener("close", () => { if (pendingChange) cancelChange(); });
   modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
   brushButtons.forEach(button => button.addEventListener("click", () => {
-    if (previewing) return;
+    if (editBlocked()) return;
     clearGesture();
     brush = button.dataset.brush;
     brushButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
   }));
   for (const action of ["undo", "redo"]) {
     document.querySelector(`#${action}`).addEventListener("click", () => {
-      if (previewing) return;
+      if (editBlocked()) return;
       clearGesture();
       paint[action]();
       render();
     });
   }
   canvas.addEventListener("keydown", (event) => {
-    if (previewing || !background || mode !== "place") return;
+    if (editBlocked() || !background || mode !== "place") return;
     const moves = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, -0.01], ArrowDown: [0, 0.01] };
     if (!moves[event.key]) return;
     event.preventDefault();
@@ -321,9 +459,14 @@
     render();
   });
   new ResizeObserver(() => { clearGesture(); render(); }).observe(stage);
-  characterImage.onload = () => { paint.setMask(characterImage); render(); };
+  const standImage = characterImage;
+  standImage.onload = () => {
+    if (characterImage !== standImage) return;
+    try { paint.setMask(standImage, Poses.get()); render(); }
+    catch { status.textContent = "カクレロンのマスクを作成できませんでした。静的Web配信で開き直してください。"; }
+  };
   characterImage.onerror = () => { status.textContent = "カクレロンを読み込めませんでした。ページを開き直してください。"; };
-  characterImage.src = "assets/kakureron.svg";
+  characterImage.src = Poses.get().silhouette;
   document.documentElement.dataset.version = VERSION;
 
   function updateOutputButtons() {
@@ -411,7 +554,7 @@
   }
 
   async function enterPreview() {
-    if (previewing) return;
+    if (editBlocked()) return;
     if (!background) { status.textContent = "先に写真を選択してください。"; return; }
     if (!characterImage.complete || !characterImage.naturalWidth) { status.textContent = "カクレロンの読込が終わってからお試しください。"; return; }
     clearGesture();

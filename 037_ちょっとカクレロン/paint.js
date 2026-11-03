@@ -2,18 +2,20 @@
 
 // Shared by the UI and internal tests; no network or persistent storage.
 ((root) => {
+  const Poses = typeof module !== "undefined" && module.exports ? require("./poses.js") : root.KakureronPoses;
   const WIDTH = 384;
   const HEIGHT = 576;
   const HISTORY_LIMIT = 25;
   const BRUSHES = Object.freeze({ small: 12, medium: 32, large: 72 });
 
-  function screenToLocal(point, character, fit) {
+  function screenToLocal(point, character, fit, pose = Poses.get(character.poseId)) {
     const dx = point.x - (fit.x + character.x * fit.width);
     const dy = point.y - (fit.y + character.y * fit.height);
     const scale = WIDTH / (character.size * fit.width);
+    const height = Poses.rasterSize(pose).height;
     return {
       x: (dx * Math.cos(character.angle) + dy * Math.sin(character.angle)) * scale + WIDTH / 2,
-      y: (-dx * Math.sin(character.angle) + dy * Math.cos(character.angle)) * scale + HEIGHT / 2
+      y: (-dx * Math.sin(character.angle) + dy * Math.cos(character.angle)) * height / (character.size * fit.width * pose.ratio) + height / 2
     };
   }
 
@@ -42,17 +44,54 @@
     let before = null;
     let previous = null;
     let stroke = null;
+    let width = WIDTH;
+    let height = HEIGHT;
+    let bounds = null;
 
-    const snapshot = () => ctx.getImageData(0, 0, WIDTH, HEIGHT);
-    function setMask(image) {
-      maskCtx.clearRect(0, 0, WIDTH, HEIGHT);
-      maskCtx.drawImage(image, 0, 0, WIDTH, HEIGHT);
-      maskPixels = maskCtx.getImageData(0, 0, WIDTH, HEIGHT).data;
+    const snapshot = () => ctx.getImageData(0, 0, width, height);
+    function prepareMask(image, pose = Poses.get()) {
+      const size = Poses.rasterSize(pose);
+      const surface = makeCanvas();
+      surface.width = size.width;
+      surface.height = size.height;
+      try {
+        const context = surface.getContext("2d", { willReadFrequently: true });
+        context.drawImage(image, 0, 0, size.width, size.height);
+        const pixels = context.getImageData(0, 0, size.width, size.height).data;
+        let left = size.width, top = size.height, right = -1, bottom = -1;
+        for (let y = 0; y < size.height; y++) for (let x = 0; x < size.width; x++) {
+          if (pixels[(y * size.width + x) * 4 + 3]) {
+            left = Math.min(left, x); top = Math.min(top, y);
+            right = Math.max(right, x); bottom = Math.max(bottom, y);
+          }
+        }
+        if (right < 0) throw new Error("シルエットを読み込めません。");
+        return { surface, pixels, ...size, bounds: { x: left / size.width, y: top / size.height,
+          width: (right - left + 1) / size.width, height: (bottom - top + 1) / size.height } };
+      } catch (error) { surface.width = surface.height = 1; throw error; }
+    }
+    function applyMask(prepared) {
+      width = prepared.width;
+      height = prepared.height;
+      for (const canvas of [paint, mask, stamp]) { canvas.width = width; canvas.height = height; }
+      maskCtx.drawImage(prepared.surface, 0, 0);
+      maskPixels = prepared.pixels;
+      bounds = { ...prepared.bounds };
+      prepared.surface.width = prepared.surface.height = 1;
+      reset();
+    }
+    function setMask(image, pose) {
+      applyMask(prepareMask(image, pose));
+    }
+    function hasPaint() {
+      const pixels = snapshot().data;
+      for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) return true;
+      return false;
     }
     function contains(point) {
       const x = Math.floor(point.x);
       const y = Math.floor(point.y);
-      return !!maskPixels && x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && maskPixels[(y * WIDTH + x) * 4 + 3] > 0;
+      return !!maskPixels && x >= 0 && x < width && y >= 0 && y < height && maskPixels[(y * width + x) * 4 + 3] > 0;
     }
     function finish() {
       if (before) {
@@ -72,7 +111,7 @@
       if (!stroke) return false;
       if (!contains(point)) { previous = null; return false; }
       if (!before) before = snapshot();
-      stampCtx.clearRect(0, 0, WIDTH, HEIGHT);
+      stampCtx.clearRect(0, 0, width, height);
       stampCtx.globalCompositeOperation = "source-over";
       stampCtx.strokeStyle = stroke.color;
       stampCtx.fillStyle = stroke.color;
@@ -111,9 +150,9 @@
       previous = null;
       undo.length = 0;
       redo.length = 0;
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      ctx.clearRect(0, 0, width, height);
     }
-    return { canvas: paint, setMask, contains, begin, dab, finish, reset,
+    return { canvas: paint, setMask, prepareMask, applyMask, hasPaint, bounds: () => bounds && { ...bounds }, contains, begin, dab, finish, reset,
       undo: () => restore(undo, redo), redo: () => restore(redo, undo),
       history: () => ({ undo: undo.length, redo: redo.length }) };
   }

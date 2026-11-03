@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const Paint = require('../paint.js');
 const Export = require('../export.js');
+const Poses = require('../poses.js');
 
 function setup(options = {}) {
   const elements = new Map();
@@ -27,18 +28,28 @@ function setup(options = {}) {
     const operations = [];
     let pixels = new Uint8ClampedArray(Paint.WIDTH * Paint.HEIGHT * 4);
     const target = { width: 0, height: 0, operations };
+    const ensurePixels = () => {
+      if (pixels.length !== target.width * target.height * 4) pixels = new Uint8ClampedArray(target.width * target.height * 4);
+    };
     const context = {
       globalCompositeOperation: 'source-over',
-      clearRect() { pixels.fill(0); operations.push(['clear']); },
+      clearRect() { ensurePixels(); pixels.fill(0); operations.push(['clear']); },
       drawImage(image, ...args) {
+        ensurePixels();
         if (image.source?.startsWith('blob:')) target.source = image.source;
         operations.push(['draw', this.globalCompositeOperation, image, ...args]);
-        if (image.source === 'assets/kakureron.svg') {
+        if (Poses.list.some(pose => pose.silhouette === image.source)) {
           // Synthetic mask: a central strip with transparent space on both sides.
-          for (let y = 0; y < Paint.HEIGHT; y++) for (let x = 80; x < 304; x++) pixels[(y * Paint.WIDTH + x) * 4 + 3] = 255;
-        } else pixels[0]++;
+          if (image.source !== options.emptyPose) for (let y = 0; y < target.height; y++) for (let x = 80; x < 304; x++) pixels[(y * target.width + x) * 4 + 3] = 255;
+          target.maskPixels = new Uint8ClampedArray(pixels);
+        } else if (image.maskPixels && this.globalCompositeOperation === 'source-over') {
+          pixels.set(image.maskPixels.subarray(0, pixels.length));
+          target.maskPixels = new Uint8ClampedArray(pixels);
+        } else if (this.globalCompositeOperation === 'destination-out') pixels.fill(0);
+        else if (this.globalCompositeOperation !== 'destination-in') { pixels[0]++; pixels[3] = 255; }
       },
       getImageData(x, y, width, height) {
+        ensurePixels();
         if (width === 1 && height === 1) return { data: new Uint8ClampedArray([185, 140, 98, 255]) };
         return { data: new Uint8ClampedArray(pixels), width, height };
       },
@@ -56,8 +67,9 @@ function setup(options = {}) {
     };
     target.getContext = () => context;
     target.toBlob = (callback, type) => {
+      const sources = operations.filter(op => op[0] === 'draw').map(op => op[2].source || 'paint-layer').join('|');
       const encoding = { type, width: target.width, height: target.height, operations: [...operations],
-        complete: () => callback(options.failEncoding ? null : new Blob(['synthetic PNG for API control-flow testing'], { type })) };
+        complete: () => callback(options.failEncoding ? null : new Blob([`synthetic PNG for API control-flow testing:${sources}`], { type })) };
       encodings.push(encoding);
       if (!options.deferEncoding) queueMicrotask(encoding.complete);
     };
@@ -71,6 +83,7 @@ function setup(options = {}) {
       classList: { add() {}, remove() {} }, dataset: {}, style: {},
       setAttribute(name, value) { this[name] = value; },
       removeAttribute(name) { delete this[name]; }, focus() {},
+      open: false, showModal() { this.open = true; }, close() { this.open = false; },
       addEventListener(type, handler) { this.handlers[type] = handler; },
       click() { return this.handlers.click?.({}); },
       getContext() { return context; },
@@ -82,7 +95,8 @@ function setup(options = {}) {
   }
   const modes = ['place', 'pick', 'paint', 'erase'].map(mode => { const button = element(`mode-${mode}`); button.dataset.mode = mode; return button; });
   const brushes = ['small', 'medium', 'large'].map(brush => { const button = element(`brush-${brush}`); button.dataset.brush = brush; return button; });
-  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo'].map(element).concat(modes, brushes);
+  const poses = Poses.list.map(pose => { const button = element(`pose-${pose.poseId}`); button.dataset.pose = pose.poseId; return button; });
+  const buttons = ['smaller', 'larger', 'rotate-left', 'rotate-right', 'reset', 'undo', 'redo', 'toggle-poses'].map(element).concat(modes, brushes, poses);
   Object.assign(element('loupe').getContext(), { fillRect() {}, strokeRect() {} });
   const document = {
     documentElement: { dataset: {} }, hidden: false, addEventListener() {},
@@ -95,7 +109,7 @@ function setup(options = {}) {
       return offscreen();
     },
     querySelector(selector) { return element(selector.slice(1)); },
-    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : buttons; }
+    querySelectorAll(selector) { return selector === '[data-mode]' ? modes : selector === '[data-brush]' ? brushes : selector === '[data-pose]' ? poses : buttons; }
   };
   let revoked = 0;
   class Image {
@@ -104,11 +118,11 @@ function setup(options = {}) {
     naturalHeight = options.imageHeight || 400;
     set src(value) {
       this.source = value;
-      queueMicrotask(() => value === 'blob:bad' ? this.onerror?.() : this.onload?.());
+      queueMicrotask(() => value === 'blob:bad' || value === options.failPose ? this.onerror?.() : this.onload?.());
     }
   }
   vm.runInNewContext(fs.readFileSync('app.js', 'utf8'), {
-    document, Image, KakureronPaint: Paint, KakureronExport: Export, navigator,
+    document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, navigator,
     Blob, File, isSecureContext: options.secureContext !== false,
     window: { devicePixelRatio: 2, addEventListener() {} },
     URL: { createObjectURL: file => {
@@ -253,6 +267,7 @@ test('paint and eraser stamps are masked, history is per stroke, undo/redo and r
   app.pointer('pointerup', 3, 200, 200);
   assert.equal(app.element('redo').disabled, true);
   app.element('reset').click();
+  app.element('confirm-change').click();
   assert.equal(app.element('undo').disabled, true);
   assert.equal(app.element('redo').disabled, true);
   assert.equal(layer.operations.at(-1)[0], 'clear');
@@ -510,4 +525,215 @@ test('share and save exceptions keep a usable preview and allow retry', async ()
   app.element('save-question').click();
   assert.equal(app.downloads.length, 1);
   assert.equal(app.element('preview-image').hidden, false);
+});
+
+test('pose assets have independent silhouettes and STAND remains byte compatible', () => {
+  const crypto = require('node:crypto');
+  const stand = fs.readFileSync(Poses.get('P01').silhouette, 'utf8').replace(/\r\n?/g, '\n').trim();
+  assert.equal(crypto.createHash('sha256').update(stand).digest('hex'), '15f001cd50b0fbc5461af5ace0a81c1214b165413274270288a95ca930d2b3c4');
+  assert.equal(Poses.list.length, 4);
+  const assets = Poses.list.map(pose => fs.readFileSync(pose.silhouette, 'utf8'));
+  assert.equal(new Set(assets).size, 4);
+  Poses.list.forEach((pose, index) => {
+    assert.ok(assets[index].includes(`viewBox="0 0 ${pose.referenceWidth} ${pose.referenceHeight}"`));
+    assert.ok(!/transform=|https?:\/\/(?!www\.w3\.org)/.test(assets[index]));
+  });
+});
+
+for (const pose of Poses.list) {
+  test(`${pose.poseId} ${pose.english}: placement, pinch, rotation, three brushes, eraser, PNG and answer`, async () => {
+    const app = setup();
+    await app.load();
+    app.element('toggle-poses').click();
+    assert.equal(app.element('pose-options').hidden, false);
+    await app.element(`pose-${pose.poseId}`).click();
+    assert.equal(app.element('change-confirm').open, false);
+    assert.equal(app.element(`pose-${pose.poseId}`)['aria-pressed'], 'true');
+    assert.equal(app.draws[1].image.source, pose.silhouette);
+    assert.ok(Math.abs(app.draws[1].rect[3] / app.draws[1].rect[2] - pose.ratio) < 1e-9);
+    assert.equal(app.offscreens[0].height, Poses.rasterSize(pose).height);
+    // The alpha-mask's transparent margin must not start a drag.
+    app.pointer('pointerdown', 1, 165, 200);
+    assert.equal(app.captures.size, 0);
+    app.pointer('pointerdown', 1, 200, 200);
+    app.pointer('pointermove', 1, 230, 210);
+    assert.ok(Math.abs(app.draws[1].position[0] - 230) < 1e-8);
+    assert.ok(Math.abs(app.draws[1].position[1] - 210) < 1e-8);
+    app.pointer('pointerdown', 2, 270, 210);
+    app.pointer('pointermove', 2, 230, 290);
+    assert.equal(app.element('size-value').textContent, '36%');
+    assert.equal(app.element('angle-value').textContent, '90°');
+    app.pointer('pointerup', 2, 230, 290);
+    app.pointer('pointerup', 1, 230, 210);
+    app.element('larger').click();
+    app.element('rotate-right').click();
+    assert.equal(app.element('size-value').textContent, '38%');
+    assert.equal(app.element('angle-value').textContent, '95°');
+    const center = Array.from(app.draws[1].position);
+    app.element('mode-pick').click();
+    app.pointer('pointerdown', 1, ...center);
+    app.pointer('pointerup', 1, ...center);
+    assert.equal(app.element('color-value').textContent, '#B98C62');
+    app.element('mode-paint').click();
+    for (const brush of ['small', 'medium', 'large']) {
+      app.element(`brush-${brush}`).click();
+      app.pointer('pointerdown', 1, ...center);
+      app.pointer('pointerup', 1, ...center);
+    }
+    const stamp = app.offscreens[2];
+    for (const width of Object.values(Paint.BRUSHES)) assert.ok(stamp.operations.some(op => op[0] === 'arc' && op[3] === width / 2));
+    assert.ok(stamp.operations.some(op => op[0] === 'fill' && op[1] === '#B98C62'));
+    assert.ok(stamp.operations.some(op => op[0] === 'draw' && op[1] === 'destination-in'));
+    app.element('mode-erase').click();
+    app.pointer('pointerdown', 1, ...center);
+    app.pointer('pointerup', 1, ...center);
+    app.element('undo').click();
+    app.element('redo').click();
+    app.element('undo').click(); // retain colored paint for PNG
+    await app.element('open-preview').click();
+    const question = app.encodings.at(-1);
+    assert.ok(question.operations.some(op => op[0] === 'draw' && op[2].source === pose.silhouette));
+    assert.ok(question.operations.some(op => op[0] === 'rotate' && Math.abs(op[1] - 95 * Math.PI / 180) < 1e-9));
+    assert.equal(question.operations.filter(op => op[0] === 'strokeRect').length, 0);
+    await app.element('show-answer').click();
+    assert.equal(app.encodings.at(-1).operations.filter(op => op[0] === 'strokeRect').length, 2);
+    app.element('save-answer').click();
+    assert.match(app.downloads[0].download, /kakureron_answer_/);
+    app.element('back-to-edit').click();
+    assert.equal(app.draws[1].image.source, pose.silhouette);
+  });
+}
+
+test('painted pose change requires confirmation, cancel is lossless, confirm clears history and preserves transform', async () => {
+  const app = setup();
+  await app.load();
+  app.element('larger').click();
+  app.element('rotate-left').click();
+  app.element('mode-paint').click();
+  app.pointer('pointerdown', 1, 200, 200);
+  app.pointer('pointerup', 1, 200, 200);
+  const previousOperations = app.offscreens[0].operations.length;
+  await app.element('pose-P04').click();
+  assert.equal(app.element('change-confirm').open, true);
+  assert.equal(app.element('confirm-message').textContent, 'ポーズを変更すると、現在の塗装が消去されます。変更しますか？');
+  assert.equal(app.draws[1].image.source, Poses.get('P01').silhouette);
+  assert.equal(app.offscreens[0].operations.length, previousOperations);
+  app.pointer('pointerdown', 1, 200, 200);
+  assert.equal(app.captures.size, 0);
+  await app.element('open-preview').click();
+  assert.equal(app.encodings.length, 0);
+  app.element('cancel-change').click();
+  assert.equal(app.element('change-confirm').open, false);
+  assert.equal(app.offscreens[0].operations.length, previousOperations);
+  assert.equal(app.element('undo').disabled, false);
+  assert.equal(app.element('pose-P01')['aria-pressed'], 'true');
+  await app.element('pose-P01').click(); // same pose: no discard and no dialog
+  assert.equal(app.element('change-confirm').open, false);
+  await app.element('pose-P04').click();
+  app.element('confirm-change').click();
+  assert.equal(app.element('pose-P04')['aria-pressed'], 'true');
+  assert.equal(app.offscreens[0].height, 192);
+  assert.equal(app.element('undo').disabled, true);
+  assert.equal(app.element('redo').disabled, true);
+  assert.equal(app.element('size-value').textContent, '20%');
+  assert.equal(app.element('angle-value').textContent, '-5°');
+  assert.deepEqual(Array.from(app.draws[1].position), [200, 200]);
+});
+
+test('pose asset or mask failure preserves existing paint and pose, and retry succeeds', async () => {
+  const options = { failPose: Poses.get('P02').silhouette };
+  const app = setup(options);
+  await app.load();
+  app.element('mode-paint').click();
+  app.pointer('pointerdown', 1, 200, 200);
+  app.pointer('pointerup', 1, 200, 200);
+  const previous = app.offscreens[0].operations.length;
+  await app.element('pose-P02').click();
+  assert.match(app.element('status').textContent, /読み込めません/);
+  assert.equal(app.offscreens[0].operations.length, previous);
+  assert.equal(app.element('undo').disabled, false);
+  options.failPose = null;
+  options.emptyPose = Poses.get('P02').silhouette;
+  await app.element('pose-P02').click();
+  assert.equal(app.offscreens[0].operations.length, previous);
+  assert.equal(app.element('pose-P01')['aria-pressed'], 'true');
+  options.emptyPose = null;
+  await app.element('pose-P02').click();
+  assert.equal(app.element('change-confirm').open, true);
+  app.element('confirm-change').click();
+  assert.equal(app.element('pose-P02')['aria-pressed'], 'true');
+});
+
+test('pose change replaces cached PNG/File; reset and image replacement return to STAND', async () => {
+  const shared = [];
+  const app = setup({ navigator: { canShare: () => true, share: async data => shared.push(data.files[0]) } });
+  await app.load();
+  await app.element('open-preview').click();
+  const firstURL = app.element('preview-image').src;
+  app.element('back-to-edit').click();
+  await app.element('pose-P04').click();
+  await app.element('open-preview').click();
+  assert.notEqual(app.element('preview-image').src, firstURL);
+  await app.element('share-question').click();
+  assert.match(await shared[0].text(), /assets\/poses\/lie\.svg/);
+  assert.doesNotMatch(await shared[0].text(), /assets\/kakureron\.svg/);
+  app.element('back-to-edit').click();
+  app.element('mode-paint').click();
+  app.pointer('pointerdown', 1, 200, 200);
+  app.pointer('pointerup', 1, 200, 200);
+  app.element('reset').click();
+  assert.equal(app.element('change-confirm').open, true);
+  app.element('cancel-change').click();
+  assert.equal(app.element('pose-P04')['aria-pressed'], 'true');
+  app.element('reset').click();
+  app.element('confirm-change').click();
+  assert.equal(app.element('pose-P01')['aria-pressed'], 'true');
+  assert.equal(app.element('size-value').textContent, '18%');
+  assert.equal(app.element('angle-value').textContent, '0°');
+  assert.equal(app.element('undo').disabled, true);
+  await app.element('pose-P03').click();
+  await app.load('replacement');
+  assert.equal(app.element('pose-P01')['aria-pressed'], 'true');
+  assert.equal(app.draws[0].image.source, 'blob:replacement');
+});
+
+test('all pose aspect ratios preserve inverse coordinates and rotated alpha bounds at multiple scales', () => {
+  const rect = { x: 0, y: 0, width: 1000, height: 1000 };
+  for (const pose of Poses.list) for (const size of [0.05, 0.18, 0.32]) for (const angle of [0, Math.PI / 2, -0.7]) {
+    const character = { x: 0.5, y: 0.5, size, angle, poseId: pose.poseId };
+    const raster = Poses.rasterSize(pose);
+    const local = { x: 214, y: raster.height * 0.33 };
+    const dx = (local.x / raster.width - 0.5) * size * rect.width;
+    const dy = (local.y / raster.height - 0.5) * size * rect.width * pose.ratio;
+    const screen = { x: 500 + dx * Math.cos(angle) - dy * Math.sin(angle), y: 500 + dx * Math.sin(angle) + dy * Math.cos(angle) };
+    const actual = Paint.screenToLocal(screen, character, rect);
+    assert.ok(Math.abs(actual.x - local.x) < 1e-8);
+    assert.ok(Math.abs(actual.y - local.y) < 1e-8);
+    const alpha = { x: 0.1, y: 0.05, width: 0.8, height: 0.85 };
+    const answer = Export.answerBounds(character, rect, pose, alpha);
+    for (const [u, v] of [[0.1, 0.05], [0.9, 0.05], [0.1, 0.9], [0.9, 0.9]]) {
+      const x = (u - 0.5) * size * rect.width, y = (v - 0.5) * size * rect.width * pose.ratio;
+      const px = 500 + x * Math.cos(angle) - y * Math.sin(angle), py = 500 + x * Math.sin(angle) + y * Math.cos(angle);
+      assert.ok(px >= answer.x && px <= answer.x + answer.width);
+      assert.ok(py >= answer.y && py <= answer.y + answer.height);
+    }
+  }
+});
+
+test('Escape cancels pose change and preserves redo-only paint history', async () => {
+  const app = setup();
+  await app.load();
+  app.element('mode-paint').click();
+  app.pointer('pointerdown', 1, 200, 200);
+  app.pointer('pointerup', 1, 200, 200);
+  app.element('undo').click();
+  assert.equal(app.element('redo').disabled, false);
+  await app.element('pose-P03').click();
+  assert.equal(app.element('change-confirm').open, true);
+  app.element('change-confirm').handlers.cancel({ preventDefault() {} });
+  assert.equal(app.element('change-confirm').open, false);
+  assert.equal(app.element('pose-P01')['aria-pressed'], 'true');
+  assert.equal(app.element('redo').disabled, false);
+  app.element('redo').click();
+  assert.equal(app.element('undo').disabled, false);
 });
