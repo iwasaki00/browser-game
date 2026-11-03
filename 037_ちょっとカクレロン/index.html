@@ -6,17 +6,18 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <link rel="stylesheet" href="style.css?v=0.2.0">
-  <script src="paint.js?v=0.2.0" defer></script>
-  <script src="app.js?v=0.2.0" defer></script>
+  <link rel="stylesheet" href="style.css?v=0.3.0">
+  <script src="paint.js?v=0.3.0" defer></script>
+  <script src="export.js?v=0.3.0" defer></script>
+  <script src="app.js?v=0.3.0" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">ちょっと、背景になじんでみよう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.2.0 <span>CAMOUFLAGE / 擬態ペイント</span></p></div>
+      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.3.0 <span>SHARE / 画像保存・共有</span></p></div>
       <button id="change-image" class="secondary" hidden>画像変更</button>
     </header>
-    <section class="workspace" aria-label="画像編集エリア">
+    <section id="editor-workspace" class="workspace" aria-label="画像編集エリア">
       <div class="workspace-heading"><span><i></i> 擬態スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
       <div id="stage" class="stage">
         <canvas id="canvas" tabindex="0" aria-label="カクレロンの配置。ドラッグで移動。矢印キーでも移動できます。" hidden></canvas>
@@ -31,7 +32,7 @@
       </div>
       <p id="hint" class="hint">写真を1枚選ぶと、白いカクレロンが登場します。</p>
     </section>
-    <section class="controls" aria-label="配置の調整">
+    <section id="editor-controls" class="controls" aria-label="配置の調整">
       <div class="control-heading"><h2>カクレロンを調整</h2><button id="reset" class="reset" disabled>↺ リセット</button></div>
       <div class="mode-bar" role="group" aria-label="編集モード">
         <button data-mode="place" aria-pressed="true" disabled>配置</button>
@@ -49,8 +50,27 @@
       </div>
       <div id="brush-controls" class="brush-controls" role="group" aria-label="ブラシサイズ" hidden><span>ブラシ</span><button data-brush="small" aria-pressed="false" disabled>小</button><button data-brush="medium" aria-pressed="true" disabled>中</button><button data-brush="large" aria-pressed="false" disabled>大</button></div>
       <p id="gesture-help" class="gesture-help">1本指で移動 ／ 2本指でサイズ・角度を調整</p>
+      <button id="open-preview" class="primary preview-start" disabled>完成プレビュー <span aria-hidden="true">↗</span></button>
     </section>
-    <footer>写真も、作業も、このブラウザの中だけ。</footer>
+    <section id="preview-screen" class="preview-screen" aria-labelledby="preview-title" hidden>
+      <div class="preview-heading"><h2 id="preview-title" tabindex="-1">問題画像</h2><span id="output-size"></span></div>
+      <div class="preview-image-wrap"><img id="preview-image" alt="完成した問題画像" hidden><p id="preview-progress" role="status">画像を作成しています…</p></div>
+      <div id="question-actions" class="preview-actions">
+        <button id="share-question" class="primary" disabled>問題画像を共有</button>
+        <button id="save-question" class="secondary" disabled>問題画像を保存</button>
+        <button id="show-answer" class="secondary" disabled>答えを見る</button>
+      </div>
+      <div id="answer-actions" class="preview-actions" hidden>
+        <button id="save-answer" class="primary" disabled>答え画像を保存</button>
+        <button id="show-question" class="secondary" disabled>問題画像へ戻る</button>
+      </div>
+      <button id="retry-preview" class="secondary retry-preview" hidden>画像作成を再試行</button>
+      <p id="share-note" class="preview-note"></p>
+      <a id="open-generated-image" class="image-fallback" target="_blank" rel="noopener" hidden>保存できない場合は画像を開く</a>
+      <button id="back-to-edit" class="back-to-edit">← 編集に戻る</button>
+      <p class="preview-note">iPhoneでは「ファイル」に保存される場合があります。<br>写真へ保存する場合は共有メニュー等をご利用ください。</p>
+    </section>
+    <footer>写真の処理はこのブラウザの中で。共有先は自分で選べます。</footer>
     <p id="status" class="status" role="status" aria-live="polite"></p>
     <input id="image-input" type="file" accept="image/*" hidden>
   </main>

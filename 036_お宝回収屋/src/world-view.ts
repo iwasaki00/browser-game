@@ -1,0 +1,9 @@
+import type {Plot} from './engine';import {project} from './surface';import {environment} from './world-rules';
+export function renderWorldDecor(ctx:CanvasRenderingContext2D,p:Plot,time:number){if(!p.worldVersion)return;const area=p.areaId??'B-A',e=environment(p);ctx.save();ctx.setTransform(2,0,0,2,0,0);
+ if(area==='B-B'){ctx.fillStyle='#8bbdbb66';ctx.fillRect(0,45,360,50);ctx.strokeStyle='#f7f2d7';for(let i=0;i<3;i++){ctx.beginPath();for(let x=0;x<365;x+=8){const y=60+i*12+Math.sin(time+x/30+i)*2;x?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}}
+ if(area==='B-C')for(let i=0;i<12;i++){const q=project(40+(i%4)*80,55+Math.floor(i/4)*75);ctx.fillStyle=i%2?'#909489':'#747e78';ctx.beginPath();ctx.ellipse(q.x,q.y,13+i%3*4,7+i%2*3,.1,0,Math.PI*2);ctx.fill();}
+ if(area==='B-D'||area==='R-C'){ctx.strokeStyle=area==='R-C'?'#4c6255bb':'#82755cbb';ctx.lineWidth=5;for(let i=0;i<7;i++){const q=project(35+i*46,40+(i%3)*75);ctx.beginPath();ctx.moveTo(q.x-15,q.y);ctx.lineTo(q.x+16,q.y+9);ctx.lineTo(q.x+4,q.y-5);ctx.stroke();}}
+ if(area==='R-D'){const g=ctx.createLinearGradient(0,35,0,290);g.addColorStop(0,'#173b5270');g.addColorStop(1,'#305d6c00');ctx.fillStyle=g;ctx.fillRect(0,35,360,255);}
+ if(area==='G-C'){ctx.strokeStyle='#58655b';ctx.lineWidth=3;for(const site of p.goldSites??[]){const q=project(site.x,site.y);ctx.beginPath();ctx.moveTo(q.x-26,q.y-14);ctx.lineTo(q.x-9,q.y-4);ctx.lineTo(q.x-14,q.y+13);ctx.moveTo(q.x+12,q.y-17);ctx.lineTo(q.x+21,q.y+15);ctx.stroke();}}
+ if(area==='G-D'){ctx.strokeStyle='#ab925b55';ctx.lineWidth=4;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,100+i*65);ctx.bezierCurveTo(90,70+i*65,230,140+i*65,360,95+i*65);ctx.stroke();}}
+ ctx.fillStyle='#345a4f';ctx.font='9px sans-serif';ctx.fillText(area==='B-C'?'岩間は精密掘削':area==='B-D'?'漂着帯 / 深層と選別':area==='R-C'?'流木の隙間 / フックと映像':area==='R-D'?'深い堆積 / 距離と重量':area==='G-C'?'岩盤の溝 / 小さな道具で採取':area==='G-D'?'旧河道 / 大量選別':'',12,314);ctx.restore();}

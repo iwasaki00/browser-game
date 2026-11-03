@@ -65,6 +65,7 @@ export function riverStart(s:State,id:string,x:number,y:number,cast=false){
  const f=candidates[0];logEvent(s,c.rope?'磁石投擲':'対象選択',`${id} / ${target.x.toFixed(0)},${target.y.toFixed(0)}`);
  s.riverSession={tool:id,...target,originX:180,originY:278,progress:0,phase:'empty',elapsed:0,magnetic:c.magnetic,operations:0};
  if(!f)return failure(s,c.rope&&distance>c.reach?'ロープが届かない。もう少し近くを狙おう。':'手応えなし。違う場所を探そう。');
+ if(s.explorationAreas[0].worldVersion&&f.obstacle&&(id==='R203'||c.camera&&f.riverCameraObserved)&&(280-f.y)<=c.reach&&(f.weight??treasure(f.id).weight)>c.lift){f.obstacle=false;logEvent(s,'障害物の解除',f.uid);delete s.riverSession;return {ok:false,reason:'引っかかりを外した。磁石や巻上げ構成へ持ち替えて再挑戦しよう。'};}
  const reason=riverCheck(s,id,f,c.meter&&!!f.riverLoadMeasured);if(reason)return failure(s,reason);
  s.riverSession.uid=f.uid;s.riverSession.phase='hooked';measure(s,id,'吸着・把持',1,0);logEvent(s,c.magnetic?'磁石吸着':'つかんだ','何かが引っかかった');return {ok:true,reason:'何かが引っかかった！ 手前へドラッグして引き上げよう。'};
 }

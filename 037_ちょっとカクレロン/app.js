@@ -1,8 +1,9 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.2.0";
+  const VERSION = "0.3.0";
   const Paint = globalThis.KakureronPaint;
+  const Export = globalThis.KakureronExport;
   const MAX_PHOTO_EDGE = 2048;
   const INITIAL = Object.freeze({ x: 0.5, y: 0.5, size: 0.18, angle: 0 });
   const MIN_SIZE = 0.05;
@@ -38,6 +39,19 @@
   let fit = { x: 0, y: 0, width: 1, height: 1 };
   let gesture = null;
   let loadSequence = 0;
+  let previewing = false;
+  let preparing = false;
+  let sharing = false;
+  let previewSequence = 0;
+  let previewScene = null;
+  let previewDate = null;
+  let previewKind = "question";
+  let retryKind = "question";
+  let encodingQueue = Promise.resolve();
+  const outputs = { question: null, answer: null };
+  const previewImage = document.querySelector("#preview-image");
+  const GENERATION_ERROR = "画像を作成できませんでした。画像サイズを小さくして再度お試しください。";
+  const SHARE_FALLBACK = "このブラウザでは直接共有できません。画像を保存してから共有してください。";
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const normalizeAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
@@ -51,19 +65,12 @@
     fit = { x: (stage.clientWidth - width) / 2, y: (stage.clientHeight - height) / 2, width, height };
   }
 
-  function drawCharacter() {
-    if (!characterImage.complete || !characterImage.naturalWidth) return;
-    const width = fit.width * character.size;
-    ctx.save();
-    ctx.translate(fit.x + character.x * fit.width, fit.y + character.y * fit.height);
-    ctx.rotate(character.angle);
-    // The SVG supplies the silhouette and white base. Paint has its own local raster layer.
-    ctx.drawImage(characterImage, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
-    ctx.drawImage(paint.canvas, -width / 2, -width * CHARACTER_RATIO / 2, width, width * CHARACTER_RATIO);
-    ctx.restore();
+  function scene() {
+    return { background, characterImage, paintLayer: paint.canvas, character: { ...character } };
   }
 
   function render() {
+    if (previewing) return;
     const density = Math.min(window.devicePixelRatio || 1, 3);
     const width = Math.round(stage.clientWidth * density);
     const height = Math.round(stage.clientHeight * density);
@@ -75,13 +82,10 @@
     ctx.clearRect(0, 0, stage.clientWidth, stage.clientHeight);
     if (!background) return;
     updateFit();
-    ctx.drawImage(background, fit.x, fit.y, fit.width, fit.height);
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(fit.x, fit.y, fit.width, fit.height);
-    ctx.clip();
-    drawCharacter();
-    ctx.restore();
+    const ready = characterImage.complete && characterImage.naturalWidth > 0;
+    if (ready) Export.drawScene(ctx, scene(), fit);
+    else ctx.drawImage(background, fit.x, fit.y, fit.width, fit.height);
+    document.querySelector("#open-preview").disabled = !ready;
     document.querySelector("#size-value").textContent = `${Math.round(character.size * 100)}%`;
     document.querySelector("#angle-value").textContent = `${Math.round(character.angle * 180 / Math.PI)}°`;
     document.querySelector("#smaller").disabled = character.size <= MIN_SIZE;
@@ -109,6 +113,7 @@
   }
 
   function reset() {
+    if (previewing) return;
     clearGesture();
     character = { ...INITIAL };
     paint.reset();
@@ -116,6 +121,7 @@
   }
 
   function setMode(next) {
+    if (previewing) return;
     clearGesture();
     mode = next;
     canvas.dataset.mode = mode;
@@ -188,7 +194,7 @@
   }
 
   canvas.addEventListener("pointerdown", (event) => {
-    if (!background || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
+    if (previewing || !background || (event.pointerType === "mouse" && event.button !== 0) || pointers.size >= 2) return;
     if (mode !== "place" && pointers.size) return;
     const point = localPoint(event);
     if (mode === "place" && !pointers.size && !hitsCharacter(point)) return;
@@ -203,7 +209,7 @@
   });
 
   canvas.addEventListener("pointermove", (event) => {
-    if (!pointers.has(event.pointerId)) return;
+    if (previewing || !pointers.has(event.pointerId)) return;
     event.preventDefault();
     pointers.set(event.pointerId, localPoint(event));
     if (mode !== "place") { editPoint(localPoint(event)); return; }
@@ -254,6 +260,7 @@
         image.src = url;
       });
       if (sequence !== loadSequence) return;
+      if (previewing) leavePreview();
       clearGesture();
       const scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
       photo.width = Math.max(1, Math.round(image.naturalWidth * scale));
@@ -277,7 +284,7 @@
   });
 
   function adjust(sizeDelta, angleDelta) {
-    if (!background) return;
+    if (previewing || !background) return;
     clearGesture();
     character.size = clamp(character.size + sizeDelta, MIN_SIZE, MAX_SIZE);
     character.angle = normalizeAngle(character.angle + angleDelta);
@@ -290,19 +297,21 @@
   document.querySelector("#reset").addEventListener("click", reset);
   modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
   brushButtons.forEach(button => button.addEventListener("click", () => {
+    if (previewing) return;
     clearGesture();
     brush = button.dataset.brush;
     brushButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
   }));
   for (const action of ["undo", "redo"]) {
     document.querySelector(`#${action}`).addEventListener("click", () => {
+      if (previewing) return;
       clearGesture();
       paint[action]();
       render();
     });
   }
   canvas.addEventListener("keydown", (event) => {
-    if (!background || mode !== "place") return;
+    if (previewing || !background || mode !== "place") return;
     const moves = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, -0.01], ArrowDown: [0, 0.01] };
     if (!moves[event.key]) return;
     event.preventDefault();
@@ -313,6 +322,174 @@
   });
   new ResizeObserver(() => { clearGesture(); render(); }).observe(stage);
   characterImage.onload = () => { paint.setMask(characterImage); render(); };
+  characterImage.onerror = () => { status.textContent = "カクレロンを読み込めませんでした。ページを開き直してください。"; };
   characterImage.src = "assets/kakureron.svg";
   document.documentElement.dataset.version = VERSION;
+
+  function updateOutputButtons() {
+    const blocked = preparing || sharing;
+    for (const id of ["share-question", "save-question", "show-answer"]) {
+      document.querySelector(`#${id}`).disabled = blocked || !outputs.question;
+    }
+    document.querySelector("#save-answer").disabled = blocked || !outputs.answer;
+    document.querySelector("#show-question").disabled = blocked || !outputs.question;
+    document.querySelector("#retry-preview").disabled = blocked;
+  }
+
+  function releaseOutputs() {
+    previewSequence++;
+    previewImage.removeAttribute("src");
+    const fallback = document.querySelector("#open-generated-image");
+    fallback.removeAttribute("href");
+    fallback.hidden = true;
+    for (const kind of ["question", "answer"]) {
+      if (outputs[kind]) URL.revokeObjectURL(outputs[kind].url);
+      outputs[kind] = null;
+    }
+    previewScene = null;
+    previewDate = null;
+    preparing = false;
+    sharing = false;
+  }
+
+  function showOutput(kind) {
+    previewKind = kind;
+    const output = outputs[kind];
+    previewImage.src = output.url;
+    previewImage.alt = kind === "answer" ? "赤い枠で正解位置を示した答え画像" : "完成した問題画像。カクレロンを探してみよう";
+    previewImage.hidden = false;
+    document.querySelector("#preview-progress").hidden = true;
+    document.querySelector("#preview-title").textContent = kind === "answer" ? "答え画像" : "問題画像";
+    document.querySelector("#output-size").textContent = `${output.width} × ${output.height} px / PNG`;
+    document.querySelector("#question-actions").hidden = kind !== "question";
+    document.querySelector("#answer-actions").hidden = kind !== "answer";
+    const fallback = document.querySelector("#open-generated-image");
+    fallback.href = output.url;
+    fallback.hidden = false;
+    document.querySelector("#share-note").textContent = kind === "question"
+      ? (Export.canShareFile(navigator, globalThis.isSecureContext, output.file) ? "共有メニューからLINE・メッセージ・AirDropなどを選べます。" : SHARE_FALLBACK)
+      : "答えの印はこの答え画像だけに含まれます。";
+  }
+
+  async function prepareOutput(kind) {
+    if (!previewing || preparing || sharing) return;
+    if (outputs[kind]) { showOutput(kind); updateOutputButtons(); return; }
+    const sequence = previewSequence;
+    retryKind = kind;
+    preparing = true;
+    document.querySelector("#retry-preview").hidden = true;
+    status.textContent = "画像を作成しています…";
+    updateOutputButtons();
+    try {
+      const requestedScene = previewScene;
+      // Serialize encoders even if the user leaves and reopens a pending preview.
+      const task = encodingQueue.then(() => sequence === previewSequence && previewing
+        ? Export.createPNG(() => document.createElement("canvas"), requestedScene, kind === "answer") : null);
+      encodingQueue = task.then(() => {}, () => {});
+      const result = await task;
+      if (sequence !== previewSequence || !previewing) return;
+      const name = Export.fileName(kind, previewDate);
+      let file = null;
+      if (typeof File === "function") {
+        try { file = new File([result.blob], name, { type: "image/png" }); } catch { /* Saving still works without File sharing. */ }
+      }
+      outputs[kind] = { ...result, name, file, url: URL.createObjectURL(result.blob) };
+      showOutput(kind);
+      status.textContent = "";
+    } catch {
+      if (sequence !== previewSequence || !previewing) return;
+      status.textContent = GENERATION_ERROR;
+      if (!outputs[previewKind]) {
+        document.querySelector("#preview-progress").textContent = GENERATION_ERROR;
+        document.querySelector("#preview-progress").hidden = false;
+      }
+      document.querySelector("#retry-preview").textContent = kind === "answer" ? "答え画像の作成を再試行" : "画像作成を再試行";
+      document.querySelector("#retry-preview").hidden = false;
+    } finally {
+      if (sequence === previewSequence) { preparing = false; updateOutputButtons(); }
+    }
+  }
+
+  async function enterPreview() {
+    if (previewing) return;
+    if (!background) { status.textContent = "先に写真を選択してください。"; return; }
+    if (!characterImage.complete || !characterImage.naturalWidth) { status.textContent = "カクレロンの読込が終わってからお試しください。"; return; }
+    clearGesture();
+    releaseOutputs();
+    previewing = true;
+    previewKind = "question";
+    previewScene = scene();
+    previewDate = new Date();
+    document.querySelector(".app").dataset.screen = "preview";
+    document.querySelector("#editor-workspace").hidden = true;
+    document.querySelector("#editor-controls").hidden = true;
+    document.querySelector("#change-image").hidden = true;
+    document.querySelector("#preview-screen").hidden = false;
+    document.querySelector("#preview-title").textContent = "問題画像";
+    document.querySelector("#preview-title").focus();
+    document.querySelector("#output-size").textContent = "";
+    document.querySelector("#share-note").textContent = "";
+    document.querySelector("#question-actions").hidden = false;
+    document.querySelector("#answer-actions").hidden = true;
+    previewImage.hidden = true;
+    document.querySelector("#preview-progress").hidden = false;
+    document.querySelector("#preview-progress").textContent = "画像を作成しています…";
+    await prepareOutput("question");
+  }
+
+  function leavePreview() {
+    if (!previewing) return;
+    previewing = false;
+    releaseOutputs();
+    document.querySelector(".app").dataset.screen = "edit";
+    document.querySelector("#preview-screen").hidden = true;
+    document.querySelector("#editor-workspace").hidden = false;
+    document.querySelector("#editor-controls").hidden = false;
+    document.querySelector("#change-image").hidden = !background;
+    status.textContent = "";
+    render();
+    document.querySelector("#open-preview").focus();
+  }
+
+  function saveOutput(kind) {
+    if (!previewing || preparing || sharing || !outputs[kind]) return;
+    try {
+      const link = document.createElement("a");
+      link.href = outputs[kind].url;
+      link.download = outputs[kind].name;
+      document.body.append(link);
+      try { link.click(); } finally { link.remove(); }
+      status.textContent = "保存を開始しました。iPhoneでは「ファイル」に保存される場合があります。";
+    } catch {
+      status.textContent = "保存を開始できませんでした。「保存できない場合は画像を開く」からお試しください。";
+    }
+  }
+
+  async function shareQuestion() {
+    if (!previewing || preparing || sharing || !outputs.question) return;
+    const file = outputs.question.file;
+    if (!Export.canShareFile(navigator, globalThis.isSecureContext, file)) { status.textContent = SHARE_FALLBACK; return; }
+    const sequence = previewSequence;
+    sharing = true;
+    updateOutputButtons();
+    try {
+      // No image generation or await before share: retain this button's user activation.
+      await navigator.share({ files: [file] });
+      if (sequence === previewSequence) status.textContent = "共有操作が完了しました。";
+    } catch (error) {
+      if (sequence === previewSequence) status.textContent = error?.name === "AbortError" ? "" : "共有できませんでした。画像を保存してから共有するか、再度お試しください。";
+    } finally {
+      if (sequence === previewSequence) { sharing = false; updateOutputButtons(); }
+    }
+  }
+
+  document.querySelector("#open-preview").addEventListener("click", enterPreview);
+  document.querySelector("#back-to-edit").addEventListener("click", leavePreview);
+  document.querySelector("#show-answer").addEventListener("click", () => prepareOutput("answer"));
+  document.querySelector("#show-question").addEventListener("click", () => prepareOutput("question"));
+  document.querySelector("#retry-preview").addEventListener("click", () => prepareOutput(retryKind));
+  document.querySelector("#save-question").addEventListener("click", () => saveOutput("question"));
+  document.querySelector("#save-answer").addEventListener("click", () => saveOutput("answer"));
+  document.querySelector("#share-question").addEventListener("click", shareQuestion);
+  window.addEventListener("pagehide", leavePreview);
 })();

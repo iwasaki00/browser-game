@@ -6,7 +6,7 @@ import type {Automation,MachineId} from './automation';
 import {beachProfiles,beachUnlocks,plotDepthScale,beachCapacity,detectorTool,equippedBeach,sieveSettings} from './beach-tools';
 import { CONFIG, income, treasure, tool, weights, combinations } from './data';
 import {scanReading,finishQuality,recordRecovery,initializeBatch,batchRemaining,tiny,type SurveyMark,type ScanReading,type SortEvent,type RecoveryEvent} from './tool-value';
-import {generateRiver,areaId,beachCount,RIVER_TOOLS,type RiverSession,type RiverMetrics} from './river';
+import {generateRiver,areaId,areaUnlocked,beachCount,RIVER_TOOLS,type RiverSession,type RiverMetrics} from './river';
 import {logEvent,type GameEvent} from './events';
 import {generateGold,goldAreaUnlocked,GOLD_TOOLS,type GravelSite,type GravelBatch,type GoldWork,type GoldStatistics} from './gold';
 import {rememberEquipment,restoreEquipment,assignPurchased} from './equipment';
@@ -117,7 +117,7 @@ export function scan(s:State,x:number,y:number,id='B201'){if(!detectorTool(id)||
 export function detect(s:State,x:number,y:number){return scan(s,x,y).strength;}
 export function recover(s:State,uid:string,usedTool='hand') {
  const p=plot(s),f=p.items.find(f=>f.uid===uid);
- if(areaId(s)!=='B-A')return false;
+ if(!areaId(s).startsWith('B-'))return false;
  if(usedTool!=='hand'&&(!s.ownedTools.includes(usedTool)||!beachProfiles[usedTool]))return false;
  if(!f||f.state!=='buried'||exposure(p,f)<CONFIG.exposure||stored(s).length>=Math.min(beachCapacity(s),s.automationStoreLimit??Infinity))return false;
  const staminaBefore=s.playerStats.stamina;let count=1;finishQuality(s,f,usedTool);f.state='stored';f.tool=usedTool;recordRecovery(s,f);s.playerStats.xp[2]++;if(usedTool==='B109'){for(const other of p.items)if(other!==f&&other.state==='buried'&&Math.hypot(other.x-f.x,other.y-f.y)<45&&exposure(p,other)>=CONFIG.exposure&&stored(s).length<beachCapacity(s)){finishQuality(s,other,usedTool);other.state='stored';other.tool=usedTool;recordRecovery(s,other);count++;}s.playerStats.stamina=Math.max(0,s.playerStats.stamina-1);}measure(s,usedTool,'回収',count,staminaBefore-s.playerStats.stamina,count);return true;
@@ -175,4 +175,4 @@ export function rate(s:State) {const archived=s.rewardLedger?.window.filter(r=>r
 
 export const maxStamina=(s:State)=>s.maxStamina??100+Math.floor(s.playerStats.xp[3]/CONFIG.xpPerLevel)*2;
 
-export function enterArea(s:State,area:string,seed=Date.now()>>>0){if(!(['B-A','R-A','R-B'].includes(area)?area==='B-A'||area==='R-A'&&beachCount(s)>=10||area==='R-B'&&beachCount(s)>=20:goldAreaUnlocked(s,area)&&['G-A','G-B'].includes(area)))return false;addPlot(s,seed,false,area);return true;}
+export function enterArea(s:State,area:string,seed=Date.now()>>>0){if(!areaUnlocked(s,area))return false;addPlot(s,seed,false,area);return true;}

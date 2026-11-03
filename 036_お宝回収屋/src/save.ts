@@ -1,3 +1,4 @@
+import {environments,collectionMilestones} from './world-rules';
 import {validateLines} from './lines';
 import {compactHistory,validateLedger} from './ledger';
 import {restoreAutomation} from './automation';
@@ -40,6 +41,8 @@ export function migrate(raw:unknown):State {
  if(s.riverSession&&(!s.explorationAreas[0].areaId?.startsWith('R-')||!Number.isFinite(s.riverSession.progress)||s.riverSession.progress<0||s.riverSession.progress>1))delete s.riverSession;
  for(const f of [...s.explorationAreas[0].items,...s.retainedFinds])if(f.weight!==undefined&&(!Number.isFinite(f.weight)||f.weight<=0))throw Error('重量データが不正です');
  // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
+ if(s.world){if(s.world.version!==1||!Array.isArray(s.world.unlocked)||Object.keys(s.world.visits).some(id=>!environments[id])||Object.values(s.world.visits).some(n=>!Number.isSafeInteger(n)||n<0))throw Error('探索進捗が不正です');s.world.milestones=collectionMilestones(s);}
+ for(const p of s.explorationAreas)if(p.environment&&Object.values(p.environment).some(n=>!Number.isFinite(n)||n<0))throw Error('環境条件が不正です');
  compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
 }
 const revisions=new Map<string,number>(),sequences=new Map<string,number>();
