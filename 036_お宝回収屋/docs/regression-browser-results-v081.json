@@ -1,0 +1,12 @@
+[
+  {
+    "name": "browser",
+    "exitCode": 0,
+    "seconds": 34.774
+  },
+  {
+    "name": "depth-browser",
+    "exitCode": 1,
+    "seconds": 5.549
+  }
+]

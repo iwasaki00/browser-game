@@ -1,0 +1,47 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "version": "0.8.1",
+    "layout": "PASS",
+    "surfaceDigAndClick": "PASS",
+    "cursorTypes": 6,
+    "touchIndicator": "PASS",
+    "toastNoBottomOverlap": "PASS",
+    "singlePlotAndReload": "PASS",
+    "shopCollectionEquipment": "PASS",
+    "jackpot": "PASS",
+    "IDBFallback": "PASS",
+    "pageErrors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "version": "0.8.1",
+    "layout": "PASS",
+    "surfaceDigAndClick": "PASS",
+    "cursorTypes": 6,
+    "touchIndicator": "PASS",
+    "toastNoBottomOverlap": "PASS",
+    "singlePlotAndReload": "PASS",
+    "shopCollectionEquipment": "PASS",
+    "jackpot": "PASS",
+    "IDBFallback": "PASS",
+    "pageErrors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "version": "0.8.1",
+    "layout": "PASS",
+    "surfaceDigAndClick": "PASS",
+    "cursorTypes": 6,
+    "touchIndicator": "PASS",
+    "toastNoBottomOverlap": "PASS",
+    "singlePlotAndReload": "PASS",
+    "shopCollectionEquipment": "PASS",
+    "jackpot": "PASS",
+    "IDBFallback": "PASS",
+    "pageErrors": []
+  }
+]
