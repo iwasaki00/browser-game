@@ -143,6 +143,7 @@ function setup(options = {}) {
       queueMicrotask(() => value === 'blob:bad' || value === options.failPose ? this.onerror?.() : this.onload?.());
     }
   }
+  if (options.initialFiles) element('image-input').files = options.initialFiles;
   vm.runInNewContext(fs.readFileSync('app.js', 'utf8'), {
     document, Image, KakureronPaint: Paint, KakureronExport: Export, KakureronPoses: Poses, KakureronCopy: Copy, KakureronView: View, navigator,
     Blob, File, isSecureContext: options.secureContext !== false,
@@ -166,6 +167,15 @@ function setup(options = {}) {
   return { element, draws, load, pointer, offscreens, encodings, downloads, urlBlobs, navigator,
     resize: () => resize(), captures, revoked: () => revoked, frame:nextFrame, frames, windowHandlers, documentHandlers, document };
 }
+
+test('a photo selected before app initialization is consumed once initialization completes', async () => {
+  const app=setup({initialFiles:[{name:'early-selection'}]});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(app.element('canvas').hidden,false);
+  assert.equal(app.draws[0].image.source,'blob:early-selection');
+  assert.equal(app.element('image-input').value,'');
+  assert.equal(app.document.documentElement.dataset.appReady,'true');
+});
 
 test('photo draw failure preserves photo, transform, paint/history and pending confirmation', async () => {
   const options = {}, app = setup(options);

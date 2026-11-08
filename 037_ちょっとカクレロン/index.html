@@ -6,20 +6,21 @@
   <meta name="theme-color" content="#f5f5ed">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>ちょっとカクレロン</title>
-  <meta name="application-version" content="0.7.1">
-  <link rel="stylesheet" href="style.css?v=0.7.1">
-  <script src="poses.js?v=0.7.1" defer></script>
-  <script src="copy-brush.js?v=0.7.1" defer></script>
-  <script src="paint.js?v=0.7.1" defer></script>
-  <script src="editor-view.js?v=0.7.1" defer></script>
-  <script src="export.js?v=0.7.1" defer></script>
-  <script src="app.js?v=0.7.1" defer></script>
+  <meta name="application-version" content="0.7.2">
+  <link rel="stylesheet" href="style.css?v=0.7.2">
+  <script src="startup.js?v=0.7.2" defer></script>
+  <script src="poses.js?v=0.7.2" defer></script>
+  <script src="copy-brush.js?v=0.7.2" defer></script>
+  <script src="paint.js?v=0.7.2" defer></script>
+  <script src="editor-view.js?v=0.7.2" defer></script>
+  <script src="export.js?v=0.7.2" defer></script>
+  <script src="app.js?v=0.7.2" defer></script>
 </head>
 <body>
   <main class="app">
     <header class="header">
-      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.7.1 <span>RELEASE PREP / 公開準備</span></p></div>
-      <button id="change-image" class="secondary" hidden>画像変更</button>
+      <div><p class="eyebrow">かくして、送って、見つけてもらおう。</p><h1>ちょっとカクレロン</h1><p class="version">v0.7.2 <span>PHOTO PICKER FIX / 画像選択修正</span></p></div>
+      <label id="change-image" for="image-input" class="secondary image-picker" role="button" tabindex="0" hidden>画像変更</label>
     </header>
     <section id="editor-workspace" class="workspace" aria-label="画像編集エリア">
       <div class="workspace-heading"><span><i></i> 擬態スタジオ</span><span id="workspace-state">写真を選んではじめよう</span></div>
@@ -34,7 +35,7 @@
           <img src="assets/kakureron.svg" alt="顔のない白い人型のカクレロン" width="100" height="150" draggable="false">
           <h2>ここから、かくれよう。</h2>
           <p>写真の色を集めて、カクレロンを塗ろう。<br>背景になじむ、自分だけの擬態ペイント。</p>
-          <button id="choose-image" class="primary"><span aria-hidden="true">＋</span> 画像を選ぶ</button>
+          <label id="choose-image" for="image-input" class="primary image-picker" role="button" tabindex="0"><span aria-hidden="true">＋</span> 画像を選ぶ</label>
           <p class="privacy">写真はサーバーへ送信されません</p>
         </div>
       </div>
@@ -92,7 +93,9 @@
     </section>
     <footer>写真の処理はこのブラウザの中で。共有先は自分で選べます。</footer>
     <p id="status" class="status" role="status" aria-live="polite"></p>
-    <input id="image-input" type="file" accept="image/*" hidden>
+    <p id="startup-status" class="status" role="alert">アプリを準備しています…</p>
+    <noscript><p class="status">編集にはJavaScriptが必要です。JavaScriptを有効にしてHTTP(S)のページを開き直してください。</p></noscript>
+    <input id="image-input" class="visually-hidden" type="file" accept="image/*" tabindex="-1" aria-label="写真を選択または変更">
     <dialog id="change-confirm" class="change-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
       <h2 id="confirm-title">ポーズの変更</h2>
       <p id="confirm-message">ポーズを変更すると、現在の塗装が消去されます。変更しますか？</p>

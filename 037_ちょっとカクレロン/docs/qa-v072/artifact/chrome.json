@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-11-08T16:00:47.956Z",
+  "engine": "chrome",
+  "browser": "157.0.8103.38",
+  "baseline": false,
+  "applicationRoot": "release/pages/037_ちょっとカクレロン",
+  "results": [
+    {
+      "name": "visible initial control opens filechooser and selection renders the photo",
+      "status": "PASS",
+      "detail": {
+        "hidden": false,
+        "display": "block",
+        "found": true
+      }
+    },
+    {
+      "name": "change-image opens chooser; same-file reselection fires change and resets edited size",
+      "status": "PASS"
+    },
+    {
+      "name": "a native selection made while the game script is delayed is processed after startup",
+      "status": "PASS"
+    },
+    {
+      "name": "keyboard Enter and Space and touch activate the native label association",
+      "status": "PASS"
+    },
+    {
+      "name": "empty chooser response and cancel event preserve existing painted pixels and history",
+      "status": "PASS",
+      "detail": "No-file chooser response + DOM cancel; real OS dialog cancel remains an iPhone acceptance check"
+    },
+    {
+      "name": "decode failure through the real change control preserves current photo and paint",
+      "status": "PASS"
+    },
+    {
+      "name": "HTTP startup and assets have no errors; file input and control exist",
+      "status": "PASS"
+    },
+    {
+      "name": "script startup failure is distinct from image decode and native label still opens chooser",
+      "status": "PASS"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ function directory(t){
 }
 test('release contains exactly the runtime allowlist, fingerprints and matching versions',t=>{
   const out=path.join(directory(t),'artifact'),manifest=buildApp(out);
-  assert.equal(manifest.files.length,13);assert.equal(FILES.length,13);assert.equal(verifyArtifact(out).files,13);
+  assert.equal(manifest.files.length,14);assert.equal(FILES.length,14);assert.equal(verifyArtifact(out).files,14);
   assert.ok(!walk(out).some(f=>/^(?:tests|docs|scripts|release|node_modules)\/|README|\.cjs$|\.ya?ml$|\.map$/.test(f)));
   for(const file of manifest.files){
     if(!['index.html','assets/menu-icon.svg'].includes(file.file))assert.match(file.file,/\.[a-f0-9]{12}\.(?:js|css|svg)$/);

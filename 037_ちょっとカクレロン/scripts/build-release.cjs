@@ -35,7 +35,7 @@ function outputDirectory(target) {
 function plan() {
   const input = new Map(FILES.map(file => [file, fs.readFileSync(regularFile(APP, file))]));
   const html = input.get('index.html').toString();
-  if (!html.includes(`application-version" content="${VERSION}"`) || !html.includes(`v${VERSION} <span>RELEASE PREP / 公開準備`)) throw new Error('HTML/runtime version mismatch');
+  if (!html.includes(`application-version" content="${VERSION}"`) || !html.includes(`v${VERSION} <span>PHOTO PICKER FIX / 画像選択修正`)) throw new Error('HTML/runtime version mismatch');
   for (const [,version] of html.matchAll(/\.(?:js|css)\?v=([^"']+)/g)) if (version !== VERSION) throw new Error('Source cache key mismatch');
   const names = {}, content = new Map();
   const fingerprint = (file, bytes) => {

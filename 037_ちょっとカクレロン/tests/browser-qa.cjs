@@ -6,7 +6,7 @@ const http = require('node:http');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '../../036_お宝回収屋/node_modules/playwright');
 const sourceRoot = path.resolve(__dirname, '..');
 const root = path.resolve(sourceRoot, process.env.QA_APP_ROOT || '.');
-const artifacts = path.resolve(sourceRoot, process.env.QA_ARTIFACT_DIR || 'docs/qa-v071/source');
+const artifacts = path.resolve(sourceRoot, process.env.QA_ARTIFACT_DIR || 'docs/qa-v072/source');
 const mount = process.env.QA_BASE_PATH || '/';
 if (!mount.startsWith('/') || !mount.endsWith('/') || mount.includes('..')) throw new Error('Invalid test mount');
 fs.mkdirSync(artifacts, { recursive: true });
@@ -78,16 +78,16 @@ function inspectPNG(bytes) {
     page.on('request', req => { if (/^https?:/.test(req.url()) && !req.url().startsWith(base)) network.push(req.url()); });
     await page.goto(base);
     await check('release version and nested relative resources load without source-folder fallback',async()=>{
-      assert.equal(await page.locator('meta[name="application-version"]').getAttribute('content'),'0.7.1');
-      assert.equal(await page.evaluate(()=>document.documentElement.dataset.version),'0.7.1');
-      assert.match(await page.locator('.version').textContent(),/v0\.7\.1.*RELEASE PREP/);
+      assert.equal(await page.locator('meta[name="application-version"]').getAttribute('content'),'0.7.2');
+      assert.equal(await page.evaluate(()=>document.documentElement.dataset.version),'0.7.2');
+      assert.match(await page.locator('.version').textContent(),/v0\.7\.2.*PHOTO PICKER FIX/);
       assert.deepEqual(await page.evaluate(()=>[...document.scripts].map(s=>new URL(s.src).pathname).every(p=>p.startsWith(new URL(location.href).pathname))),true);
       if(process.env.QA_APP_ROOT){
         for(const file of ['tests/app.test.cjs','docs/QA_REPORT_v0.7.0.md','README.md','scripts/build-release.cjs','app.js','assets/kakureron.svg']){
           const response=await fetch(new URL(file,base));assert.equal(response.status,404,`${file} leaked or source fallback enabled`);
         }
       }
-      return {version:'0.7.1',mount,artifact:!!process.env.QA_APP_ROOT};
+      return {version:'0.7.2',mount,artifact:!!process.env.QA_APP_ROOT};
     });
     await check('photo aspects, responsive layouts and aspect-following question/answer preview', async () => {
       const measurements=[];

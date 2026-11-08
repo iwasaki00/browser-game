@@ -1,3 +1,4 @@
+import {advanceDepth,digProfiles} from './digging';
 import {generateWorld} from './world-generation';
 import {environment,recordVisit,collectionMilestones,worldUnlocked,type Environment} from './world-rules';
 import {clearRiverBeforeMove,type Line,type Field,type LineKey,type StageId} from './lines';
@@ -13,9 +14,9 @@ import {rememberEquipment,restoreEquipment,assignPurchased} from './equipment';
 import {measure,type OperationMetric} from './measure';
 import type {HandFeedback} from './feedback';
 export interface Find {automationInstance?:string;lineId?:string;automationJob?:string;automationMachine?:MachineId;riverObserved?:boolean;riverCameraObserved?:boolean;riverLoadMeasured?:boolean;riverProtected?:boolean; identified?:boolean; grain?:number;density?:number;goldSite?:string;goldOffset?:number;goldAllocation?:number;goldCapture?:number;captureRank?:number;goldRich?:boolean;observed?:boolean;pickWork?:number;  evaluationFN?:number; rewardFN?:number; damageState?:'worn'|'scratched'; areaId?:string; weight?:number; magnetic?:boolean; material?:string; difficulty?:number; obstacle?:boolean; rarity?:string; recoveryOperations?:number; uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'transit'|'stored'|'paid'; tool:string; }
-export interface Plot {environment?:Environment;worldVersion?:number;beachDepthVersion?:number; goldSites?:GravelSite[]; areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
+export interface Plot {digLayersSeen?:number[];environment?:Environment;worldVersion?:number;beachDepthVersion?:number; goldSites?:GravelSite[]; areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
 export interface Batch {resistance?:number;automationJob?:string; id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
-export interface State {distribution?:Partial<Record<Field,{mode:'manual'|'equal'|'capacity'|'space';cursor:number}>>;world?:{version:1;unlocked:string[];visits:Record<string,number>;milestones:Record<string,number[]>};lines?:Partial<Record<LineKey,Line>>;lineAccess?:string;lineScreenTool?:string;linePrecisionTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationSandEnd?:number;automationGoldStart?:number;automationGoldEnd?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
+export interface State {digWorkSeconds?:number;digBatchSerial?:number;distribution?:Partial<Record<Field,{mode:'manual'|'equal'|'capacity'|'space';cursor:number}>>;world?:{version:1;unlocked:string[];visits:Record<string,number>;milestones:Record<string,number[]>};lines?:Partial<Record<LineKey,Line>>;lineAccess?:string;lineScreenTool?:string;linePrecisionTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationSandEnd?:number;automationGoldStart?:number;automationGoldEnd?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
  goldVersion?:number;goldUnlockedAreas?:string[];gravelBatches?:GravelBatch[];goldWork?:GoldWork;sluiceFeed?:string[];goldStats?:GoldStatistics;loadouts?:Record<string,string[]>;selectedTools?:Record<string,string>;operationMetrics?:Record<string,OperationMetric>;lastOperationKey?:string; events?:GameEvent[]; riverSession?:RiverSession; riverMetrics?:RiverMetrics; maxStamina?:number; lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
@@ -84,11 +85,11 @@ export function exposure(p:Plot,f:Find) {
 }
 function cost(s:State,id:string) {s.playerStats.stamina=Math.max(0,s.playerStats.stamina-(id==='hand'?5:tool(id)!.staminaCost));s.playerStats.xp[3]++;}
 export const diggingLimit=(id:string)=>beachProfiles[id]?.limit??0;
-export function dig(s:State,id:string,x:number,y:number,dx:number) {
+export function dig(s:State,id:string,x:number,y:number,dx:number,seconds?:number) {
  if((id!=='hand'&&!s.ownedTools.includes(id))||id==='B201'||id==='B104'||Math.abs(dx)<2||x<0||x>=360||y<0||y>=280)return 0;
- if(!diggingLimit(id))return 0;
+ if(!diggingLimit(id)||seconds!==undefined&&!digProfiles[id]&&id!=='B106')return 0;
  if(!areaId(s).startsWith('B-'))return 0;
- const p=plot(s),profile=beachProfiles[id],scale=plotDepthScale(p),maxDepth=Math.min(diggingLimit(id),scale),limit=maxDepth/scale,radius=profile.radius??7,ry=profile.ry??radius;
+ const p=plot(s),profile=beachProfiles[id],scale=plotDepthScale(p),brush=seconds!==undefined&&id==='B106',near=brush?p.items.find(f=>f.state==='buried'&&Math.hypot(f.x-x,f.y-y)<18&&(f.depth??f.y)<=280&&depthAt(p,f.x,f.y)>=(f.depth??f.y)-12):undefined;if(brush&&!near)return 0;const maxDepth=Math.min(diggingLimit(id),scale,brush?(near!.depth??near!.y)+8:Infinity),limit=maxDepth/scale,radius=profile.radius??7,ry=profile.ry??radius;
  const low=s.playerStats.stamina<10?.5:1;let removed=0;
  for(let yy=Math.max(0,Math.floor((y-ry-4)/10));yy<=Math.min(27,Math.floor((y+ry+4)/10));yy++)for(let xx=Math.max(0,Math.floor((x-radius-4)/10));xx<=Math.min(35,Math.floor((x+radius+4)/10));xx++){
   const i=yy*36+xx;
@@ -97,21 +98,21 @@ export function dig(s:State,id:string,x:number,y:number,dx:number) {
   const hard=currentDepth>420?2.1:currentDepth>280?1.5:1,precision=id==='B106'&&equippedBeach(s,'B206')&&p.items.some(f=>f.identified&&Math.hypot(f.x-x,f.y-y)<35)?1.8:1;
   const env=environment(p),resist=env.hardness>1?(1+(env.hardness-1)*((id==='B106'||id==='B107'||id==='B302')?.2:id==='B105'?.8:1)):1;
   const strokeDepth=(profile.stroke??.85)/resist*precision*(currentDepth>280?Math.min(1,(profile.hard??1)/hard):1)*low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01))*maxDepth;
-  const nextDepth=Math.min(maxDepth,currentDepth+strokeDepth);
-  p.mask[i]=nextDepth/scale;removed+=(nextDepth-currentDepth)/maxDepth;
+  const nextDepth=seconds===undefined?Math.min(maxDepth,currentDepth+strokeDepth):brush?Math.min(maxDepth,currentDepth+8*Math.min(.1,seconds)):advanceDepth(p,id,currentDepth,Math.min(.1,Math.max(0,seconds)),low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)));
+  p.mask[i]=nextDepth/scale;removed+=(nextDepth-currentDepth)/(seconds===undefined?maxDepth:80);
  }
  if(!removed)return 0;
- const staminaBefore=s.playerStats.stamina;cost(s,id);measure(s,id,'掘削',removed,staminaBefore-s.playerStats.stamina);s.digs++;s.cells+=removed;s.playerStats.xp[0]+=removed;s.playerStats.xp[1]+=.5;
+ const staminaBefore=s.playerStats.stamina;if(seconds===undefined)cost(s,id);else{s.playerStats.stamina=Math.max(0,s.playerStats.stamina-(digProfiles[id]?.stamina??1.5)*Math.min(.1,seconds));s.playerStats.xp[3]+=seconds;}measure(s,id,'掘削',removed,staminaBefore-s.playerStats.stamina);if(seconds===undefined)s.digs++;else{const before=s.digWorkSeconds??0;s.digWorkSeconds=before+Math.min(.1,seconds);s.digs+=Math.floor((s.digWorkSeconds+1e-8)/.25)-Math.floor((before+1e-8)/.25);}s.cells+=removed;s.playerStats.xp[0]+=removed;s.playerStats.xp[1]+=.5*(seconds===undefined?1:seconds/.25);
  for(const f of p.items)if(f.state==='buried'&&!f.qualityFinalized&&exposure(p,f)>=CONFIG.exposure)finishQuality(s,f,id);
- if(profile.sample) {
+ if(profile.sample||seconds!==undefined) {
   s.sandSampled=true;
   let b=s.sandBatches.find(b=>b.plotId===p.id&&!b.processed&&!b.automationJob&&b.cells<(equippedBeach(s,'B108')?72:CONFIG.batchCells));
-  if(!b){b={id:`${p.id}:batch-${s.digs}`,plotId:p.id,items:[],processed:false,cells:0,...(p.worldVersion?{resistance:1+environment(p).stones*.5}:{})};s.sandBatches.push(b);}
+  if(!b){b={id:seconds===undefined?`${p.id}:batch-${s.digs}`:`${p.id}:timed-${s.digBatchSerial=(s.digBatchSerial??0)+1}`,plotId:p.id,items:[],processed:false,cells:0,...(p.worldVersion?{resistance:1+environment(p).stones*.5}:{})};s.sandBatches.push(b);}
   b.cells+=removed;
-  for(const f of p.items)if(f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&(['B001','B002','B003','B004'].includes(f.id)||Number(f.id.slice(1))>=13&&treasure(f.id).size==='小')){finishQuality(s,f,id);f.state='batch';f.tool=id;b.items.push(f.uid);b.allocations??={};b.allocations[f.uid]=b.cells;}
-  if(id==='B203')sortBatch(s,b,'sieve',Math.min(5,removed),'B203',1);
+  for(const f of p.items)if(profile.sample&&f.state==='buried'&&exposure(p,f)>=CONFIG.exposure&&(['B001','B002','B003','B004'].includes(f.id)||Number(f.id.slice(1))>=13&&treasure(f.id).size==='小')){finishQuality(s,f,id);f.state='batch';f.tool=id;b.items.push(f.uid);b.allocations??={};b.allocations[f.uid]=b.cells;}
+  if(id==='B203'&&(seconds===undefined||Math.floor(((s.digWorkSeconds??0)+1e-8)/.25)>Math.floor(((s.digWorkSeconds??0)-seconds+1e-8)/.25)))sortBatch(s,b,'sieve',Math.min(5,seconds===undefined?removed:b.cells-(b.screenedUnits??0)),'B203',1);
  }
- refresh(s);return removed;
+ if(seconds===undefined||Math.floor(((s.digWorkSeconds??0)+1e-8)/.25)>Math.floor(((s.digWorkSeconds??0)-seconds+1e-8)/.25))refresh(s);return removed;
 }
 export function scan(s:State,x:number,y:number,id='B201'){if(!detectorTool(id)||!s.ownedTools.includes(id)||!areaId(s).startsWith('B-'))return {strength:0,band:'未装備',depthHint:'',character:''};const before=s.playerStats.stamina;cost(s,id);measure(s,id,'探知',1,before-s.playerStats.stamina);s.playerStats.xp[1]++;return scanReading(s,x,y,id);}
 export function detect(s:State,x:number,y:number){return scan(s,x,y).strength;}
@@ -176,3 +177,6 @@ export function rate(s:State) {const archived=s.rewardLedger?.window.filter(r=>r
 export const maxStamina=(s:State)=>s.maxStamina??100+Math.floor(s.playerStats.xp[3]/CONFIG.xpPerLevel)*2;
 
 export function enterArea(s:State,area:string,seed=Date.now()>>>0){if(!areaUnlocked(s,area))return false;addPlot(s,seed,false,area);return true;}
+
+/** Continuous input entry point. Legacy dig without seconds remains a fixed-work adapter for saved scenario scripts. */
+export function digForTime(s:State,id:string,x:number,y:number,seconds:number){if(!Number.isFinite(seconds)||seconds<=0)return 0;return dig(s,id,x,y,5,Math.min(.1,seconds));}

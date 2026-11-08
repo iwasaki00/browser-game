@@ -12,15 +12,17 @@ function run(args,env={}){
 try{
   run(['scripts/build-release.cjs','--pages']);
   run(['--test','tests/*.test.cjs']);
-  run(['tests/browser-qa.cjs'],{QA_APP_ROOT:'',QA_BASE_PATH:'/',QA_ARTIFACT_DIR:'docs/qa-v071/source'});
-  run(['tests/browser-qa.cjs'],{QA_APP_ROOT:`release/pages/${path.basename(APP)}`,QA_BASE_PATH:`/browser-game/${path.basename(APP)}/`,QA_ARTIFACT_DIR:'docs/qa-v071/artifact'});
+  run(['tests/browser-qa.cjs'],{QA_APP_ROOT:'',QA_BASE_PATH:'/',QA_ARTIFACT_DIR:'docs/qa-v072/source'});
+  run(['tests/browser-qa.cjs'],{QA_APP_ROOT:`release/pages/${path.basename(APP)}`,QA_BASE_PATH:`/browser-game/${path.basename(APP)}/`,QA_ARTIFACT_DIR:'docs/qa-v072/artifact'});
+  run(['tests/photo-picker.browser.cjs'],{QA_APP_ROOT:'',PICKER_BASELINE:'',PICKER_ENGINE:'chrome'});
+  run(['tests/photo-picker.browser.cjs'],{QA_APP_ROOT:`release/pages/${path.basename(APP)}`,PICKER_BASELINE:'',PICKER_ENGINE:'chrome'});
   const files=['P01','P02','P03','P04'].flatMap(id=>['question','answer'].map(kind=>`${id}-${kind}.png`)).concat('oriented-question.png');
-  for(const file of files)assert.deepEqual(fs.readFileSync(path.join(APP,'docs/qa-v071/source',file)),fs.readFileSync(path.join(APP,'docs/qa-v071/artifact',file)),`Source/artifact PNG mismatch: ${file}`);
+  for(const file of files)assert.deepEqual(fs.readFileSync(path.join(APP,'docs/qa-v072/source',file)),fs.readFileSync(path.join(APP,'docs/qa-v072/artifact',file)),`Source/artifact PNG mismatch: ${file}`);
   const {hash}=require('./build-release.cjs');
-  const result={version:VERSION,status:'PASS',comparison:'exact PNG bytes, source vs isolated nested artifact',files:files.map(file=>({file,sha256:hash(fs.readFileSync(path.join(APP,'docs/qa-v071/artifact',file)))}))};
-  fs.writeFileSync(path.join(APP,'docs/qa-v071/png-parity.json'),JSON.stringify(result,null,2)+'\n');
-  fs.copyFileSync(path.join(APP,'release/pages-manifest.json'),path.join(APP,'docs/qa-v071/pages-manifest.json'));
+  const result={version:VERSION,status:'PASS',comparison:'exact PNG bytes, source vs isolated nested artifact',files:files.map(file=>({file,sha256:hash(fs.readFileSync(path.join(APP,'docs/qa-v072/artifact',file)))}))};
+  fs.writeFileSync(path.join(APP,'docs/qa-v072/png-parity.json'),JSON.stringify(result,null,2)+'\n');
+  fs.copyFileSync(path.join(APP,'release/pages-manifest.json'),path.join(APP,'docs/qa-v072/pages-manifest.json'));
   const manifest=require(path.join(APP,'release/pages-manifest.json'));
-  fs.writeFileSync(path.join(APP,'docs/qa-v071/app-files.txt'),manifest.appManifest.files.map(f=>`${f.file}  ${f.sha256}`).join('\n')+'\n');
+  fs.writeFileSync(path.join(APP,'docs/qa-v072/app-files.txt'),manifest.appManifest.files.map(f=>`${f.file}  ${f.sha256}`).join('\n')+'\n');
   console.log(`PASS: ${VERSION} source/artifact PNG parity (${files.length} pairs)`);
 }catch(error){console.error(error.message);process.exitCode=1;}

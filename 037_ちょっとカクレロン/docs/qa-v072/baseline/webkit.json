@@ -1,0 +1,26 @@
+{
+  "observedAt": "2026-11-08T15:47:40.271Z",
+  "engine": "webkit",
+  "browser": "26.4",
+  "baseline": true,
+  "applicationRoot": "release/baseline-v071",
+  "results": [
+    {
+      "name": "visible initial control opens filechooser and selection renders the photo",
+      "status": "PASS",
+      "detail": {
+        "hidden": true,
+        "display": "none",
+        "found": true
+      }
+    },
+    {
+      "name": "change-image opens chooser; same-file reselection fires change and resets edited size",
+      "status": "PASS"
+    },
+    {
+      "name": "HTTP startup and assets have no errors; file input and control exist",
+      "status": "PASS"
+    }
+  ]
+}

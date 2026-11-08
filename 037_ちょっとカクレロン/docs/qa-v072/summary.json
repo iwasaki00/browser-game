@@ -1,0 +1,47 @@
+{
+  "version": "0.7.2",
+  "unit": {
+    "pass": 71,
+    "fail": 0
+  },
+  "generalChrome": [
+    {
+      "kind": "source",
+      "pass": 14
+    },
+    {
+      "kind": "artifact",
+      "pass": 14
+    }
+  ],
+  "picker": [
+    {
+      "kind": "source",
+      "engine": "chrome",
+      "browser": "157.0.8103.38",
+      "pass": 8
+    },
+    {
+      "kind": "source",
+      "engine": "webkit",
+      "browser": "26.4",
+      "pass": 8
+    },
+    {
+      "kind": "artifact",
+      "engine": "chrome",
+      "browser": "157.0.8103.38",
+      "pass": 8
+    },
+    {
+      "kind": "artifact",
+      "engine": "webkit",
+      "browser": "26.4",
+      "pass": 8
+    }
+  ],
+  "pngParity": "PASS",
+  "totalPass": 132,
+  "totalFail": 0,
+  "iphone": "Not verified"
+}

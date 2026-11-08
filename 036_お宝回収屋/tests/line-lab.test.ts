@@ -1,3 +1,4 @@
+import {VERSION} from '../src/data';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {applyLineScenario,lineScenarios,lineDebugSnapshot} from '../src/dev-lines';
 import {lineBenchmark} from '../src/dev-line-model';
@@ -5,7 +6,7 @@ import {lineTick,lineBuffer} from '../src/lines';
 import {auto,enqueueMaterial,cancelJob} from '../src/automation';
 import {sortSand} from '../src/engine';
 import {migrate} from '../src/save';
-for(const scenario of lineScenarios)test('DEBUG '+scenario.id+' 実状態の作成・保存互換',()=>{const {state}=applyLineScenario(scenario.id);assert.ok(Object.keys(state.lines??{}).length);assert.doesNotThrow(()=>migrate(structuredClone(state)));assert.equal(lineDebugSnapshot(state).version,'0.8.0');});
+for(const scenario of lineScenarios)test('DEBUG '+scenario.id+' 実状態の作成・保存互換',()=>{const {state}=applyLineScenario(scenario.id);assert.ok(Object.keys(state.lines??{}).length);assert.doesNotThrow(()=>migrate(structuredClone(state)));assert.equal(lineDebugSnapshot(state).version,VERSION);});
 test('LINE 改善した運搬道具が中間容量を増やす',()=>{const {state:s}=applyLineScenario('LINE-01'),l=s.lines!.B!;assert.equal(lineBuffer(l),96);l.support=['B110'];assert.equal(lineBuffer(l),192);});
 test('LINE 同じ継続採取条件で完全に再現できる',()=>{assert.deepEqual(lineBenchmark(6000,'G','D',30),lineBenchmark(6000,'G','D',30));});
 test('LINE 比較処理は元の通常状態を変更しない',()=>{const {state:s}=applyLineScenario('LINE-01'),before=structuredClone(s);lineBenchmark(6000,'B','C',10);assert.deepEqual(s,before);});

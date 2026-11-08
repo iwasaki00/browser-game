@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.7.1";
+  const VERSION = "0.7.2";
   const View = globalThis.KakureronView;
   const Poses = globalThis.KakureronPoses;
   const Copy = globalThis.KakureronCopy;
@@ -548,10 +548,9 @@
   window.addEventListener("blur", () => { spacePan = false; finishPoseAnimation(); clearGesture(true); render(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) { spacePan = false; finishPoseAnimation(); clearGesture(true); render(); } });
 
-  function chooseImage() { input.click(); }
-  document.querySelector("#choose-image").addEventListener("click", chooseImage);
-  document.querySelector("#change-image").addEventListener("click", chooseImage);
-  input.addEventListener("change", async () => {
+  // Pointer activation uses the HTML label/file-input association, independently
+  // of game initialization. Keyboard activation is registered by startup.js.
+  async function loadSelectedImage() {
     const file = input.files[0];
     input.value = "";
     if (!file) return;
@@ -607,7 +606,8 @@
       if (preparedPhoto) preparedPhoto.width = preparedPhoto.height = 1;
       URL.revokeObjectURL(url);
     }
-  });
+  }
+  input.addEventListener("change", loadSelectedImage);
 
   function adjust(sizeDelta, angleDelta) {
     if (editBlocked() || !background) return;
@@ -887,4 +887,8 @@
   document.querySelector("#save-answer").addEventListener("click", () => saveOutput("answer"));
   document.querySelector("#share-question").addEventListener("click", shareQuestion);
   window.addEventListener("pagehide", leavePreview);
+  document.documentElement.dataset.appReady = "true";
+  document.querySelector("#startup-status").hidden = true;
+  // Native labels can be used while deferred game modules are still loading.
+  if (input.files?.length) void loadSelectedImage();
 })();

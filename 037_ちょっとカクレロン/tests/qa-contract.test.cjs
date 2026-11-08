@@ -23,7 +23,7 @@ test('all shipped HTML and pose resources exist with exact case and local relati
 test('privacy contract forbids runtime upload, persistence, analytics and remote dependencies',()=>{
   // A regression guard for known API spellings, complemented by the browser
   // network/storage probe and manual data-flow audit; not a general proof.
-  const files=['index.html','style.css','app.js','poses.js','paint.js','copy-brush.js','editor-view.js','export.js'];
+  const files=['index.html','style.css','startup.js','app.js','poses.js','paint.js','copy-brush.js','editor-view.js','export.js'];
   for(const file of files){
     const source=fs.readFileSync(path.join(root,file),'utf8');
     assert.doesNotMatch(source,/https?:\/\/|\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|localStorage|sessionStorage|indexedDB|console\./,file);

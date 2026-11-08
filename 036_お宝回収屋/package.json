@@ -1,6 +1,6 @@
 {
   "name": "the-finders",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -37,7 +37,9 @@
     "balance:advanced": "tsx scripts/advanced-balance.ts",
     "audit:treasures": "tsx scripts/treasure-audit.ts",
     "test:advanced-stress": "tsx scripts/advanced-stress.ts",
-    "test:advanced-browser": "node scripts/advanced-browser-test.mjs"
+    "test:advanced-browser": "node scripts/advanced-browser-test.mjs",
+    "balance:digging": "tsx scripts/digging-balance.ts",
+    "test:digging-browser": "node scripts/digging-browser-test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

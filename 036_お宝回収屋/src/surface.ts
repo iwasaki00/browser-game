@@ -1,3 +1,4 @@
+import {LAYERS,layerAt} from './digging';
 import {plotDepthScale,BEACH_ADDED,detectorTool} from './beach-tools';
 import {exposure,MAX_DEPTH,type Plot} from './engine';
 import {CONFIG} from './data';
@@ -76,7 +77,7 @@ export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,de
 
 export function depthAppearance(depth:number){
  const d=Math.max(0,Math.min(600,depth));
- const stops:[number,number[]][]=[[0,[233,207,160]],[80,[215,179,119]],[180,[164,119,72]],[280,[100,66,43]],[420,[69,57,45]],[600,[38,37,35]]];
+ const stops:[number,number[]][]=[[0,[233,207,160]],[40,[224,193,140]],[80,[215,179,119]],[130,[190,150,95]],[180,[164,119,72]],[230,[128,89,55]],[280,[100,66,43]],[350,[82,61,44]],[420,[69,57,45]],[510,[51,46,39]],[600,[38,37,35]]];
  let i=1;while(i<stops.length-1&&d>stops[i][0])i++;
  const [a,ca]=stops[i-1],[b,cb]=stops[i],t=(d-a)/(b-a),color=ca.map((n,k)=>Math.round(n+(cb[k]-n)*t));
  return {color:color as [number,number,number],wall:2+15*Math.pow(d/280,.75),shadow:.2+.6*d/600};
@@ -102,7 +103,7 @@ function drawPits(ctx:CanvasRenderingContext2D,p:Plot){
   for(const i of cells){const x=i%36*10,y=Math.floor(i/36)*10,depth=p.mask[i]*plotDepthScale(p),look=depthAppearance(depth);
    const patch=new Path2D(),corners=[project(x,y),project(x+10,y),project(x+10,y+10),project(x,y+10)];
    corners.forEach((q,j)=>j?patch.lineTo(q.x,q.y):patch.moveTo(q.x,q.y));patch.closePath();
-   ctx.save();ctx.translate(0,look.wall*.28);ctx.fillStyle=`rgb(${look.color.join(',')})`;ctx.fill(patch);ctx.restore();
+   ctx.save();ctx.translate(0,look.wall*.28);ctx.fillStyle=`rgb(${look.color.join(',')})`;ctx.fill(patch);ctx.restore();const layer=layerAt(depth);if(layer>=3){const grain=project(x+3+(i%3),y+3);ctx.fillStyle=layer>=8?'#a69a8255':'#d2bb8a44';ctx.fillRect(grain.x,grain.y+look.wall*.28,layer>=8?2:1,1);}
    const above=y>0?p.mask[i-36]*plotDepthScale(p):0;
    if(depth>above+1){const left=project(x,y),right=project(x+10,y);ctx.strokeStyle=`rgba(64,39,23,${look.shadow})`;ctx.lineWidth=Math.min(5,look.wall-depthAppearance(above).wall+1);ctx.beginPath();ctx.moveTo(left.x,left.y+1);ctx.lineTo(right.x,right.y+1);ctx.stroke();}
   }

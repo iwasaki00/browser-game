@@ -1,8 +1,8 @@
 # ちょっとカクレロン
 
-Version **v0.7.1 — RELEASE PREP / 公開準備**。iPhone SafariとPCで、4種類のカクレロンを写真に配置し、色や背景模様で隠して、問題画像を保存・共有するブラウザゲームです。
+Version **v0.7.2 — PHOTO PICKER FIX / 画像選択修正**。iPhone SafariとPCで、4種類のカクレロンを写真に配置し、色や背景模様で隠して、問題画像を保存・共有するブラウザゲームです。
 
-判定は **CONDITIONAL**。ゲーム機能を維持し、必要な13ファイルだけの公開物と、他ゲームを保持した共有Pages成果物を準備しました。内部68件・Chrome14件×ソース／成果物・PNG比較1件の計97実行単位が成功しています。共有Pages設定への適用と実URLのv0.7.1確認、iPhone・LINE・実機メモリは未確認です。v1.0.0への更新は最終受入後に行います。[公開準備手順](docs/RELEASE_PREP_v0.7.1.md)、[QA報告](docs/QA_REPORT_v0.7.1.md)、[チェックリスト](docs/RELEASE_CHECKLIST_v0.7.1.md)を参照してください。
+判定は **CONDITIONAL**。「画像を選ぶ」「画像変更」を標準label方式へ変更し、実クリック・タップ・キーボードからfilechooserが発生する試験を追加しました。修正前もChrome／WebKitでは成功したため、報告されたiPhoneでの原因は未確定です。修正版132実行単位が成功していますが、実機での解消確認は待ちです。v1.0.0更新・本番切替・デプロイは行いません。[今回のQA報告](docs/QA_REPORT_v0.7.2.md)、[実機チェックリスト](docs/RELEASE_CHECKLIST_v0.7.2.md)を参照してください。
 
 v0.7.0で修正した写真変更失敗時の状態保持とプレビュー余白を維持しています。[旧QA報告](docs/QA_REPORT_v0.7.0.md)・[旧問題一覧](docs/ISSUES_v0.7.0.md)と証跡は開発資料として残しています。
 
@@ -11,16 +11,22 @@ v0.7.0で修正した写真変更失敗時の状態保持とプレビュー余�
 開発時はこのフォルダーを静的HTTPサーバーで配信して `index.html` を開きます。公開用には以下のコマンドで許可リストからファイルを生成します。npm依存・フレームワーク・画像処理サーバーは不要です。`file://` の直接起動はCanvas制限があるためHTTPを使用してください。ファイル共有にはHTTPS等の安全なコンテキストとWeb Share対応が必要です。
 
 ```powershell
-node scripts/build-release.cjs         # dist/：本アプリ13ファイル
+node scripts/build-release.cjs         # dist/：本アプリ14ファイル
 node scripts/build-release.cjs --pages # release/pages/：メニュー・他ゲームを保持した共有成果物
 node scripts/verify-release.cjs        # 内部・ソース／成果物Chrome・PNG同一性をまとめて検証
 ```
 
-画面・内部定数・HTMLメタ情報・参照queryを0.7.1へ統一しています。公開物ではJS／CSS／ポーズSVGに内容ハッシュを付け、参照を相対パスで書き換えます。Versionの基準は既存 `app.js` のVERSION定数です。Pages HTMLの実測max-ageは600秒で、配信直後の旧HTML残留は即時排除できません。新Versionを確認し、必要なら一度再読み込みしてください。Service Workerや強制再読込ループ、他アプリのキャッシュ削除は導入していません。
+画面・内部定数・HTMLメタ情報・参照queryを0.7.2へ統一しています。公開物ではJS／CSS／SVGに内容ハッシュを付け、参照を相対パスで書き換えます。Versionの基準は既存 `app.js` のVERSION定数です。以前のPages調査ではHTMLのmax-ageは600秒で、配信直後の旧HTML残留は即時排除できません。新Versionを確認し、必要なら一度再読み込みしてください。Service Workerや強制再読込ループ、他アプリのキャッシュ削除は導入していません。
 
-現在のPages実設定はmain／root配信で、公開中のVersionは0.7.0です。旧テスト・監査資料も200で取得できることを確認しました。distを作るだけでは除外できないため、共有成果物を配信するActions案を `scripts/pages-release.workflow.yml` に用意しました。Pages設定は全ゲームへ影響するので未変更・未デプロイです。QA-03は成果物側で対処済み、本番は切替待ち。[適用・復旧手順](docs/RELEASE_PREP_v0.7.1.md)に従ってレビューしてください。アプリ単独のdistだけを共有サイトへ配信すると他ゲームが失われるため、共有Pagesには `release/pages/` を指定します。
+v0.7.1準備時（2026-11-08）のPages調査はmain／root配信・公開Version0.7.0で、旧テスト資料も200でした。今回、本番設定の再照会・変更・デプロイは行っていません。共有成果物を配信するActions案と [適用・復旧手順](docs/RELEASE_PREP_v0.7.1.md) は維持しています。アプリ単独のdistだけを共有サイトへ配信すると他ゲームが失われるため、共有Pagesには `release/pages/` を指定します。旧資料の13ファイルという記載は今回14へ読み替えてください。
 
-`dist/`・`release/` はGit追跡対象外。`.gitattributes` は本アプリのテキストをLF、PNGをバイナリとして扱い、Windows／CI間の改行差を抑えます。公開一覧・SHA-256は [app-files.txt](docs/qa-v071/app-files.txt)、他ゲームの保持結果は [pages-manifest.json](docs/qa-v071/pages-manifest.json) に記録しています。
+`dist/`・`release/` はGit追跡対象外。`.gitattributes` は本アプリのテキストをLF、PNGをバイナリとして扱い、Windows／CI間の改行差を抑えます。公開一覧・SHA-256は [app-files.txt](docs/qa-v072/app-files.txt)、他ゲームの保持結果は [pages-manifest.json](docs/qa-v072/pages-manifest.json) に記録しています。
+
+## 画像選択と起動診断
+
+両方の画像選択labelが、視覚的に隠した同じfile inputを使用します。タップはHTML標準の関連付けで動き、ゲームのclickハンドラーへ依存しません。Tabでlabelへ移動し、Enter／Spaceでも選択できます。初期化前に選択された写真も、起動完了後に取り込みます。inputの値はFile取得後に空へ戻し、同一画像の再選択に対応します。キャンセルでは写真・塗装を変更しません。
+
+`startup.js` はゲームより先に動き、初期化失敗を「アプリを起動できません」と表示します。画像読込エラーや、キー操作で選択画面を開く際の例外とは別のメッセージです。診断ログへファイル名・画像・個人情報を出力しません。JavaScript無効時は編集にJavaScriptが必要であることを案内します。
 
 ## 編集画面とPC操作
 
@@ -55,6 +61,7 @@ node scripts/verify-release.cjs        # 内部・ソース／成果物Chrome・
 - `index.html`：編集画面、完成プレビュー、保存・共有・答え合わせ画面。
 - `style.css`：スマートフォン向けレイアウト、選択状態、Safe Area、ルーペ。
 - `app.js`：編集操作、プレビュー遷移、PNG事前生成、保存・共有、Object URLの管理。
+- `startup.js`：labelのキーボード操作と、ゲーム初期化失敗の安全な案内。
 - `poses.js`：4ポーズのID・名称・SVG・基準寸法・縦横比と描画レイヤー寸法の共通定義。
 - `paint.js`：逆座標変換、マスク、独立したPaint Layer、ストローク単位の履歴。
 - `copy-brush.js`：背景座標・ローカル座標間のアフィン変換、コピー参照位置、変更領域の計算。
@@ -70,12 +77,14 @@ node scripts/verify-release.cjs        # 内部・ソース／成果物Chrome・
 - `tests/qa-contract.test.cjs`：ローカル参照の大小文字一致、通信・永続化・外部依存の回帰検知。
 - `tests/browser-qa.cjs`：既存Playwrightを利用するChrome実描画・PNG画素・入力・共有API契約・参照解放の監査。
 - `tests/release.test.cjs`：公開物の過不足・ハッシュ・依存参照・決定性・安全な出力先の検査。
+- `tests/startup.test.cjs`：起動／選択エラーの区別、個人情報を含まない案内、同期キー操作。
+- `tests/photo-picker.browser.cjs`：実操作→filechooser→画像指定、同一画像、無選択、失敗保持、初期化前選択をソース／成果物で検査。
 - `scripts/release-config.cjs`：公開入力の許可リストとVersionの読み取り。
 - `scripts/build-release.cjs`：13ファイルの生成・検証、Gitコミットから他ゲームを保持した共有Pages構成の生成。
 - `scripts/verify-release.cjs`：公開用構成を含む全ローカル検証とPNG比較。
 - `scripts/check-public.cjs`：既存公開状態のGET観測。適用後は `--release` で新Version・200／404を検査。
 - `scripts/pages-release.workflow.yml`：rootへの設置と共有Pages切替が必要な未適用workflow案。
-- `docs/`：v0.7.0監査資料、v0.7.1公開準備資料と合成画像の証跡。ゲームの配布対象外。
+- `docs/`：旧監査／公開準備資料、v0.7.2画像選択修正の記録と合成画像の証跡。ゲームの配布対象外。
 - `tests/fixtures/photo.svg`：色取得の目視確認用、緑・茶・青の固定画像。
 
 ## 操作
@@ -162,6 +171,7 @@ node scripts/verify-release.cjs        # 内部・ソース／成果物Chrome・
 
 ```sh
 node --check app.js
+node --check startup.js
 node --check poses.js
 node --check paint.js
 node --check export.js
@@ -170,21 +180,23 @@ node --check editor-view.js
 node --test tests/*.test.cjs
 # ソース版のブラウザ試験（既存PlaywrightとChromeを利用）
 node tests/browser-qa.cjs
+# 実際の画像選択操作（既定Chrome）
+node tests/photo-picker.browser.cjs
 # 公開用生成・内部・ソース／成果物・PNG比較の一括検証
 node scripts/verify-release.cjs
 ```
 
-内部テスト68件成功、0件失敗。v0.7.0の65件を維持し、許可リスト・不足／余分／改変の拒否・決定性／安全な出力先を3件追加しました。PC操作、4ポーズ、塗装・コピー・履歴・出力、各種パン、リサイズ、全12遷移、入力・PNG抑止、reduced-motionも継続検証しています。
+内部テスト71件成功、0件失敗。既存68件に起動診断・キー操作・初期化前選択の3件を追加しました。従来の97実行単位を維持し、画像選択8件をChrome／WebKitのソース／成果物で各実行して、合計132単位が成功しています。通常の一括コマンドはChromeまでの116単位です。WebKitは既存の対応環境で `PICKER_ENGINE=webkit`、必要なら `PLAYWRIGHT_MODULE` を設定して別途実行します。
 
 通常・2・4・8倍で同じコピー経路を入力し、Canvas参照実装上でPaint LayerのRGBA画素が一致することを確認しています。複数の画面寸法・全ポーズ・回転・サイズの組合せで座標変換を比較し、表示Canvasの2048px上限と演出の終端値も確認しています。
 
 内部テストはCanvas代替と最小RGBA参照実装を使用し、ブラウザのアンチエイリアスや色管理を完全には再現しません。Windows Chrome 157では、14試験をソース版と隔離した公開成果物版の両方で成功しました。180条件の座標・実マスク・問題／答えPNG360枚の画素をそれぞれ検査し、代表PNG9組はバイト全体が一致しました。成果物は実URLと同じサブディレクトリで配信し、ソースからの補完なし、開発パス404を確認しています。
 
-実OS共有の代わりにAPIを差し替えた契約試験で、事前生成File・ユーザー操作中の呼出・重複抑止・キャンセル・エラー・最新データを確認しています。iPhoneの共有シートやLINE実送信、実Safari、実RAMは未確認です。新しい依存は追加していません。共有Pagesの実行／配信と公開URLのv0.7.1受入も未確認です。実行条件・件数・証跡は [QA_REPORT v0.7.1](docs/QA_REPORT_v0.7.1.md)へ記録しています。
+実OS共有の代わりにAPIを差し替えた契約試験で、事前生成File・ユーザー操作中の呼出・重複抑止・キャンセル・エラー・最新データを確認しています。iPhoneの共有シートやLINE実送信、実Safari、実RAMは未確認です。画像選択のキャンセル試験は無選択応答とDOM cancelで、実OS操作は別途確認します。新しい依存は追加していません。本番v0.7.2の受入は未実施です。実行条件・件数・証跡は [QA_REPORT v0.7.2](docs/QA_REPORT_v0.7.2.md)へ記録しています。
 
 ## iPhone Safari受入確認
 
-最新版の受入状況は [RELEASE_CHECKLIST v0.7.1](docs/RELEASE_CHECKLIST_v0.7.1.md)を使用してください。IP-01〜18はv0.7.0の表を引き継いでいます。以下は旧Versionの継続確認用です。
+今回の画像選択修正は [RELEASE_CHECKLIST v0.7.2](docs/RELEASE_CHECKLIST_v0.7.2.md) のIP-01〜07を使用してください。以下は旧Versionの継続確認用です。
 
 v0.6.0の確認項目：
 

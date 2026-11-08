@@ -1,0 +1,102 @@
+[
+  {
+    "channel": "chrome",
+    "width": 320,
+    "hand": 48.37561904816395,
+    "small": 120.41140869318899,
+    "large": 240.6795465896869,
+    "frequency": [
+      119.69860869565197,
+      119.47650435028885
+    ],
+    "touch": 120.080834781377,
+    "deepest": 600,
+    "layoutStable": true,
+    "releaseStop": true,
+    "toolChangeStop": true,
+    "modalStop": true,
+    "blurStop": true,
+    "hiddenStop": true,
+    "touchCancel": true,
+    "fastSwipeBounded": true,
+    "saveReload": true,
+    "equipment": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "hand": 48.14933333169841,
+    "small": 119.86906086710205,
+    "large": 240.13911110934606,
+    "frequency": [
+      119.84839999876831,
+      119.46617391304328
+    ],
+    "touch": 120.04467825717491,
+    "deepest": 600,
+    "layoutStable": true,
+    "releaseStop": true,
+    "toolChangeStop": true,
+    "modalStop": true,
+    "blurStop": true,
+    "hiddenStop": true,
+    "touchCancel": true,
+    "fastSwipeBounded": true,
+    "saveReload": true,
+    "equipment": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "hand": 47.87961904707404,
+    "small": 120.2151304347824,
+    "large": 240.96086917562727,
+    "frequency": [
+      119.87422608572483,
+      119.37320000246277
+    ],
+    "touch": 120.10149565586816,
+    "deepest": 600,
+    "layoutStable": true,
+    "releaseStop": true,
+    "toolChangeStop": true,
+    "modalStop": true,
+    "blurStop": true,
+    "hiddenStop": true,
+    "touchCancel": true,
+    "fastSwipeBounded": true,
+    "saveReload": true,
+    "equipment": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 1280,
+    "hand": 48.24533333278832,
+    "small": 119.72443478260848,
+    "large": 241.123740138074,
+    "frequency": [
+      120.14798261115841,
+      119.46100870057792
+    ],
+    "touch": 120.37525217514431,
+    "deepest": 600,
+    "layoutStable": true,
+    "releaseStop": true,
+    "toolChangeStop": true,
+    "modalStop": true,
+    "blurStop": true,
+    "hiddenStop": true,
+    "touchCancel": true,
+    "fastSwipeBounded": true,
+    "saveReload": true,
+    "equipment": true,
+    "lab": false,
+    "errors": []
+  }
+]
