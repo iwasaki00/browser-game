@@ -1,0 +1,84 @@
+{
+  "observedAt": "2026-11-08T14:13:05.592Z",
+  "mode": "read-only baseline observation; not a release acceptance test",
+  "index": {
+    "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/index.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "cacheControl": "max-age=600",
+    "lastModified": "Tue, 03 Nov 2026 13:07:45 GMT"
+  },
+  "version": "0.7.0",
+  "assets": [
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/style.css?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/poses.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/kakureron.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/crouch.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/spread.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/lie.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/copy-brush.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/paint.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/editor-view.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/export.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/app.js?v=0.7.0",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/kakureron.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/crouch.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/spread.svg",
+      "status": 200
+    },
+    {
+      "url": "https://iwasaki00.github.io/browser-game/037_%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%82%AB%E3%82%AF%E3%83%AC%E3%83%AD%E3%83%B3/assets/poses/lie.svg",
+      "status": 200
+    }
+  ],
+  "development": [
+    {
+      "file": "tests/app.test.cjs",
+      "status": 200
+    },
+    {
+      "file": "docs/QA_REPORT_v0.7.0.md",
+      "status": 200
+    }
+  ]
+}

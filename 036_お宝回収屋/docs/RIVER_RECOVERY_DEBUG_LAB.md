@@ -1,3 +1,11 @@
+# Version 0.8.0 DEBUG LAB追補
+
+開発版設定のバージョンを5回タップ→探索/シナリオ→ADVANCED AUTOMATION。既存8タブ・99シナリオへADV-01〜20を追加、計119。6ライン・接続/予約競合・配分・強化・移行・成長・300品監査を再現する。
+
+比較は同じシード・材料の5構成、設備付与の性能試験。Worker進捗・中止・JSON、追加費用に基づく条件付き投資回収を出力。ADV-20は24時間Worker（初期材料後は待機）。継続投入と1002対象はtest:advanced-stress。通常/LABセーブ分離と本番DEV除外を維持。[操作](ADVANCED_AUTOMATION.md) / [結果](ADVANCED_AUTOMATION_BALANCE.md)。
+
+---
+
 # Version 0.7.0 DEBUG LAB追補
 
 開発サーバーを起動し、設定内のバージョンを5回タップ。「探索」または「シナリオ」のWORLD & TREASUREを展開する。8タブ、従来44＋AUTO15＋LINE20にWORLD10＋TREASURE10を追加し計99シナリオ。

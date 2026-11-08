@@ -4,8 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '../../036_お宝回収屋/node_modules/playwright');
-const root = path.resolve(__dirname, '..');
-const artifacts = path.join(root, 'docs', 'qa-v070');
+const sourceRoot = path.resolve(__dirname, '..');
+const root = path.resolve(sourceRoot, process.env.QA_APP_ROOT || '.');
+const artifacts = path.resolve(sourceRoot, process.env.QA_ARTIFACT_DIR || 'docs/qa-v071/source');
+const mount = process.env.QA_BASE_PATH || '/';
+if (!mount.startsWith('/') || !mount.endsWith('/') || mount.includes('..')) throw new Error('Invalid test mount');
 fs.mkdirSync(artifacts, { recursive: true });
 const results = [];
 const check = async (name, fn) => {
@@ -15,9 +18,16 @@ const check = async (name, fn) => {
   console.log(`${results.at(-1).status}: ${name}`);
 };
 const server = http.createServer((req, res) => {
-  const file = path.resolve(root, '.' + decodeURIComponent(new URL(req.url, 'http://localhost').pathname));
-  if (!file.startsWith(root + path.sep) && file !== root) { res.writeHead(403).end(); return; }
-  const target = file === root ? path.join(root, 'index.html') : file;
+  const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  if (!pathname.startsWith(mount)) { res.writeHead(404).end(); return; }
+  const relative = pathname.slice(mount.length) || 'index.html';
+  let target = root;
+  for (const part of relative.split('/')) {
+    if (!part || part === '.' || part === '..' || !fs.existsSync(target) || !fs.statSync(target).isDirectory() || !fs.readdirSync(target).includes(part)) { res.writeHead(404).end(); return; }
+    target = path.join(target,part);
+    if(fs.lstatSync(target).isSymbolicLink()){res.writeHead(404).end();return;}
+  }
+  if(!fs.statSync(target).isFile()){res.writeHead(404).end();return;}
   const type = { '.html':'text/html', '.css':'text/css', '.js':'text/javascript', '.svg':'image/svg+xml' }[path.extname(target)] || 'application/octet-stream';
   fs.readFile(target, (error, bytes) => { res.writeHead(error ? 404 : 200, { 'Content-Type':type }); res.end(error ? '' : bytes); });
 });
@@ -57,15 +67,28 @@ function inspectPNG(bytes) {
 
 (async () => {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const base = `http://127.0.0.1:${server.address().port}/`;
+  const base = `http://127.0.0.1:${server.address().port}${encodeURI(mount)}`;
   let browser;
   try {
     browser = await chromium.launch({ channel:process.env.QA_BROWSER_CHANNEL || 'chrome', headless:true });
     const context = await browser.newContext({ viewport:{width:390,height:844}, reducedMotion:'reduce', acceptDownloads:true });
     const page = await context.newPage(), errors=[], network=[];
     page.on('pageerror', e => errors.push(e.message));
+    page.on('response', response => { if(response.status()>=400)errors.push(`HTTP ${response.status()}: ${response.url()}`); });
     page.on('request', req => { if (/^https?:/.test(req.url()) && !req.url().startsWith(base)) network.push(req.url()); });
     await page.goto(base);
+    await check('release version and nested relative resources load without source-folder fallback',async()=>{
+      assert.equal(await page.locator('meta[name="application-version"]').getAttribute('content'),'0.7.1');
+      assert.equal(await page.evaluate(()=>document.documentElement.dataset.version),'0.7.1');
+      assert.match(await page.locator('.version').textContent(),/v0\.7\.1.*RELEASE PREP/);
+      assert.deepEqual(await page.evaluate(()=>[...document.scripts].map(s=>new URL(s.src).pathname).every(p=>p.startsWith(new URL(location.href).pathname))),true);
+      if(process.env.QA_APP_ROOT){
+        for(const file of ['tests/app.test.cjs','docs/QA_REPORT_v0.7.0.md','README.md','scripts/build-release.cjs','app.js','assets/kakureron.svg']){
+          const response=await fetch(new URL(file,base));assert.equal(response.status,404,`${file} leaked or source fallback enabled`);
+        }
+      }
+      return {version:'0.7.1',mount,artifact:!!process.env.QA_APP_ROOT};
+    });
     await check('photo aspects, responsive layouts and aspect-following question/answer preview', async () => {
       const measurements=[];
       for (const [width,height] of [[390,844],[375,667],[320,568],[844,390],[1280,900]]) {
@@ -207,6 +230,22 @@ function inspectPNG(bytes) {
       assert.equal(await page.locator('#undo').isEnabled(),true);
       assert.equal(await page.locator('[data-pose="P04"]').getAttribute('aria-pressed'),'true');
       await preview(page);assert.deepEqual(await imagePixels(page),before);await page.locator('#back-to-edit').click();
+    });
+    await check('artifact UI eyedropper, copy source, opacity, eraser and mixed Undo/Redo regenerate exact pixels',async()=>{
+      await page.goto(base);await load(page);
+      const box=await page.locator('#canvas').boundingBox(),cx=box.x+box.width/2,cy=box.y+box.height/2;
+      await page.locator('[data-mode="pick"]').click();await page.mouse.click(box.x+box.width*.15,cy);
+      await page.locator('[data-mode="paint"]').click();await page.mouse.click(cx,cy);
+      await preview(page);const painted=await imagePixels(page);await page.locator('#back-to-edit').click();
+      await page.locator('[data-mode="copy"]').click();await page.locator('#select-copy-source').click();
+      await page.mouse.click(box.x+box.width*.8,cy);
+      assert.match(await page.locator('#copy-source-state').textContent(),/指定済み/);
+      await page.locator('[data-opacity="0.4"]').click();await page.mouse.click(cx,cy);
+      await preview(page);const copied=await imagePixels(page);assert.notEqual(copied.hash,painted.hash);await page.locator('#back-to-edit').click();
+      await page.locator('[data-mode="erase"]').click();await page.mouse.click(cx,cy);
+      await preview(page);const erased=await imagePixels(page);assert.notEqual(erased.hash,copied.hash);await page.locator('#back-to-edit').click();
+      await page.locator('#undo').click();await preview(page);assert.deepEqual(await imagePixels(page),copied);await page.locator('#back-to-edit').click();
+      await page.locator('#redo').click();await preview(page);assert.deepEqual(await imagePixels(page),erased);await page.locator('#back-to-edit').click();
     });
     await check('eight downloaded PNG files have valid signatures, chunk CRCs and no EXIF/text payload',async()=>{
       return ['P01','P02','P03','P04'].flatMap(pose=>['question','answer'].map(kind=>{
@@ -362,7 +401,7 @@ function inspectPNG(bytes) {
       assert.deepEqual(errors,[]);assert.deepEqual(network,[]);
       assert.deepEqual(await page.evaluate(async()=>({local:localStorage.length,session:sessionStorage.length,databases:(await indexedDB.databases()).length})),{local:0,session:0,databases:0});
     });
-    fs.writeFileSync(path.join(artifacts,'results.json'),JSON.stringify({date:new Date().toISOString(),browser:await browser.version(),node:process.version,platform:process.platform,results},null,2)+'\n');
+    fs.writeFileSync(path.join(artifacts,'results.json'),JSON.stringify({date:new Date().toISOString(),browser:await browser.version(),node:process.version,platform:process.platform,applicationRoot:path.relative(sourceRoot,root).split(path.sep).join('/'),mount,results},null,2)+'\n');
     await context.close();
   } finally { if(browser)await browser.close();await new Promise(resolve=>server.close(resolve)); }
   console.log(JSON.stringify({pass:results.filter(r=>r.status==='PASS').length,fail:results.filter(r=>r.status==='FAIL').length}));

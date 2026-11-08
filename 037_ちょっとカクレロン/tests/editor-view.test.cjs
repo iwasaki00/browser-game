@@ -59,10 +59,10 @@ test('viewport backing store is bounded and animation settles to the exact pose'
 
 test('document version, local asset cache keys and responsive layout rules are consistent',()=>{
   const html=fs.readFileSync('index.html','utf8'),css=fs.readFileSync('style.css','utf8');
-  assert.match(html,/application-version" content="0\.7\.0/);
-  assert.match(html,/v0\.7\.0/);
+  assert.match(html,/application-version" content="0\.7\.1/);
+  assert.match(html,/v0\.7\.1/);
   for(const [,file,version]of html.matchAll(/(?:src|href)="([^"?]+\.(?:js|css))\?v=([^"]+)"/g)){
-    assert.ok(fs.existsSync(file));assert.equal(version,'0.7.0');
+    assert.ok(fs.existsSync(file));assert.equal(version,'0.7.1');
   }
   assert.match(css,/height:100dvh/);assert.match(css,/safe-area-inset-bottom/);
   assert.match(css,/min-height:44px/);assert.match(css,/\.mode-settings\{[^}]*overflow-y:auto/);

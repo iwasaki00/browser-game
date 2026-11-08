@@ -1,0 +1,43 @@
+{
+  "version": "0.7.1",
+  "status": "PASS",
+  "comparison": "exact PNG bytes, source vs isolated nested artifact",
+  "files": [
+    {
+      "file": "P01-question.png",
+      "sha256": "7b469c6a9d985845eb9d4753bb5771c326d1a73cd7878b3a7aff080e20df23d9"
+    },
+    {
+      "file": "P01-answer.png",
+      "sha256": "d679d6ae6e17d900ba42e3eb6bdbf2d6e5e834bed0aec5352fac04e6e45a631c"
+    },
+    {
+      "file": "P02-question.png",
+      "sha256": "f84084da736b5a2ec34af20ebc9d68baebcecf535fcf72269b545455e5442ea8"
+    },
+    {
+      "file": "P02-answer.png",
+      "sha256": "93fcea4b27399b34840b2d3777802ad85d0b18b75635b7520f5829871c8dc052"
+    },
+    {
+      "file": "P03-question.png",
+      "sha256": "23f3d4fabec57a2bb479fa7a1131d6fbd1724723e53099cb3657c6d249a2c5d8"
+    },
+    {
+      "file": "P03-answer.png",
+      "sha256": "27ea55878a9dc2fd2fc6e8fa972ce631b91787ac5ddbff7697f6ab996a89cefd"
+    },
+    {
+      "file": "P04-question.png",
+      "sha256": "f1b592d71090fcffe5ca3d42107a5bd76d98199fa453d6cc87159fdab7ee5832"
+    },
+    {
+      "file": "P04-answer.png",
+      "sha256": "dca749dc70a14a5a1f50b9bb2c01e54649ab52e8319a0a1ca2b8ec2289c6bebc"
+    },
+    {
+      "file": "oriented-question.png",
+      "sha256": "3dbcd8c034c352701f322bde40ba020c2fc2f0844e6f5dec5135af222070b540"
+    }
+  ]
+}

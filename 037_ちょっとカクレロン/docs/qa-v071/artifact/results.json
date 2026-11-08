@@ -1,0 +1,686 @@
+{
+  "date": "2026-11-08T14:03:32.996Z",
+  "browser": "157.0.8103.38",
+  "node": "v25.9.0",
+  "platform": "win32",
+  "applicationRoot": "release/pages/037_ちょっとカクレロン",
+  "mount": "/browser-game/037_ちょっとカクレロン/",
+  "results": [
+    {
+      "name": "release version and nested relative resources load without source-folder fallback",
+      "status": "PASS",
+      "ms": 74,
+      "detail": {
+        "version": "0.7.1",
+        "mount": "/browser-game/037_ちょっとカクレロン/",
+        "artifact": true
+      }
+    },
+    {
+      "name": "photo aspects, responsive layouts and aspect-following question/answer preview",
+      "status": "PASS",
+      "ms": 3488,
+      "detail": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "photo": [
+            800,
+            500
+          ],
+          "image": {
+            "width": 366,
+            "height": 228.75
+          },
+          "wrap": {
+            "width": 366,
+            "height": 228.75
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "photo": [
+            500,
+            800
+          ],
+          "image": {
+            "width": 337.578125,
+            "height": 540.140625
+          },
+          "wrap": {
+            "width": 337.59375,
+            "height": 540.140625
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "photo": [
+            600,
+            600
+          ],
+          "image": {
+            "width": 366,
+            "height": 366
+          },
+          "wrap": {
+            "width": 366,
+            "height": 366
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "photo": [
+            800,
+            500
+          ],
+          "image": {
+            "width": 359,
+            "height": 224.375
+          },
+          "wrap": {
+            "width": 359,
+            "height": 224.375
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "photo": [
+            500,
+            800
+          ],
+          "image": {
+            "width": 266.796875,
+            "height": 426.875
+          },
+          "wrap": {
+            "width": 266.796875,
+            "height": 426.875
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            375,
+            667
+          ],
+          "photo": [
+            600,
+            600
+          ],
+          "image": {
+            "width": 359,
+            "height": 359
+          },
+          "wrap": {
+            "width": 359,
+            "height": 359
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "photo": [
+            800,
+            500
+          ],
+          "image": {
+            "width": 304,
+            "height": 190
+          },
+          "wrap": {
+            "width": 304,
+            "height": 190
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "photo": [
+            500,
+            800
+          ],
+          "image": {
+            "width": 227.1875,
+            "height": 363.5
+          },
+          "wrap": {
+            "width": 227.1875,
+            "height": 363.5
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "photo": [
+            600,
+            600
+          ],
+          "image": {
+            "width": 304,
+            "height": 304
+          },
+          "wrap": {
+            "width": 304,
+            "height": 304
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "photo": [
+            800,
+            500
+          ],
+          "image": {
+            "width": 399.3125,
+            "height": 249.578125
+          },
+          "wrap": {
+            "width": 399.34375,
+            "height": 249.578125
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "photo": [
+            500,
+            800
+          ],
+          "image": {
+            "width": 155.96875,
+            "height": 249.5625
+          },
+          "wrap": {
+            "width": 155.984375,
+            "height": 249.5625
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "photo": [
+            600,
+            600
+          ],
+          "image": {
+            "width": 249.59375,
+            "height": 249.59375
+          },
+          "wrap": {
+            "width": 249.59375,
+            "height": 249.59375
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            1280,
+            900
+          ],
+          "photo": [
+            800,
+            500
+          ],
+          "image": {
+            "width": 756,
+            "height": 472.5
+          },
+          "wrap": {
+            "width": 756,
+            "height": 472.5
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            1280,
+            900
+          ],
+          "photo": [
+            500,
+            800
+          ],
+          "image": {
+            "width": 360,
+            "height": 576
+          },
+          "wrap": {
+            "width": 360,
+            "height": 576
+          },
+          "fit": "contain"
+        },
+        {
+          "viewport": [
+            1280,
+            900
+          ],
+          "photo": [
+            600,
+            600
+          ],
+          "image": {
+            "width": 576,
+            "height": 576
+          },
+          "wrap": {
+            "width": 576,
+            "height": 576
+          },
+          "fit": "contain"
+        }
+      ]
+    },
+    {
+      "name": "180 photo/pose/size/rotation combinations: inverse input, real masks, PNG pixels and answer bounds",
+      "status": "PASS",
+      "ms": 5812,
+      "detail": {
+        "scenes": 180,
+        "coordinateChecks": 2160,
+        "realPNGs": 360
+      }
+    },
+    {
+      "name": "UI mouse, zoom drawing, pose confirmation, downloads, cache and decode failure",
+      "status": "PASS",
+      "ms": 7305,
+      "detail": {
+        "poses": 4,
+        "zooms": [
+          2,
+          4,
+          8
+        ],
+        "downloads": 8
+      }
+    },
+    {
+      "name": "photo draw failure preserves previous photo, paint, pose and preview bytes",
+      "status": "PASS",
+      "ms": 706
+    },
+    {
+      "name": "artifact UI eyedropper, copy source, opacity, eraser and mixed Undo/Redo regenerate exact pixels",
+      "status": "PASS",
+      "ms": 1493
+    },
+    {
+      "name": "eight downloaded PNG files have valid signatures, chunk CRCs and no EXIF/text payload",
+      "status": "PASS",
+      "ms": 47,
+      "detail": [
+        {
+          "file": "P01-question.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 24996
+        },
+        {
+          "file": "P01-answer.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 26178
+        },
+        {
+          "file": "P02-question.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 14420
+        },
+        {
+          "file": "P02-answer.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 15622
+        },
+        {
+          "file": "P03-question.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 15411
+        },
+        {
+          "file": "P03-answer.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 16610
+        },
+        {
+          "file": "P04-question.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 13948
+        },
+        {
+          "file": "P04-answer.png",
+          "size": [
+            800,
+            500
+          ],
+          "chunks": [
+            "IHDR",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IDAT",
+            "IEND"
+          ],
+          "bytes": 15153
+        }
+      ]
+    },
+    {
+      "name": "JPEG EXIF orientation is respected and source metadata is not copied to PNG",
+      "status": "PASS",
+      "ms": 591,
+      "detail": {
+        "size": [
+          200,
+          300
+        ],
+        "chunks": [
+          "IHDR",
+          "IDAT",
+          "IDAT",
+          "IEND"
+        ],
+        "bytes": 3841
+      }
+    },
+    {
+      "name": "real copy pixels, three opacities, overlap, clipping and 25-stroke history limit",
+      "status": "PASS",
+      "ms": 10988,
+      "detail": {
+        "copyCases": 180,
+        "poses": 4,
+        "strokesPerHistoryRun": 30
+      }
+    },
+    {
+      "name": "share API contract: prepared PNG, user activation, duplicate lock, cancel, errors and fresh bytes (mocked OS)",
+      "status": "PASS",
+      "ms": 856
+    },
+    {
+      "name": "repeated image/preview cycles release Object URLs and bound canvas backing stores",
+      "status": "PASS",
+      "ms": 3216,
+      "detail": {
+        "cycles": 12,
+        "samples": [
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                2048,
+                1365
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          },
+          {
+            "urls": 0,
+            "largeCanvases": 1,
+            "dimensions": [
+              [
+                800,
+                500
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "real RAF pose transitions settle and block editing/export for all 12 pairs",
+      "status": "PASS",
+      "ms": 13453,
+      "detail": {
+        "transitions": 12,
+        "duration": 380
+      }
+    },
+    {
+      "name": "mobile Chrome emulation: real touch drag, pinch/rotate, zoom and paint",
+      "status": "PASS",
+      "ms": 1218,
+      "detail": {
+        "engine": "Chrome mobile emulation (not iPhone Safari)",
+        "viewport": [
+          390,
+          844
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "no unexpected network requests, page errors or persistent photo storage",
+      "status": "PASS",
+      "ms": 27
+    }
+  ]
+}

@@ -1,3 +1,28 @@
+# Version 0.8.0 — 検証結果
+
+- 自動454件成功、失敗0。既存407＋追加47。バージョン期待値は現行へ更新。設備個体・配分・移行・部分投入・強化制限・成長・300品・ADV20を検証。
+- 型検査・Vite成功。41モジュール、JS358.64kB/gzip90.11kB、CSS21.66kB/gzip5.82kB。
+- [既存ブラウザ7系統](regression-browser-results-v080.json)：全成功。通常、深層、露出/洗浄、川底、河原、砂浜道具、川底/河原道具。
+- [ADV UI](advanced-ui-v080.json)：320/390/1280pxで購入・増設・強化・2/6ライン・個別停止・材料指定・一つずつの詳細・成長・8タブ・ADV20・300品・通常セーブ分離・Worker実行/中止/JSONを確認。
+- [3設備](automation-ui-results-v080.json)、[旧ライン管理](line-ui-results-v080.json)、[12エリアと図鑑300](world-ui-results-v080.json)も3幅で成功。
+- [本番Chrome/Edge](production-results-v080.json)：既存機能と増設/強化/保存復元成功。DEV API・隠し起動・ADV/WORLD/TREASURE/LINE/AUTO強制操作と比較モジュールを除外。
+- [保存](save-phase0-v080.json)：1万履歴848827→29065bytes、最近200件と累計保持。進行中保存、最新緊急スナップショット、単一進行タブ、所有権移動・復元成功。
+- [300品監査](TREASURE_REACHABILITY_AUDIT.csv)：正常300、警告0、異常0。SR/Jを含め条件固定で通常回収・支払い・図鑑・二重報酬拒否まで検証。通常100シードで全種出たという意味ではない。
+- [100シード](advanced-balance-v080.json)：3分野×5構成×少量/大量＝3000条件、全条件で通常収益あり、二重報酬0。体力は本体操作実績から集計。
+- [成長100単位](growth-model-v080.json)：同じ空の砂袋で初期34操作、1ライン1操作、2ライン2操作。採取/洗浄/FNは対象外。
+- [負荷](advanced-stress-v080.json)：1002対象を全件回収、キュー最大64。6ライン24ゲーム時間、毎時復元24回、継続投入4332件、履歴200、非表示tick不変、二重移行不変。試験側で完了参照を毎分整理（通常の区画切替に相当）し途中・未受取は残す。
+- 保存：1002対象処理後466091bytes、24時間175651〜182209bytes。Node heap約24.1〜108.8MiB。ブラウザ/iPhoneメモリは未測定。
+- 大量個体照合の二重ループを集合参照に変更し、スポット測定の2ゲーム秒計算が約200〜500msから30〜50msへ改善。設備計算10Hz、UI400ms単位、描画から分離。
+- iPhone Safari実機は未確認。Chromeの縦画面・タッチで代替確認。時間は固定モデルで人間の実プレイ時間ではない。
+
+## 再実行と制約
+
+npm.cmd test / npm.cmd run build / npm.cmd run audit:treasures / npm.cmd run balance:advanced / npm.cmd run test:advanced-stress。ブラウザは別ターミナルでnpm.cmd run dev -- --port 5176 --strictPortを起動しtest:advanced-browser、test:automation-browser、test:line-browser、test:world-browser、test:save-browser、test:regression-browser、test:production。
+
+性能比較は材料準備済み・設備付与。購入時間は採取を含む短時間収益を反復する線形試算で、資金制約付きの解放/購入ルート全体ではない。長い投資回収期間、分野単位の異なる全体滞留、Safari実機・ブラウザメモリは次版へ引き継ぐ。
+
+---
+
 # Version 0.7.0 — 検証結果
 
 - 自動テスト407件成功、失敗0。既存351件と追加56件。旧件数36→300、部分投入、保存区画保持に伴う期待値は現行仕様へ更新。第5層の既存テストは実処理を維持して成功。

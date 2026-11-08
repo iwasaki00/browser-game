@@ -1,0 +1,111 @@
+{
+  "version": "0.7.1",
+  "revision": "626d57bf28601b9758b1651feca9e2468237beb2",
+  "appPath": "037_ちょっとカクレロン",
+  "appManifest": {
+    "version": "0.7.1",
+    "files": [
+      {
+        "file": "app.bc67bd8d8623.js",
+        "bytes": 42165,
+        "sha256": "bc67bd8d86236e4b9fa7b037aaa8730855a1ae391e8eebd5c495ac98732b0eeb"
+      },
+      {
+        "file": "assets/kakureron.b1010c1d046b.svg",
+        "bytes": 395,
+        "sha256": "b1010c1d046bb68082ce5e30517a32428be67e505f03350b6fe6c455fcc4aaa9"
+      },
+      {
+        "file": "assets/menu-icon.svg",
+        "bytes": 596,
+        "sha256": "8a72e7661be4771a87f3ce3bf5a882aadbce8e6b91f013df2ef73ea890cf22ef"
+      },
+      {
+        "file": "assets/poses/crouch.c1a5fa38d765.svg",
+        "bytes": 447,
+        "sha256": "c1a5fa38d765bdd365a205849f2af4fd04f62f9ff1f92bef5326342d8ef9a0c8"
+      },
+      {
+        "file": "assets/poses/lie.0ac0c7f54263.svg",
+        "bytes": 434,
+        "sha256": "0ac0c7f5426322e7361343af4130a1d0f4d67d306b7bc550a47a6cdb3545188f"
+      },
+      {
+        "file": "assets/poses/spread.11b1747554e6.svg",
+        "bytes": 442,
+        "sha256": "11b1747554e6045fdd029331c6c570f2bb9f8f6639f9bdebfcace9931101c4b2"
+      },
+      {
+        "file": "copy-brush.ae7f91aa34e6.js",
+        "bytes": 3350,
+        "sha256": "ae7f91aa34e684057fd1b035b80a0671dd65ee09885a4abb80dbd5f32673b49f"
+      },
+      {
+        "file": "editor-view.6968b0c7b9b0.js",
+        "bytes": 1943,
+        "sha256": "6968b0c7b9b0b9cb8acc4fdba098836c4500fcca6a9bea70eab3ceb3ff91d0e7"
+      },
+      {
+        "file": "export.0055bff26cd5.js",
+        "bytes": 6398,
+        "sha256": "0055bff26cd5da190725bf6fc5e10a942de467d72fdb407d2d1bd76f9fcea617"
+      },
+      {
+        "file": "index.html",
+        "bytes": 9883,
+        "sha256": "66c00b08d7911b49347f6f84bcf5e418285ad79675c3487deed645f6b263e49c"
+      },
+      {
+        "file": "paint.0e72e92ec155.js",
+        "bytes": 10883,
+        "sha256": "0e72e92ec1551f4affb0beb56d3944f19c678839d5a6ce607d5228db9abe9020"
+      },
+      {
+        "file": "poses.498ed768bf03.js",
+        "bytes": 1201,
+        "sha256": "498ed768bf03935487778e532bcddb44c752c1d731e522424cadb801767503b6"
+      },
+      {
+        "file": "style.af3533482870.css",
+        "bytes": 11386,
+        "sha256": "af3533482870d6d0dae15fbb4195b662571b2502762603adbd77071bfde70513"
+      }
+    ],
+    "names": {
+      "assets/kakureron.svg": "assets/kakureron.b1010c1d046b.svg",
+      "assets/menu-icon.svg": "assets/menu-icon.svg",
+      "assets/poses/crouch.svg": "assets/poses/crouch.c1a5fa38d765.svg",
+      "assets/poses/spread.svg": "assets/poses/spread.11b1747554e6.svg",
+      "assets/poses/lie.svg": "assets/poses/lie.0ac0c7f54263.svg",
+      "style.css": "style.af3533482870.css",
+      "poses.js": "poses.498ed768bf03.js",
+      "copy-brush.js": "copy-brush.ae7f91aa34e6.js",
+      "paint.js": "paint.0e72e92ec155.js",
+      "editor-view.js": "editor-view.6968b0c7b9b0.js",
+      "export.js": "export.0055bff26cd5.js",
+      "app.js": "app.bc67bd8d8623.js",
+      "index.html": "index.html"
+    },
+    "validation": {
+      "version": "0.7.1",
+      "files": 13,
+      "missing": 0,
+      "unexpected": 0,
+      "hashes": "PASS",
+      "references": "PASS",
+      "privacy": "PASS"
+    }
+  },
+  "otherFiles": 3962,
+  "totalFiles": 3975,
+  "otherFilesByteIdentical": true,
+  "excludedRoot": [
+    ".gitignore",
+    ".openai/hosting.json",
+    ".vite/deps/_metadata.json",
+    ".vite/deps/package.json",
+    "README.md"
+  ],
+  "applicationDevelopmentFilesExcluded": true,
+  "appliedToGitHub": false
+}

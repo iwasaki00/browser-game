@@ -1,3 +1,11 @@
+# Version 0.8.0 — 設備個体と複数ライン
+
+設備種別B301/R301/G304の名称・価格を維持。Automation.instancesにinstanceId→Machineを保持。個体にlevel/investment、ラインにinstanceId/name/mesh、作業にinstanceId/lineIdを追加。既存キーB/R/GへB2/R2/G2を追加。配分はState.distributionのmanual/equal/capacity/spaceと巡回カーソル。未知ID・重複接続・不正Lv・孤立予約・壊れた配分を保存検証で拒否する。
+
+厳密台帳の個体ID発行・支払資格は維持。[300品CSV監査](TREASURE_REACHABILITY_AUDIT.csv) / [詳細JSON](treasure-audit-v080.json)。
+
+---
+
 # Version 0.7.0 — データ構成
 
 お宝300種＝旧36＋src/treasure-expansion.jsonの264。B001〜B100、R001〜R100、G001〜G100。ID・名称・分野・分類・レア度・評価・場所・材質・重量・磁性・能力条件・難易度・洗浄・画像ID・固定報酬を登録。河原は粒径・比重を追加。

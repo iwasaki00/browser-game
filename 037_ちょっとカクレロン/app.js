@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-  const VERSION = "0.7.0";
+  const VERSION = "0.7.1";
   const View = globalThis.KakureronView;
   const Poses = globalThis.KakureronPoses;
   const Copy = globalThis.KakureronCopy;

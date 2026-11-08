@@ -1,0 +1,54 @@
+# Candidate only. Install at repository .github/workflows/pages-release.yml
+# after reviewing the repository-wide Pages source change. Never auto-push.
+name: Prepare browser-game Pages
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy the reviewed shared artifact (Pages source must be GitHub Actions)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Require main
+        if: github.ref != 'refs/heads/main'
+        run: exit 1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Regression tests
+        working-directory: 037_ちょっとカクレロン
+        run: node --test tests/*.test.cjs
+      - name: Build shared artifact and verify other projects
+        run: node '037_ちょっとカクレロン/scripts/build-release.cjs' --pages
+      - name: Configure Pages (no automatic enablement)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: false
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: '037_ちょっとカクレロン/release/pages'
+  deploy:
+    if: inputs.deploy
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

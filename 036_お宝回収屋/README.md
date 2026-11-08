@@ -1,8 +1,16 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.7.0 — WORLD & TREASURE EXPANSION**
+**Version 0.8.0 — ADVANCED AUTOMATION**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## 複数ラインと設備強化
+
+各分野2ライン、最大6ライン。実価格での増設、Lv1〜Lv3強化、4方式の材料配分、個別停止・道具・工程設定、固定条件の成長レポートを追加しました。既存価格と旧セーブを維持し、設備個体・材料を二重使用しません。
+
+[操作・保存仕様](docs/ADVANCED_AUTOMATION.md) / [成長比較](docs/AUTOMATION_GROWTH.md) / [性能と費用](docs/ADVANCED_AUTOMATION_BALANCE.md) / [300品監査CSV](docs/TREASURE_REACHABILITY_AUDIT.csv) / [検証](docs/TEST_RESULTS.md)。
+
+再実行：`npm.cmd run balance:advanced` / `npm.cmd run audit:treasures` / `npm.cmd run test:advanced-stress` / `npm.cmd run test:advanced-browser`。
 
 ## 12エリアと300種類のお宝
 

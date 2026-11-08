@@ -1,0 +1,28 @@
+{
+  "checkedOn": "2026-11-08",
+  "repository": "iwasaki00/browser-game",
+  "source": {
+    "branch": "main",
+    "path": "/"
+  },
+  "build_type": "legacy",
+  "status": "built",
+  "html_url": "https://iwasaki00.github.io/browser-game/",
+  "cname": null,
+  "latestBuild": {
+    "commit": "626d57bf28601b9758b1651feca9e2468237beb2",
+    "status": "built",
+    "created_at": "2026-11-03T13:07:04Z",
+    "updated_at": "2026-11-03T13:08:10Z"
+  },
+  "workflows": [
+    {
+      "name": "pages-build-deployment",
+      "path": "dynamic/pages/pages-build-deployment",
+      "state": "active"
+    }
+  ],
+  "method": "gh api GET pages, pages/builds/latest, actions/workflows; read only",
+  "settingsChanged": false,
+  "deployed": false
+}
