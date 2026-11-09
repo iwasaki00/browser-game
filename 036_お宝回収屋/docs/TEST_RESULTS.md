@@ -1,3 +1,20 @@
+# Version 0.8.1 — 検証結果
+
+- 自動 **528件成功、失敗0**。旧454件を含む。追加74件：10境界、9道具の上限、材質適性、非掘削道具、ブラシ、静止/移動/イベント/フレーム頻度、停止/復帰、固定個体、実体積採砂、限界、旧250保存、ライン供給、描画、DIG20保存整合。
+- 型検査・本番ビルド成功。44モジュール、JS367.69kB/gzip93.75kB、CSS22.64kB/gzip6.03kB。
+- [既存ブラウザ7系統](regression-browser-results-v081.json)：全成功。時間式入力に合わせて長押しへ変更し、80/180/280/420/600の上限、洗浄報酬、保存、宝非露出の期待値は維持。画素は宝の輝きと重ならない穴で計測。
+- [掘削Chrome/Edge](digging-ui-results-v081.json)：Chrome320/390/1280、Edge1280。静止・ドラッグ・20/200イベント、CDPタッチ、10層、道具/モーダル/blur/hidden停止、保存復元、4枠と装備比較、DIG20・8タブ・JSON・通常セーブ分離を検証。
+- [6ライン](advanced-ui-v081.json)、[3設備](automation-ui-results-v081.json)、[旧ライン](line-ui-results-v081.json)、[12エリアと図鑑300](world-ui-results-v081.json)：320/390/1280pxで全成功。Worker比較/中止を維持。
+- [本番Chrome/Edge](production-results-v081.json)：DEV APIなし、隠し操作で開けず、通常保存キーのみ。DIG/ADV/WORLD/TREASURE/LINE/AUTOと比較/Worker/強制操作のコード・専用CSSマーカーを配布全アセットで不在確認。既存全分野と増設・保存復元も成功。
+- [保存と複数タブ](save-phase0-v081.json)：1万履歴848827→29068bytes、最近200件・支払10000件保持。処理中保存、緊急スナップショット、単一進行タブ、所有権引き継ぎ・復元成功。
+- [100シード](digging-balance-v081.json)：到達2400、表層/硬砂4800、収益1400条件。固定個体維持、Jなし、不可逆進行不能0。60秒収益なしの構成/シードあり。[表と制約](DIGGING_BALANCE.md)。人間の実プレイ時間ではない。
+- [24ゲーム時間負荷](advanced-stress-v081.json)：6ライン同時稼働、1002個体全回収、キュー最大64、毎時復元24回、継続投入4332件、履歴200。保存175651〜181611bytes、非表示進行なし・二重移行不変。計測はNode heapで実機メモリではない。
+- iPhone Safari実機・実機の音・電池/メモリは未確認。Chromeの幅とタッチ試験はSafariの代替保証ではない。
+
+再実行：npm.cmd test / npm.cmd run build / npm.cmd run balance:digging。開発サーバーを5176で起動してtest:digging-browser、test:regression-browser、test:advanced-browser、test:automation-browser、test:line-browser、test:world-browser、test:save-browser。本番はtest:production。
+
+---
+
 # Version 0.8.0 — 検証結果
 
 - 自動454件成功、失敗0。既存407＋追加47。バージョン期待値は現行へ更新。設備個体・配分・移行・部分投入・強化制限・成長・300品・ADV20を検証。

@@ -1,0 +1,50 @@
+[
+  {
+    "width": 320,
+    "touch": true,
+    "lineManagement": true,
+    "pause": true,
+    "intermediateInventory": true,
+    "riverMoveWarning": true,
+    "goldPrecision": true,
+    "oldTabs": 8,
+    "oldScenarios": 44,
+    "lineScenarios": 20,
+    "speedCompare": true,
+    "workerCompare": true,
+    "workerCancel": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "touch": true,
+    "lineManagement": true,
+    "pause": true,
+    "intermediateInventory": true,
+    "riverMoveWarning": true,
+    "goldPrecision": true,
+    "oldTabs": 8,
+    "oldScenarios": 44,
+    "lineScenarios": 20,
+    "speedCompare": true,
+    "workerCompare": true,
+    "workerCancel": true,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "touch": true,
+    "lineManagement": true,
+    "pause": true,
+    "intermediateInventory": true,
+    "riverMoveWarning": true,
+    "goldPrecision": true,
+    "oldTabs": 8,
+    "oldScenarios": 44,
+    "lineScenarios": 20,
+    "speedCompare": true,
+    "workerCompare": true,
+    "workerCancel": true,
+    "errors": []
+  }
+]

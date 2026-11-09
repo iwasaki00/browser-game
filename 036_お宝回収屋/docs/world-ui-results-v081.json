@@ -1,0 +1,62 @@
+[
+  {
+    "width": 320,
+    "newAreas": 7,
+    "bookPageSize": 12,
+    "bookFilters": true,
+    "undiscoveredHidden": true,
+    "rareLevels": [
+      "R",
+      "SR",
+      "J"
+    ],
+    "fixedReveal": true,
+    "worldScenarios": 10,
+    "treasureScenarios": 10,
+    "oldScenarios": 79,
+    "mass1000": true,
+    "normalSaveIsolated": true,
+    "noMissingImageRequests": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "newAreas": 7,
+    "bookPageSize": 12,
+    "bookFilters": true,
+    "undiscoveredHidden": true,
+    "rareLevels": [
+      "R",
+      "SR",
+      "J"
+    ],
+    "fixedReveal": true,
+    "worldScenarios": 10,
+    "treasureScenarios": 10,
+    "oldScenarios": 79,
+    "mass1000": true,
+    "normalSaveIsolated": true,
+    "noMissingImageRequests": true,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "newAreas": 7,
+    "bookPageSize": 12,
+    "bookFilters": true,
+    "undiscoveredHidden": true,
+    "rareLevels": [
+      "R",
+      "SR",
+      "J"
+    ],
+    "fixedReveal": true,
+    "worldScenarios": 10,
+    "treasureScenarios": 10,
+    "oldScenarios": 79,
+    "mass1000": true,
+    "normalSaveIsolated": true,
+    "noMissingImageRequests": true,
+    "errors": []
+  }
+]

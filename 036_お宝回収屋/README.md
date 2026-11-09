@@ -1,8 +1,14 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.8.0 — ADVANCED AUTOMATION**
+**Version 0.8.1 — DEEP DIGGING & TOOL FEEL**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## 10層と道具の手応え
+
+押し続け・ドラッグで掘削。素手・小型・大型・深掘りの速度と材質適性を分離し、現在層と道具の到達層を表示します。装備画面で同じ場所の性能を比較できます。旧深度と個体・報酬・6ラインは維持します。
+
+[10層仕様](docs/DEEP_DIGGING_10_LAYERS.md) / [道具性能](docs/TOOL_DIGGING_PERFORMANCE.md) / [入力](docs/DIGGING_INPUT_AND_FEEL.md) / [100シード](docs/DIGGING_BALANCE.md)。追加検証：`npm.cmd run balance:digging` / `npm.cmd run test:digging-browser`。
 
 ## 複数ラインと設備強化
 

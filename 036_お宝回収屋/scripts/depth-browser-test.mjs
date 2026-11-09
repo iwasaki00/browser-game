@@ -12,11 +12,11 @@ try{
   const at=screen(185,155);await page.mouse.move(at.x,at.y);await page.mouse.down();await page.waitForFunction(limit=>window.__finders.getState().explorationAreas[0].mask[15*36+18]*280>=limit-1e-7,limit,{timeout:25000});await page.mouse.up();
   const depth=await page.evaluate(()=>window.__finders.getState().explorationAreas[0].mask[15*36+18]*280);assert.ok(Math.abs(depth-limit)<1e-7);assert.equal(await page.evaluate(()=>window.__finders.getState().explorationAreas[0].items[0].state),'buried');
   if(id==='hand'){
-   handSawCue=true;assert.match(await page.locator('#dig-progress').textContent(),/限界|これ以上/);
+   handSawCue=true;assert.match(await page.locator('#dig-progress').textContent(),/限界|これ以上|到達地点/);
    const cdp=await context.newCDPSession(page),finger=screen(185,155);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:finger.x,y:finger.y}]});assert.ok(await page.locator('#touch-tool').isVisible());const tool=await page.locator('#touch-tool').boundingBox();assert.ok(tool.y+tool.height<finger.y);await page.screenshot({path:'docs/v081-touch-hand-cue.png',fullPage:true});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   }
-  await page.waitForTimeout(60);await page.screenshot({path:`docs/v081-depth-${name}.png`,fullPage:true});
-  const pixel=await page.evaluate(async()=>{const {project}=await import('/src/surface.ts'),q=project(185,155);return Array.from(document.querySelector('#beach').getContext('2d').getImageData(Math.floor(q.x*2),Math.floor(q.y*2),1,1).data).slice(0,3);});
+  const empty=screen(185,205);await page.mouse.move(empty.x,empty.y);await page.mouse.down();await page.waitForFunction(limit=>window.__finders.getState().explorationAreas[0].mask[20*36+18]*280>=limit-1e-7,limit,{timeout:25000});await page.mouse.up();await page.waitForTimeout(350);await page.screenshot({path:`docs/v081-depth-${name}.png`,fullPage:true});
+  const pixel=await page.evaluate(async()=>{const {project}=await import('/src/surface.ts'),q=project(185,205);return Array.from(document.querySelector('#beach').getContext('2d').getImageData(Math.floor(q.x*2),Math.floor(q.y*2),1,1).data).slice(0,3);});
   results.push({id,depth,pixel});if(id==='hand')await page.waitForTimeout(1600);
   await page.evaluate(()=>window.__finders.save());await page.reload();await page.locator('#start').click();assert.equal(await page.evaluate(()=>window.__finders.getState().explorationAreas[0].mask[15*36+18]*280),depth);
   await page.evaluate(()=>{Math.random=()=>0;});

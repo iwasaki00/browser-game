@@ -1,3 +1,9 @@
+# Version 0.8.1 — 掘削モデル
+
+src/digging.tsに10層と9掘削道具の速度・材質適性・体力性能を分離。126道具ID、46使用可能道具、3設備、300お宝マスターと価格・報酬・J率は変更しない。StateへdigWorkSeconds/digBatchSerial、PlotへdigLayersSeenを任意項目で追加。旧保存の物理深度を維持。
+
+---
+
 # Version 0.8.0 — 設備個体と複数ライン
 
 設備種別B301/R301/G304の名称・価格を維持。Automation.instancesにinstanceId→Machineを保持。個体にlevel/investment、ラインにinstanceId/name/mesh、作業にinstanceId/lineIdを追加。既存キーB/R/GへB2/R2/G2を追加。配分はState.distributionのmanual/equal/capacity/spaceと巡回カーソル。未知ID・重複接続・不正Lv・孤立予約・壊れた配分を保存検証で拒否する。

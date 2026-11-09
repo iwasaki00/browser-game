@@ -1,0 +1,53 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "riverAndGoldShop": "PASS",
+    "armBeforeAfter": "PASS",
+    "cameraAndQuality": "PASS",
+    "touchGatherAndScreen": "PASS",
+    "magneticPreparation": "PASS",
+    "bulkSuctionAndSave": "PASS",
+    "workerRoutesAndDownload": "PASS",
+    "workerCancel": "PASS",
+    "allToolBeforeAfterMeasurements": "PASS",
+    "normalSaveIsolation": "PASS",
+    "tabs": 8,
+    "scenarios": 44,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "riverAndGoldShop": "PASS",
+    "armBeforeAfter": "PASS",
+    "cameraAndQuality": "PASS",
+    "touchGatherAndScreen": "PASS",
+    "magneticPreparation": "PASS",
+    "bulkSuctionAndSave": "PASS",
+    "workerRoutesAndDownload": "PASS",
+    "workerCancel": "PASS",
+    "allToolBeforeAfterMeasurements": "PASS",
+    "normalSaveIsolation": "PASS",
+    "tabs": 8,
+    "scenarios": 44,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 900,
+    "riverAndGoldShop": "PASS",
+    "armBeforeAfter": "PASS",
+    "cameraAndQuality": "PASS",
+    "touchGatherAndScreen": "PASS",
+    "magneticPreparation": "PASS",
+    "bulkSuctionAndSave": "PASS",
+    "workerRoutesAndDownload": "PASS",
+    "workerCancel": "PASS",
+    "allToolBeforeAfterMeasurements": "PASS",
+    "normalSaveIsolation": "PASS",
+    "tabs": 8,
+    "scenarios": 44,
+    "errors": []
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "version": "0.8.1",
+  "viewport": [
+    390,
+    844
+  ],
+  "sameHoleStages": [
+    {
+      "id": "hand",
+      "depth": 80,
+      "pixel": [
+        215,
+        179,
+        119
+      ]
+    },
+    {
+      "id": "B101",
+      "depth": 180,
+      "pixel": [
+        164,
+        119,
+        72
+      ]
+    },
+    {
+      "id": "B105",
+      "depth": 280,
+      "pixel": [
+        100,
+        66,
+        43
+      ]
+    }
+  ],
+  "handCue": true,
+  "V05NoDepthLabels": "PASS",
+  "touchCueAndToolDoNotOverlap": "PASS",
+  "saveAfterEveryStage": "PASS",
+  "deepRecoveryAndWash": "PASS",
+  "errors": []
+}
