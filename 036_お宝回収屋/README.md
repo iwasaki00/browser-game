@@ -1,8 +1,22 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.8.1 — DEEP DIGGING & TOOL FEEL**
+**Version 0.9.0 — GAME EXPERIENCE REFINEMENT**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## 次の一歩を分かりやすく
+
+短い行動案内、検索と購入比較、4枠の短縮表示、設備の3手順、図鑑の最近の初登録、演出の標準/軽量/なしを追加しました。案内は任意に消せます。既存の道具・設備・お宝・経済は維持します。
+
+[変更内容](docs/GAME_EXPERIENCE_0.9.0.md) / [100シード・30分モデル](docs/FIRST_30_MINUTES_ANALYSIS.md) / [QA](docs/UX_QA_REPORT.md) / [プレイ評価表](docs/PLAYTEST_0.9.0.md) / [最終報告](docs/FINAL_REPORT_0.9.0.md)。主観的評価とiPhone Safari実機はユーザー確認待ちです。
+
+検証：`npm.cmd test` / `npm.cmd run balance:ux -- 100` / `npm.cmd run test:ux-browser` / `npm.cmd run build`。DEBUG LABは設定のVERSIONを5連続タップ、探索/シナリオ内のGAME EXPERIENCEから利用できます。
+
+## 川底・河原の道具体験
+
+川底の長押し/ドラッグでの引上げ、河原の採取・ふるい・皿を時間式に統一。重量・地形・道具構成による実速度差と、4枠装備での性能比較を追加しました。
+
+[川底](docs/RIVER_TOOL_FEEL.md) / [河原](docs/GOLD_TOOL_FEEL.md) / [100シード比較](docs/FIELD_TOOL_BALANCE.md)。検証：`npm.cmd run balance:field-feel` / `npm.cmd run test:field-feel-browser`。
 
 ## 10層と道具の手応え
 

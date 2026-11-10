@@ -1,3 +1,28 @@
+# Version 0.9.0 — GAME EXPERIENCE REFINEMENT
+
+617件の自動テスト、既存7ブラウザ回帰、Chrome/Edgeの新UI・本番版、100シード×4方針、6ライン24ゲーム時間が成功。詳しくは [QA](UX_QA_REPORT.md) と [30分モデル](FIRST_30_MINUTES_ANALYSIS.md)。WebKit未実施、実機iPhone Safari・人間の主観評価はユーザー確認待ち。
+
+再実行：npm.cmd test / npm.cmd run test:regression-browser / npm.cmd run test:ux-browser / npm.cmd run test:automation-browser / npm.cmd run test:advanced-browser / npm.cmd run test:save-browser / npm.cmd run test:field-feel-browser / npm.cmd run test:advanced-stress / npm.cmd run balance:ux -- 100 / npm.cmd run test:ux-performance / npm.cmd run build / npm.cmd run test:production。
+
+---
+
+# Version 0.8.2 — 検証結果
+
+- 自動 **581件成功、失敗0**。既存528件＋追加53件。川底の能力/重量/磁性/距離/障害物/時間/持替え/再試行/入力頻度、河原の地形/容量/ふるい/皿/水流準備/微細回収/固定個体/残渣/時間加速/保存を検証。RFEEL/GFEEL20件の保存整合も含む。
+- TypeScript・Vite成功。46モジュール、JS376.26kB/gzip96.58kB、CSS23.31kB/gzip6.20kB。
+- [道具体験UI](field-feel-ui-v082.json)：Chrome320/390/1280px、Edge390px。マウス長押し・ドラッグ、20/200イベント、CDPタッチ・cancel、blur/解放停止、持替え進捗、保存、装備4枠、8タブ・FEEL20・JSON・通常保存分離に成功。頻度比較は実際に計上された作業秒当たりの進行で照合。処理落ちで100msを超えた時間は安全側に捨てる。
+- [既存7系統](regression-browser-results-v082.json)：すべて成功。旧「回数/距離だけ」の操作を長押しへ更新し、既存の対象・報酬・品質・深度・保存期待値を維持。通常画面・深層・露出/洗浄・川底・河原・砂浜道具・川底/河原道具を確認。
+- [6ラインUI](advanced-ui-v082.json)：320/390/1280pxで購入・増設・強化・個別停止・配分・6ライン・成長・300品・Worker/中止/出力/通常保存分離を確認。
+- [本番Chrome/Edge](production-results-v082.json)：既存全分野/設備/ライン/図鑑/保存復元を確認。RFEEL/GFEEL・DIG・旧LABの強制操作/比較/Workerマーカーが全アセットに存在しない。DEV APIなし、隠し操作も無効、通常保存キーだけを使用。
+- [保存と複数タブ](save-phase0-v082.json)：履歴1万件の圧縮、支払い資格保持、処理中保存、最新スナップショット、単一進行タブ、所有権移動・復元に成功。
+- [100シード](field-feel-balance-v082.json)：川底2800、河原処理1400、採取800、精密400条件。全条件で二重報酬0、固定個体維持。能力不足は回収不可でnull時間。詳細と計測範囲はFIELD_TOOL_BALANCE.md。
+- [長時間試験](advanced-stress-v082.json)：6ライン24ゲーム時間、1002個体の一括回収、継続投入4332件、キュー最大64、毎時復元24回、履歴200、保存175663〜181543bytes。非表示進行なし・二重移行不変。Node heapでありiPhone実機メモリではない。
+- iPhone Safari実機・実機の音/電池/メモリは未確認。Chromeの小画面とタッチ成功をSafari実機の保証とはしない。
+
+再実行：npm.cmd test / npm.cmd run build / npm.cmd run balance:field-feel / npm.cmd run test:advanced-stress。開発サーバー5176でtest:field-feel-browser、test:regression-browser、test:advanced-browser、test:save-browser。本番はtest:production。
+
+---
+
 # Version 0.8.1 — 検証結果
 
 - 自動 **528件成功、失敗0**。旧454件を含む。追加74件：10境界、9道具の上限、材質適性、非掘削道具、ブラシ、静止/移動/イベント/フレーム頻度、停止/復帰、固定個体、実体積採砂、限界、旧250保存、ライン供給、描画、DIG20保存整合。

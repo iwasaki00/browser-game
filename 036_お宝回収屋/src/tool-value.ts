@@ -1,3 +1,4 @@
+import {firstEvent} from './experience';
 import {compactHistory} from './ledger';
 import {beachProfiles,equippedBeach} from './beach-tools';
 import {treasure} from './data';
@@ -37,7 +38,7 @@ export function finishQuality(s:State,f:Find,id:string){
  const before=Math.min(f.initialQuality,f.quality);f.quality=Math.max(0,before*(1-loss));f.qualityLoss=before-f.quality;f.damagePrevented=!!f.surveyed&&loss<base;f.qualityFinalized=true;
 }
 export function recordRecovery(s:State,f:Find){
- if(f.recoveryRecorded)return;f.recoveryRecorded=true;
+ if(f.recoveryRecorded)return;firstEvent(s,'find');f.recoveryRecorded=true;
  const history=s.recoveryHistory??(s.recoveryHistory=[]),last=history.at(-1)?.digsAt;
  history.push({time:s.playTime,surveyed:!!(f.plannedRecovery??f.surveyed),tool:f.excavationTool??f.tool,digs:last===undefined?null:Math.max(0,s.digs-last),digsAt:s.digs,evaluation:Math.round(treasure(f.id).baseValueFN*f.quality),loss:f.qualityLoss??0,protected:!!f.damagePrevented});compactHistory(s);
 }

@@ -1,3 +1,17 @@
+# Version 0.9.0 — GAME EXPERIENCE REFINEMENT
+
+次の行動を短いボタンから確認でき、任意に非表示にできます。新規は案内有効、旧セーブは無効で移行。初回11イベント・操作数を端末内に記録。ショップの名前/ID/用途検索、観測済み条件に基づく最大3候補と実処理APIによる比較、4枠の短縮表示、設備の3手順・一枚展開、最近12種類の図鑑初登録、R/SR/Jの洗浄表現、標準/軽量/なしの設定を追加。価格・報酬・道具性能・生成確率は変更していません。
+
+[操作と変更前後](GAME_EXPERIENCE_0.9.0.md) / [30分モデル](FIRST_30_MINUTES_ANALYSIS.md) / [確認表](PLAYTEST_0.9.0.md)。
+
+---
+
+# Version 0.8.2 — RIVER & GOLD TOOL FEEL
+
+川底を時間式の吸着/保持/引上げへ、河原を時間式の採取/粒径/比重選別へ更新。4枠の実性能比較、RFEEL/GFEEL20シナリオを追加。詳しくはRIVER_TOOL_FEEL.md、GOLD_TOOL_FEEL.md、FIELD_TOOL_BALANCE.md。
+
+---
+
 # Version 0.8.1 — DEEP DIGGING & TOOL FEEL
 
 [10層仕様](DEEP_DIGGING_10_LAYERS.md) / [性能](TOOL_DIGGING_PERFORMANCE.md) / [入力](DIGGING_INPUT_AND_FEEL.md)。層構造だけを細分化し既存最大深度・宝個体・経済を維持。押し続け・ドラッグ共通時間処理、現在層と到達層の表示、実地点の性能比較を追加。

@@ -1,8 +1,9 @@
+import {firstEvent,effects} from './experience';
 import {treasureImage} from './treasure-assets';
 import {treasure,income} from './data';
 import {reward,type State,type Find} from './engine';
-export function treasureShape(id:string){
- const image=treasureImage(id);if(image)return `<img src="${image}" alt="">`;let shape='';const kind=treasure(id)?.kind??'';
+export function treasureShape(id:string,fallback=false){
+ const image=treasureImage(id);if(image&&!fallback)return `<img src="${image}" data-treasure-fallback="${id}" alt="">`;let shape='';const kind=treasure(id)?.kind??'';
  if(id==='B012'||treasure(id)?.name.includes('時計'))shape='<rect x="43" y="7" width="34" height="106" rx="9" fill="#697f73"/><circle cx="60" cy="60" r="27" fill="#e2c87e"/><circle cx="60" cy="60" r="21" fill="#f0eee0"/><path d="M60 44v17l12 7" stroke="#405957" stroke-width="4"/>';
  else if(id==='B011'||id==='B009')shape='<circle cx="60" cy="65" r="29" fill="none" stroke="#dcb95b" stroke-width="13"/><path d="M46 36l14-18 14 18-14 12z" fill="#e9edc0"/>';
  else if(['B007','B010'].includes(id))shape='<circle cx="60" cy="60" r="36" fill="#bc9a51" stroke="#e7d17e" stroke-width="5"/><circle cx="60" cy="60" r="27" fill="none" stroke="#e6ce82" stroke-width="2"/><path d="M60 37l7 15 17 2-12 12 3 17-15-8-15 8 3-17-12-12 17-2z" fill="#e3c775"/>';
@@ -28,8 +29,9 @@ export function mountReveal(root:HTMLElement,s:State,f:Find,callbacks:RevealCall
  let live=true,phase:'dirty'|'washing'|'done'='dirty',timer=0;const t=treasure(f.id),rarity=f.rarity??t.rarity,uid=f.uid;
  root.innerHTML=`<section class="wash-card" data-phase="dirty"><div id="reveal-status" class="reveal-status">発見物 / 未洗浄</div><div class="wash-display" role="img" aria-label="砂に覆われた回収品"><div class="treasure-art">${treasureShape(f.id)}</div><div class="dirt-layer"><i></i><i></i><i></i><span>?</span></div><div class="sand-fall" aria-hidden="true">· · ·</div></div><div class="wash-info"><h3 id="reveal-name">${f.id.startsWith('R')?'泥に覆われた回収品':f.id.startsWith('G')?'砂利から見つけた鉱物':'砂まみれの小物'}</h3><p id="reveal-description">汚れを落とすと、形が見えてきそう。</p></div><div class="wash-values"><span id="reveal-quality">品質・評価：未判明</span><strong id="reveal-reward">洗浄して確認</strong></div><div class="wash-actions"><button id="clean" class="primary">洗う</button><button id="next-find" class="primary" hidden>次へ</button><button id="skip-clean">スキップ</button></div></section>`;
  root.querySelector<HTMLElement>('.wash-card')!.dataset.rarity=rarity;
+ root.querySelector<HTMLElement>('.wash-card')!.dataset.effects=effects(s);
  const el=<T extends HTMLElement=HTMLElement>(q:string)=>root.querySelector<T>(q)!;const card=el('.wash-card');
- function finish(){if(!live||phase==='done')return;clearTimeout(timer);phase='done';const isNew=!s.discoveredTreasures[f.id],fn=reward(s,uid);card.dataset.phase='done';card.classList.remove('washing');if(rarity==='J')card.classList.add('jackpot');else if(['R','SR'].includes(rarity))card.classList.add('rare-reveal');
+ function finish(){if(!live||phase==='done')return;clearTimeout(timer);firstEvent(s,'wash');phase='done';const isNew=!s.discoveredTreasures[f.id],fn=reward(s,uid);card.dataset.phase='done';card.classList.remove('washing');if(rarity==='J')card.classList.add('jackpot');else if(['R','SR'].includes(rarity))card.classList.add('rare-reveal');
   el('#reveal-status').textContent=rarity==='J'?'JACKPOT / 特別依頼達成':isNew?'新発見 / 図鑑登録':'回収完了';
   el('.wash-display').setAttribute('aria-label',t.name);el('#reveal-name').textContent=`${t.name} / ${rarity}`;el('#reveal-description').textContent=t.description;
   el('#reveal-quality').textContent=`品質 ${Math.round(f.quality*100)}% ・ 評価 ${Math.round(t.baseValueFN*f.quality).toLocaleString()} FN`;

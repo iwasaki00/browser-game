@@ -1,3 +1,4 @@
+import {validateExperience} from './experience';
 import {validateFacilities} from './facilities';
 import {treasure} from './data';
 import {environments,collectionMilestones} from './world-rules';
@@ -42,12 +43,13 @@ export function migrate(raw:unknown):State {
  for(const b of s.sandBatches)if(b.resistance!==undefined&&(!Number.isFinite(b.resistance)||b.resistance<1||b.resistance>10))throw Error('砂の環境係数が不正です');
  for(const b of s.sandBatches)if(!Number.isFinite(b.cells)||b.cells<0||Object.values(b.residueWork??{}).some(n=>!Number.isFinite(n)||n<0))throw Error('砂の残量データが不正です');
  for(const b of s.sandBatches)if(b.screenedUnits!==undefined&&(!Number.isFinite(b.screenedUnits)||b.screenedUnits<0||b.screenedUnits>b.cells+1e-6))throw Error('砂の選別データが不正です');
+ if(s.riverSession?.workSeconds!==undefined&&(!Number.isFinite(s.riverSession.workSeconds)||s.riverSession.workSeconds<0))throw Error('川底作業時間が不正です');
  if(s.riverSession&&(!s.explorationAreas[0].areaId?.startsWith('R-')||!Number.isFinite(s.riverSession.progress)||s.riverSession.progress<0||s.riverSession.progress>1))delete s.riverSession;
  for(const f of [...s.explorationAreas[0].items,...s.retainedFinds])if(f.weight!==undefined&&(!Number.isFinite(f.weight)||f.weight<=0))throw Error('重量データが不正です');
  // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
  if(s.world){if(s.world.version!==1||!Array.isArray(s.world.unlocked)||s.world.unlocked.some(id=>!environments[id])||Object.keys(s.world.visits).some(id=>!environments[id])||Object.values(s.world.visits).some(n=>!Number.isSafeInteger(n)||n<0))throw Error('探索進捗が不正です');s.world.milestones=collectionMilestones(s);}
  for(const p of s.explorationAreas)if(p.environment&&(Object.values(p.environment).some(n=>!Number.isFinite(n)||n<0)||p.environment.current<=0||p.environment.hardness<=0||p.environment.volume<=0))throw Error('環境条件が不正です');
- if(s.digWorkSeconds!==undefined&&(!Number.isFinite(s.digWorkSeconds)||s.digWorkSeconds<0)||s.digBatchSerial!==undefined&&(!Number.isSafeInteger(s.digBatchSerial)||s.digBatchSerial<0))throw Error('掘削時間の保存が不正です');for(const p of s.explorationAreas)if(p.digLayersSeen&&(!Array.isArray(p.digLayersSeen)||p.digLayersSeen.some(n=>!Number.isInteger(n)||n<1||n>10)))throw Error('地層到達記録が不正です');compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateFacilities(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
+ if(s.digWorkSeconds!==undefined&&(!Number.isFinite(s.digWorkSeconds)||s.digWorkSeconds<0)||s.digBatchSerial!==undefined&&(!Number.isSafeInteger(s.digBatchSerial)||s.digBatchSerial<0))throw Error('掘削時間の保存が不正です');for(const p of s.explorationAreas)if(p.digLayersSeen&&(!Array.isArray(p.digLayersSeen)||p.digLayersSeen.some(n=>!Number.isInteger(n)||n<1||n>10)))throw Error('地層到達記録が不正です');validateExperience(s,r.experience===undefined);compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateFacilities(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
 }
 const revisions=new Map<string,number>(),sequences=new Map<string,number>();
 let saveAllowed=()=>true,sessionOwner:string|undefined;

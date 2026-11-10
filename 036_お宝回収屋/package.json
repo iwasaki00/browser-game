@@ -1,6 +1,6 @@
 {
   "name": "the-finders",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -39,7 +39,12 @@
     "test:advanced-stress": "tsx scripts/advanced-stress.ts",
     "test:advanced-browser": "node scripts/advanced-browser-test.mjs",
     "balance:digging": "tsx scripts/digging-balance.ts",
-    "test:digging-browser": "node scripts/digging-browser-test.mjs"
+    "test:digging-browser": "node scripts/digging-browser-test.mjs",
+    "balance:field-feel": "tsx scripts/field-feel-balance.ts",
+    "test:field-feel-browser": "node scripts/field-feel-browser-test.mjs",
+    "balance:ux": "tsx scripts/ux-balance.ts",
+    "test:ux-browser": "node scripts/ux-browser-test.mjs",
+    "test:ux-performance": "node scripts/ux-performance-test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

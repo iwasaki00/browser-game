@@ -1,0 +1,61 @@
+{
+  "results": [
+    {
+      "name": "book300",
+      "wallMs": 227.17020000000014
+    },
+    {
+      "name": "shopSearch",
+      "wallMs": 216.49670000000015
+    },
+    {
+      "name": "modal20Cycles",
+      "wallMs": 1751.0514
+    },
+    {
+      "name": "save100Wash6Lines",
+      "wallMs": 13.777399999999943
+    },
+    {
+      "name": "canvasDraw-full",
+      "count": 300,
+      "medianMs": 2.100000023841858,
+      "p95Ms": 3.799999952316284
+    },
+    {
+      "name": "canvasDraw-light",
+      "count": 300,
+      "medianMs": 1.5,
+      "p95Ms": 2.799999952316284
+    },
+    {
+      "name": "canvasDraw-off",
+      "count": 300,
+      "medianMs": 1.6999999284744263,
+      "p95Ms": 2.799999952316284
+    },
+    {
+      "name": "longDig60Seconds",
+      "wallMs": 64974.25450000001
+    },
+    {
+      "fixture": {
+        "treasures": 300,
+        "lines": 6,
+        "stored": 100
+      },
+      "heap": {
+        "usedSize": 6611056,
+        "totalSize": 8491008,
+        "embedderHeapUsedSize": 2919232,
+        "backingStorageSize": 1850989
+      },
+      "save": {
+        "bytes": 294502,
+        "dom": 283
+      },
+      "basis": "Headless Chrome on this Windows PC. Browser heap and draw function only; not iPhone memory, FPS or human response ratings."
+    }
+  ],
+  "errors": []
+}

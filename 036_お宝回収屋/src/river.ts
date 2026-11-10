@@ -9,7 +9,7 @@ import {logEvent} from './events';
 
 export const RIVER_TOOLS=[...RIVER_ADDED,'R101','R106','R103','R104','R110','R201','R206'];
 export type RiverPhase='empty'|'hooked'|'reeling'|'lifting';
-export interface RiverSession {tool:string;x:number;y:number;originX:number;originY:number;uid?:string;progress:number;phase:RiverPhase;elapsed:number;magnetic:boolean;operations:number;}
+export interface RiverSession {tool:string;x:number;y:number;originX:number;originY:number;uid?:string;progress:number;phase:RiverPhase;elapsed:number;magnetic:boolean;operations:number;workSeconds?:number;}
 export interface RiverMetrics {attempts:number;successes:number;operations:number;uses:Record<string,number>;failures:Record<string,number>;bottleneck:string;}
 export const areaId=(s:State)=>s.explorationAreas[0].areaId??'B-A';
 export const isRiver=(s:State)=>areaId(s).startsWith('R-');
@@ -70,12 +70,12 @@ export function riverStart(s:State,id:string,x:number,y:number,cast=false){
  const reason=riverCheck(s,id,f,c.meter&&!!f.riverLoadMeasured);if(reason)return failure(s,reason);
  s.riverSession.uid=f.uid;s.riverSession.phase='hooked';measure(s,id,'吸着・把持',1,0);logEvent(s,c.magnetic?'磁石吸着':'つかんだ','何かが引っかかった');return {ok:true,reason:'何かが引っかかった！ 手前へドラッグして引き上げよう。'};
 }
-export function riverPull(s:State,amount=50){
+export function riverPull(s:State,amount=50,timed=false){
  const r=s.riverSession;if(!isRiver(s)||!r?.uid||r.phase==='empty'||!Number.isFinite(amount)||amount<=0)return {ok:false,reason:'対象をつかんでから引こう。',recovered:false};
  const f=s.explorationAreas[0].items.find(f=>f.uid===r.uid);if(!f||f.state!=='buried'){delete s.riverSession;return {ok:false,reason:'回収済み、または対象がありません。',recovered:false};}
  const reason=riverCheck(s,r.tool,f);if(reason){s.riverSession=undefined;return {...failure(s,reason),recovered:false};}
  const c=riverCapabilities(s,r.tool),weight=f.weight??treasure(f.id).weight;
- const beforeProgress=r.progress,beforeStamina=s.playerStats.stamina;r.operations++;metrics(s).operations++;r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
+ const beforeProgress=r.progress,beforeStamina=s.playerStats.stamina;if(!timed){r.operations++;metrics(s).operations++;}r.progress=Math.min(1,r.progress+Math.min(100,amount)*c.speed*(s.playerStats.stamina<10?.5:1)/(110+weight*48+(f.difficulty??1)*12));r.phase=r.progress<.7?'reeling':'lifting';
  s.playerStats.stamina=Math.max(0,s.playerStats.stamina-(s.automationAccess?0:fieldProfiles[r.tool]?.cost??2)*Math.min(100,amount)/70);s.playerStats.xp[0]+=.3*Math.min(100,amount)/70;s.playerStats.xp[3]+=Math.min(100,amount)/70;measure(s,r.tool,'引上げ',r.progress-beforeProgress,beforeStamina-s.playerStats.stamina,Number(r.progress>=1));
  if(r.progress<1)return {ok:true,reason:r.phase==='lifting'?'重みを感じる…もう少し引き上げよう。':'手応えあり。正体はまだ分からない…',recovered:false};
  if([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state==='stored').length>=CONFIG.capacity){r.progress=.99;return {ok:false,reason:'保管がいっぱいです。先に洗浄しよう。',recovered:false};}
@@ -91,3 +91,8 @@ export function riverObserve(s:State,id:string,x:number,y:number){
  f.riverObserved=true;if(id==='R204')f.riverCameraObserved=true;else f.riverLoadMeasured=true;const before=s.playerStats.stamina;s.playerStats.stamina=Math.max(0,before-fieldProfiles[id].cost);measure(s,id,'川底観察',1,before-s.playerStats.stamina,1);logEvent(s,'川底観察',id);
  return {ok:true,reason:id==='R210'?'荷重の目安 '+(f.weight??treasure(f.id).weight).toFixed(1)+'kg。引き上げ能力を確認しよう。':(f.magnetic??treasure(f.id).magnetic)?'鉄系の反応'+(f.obstacle?'・隙間にある':'・障害物なし'):'磁石に付かない反応'+(f.obstacle?'・隙間にある':'・障害物なし')};
 }
+
+export function riverWorkModel(s:State,id:string,f:Find){const c=riverCapabilities(s,id),weight=f.weight??treasure(f.id).weight,reason=riverCheck(s,id,f),depth=Math.max(0,f.depth??0),resistance=1+Math.min(.5,depth/600),handling=id==='R103'?1.25:id==='R201'?.9:id==='R202'?.95:id==='R205'?1.05:1,winch=!!s.automationAccess&&!!s.automation?.machines.R301?1.8:1,low=s.playerStats.stamina<10?.5:1;const units=70*handling*winch/resistance,progressPerSecond=units*c.speed*low/(110+weight*48+(f.difficulty??1)*12);return {reason,capabilities:c,resistance,units,progressPerSecond,seconds:reason?null:1/progressPerSecond,staminaPerSecond:s.automationAccess?0:(fieldProfiles[id]?.cost??2)*units/70,precision:id==='R205'||c.camera||c.meter};}
+export function riverWork(s:State,seconds:number,rateScale=1){const r=s.riverSession,f=r?.uid?s.explorationAreas[0].items.find(f=>f.uid===r.uid):undefined;if(!r||!f||!Number.isFinite(seconds)||seconds<=0)return {ok:false,reason:'対象をつかんでから引こう。',recovered:false};const dt=Math.min(.1,seconds),model=riverWorkModel(s,r.tool,f);if(model.reason){delete s.riverSession;return {...failure(s,model.reason),recovered:false};}const before=r.workSeconds??0;r.workSeconds=before+dt;const ops=Math.floor((r.workSeconds+1e-8)/.6)-Math.floor((before+1e-8)/.6);r.operations+=ops;metrics(s).operations+=ops;return riverPull(s,dt*model.units*rateScale,true);}
+export function riverRetool(s:State,id:string){const r=s.riverSession,f=r?.uid?s.explorationAreas[0].items.find(f=>f.uid===r.uid):undefined;if(!r||!f)return '';const reason=riverCheck(s,id,f);if(reason)return reason;r.tool=id;r.magnetic=riverCapabilities(s,id).magnetic;return '';}
+export function riverSuggestion(s:State,reason:string,uid?:string){const f=s.explorationAreas[0].items.find(f=>f.uid===(uid??s.riverSession?.uid));const candidate=f?['R101','R102','R103','R106','R201','R203','R205'].find(id=>s.ownedTools.includes(id)&&!riverCheck(s,id,f)):undefined;return reason+(candidate?' '+(tool(candidate)?.name??candidate)+'へ持ち替えよう。':' 装備構成・ショップを確認しよう。');}

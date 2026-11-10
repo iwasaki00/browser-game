@@ -1,0 +1,122 @@
+[
+  {
+    "channel": "chrome",
+    "width": 320,
+    "river": [
+      0.6431478945614658,
+      0.34023904226284796
+    ],
+    "freq": [
+      0.25582646599017367,
+      0.25582646599017367
+    ],
+    "touchProgress": 0.1637289382337113,
+    "gathered": [
+      8.212999999523166,
+      13.553333334128068
+    ],
+    "screened": [
+      8,
+      16
+    ],
+    "hold": true,
+    "releaseStop": true,
+    "blurStop": true,
+    "touchCancel": true,
+    "toolProgress": true,
+    "save": true,
+    "equipment4": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "river": [
+      0.6329278137377823,
+      0.34272533101606245
+    ],
+    "freq": [
+      0.2558264659901737,
+      0.2558264659901737
+    ],
+    "touchProgress": 0.15861240891390782,
+    "gathered": [
+      8.203999999761585,
+      13.398333332935975
+    ],
+    "screened": [
+      8,
+      16
+    ],
+    "hold": true,
+    "releaseStop": true,
+    "blurStop": true,
+    "touchCancel": true,
+    "toolProgress": true,
+    "save": true,
+    "equipment4": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "river": [
+      0.6424306959484206,
+      0.3370833682229547
+    ],
+    "freq": [
+      0.2558264659901737,
+      0.25582646599017367
+    ],
+    "touchProgress": 0.1637289382337113,
+    "gathered": [
+      8.275000000000002,
+      13.411666667461402
+    ],
+    "screened": [
+      8,
+      16
+    ],
+    "hold": true,
+    "releaseStop": true,
+    "blurStop": true,
+    "touchCancel": true,
+    "toolProgress": true,
+    "save": true,
+    "equipment4": true,
+    "lab": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 390,
+    "river": [
+      0.6338243120575242,
+      0.33856557878966087
+    ],
+    "freq": [
+      0.2558264659901737,
+      0.25582646599017367
+    ],
+    "touchProgress": 0.15861240891390782,
+    "gathered": [
+      8.130000000000004,
+      13.516666666666673
+    ],
+    "screened": [
+      8,
+      16
+    ],
+    "hold": true,
+    "releaseStop": true,
+    "blurStop": true,
+    "touchCancel": true,
+    "toolProgress": true,
+    "save": true,
+    "equipment4": true,
+    "lab": false,
+    "errors": []
+  }
+]

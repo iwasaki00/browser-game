@@ -1,3 +1,4 @@
+import {firstEvent} from './experience';
 import {facility,machinePerformance} from './facilities';
 import {lineBuffer,type LineKey,type StageId} from './lines';
 import {sieveSettings} from './beach-tools';
@@ -5,8 +6,8 @@ import {recoveryCount} from './ledger';
 import {tool,CONFIG} from './data';
 import {plot,stored,sortBatch,type State,type Plot,type Find} from './engine';
 import {batchRemaining} from './tool-value';
-import {riverCheck,riverCapabilities,riverStart,riverPull,type RiverSession} from './river';
-import {beginGoldWork,goldMotion,goldTick,availableGrains,validateGold,type GoldWork} from './gold';
+import {riverCheck,riverCapabilities,riverStart,riverPull,riverWork,type RiverSession} from './river';
+import {beginGoldWork,goldMotion,goldWorkForTime,goldTick,goldSluiceForTime,availableGrains,validateGold,type GoldWork} from './gold';
 import {logEvent} from './events';
 
 export type MachineId='B301'|'R301'|'G304';
@@ -28,7 +29,7 @@ export const machineName=(id:MachineId)=>tool(id)!.name;
 export const autoScreenSeconds=3;
 export function requirement(s:State,id:MachineId){const d=definition(id);return d.requires.every(group=>group.some(t=>s.ownedTools.includes(t)));}
 export function machineUnlocked(s:State,id:MachineId){return id==='B301'?s.sandSampled||recoveryCount(s)>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
-export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||s.currentFN<tool(id)!.priceFN)return false;s.currentFN-=tool(id)!.priceFN;auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};logEvent(s,'設備購入',id);return true;}
+export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||s.currentFN<tool(id)!.priceFN)return false;s.currentFN-=tool(id)!.priceFN;auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};firstEvent(s,'machine');logEvent(s,'設備購入',id);return true;}
 export function setMachineRunning(s:State,id:MachineId,running:boolean){const m=auto(s).machines[id];if(!m)return false;m.running=running;const line=s.lines?.[definition(id).field];if(line)line.running=running;m.status=running?'材料待ち':'停止中';m.reason=running?'登録された作業を待っています':'進捗を保持して一時停止';return true;}
 export const liveJobs=(s:State,id?:MachineId)=>auto(s).jobs.filter(j=>j.state!=='done'&&(!id||j.machine===id));
 export const allAutoFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
@@ -65,18 +66,18 @@ export function automationTick(s:State,seconds:number,visible=true){if(!visible|
  if(!requirement(s,d.id)){m.status='処理不能';m.reason='前提道具が不足しています';m.stopped+=dt;continue;}
  if(!j){m.status=jobs.length?'処理不能':'材料待ち';m.reason=jobs.length?'失敗した作業は道具を変更して再指示してください':'材料・登録対象を待っています';m.stopped+=dt;continue;}
  if(machineOutput(s,d.id,m.instanceId).length>=d.output||d.id!=='G304'&&stored(s).length>=CONFIG.capacity){m.status='出力満杯';m.reason=d.id==='G304'?'選別台で粒を精密回収してください':'洗浄して保管を空けてください';m.stopped+=dt;continue;}
- m.status='稼働中';m.reason=j.field==='G'?({feed:'砂利を供給中',screen:'粒径選別中',magnet:'砂鉄分離中',separate:'比重選別中',pull:'処理中'}[j.stage]):j.field==='R'?'指定対象を巻上げ中':'砂を選別中';j.state='working';m.uptime+=dt;
+ m.status='稼働中';m.reason=j.field==='G'?({feed:'砂利を供給中',screen:'粒径選別中',magnet:'砂鉄分離中',separate:'比重選別中',pull:'処理中'}[j.stage]):j.field==='R'?'指定対象を巻上げ中':'砂を選別中';j.state='working';firstEvent(s,'automation');m.uptime+=dt;
  const before=new Set(allAutoFinds(s).filter(f=>f.state==='stored').map(f=>f.uid)),previous=j.processed;
  if(j.field==='B'){const b=s.sandBatches.find(b=>b.id===j.source);if(!b){failure(j,m,'砂バッチの参照がありません');continue;}const c=context(s,j),r=sortBatch(c,b,'sieve',d.rate/60*dt/(b.resistance??1),s.lineScreenTool??'B104',s.lineScreenTool?sieveSettings(c,s.lineScreenTool,s.beachMesh??'fine').fine:1);j.processed=Math.min(j.amount,Math.max(0,(b.screenedUnits??0)-(j.sandStart??0)));j.remaining=Math.max(0,j.amount-j.processed);j.progress=j.amount?Math.min(1,j.processed/j.amount):0;}
  else if(j.field==='R'){const c=context(s,j),f=j.plot!.items[0];if(f.state!=='buried'){if(f.state==='stored'||f.state==='paid'){j.processed=1;j.remaining=0;}else failure(j,m,'対象の状態が変わっています');}
  else{const reason=riverCheck(c,j.primary,f);if(reason){failure(j,m,reason);continue;}if(!c.riverSession){const r=riverStart(c,j.primary,f.x,f.y,riverCapabilities(c,j.primary).rope);if(!r.ok){failure(j,m,r.reason);continue;}}
- const r=riverPull(c,d.rate*dt);j.session=c.riverSession;s.riverMetrics=c.riverMetrics;j.progress=r.recovered?1:j.session?.progress??0;j.processed=j.progress;j.remaining=1-j.progress;if(!r.ok){failure(j,m,r.reason);continue;}}
+ const r=riverWork(c,dt,d.rate/(70/.75));j.session=c.riverSession;s.riverMetrics=c.riverMetrics;j.progress=r.recovered?1:j.session?.progress??0;j.processed=j.progress;j.remaining=1-j.progress;if(!r.ok){failure(j,m,r.reason);continue;}}
  }
  else{const b=s.gravelBatches?.find(b=>b.id===j.source);if(!b){failure(j,m,'砂利バッチの参照がありません');continue;}const c=context(s,j),end=c.automationGoldEnd!;const screen=j.tools.includes('G202')?'G202':'G103';if(!j.tools.includes(screen)){failure(j,m,'粒径選別道具を構成に含めてください');continue;}
  if(j.stage==='feed'){j.fed=Math.min(j.amount,j.fed+d.rate/60*dt);if(j.fed>=j.amount-1e-8)j.stage=j.tools.includes('G205')?'magnet':'screen';}
- else if(j.stage==='screen'){if(b.screened>=end-1e-8)j.stage='separate';else{if(!c.goldWork)beginGoldWork(c,b.id,screen);if(c.goldWork)goldMotion(c,dt/autoScreenSeconds*24,dt);}}
- else if(j.stage==='magnet'){if((b.magnetized??0)>=end-1e-8)j.stage='screen';else{if(!c.goldWork)beginGoldWork(c,b.id,'G205');if(c.goldWork)goldMotion(c,dt/.6*24,dt);}}
- else{if(b.processed>=end-1e-8){j.remaining=0;j.processed=j.amount;}else{if(!c.goldWork)beginGoldWork(c,b.id,j.primary);if(c.goldWork){if(c.goldWork.mode==='sluice')goldTick(c,dt);else goldMotion(c,dt/.6*24,dt);}}}
+ else if(j.stage==='screen'){if(b.screened>=end-1e-8)j.stage='separate';else{if(!c.goldWork)beginGoldWork(c,b.id,screen);if(c.goldWork)goldWorkForTime(c,dt);}}
+ else if(j.stage==='magnet'){if((b.magnetized??0)>=end-1e-8)j.stage='screen';else{if(!c.goldWork)beginGoldWork(c,b.id,'G205');if(c.goldWork)goldWorkForTime(c,dt);}}
+ else{if(b.processed>=end-1e-8){j.remaining=0;j.processed=j.amount;}else{if(!c.goldWork)beginGoldWork(c,b.id,j.primary);if(c.goldWork){if(c.goldWork.mode==='sluice')goldSluiceForTime(c,dt);else goldWorkForTime(c,dt);}}}
  if(c.goldWork)c.goldWork.work=Math.min(c.goldWork.required,c.goldWork.work);j.goldWork=c.goldWork;s.goldStats=c.goldStats;j.processed=Math.min(j.amount,Math.max(0,b.processed-(j.sourceStart??(b.amount-j.amount))));j.remaining=Math.max(0,j.amount-j.processed);j.progress=Math.min(1,(j.fed/j.amount+Math.min(1,b.screened/b.amount)+j.processed/j.amount)/3);
  for(const f of availableGrains(s,b).filter(f=>(f.goldAllocation??0)>=(j.sourceStart??(b.amount-j.amount))-1e-8&&(f.goldAllocation??0)<end-1e-8))if(!j.outputs.includes(f.uid)){j.outputs.push(f.uid);f.automationMachine=d.id;f.automationInstance=j.instanceId;m.found++;}
  }

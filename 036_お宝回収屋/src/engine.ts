@@ -1,3 +1,4 @@
+import {freshExperience,firstEvent,type Experience} from './experience';
 import {advanceDepth,digProfiles} from './digging';
 import {generateWorld} from './world-generation';
 import {environment,recordVisit,collectionMilestones,worldUnlocked,type Environment} from './world-rules';
@@ -16,14 +17,14 @@ import type {HandFeedback} from './feedback';
 export interface Find {automationInstance?:string;lineId?:string;automationJob?:string;automationMachine?:MachineId;riverObserved?:boolean;riverCameraObserved?:boolean;riverLoadMeasured?:boolean;riverProtected?:boolean; identified?:boolean; grain?:number;density?:number;goldSite?:string;goldOffset?:number;goldAllocation?:number;goldCapture?:number;captureRank?:number;goldRich?:boolean;observed?:boolean;pickWork?:number;  evaluationFN?:number; rewardFN?:number; damageState?:'worn'|'scratched'; areaId?:string; weight?:number; magnetic?:boolean; material?:string; difficulty?:number; obstacle?:boolean; rarity?:string; recoveryOperations?:number; uid:string; id:string; x:number; y:number; depth?:number; plannedRecovery?:boolean; excavationTool?:string; initialQuality?:number; qualityFinalized?:boolean; qualityLoss?:number; damagePrevented?:boolean; recoveryRecorded?:boolean; surveyed?:boolean; quality:number; state:'buried'|'batch'|'transit'|'stored'|'paid'; tool:string; }
 export interface Plot {digLayersSeen?:number[];environment?:Environment;worldVersion?:number;beachDepthVersion?:number; goldSites?:GravelSite[]; areaId?:string;  id:string; seed:number; mask:number[]; items:Find[]; surveyMarks?:SurveyMark[]; }
 export interface Batch {resistance?:number;automationJob?:string; id:string; plotId:string; items:string[]; processed:boolean; cells:number; screenedUnits?:number; residueWork?:Record<string,number>; allocations?:Record<string,number>; }
-export interface State {digWorkSeconds?:number;digBatchSerial?:number;distribution?:Partial<Record<Field,{mode:'manual'|'equal'|'capacity'|'space';cursor:number}>>;world?:{version:1;unlocked:string[];visits:Record<string,number>;milestones:Record<string,number[]>};lines?:Partial<Record<LineKey,Line>>;lineAccess?:string;lineScreenTool?:string;linePrecisionTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationSandEnd?:number;automationGoldStart?:number;automationGoldEnd?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
+export interface State {experience?:Experience;digWorkSeconds?:number;digBatchSerial?:number;distribution?:Partial<Record<Field,{mode:'manual'|'equal'|'capacity'|'space';cursor:number}>>;world?:{version:1;unlocked:string[];visits:Record<string,number>;milestones:Record<string,number[]>};lines?:Partial<Record<LineKey,Line>>;lineAccess?:string;lineScreenTool?:string;linePrecisionTool?:string;lineManual?:boolean;rewardLedger?:RewardLedger;saveSequence?:number;saveRevision?:number;automation?:Automation;automationAccess?:string;automationStoreLimit?:number;automationSandEnd?:number;automationGoldStart?:number;automationGoldEnd?:number;automationOutputLimit?:number;beachMesh?:'fine'|'coarse';
  goldVersion?:number;goldUnlockedAreas?:string[];gravelBatches?:GravelBatch[];goldWork?:GoldWork;sluiceFeed?:string[];goldStats?:GoldStatistics;loadouts?:Record<string,string[]>;selectedTools?:Record<string,string>;operationMetrics?:Record<string,OperationMetric>;lastOperationKey?:string; events?:GameEvent[]; riverSession?:RiverSession; riverMetrics?:RiverMetrics; maxStamina?:number; lastScan?:ScanReading; sortHistory?:SortEvent[]; recoveryHistory?:RecoveryEvent[]; handFeedback?:HandFeedback[]; saveVersion:number; playerId:string; currentFN:number; totalEarnedFN:number;
  playerStats:{stamina:number;xp:number[]}; ownedTools:string[]; equippedTools:string[]; quickSlots:string[]; unlockedTools:string[];
  discoveredTreasures:Record<string,{count:number;first:string;best:number;locations:string[];tools:string[]}>;
  explorationAreas:Plot[]; currentPlot:number; exploredPlots:number; retainedFinds:Find[]; sandSampled:boolean;
  collectedTreasures:string[]; completedContracts:string[]; activeContracts:string[]; jackpotHistory:string[]; sandBatches:Batch[];
  revenueHistory:{time:number;fn:number;jackpot:boolean;area?:string;item?:string}[]; purchases:{id:string;time:number;before:number;predicted:number}[];
- playTime:number; lastSavedAt:string; digs:number; cells:number; settings:{sound:boolean;short:boolean};
+ playTime:number; lastSavedAt:string; digs:number; cells:number; settings:{sound:boolean;short:boolean;effects?:'full'|'light'|'off'};
 }
 export function rng(seed:number) { return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;}; }
 // The surface position is independent of the buried depth and rarity draw.
@@ -50,7 +51,7 @@ export function generate(seed:number,tutorial=false,noJackpot=false,deep=!tutori
  return {id:`BA-${seed}`,seed,mask:Array(1008).fill(0),items,...(deep?{beachDepthVersion:1}:{})};
 }
 export function createState(seed=Date.now()>>>0):State {
- return {goldVersion:1,gravelBatches:[],sluiceFeed:[],handFeedback:[],saveVersion:2,playerId:`finder-${seed}`,currentFN:0,totalEarnedFN:0,playerStats:{stamina:100,xp:[0,0,0,0]},ownedTools:[],equippedTools:[],quickSlots:['hand','','',''],unlockedTools:[],discoveredTreasures:{},explorationAreas:[generate(seed,true)],currentPlot:0,exploredPlots:1,retainedFinds:[],sandSampled:false,collectedTreasures:[],completedContracts:[],activeContracts:[],jackpotHistory:[],sandBatches:[],revenueHistory:[],purchases:[],playTime:0,lastSavedAt:'',digs:0,cells:0,settings:{sound:false,short:false}};
+ return {experience:freshExperience(),goldVersion:1,gravelBatches:[],sluiceFeed:[],handFeedback:[],saveVersion:2,playerId:`finder-${seed}`,currentFN:0,totalEarnedFN:0,playerStats:{stamina:100,xp:[0,0,0,0]},ownedTools:[],equippedTools:[],quickSlots:['hand','','',''],unlockedTools:[],discoveredTreasures:{},explorationAreas:[generate(seed,true)],currentPlot:0,exploredPlots:1,retainedFinds:[],sandSampled:false,collectedTreasures:[],completedContracts:[],activeContracts:[],jackpotHistory:[],sandBatches:[],revenueHistory:[],purchases:[],playTime:0,lastSavedAt:'',digs:0,cells:0,settings:{sound:false,short:false}};
 }
 export const plot=(s:State)=>s.explorationAreas[0];
 const allFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];
@@ -71,7 +72,7 @@ export function buy(s:State,id:string) {
  const t=tool(id);refresh(s);
  if(!t||t.implementationStatus!=='available'||!s.unlockedTools.includes(id)||s.ownedTools.includes(id)||s.currentFN<t.priceFN)return false;
  const before=rate(s).normal;s.currentFN-=t.priceFN;s.ownedTools.push(id);assignPurchased(s,id);
- s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});logEvent(s,'道具購入',id);return true;
+ s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});firstEvent(s,'purchase');logEvent(s,'道具購入',id);return true;
 }
 export const MAX_DEPTH=280;
 export function depthAt(p:Plot,x:number,y:number){if(x<0||x>=360||y<0||y>=280)return 0;return (p.mask[Math.floor(y/10)*36+Math.floor(x/10)]??0)*plotDepthScale(p);}
@@ -101,9 +102,9 @@ export function dig(s:State,id:string,x:number,y:number,dx:number,seconds?:numbe
   const nextDepth=seconds===undefined?Math.min(maxDepth,currentDepth+strokeDepth):brush?Math.min(maxDepth,currentDepth+8*Math.min(.1,seconds)):advanceDepth(p,id,currentDepth,Math.min(.1,Math.max(0,seconds)),low*(1+Math.min(.15,Math.floor(s.playerStats.xp[0]/CONFIG.xpPerLevel)*.01)));
   p.mask[i]=nextDepth/scale;removed+=(nextDepth-currentDepth)/(seconds===undefined?maxDepth:80);
  }
- if(!removed)return 0;
+ if(!removed)return 0;firstEvent(s,'dig');if(!s.experience?.events.some(e=>e.id==='layer')&&p.mask.some(v=>v*scale>=40))firstEvent(s,'layer');
  const staminaBefore=s.playerStats.stamina;if(seconds===undefined)cost(s,id);else{s.playerStats.stamina=Math.max(0,s.playerStats.stamina-(digProfiles[id]?.stamina??1.5)*Math.min(.1,seconds));s.playerStats.xp[3]+=seconds;}measure(s,id,'掘削',removed,staminaBefore-s.playerStats.stamina);if(seconds===undefined)s.digs++;else{const before=s.digWorkSeconds??0;s.digWorkSeconds=before+Math.min(.1,seconds);s.digs+=Math.floor((s.digWorkSeconds+1e-8)/.25)-Math.floor((before+1e-8)/.25);}s.cells+=removed;s.playerStats.xp[0]+=removed;s.playerStats.xp[1]+=.5*(seconds===undefined?1:seconds/.25);
- for(const f of p.items)if(f.state==='buried'&&!f.qualityFinalized&&exposure(p,f)>=CONFIG.exposure)finishQuality(s,f,id);
+ for(const f of p.items)if(f.state==='buried'&&!f.qualityFinalized&&exposure(p,f)>=CONFIG.exposure){firstEvent(s,'find');finishQuality(s,f,id);}
  if(profile.sample||seconds!==undefined) {
   s.sandSampled=true;
   let b=s.sandBatches.find(b=>b.plotId===p.id&&!b.processed&&!b.automationJob&&b.cells<(equippedBeach(s,'B108')?72:CONFIG.batchCells));
@@ -153,14 +154,15 @@ export const stored=(s:State)=>allFinds(s).filter(f=>f.state==='stored');
 export function reward(s:State,uid:string) {
  const f=stored(s).find(f=>f.uid===uid);if(!f||!rewardEligible(s,uid))return 0;
  const t=treasure(f.id),fn=income[f.id]??0;f.evaluationFN=Math.round(t.baseValueFN*f.quality);f.rewardFN=fn;f.state='paid';s.collectedTreasures.push(uid);s.currentFN+=fn;s.totalEarnedFN+=fn;
- const d=s.discoveredTreasures[f.id]??={count:0,first:new Date().toISOString(),best:0,locations:[],tools:[]};d.count++;d.best=Math.max(d.best,Math.round(t.baseValueFN*f.quality));
+ const isNew=!s.discoveredTreasures[f.id];const d=s.discoveredTreasures[f.id]??={count:0,first:new Date().toISOString(),best:0,locations:[],tools:[]};d.count++;d.best=Math.max(d.best,Math.round(t.baseValueFN*f.quality));
  const location=f.areaId??(f.id.startsWith('R')?'R-A':f.id.startsWith('G')?'G-A':'B-A');if(!d.locations.includes(location))d.locations.push(location);if(!d.tools.includes(f.tool))d.tools.push(f.tool);
  if(t.contractOnly){s.completedContracts.push(uid);s.activeContracts=s.activeContracts.filter(x=>x!==uid);}if(t.rarity==='J')s.jackpotHistory.push(uid);
  if(f.lineId){const line=Object.values(s.lines??{}).find(l=>l?.id===f.lineId);if(line)line.fn+=fn;}
  confirmReward(s,f,t.contractOnly,t.rarity==='J');
  if(f.automationMachine&&s.automation?.machines[f.automationMachine])s.automation.machines[f.automationMachine]!.fn+=fn;
  if(s.world)s.world.milestones=collectionMilestones(s);
- s.revenueHistory.push({time:s.playTime,fn,jackpot:t.rarity==='J'||!!f.goldRich,area:location,item:f.id});logEvent(s,'報酬獲得',`${f.id} / ${fn} FN`);s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');compactHistory(s);refresh(s);return fn;
+ firstEvent(s,'reward');if(isNew&&s.experience&&!s.experience.recentBook.includes(f.id)){s.experience.recentBook=[f.id,...s.experience.recentBook].slice(0,12);}
+ s.revenueHistory.push({time:s.playTime,fn,jackpot:t.rarity==='J'||!!f.goldRich,area:location,item:f.id});logEvent(s,'報酬獲得',`${f.id} / ${fn} FN`);s.retainedFinds=s.retainedFinds.filter(f=>f.state!=='paid');compactHistory(s);refresh(s);if(worldUnlocked(s,'B-B')||areaUnlocked(s,'R-A'))firstEvent(s,'area');return fn;
 }
 export function addPlot(s:State,seed=Date.now()>>>0,noJackpot=false,area=areaId(s)) {
  const old=plot(s);clearRiverBeforeMove(s);rememberEquipment(s);for(const f of old.items)if(f.state==='buried'&&!f.automationJob)retireUID(s,f.uid);

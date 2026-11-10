@@ -1,0 +1,86 @@
+{
+  "version": "0.9.0",
+  "tests": 617,
+  "pass": 617,
+  "fail": 0,
+  "regression": [
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "seconds": 46.477
+    },
+    {
+      "name": "depth-browser",
+      "exitCode": 0,
+      "seconds": 26.223
+    },
+    {
+      "name": "reveal-browser",
+      "exitCode": 0,
+      "seconds": 14.483
+    },
+    {
+      "name": "river-browser",
+      "exitCode": 0,
+      "seconds": 55.716
+    },
+    {
+      "name": "gold-browser",
+      "exitCode": 0,
+      "seconds": 85.609
+    },
+    {
+      "name": "beach-browser",
+      "exitCode": 0,
+      "seconds": 39.541
+    },
+    {
+      "name": "field-browser",
+      "exitCode": 0,
+      "seconds": 62.125
+    }
+  ],
+  "ux": [
+    {
+      "channel": "chrome",
+      "width": 320,
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 390,
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 1280,
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 390,
+      "errors": []
+    },
+    {
+      "engine": "Playwright WebKit",
+      "status": "未実施：ランタイム未インストール"
+    }
+  ],
+  "production": [
+    {
+      "channel": "chrome",
+      "devFeatures": "absent",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "devFeatures": "absent",
+      "errors": []
+    }
+  ],
+  "modelSeeds": 100,
+  "modelRuns": 400,
+  "stressHours": 24,
+  "subjective": "未評価・ユーザー確認待ち",
+  "realIPhone": "未確認"
+}

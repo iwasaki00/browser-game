@@ -1,3 +1,4 @@
+import {tool} from './data';
 import type {State} from './engine';
 import {project} from './surface';
 import {riverCapabilities} from './river';
@@ -19,7 +20,8 @@ export function renderRiver(ctx:CanvasRenderingContext2D,s:State,time:number,act
   const q=project(r.originX+(r.x-r.originX)*flight*(1-progress),r.originY+(r.y-r.originY)*flight*(1-progress));
   if(r.magnetic){ctx.strokeStyle=progress>.65?'#e3be7d':'#d5d8bc';ctx.lineWidth=progress>.65?2:1;ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.quadraticCurveTo((origin.x+q.x)/2+8,(origin.y+q.y)/2+12*(1-progress),q.x,q.y);ctx.stroke();ctx.fillStyle='#bd704d';ctx.fillRect(q.x-4,q.y-4,8,7);}
   ctx.strokeStyle=r.uid?'#ffe3a3':'#bad9cc';ctx.beginPath();ctx.ellipse(q.x,q.y,12+Math.sin(time*4)*2,6,0,0,Math.PI*2);ctx.stroke();
-  if(r.uid){ctx.fillStyle='#e4e9c9';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.fillText(progress>.7?'引き上げ中':'手応えあり…',q.x,Math.max(20,q.y-14));ctx.fillStyle='#264d47';ctx.fillRect(90,307,180,5);ctx.fillStyle='#e4bf77';ctx.fillRect(90,307,180*progress,5);ctx.textAlign='left';}
+  if(r.uid&&!r.magnetic){ctx.strokeStyle='#cbbf94';ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(q.x,q.y);ctx.stroke();ctx.fillStyle='#c1c8bb';ctx.fillRect(q.x-3,q.y-3,6,6);}
+  if(r.uid){const f=p.items.find(f=>f.uid===r.uid),weight=f?.weight??0;ctx.fillStyle='#e3eee0';ctx.font='9px sans-serif';ctx.textAlign='left';ctx.fillText((tool(r.tool)?.name??'素手')+' / '+(weight>8?'強い抵抗':weight>2?'重みあり':'軽い手応え'),15,31);ctx.fillStyle='#e4e9c9';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.fillText(progress>.85?'水面付近':progress>.1?'水中から移動中':'引き上げ開始',q.x,Math.max(20,q.y-14));ctx.fillStyle='#264d47';ctx.fillRect(90,307,180,5);ctx.fillStyle='#e4bf77';ctx.fillRect(90,307,180*progress,5);ctx.textAlign='left';}
  }
  ctx.fillStyle='#e3eee0';ctx.font='8px sans-serif';ctx.fillText('RIVER / 水面の下を探ろう',13,18);
 }

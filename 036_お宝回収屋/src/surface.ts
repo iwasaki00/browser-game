@@ -1,7 +1,7 @@
 import {LAYERS,layerAt} from './digging';
 import {plotDepthScale,BEACH_ADDED,detectorTool} from './beach-tools';
 import {exposure,MAX_DEPTH,type Plot} from './engine';
-import {CONFIG} from './data';
+import {CONFIG,treasure} from './data';
 export const VIEW={width:360,height:325};
 export function project(x:number,y:number){return {x:180+(x-180)*(.8+.2*y/280),y:48+.88*y};}
 export function unproject(x:number,y:number){const v=(y-48)/.88;return {x:180+(x-180)/(.8+.2*v/280),y:v};}
@@ -50,7 +50,7 @@ export function toolIcon(id:string){return `<svg xmlns="http://www.w3.org/2000/s
 export function toolCursor(id:string){return `url("data:image/svg+xml,${encodeURIComponent(toolIcon(id))}") 8 26, crosshair`;}
 export function visibleFinds(p:Plot){return p.items.filter(f=>f.state==='buried'&&exposure(p,f)>.1);}
 function polygon(ctx:CanvasRenderingContext2D,points:{x:number;y:number}[]){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();}
-export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,detector?:{x:number;y:number;signal:number},tutorialHint=false){
+export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,detector?:{x:number;y:number;signal:number},tutorialHint=false,mode:'full'|'light'|'off'='full'){
  ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,360,325);
  const sea=ctx.createLinearGradient(0,0,0,100);sea.addColorStop(0,'#77bbb5');sea.addColorStop(1,'#c8e0cf');ctx.fillStyle=sea;ctx.fillRect(0,0,360,325);
  ctx.strokeStyle='#e6efe0';ctx.lineWidth=2;for(let n=0;n<3;n++){ctx.beginPath();for(let x=0;x<=360;x+=4){const y=12+n*12+Math.sin(x/37+time*.4+n)*2;x?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}
@@ -65,9 +65,9 @@ export function renderSurface(ctx:CanvasRenderingContext2D,p:Plot,time:number,de
 
  if(tutorialHint){const q=project(50,150);ctx.strokeStyle='rgba(255,251,215,.55)';ctx.lineWidth=1;ctx.setLineDash([2,5]);ctx.beginPath();ctx.ellipse(q.x,q.y,29,18,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#7e6845';ctx.font='8px sans-serif';ctx.textAlign='left';ctx.fillText('この辺りを掘ってみよう',Math.max(8,q.x-20),q.y-25);}
  for(const f of visibleFinds(p)){
-  const ex=exposure(p,f),q=project(f.x,f.y);ctx.globalAlpha=Math.min(1,ex*1.6);ctx.shadowColor='#fff3a8';ctx.shadowBlur=ex>=CONFIG.exposure?12:0;ctx.fillStyle=ex>=CONFIG.exposure?'#ffed9b':'#9c8050';
+  const ex=exposure(p,f),q=project(f.x,f.y);ctx.globalAlpha=Math.min(1,ex*1.6);ctx.shadowColor='#fff3a8';const rarity=treasure(f.id).rarity;ctx.shadowBlur=ex>=CONFIG.exposure&&mode!=='off'?(mode==='light'?4:rarity==='J'?20:rarity==='SR'?16:12):0;ctx.fillStyle=ex>=CONFIG.exposure?({C:'#ffed9b',U:'#e4efbf',R:'#bfeadd',SR:'#f4c66a',J:'#ffe682'}[rarity]??'#ffed9b'):'#9c8050';
   polygon(ctx,[{x:q.x,y:q.y-6},{x:q.x+6,y:q.y},{x:q.x,y:q.y+6},{x:q.x-6,y:q.y}]);ctx.fill();ctx.shadowBlur=0;ctx.globalAlpha=1;
-  if(ex>=CONFIG.exposure){ctx.strokeStyle=`rgba(255,244,193,${.5+Math.sin(time*3)*.2})`;ctx.beginPath();ctx.ellipse(q.x,q.y,11+Math.sin(time*3),7,0,0,Math.PI*2);ctx.stroke();}
+  if(ex>=CONFIG.exposure){ctx.strokeStyle=`rgba(255,244,193,${.5+(mode==='full'?Math.sin(time*3):0)*.2})`;ctx.beginPath();ctx.ellipse(q.x,q.y,11+Math.sin(time*3),7,0,0,Math.PI*2);ctx.stroke();}
  }
  if(detector&&onSurface(detector)){
   const q=project(detector.x,detector.y);ctx.strokeStyle=`rgba(136,255,224,${.3+detector.signal*.7})`;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(q.x,q.y,20+detector.signal*13,12+detector.signal*8,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#1b665a';ctx.beginPath();ctx.arc(q.x,q.y,2,0,Math.PI*2);ctx.fill();

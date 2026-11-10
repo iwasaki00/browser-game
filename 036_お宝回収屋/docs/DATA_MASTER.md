@@ -1,3 +1,17 @@
+# Version 0.9.0 — GAME EXPERIENCE REFINEMENT
+
+道具126マスター/46使用可能、設備3種、300お宝、12エリア、6ラインを維持。ID・価格・FN報酬・生成確率の変更なし。新規追加は保存用の experience（version=1、guide、legacy、operations、events最大11、recentBook最大12）と settings.effects（full/light/off）。各イベントは順序、ゲーム秒、操作数、FN、所持道具、分野、累計回収数、掘削作業秒を保持。ログは外部送信しません。
+
+DEBUG LABのUX-01〜UX-20は開発専用。既存159シナリオに追加して179件、8タブを維持。
+
+---
+
+# Version 0.8.2 — RIVER & GOLD TOOL FEEL
+
+新規道具/宝/エリアなし。300宝・126道具・46使用可能道具・設備3種・価格/解放を維持。RiverSession.workSeconds、GoldWork.setup、GravelBatch.sluicePreparedを任意追加。通常個体ID・固定捕捉順位・厳密台帳は維持。
+
+---
+
 # Version 0.8.1 — 掘削モデル
 
 src/digging.tsに10層と9掘削道具の速度・材質適性・体力性能を分離。126道具ID、46使用可能道具、3設備、300お宝マスターと価格・報酬・J率は変更しない。StateへdigWorkSeconds/digBatchSerial、PlotへdigLayersSeenを任意項目で追加。旧保存の物理深度を維持。
