@@ -24,14 +24,14 @@ function convertPlot(p:Plot,tutorial:boolean):Plot {
 }
 function validateCore(r:State){
  if(!Array.isArray(r.explorationAreas)||!r.explorationAreas.length)throw Error('探索区画データが欠損または不正です');
- if(!Number.isFinite(r.currentFN)||r.currentFN<0||!Number.isFinite(r.totalEarnedFN)||r.totalEarnedFN<0)throw Error('所持FN・累計FNが欠損または不正です');
+ if(!Number.isFinite(r.currentFN)||r.currentFN<0||r.currentFN>Number.MAX_SAFE_INTEGER||!Number.isFinite(r.totalEarnedFN)||r.totalEarnedFN<0||r.totalEarnedFN>Number.MAX_SAFE_INTEGER)throw Error('所持FN・累計FNが欠損または不正です');
  if(!r.playerStats||!Number.isFinite(r.playerStats.stamina)||r.playerStats.stamina<0||!Array.isArray(r.playerStats.xp)||r.playerStats.xp.length!==4||r.playerStats.xp.some(n=>!Number.isFinite(n)||n<0))throw Error('身体能力データが欠損または不正です');
  if(!Array.isArray(r.ownedTools)||r.ownedTools.some(id=>typeof id!=='string'||!tool(id))||!r.discoveredTreasures||typeof r.discoveredTreasures!=='object'||Array.isArray(r.discoveredTreasures))throw Error('道具・図鑑データが欠損または不正です');
  for(const [id,d] of Object.entries(r.discoveredTreasures))if(!treasure(id)||!d||!Number.isSafeInteger(d.count)||d.count<0||!Number.isFinite(d.best)||d.best<0||!Array.isArray(d.locations)||!Array.isArray(d.tools))throw Error('図鑑実績が不正です');
  for(const name of ['sandBatches','retainedFinds','activeContracts','collectedTreasures','completedContracts','jackpotHistory','revenueHistory','purchases','equippedTools','quickSlots','unlockedTools'] as const)if(r[name]!==undefined&&!Array.isArray(r[name]))throw Error('保存配列が不正です：'+name);
  for(const name of ['saveSequence','saveRevision','saveVersion'] as const)if(r[name]!==undefined&&(!Number.isSafeInteger(r[name])||r[name]!<0))throw Error('保存管理番号が不正です');
  for(const name of ['playTime','digs','cells'] as const)if(r[name]!==undefined&&(!Number.isFinite(r[name])||r[name]<0))throw Error('作業実績が不正です');
- for(const p of r.explorationAreas??[])if(!p||!Array.isArray(p.items)||p.items.some(f=>!f||!['buried','batch','transit','stored','paid'].includes(f.state)||!Number.isFinite(f.quality)||f.quality<0))throw Error('個体の品質・回収状態が不正です');
+ for(const p of r.explorationAreas??[])if(!p||!Array.isArray(p.items)||p.items.some(f=>!f||!['buried','batch','transit','stored','paid'].includes(f.state)||!Number.isFinite(f.quality)||f.quality<0||f.quality>2))throw Error('個体の品質・回収状態が不正です');
 }
 export function migrate(raw:unknown):State {
  validateJSONTree(raw);if(!raw||typeof raw!=='object')throw Error('セーブ形式が不正です');const r=raw as State;validateCore(r);if(r.saveVersion>2)throw Error('新しいバージョンのセーブです');
@@ -49,7 +49,7 @@ export function migrate(raw:unknown):State {
  s.retainedFinds=[...(s.retainedFinds??[]),...plots.filter((_,i)=>i!==s.currentPlot).flatMap(p=>p.items).filter(f=>f.state==='stored'||f.state==='batch')];
  s.explorationAreas=[plots[s.currentPlot]];s.currentPlot=0;s.saveVersion=2;
  s.sandBatches=s.sandBatches.filter(b=>!b.processed);const ids=new Set([...s.explorationAreas[0].items,...s.retainedFinds].filter(f=>f.state!=='paid').map(f=>f.uid));s.activeContracts=s.activeContracts.filter(uid=>ids.has(uid));
- for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(f.initialQuality!==undefined&&(!Number.isFinite(f.initialQuality)||f.initialQuality<0))throw Error('品質データが不正です');}
+ for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(!Number.isFinite(f.quality)||f.quality<0||f.quality>2||f.initialQuality!==undefined&&(!Number.isFinite(f.initialQuality)||f.initialQuality<0||f.initialQuality>2))throw Error('品質データが不正です');}
  for(const p of s.explorationAreas)for(const m of p.surveyMarks??[])if(!Number.isFinite(m.x)||!Number.isFinite(m.y)||!Number.isFinite(m.strength)||m.strength<0||m.strength>1||!Array.isArray(m.targets))throw Error('探知データが不正です');
  const individualIds=new Set<string>();for(const f of [...s.explorationAreas[0].items,...s.retainedFinds]){if(!treasure(f.id)||typeof f.uid!=='string'||individualIds.has(f.uid))throw Error('お宝種類または個体IDが不正です');individualIds.add(f.uid);}
  for(const b of s.sandBatches)if(b.resistance!==undefined&&(!Number.isFinite(b.resistance)||b.resistance<1||b.resistance>10))throw Error('砂の環境係数が不正です');

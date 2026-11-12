@@ -1,3 +1,11 @@
+# Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
+
+確認した4問題を修正。安全なJSON検証、品質/砂参照、DOMエスケープ、設備停止理由を統一。ブラウザ全体の明示ズーム制約を除去。価格・報酬・出現率・コンテンツ数に変更なし。
+
+[監査と結果](FINAL_REPORT_0.9.2.md)
+
+---
+
 # Version 0.9.1 — STABILITY & FINAL POLISH
 
 確認した不具合7件を最小修正。保存確定後のバックアップ、必須値検証、復旧導線と確認付きJSON復元、Pointer所有者、LAB終了、320px保存警告。ゲーム性能・価格・報酬・出現率は変更なし。[品質監査](QUALITY_AUDIT_0.9.1.md)。

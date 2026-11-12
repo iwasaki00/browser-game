@@ -1,0 +1,8 @@
+{
+  "accepted": true,
+  "evaluationFinite": false,
+  "resaveAccepted": false,
+  "rewardFinite": true,
+  "balanceFinite": true,
+  "case": "quality=1e308"
+}

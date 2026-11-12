@@ -2,26 +2,36 @@
   {
     "name": "browser",
     "exitCode": 0,
-    "seconds": 57.087
+    "seconds": 54.339
   },
   {
     "name": "depth-browser",
     "exitCode": 0,
-    "seconds": 30.279
+    "seconds": 26.497
   },
   {
     "name": "reveal-browser",
     "exitCode": 0,
-    "seconds": 14.275
+    "seconds": 19.865
   },
   {
     "name": "river-browser",
     "exitCode": 0,
-    "seconds": 59.747
+    "seconds": 67.231
   },
   {
     "name": "gold-browser",
-    "exitCode": 1,
-    "seconds": 28.016
+    "exitCode": 0,
+    "seconds": 69.842
+  },
+  {
+    "name": "beach-browser",
+    "exitCode": 0,
+    "seconds": 46.402
+  },
+  {
+    "name": "field-browser",
+    "exitCode": 0,
+    "seconds": 69.712
   }
 ]

@@ -1,3 +1,11 @@
+# Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
+
+既存3分野/12エリア/300種/46道具/3設備/6ライン/Lv1〜3を維持。saveVersion2を継続。JSONは検証→プレビュー→確認→原子的主保存→バックアップ。異常データを拒否し、正常な旧保存を維持。
+
+[監査と結果](FINAL_REPORT_0.9.2.md)
+
+---
+
 # Version 0.9.1 — STABILITY & FINAL POLISH
 
 従来の3分野/12エリア/300種/46道具/6ラインを維持。既存の保存形式を再利用し、保存競合・異常データを保護。JSON復元は検証・確認後に実行し、設備停止から再開。主入力の開始/終了とLABのcleanupを統一。[保存](SAVE_SAFETY_REPORT.md) / [品質](QUALITY_AUDIT_0.9.1.md)。

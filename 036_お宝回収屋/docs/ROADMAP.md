@@ -1,3 +1,11 @@
+# Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
+
+0.9.2は公開前監査と確認済み4問題の修正を完了。次はiPhone実機受入、権利者/制作由来/ライセンス/公開範囲を確認。正式公開判定はCONDITIONAL。新システムは追加していません。
+
+[監査と結果](FINAL_REPORT_0.9.2.md)
+
+---
+
 # Version 0.9.1 — STABILITY & FINAL POLISH
 
 0.9.1：保存/入力/終了処理の品質監査と確認済み7件を修正。次版では実機Safari、人間の継続プレイ、権利/NOTICE/公開範囲を確認。設備は延長モデルでも未到達でしたが、固定戦略だけを理由に価格/報酬は変更しません。v1.0.0前の残作業は[公開前チェック](RELEASE_READINESS.md)。

@@ -1,0 +1,58 @@
+{
+  "version": "0.9.2",
+  "tests": 647,
+  "fail": 0,
+  "regressions": [
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "seconds": 54.339
+    },
+    {
+      "name": "depth-browser",
+      "exitCode": 0,
+      "seconds": 26.497
+    },
+    {
+      "name": "reveal-browser",
+      "exitCode": 0,
+      "seconds": 19.865
+    },
+    {
+      "name": "river-browser",
+      "exitCode": 0,
+      "seconds": 67.231
+    },
+    {
+      "name": "gold-browser",
+      "exitCode": 0,
+      "seconds": 69.842
+    },
+    {
+      "name": "beach-browser",
+      "exitCode": 0,
+      "seconds": 46.402
+    },
+    {
+      "name": "field-browser",
+      "exitCode": 0,
+      "seconds": 69.712
+    }
+  ],
+  "roundTrips": 12,
+  "deviceConfigurations": 10,
+  "treasures": 300,
+  "stressHours": 24,
+  "decision": "CONDITIONAL",
+  "severity": {
+    "Critical": 0,
+    "High": 2,
+    "Medium": 1,
+    "Low": 1
+  },
+  "fixed": 4,
+  "webKit": "not installed",
+  "iPhone": "user acceptance pending",
+  "rights": "owner confirmation pending",
+  "commitPushPublish": false
+}

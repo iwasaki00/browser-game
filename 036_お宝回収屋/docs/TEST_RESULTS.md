@@ -1,3 +1,11 @@
+# Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
+
+647件成功（旧631＋16）、ブラウザ回帰7/7、12状態保存、別contextJSON、破損11分類＋HTML UID、10端末構成、6ライン24ゲーム時間、300種、本番Chrome/Edgeが成功。WebKit未導入/実機Safari未確認。
+
+[監査と結果](FINAL_REPORT_0.9.2.md)
+
+---
+
 # Version 0.9.1 — STABILITY & FINAL POLISH
 
 631件成功（既存617＋14）、既存7ブラウザ回帰、Chrome320/390/1280・Edge390の保存/入力、公開版Chrome/Edge、9状態復元、400モデル、6ライン24ゲーム時間、300種監査、実メモリ/CPU計測。WebKit/実機Safari未確認。[結果](FINAL_REPORT_0.9.1.md) / [性能](PERFORMANCE_REPORT_0.9.1.md)。

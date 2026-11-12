@@ -9,3 +9,6 @@ test('AUDIT 深いJSONは安全に拒否',()=>{const s:any=createState(92);let c
 test('AUDIT 空ファイル・欠損・未来形式・重複個体・巨大JSON',()=>{const duplicate=createState(92);plot(duplicate).items[1].uid=plot(duplicate).items[0].uid;for(const input of ['', '{', '{}', JSON.stringify({...createState(92),saveVersion:999}),JSON.stringify(duplicate),' '.repeat(MAX_BACKUP_BYTES+1)])assert.throws(()=>parseBackup(input));});
 test('AUDIT 砂利・6ラインのバックアップは全状態を保持',()=>{for(const s of [goldFeelMaterial(92,40),sixLineFixture(92,6)]){const before=structuredClone(s),copy=parseBackup(backupJSON(s));assert.deepEqual(s,before);assert.deepEqual(copy,migrate(before));assert.deepEqual(migrate(copy),copy);}});
 test('AUDIT 矛盾する設備予約を拒否',()=>{const s=sixLineFixture(92,4);s.automation!.jobs[0].source='missing';assert.throws(()=>parseBackup(JSON.stringify(s)),/予約|材料/);});
+
+test('AUDIT 評価値がオーバーフローする品質を拒否',()=>{for(const field of ['quality','initialQuality'])for(const retained of [false,true]){const s=createState(92),f=plot(s).items[0];f[field as 'quality'|'initialQuality']=1e308;if(retained){plot(s).items.shift();s.retainedFinds.push(f);}assert.throws(()=>parseBackup(JSON.stringify(s)),/品質/);}});
+test('AUDIT FNの安全な数値範囲を検証',()=>{for(const field of ['currentFN','totalEarnedFN'])assert.throws(()=>migrate({...createState(92),[field]:Number.MAX_VALUE}),/FN/);});

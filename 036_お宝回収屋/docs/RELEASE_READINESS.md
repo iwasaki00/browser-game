@@ -1,34 +1,30 @@
-# Version 0.9.1 — STABILITY & FINAL POLISH
+# Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
 
-## v1.0.0前のチェックリスト
+**判定：CONDITIONAL**。確認済み未修正のCritical/Highなし。実機と権利等の必須未確認が残るためREADYではありません。
 
-| 区分 | 項目 | 状態 | 根拠/残作業 |
-|---|---|---|---|
-| A 機能 | 3分野・12エリア・300種・10層600・46道具/126マスター・6ライン/Lv1-3 | PASS | 631件/7回帰/300種監査/本番操作 |
-| B データ | 保存・復元・旧データ移行・厳密な二重報酬防止 | PASS | 9状態の復元と破損/例外/競合試験 |
-| B データ | 材料重複・設備個体・中間在庫 | PASS | 既存整合性試験、6ライン24ゲーム時間 |
-| B データ | JSON退避・検証・確認付き復元・失敗時保護 | PASS | 開発版/公開版Chrome・Edge |
-| C 操作 | PCマウス・Pointer/Touch自動入力 | PASS | 右クリック/主指/他指終了/キャンセル/7回帰 |
-| C 操作 | 320/390px・モーダル・内部スクロール | PASS | Chrome320/390/1280、Edge390 |
-| C 操作 | iPhone Safari実機 | 未確認 | 機種/iOS/ノッチ/IME/タッチ/復帰を実機記入待ち |
-| C 操作 | WebKit自動試験 | 未確認 | ランタイム未インストール |
-| C 操作 | 人間の面白さ・長時間操作 | 未確認 | 自動入力の成功を主観評価に置き換えない |
-| D 公開品質 | 通常操作のコンソール/未処理例外 | PASS | Chrome・Edgeで0件。障害注入は意図的に行いUIで処理 |
-| D 公開品質 | TypeScript・本番ビルド・DEBUG LAB除外 | PASS | 本番API/隠し入口無効、静的マーカーも除外 |
-| D 公開品質 | distの不要ファイル | PASS | index.htmlとJS/CSSのみ、テスト/ログ/Workerなし |
-| D 公開品質 | 外部実行時依存 | PASS | 外部API/クラウド保存なし、システムフォントと同梱コード |
-| D 公開品質 | 既知形式の機密情報スキャン | PASS | dist内の秘密鍵/AWSキー/GitHubトークン3形式で一致なし |
-| D 公開品質 | 全体の機密情報・公開範囲の最終確認 | 未確認 | 正規表現で判定できない情報を含め公開責任者が確認 |
-| D 公開品質 | 依存パッケージのライセンス宣言 | PASS | ローカルpackage.jsonのMIT/Apache-2.0を確認 |
-| D 公開品質 | 権利・採用ライセンス・必要NOTICE表記 | 未確認 | リポジトリ全体の許諾/配布表記の最終確認が必要 |
-| D 公開品質 | 外部送信・課金・オフライン収益 | 対象外 | 今回も実装していない |
-| D 公開品質 | commit・push・公開 | 対象外 | 今回の依頼範囲外。公開操作は未実施 |
+| 項目 | 状態 | 根拠・残作業 |
+|---|---|---|
+| 既存631＋追加16単体テスト | PASS | 647/647。異常品質/砂参照/危険キーを含む |
+| ブラウザ回帰7系統 | PASS | 7/7。再試行履歴はFINAL_AUDIT参照 |
+| 12状態保存/旧移行/報酬台帳 | PASS | stability-browser / 既存単体 |
+| JSON確認/別context復元/失敗保護 | PASS | device-acceptance / import-acceptance |
+| 複数タブ/二重処理抑止 | PASS | save-phase0 / CAS / 24h |
+| Chrome/Edgeの本番操作 | PASS | production-results |
+| 320/375/390/430px/短画面 | PASS | device-acceptance |
+| 主指/副指/中断/復旧UI | PASS | stability-browser |
+| 6ライン24ゲーム時間 | PASS | 1002大量・連続4332品、履歴200 |
+| 300種/12エリア/46道具/126マスター | PASS | treasure-audit |
+| TypeScript/本番build/DEBUG除外 | PASS | 52modules・本番Chrome/Edge |
+| パターン検査：036ソース/配布物 | PASS | 確認した形式の機密候補なし。完全保証ではない |
+| npm auditと依存宣言 | PASS | 0件、インストール宣言と推移一覧 |
+| Vite由来コードのMIT表記同梱 | PASS | THIRD_PARTY_NOTICES.txt |
+| WebKit自動試験 | 未確認 | 実行ファイル未導入 |
+| iPhone Safari実機/Files/ノッチ/IME | 未確認 | ユーザー受入表 |
+| 制作由来/コード・データの全体配布許諾 | 未確認 | 所有者確認/採用LICENSE未決定 |
+| 任意形式の個人情報/公開範囲の最終確認 | 未確認 | パターン検査外の人手レビュー |
+| 他ゲームFirebase設定の管理状態 | 未確認 | 036のdist外。リポジトリ全体公開時に確認 |
+| 人間による長時間の操作感/面白さ | 未確認 | モデル/自動入力で代替しない |
+| 完全自動探索/課金/オフライン収益 | 対象外 | 今回追加なし |
+| commit/push/公開 | 対象外 | 指示どおり未実施 |
 
-## 公開前に残る作業
-
-- 実機iPhone Safariのチェック表を記入し、機種/iOS/設定を記録。
-- 人間の操作/継続性/設備までの距離を評価。モデルだけで価格を変えない。
-- コード/素材/データの権利・ライセンス・NOTICE、公開範囲を最終確認。
-- 配布する最終成果物で再確認し、公開は別の明示的な指示で行う。
-
-[品質監査](QUALITY_AUDIT_0.9.1.md) / [iPhone手順](IPHONE_SAFARI_TEST.md) / [公開成果物スキャン](release-scan-v091.json)。未確認項目をPASSにしていません。
+[判断](RELEASE_DECISION_0.9.2.md) / [総合監査](FINAL_AUDIT_0.9.2.md) / [実機表](IPHONE_ACCEPTANCE_CHECKLIST.md)

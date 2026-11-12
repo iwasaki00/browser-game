@@ -1,0 +1,52 @@
+{
+  "version": "0.9.2",
+  "severity": {
+    "Critical": 0,
+    "High": 2,
+    "Medium": 1,
+    "Low": 1
+  },
+  "issues": [
+    {
+      "id": "A01",
+      "severity": "High",
+      "problem": "インポート個体IDからDOM実行",
+      "repro": "HTML属性を含むUIDを持つ砂利JSONを受理し、選別台を開くとimg/onerrorが実行。",
+      "cause": "河原のUID/砂利袋IDと設備個体IDをHTML属性へ無エスケープで挿入。危険キーの事前拒否もない。",
+      "fix": "clone前の危険キー・識別子・入れ子検証。河原と設備の属性をエスケープ。",
+      "test": "acceptance.test.ts + acceptance-import.mjs。インポート拒否と検証を迂回した直接描画でも不活性。",
+      "evidence": "import-dom-repro-before-v092.json / acceptance-repro-before-v092.json / import-acceptance-v092.json"
+    },
+    {
+      "id": "A02",
+      "severity": "Medium",
+      "problem": "砂在庫の参照矛盾を受理",
+      "repro": "同じ砂バッチID、存在しない個体、二つの袋に同じ個体を設定。",
+      "cause": "砂の量の検証はあったが、バッチIDと内容物の所有関係を検証していない。",
+      "fix": "バッチID/個体の一意性、batch状態、配分量、残渣参照を検証。内容物の再抽選なし。",
+      "test": "acceptance.test.ts + invalid sand/queue browser cases。正常な砂利・6ラインも完全一致。",
+      "evidence": "acceptance-repro-before-v092.json / import-acceptance-v092.json"
+    },
+    {
+      "id": "A03",
+      "severity": "High",
+      "problem": "異常品質の洗浄後に保存不能",
+      "repro": "quality/initialQuality=1e308を受理。報酬FNは固定額のままだが、評価と図鑑bestがInfinityとなり、次回migrateは拒否。",
+      "cause": "有限・非負だけで品質を検証し、評価計算の有効範囲を限定していない。",
+      "fix": "通常生成とLABの上限を確認して品質0〜2、初期品質0〜2を検証。保管個体も同じ検証。FNは0〜MAX_SAFE_INTEGER。",
+      "test": "acceptance.test.ts + qualityOverflow import case。元の主保存・バックアップ不変。",
+      "evidence": "numeric-repro-before-v092.json / import-acceptance-v092.json"
+    },
+    {
+      "id": "A04",
+      "severity": "Low",
+      "problem": "JSONとIDBで設備の停止理由が不一致",
+      "repro": "6ラインをJSON round-tripすると、共有参照のあるIDB snapshotとは設備reasonだけ異なる。",
+      "cause": "machinesの停止理由を更新後、instancesの別オブジェクトへ参照を付け替える。",
+      "fix": "validateFacilitiesで全設備個体の停止理由を共通正規化。数量・進捗・FNは変更なし。",
+      "test": "砂利/6ラインのJSON全状態一致と移行反復一致、12状態の保存試験。",
+      "evidence": "json-facility-repro-before-v092.json / stability-browser-v092.json"
+    }
+  ],
+  "unresolvedConfirmed": 0
+}

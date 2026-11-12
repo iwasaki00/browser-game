@@ -6,6 +6,7 @@
     "missing",
     "future",
     "range",
+    "qualityOverflow",
     "duplicate",
     "unsafeKey",
     "sandConflict",
