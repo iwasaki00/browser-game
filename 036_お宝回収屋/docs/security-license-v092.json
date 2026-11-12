@@ -1,0 +1,187 @@
+{
+  "version": "0.9.2",
+  "date": "2026-11-12",
+  "trackedCount": 4825,
+  "scannedText": 1940,
+  "scope": "Git tracked repository files + current production dist; binary assets excluded from text scanning",
+  "skipped": [],
+  "credentialCandidates": [
+    {
+      "path": "012_paint-battle/app.js",
+      "line": 5,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "012_paint-battle/app.js",
+      "line": 5,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "017_naval-battle/main.js",
+      "line": 4,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "017_naval-battle/main.js",
+      "line": 4,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "020_gps-detective-chase/js/firebase-config.js",
+      "line": 2,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "020_gps-detective-chase/js/firebase-config.js",
+      "line": 2,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "_cmn_firebase/firebase-config.js",
+      "line": 2,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "_cmn_firebase/firebase-config.js",
+      "line": 2,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    }
+  ],
+  "packages": [
+    {
+      "name": "playwright",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "purpose": "browser tests",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "playwright-core",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "purpose": "browser driver",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "license": "Apache-2.0",
+      "purpose": "type checking",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.txt"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "tsx",
+      "version": "4.23.15",
+      "license": "MIT",
+      "purpose": "TypeScript tests",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "vite",
+      "version": "7.3.7",
+      "license": "MIT",
+      "purpose": "dev server/build",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "esbuild",
+      "version": "0.28.2",
+      "license": "MIT",
+      "purpose": "build transformation",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "rollup",
+      "version": "4.67.2",
+      "license": "MIT",
+      "purpose": "production bundling",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    }
+  ],
+  "npmAudit": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {},
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 1,
+        "dev": 69,
+        "optional": 54,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 69
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": "dist\\assets\\index-Didvjovp.css",
+      "bytes": 25609
+    },
+    {
+      "path": "dist\\assets\\index-jDt7NI_8.js",
+      "bytes": 401481
+    },
+    {
+      "path": "dist\\index.html",
+      "bytes": 602
+    }
+  ],
+  "communicationSignatures": [
+    {
+      "path": "src\\main.ts",
+      "signature": "AudioContext"
+    }
+  ],
+  "assets": [],
+  "limitations": [
+    "Pattern scanning is not proof that arbitrary personal information or secrets are absent.",
+    "Ownership/provenance and overall project distribution license require owner confirmation.",
+    "No repository history or untracked unrelated local configuration was scanned."
+  ]
+}

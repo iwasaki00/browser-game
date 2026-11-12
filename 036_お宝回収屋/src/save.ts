@@ -1,3 +1,4 @@
+import {validateJSONTree,validateSandReferences} from './save-validation';
 import {validateExperience} from './experience';
 import {validateFacilities} from './facilities';
 import {treasure,tool} from './data';
@@ -33,7 +34,7 @@ function validateCore(r:State){
  for(const p of r.explorationAreas??[])if(!p||!Array.isArray(p.items)||p.items.some(f=>!f||!['buried','batch','transit','stored','paid'].includes(f.state)||!Number.isFinite(f.quality)||f.quality<0))throw Error('個体の品質・回収状態が不正です');
 }
 export function migrate(raw:unknown):State {
- if(!raw||typeof raw!=='object')throw Error('セーブ形式が不正です');const r=raw as State;validateCore(r);if(r.saveVersion>2)throw Error('新しいバージョンのセーブです');
+ validateJSONTree(raw);if(!raw||typeof raw!=='object')throw Error('セーブ形式が不正です');const r=raw as State;validateCore(r);if(r.saveVersion>2)throw Error('新しいバージョンのセーブです');
  const defaults=createState(),s={...defaults,...structuredClone(r),settings:{...defaults.settings,...r.settings}};
  if(!Array.isArray(s.explorationAreas)||!s.explorationAreas.length||!Number.isFinite(s.currentFN)||s.currentFN<0||!Number.isInteger(s.currentPlot)||s.currentPlot<0||s.currentPlot>=s.explorationAreas.length)throw Error('セーブが破損しています');
  if(s.explorationAreas.some(p=>!Array.isArray(p?.mask)||p.mask.length!==1008||p.mask.some(n=>!Number.isFinite(n)||n<0||n>1)))throw Error('地形データが不正です');
@@ -60,7 +61,7 @@ export function migrate(raw:unknown):State {
  // Optional fields are initialized lazily: v2 depth, inventories and old quality remain unchanged.
  if(s.world){if(s.world.version!==1||!Array.isArray(s.world.unlocked)||s.world.unlocked.some(id=>!environments[id])||Object.keys(s.world.visits).some(id=>!environments[id])||Object.values(s.world.visits).some(n=>!Number.isSafeInteger(n)||n<0))throw Error('探索進捗が不正です');s.world.milestones=collectionMilestones(s);}
  for(const p of s.explorationAreas)if(p.environment&&(Object.values(p.environment).some(n=>!Number.isFinite(n)||n<0)||p.environment.current<=0||p.environment.hardness<=0||p.environment.volume<=0))throw Error('環境条件が不正です');
- if(s.digWorkSeconds!==undefined&&(!Number.isFinite(s.digWorkSeconds)||s.digWorkSeconds<0)||s.digBatchSerial!==undefined&&(!Number.isSafeInteger(s.digBatchSerial)||s.digBatchSerial<0))throw Error('掘削時間の保存が不正です');for(const p of s.explorationAreas)if(p.digLayersSeen&&(!Array.isArray(p.digLayersSeen)||p.digLayersSeen.some(n=>!Number.isInteger(n)||n<1||n>10)))throw Error('地層到達記録が不正です');validateExperience(s,r.experience===undefined);compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateFacilities(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
+ if(s.digWorkSeconds!==undefined&&(!Number.isFinite(s.digWorkSeconds)||s.digWorkSeconds<0)||s.digBatchSerial!==undefined&&(!Number.isSafeInteger(s.digBatchSerial)||s.digBatchSerial<0))throw Error('掘削時間の保存が不正です');for(const p of s.explorationAreas)if(p.digLayersSeen&&(!Array.isArray(p.digLayersSeen)||p.digLayersSeen.some(n=>!Number.isInteger(n)||n<1||n>10)))throw Error('地層到達記録が不正です');validateSandReferences(s);validateExperience(s,r.experience===undefined);compactHistory(s);validateLedger(s);validateGold(s);restoreAutomation(s);validateFacilities(s);validateLines(s);migrateEquipment(s);refresh(s);return s;
 }
 const revisions=new Map<string,number>(),sequences=new Map<string,number>(),blocked=new Set<string>(),notices=new Map<string,string>();
 let saveAllowed=()=>true,sessionOwner:string|undefined;

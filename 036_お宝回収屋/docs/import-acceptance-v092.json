@@ -1,0 +1,20 @@
+{
+  "version": "0.9.2",
+  "invalidCases": [
+    "empty",
+    "syntax",
+    "missing",
+    "future",
+    "range",
+    "duplicate",
+    "unsafeKey",
+    "sandConflict",
+    "queueConflict",
+    "oversize"
+  ],
+  "maliciousUIDRejected": true,
+  "directRenderInert": true,
+  "failedRestoreProtected": true,
+  "originalUnchanged": true,
+  "errors": []
+}

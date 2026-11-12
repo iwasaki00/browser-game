@@ -1,0 +1,8 @@
+{
+  "source": "new full-state round-trip assertion",
+  "reproduced": true,
+  "fields": "automation.instances[*].reason",
+  "json": "材料を投入して開始",
+  "structuredClone": "保存した進捗から再開できます。閉じていた時間は処理しません",
+  "note": "FN/材料/進捗に差なし。JSONの複製とIDBの共有参照で再開理由だけ不一致。"
+}

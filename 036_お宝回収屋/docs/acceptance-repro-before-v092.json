@@ -1,0 +1,22 @@
+[
+  {
+    "name": "unsafeKey",
+    "accepted": true
+  },
+  {
+    "name": "duplicateSand",
+    "accepted": true
+  },
+  {
+    "name": "orphanSand",
+    "accepted": true
+  },
+  {
+    "name": "htmlGrainUID",
+    "accepted": true
+  },
+  {
+    "name": "htmlBatchID",
+    "accepted": true
+  }
+]
