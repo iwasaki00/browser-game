@@ -1,0 +1,123 @@
+{
+  "version": "1.0.0-rc.1",
+  "hashesMatch": true,
+  "base": "./",
+  "rows": [
+    {
+      "channel": "chrome",
+      "kind": "vite-preview",
+      "urlPath": "/",
+      "requests": [
+        "/",
+        "/assets/index-CkDx-hAs.js",
+        "/assets/index-Didvjovp.css"
+      ],
+      "responses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-Didvjovp.css",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-CkDx-hAs.js",
+          "status": 200
+        }
+      ],
+      "notice": true,
+      "backupExport": true,
+      "devAPI": "absent",
+      "hiddenEntry": "disabled",
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "kind": "pages-subdirectory",
+      "urlPath": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+      "requests": [
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-CkDx-hAs.js",
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-Didvjovp.css"
+      ],
+      "responses": [
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+          "status": 200
+        },
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-Didvjovp.css",
+          "status": 200
+        },
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-CkDx-hAs.js",
+          "status": 200
+        }
+      ],
+      "notice": true,
+      "backupExport": true,
+      "devAPI": "absent",
+      "hiddenEntry": "disabled",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "kind": "vite-preview",
+      "urlPath": "/",
+      "requests": [
+        "/",
+        "/assets/index-CkDx-hAs.js",
+        "/assets/index-Didvjovp.css"
+      ],
+      "responses": [
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-Didvjovp.css",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-CkDx-hAs.js",
+          "status": 200
+        }
+      ],
+      "notice": true,
+      "backupExport": true,
+      "devAPI": "absent",
+      "hiddenEntry": "disabled",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "kind": "pages-subdirectory",
+      "urlPath": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+      "requests": [
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-CkDx-hAs.js",
+        "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-Didvjovp.css"
+      ],
+      "responses": [
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/",
+          "status": 200
+        },
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-Didvjovp.css",
+          "status": 200
+        },
+        {
+          "path": "/browser-game/036_%E3%81%8A%E5%AE%9D%E5%9B%9E%E5%8F%8E%E5%B1%8B/assets/index-CkDx-hAs.js",
+          "status": 200
+        }
+      ],
+      "notice": true,
+      "backupExport": true,
+      "devAPI": "absent",
+      "hiddenEntry": "disabled",
+      "errors": []
+    }
+  ]
+}

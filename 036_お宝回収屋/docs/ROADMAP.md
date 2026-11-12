@@ -1,3 +1,11 @@
+# Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
+
+RC作成・ローカル検証完了。正式版への移行は素材/コード/データの許諾と公開範囲の確認後に再判定。iPhoneユーザー受入待ちは解消。新機能追加は今回の対象外。
+
+[最終受入](FINAL_ACCEPTANCE_1.0.0.md) / [公開判断](RELEASE_DECISION_1.0.0.md)
+
+---
+
 # Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
 
 0.9.2は公開前監査と確認済み4問題の修正を完了。次はiPhone実機受入、権利者/制作由来/ライセンス/公開範囲を確認。正式公開判定はCONDITIONAL。新システムは追加していません。

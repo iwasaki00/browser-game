@@ -1,0 +1,37 @@
+[
+  {
+    "name": "import",
+    "exitCode": 0,
+    "seconds": 1.952
+  },
+  {
+    "name": "stability",
+    "exitCode": 0,
+    "seconds": 90.047
+  },
+  {
+    "name": "save",
+    "exitCode": 0,
+    "seconds": 2.933
+  },
+  {
+    "name": "advanced",
+    "exitCode": 0,
+    "seconds": 24.866
+  },
+  {
+    "name": "device",
+    "exitCode": 0,
+    "seconds": 27.308
+  },
+  {
+    "name": "production",
+    "exitCode": 0,
+    "seconds": 131.033
+  },
+  {
+    "name": "performance",
+    "exitCode": 0,
+    "seconds": 44.159
+  }
+]

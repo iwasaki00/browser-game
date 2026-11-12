@@ -1,3 +1,11 @@
+# Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
+
+既存3分野/12エリア/300種/46道具/3設備/6ライン/Lv1–3/4枠を維持。新規区画は10層600、旧区画の深度は互換維持。今回ゲーム処理変更なし。
+
+[最終受入](FINAL_ACCEPTANCE_1.0.0.md) / [公開判断](RELEASE_DECISION_1.0.0.md)
+
+---
+
 # Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
 
 既存3分野/12エリア/300種/46道具/3設備/6ライン/Lv1〜3を維持。saveVersion2を継続。JSONは検証→プレビュー→確認→原子的主保存→バックアップ。異常データを拒否し、正常な旧保存を維持。

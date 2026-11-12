@@ -1,6 +1,6 @@
 {
   "name": "the-finders",
-  "version": "0.9.2",
+  "version": "1.0.0-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -52,7 +52,14 @@
     "test:acceptance-device": "node scripts/acceptance-device.mjs",
     "test:acceptance-import": "node scripts/acceptance-import.mjs",
     "test:acceptance-regression": "node scripts/acceptance-regression.mjs",
-    "audit:release": "node scripts/acceptance-security.mjs"
+    "audit:release": "node scripts/acceptance-security.mjs",
+    "test:rc": "node scripts/rc-test.mjs regression",
+    "test:rc-save": "node scripts/rc-test.mjs stability",
+    "test:rc-device": "node scripts/rc-test.mjs device",
+    "test:rc-production": "node scripts/rc-test.mjs production",
+    "test:rc-preview": "node scripts/rc-preview.mjs",
+    "test:rc-stress": "node scripts/rc-test.mjs stress",
+    "audit:rc-build": "tsc --noEmit && node scripts/rc-build.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

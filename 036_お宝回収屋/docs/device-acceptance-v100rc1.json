@@ -1,0 +1,3038 @@
+{
+  "version": "1.0.0-rc.1",
+  "devices": [
+    {
+      "channel": "chrome",
+      "width": 320,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 101.28125,
+            "bottom": 147.28125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 320,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 320
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 532,
+        "clientHeight": 532
+      },
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 375,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 375,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 375
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 390,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 390,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 390
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 430,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 430,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 430
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 1280,
+      "height": 900,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 140.4375,
+            "bottom": 186.4375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 779.171875
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 371.609375,
+            "bottom": 417.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 548
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 1280,
+          "scrollWidth": 568,
+          "scrollHeight": 1280,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 1280
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 434,
+        "clientHeight": 434
+      },
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 320,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 101.28125,
+            "bottom": 147.28125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 320,
+          "height": 568,
+          "scrollWidth": 320,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 298
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 60,
+              "scrollWidth": 60
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            },
+            {
+              "text": "＋未装備",
+              "width": 62,
+              "scrollWidth": 62
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 320,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 320
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 532,
+        "clientHeight": 532
+      },
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 375,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 375,
+          "height": 568,
+          "scrollWidth": 375,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 353
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 74,
+              "scrollWidth": 74
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            },
+            {
+              "text": "＋未装備",
+              "width": 76,
+              "scrollWidth": 76
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 375,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 375
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 390,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 390,
+          "height": 568,
+          "scrollWidth": 390,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 368
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 78,
+              "scrollWidth": 78
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            },
+            {
+              "text": "＋未装備",
+              "width": 80,
+              "scrollWidth": 80
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 390,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 390
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 430,
+      "height": 568,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 430,
+          "height": 568,
+          "scrollWidth": 430,
+          "scrollHeight": 568,
+          "close": {
+            "top": 87.78125,
+            "bottom": 133.78125,
+            "right": 408
+          },
+          "main": {
+            "height": 568
+          },
+          "sheet": {
+            "height": 499.828125
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 88,
+              "scrollWidth": 88
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            },
+            {
+              "text": "＋未装備",
+              "width": 90,
+              "scrollWidth": 90
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 430,
+          "scrollWidth": 568,
+          "scrollHeight": 558,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 430
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 491,
+        "clientHeight": 491
+      },
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 1280,
+      "height": 900,
+      "screens": [
+        {
+          "name": "explore",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "equipment",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 140.4375,
+            "bottom": 186.4375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 779.171875
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "shop",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "collection",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "automation",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 127.609375,
+            "bottom": 173.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 792
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "backup",
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "close": {
+            "top": 371.609375,
+            "bottom": 417.609375,
+            "right": 943
+          },
+          "main": {
+            "height": 900
+          },
+          "sheet": {
+            "height": 548
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 134,
+              "scrollWidth": 134
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            },
+            {
+              "text": "＋未装備",
+              "width": 136,
+              "scrollWidth": 136
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        },
+        {
+          "name": "landscape",
+          "width": 568,
+          "height": 1280,
+          "scrollWidth": 568,
+          "scrollHeight": 1280,
+          "close": {
+            "top": 0,
+            "bottom": 0,
+            "right": 0
+          },
+          "main": {
+            "height": 1280
+          },
+          "sheet": {
+            "height": 0
+          },
+          "controls": [
+            {
+              "text": "素手",
+              "width": 122,
+              "scrollWidth": 122
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            },
+            {
+              "text": "＋未装備",
+              "width": 124,
+              "scrollWidth": 124
+            }
+          ],
+          "viewport": "width=device-width,initial-scale=1,viewport-fit=cover"
+        }
+      ],
+      "scroll": {
+        "scrollTop": 0,
+        "scrollHeight": 434,
+        "clientHeight": 434
+      },
+      "errors": []
+    }
+  ],
+  "performance": [
+    {
+      "channel": "chrome",
+      "width": 390,
+      "raf": {
+        "samples": 180,
+        "fps": 59.95004163197333,
+        "frameMedian": 16.699999999999818,
+        "frameP95": 16.90000000000009
+      },
+      "shopClickToVisibleMs": [
+        69.53119999999944,
+        118.8015000000014,
+        160.70119999999952,
+        70.54050000000097,
+        131.91580000000067,
+        112.04500000000007,
+        181.08150000000023,
+        119.78070000000116,
+        73.08499999999913,
+        95.34879999999976
+      ],
+      "note": "headless Chrome rAF cadence. Not display hardware FPS. Click to visible includes Playwright transport and actionability."
+    }
+  ],
+  "unavailable": [
+    {
+      "engine": "webkit",
+      "reason": "Playwright WebKit executable not installed (webkit-2370)"
+    }
+  ],
+  "errors": [],
+  "crossContextBackup": true
+}

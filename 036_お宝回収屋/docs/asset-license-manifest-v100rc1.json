@@ -1,0 +1,895 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-11-13",
+  "initialObservedGit": "0811997",
+  "initialWorktree": "clean (git status --short returned no entries)",
+  "runtimeDependencyModules": [
+    {
+      "id": "vite:modulepreload-polyfill",
+      "renderedLength": 1168
+    }
+  ],
+  "rasterImages": [],
+  "audioFiles": [],
+  "fontFiles": [],
+  "plannedImages": {
+    "count": 300,
+    "present": 0,
+    "evidence": "docs/TREASURE_ASSET_MANIFEST.csv; implemented=false, actual glob empty"
+  },
+  "systemFonts": {
+    "families": [
+      "Yu Gothic",
+      "Meiryo",
+      "system-ui",
+      "sans-serif",
+      "Georgia",
+      "serif"
+    ],
+    "embedded": false,
+    "redistribution": "フォントファイルの同梱なし"
+  },
+  "iPhoneAcceptance": {
+    "acceptor": "ユーザー",
+    "targetVersion": "0.9.2",
+    "result": "OKとの申告",
+    "details": "詳細な測定値・ログ・機種・iOSは未提供",
+    "codexDirectDeviceTest": "未実施",
+    "source": "今回の添付仕様 Phase 5",
+    "recorded": "2026-11-13"
+  },
+  "noticeComplete": true,
+  "materials": [
+    {
+      "file": "src/treasure-expansion.json",
+      "usedInDistribution": true,
+      "usage": "ゲームマスターデータ",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "b8a47a5a|2026-11-03|VS",
+        "sha256": "7a322c4ce66c4a5533a894af947a685b22d7cbf133841a9a4d078f720b8f730d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/world-rules.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "b8a47a5a|2026-11-03|VS",
+        "sha256": "0c8e2cdf601357ef02ba02568c60170ac21f801f0ab5d8ddf652570d3933c39e"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/field-tools.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "678b493b|2026-11-02|aaa",
+        "sha256": "83b745a45bcd4312298ecb539f1e895092b44f9b386b9755a4da596851404316"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/digging.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "cba74e58|2026-11-09|aaa",
+        "sha256": "6a2167e4f042cbb31f5d1605d5b76fcb9b483fd607a4fadcac513453fac1e547"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/ledger.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "adfdc6ea|2026-11-02|aaa",
+        "sha256": "73ed88cccf17a8cf3ee4e10bb8eb280e10469f1911de28337d68f1d75b1c413d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/beach-tools.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "014370c4|2026-11-02|aaa",
+        "sha256": "299ba76ce21e1d0d5d540165b7259b4934e16703f740f4f33c776c07666f34e3"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/master-source.json",
+      "usedInDistribution": true,
+      "usage": "ゲームマスターデータ",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "d8a8eec05d2a55c9c4b8c428bcbc581da5081a076699643f5f4608c195eaead8"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/data.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "4ad40010a2515c59ada4478f9f09dde17b4d71844116bc0ff9ddd4c351eed14d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/save-validation.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "生成AIで制作",
+      "observation": "同一会話のCodex実装記録で新規作成（v0.9.2）。生成AI由来だけで第三者権利や全体の配布許諾を確定しない。",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "87041c01|2026-11-12|aaa",
+        "sha256": "d445c6b14754b9205582bbf5d0b7596ec719f11dc4487ceafe8fc6550a405af0",
+        "conversation": "本会話の該当Version実装記録"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/experience.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "13cc613e|2026-11-10|aaa",
+        "sha256": "ddf75736c18b9d89f8daafda805688699c17cbf6de2fae18e7b32d1f59f2750d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/tool-value.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "dfad8500|2026-11-01|aaa",
+        "sha256": "76c8c7462e77f3c1b71936973fda9ee0aafd7f8fdf888e8d80168bbe0e6fae27"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/events.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "a2c93607|2026-11-01|aaa",
+        "sha256": "3c3dc2b9fa29b9c0f7ae818ac79d2bb65f6ea47f7cc9081de0e0d769b028327a"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/measure.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "441b5fa4|2026-11-01|aaa",
+        "sha256": "7f58e6420fb8065042ffff0ac74963f12ebd60d9713262dbee49ec39fc799796"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/gold.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "441b5fa4|2026-11-01|aaa",
+        "sha256": "cf76533d5c1d1b7318614d151b0cb48635c6e2008563190ecd6816c8a313c822"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/river.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "a2c93607|2026-11-01|aaa",
+        "sha256": "985c6a21092bd15d0592f321289c81b2b3be0978c6b0f1e5852e91fb91c97827"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/world-generation.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "b8a47a5a|2026-11-03|VS",
+        "sha256": "6beda77d3159ab7dad873eae50f32faea324136da2f3e055c0e8fd75a49a1bf9"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/equipment.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "441b5fa4|2026-11-01|aaa",
+        "sha256": "16e00365caddcb230b19fb8891fef20ae18aede4e54b2b32c87a8d0b47624b15"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/engine.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "fcbf47392b7d56fd08c84610bdd0fea57de05e4abfa57c41cfc110a05ab4b04a"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/lines.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "adfdc6ea|2026-11-02|aaa",
+        "sha256": "929a9fb52d2f49a517f0102927803a10f3ee8b09d4af8db9d8cc3e75bd6ac79f"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/automation.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "679947c9|2026-11-02|aaa",
+        "sha256": "1bc6d8375f8fd1cd65baf55338550514f2ef1a0e2e6d7f44e984fbfb30ffaa6b"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/facilities.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "626d57bf|2026-11-03|aaa",
+        "sha256": "97bb37b2bf437d77d976837e295c3294b5ff8c07292e657fb92eb164af175ee3"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/save.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "69aad91b54e6327320516efec47a548b9bdd30e82f059aa7db79038d87008db2"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/backup-ui.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "生成AIで制作",
+      "observation": "同一会話のCodex実装記録で新規作成（v0.9.1）。生成AI由来だけで第三者権利や全体の配布許諾を確定しない。",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "76154440|2026-11-12|aaa",
+        "sha256": "a6a36d320a718b2865ba31e0cea382235b7840dfe0f9dbdde2823170bdd0cb50",
+        "conversation": "本会話の該当Version実装記録"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/ux-guidance.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "13cc613e|2026-11-10|aaa",
+        "sha256": "22f91a1bce1519735b1fd8d1ea02cdc0ed0b204c0423ac50cf311f1fc15cb279"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/dig-input.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "cba74e58|2026-11-09|aaa",
+        "sha256": "64f79221511c21d91572ca72d49fd1d6d205b4ff83c46efeda76c59bc6342957"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/treasure-assets.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "25dee2c5|2026-11-03|aaa",
+        "sha256": "d1b9af1b84c37145af6e9d5883702e4c491b70ee8fdf341dcce6b908534d8de1"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/reveal.ts",
+      "usedInDistribution": true,
+      "usage": "お宝SVG・洗浄画面",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "dfad8500|2026-11-01|aaa",
+        "sha256": "ff8ddf0c8e92da7df33112274369c1aa6eff9e67d2ddd912e9280586c44159e4"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/collection.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "25dee2c5|2026-11-03|aaa",
+        "sha256": "3c12fd4d530fabda2b8ceec621964137c1a14686fa89b3cd384ac89b9804f280"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/surface.ts",
+      "usedInDistribution": true,
+      "usage": "道具SVG・カーソル・砂浜Canvas",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "37933a46|2026-11-01|aaa",
+        "sha256": "2ad310c2e3d6582bb336702ab64c5f7503b440001a0a617cd799df46117d6a33"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/world-view.ts",
+      "usedInDistribution": true,
+      "usage": "探索Canvas表示",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "25dee2c5|2026-11-03|aaa",
+        "sha256": "b0ff194e534ff3bb5eb242f990acf2ec90e3c4c6232f7a16a890d7f2bbd3a8b3"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/growth.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "626d57bf|2026-11-03|aaa",
+        "sha256": "eb2e35a11722f0c761b3cb55aa0f99eceb7e0b4490a292a7d344259bd9cef4a2"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/lines-ui.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "adfdc6ea|2026-11-02|aaa",
+        "sha256": "fc3ad2532c9ba4b25637a0def98e1059bb87179fade6ce1811ded636b0e94589"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/session.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "adfdc6ea|2026-11-02|aaa",
+        "sha256": "b5833e756e3ab08342bc2571c31b5cac475805b6a1ba03933392959bc8c43510"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/automation-ui.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "679947c9|2026-11-02|aaa",
+        "sha256": "7577e8a647b4a3b8c8fde4e79ede7a41f813e7619436963e83f79d5a3e9278e6"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/field-shop.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "678b493b|2026-11-02|aaa",
+        "sha256": "ebb4a58b60195ad125487e4ca9541611a83db045abe4a0df008b2779f47a288c"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/shop.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "014370c4|2026-11-02|aaa",
+        "sha256": "27f8e157ead205a0c2ec80083dcea2f94392d1c97ce2c6a14dc2bb1d71477592"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/field-feel-ui.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "13cc613e|2026-11-10|aaa",
+        "sha256": "f78c040e17838b6a579468f1e55e1ba9be1d2c635a3e089d529f5726d86bd78a"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/gold-view.ts",
+      "usedInDistribution": true,
+      "usage": "探索Canvas表示",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "441b5fa4|2026-11-01|aaa",
+        "sha256": "ec9d0f050d370016ad86e27f6dd85f0e45d24082081340a7e4269676fbbc583d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/gold-ui.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "441b5fa4|2026-11-01|aaa",
+        "sha256": "194cdbe7fe952457fa7234d262cbb7651e181004915dfa5cfbe62d07dc7da0bd"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/river-view.ts",
+      "usedInDistribution": true,
+      "usage": "探索Canvas表示",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "a2c93607|2026-11-01|aaa",
+        "sha256": "2c08b1bee37a46164416562504004e5793d8ba875a15594735d162cd696069e2"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/feedback.ts",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "0ede9276|2026-11-01|aaa",
+        "sha256": "decd84721dfe2c7c23823d96adafb37bd0defaf1db52f77001123254bf13a789"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/main.ts",
+      "usedInDistribution": true,
+      "usage": "UIと合成効果音",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "0c8ea8c4a4c1a83b0698a5b540962b2a2755b44f9b704ee3e1cc326d5922bb8b"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/stability.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "76154440|2026-11-12|aaa",
+        "sha256": "08b9c7e21691c30c39b39f73d182280c00b650febac693c7cdbe9b070f87d5ad"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/experience.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "13cc613e|2026-11-10|aaa",
+        "sha256": "5cd9509640cf56036fe29a1042f408f8c3ec31bf0cd8ed6fe7c94673f6a43948"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/digging.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "cba74e58|2026-11-09|aaa",
+        "sha256": "eab90552e327df5b740fed5ecffe0e86d8994802a664ca8765e165f696c70117"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/field-feel.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "13cc613e|2026-11-10|aaa",
+        "sha256": "ffbf0d7cc153ef3792692d8f54c70de127501e859d80f392432ffdb6a3c7b677"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/world.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "25dee2c5|2026-11-03|aaa",
+        "sha256": "804fd77d952d779a71769bd5d54adb77b548f71a3db5591bf57e74900d31632d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/lines.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "adfdc6ea|2026-11-02|aaa",
+        "sha256": "59669fa1b8b90e7b87408f5617e43f7837d63eb0a1b12b2b982ec0359ef917f1"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/automation.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "679947c9|2026-11-02|aaa",
+        "sha256": "84328eefc5449b12d363ad36b4aedd6fe834d4de66ba2158c751f5200795c03d"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "src/style.css",
+      "usedInDistribution": true,
+      "usage": "画面スタイル・システムフォント指定",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "ca01a0e83fbde8656aafe74176a68f652d3d2acd23e4c35cc686104b5002a2d0"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "index.html",
+      "usedInDistribution": true,
+      "usage": "ゲームUI/ロジック",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "8fce174b|2026-11-01|aaa",
+        "sha256": "69291cfe1a99d39b1c376c30a7e2e751eae4183e247e4ce95bdf0d832131ac2f"
+      },
+      "status": "未確認"
+    },
+    {
+      "file": "icon.svg",
+      "usedInDistribution": false,
+      "usage": "未参照アイコン（dist外）",
+      "creationOrigin": "出所不明",
+      "observation": "Git内への追加は確認。自作・生成AI・外部転用の区分を証明する申告/出典なし",
+      "license": "未確認",
+      "redistribution": "許諾/権原の確認後に判断。確認できなければ公開前に差替え",
+      "credit": "未確認",
+      "evidence": {
+        "firstCommit": "7a4409d7|2026-11-01|aaa",
+        "sha256": "617cfa02e5be1302896cc6b843528ab098806abcc3f9a4bef7fa451090676c94"
+      },
+      "status": "配布対象外・由来未確認"
+    },
+    {
+      "file": "public/THIRD_PARTY_NOTICES.txt",
+      "usedInDistribution": true,
+      "usage": "Vite MIT表記",
+      "creationOrigin": "外部ライブラリ同梱素材",
+      "observation": "インストール済ViteのLICENSE.mdから本文を保持",
+      "license": "MIT",
+      "redistribution": "MIT本文・著作権表示を保持する条件で許諾",
+      "credit": "必要。同梱済み",
+      "evidence": {
+        "firstCommit": "08119974|2026-11-13|aaa",
+        "sha256": "64e7ee04ad902e11711e19058843aa7fd2cac51d67eb9623e19374bdaee2d216"
+      },
+      "status": "PASS"
+    }
+  ],
+  "unconfirmedInDistribution": [
+    "src/treasure-expansion.json",
+    "src/world-rules.ts",
+    "src/field-tools.ts",
+    "src/digging.ts",
+    "src/ledger.ts",
+    "src/beach-tools.ts",
+    "src/master-source.json",
+    "src/data.ts",
+    "src/save-validation.ts",
+    "src/experience.ts",
+    "src/tool-value.ts",
+    "src/events.ts",
+    "src/measure.ts",
+    "src/gold.ts",
+    "src/river.ts",
+    "src/world-generation.ts",
+    "src/equipment.ts",
+    "src/engine.ts",
+    "src/lines.ts",
+    "src/automation.ts",
+    "src/facilities.ts",
+    "src/save.ts",
+    "src/backup-ui.ts",
+    "src/ux-guidance.ts",
+    "src/dig-input.ts",
+    "src/treasure-assets.ts",
+    "src/reveal.ts",
+    "src/collection.ts",
+    "src/surface.ts",
+    "src/world-view.ts",
+    "src/growth.ts",
+    "src/lines-ui.ts",
+    "src/session.ts",
+    "src/automation-ui.ts",
+    "src/field-shop.ts",
+    "src/shop.ts",
+    "src/field-feel-ui.ts",
+    "src/gold-view.ts",
+    "src/gold-ui.ts",
+    "src/river-view.ts",
+    "src/feedback.ts",
+    "src/main.ts",
+    "src/stability.css",
+    "src/experience.css",
+    "src/digging.css",
+    "src/field-feel.css",
+    "src/world.css",
+    "src/lines.css",
+    "src/automation.css",
+    "src/style.css",
+    "index.html"
+  ],
+  "conclusion": "CONDITIONAL: Git history proves repository addition, not authorship or a redistribution grant. No game-wide license was assigned."
+}

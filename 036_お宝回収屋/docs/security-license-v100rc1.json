@@ -1,0 +1,676 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-11-13",
+  "trackedCount": 5012,
+  "scannedText": 2045,
+  "scope": "Git tracked repository files + current production dist; binary assets excluded from text scanning",
+  "skipped": [],
+  "credentialCandidates": [
+    {
+      "path": "012_paint-battle/app.js",
+      "line": 5,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "012_paint-battle/app.js",
+      "line": 5,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "017_naval-battle/main.js",
+      "line": 4,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "017_naval-battle/main.js",
+      "line": 4,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "020_gps-detective-chase/js/firebase-config.js",
+      "line": 2,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "020_gps-detective-chase/js/firebase-config.js",
+      "line": 2,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "_cmn_firebase/firebase-config.js",
+      "line": 2,
+      "type": "googleAPI",
+      "value": "[MASKED]"
+    },
+    {
+      "path": "_cmn_firebase/firebase-config.js",
+      "line": 2,
+      "type": "credentialAssignment",
+      "value": "[MASKED]"
+    }
+  ],
+  "packages": [
+    {
+      "name": "playwright",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "purpose": "browser tests",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "playwright-core",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "purpose": "browser driver",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "license": "Apache-2.0",
+      "purpose": "type checking",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.txt"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "tsx",
+      "version": "4.23.15",
+      "license": "MIT",
+      "purpose": "TypeScript tests",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "vite",
+      "version": "7.3.7",
+      "license": "MIT",
+      "purpose": "dev server/build",
+      "productionRuntime": "module-preload bootstrap only",
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "esbuild",
+      "version": "0.28.2",
+      "license": "MIT",
+      "purpose": "build transformation",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    },
+    {
+      "name": "rollup",
+      "version": "4.67.2",
+      "license": "MIT",
+      "purpose": "production bundling",
+      "productionRuntime": false,
+      "licenseFiles": [
+        "LICENSE.md"
+      ],
+      "distribution": "Development/build dependency; preserve license and NOTICE if redistributing this package."
+    }
+  ],
+  "npmAudit": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {},
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 1,
+        "dev": 69,
+        "optional": 54,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 69
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": "dist\\assets\\index-CkDx-hAs.js",
+      "bytes": 401648
+    },
+    {
+      "path": "dist\\assets\\index-Didvjovp.css",
+      "bytes": 25609
+    },
+    {
+      "path": "dist\\index.html",
+      "bytes": 602
+    },
+    {
+      "path": "dist\\THIRD_PARTY_NOTICES.txt",
+      "bytes": 1486
+    }
+  ],
+  "communicationSignatures": [
+    {
+      "path": "src\\main.ts",
+      "signature": "AudioContext"
+    }
+  ],
+  "assets": [],
+  "transitiveDeclarations": [
+    {
+      "path": "node_modules/@esbuild/aix-ppc64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/android-arm",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/android-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/android-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/darwin-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/darwin-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/freebsd-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/freebsd-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-ia32",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-loong64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-mips64el",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-ppc64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-riscv64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-s390x",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/linux-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/netbsd-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/netbsd-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/openbsd-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/openbsd-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/openharmony-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/sunos-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/win32-arm64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/win32-ia32",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@esbuild/win32-x64",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@napi-rs/lzma-linux-x64-gnu",
+      "version": "1.5.1",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-android-arm-eabi",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-android-arm64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-android-x64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-darwin-arm64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-darwin-x64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-freebsd-arm64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-freebsd-x64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-arm-gnueabihf",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-arm-musleabihf",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-arm64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-arm64-musl",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-loong64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-loong64-musl",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-ppc64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-ppc64-musl",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-riscv64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-riscv64-musl",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-s390x-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-x64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-linux-x64-musl",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-openbsd-x64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-openharmony-arm64",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-win32-arm64-msvc",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-win32-ia32-msvc",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-win32-x64-gnu",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@rollup/rollup-win32-x64-msvc",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/@types/estree",
+      "version": "1.0.10",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/esbuild",
+      "version": "0.28.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/fdir",
+      "version": "6.5.0",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/fsevents",
+      "version": "2.3.3",
+      "license": "MIT",
+      "dev": true,
+      "optional": true
+    },
+    {
+      "path": "node_modules/nanoid",
+      "version": "3.3.20",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/picocolors",
+      "version": "1.1.1",
+      "license": "ISC",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/picomatch",
+      "version": "4.0.7",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/playwright",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/playwright-core",
+      "version": "1.64.1",
+      "license": "Apache-2.0",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/postcss",
+      "version": "8.5.32",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/rollup",
+      "version": "4.67.2",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/source-map-js",
+      "version": "1.2.2",
+      "license": "BSD-3-Clause",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/tinyglobby",
+      "version": "0.2.17",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/tsx",
+      "version": "4.23.15",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/typescript",
+      "version": "5.9.3",
+      "license": "Apache-2.0",
+      "dev": true,
+      "optional": false
+    },
+    {
+      "path": "node_modules/vite",
+      "version": "7.3.7",
+      "license": "MIT",
+      "dev": true,
+      "optional": false
+    }
+  ],
+  "limitations": [
+    "Pattern scanning is not proof that arbitrary personal information or secrets are absent.",
+    "Ownership/provenance and overall project distribution license require owner confirmation.",
+    "No repository history or untracked unrelated local configuration was scanned."
+  ]
+}

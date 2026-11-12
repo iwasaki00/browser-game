@@ -1,212 +1,55 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT**
+**Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE**
 
-少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
-
-## 0.9.2 公開前監査
-
-JSONのHTML注入・異常品質・砂の参照矛盾と設備停止理由の差を修正。647テストと既存7ブラウザ回帰を確認しました。公開判定はCONDITIONALです。iPhone Safari実機と全体の権利/配布許諾は未確認で、公開操作は行っていません。
-
-[30項目最終報告](docs/FINAL_REPORT_0.9.2.md) / [実機受入表とLAN起動](docs/IPHONE_ACCEPTANCE_CHECKLIST.md) / [公開判断](docs/RELEASE_DECISION_0.9.2.md) / [安全性・権利](docs/SECURITY_AND_LICENSE_AUDIT.md)。
-
-再実行：npm.cmd test / npm.cmd run test:acceptance-browser / npm.cmd run test:acceptance-import / npm.cmd run test:acceptance-device / npm.cmd run test:acceptance-regression / npm.cmd run build。権利表記はpublic/THIRD_PARTY_NOTICES.txtを本番出力に同梱。
-
-## セーブ保護と安定性
-
-確認した保存・入力・LAB終了の不具合を修正しました。設定またはタイトルの「セーブ保護・バックアップ」からJSON保存、検証、確認付き復元ができます。ゲームの価格・報酬・性能は維持しています。
-
-[最終報告](docs/FINAL_REPORT_0.9.1.md) / [監査](docs/QUALITY_AUDIT_0.9.1.md) / [保存](docs/SAVE_SAFETY_REPORT.md) / [性能](docs/PERFORMANCE_REPORT_0.9.1.md) / [公開前チェック](docs/RELEASE_READINESS.md) / [iPhone実機手順](docs/IPHONE_SAFARI_TEST.md)。実機Safariと人間評価はユーザー確認待ち。
-
-再実行：npm.cmd test / npm.cmd run test:stability-browser / npm.cmd run test:stability-performance / npm.cmd run balance:ux -- 100 / npm.cmd run build / npm.cmd run test:production。
-
-## 次の一歩を分かりやすく
-
-短い行動案内、検索と購入比較、4枠の短縮表示、設備の3手順、図鑑の最近の初登録、演出の標準/軽量/なしを追加しました。案内は任意に消せます。既存の道具・設備・お宝・経済は維持します。
-
-[変更内容](docs/GAME_EXPERIENCE_0.9.0.md) / [100シード・30分モデル](docs/FIRST_30_MINUTES_ANALYSIS.md) / [QA](docs/UX_QA_REPORT.md) / [プレイ評価表](docs/PLAYTEST_0.9.0.md) / [最終報告](docs/FINAL_REPORT_0.9.0.md)。主観的評価とiPhone Safari実機はユーザー確認待ちです。
-
-検証：`npm.cmd test` / `npm.cmd run balance:ux -- 100` / `npm.cmd run test:ux-browser` / `npm.cmd run build`。DEBUG LABは設定のVERSIONを5連続タップ、探索/シナリオ内のGAME EXPERIENCEから利用できます。
-
-## 川底・河原の道具体験
-
-川底の長押し/ドラッグでの引上げ、河原の採取・ふるい・皿を時間式に統一。重量・地形・道具構成による実速度差と、4枠装備での性能比較を追加しました。
-
-[川底](docs/RIVER_TOOL_FEEL.md) / [河原](docs/GOLD_TOOL_FEEL.md) / [100シード比較](docs/FIELD_TOOL_BALANCE.md)。検証：`npm.cmd run balance:field-feel` / `npm.cmd run test:field-feel-browser`。
-
-## 10層と道具の手応え
-
-押し続け・ドラッグで掘削。素手・小型・大型・深掘りの速度と材質適性を分離し、現在層と道具の到達層を表示します。装備画面で同じ場所の性能を比較できます。旧深度と個体・報酬・6ラインは維持します。
-
-[10層仕様](docs/DEEP_DIGGING_10_LAYERS.md) / [道具性能](docs/TOOL_DIGGING_PERFORMANCE.md) / [入力](docs/DIGGING_INPUT_AND_FEEL.md) / [100シード](docs/DIGGING_BALANCE.md)。追加検証：`npm.cmd run balance:digging` / `npm.cmd run test:digging-browser`。
-
-## 複数ラインと設備強化
-
-各分野2ライン、最大6ライン。実価格での増設、Lv1〜Lv3強化、4方式の材料配分、個別停止・道具・工程設定、固定条件の成長レポートを追加しました。既存価格と旧セーブを維持し、設備個体・材料を二重使用しません。
-
-[操作・保存仕様](docs/ADVANCED_AUTOMATION.md) / [成長比較](docs/AUTOMATION_GROWTH.md) / [性能と費用](docs/ADVANCED_AUTOMATION_BALANCE.md) / [300品監査CSV](docs/TREASURE_REACHABILITY_AUDIT.csv) / [検証](docs/TEST_RESULTS.md)。
-
-再実行：`npm.cmd run balance:advanced` / `npm.cmd run audit:treasures` / `npm.cmd run test:advanced-stress` / `npm.cmd run test:advanced-browser`。
-
-## 12エリアと300種類のお宝
-
-砂浜・川底・河原を各4エリアへ拡張。環境に応じて精密道具・フック・カメラ・小型採取具を使い分けます。図鑑は12件ずつのページ、検索・分野・レア度・発見状態の絞り込み、各分野の達成記録に対応。既存46道具と3設備、旧セーブを維持します。大容量の砂・砂利袋は設備容量の範囲だけ部分投入できます。
-
-[エリアと操作](docs/WORLD_EXPANSION.md) / [300品マスター](docs/TREASURE_MASTER_300.md) / [画像対応CSV](docs/TREASURE_ASSET_MANIFEST.csv) / [100シード比較](docs/WORLD_BALANCE.md) / [検証結果](docs/TEST_RESULTS.md)。画像素材は未生成で、現在はSVG表示です。
-
-追加検証：`npm.cmd run balance:world` / `npm.cmd run balance:world-milestones` / `npm.cmd run test:world-stress` / `npm.cmd run test:world-browser`。
-
-## 自動化ライン
-
-設備画面の「工程を接続・ライン管理」から、砂浜の搬送→選別→整理、川底の指定対象→引き上げ→整理、河原の搬送→粒径→比重→手動精密回収を接続できます。工程単位の停止、道具構成、優先順位、実在庫に基づく滞留表示に対応。洗浄・探索は手動です。保存履歴を集計し、複数タブの二重進行を防ぎます。
-
-[操作とライン仕様](docs/AUTOMATION_LINE.md) / [比較・投資効果](docs/LINE_BALANCE.md) / [保存最適化](docs/SAVE_OPTIMIZATION.md)。
-
-追加検証：`npm.cmd run balance:lines` / `npm.cmd run test:line-stress` / `npm.cmd run test:line-browser` / `npm.cmd run test:save-browser`。
-
-## 半自動設備
-
-QUICK TOOLS行の「設備」、またはショップ上部から、B301電動ふるい・R301電動ウインチ・G304電動砂利搬送機を購入・管理できます。実際に採取した砂・砂利、指定した川底対象だけを処理し、洗浄と精密回収は手動です。別分野へ移動しても稼働し、非表示中は停止、再読込後は手動で再開します。
-
-仕様・DEBUG LAB操作は [SEMI_AUTOMATION](docs/SEMI_AUTOMATION.md)、100シード比較は [AUTOMATION_BALANCE](docs/AUTOMATION_BALANCE.md)、検証は [TEST_RESULTS](docs/TEST_RESULTS.md)。設備は4枠と別管理で、既存46道具を維持します。
-
-追加コマンド：npm.cmd run balance:automation / npm.cmd run test:automation-browser / npm.cmd run test:regression-browser。
-
-## Windows / VSCodeで起動
-
-1. Node.js 22.12以降のLTSとVSCodeを用意します。
-2. このリポジトリをVSCodeで開き、メニュー「ターミナル → 新しいターミナル」を選びます。
-3. PowerShellで次を順に実行します。
-
-```powershell
-cd "C:\_wk\github\browser-game\036_お宝回収屋"
-npm.cmd ci
-npm.cmd run dev
-```
-
-ターミナルに出る `http://localhost:5173/` をブラウザで開きます。使用中のポートがあれば、表示された別の番号を使ってください。停止はCtrl+Cです。`npm.cmd` を使うとPowerShellのスクリプト実行ポリシーの影響を避けられます。
-
-## 0.4.1の変更
-
-- 川底6・河原6道具を追加。距離・磁性・重量・観察、採取・前処理・微細回収に役割を分けました。
-- カメラ＋アームのC07、砂鉄分離＋水流のC10を実装。所有だけの固定FNボーナスはありません。
-- ショップの比較と12道具のアイコンを追加。分野別クイック4枠を維持します。
-- DEBUG LABは8タブ・44シナリオ。購入前後計測と4購入ルート比較、Workerの中止、JSON出力に対応。
-- [新道具の価格・使い方](docs/RIVER_GOLD_TOOL_EXPANSION.md)／[購入ルートの100シード結果](docs/PURCHASE_ROUTE_ANALYSIS.md)。
-
-## 0.4.0の変更
-
-- 既存マスターから砂浜15道具を追加。第4・第5層、精密回収、広域探知、前処理・運搬補助を実装。
-- 旧区画の穴とお宝を保持。新しい清掃区画から深層対応します。通常画面に深度の数字は表示しません。
-- C02/C03/C04が実作業で成立。4枠をどう使うかで得意な工程が変わります。
-- ショップを分類・8件単位・状態表示・性能比較へ。DEBUG LABは8タブを維持して同一シード比較と砂浜10シナリオを追加。
-- [新道具の操作・価格・解放・組み合わせ](docs/BEACH_TOOL_EXPANSION.md)／[深層と保存互換](docs/DEPTH_EXPANSION.md)。
-
-## 0.3.0の変更
-
-- G-A/G-Bの河原探索、砂利袋、指で動かすパンニング、7道具、連続選別するスルースを追加。
-- 砂浜20個または川底5個でG-A。河原発見10個またはパンニング5回でG-B。初回は素手、資金と荷物は共通です。
-- ふるいで前処理し、通常皿で微細粒を残すC09。虫眼鏡で見分け、吸引瓶で精密回収します。
-- 砂浜・川底・河原のクイック装備を各4枠で保存。砂利の残渣や途中作業も保存します。
-- DEBUG LABは8タブ・22シナリオへ。河原状態・工程別実測・1/2/10倍速を追加。本番ビルドから除外します。
-- 初心者向け操作、保存互換、LABの使い方は [GOLD PANNING説明書](docs/GOLD_PANNING.md)。[試験結果](docs/TEST_RESULTS.md)と[バランス](docs/BALANCE.md)も更新しました。
-
-## 0.2.0の変更
-
-- 砂浜累計回収10個で岸辺の浅瀬、20個で石だまりを解放。川底の初回は素手。資金・道具・図鑑・荷物は共通です。
-- トング、フック、小型磁石、ロープ付き磁石、巻取り器、強力磁石、滑車の7道具を実装。道具が届く場所、磁性・重量、必要操作が変わります。
-- 対象をつかんで手前へドラッグ。ロープ付き磁石は岸から水底へスワイプして離すと投擲。回収失敗の個体は同区画で再挑戦できます。
-- 開発版は設定のVERSION表示を素早く5回タップするとDEBUG LAB。7タブ、10シナリオ、専用セーブ、可視化とJSONログを使用できます。通常状態を退避してテストします。
-- 本番ではLABのJS・CSS・生成操作を除外。詳しい操作・道具・保存仕様は [川底とDEBUG LABの説明書](docs/RIVER_RECOVERY_DEBUG_LAB.md)。
-
-## 0.1.3の変更
-
-- 探知機は弱／中／強、浅そう／深そうと反応の特徴を表示し、粗い探知跡を持替え後も残します。先に探知して慎重に掘ると損耗が減り、初期品質は上がりません。固定FN報酬は変更していません。
-- 手選別は1回3単位・所要体力6、購入後の砂ふるいは15単位・所要体力4。複数の砂袋をまとめて処理し、取り残した小物は残渣として次へ持ち越せます。手選別だけでも最終的に回収できます。
-- 「洗う」は約1.4秒で汚れが落ち、「スキップ」は同じ結果へ即移行します。洗浄前・中・後のモーダルとお宝・ボタンの位置は共通です。
-- 第3層までの深掘りと保存互換を維持。道具の仕事は図鑑・記録から確認でき、実測不足は「データ不足」と表示します。
-
-画面例：[洗浄前](docs/v013-wash-before-390.png) / [洗浄中](docs/v013-wash-during-390.png) / [洗浄後](docs/v013-wash-after-390.png)。詳細は [TOOL_VALUE_REVEAL_UX](docs/TOOL_VALUE_REVEAL_UX.md)。
-
-## 0.1.2から引き継いだ機能
-
-砂浜の左右を水平にし、前後だけの遠近感へ変更しました。同じ穴を素手→小型スコップ→大型スコップと掘り進めると、地点ごとの底色・壁・影が変わります。通常UIに深さの数値は表示しません。素手の限界の下に未発見品があると、低確率で小さな「コツッ」と手応えを返します。探知・回収そのものを代行する機能ではありません。
-
-画面例：[素手](docs/v012-depth-hand.png) / [小型スコップ](docs/v012-depth-small-shovel.png) / [大型スコップ](docs/v012-depth-large-shovel.png)。原因調査と保存互換の詳細は [PERSPECTIVE_DEPTH_FIX](docs/PERSPECTIVE_DEPTH_FIX.md)。
-
-## 0.1.1から引き継いだ機能
-
-断面表示を廃止し、穴の影と縁で深さを表現しました。深さの数字は表示しません。6種類の道具カーソルと、指を置いている間だけ出る半透明アイコンに対応。通知は砂浜上部に表示され、タップで消せます。0.1.0のセーブは自動移行し、現在の1区画と回収済みの荷物を保持します。詳細は `docs/SURFACE_VIEW_UPDATE.md`。
+砂浜を掘り、川底で引き上げ、河原で砂金を選別する探索ゲームです。素手から道具を揃え、洗ったお宝の報酬で次の作業を育てます。3分野・12エリア・300種類のお宝。FNはゲーム内だけの架空通貨で、課金や換金はありません。
 
 ## 遊び方
 
-- 「砂浜へ出かける」を押し、砂浜の**好きな場所を**マウス・指でなぞります。タップだけでは掘れません。
-- 光る◇をタップして保管し、「洗浄」で正体を確認・報酬を受け取ります。
-- 2個回収で小型スコップが入荷。最初の4個（ボルト・おもり各2個）は合計160 FNです。
-- スコップは掘った砂をバッチに採取。手で選別でき、砂ふるいなら1作業で最大15単位の砂を選別します。
-- 熊手は表層を横に広く探索。大型スコップは深く大量採取。探知機は視覚ゲージで埋没金属を探し、掘る時は持ち替えます。
-- 装備画面で4枠に割り当てます。素手は常時使用可能です。
-- 区画追加は無料。新しい場所へ進むと前の地形と未発見品は破棄され、戻れません。回収品・採取済みの砂・図鑑・資金は持ち越します。
-- 自動保存は購入・報酬・区画移動直後と5秒ごと。ブラウザのサイトデータ削除でセーブも消えます。
+- 砂浜：タップ・長押し・ドラッグで掘削。光るお宝を回収し、採取砂は選別します。道具の得意な硬さや到達できる層を比べてください。
+- 川底：岸辺でつかむ操作から、磁石の投擲・フック・引上げへ。磁性、重量、距離、障害物に合う道具を選びます。
+- 河原：砂利を採取し、ふるい・皿・スルースで選別。微細な粒は最後に手動で精密回収します。
+- ショップで道具を購入し、4枠へ装備。洗浄で正体と報酬を確定し、図鑑を埋めましょう。
 
-## 本番ビルドと確認
+電動ふるい・電動ウインチ・電動砂利搬送機は、実際に採取した材料や指定した対象を処理します。最大6ライン・Lv1〜Lv3。処理待ちと材料不足を見て工程を改善できます。探索・洗浄・最後の精密回収は手動です。
 
-```powershell
+## Windowsで起動
+
+Node.jsは同梱Viteの要件（^20.19.0 または >=22.12.0）を満たすものを使用してください。依存導入済みならnpm.cmd ciは不要です。
+
+~~~powershell
+Set-Location -LiteralPath "C:/_wk/github/browser-game/036_お宝回収屋"
+npm.cmd ci
+npm.cmd run dev -- --port 5176 --strictPort
+~~~
+
+PCでhttp://localhost:5176/を開きます。終了は起動した端末でCtrl+C。
+
+配布候補を開発サーバーとは別に確認する場合：
+
+~~~powershell
 npm.cmd run build
-npm.cmd run preview
-```
+npm.cmd run preview -- --host 127.0.0.1 --port 4176 --strictPort
+~~~
 
-表示された `http://localhost:4173/` を開きます。GitHub Pagesでは `036_お宝回収屋/dist/index.html` が入口です。ルートのゲーム一覧にもリンクを追加済みです。ソースのindex.htmlをダブルクリックしてもTypeScriptは実行できません。distのファイルはビルドで置き換わります。
+http://127.0.0.1:4176/を開きます。今回、GitHub Pages等への公開は行っていません。
 
-## iPhone Safariでの確認
+## セーブとバックアップ
 
-PCとiPhoneを同じWi-Fiに接続し、`npm.cmd run dev` に表示されるNetwork URL（例 `http://192.168.x.x:5173/`）をSafariで開きます。Windowsファイアウォールは必要に応じてプライベートネットワークでNode.jsを許可してください。縦画面の掘削、画面外へのドラッグ、アプリ切替後の再開、再読込後の地形・資金、消音時の探知ゲージを確認してください。**実機Safariは未検証**です。LANのアドレスとlocalhostは別の保存先です。
+進行はブラウザへ保存されます。タイトル/設定の「セーブ保護・バックアップ」からJSONを退避し、内容の検証と確認を経て復元できます。端末・ブラウザ・サイトのアドレスが変わると保存領域が変わるため、移行前にJSONを保管してください。サイトデータ削除や端末故障に備え、JSONを端末外にも残してください。
 
-## 検証
+開発版と本番プレビューは保存領域を分けています。複数タブの進行は1つに制限します。タブ非表示中/終了中の収益はなく、復元した設備は停止状態から手動で再開します。
 
-```powershell
-npm.cmd test
-npm.cmd run balance
-# 別ターミナルで5176番の開発サーバーを起動してから:
-npm.cmd run dev -- --port 5176
-# 元のターミナルで:
-npm.cmd run test:browser
-npm.cmd run test:depth-browser
-npm.cmd run test:reveal-browser
-npm.cmd run balance:tools
-npm.cmd run balance:river
-npm.cmd run balance:routes
-npm.cmd run test:field-browser
-npm.cmd run balance:beach
-npm.cmd run test:beach-browser
-npm.cmd run balance:gold
-npm.cmd run test:gold-browser
-npm.cmd run test:river-browser
-npm.cmd run test:production
-```
+## 動作確認と公開状況
 
-ブラウザ試験はインストール済みGoogle Chromeを利用します。開発版と本番版のセーブは別です。開発版は設定のVERSIONを5回タップしてDEBUG LABを開き、専用テストセーブでFN変更・道具付与・お宝出現等を利用できます。
+Windows Chrome/Edgeと320/375/390/430pxの自動試験を実施。iPhone Safariはユーザーから0.9.2の実機受入OKとの申告を記録しました。詳細測定値/ログ未提供、Codexの実機直接操作は未実施です。WebKit自動試験は実行環境未導入のため未実施。
 
-## ファイル
+**公開判定はCONDITIONALです。** RCの作成・技術受入は完了しましたが、ゲーム固有素材・コード・データの配布許諾が未確定です。現在のお宝画像はSVG仮画像で、300種類の実画像は未配置。大規模な差替えやゲームバランス変更はしていません。
 
-- `src/data.ts`, `src/master-source.json`: 36お宝・126道具・16連携・12エリア
-- `src/engine.ts`: UIに依存しないゲームロジック
-- `src/save.ts`: IndexedDB・バックアップ・形式移行
-- `src/surface.ts`: 斜め投影・穴の描画・道具SVG・カーソル
-- `src/main.ts`, `src/style.css`: 入力・UI・上部トースト・タッチアイコン
-- `src/tool-value.ts`: 探知情報・品質保護・道具実測レポート
-- `src/reveal.ts`: 洗浄演出と完了状態
-- `src/river.ts`, `src/river-view.ts`: 川底の独立回収処理と水面描画
-- `src/dev.ts`, `src/dev-actions.ts`, `src/dev.css`: 開発専用DEBUG LAB
-- `src/gold.ts`, `src/gold-ui.ts`, `src/gold-view.ts`: 河原・砂利・選別・作業台
-- `src/equipment.ts`, `src/measure.ts`: カテゴリ別装備・共通工程実測
-- `src/dev-gold.ts`: 開発専用の河原シナリオ
-- `src/beach-tools.ts`, `src/shop.ts`: 砂浜の性能・解放・ショップ比較
-- `src/dev-beach.ts`, `src/dev-beach-ui.ts`: 開発専用の固定条件比較・深度シナリオ
-- `src/field-tools.ts`, `src/field-shop.ts`: 川底・河原の追加性能と比較
-- `src/dev-field.ts`, `src/dev-routes.ts`, `src/dev-route-ui.ts`, `src/dev-route-worker.ts`: 購入前後・購入ルートの開発専用比較
-- `src/events.ts`: 上限100件の重要イベント
-- `tests/`, `scripts/`: 自動テスト・模擬プレイ・ブラウザ試験
-- `docs/`: 仕様・判断・試験結果・今後の計画
+[プレイヤー向けリリースノート](docs/RELEASE_NOTES_1.0.0.md) / [総合受入](docs/FINAL_ACCEPTANCE_1.0.0.md) / [素材許諾](docs/ASSET_LICENSE_MANIFEST.md) / [配布監査](docs/RELEASE_PACKAGE_AUDIT.md) / [公開判断](docs/RELEASE_DECISION_1.0.0.md) / [28項目最終報告](docs/FINAL_REPORT_1.0.0-rc.1.md)。
 
-R-C/R-D、G-C/G-Dなどの将来エリア・80道具はマスターのみです。オンライン同期・オフライン収益はありません。詳細は `docs/GAME_SPEC.md` と `docs/TEST_RESULTS.md` を参照してください。
+## 開発検証
+
+npm.cmd test（647件）／npm.cmd run test:rc（7ブラウザ回帰）／node scripts/rc-test.mjs acceptance（保存・端末・本番等）／npm.cmd run test:rc-stress（24ゲーム時間）／npm.cmd run test:rc-preview（本番preview稼働中）／npm.cmd run audit:rc-build（ビルド台帳）。試験は使い捨てブラウザ環境で行い、通常プレイの保存を使用しません。DEBUG LABは開発版専用で、本番から除外されます。
+
+配布候補の第三者表記はpublic/THIRD_PARTY_NOTICES.txtからdistへ同梱します。ツール一式やnode_modulesを配布する場合は、各依存のLICENSE/NOTICEの確認も必要です。過去の開発履歴は[CHANGELOG](docs/CHANGELOG.md)と[仕様](docs/GAME_SPEC.md)に保持しています。

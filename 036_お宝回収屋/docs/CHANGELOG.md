@@ -1,3 +1,11 @@
+# Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
+
+RC表記と最終受入・素材棚卸し・配布監査を追加。ゲーム機能/価格/確率/保存形式は変更なし。647件・7回帰を維持。ユーザーによる0.9.2のiPhone受入OKを記録。
+
+[最終受入](FINAL_ACCEPTANCE_1.0.0.md) / [公開判断](RELEASE_DECISION_1.0.0.md)
+
+---
+
 # Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
 
 確認した4問題を修正。安全なJSON検証、品質/砂参照、DOMエスケープ、設備停止理由を統一。ブラウザ全体の明示ズーム制約を除去。価格・報酬・出現率・コンテンツ数に変更なし。

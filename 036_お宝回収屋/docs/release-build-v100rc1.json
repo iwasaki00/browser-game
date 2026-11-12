@@ -1,0 +1,208 @@
+{
+  "version": "1.0.0-rc.1",
+  "base": "./",
+  "output": "dist",
+  "files": [
+    {
+      "path": "assets/index-CkDx-hAs.js",
+      "bytes": 401648,
+      "sha256": "a68ddb367b51656066b1dcafdc6243001162defc25a9bb9403c3570fc3eda36f"
+    },
+    {
+      "path": "assets/index-Didvjovp.css",
+      "bytes": 25609,
+      "sha256": "75ba7ea98a70e284fe69fa71731e2bc9df8afcc28f6770db702344e2c7671561"
+    },
+    {
+      "path": "index.html",
+      "bytes": 602,
+      "sha256": "027531b5bfc3163725e1064bb2bd9d028f685cf8c8dd038d5c753f1f5285aa0e"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "bytes": 1486,
+      "sha256": "64e7ee04ad902e11711e19058843aa7fd2cac51d67eb9623e19374bdaee2d216"
+    }
+  ],
+  "chunks": [
+    {
+      "file": "assets/index-CkDx-hAs.js",
+      "imports": [],
+      "dynamicImports": [],
+      "modules": [
+        {
+          "id": "vite:modulepreload-polyfill",
+          "renderedLength": 1168
+        },
+        {
+          "id": "src/treasure-expansion.json",
+          "renderedLength": 136743
+        },
+        {
+          "id": "src/world-rules.ts",
+          "renderedLength": 2440
+        },
+        {
+          "id": "src/field-tools.ts",
+          "renderedLength": 2230
+        },
+        {
+          "id": "src/digging.ts",
+          "renderedLength": 3297
+        },
+        {
+          "id": "src/ledger.ts",
+          "renderedLength": 5711
+        },
+        {
+          "id": "src/beach-tools.ts",
+          "renderedLength": 4431
+        },
+        {
+          "id": "src/master-source.json",
+          "renderedLength": 8112
+        },
+        {
+          "id": "src/data.ts",
+          "renderedLength": 6064
+        },
+        {
+          "id": "src/save-validation.ts",
+          "renderedLength": 1969
+        },
+        {
+          "id": "src/experience.ts",
+          "renderedLength": 1686
+        },
+        {
+          "id": "src/tool-value.ts",
+          "renderedLength": 6022
+        },
+        {
+          "id": "src/events.ts",
+          "renderedLength": 177
+        },
+        {
+          "id": "src/measure.ts",
+          "renderedLength": 741
+        },
+        {
+          "id": "src/gold.ts",
+          "renderedLength": 24662
+        },
+        {
+          "id": "src/river.ts",
+          "renderedLength": 13237
+        },
+        {
+          "id": "src/world-generation.ts",
+          "renderedLength": 4717
+        },
+        {
+          "id": "src/equipment.ts",
+          "renderedLength": 1513
+        },
+        {
+          "id": "src/engine.ts",
+          "renderedLength": 20324
+        },
+        {
+          "id": "src/lines.ts",
+          "renderedLength": 29288
+        },
+        {
+          "id": "src/automation.ts",
+          "renderedLength": 24375
+        },
+        {
+          "id": "src/facilities.ts",
+          "renderedLength": 3161
+        },
+        {
+          "id": "src/save.ts",
+          "renderedLength": 16219
+        },
+        {
+          "id": "src/backup-ui.ts",
+          "renderedLength": 3299
+        },
+        {
+          "id": "src/ux-guidance.ts",
+          "renderedLength": 7357
+        },
+        {
+          "id": "src/dig-input.ts",
+          "renderedLength": 1638
+        },
+        {
+          "id": "src/treasure-assets.ts",
+          "renderedLength": 248
+        },
+        {
+          "id": "src/reveal.ts",
+          "renderedLength": 7310
+        },
+        {
+          "id": "src/collection.ts",
+          "renderedLength": 4704
+        },
+        {
+          "id": "src/surface.ts",
+          "renderedLength": 13680
+        },
+        {
+          "id": "src/world-view.ts",
+          "renderedLength": 2431
+        },
+        {
+          "id": "src/growth.ts",
+          "renderedLength": 2567
+        },
+        {
+          "id": "src/lines-ui.ts",
+          "renderedLength": 15473
+        },
+        {
+          "id": "src/session.ts",
+          "renderedLength": 2931
+        },
+        {
+          "id": "src/automation-ui.ts",
+          "renderedLength": 8657
+        },
+        {
+          "id": "src/field-shop.ts",
+          "renderedLength": 661
+        },
+        {
+          "id": "src/shop.ts",
+          "renderedLength": 5326
+        },
+        {
+          "id": "src/field-feel-ui.ts",
+          "renderedLength": 3185
+        },
+        {
+          "id": "src/gold-view.ts",
+          "renderedLength": 2507
+        },
+        {
+          "id": "src/gold-ui.ts",
+          "renderedLength": 10174
+        },
+        {
+          "id": "src/river-view.ts",
+          "renderedLength": 4670
+        },
+        {
+          "id": "src/feedback.ts",
+          "renderedLength": 1097
+        },
+        {
+          "id": "src/main.ts",
+          "renderedLength": 44314
+        }
+      ]
+    }
+  ]
+}

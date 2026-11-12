@@ -1,3 +1,11 @@
+# Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
+
+647/647、ブラウザ7/7、保存12状態、不正JSON、複数タブ、10画面構成、本番2ブラウザ、preview/配下パス4ケース、300種、未実装77道具、6ライン24ゲーム時間を確認。iPhoneはユーザー申告OK、WebKit未導入。
+
+[最終受入](FINAL_ACCEPTANCE_1.0.0.md) / [公開判断](RELEASE_DECISION_1.0.0.md)
+
+---
+
 # Version 0.9.2 — DEVICE ACCEPTANCE & RELEASE AUDIT
 
 647件成功（旧631＋16）、ブラウザ回帰7/7、12状態保存、別contextJSON、破損11分類＋HTML UID、10端末構成、6ライン24ゲーム時間、300種、本番Chrome/Edgeが成功。WebKit未導入/実機Safari未確認。

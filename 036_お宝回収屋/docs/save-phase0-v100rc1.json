@@ -1,0 +1,19 @@
+{
+  "phase": 0,
+  "largeHistory": {
+    "before": 849576,
+    "after": 30034,
+    "recent": 200,
+    "paid": 10000,
+    "progress": 3,
+    "liveProgress": 3,
+    "FN": 1234,
+    "sequence": 3
+  },
+  "saveDuringProgress": "PASS",
+  "latestEmergencySnapshot": "PASS",
+  "singleTabWriter": "PASS",
+  "ownerTransferAndReload": "PASS",
+  "duplicateProgress": "prevented",
+  "errors": []
+}
