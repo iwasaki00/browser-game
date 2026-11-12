@@ -1,0 +1,23 @@
+{
+  "missingRequired": {
+    "accepted": true,
+    "fn": 0
+  },
+  "rightButton": {
+    "extraDigs": 1
+  },
+  "saveConflict": {
+    "rejected": true,
+    "backupFN": 123,
+    "loadedFN": 123
+  },
+  "labClose": {
+    "beforeCloseIntervals": 4,
+    "afterCloseIntervals": 4,
+    "workers": 1
+  },
+  "secondaryPull": {
+    "before": 0,
+    "after": 0.10351924997664319
+  }
+}

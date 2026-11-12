@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createState,plot,digForTime} from '../src/engine';import {migrate,parseBackup,backupJSON,MAX_BACKUP_BYTES,storageMessage} from '../src/save';
+for(const field of ['currentFN','totalEarnedFN','playerStats','ownedTools','discoveredTreasures','explorationAreas'])test('STABLE 必須値欠損を初期値で上書きしない '+field,()=>{const s:any=createState(91);delete s[field];assert.throws(()=>migrate(s));});
+test('STABLE JSONの検証は元の状態を変更しない',()=>{const s=createState(91);digForTime(s,'hand',30,150,.1);const original=structuredClone(s),text=backupJSON(s),copy=parseBackup(text);assert.deepEqual(s,original);assert.deepEqual(copy,migrate(original));assert.deepEqual(plot(copy).mask,plot(s).mask);});
+test('STABLE 不正JSONと別形式を受理しない',()=>{for(const text of ['{','null','[]','{}','{"currentFN":100}'])assert.throws(()=>parseBackup(text));});
+test('STABLE 未来形式・不正な連番を受理しない',()=>{for(const patch of [{saveVersion:3},{saveVersion:'2'},{saveSequence:-1},{saveRevision:NaN}])assert.throws(()=>migrate({...createState(91),...patch}));});
+test('STABLE 不明な個体状態と非数の品質を受理しない',()=>{for(const patch of [{state:'ready'},{quality:NaN},{quality:-1}]){const s=createState(91);Object.assign(plot(s).items[0],patch);assert.throws(()=>migrate(s));}});
+test('STABLE 身体能力の欠損と異常値を受理しない',()=>{for(const xp of [[],[0,0,0,NaN],[0,0,0,-1]])assert.throws(()=>migrate({...createState(91),playerStats:{stamina:100,xp}}));});
+test('STABLE 20MB超のファイルは解析前に拒否',()=>assert.throws(()=>parseBackup(' '.repeat(MAX_BACKUP_BYTES+1)),/20MB/));
+test('STABLE 旧保存の再移行は深度・FN・図鑑を変えない',()=>{const s=createState(91);delete s.experience;s.currentFN=350;const a=migrate(s);assert.deepEqual(migrate(a),a);assert.equal(a.currentFN,350);assert.equal(a.experience!.guide,false);});
+test('STABLE 容量・保存禁止の対応を表示できる',()=>{assert.match(storageMessage(new DOMException('full','QuotaExceededError')),/保存容量/);assert.match(storageMessage(new DOMException('denied','SecurityError')),/保存設定/);});
