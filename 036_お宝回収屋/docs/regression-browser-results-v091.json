@@ -1,0 +1,37 @@
+[
+  {
+    "name": "browser",
+    "exitCode": 0,
+    "seconds": 42.153
+  },
+  {
+    "name": "depth-browser",
+    "exitCode": 0,
+    "seconds": 22.878
+  },
+  {
+    "name": "reveal-browser",
+    "exitCode": 0,
+    "seconds": 11.736
+  },
+  {
+    "name": "river-browser",
+    "exitCode": 0,
+    "seconds": 56.322
+  },
+  {
+    "name": "gold-browser",
+    "exitCode": 0,
+    "seconds": 58.623
+  },
+  {
+    "name": "beach-browser",
+    "exitCode": 0,
+    "seconds": 40.835
+  },
+  {
+    "name": "field-browser",
+    "exitCode": 0,
+    "seconds": 62.449
+  }
+]

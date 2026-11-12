@@ -1,0 +1,138 @@
+{
+  "version": "0.9.1",
+  "tests": 631,
+  "fail": 0,
+  "issues": 7,
+  "fixed": 7,
+  "severity": {
+    "Critical": 1,
+    "High": 2,
+    "Medium": 3,
+    "Low": 1
+  },
+  "browserRegressions": [
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "seconds": 42.153
+    },
+    {
+      "name": "depth-browser",
+      "exitCode": 0,
+      "seconds": 22.878
+    },
+    {
+      "name": "reveal-browser",
+      "exitCode": 0,
+      "seconds": 11.736
+    },
+    {
+      "name": "river-browser",
+      "exitCode": 0,
+      "seconds": 56.322
+    },
+    {
+      "name": "gold-browser",
+      "exitCode": 0,
+      "seconds": 58.623
+    },
+    {
+      "name": "beach-browser",
+      "exitCode": 0,
+      "seconds": 40.835
+    },
+    {
+      "name": "field-browser",
+      "exitCode": 0,
+      "seconds": 62.449
+    }
+  ],
+  "UI": [
+    {
+      "channel": "chrome",
+      "width": 320,
+      "backupDownload": true,
+      "invalidFileProtected": true,
+      "previewNoWrite": true,
+      "cancelNoWrite": true,
+      "explicitRestoreReload": true,
+      "LABWorkerAndTimerDisposed": true,
+      "secondaryFingerIgnored": true,
+      "goldSecondaryReleaseIgnored": true,
+      "pullReleaseStopped": true,
+      "saveWarningCompact": "PASS",
+      "layout": "PASS",
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 390,
+      "backupDownload": true,
+      "invalidFileProtected": true,
+      "previewNoWrite": true,
+      "cancelNoWrite": true,
+      "explicitRestoreReload": true,
+      "LABWorkerAndTimerDisposed": true,
+      "secondaryFingerIgnored": true,
+      "goldSecondaryReleaseIgnored": true,
+      "pullReleaseStopped": true,
+      "saveWarningCompact": "320pxケースで確認",
+      "layout": "PASS",
+      "errors": []
+    },
+    {
+      "channel": "chrome",
+      "width": 1280,
+      "backupDownload": true,
+      "invalidFileProtected": true,
+      "previewNoWrite": true,
+      "cancelNoWrite": true,
+      "explicitRestoreReload": true,
+      "LABWorkerAndTimerDisposed": true,
+      "secondaryFingerIgnored": true,
+      "goldSecondaryReleaseIgnored": true,
+      "pullReleaseStopped": true,
+      "saveWarningCompact": "320pxケースで確認",
+      "layout": "PASS",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "width": 390,
+      "backupDownload": true,
+      "invalidFileProtected": true,
+      "previewNoWrite": true,
+      "cancelNoWrite": true,
+      "explicitRestoreReload": true,
+      "LABWorkerAndTimerDisposed": true,
+      "secondaryFingerIgnored": true,
+      "goldSecondaryReleaseIgnored": true,
+      "pullReleaseStopped": true,
+      "saveWarningCompact": "320pxケースで確認",
+      "layout": "PASS",
+      "errors": []
+    }
+  ],
+  "production": [
+    {
+      "channel": "chrome",
+      "debug": "absent",
+      "backup": "PASS",
+      "errors": []
+    },
+    {
+      "channel": "msedge",
+      "debug": "absent",
+      "backup": "PASS",
+      "errors": []
+    }
+  ],
+  "modelSeeds": 100,
+  "modelRuns": 400,
+  "modelUnchanged": true,
+  "stressHours": 24,
+  "treasures": 300,
+  "realIPhone": "未確認",
+  "WebKit": "未インストール",
+  "subjective": "ユーザー確認待ち"
+}

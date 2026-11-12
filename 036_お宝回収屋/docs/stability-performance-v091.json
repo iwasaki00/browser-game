@@ -1,0 +1,97 @@
+{
+  "version": "0.9.1",
+  "snapshots": [
+    {
+      "label": "initial",
+      "heap": {
+        "usedSize": 3755036,
+        "totalSize": 4227072,
+        "embedderHeapUsedSize": 1156464,
+        "backingStorageSize": 1570292
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 230,
+        "jsEventListeners": 61
+      },
+      "live": {
+        "intervals": 2,
+        "workers": 0,
+        "dom": 118,
+        "saveBytes": 4667
+      }
+    },
+    {
+      "label": "after-60-modal-cycles",
+      "heap": {
+        "usedSize": 6016984,
+        "totalSize": 6848512,
+        "embedderHeapUsedSize": 3493040,
+        "backingStorageSize": 2053263
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 2898,
+        "jsEventListeners": 281
+      },
+      "live": {
+        "intervals": 2,
+        "workers": 0,
+        "dom": 770,
+        "saveBytes": 4758
+      }
+    },
+    {
+      "label": "after-120-modal-cycles",
+      "heap": {
+        "usedSize": 5786448,
+        "totalSize": 7110656,
+        "embedderHeapUsedSize": 3644272,
+        "backingStorageSize": 2053263
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 2919,
+        "jsEventListeners": 288
+      },
+      "live": {
+        "intervals": 2,
+        "workers": 0,
+        "dom": 770,
+        "saveBytes": 4758
+      }
+    },
+    {
+      "label": "after-6-lines",
+      "heap": {
+        "usedSize": 8675368,
+        "totalSize": 11829248,
+        "embedderHeapUsedSize": 2997616,
+        "backingStorageSize": 2050131
+      },
+      "dom": {
+        "documents": 2,
+        "nodes": 2877,
+        "jsEventListeners": 288
+      },
+      "live": {
+        "intervals": 2,
+        "workers": 0,
+        "dom": 770,
+        "saveBytes": 566080
+      }
+    }
+  ],
+  "work": [
+    {
+      "label": "6-lines-1002-targets-100-unwashed-book300",
+      "wallSeconds": 15.0116529999068,
+      "mainThreadTaskSeconds": 2.997375,
+      "scriptSeconds": 2.3095470000000002,
+      "layoutSeconds": 0.050177999999999945,
+      "taskFraction": 0.1996698831247038
+    }
+  ],
+  "errors": [],
+  "basis": "Windows headless Chrome、開発版、GC後の実測JSヒープとCDP renderer main-thread TaskDuration。OS全体CPU・iPhone・FPSではない。モジュール読込み/キャッシュ増加をリークと断定しない。"
+}

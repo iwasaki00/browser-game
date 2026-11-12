@@ -1,3 +1,9 @@
+# Version 0.9.1 — STABILITY & FINAL POLISH
+
+631件成功（既存617＋14）、既存7ブラウザ回帰、Chrome320/390/1280・Edge390の保存/入力、公開版Chrome/Edge、9状態復元、400モデル、6ライン24ゲーム時間、300種監査、実メモリ/CPU計測。WebKit/実機Safari未確認。[結果](FINAL_REPORT_0.9.1.md) / [性能](PERFORMANCE_REPORT_0.9.1.md)。
+
+---
+
 # Version 0.9.0 — GAME EXPERIENCE REFINEMENT
 
 617件の自動テスト、既存7ブラウザ回帰、Chrome/Edgeの新UI・本番版、100シード×4方針、6ライン24ゲーム時間が成功。詳しくは [QA](UX_QA_REPORT.md) と [30分モデル](FIRST_30_MINUTES_ANALYSIS.md)。WebKit未実施、実機iPhone Safari・人間の主観評価はユーザー確認待ち。

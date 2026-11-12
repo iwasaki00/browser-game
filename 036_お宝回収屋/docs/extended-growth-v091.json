@@ -1,0 +1,120 @@
+{
+  "version": "0.9.1",
+  "seed": 9000,
+  "horizonSeconds": 21600,
+  "basis": "各方針1シード・6モデル時間。実プレイ時間ではない。付与/価格変更なし。simulationLimitはモデルの反復上限でゲーム内の進行不能ではない。",
+  "rows": [
+    {
+      "policy": "A",
+      "seconds": 21600,
+      "simulationLimit": false,
+      "earned": 7133,
+      "fn": 4753,
+      "purchases": [
+        {
+          "id": "B101",
+          "time": 444.99999999998914
+        },
+        {
+          "id": "B104",
+          "time": 1123.9999999999
+        },
+        {
+          "id": "R101",
+          "time": 1126.9999999998972
+        },
+        {
+          "id": "G101",
+          "time": 1250.499999999785
+        },
+        {
+          "id": "B105",
+          "time": 6854.699999997189
+        }
+      ],
+      "firstMachine": null,
+      "firstAutomation": null,
+      "operations": 5789,
+      "jackpots": 0
+    },
+    {
+      "policy": "B",
+      "seconds": 21600,
+      "simulationLimit": false,
+      "earned": 4754,
+      "fn": 2704,
+      "purchases": [
+        {
+          "id": "B101",
+          "time": 288.9999999999891
+        },
+        {
+          "id": "B104",
+          "time": 2804.799999998368
+        },
+        {
+          "id": "B105",
+          "time": 6625.599999997185
+        }
+      ],
+      "firstMachine": null,
+      "firstAutomation": null,
+      "operations": 8085,
+      "jackpots": 0
+    },
+    {
+      "policy": "C",
+      "seconds": 21600,
+      "simulationLimit": false,
+      "earned": 4783,
+      "fn": 2553,
+      "purchases": [
+        {
+          "id": "B101",
+          "time": 600.9999999999891
+        },
+        {
+          "id": "R101",
+          "time": 1331.09999999972
+        },
+        {
+          "id": "B104",
+          "time": 5770.299999997211
+        },
+        {
+          "id": "B105",
+          "time": 11026.699999997187
+        }
+      ],
+      "firstMachine": null,
+      "firstAutomation": null,
+      "operations": 4271,
+      "jackpots": 0
+    },
+    {
+      "policy": "D",
+      "seconds": 21600,
+      "simulationLimit": false,
+      "earned": 5737,
+      "fn": 3687,
+      "purchases": [
+        {
+          "id": "B101",
+          "time": 748.9999999999889
+        },
+        {
+          "id": "B104",
+          "time": 6883.299999997185
+        },
+        {
+          "id": "B105",
+          "time": 12604.899999997162
+        }
+      ],
+      "firstMachine": null,
+      "firstAutomation": null,
+      "operations": 6065,
+      "jackpots": 0
+    }
+  ]
+}

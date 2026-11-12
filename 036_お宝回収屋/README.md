@@ -1,8 +1,16 @@
 # お宝回収屋 — THE FINDERS
 
-**Version 0.9.0 — GAME EXPERIENCE REFINEMENT**
+**Version 0.9.1 — STABILITY & FINAL POLISH**
 
 少し斜めから見下ろす砂浜を掘り、川底ではつかむ・磁石を投げる・引き上げる操作で探索し、回収・洗浄で架空通貨FNを稼ぐ探索ゲームです。河原では砂利を採取し、パンニング・ふるい・吸引瓶・スルースで砂金を取り出します。素手から道具へ工程を育てます。TypeScript / Vite / Canvas 2D、サーバー・外部API・課金は不要です。
+
+## セーブ保護と安定性
+
+確認した保存・入力・LAB終了の不具合を修正しました。設定またはタイトルの「セーブ保護・バックアップ」からJSON保存、検証、確認付き復元ができます。ゲームの価格・報酬・性能は維持しています。
+
+[最終報告](docs/FINAL_REPORT_0.9.1.md) / [監査](docs/QUALITY_AUDIT_0.9.1.md) / [保存](docs/SAVE_SAFETY_REPORT.md) / [性能](docs/PERFORMANCE_REPORT_0.9.1.md) / [公開前チェック](docs/RELEASE_READINESS.md) / [iPhone実機手順](docs/IPHONE_SAFARI_TEST.md)。実機Safariと人間評価はユーザー確認待ち。
+
+再実行：npm.cmd test / npm.cmd run test:stability-browser / npm.cmd run test:stability-performance / npm.cmd run balance:ux -- 100 / npm.cmd run build / npm.cmd run test:production。
 
 ## 次の一歩を分かりやすく
 

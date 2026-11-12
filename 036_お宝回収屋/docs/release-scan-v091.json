@@ -1,0 +1,61 @@
+{
+  "version": "0.9.1",
+  "dependencyMetadata": [
+    {
+      "name": "playwright",
+      "version": "1.64.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "playwright-core",
+      "version": "1.64.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "vite",
+      "version": "7.3.7",
+      "license": "MIT"
+    },
+    {
+      "name": "tsx",
+      "version": "4.23.15",
+      "license": "MIT"
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.28.2",
+      "license": "MIT"
+    },
+    {
+      "name": "rollup",
+      "version": "4.67.2",
+      "license": "MIT"
+    }
+  ],
+  "distFiles": [
+    "index.html",
+    "index-BPIVvpyP.js",
+    "index-Didvjovp.css"
+  ],
+  "secretPatternMatches": [
+    {
+      "name": "privateKey",
+      "match": false
+    },
+    {
+      "name": "awsAccess",
+      "match": false
+    },
+    {
+      "name": "githubToken",
+      "match": false
+    }
+  ],
+  "externalRuntimeURLs": [],
+  "rights": "制作物全体の権利承認は未確認。SPDXはローカル依存パッケージの宣言を確認したもの。"
+}

@@ -1,3 +1,9 @@
+# Version 0.9.1 — STABILITY & FINAL POLISH
+
+確認した不具合7件を最小修正。保存確定後のバックアップ、必須値検証、復旧導線と確認付きJSON復元、Pointer所有者、LAB終了、320px保存警告。ゲーム性能・価格・報酬・出現率は変更なし。[品質監査](QUALITY_AUDIT_0.9.1.md)。
+
+---
+
 # Version 0.9.0 — GAME EXPERIENCE REFINEMENT
 
 - スキップ可能な次の行動案内と初回11イベントの端末内記録。

@@ -44,7 +44,10 @@
     "test:field-feel-browser": "node scripts/field-feel-browser-test.mjs",
     "balance:ux": "tsx scripts/ux-balance.ts",
     "test:ux-browser": "node scripts/ux-browser-test.mjs",
-    "test:ux-performance": "node scripts/ux-performance-test.mjs"
+    "test:ux-performance": "node scripts/ux-performance-test.mjs",
+    "test:stability-browser": "node scripts/stability-browser-test.mjs",
+    "test:stability-performance": "node scripts/stability-performance.mjs",
+    "balance:extended": "tsx scripts/stability-growth.ts"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

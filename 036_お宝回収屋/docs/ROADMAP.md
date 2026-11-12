@@ -1,3 +1,9 @@
+# Version 0.9.1 — STABILITY & FINAL POLISH
+
+0.9.1：保存/入力/終了処理の品質監査と確認済み7件を修正。次版では実機Safari、人間の継続プレイ、権利/NOTICE/公開範囲を確認。設備は延長モデルでも未到達でしたが、固定戦略だけを理由に価格/報酬は変更しません。v1.0.0前の残作業は[公開前チェック](RELEASE_READINESS.md)。
+
+---
+
 # Version 0.9.0 — GAME EXPERIENCE REFINEMENT
 
 実装・技術検証を実施。主観的プレイ評価はユーザー確認待ちです。
