@@ -242,6 +242,486 @@
         17,
         28
       ]
+    },
+    {
+      "id": "R014",
+      "field": "R",
+      "sourceFile": "exec-e96e2e66-d828-46e8-a42e-c12c185d456e.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel WING NUT, short central threaded barrel with a visible circular hole and TWO broad upturned butterfly WINGS extending sideways. Three-quarter view shows thin wings and thick center, dark blue-gray iron, small red-brown rust at one wing root. Transparent center bore. Not a bolt, washer or propeller. Broad butterfly silhouette, no other parts.",
+      "description": "One steel WING NUT, short central threaded barrel with a visible circular hole and TWO broad upturned butterfly WINGS extending sideways. Three-quarter view shows thin wings and thick center, dark blue-gray iron, small red-brown rust at one wing root. Transparent center bore. Not a bolt, washer or propeller. Broad butterfly silhouette, no other parts.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        23
+      ]
+    },
+    {
+      "id": "R015",
+      "field": "R",
+      "sourceFile": "exec-300e9a3c-10f7-4567-943e-ca315356c312.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel SPLIT COTTER PIN, a small oval loop at one end, TWO slender parallel legs of unequal lengths at the other, one leg slightly bent outward. Diagonal narrow metallic shape, transparent eye and gap between legs. Worn steel highlight upper-left, little rust at bent leg. No nail head, no screw thread or pliers handles.",
+      "description": "One steel SPLIT COTTER PIN, a small oval loop at one end, TWO slender parallel legs of unequal lengths at the other, one leg slightly bent outward. Diagonal narrow metallic shape, transparent eye and gap between legs. Worn steel highlight upper-left, little rust at bent leg. No nail head, no screw thread or pliers handles.",
+      "palette": "steel",
+      "maxBounds": [
+        24,
+        28
+      ]
+    },
+    {
+      "id": "R016",
+      "field": "R",
+      "sourceFile": "exec-c35afafe-0135-404d-9fe6-f12fdb88eebd.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One PLAIN FLAT STEEL WASHER, a thin annular round disc with a large circular through-hole, SMOOTH unbroken outer rim. Slight three-quarter ellipse shows thin lower edge and broad flat upper surface. Gray steel, sparse rust dots at one edge. NO split, teeth, tabs, raised hub or threads. Clearly flat ring-shaped washer.",
+      "description": "One PLAIN FLAT STEEL WASHER, a thin annular round disc with a large circular through-hole, SMOOTH unbroken outer rim. Slight three-quarter ellipse shows thin lower edge and broad flat upper surface. Gray steel, sparse rust dots at one edge. NO split, teeth, tabs, raised hub or threads. Clearly flat ring-shaped washer.",
+      "palette": "steel",
+      "maxBounds": [
+        25,
+        24
+      ]
+    },
+    {
+      "id": "R017",
+      "field": "R",
+      "sourceFile": "exec-60d45d85-e494-4d32-bc7c-5cd5644f5b98.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One SPLIT SPRING LOCK WASHER, a thick circular steel ring CUT at one point, one cut END RAISED slightly above the other. Show obvious diagonal gap on lower-right and stepped overlapping split ends. Open center transparent, dark metal with upper-left highlight and rust at split. NOT a plain unbroken washer or a spiral spring.",
+      "description": "One SPLIT SPRING LOCK WASHER, a thick circular steel ring CUT at one point, one cut END RAISED slightly above the other. Show obvious diagonal gap on lower-right and stepped overlapping split ends. Open center transparent, dark metal with upper-left highlight and rust at split. NOT a plain unbroken washer or a spiral spring.",
+      "palette": "steel",
+      "maxBounds": [
+        26,
+        25
+      ]
+    },
+    {
+      "id": "R019",
+      "field": "R",
+      "sourceFile": "exec-a11486a0-a8aa-44e9-8b73-792f5d87c5df.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One U-BOLT, heavy steel rod bent into an inverted U with TWO long straight parallel threaded legs pointing downward. Both ends blunt, about four coarse thread marks on each leg, curved smooth bridge at top. No nuts or mounting plate. Dark iron and sparse rust, clearly open gap under bridge. Not a horseshoe or chain link.",
+      "description": "One U-BOLT, heavy steel rod bent into an inverted U with TWO long straight parallel threaded legs pointing downward. Both ends blunt, about four coarse thread marks on each leg, curved smooth bridge at top. No nuts or mounting plate. Dark iron and sparse rust, clearly open gap under bridge. Not a horseshoe or chain link.",
+      "palette": "steel",
+      "maxBounds": [
+        22,
+        28
+      ]
+    },
+    {
+      "id": "R020",
+      "field": "R",
+      "sourceFile": "exec-94112b9f-1640-4802-9fb5-58e7c6a5bb0d.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One old steel RIVET, short smooth cylindrical shank with a broad rounded MUSHROOM HEAD at one end. Diagonal, thick dome shows upper-left silver highlight and dark side edge, flat blunt opposite end. A little red-brown rust around head rim. NO screw threads, no hexagon head or pointed tip. Short blunt fastening silhouette.",
+      "description": "One old steel RIVET, short smooth cylindrical shank with a broad rounded MUSHROOM HEAD at one end. Diagonal, thick dome shows upper-left silver highlight and dark side edge, flat blunt opposite end. A little red-brown rust around head rim. NO screw threads, no hexagon head or pointed tip. Short blunt fastening silhouette.",
+      "palette": "steel",
+      "maxBounds": [
+        25,
+        24
+      ]
+    },
+    {
+      "id": "R021",
+      "field": "R",
+      "sourceFile": "exec-0e603746-6c33-4e19-ba34-20f6da2fa9b2.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One loose steel WORM-DRIVE HOSE CLAMP. A thin broad circular BAND with several small rectangular slots along its surface, joined by a short blocky screw housing with protruding screw head on upper-right. Large transparent circular center, band side thickness visible. Dark steel with rust on screw housing. Not a plain washer: band is standing on edge and housing protrudes.",
+      "description": "One loose steel WORM-DRIVE HOSE CLAMP. A thin broad circular BAND with several small rectangular slots along its surface, joined by a short blocky screw housing with protruding screw head on upper-right. Large transparent circular center, band side thickness visible. Dark steel with rust on screw housing. Not a plain washer: band is standing on edge and housing protrudes.",
+      "palette": "steel",
+      "maxBounds": [
+        27,
+        26
+      ]
+    },
+    {
+      "id": "R022",
+      "field": "R",
+      "sourceFile": "exec-724bf157-6634-4779-962c-90f15ddba2cb.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One small metal EXPANSION ANCHOR FASTENER for masonry, a short thick cylindrical sleeve with FOUR longitudinal expansion slots at bottom and a slightly flared collar at top, central blunt inner pin visible. Diagonal upper-left to lower-right, gray steel with sparse rust, visible separated sleeve end prongs. Not a ship anchor, no curved flukes, no hex bolt head.",
+      "description": "One small metal EXPANSION ANCHOR FASTENER for masonry, a short thick cylindrical sleeve with FOUR longitudinal expansion slots at bottom and a slightly flared collar at top, central blunt inner pin visible. Diagonal upper-left to lower-right, gray steel with sparse rust, visible separated sleeve end prongs. Not a ship anchor, no curved flukes, no hex bolt head.",
+      "palette": "steel",
+      "maxBounds": [
+        23,
+        28
+      ]
+    },
+    {
+      "id": "R023",
+      "field": "R",
+      "sourceFile": "exec-6b249619-b0c2-451b-8087-e4a58068f5b9.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One EXTERNAL TOOTH LOCK WASHER, thin flat steel ring with exactly TEN broad triangular serrated teeth around its outer edge, large circular through-hole, narrow annular flat center. Slight top-down view, upper-left metal edge and tiny rust on two teeth. NO tall cylindrical wall, no axle hub. Gear-like but very thin washer silhouette.",
+      "description": "One EXTERNAL TOOTH LOCK WASHER, thin flat steel ring with exactly TEN broad triangular serrated teeth around its outer edge, large circular through-hole, narrow annular flat center. Slight top-down view, upper-left metal edge and tiny rust on two teeth. NO tall cylindrical wall, no axle hub. Gear-like but very thin washer silhouette.",
+      "palette": "steel",
+      "maxBounds": [
+        26,
+        26
+      ]
+    },
+    {
+      "id": "R024",
+      "field": "R",
+      "sourceFile": "exec-259b0f1c-d94d-46a3-9548-a4f459efdb64.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One detached steel HINGE PIN, a long smooth narrow cylindrical rod with a small flat round head at top and a slightly rounded blunt lower end. One shallow circumferential groove just under head. Plain straight shaft with NO threads, point or split legs. Iron-gray left highlight and localized reddish rust along lower section. Preserve slender vertical proportions.",
+      "description": "One detached steel HINGE PIN, a long smooth narrow cylindrical rod with a small flat round head at top and a slightly rounded blunt lower end. One shallow circumferential groove just under head. Plain straight shaft with NO threads, point or split legs. Iron-gray left highlight and localized reddish rust along lower section. Preserve slender vertical proportions.",
+      "palette": "steel",
+      "maxBounds": [
+        8,
+        28
+      ]
+    },
+    {
+      "id": "R026",
+      "field": "R",
+      "sourceFile": "exec-3ad08fcd-732b-45bb-a62a-99520c9e8dcd.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One pair of old steel NEEDLE-NOSE PLIERS, slightly open. Long narrow pointed tapered JAWS at upper-right, central circular pivot, TWO curved metal HANDLES spreading at lower-left with a large transparent gap. Inner jaw notches subtle. No plastic grips. Worn gray steel and small rust patches. Crucial long pointed double jaws and two handles, not an open-ended wrench.",
+      "description": "One pair of old steel NEEDLE-NOSE PLIERS, slightly open. Long narrow pointed tapered JAWS at upper-right, central circular pivot, TWO curved metal HANDLES spreading at lower-left with a large transparent gap. Inner jaw notches subtle. No plastic grips. Worn gray steel and small rust patches. Crucial long pointed double jaws and two handles, not an open-ended wrench.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ]
+    },
+    {
+      "id": "R028",
+      "field": "R",
+      "sourceFile": "exec-2d1eb553-7dc8-4689-9041-e4bed989676e.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel HEX SOCKET, short thick cylindrical tool viewed obliquely from above. Large clearly SIX-SIDED recessed opening on top, thick round wall, knurled or stepped collar around lower outside, dark square drive recess only hinted on underside. Upper-left bright rim, blue-gray shaded cylinder, small rust at base. No handle. Distinguish deep thick socket from flat round washer and square nut.",
+      "description": "One steel HEX SOCKET, short thick cylindrical tool viewed obliquely from above. Large clearly SIX-SIDED recessed opening on top, thick round wall, knurled or stepped collar around lower outside, dark square drive recess only hinted on underside. Upper-left bright rim, blue-gray shaded cylinder, small rust at base. No handle. Distinguish deep thick socket from flat round washer and square nut.",
+      "palette": "steel",
+      "maxBounds": [
+        23,
+        27
+      ]
+    },
+    {
+      "id": "R029",
+      "field": "R",
+      "sourceFile": "exec-ce2c5570-5e0e-42ac-8642-c8863590f485.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel RATCHET HANDLE, narrow diagonal long handle with rounded teardrop-shaped CLOSED HEAD at upper-right. Head has a visible central SQUARE DRIVE stub and tiny reversing lever near neck; lower handle has a flattened grip with shallow parallel ridges. NO open jaws. Slight top view, steel edge highlights and a little rust. Clearly different from old open-end spanner and adjustable wrench.",
+      "description": "One steel RATCHET HANDLE, narrow diagonal long handle with rounded teardrop-shaped CLOSED HEAD at upper-right. Head has a visible central SQUARE DRIVE stub and tiny reversing lever near neck; lower handle has a flattened grip with shallow parallel ridges. NO open jaws. Slight top view, steel edge highlights and a little rust. Clearly different from old open-end spanner and adjustable wrench.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ]
+    },
+    {
+      "id": "R030",
+      "field": "R",
+      "sourceFile": "exec-51faac07-cda8-4865-bde4-634946e07778.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One detached steel HAMMER HEAD with NO wooden handle. Horizontal heavy double-ended head: one flat square striking face on left, narrower curved split CLAW on right, and central dark oval handle SOCKET through its body. Visible upper and side planes show thick mass. Rust patches in claw recess, upper-left iron reflection. Hole transparent if through. Compact asymmetric silhouette.",
+      "description": "One detached steel HAMMER HEAD with NO wooden handle. Horizontal heavy double-ended head: one flat square striking face on left, narrower curved split CLAW on right, and central dark oval handle SOCKET through its body. Visible upper and side planes show thick mass. Rust patches in claw recess, upper-left iron reflection. Hole transparent if through. Compact asymmetric silhouette.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        17
+      ]
+    },
+    {
+      "id": "R032",
+      "field": "R",
+      "sourceFile": "exec-9188c8cd-5189-4956-b092-880b7c5d5361.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One HACKSAW FRAME only, NO SAW BLADE. Bent steel bow-shaped open rectangular arch, one short pistol-like metal grip attached to lower-left, two small blade mounting pegs at separated lower corners. Large clear empty space inside frame and gap along bottom where blade is absent. Dark gray iron with sparse rust. No letters or measurement marks, preserve thin frame.",
+      "description": "One HACKSAW FRAME only, NO SAW BLADE. Bent steel bow-shaped open rectangular arch, one short pistol-like metal grip attached to lower-left, two small blade mounting pegs at separated lower corners. Large clear empty space inside frame and gap along bottom where blade is absent. Dark gray iron with sparse rust. No letters or measurement marks, preserve thin frame.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        24
+      ]
+    },
+    {
+      "id": "R033",
+      "field": "R",
+      "sourceFile": "exec-b717a500-7cce-4c54-abdc-4a00dabbdedd.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One old cold CHISEL, short chunky steel hexagonal bar, broad FLAT WEDGE CUTTING EDGE at one end and slightly mushroomed blunt striking cap at the other. Diagonal, cutting end wide and straight with bright bevel. Dark iron and small rust near cap. No pointed needle tip, no handle or wrench jaw. Compact beveled blade silhouette.",
+      "description": "One old cold CHISEL, short chunky steel hexagonal bar, broad FLAT WEDGE CUTTING EDGE at one end and slightly mushroomed blunt striking cap at the other. Diagonal, cutting end wide and straight with bright bevel. Dark iron and small rust near cap. No pointed needle tip, no handle or wrench jaw. Compact beveled blade silhouette.",
+      "palette": "steel",
+      "maxBounds": [
+        24,
+        28
+      ]
+    },
+    {
+      "id": "R034",
+      "field": "R",
+      "sourceFile": "exec-c4afc63c-1db2-4035-a2a4-6ca2aa430fd0.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel CENTER PUNCH, narrow tapered straight rod, one conical sharp POINT and blunt flat striking end. Hexagonal middle shank indicated by planar highlights, taper extends along lower third. Diagonal opposite direction to chisel. No wide cutting blade, no mushroom nail head, no threads or holes. Small rust near upper end, crisp upper-left edge.",
+      "description": "One steel CENTER PUNCH, narrow tapered straight rod, one conical sharp POINT and blunt flat striking end. Hexagonal middle shank indicated by planar highlights, taper extends along lower third. Diagonal opposite direction to chisel. No wide cutting blade, no mushroom nail head, no threads or holes. Small rust near upper end, crisp upper-left edge.",
+      "palette": "steel",
+      "maxBounds": [
+        25,
+        28
+      ]
+    },
+    {
+      "id": "R035",
+      "field": "R",
+      "sourceFile": "exec-717dc846-9161-4360-b7da-6caa26dcef6a.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One detached PIPE WRENCH JAW: chunky steel hooked J-shaped gripping head with a broad inward-facing SERRATED surface and short rectangular toothed rack stem pointing downward. Show THREE or FOUR big gripping teeth inside the open hook. No whole long handle, no pivot or paired plier arms. Dark iron, rusty recesses, bright upper-left tooth edges. Clearly an isolated heavy jaw component.",
+      "description": "One detached PIPE WRENCH JAW: chunky steel hooked J-shaped gripping head with a broad inward-facing SERRATED surface and short rectangular toothed rack stem pointing downward. Show THREE or FOUR big gripping teeth inside the open hook. No whole long handle, no pivot or paired plier arms. Dark iron, rusty recesses, bright upper-left tooth edges. Clearly an isolated heavy jaw component.",
+      "palette": "steel",
+      "maxBounds": [
+        24,
+        28
+      ]
+    },
+    {
+      "id": "R037",
+      "field": "R",
+      "sourceFile": "exec-40147af6-36c3-45ca-9179-c2eb6bd619f5.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel SOCKET EXTENSION BAR, straight narrow shaft with one FEMALE SQUARE RECESS in thicker collar at top and a smaller protruding MALE SQUARE DRIVE at bottom. Two stepped square-ended collars linked by smooth narrow cylindrical rod, tiny detent ball dot near male drive. No wrench head or blade. Gray iron edge reflection and small rust by collar.",
+      "description": "One steel SOCKET EXTENSION BAR, straight narrow shaft with one FEMALE SQUARE RECESS in thicker collar at top and a smaller protruding MALE SQUARE DRIVE at bottom. Two stepped square-ended collars linked by smooth narrow cylindrical rod, tiny detent ball dot near male drive. No wrench head or blade. Gray iron edge reflection and small rust by collar.",
+      "palette": "steel",
+      "maxBounds": [
+        9,
+        28
+      ]
+    },
+    {
+      "id": "R038",
+      "field": "R",
+      "sourceFile": "exec-6df809fc-cbdb-4fcb-88eb-9f23454a731d.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One steel CARPENTER'S SQUARE, thin flat L-shaped ruler with two unequal straight rectangular arms meeting at exactly90 degrees. Long arm narrow, short arm slightly wider, perfectly open inner right-angle corner. A few tiny unnumbered tick NOTCHES along inner edges, NO numerals or text. Visible very thin side edge, gray steel with small rust. Distinguish from round-bar Allen key by broad flat strip profile.",
+      "description": "One steel CARPENTER'S SQUARE, thin flat L-shaped ruler with two unequal straight rectangular arms meeting at exactly90 degrees. Long arm narrow, short arm slightly wider, perfectly open inner right-angle corner. A few tiny unnumbered tick NOTCHES along inner edges, NO numerals or text. Visible very thin side edge, gray steel with small rust. Distinguish from round-bar Allen key by broad flat strip profile.",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        25
+      ]
+    },
+    {
+      "id": "G015",
+      "field": "G",
+      "sourceFile": "exec-14bb2683-3c1c-4335-ae74-4c8a23a8a8b8.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One PLAGIOCLASE FELDSPAR fragment, a pale gray-white angular broad cleavage chip shaped as an irregular flat rectangular plate with one corner chipped off. FOUR clearly parallel straight twin STRIATIONS cross its broad front face, visible thin stepped side plane. Upper-left cream highlight, slate-gray outline. Not a pointed quartz prism, not a smooth pebble or a pink thick feldspar block.",
+      "description": "One PLAGIOCLASE FELDSPAR fragment, a pale gray-white angular broad cleavage chip shaped as an irregular flat rectangular plate with one corner chipped off. FOUR clearly parallel straight twin STRIATIONS cross its broad front face, visible thin stepped side plane. Upper-left cream highlight, slate-gray outline. Not a pointed quartz prism, not a smooth pebble or a pink thick feldspar block.",
+      "palette": "pale",
+      "maxBounds": [
+        26,
+        25
+      ]
+    },
+    {
+      "id": "G016",
+      "field": "G",
+      "sourceFile": "exec-35022ce9-570e-4d5c-a791-045fed33053e.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One BIOTITE MICA thin flake, dark brown-black irregular hexagonal layered PLATE. A raised corner peels slightly upward, TWO stacked very thin sheets visibly offset along lower edge, bronze-dark upper-left glints. Flat broad layered silhouette, not a chunky rock or pointed black crystal. NO bright halo, background transparent, solid visible sheet faces.",
+      "description": "One BIOTITE MICA thin flake, dark brown-black irregular hexagonal layered PLATE. A raised corner peels slightly upward, TWO stacked very thin sheets visibly offset along lower edge, bronze-dark upper-left glints. Flat broad layered silhouette, not a chunky rock or pointed black crystal. NO bright halo, background transparent, solid visible sheet faces.",
+      "palette": "biotite",
+      "maxBounds": [
+        28,
+        20
+      ]
+    },
+    {
+      "id": "G017",
+      "field": "G",
+      "sourceFile": "exec-fadc915d-61e9-44d2-8937-6bd121b860ee.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One MUSCOVITE MICA flake, pale silvery-beige translucent-looking irregular broad hexagonal sheet, one corner slightly folded and an offset second thin sheet beneath. Show fine parallel laminar edge steps and a few pale reflective bands. Keep whole face visible opaque pale ivory, surrounding background transparent. Broad flat thin shape, not a quartz point, not a cube or green block.",
+      "description": "One MUSCOVITE MICA flake, pale silvery-beige translucent-looking irregular broad hexagonal sheet, one corner slightly folded and an offset second thin sheet beneath. Show fine parallel laminar edge steps and a few pale reflective bands. Keep whole face visible opaque pale ivory, surrounding background transparent. Broad flat thin shape, not a quartz point, not a cube or green block.",
+      "palette": "pale",
+      "maxBounds": [
+        27,
+        23
+      ]
+    },
+    {
+      "id": "G019",
+      "field": "G",
+      "sourceFile": "exec-85a6661b-cde4-4d34-b598-f784f3578653.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One AMPHIBOLE mineral grain, a narrow elongated dark green-black PRISM fragment, oblique slanted broken ends and TWO long vertical cleavage ridges. Slightly splintery one side, pointed-ish irregular tip but no perfect gemstone termination. Upper-left gray-green highlights, dark forest-colored outline. Distinguish from short squat dark augite by long thin silhouette.",
+      "description": "One AMPHIBOLE mineral grain, a narrow elongated dark green-black PRISM fragment, oblique slanted broken ends and TWO long vertical cleavage ridges. Slightly splintery one side, pointed-ish irregular tip but no perfect gemstone termination. Upper-left gray-green highlights, dark forest-colored outline. Distinguish from short squat dark augite by long thin silhouette.",
+      "palette": "greenstone",
+      "maxBounds": [
+        18,
+        28
+      ]
+    },
+    {
+      "id": "G020",
+      "field": "G",
+      "sourceFile": "exec-b64d6a38-802a-479a-b818-cdf6b7a1e5ce.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One AUGITE mineral grain, a SHORT SQUAT blocky dark olive-gray prism with broad eight-sided cross-section and two blunt uneven broken ends. Wide central face, two narrow sloped side faces, one short cleavage notch. Dense dark mineral with gray-green left-lit facets, not metal. Much shorter and thicker than a needlelike amphibole grain, no long points.",
+      "description": "One AUGITE mineral grain, a SHORT SQUAT blocky dark olive-gray prism with broad eight-sided cross-section and two blunt uneven broken ends. Wide central face, two narrow sloped side faces, one short cleavage notch. Dense dark mineral with gray-green left-lit facets, not metal. Much shorter and thicker than a needlelike amphibole grain, no long points.",
+      "palette": "greenstone",
+      "maxBounds": [
+        25,
+        22
+      ]
+    },
+    {
+      "id": "G024",
+      "field": "G",
+      "sourceFile": "exec-ddc78a4a-8e9d-4859-95cf-b85ce04275e2.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One CHLORITE mineral aggregate, a small deep desaturated green clump formed from FIVE overlapping thin leaflike PLATY flakes radiating in a loose fan. Obvious laminar edges, individual plates tilt differently, irregular layered silhouette with deep notches. Pale green edge glints, opaque dark green faces. Not a smooth serpentine pebble or blocky feldspar, no plant leaves or stems.",
+      "description": "One CHLORITE mineral aggregate, a small deep desaturated green clump formed from FIVE overlapping thin leaflike PLATY flakes radiating in a loose fan. Obvious laminar edges, individual plates tilt differently, irregular layered silhouette with deep notches. Pale green edge glints, opaque dark green faces. Not a smooth serpentine pebble or blocky feldspar, no plant leaves or stems.",
+      "palette": "greenstone",
+      "maxBounds": [
+        26,
+        27
+      ]
+    },
+    {
+      "id": "G049",
+      "field": "G",
+      "sourceFile": "exec-c401df35-84f8-449f-846b-5d96ee01d970.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One CHALCOPYRITE grain, a compact irregular jagged brass-yellow metallic mineral mass with THREE uneven triangular facet ridges and a small offset protruding point. Warm pale upper-left reflection, olive-brown creases, a tiny muted purplish tarnish patch. NO regular cube, NO rounded gold nugget, NO loose dust grains. Distinguish from square pyrite cubes and rounded/flat natural gold by angular asymmetric knobbly crystal silhouette.",
+      "description": "One CHALCOPYRITE grain, a compact irregular jagged brass-yellow metallic mineral mass with THREE uneven triangular facet ridges and a small offset protruding point. Warm pale upper-left reflection, olive-brown creases, a tiny muted purplish tarnish patch. NO regular cube, NO rounded gold nugget, NO loose dust grains. Distinguish from square pyrite cubes and rounded/flat natural gold by angular asymmetric knobbly crystal silhouette.",
+      "palette": "brass",
+      "maxBounds": [
+        26,
+        26
+      ]
+    },
+    {
+      "id": "G062",
+      "field": "G",
+      "sourceFile": "exec-7dea13a1-b041-458f-9259-b83bd94a4b5b.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One JASPER pebble, opaque muted brick-red and rusty orange elongated rounded kidney shape. Dense smooth mineral surface with TWO broad subtle wavy ochre veins and one small natural shallow nick. Clearly curved asymmetric kidney silhouette, visible darker rounded lower side, no crystal faces or glass highlights. Not a circular coin, not banded agate wedge.",
+      "description": "One JASPER pebble, opaque muted brick-red and rusty orange elongated rounded kidney shape. Dense smooth mineral surface with TWO broad subtle wavy ochre veins and one small natural shallow nick. Clearly curved asymmetric kidney silhouette, visible darker rounded lower side, no crystal faces or glass highlights. Not a circular coin, not banded agate wedge.",
+      "palette": "jasper",
+      "maxBounds": [
+        28,
+        21
+      ]
+    },
+    {
+      "id": "G063",
+      "field": "G",
+      "sourceFile": "exec-5a6f3a2b-6c52-40c0-a2b8-96813a9f95e8.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One FLINT nodule pebble, an asymmetrical oval pale chalky OUTER CORTEX with a large dark slate-gray freshly BROKEN concave face. The dark face has THREE curved CONCHOIDAL ripple ridges sweeping from an off-center impact point. One sharp scoop-shaped broken edge interrupts rounded silhouette, upper-left light. No pointed quartz crystals, not smooth black pebble.",
+      "description": "One FLINT nodule pebble, an asymmetrical oval pale chalky OUTER CORTEX with a large dark slate-gray freshly BROKEN concave face. The dark face has THREE curved CONCHOIDAL ripple ridges sweeping from an off-center impact point. One sharp scoop-shaped broken edge interrupts rounded silhouette, upper-left light. No pointed quartz crystals, not smooth black pebble.",
+      "palette": "flint",
+      "maxBounds": [
+        26,
+        27
+      ]
+    },
+    {
+      "id": "G064",
+      "field": "G",
+      "sourceFile": "exec-4c5195ee-a149-41c0-8a7e-7accd4378d0e.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One CHERT pebble, muted warm brown-gray compact irregular POLYGONAL rock chip. Thin curved white-gray sedimentary bands and one shallow smooth scalloped fracture on broad flat face, angular broken corners, NO thick white cortex and NO shiny black glass. Slight top-down shows broad dull face and thin dark side, distinguish from oval flint nodule and red kidney jasper.",
+      "description": "One CHERT pebble, muted warm brown-gray compact irregular POLYGONAL rock chip. Thin curved white-gray sedimentary bands and one shallow smooth scalloped fracture on broad flat face, angular broken corners, NO thick white cortex and NO shiny black glass. Slight top-down shows broad dull face and thin dark side, distinguish from oval flint nodule and red kidney jasper.",
+      "palette": "stone",
+      "maxBounds": [
+        26,
+        25
+      ]
+    },
+    {
+      "id": "G065",
+      "field": "G",
+      "sourceFile": "exec-fe1904ef-6c9a-49b4-b1eb-482ccb280324.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One OBSIDIAN shard, narrow sharp triangular curved black volcanic GLASS flake. Strong conchoidal swept fracture ridges across a shiny cool blue-black face and a pale thin upper-left edge reflection. One long sharp point, one deeply curved concave side and broad thicker broken base. No aura or sparkle. Clearly sharp curved shard rather than rounded black rock or blocky mineral grain.",
+      "description": "One OBSIDIAN shard, narrow sharp triangular curved black volcanic GLASS flake. Strong conchoidal swept fracture ridges across a shiny cool blue-black face and a pale thin upper-left edge reflection. One long sharp point, one deeply curved concave side and broad thicker broken base. No aura or sparkle. Clearly sharp curved shard rather than rounded black rock or blocky mineral grain.",
+      "palette": "blackstone",
+      "maxBounds": [
+        20,
+        28
+      ]
+    },
+    {
+      "id": "G066",
+      "field": "G",
+      "sourceFile": "exec-27e788b7-440d-4406-b907-c86457a5567f.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One river-worn PUMICE pebble, pale cream-gray rounded oval stone with large dark irregular VESICLE pits. Water-worn outline rounded at both ends, one broad flattened side, three large pits and several small ones. Light porous volcanic texture, matte mineral surface. Different from a pointed angular drift pumice fragment by smoothly rounded thick oval silhouette. No coral branches or attached shells.",
+      "description": "One river-worn PUMICE pebble, pale cream-gray rounded oval stone with large dark irregular VESICLE pits. Water-worn outline rounded at both ends, one broad flattened side, three large pits and several small ones. Light porous volcanic texture, matte mineral surface. Different from a pointed angular drift pumice fragment by smoothly rounded thick oval silhouette. No coral branches or attached shells.",
+      "palette": "coral",
+      "maxBounds": [
+        27,
+        24
+      ]
+    },
+    {
+      "id": "G069",
+      "field": "G",
+      "sourceFile": "exec-5958cb6e-5cba-4264-a438-2c554d1db721.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One GRANITE pebble, chunky irregular rounded-square rock with FOUR visibly coarse interlocking grains of pale pink feldspar, off-white quartz and dark gray-black speckles. Grain boundaries angular, no smooth colored bands or veins. Slightly domed broad face and darker thick side, no crystal points. Overall neutral pale pink-gray salt-and-pepper specimen on transparent background.",
+      "description": "One GRANITE pebble, chunky irregular rounded-square rock with FOUR visibly coarse interlocking grains of pale pink feldspar, off-white quartz and dark gray-black speckles. Grain boundaries angular, no smooth colored bands or veins. Slightly domed broad face and darker thick side, no crystal points. Overall neutral pale pink-gray salt-and-pepper specimen on transparent background.",
+      "palette": "pegmatite",
+      "maxBounds": [
+        26,
+        27
+      ]
+    },
+    {
+      "id": "G072",
+      "field": "G",
+      "sourceFile": "exec-397aac68-fff6-4bf6-b074-118a5e2f3808.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One GNEISS pebble, an elongated flattened irregular slab with THREE alternating wavy light ivory and dark charcoal mineral BANDS. Bands sweep diagonally across face and continue onto visible thick side. Chipped asymmetric edges, upper-left light. Clearly layered striped metamorphic rock, not granite's random speckles or agate's concentric curved rings.",
+      "description": "One GNEISS pebble, an elongated flattened irregular slab with THREE alternating wavy light ivory and dark charcoal mineral BANDS. Bands sweep diagonally across face and continue onto visible thick side. Chipped asymmetric edges, upper-left light. Clearly layered striped metamorphic rock, not granite's random speckles or agate's concentric curved rings.",
+      "palette": "flint",
+      "maxBounds": [
+        28,
+        23
+      ]
+    },
+    {
+      "id": "G075",
+      "field": "G",
+      "sourceFile": "exec-2852bc3f-7bc7-45b2-b07d-1eaea89fb0d4.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One CONGLOMERATE rock fragment, a rough angular brown-gray MATRIX chunk containing FOUR visibly rounded pebble inclusions of unequal sizes in cream, muted rust and dark slate. Each rounded inclusion enclosed by matrix, one pebble protrudes slightly from edge, one exposed broken inclusion. One connected rock specimen, not a scatter of loose pebbles. Strong rounded inclusions versus angular outer matrix.",
+      "description": "One CONGLOMERATE rock fragment, a rough angular brown-gray MATRIX chunk containing FOUR visibly rounded pebble inclusions of unequal sizes in cream, muted rust and dark slate. Each rounded inclusion enclosed by matrix, one pebble protrudes slightly from edge, one exposed broken inclusion. One connected rock specimen, not a scatter of loose pebbles. Strong rounded inclusions versus angular outer matrix.",
+      "palette": "conglomerate",
+      "maxBounds": [
+        25,
+        28
+      ]
+    },
+    {
+      "id": "G081",
+      "field": "G",
+      "sourceFile": "exec-2fc7ddcb-8d4f-46b4-8cde-f7b34d1506ee.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One QUARTZ-VEIN BRECCIA fragment, dark slate-gray ANGULAR host-rock chunk split by TWO straight branching off-white quartz veins crossing into a Y. Clearly sharp polygonal outer corners and three angular dark rock blocks separated by narrow pale vein fill. Thin visible side face, cool upper-left highlight. Not a rounded chalcedony vein stone and not a cluster of pointed quartz crystals.",
+      "description": "One QUARTZ-VEIN BRECCIA fragment, dark slate-gray ANGULAR host-rock chunk split by TWO straight branching off-white quartz veins crossing into a Y. Clearly sharp polygonal outer corners and three angular dark rock blocks separated by narrow pale vein fill. Thin visible side face, cool upper-left highlight. Not a rounded chalcedony vein stone and not a cluster of pointed quartz crystals.",
+      "palette": "flint",
+      "maxBounds": [
+        26,
+        28
+      ]
+    },
+    {
+      "id": "G082",
+      "field": "G",
+      "sourceFile": "exec-b1e4bd5b-d11f-45dd-af50-ff1583ea2f52.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One FELDSPAR-BEARING PEGMATITE fragment, coarse broken rock with THREE large interlocking angular pale pink FELDSPAR blocks, a smaller milky-gray quartz portion between them, and a tiny black mica patch. Large BLOCKY grains make outer stepped outline and broad planar faces, not a smooth pebble or tiny granite speckles. One connected rough specimen, left-lit mineral planes.",
+      "description": "One FELDSPAR-BEARING PEGMATITE fragment, coarse broken rock with THREE large interlocking angular pale pink FELDSPAR blocks, a smaller milky-gray quartz portion between them, and a tiny black mica patch. Large BLOCKY grains make outer stepped outline and broad planar faces, not a smooth pebble or tiny granite speckles. One connected rough specimen, left-lit mineral planes.",
+      "palette": "pegmatite",
+      "maxBounds": [
+        27,
+        28
+      ]
+    },
+    {
+      "id": "G083",
+      "field": "G",
+      "sourceFile": "exec-f11dbdcd-7232-4b3a-900b-216977d7e906.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One QUARTZ AND PYRITE co-grown specimen. A small irregular milky-white QUARTZ rock matrix with TWO brass-yellow PYRITE CUBES of unequal size firmly attached at upper-right, flat square faces and sharp right angles. Clearly two materials joined as one specimen, transparent surrounding background. Do not render as all-gold nugget or all-white crystal cluster, no magical glitter.",
+      "description": "One QUARTZ AND PYRITE co-grown specimen. A small irregular milky-white QUARTZ rock matrix with TWO brass-yellow PYRITE CUBES of unequal size firmly attached at upper-right, flat square faces and sharp right angles. Clearly two materials joined as one specimen, transparent surrounding background. Do not render as all-gold nugget or all-white crystal cluster, no magical glitter.",
+      "palette": "specimen",
+      "maxBounds": [
+        27,
+        28
+      ]
+    },
+    {
+      "id": "G088",
+      "field": "G",
+      "sourceFile": "exec-ed5fa18c-393d-47ea-98f5-17bc4df33ed6.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: One piece of PLATY NATURAL GOLD, a broad flattened irregular polygonal PLATE with thick crumpled rim and a distinct small V-shaped notch on one edge. Top face broad fairly flat with shallow linear folds, low side thickness visible on lower-right. Warm gold left-lit reflections and dark ochre creases. More substantial plate than a tiny thin flake, not a rounded nugget, cube or scatter. No holes or text.",
+      "description": "One piece of PLATY NATURAL GOLD, a broad flattened irregular polygonal PLATE with thick crumpled rim and a distinct small V-shaped notch on one edge. Top face broad fairly flat with shallow linear folds, low side thickness visible on lower-right. Warm gold left-lit reflections and dark ochre creases. More substantial plate than a tiny thin flake, not a rounded nugget, cube or scatter. No holes or text.",
+      "palette": "gold",
+      "maxBounds": [
+        27,
+        20
+      ]
+    },
+    {
+      "id": "G098",
+      "field": "G",
+      "sourceFile": "exec-953322c5-33c8-4495-9c7c-41af9f3c0b62.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS 32x32 pixel art retro game. Newly draw the specified real object, NOT SVG conversion or a generic category icon. Match a slightly detailed 16-bit retro RPG set: recognizable real proportions, dark material-specific colored outlines instead of pure black, limited palette around 8-14 colors, crisp square pixel clusters and stepped edges, NO antialiasing or soft gradients. Light from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid, enlarged as big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on all sides, maximum subject28x28, preserve narrow proportions of long objects. Through holes truly transparent. Silhouette first, material second, detail last. NO text, logos, lettering, numbers, labels, watermark, background, scenery, cast shadow, frame, glow or sparkles, no dirt overlay. One object only, centered. Subject: A dense GROUP OF MICROSCOPIC GOLD grains, about TWELVE very small irregular flat gold specks, clustered loosely in an asymmetrical crescent with clear transparent gaps between separate particles. Each grain only1-3 logical pixels, warm gold highlights and ochre sides, no large central nugget. Dense small-grain cluster occupying about20x18 logical pixels. Distinguish from five bigger separated fine-gold grains and from single broad gold plate. No twinkling sparkle or glow.",
+      "description": "A dense GROUP OF MICROSCOPIC GOLD grains, about TWELVE very small irregular flat gold specks, clustered loosely in an asymmetrical crescent with clear transparent gaps between separate particles. Each grain only1-3 logical pixels, warm gold highlights and ochre sides, no large central nugget. Dense small-grain cluster occupying about20x18 logical pixels. Distinguish from five bigger separated fine-gold grains and from single broad gold plate. No twinkling sparkle or glow.",
+      "palette": "gold",
+      "maxBounds": [
+        22,
+        20
+      ]
     }
   ]
 }

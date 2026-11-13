@@ -1262,7 +1262,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G016",
@@ -1273,7 +1273,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G017",
@@ -1284,7 +1284,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G018",
@@ -1306,7 +1306,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G020",
@@ -1317,7 +1317,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G021",
@@ -1361,7 +1361,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G025",
@@ -1636,7 +1636,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G050",
@@ -1779,7 +1779,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G063",
@@ -1790,7 +1790,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G064",
@@ -1801,7 +1801,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G065",
@@ -1812,7 +1812,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G066",
@@ -1823,7 +1823,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G067",
@@ -1856,7 +1856,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G070",
@@ -1889,7 +1889,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G073",
@@ -1922,7 +1922,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G076",
@@ -1988,7 +1988,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G082",
@@ -1999,7 +1999,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G083",
@@ -2010,7 +2010,7 @@
     "field": "G",
     "category": "岩石・共生標本",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G084",
@@ -2065,7 +2065,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G089",
@@ -2175,7 +2175,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G099",
@@ -2351,7 +2351,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R015",
@@ -2362,7 +2362,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R016",
@@ -2373,7 +2373,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R017",
@@ -2384,7 +2384,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R018",
@@ -2406,7 +2406,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R020",
@@ -2417,7 +2417,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R021",
@@ -2428,7 +2428,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R022",
@@ -2439,7 +2439,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R023",
@@ -2450,7 +2450,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R024",
@@ -2461,7 +2461,7 @@
     "field": "R",
     "category": "締結部品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R025",
@@ -2483,7 +2483,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R027",
@@ -2505,7 +2505,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R029",
@@ -2516,7 +2516,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R030",
@@ -2527,7 +2527,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R031",
@@ -2549,7 +2549,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R033",
@@ -2560,7 +2560,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R034",
@@ -2571,7 +2571,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R035",
@@ -2582,7 +2582,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R036",
@@ -2604,7 +2604,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R038",
@@ -2615,7 +2615,7 @@
     "field": "R",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R039",

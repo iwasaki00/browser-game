@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-11-14",
+  "completed": {
+    "B": 20,
+    "R": 20,
+    "G": 20,
+    "total": 60
+  },
+  "dedicatedTotal": 114,
+  "unmadeUntouched": 186,
+  "substitutions": 0,
+  "cellSize": 32,
+  "sheets": 9,
+  "sheetDimensions": [
+    256,
+    160
+  ],
+  "changedCells": 60,
+  "unchangedOutsideTargets": 300,
+  "nonTargetChangedPixels": 0,
+  "prior54Unchanged": true,
+  "protectedRuntimeFilesUnchanged": 91,
+  "standalonePngMatches": 60,
+  "unitTests": {
+    "pass": 665,
+    "fail": 0
+  },
+  "browser": {
+    "cases": 8,
+    "pass": 8,
+    "channels": [
+      "chrome",
+      "msedge"
+    ],
+    "viewports": [
+      [
+        320,
+        568
+      ],
+      [
+        390,
+        1000
+      ],
+      [
+        1280,
+        1000
+      ]
+    ],
+    "listPerViewport": 114,
+    "detailPerViewport": 6,
+    "washPerViewport": 6
+  },
+  "legacyBrowser": {
+    "cases": 10,
+    "pass": 10
+  },
+  "production": {
+    "cases": 4,
+    "pass": 4,
+    "debugAbsent": true
+  },
+  "unmadeSvgFallback": {
+    "cases": 2,
+    "pass": 2,
+    "ids": [
+      "B008",
+      "R018",
+      "G018"
+    ]
+  },
+  "build": "PASS",
+  "iPhoneSafariPhysical": "NOT TESTED",
+  "WebKit": "NOT TESTED",
+  "versionGameplaySaveLayout": "UNCHANGED; sprite map only60 available flags enabled"
+}

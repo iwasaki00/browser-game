@@ -1,16 +1,16 @@
 {
   "version": "1.0.0-rc.1",
   "comparison": "exact decoded RGBA bytes for all 360 cells",
-  "changedCells": 20,
-  "pendingTargets": 40,
+  "changedCells": 60,
+  "pendingTargets": 0,
   "unchangedOutsideTargets": 300,
   "nonTargetChangedPixels": 0,
   "prior54Unchanged": true,
   "protectedFilesUnchanged": 91,
   "completed": {
     "B": 20,
-    "R": 0,
-    "G": 0
+    "R": 20,
+    "G": 20
   },
   "items": [
     {
@@ -22,7 +22,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "釣り用のおもり",
       "description": "砂に沈んだ小さな金属のおもり。",
       "material": "metal",
@@ -58,7 +58,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "釣り用スイベル",
       "description": "糸のよじれを防ぐ小型の連結部。",
       "material": "iron",
@@ -95,7 +95,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "ルアーの金属リップ",
       "description": "水の抵抗を受ける薄い板状の部品。",
       "material": "iron",
@@ -132,7 +132,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "真鍮のサルカン",
       "description": "回転する接続金具。非鉄反応を示す。",
       "material": "brass",
@@ -169,7 +169,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "釣り竿のガイド環",
       "description": "糸を通す小さな輪。広い砂を探す。",
       "material": "iron",
@@ -206,7 +206,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "網の補修針",
       "description": "網目を編む細長い道具。",
       "material": "iron",
@@ -243,7 +243,7 @@
       "field": "B",
       "category": "釣り具",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "リールのドラグ座金",
       "description": "薄い円盤状の調整部品。",
       "material": "iron",
@@ -280,7 +280,7 @@
       "field": "B",
       "category": "工具",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "小さな六角レンチ",
       "description": "曲げた鋼棒の整備工具。",
       "material": "iron",
@@ -317,7 +317,7 @@
       "field": "B",
       "category": "日用品",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "栓抜き",
       "description": "輪郭が残った金属製の生活道具。",
       "material": "metal",
@@ -354,7 +354,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "巻貝の蓋",
       "description": "螺旋の跡が残る小さな蓋。細目のふるいで見分ける。",
       "material": "shell",
@@ -390,7 +390,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "ウニの殻",
       "description": "棘が抜けた軽い殻。強く掘ると欠けやすい。",
       "material": "shell",
@@ -426,7 +426,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "タコノマクラの殻",
       "description": "平たい殻に花模様が残る。浅い砂を広く探す。",
       "material": "shell",
@@ -462,7 +462,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "イカの甲",
       "description": "白く軽い多孔質の漂着物。流木の近くに溜まる。",
       "material": "shell",
@@ -498,7 +498,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "穿孔された貝殻",
       "description": "生物が開けた小孔が観察できる標本。",
       "material": "shell",
@@ -534,7 +534,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "軽石の漂着片",
       "description": "小さな気泡が多い軽量な石。潮の境目に集まる。",
       "material": "rock",
@@ -570,7 +570,7 @@
       "field": "B",
       "category": "自然物",
       "rarity": "C",
-      "available": false,
+      "available": true,
       "name": "フジツボの付いた小石",
       "description": "付着した殻と石を一緒に観察できる。",
       "material": "shell",
@@ -606,7 +606,7 @@
       "field": "B",
       "category": "硬貨・メダル",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "穴あき銅銭",
       "description": "中央の穴に固い砂が詰まった古い銭。",
       "material": "copper",
@@ -643,7 +643,7 @@
       "field": "B",
       "category": "硬貨・メダル",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "アルミ製記念コイン",
       "description": "軽い記念品。広域探知で候補を拾う。",
       "material": "aluminum",
@@ -680,7 +680,7 @@
       "field": "B",
       "category": "硬貨・メダル",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮の乗船トークン",
       "description": "船の意匠が刻まれた小円盤。",
       "material": "brass",
@@ -717,7 +717,7 @@
       "field": "B",
       "category": "硬貨・メダル",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "銅製の商店札",
       "description": "商店の名が刻まれた代用貨幣。",
       "material": "copper",
@@ -744,6 +744,1471 @@
       "rgbaSHA256": "2e704ddaa6c21064ad47d2c259233ddcc7fbea1643fc25d407ff88477bcf3b5f",
       "opaquePixels": 590,
       "colors": 8
+    },
+    {
+      "treasureId": "G049",
+      "sheet": "gold_mineral_sheet",
+      "col": 4,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "黄銅鉱の粒",
+      "description": "銅と鉄の硫化鉱物。金とは異なる。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 538,
+        "G-D": 340
+      },
+      "earlyWeightedPerPlot": 1.416,
+      "reason": "G-C/Dの高頻度C/U枠から金色鉱物・砂金の比較を補完",
+      "rgbaSHA256": "8715da84edb5938159fc18a52996470ae9302b49bb09132b8733f9b669652f77",
+      "opaquePixels": 386,
+      "colors": 9
+    },
+    {
+      "treasureId": "G088",
+      "sheet": "gold_rare_sheet",
+      "col": 1,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "U",
+      "available": true,
+      "name": "板状砂金",
+      "description": "水流で平たくなった金の粒。",
+      "material": "gold",
+      "kind": "天然金",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 115,
+        "G-D": 185
+      },
+      "earlyWeightedPerPlot": 0.415,
+      "reason": "G-C/Dの高頻度C/U枠から金色鉱物・砂金の比較を補完",
+      "rgbaSHA256": "b4d833a2d0e4094a744730118b4a4fc2efd888a669b40482284a7a0a415f4713",
+      "opaquePixels": 292,
+      "colors": 12
+    },
+    {
+      "treasureId": "G098",
+      "sheet": "gold_rare_sheet",
+      "col": 3,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "U",
+      "available": true,
+      "name": "微細砂金の集合",
+      "description": "小さな粒が濃縮物に集まっている。",
+      "material": "gold",
+      "kind": "天然金",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "岩盤の溝・砂金層の微粒を濃縮し精密回収",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 127,
+        "G-D": 177
+      },
+      "earlyWeightedPerPlot": 0.431,
+      "reason": "G-C/Dの高頻度C/U枠から金色鉱物・砂金の比較を補完",
+      "rgbaSHA256": "0168838a6bf8181e36d32b89d476fc8d66245bdb0cd60235f8dec6fffd30939c",
+      "opaquePixels": 66,
+      "colors": 8
+    },
+    {
+      "treasureId": "G015",
+      "sheet": "gold_stone_sheet",
+      "col": 4,
+      "row": 0,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "斜長石の小片",
+      "description": "細い条線が見えることのある長石。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 219,
+        "G-B": 0,
+        "G-C": 565,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.444,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "dcad34efd872afe3e4f43cdc88049ae040db27320274c738853cc0bc49eb3bfe",
+      "opaquePixels": 458,
+      "colors": 7
+    },
+    {
+      "treasureId": "G016",
+      "sheet": "gold_stone_sheet",
+      "col": 5,
+      "row": 0,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "黒雲母の薄片",
+      "description": "薄く剥がれる暗い雲母。水流に流されやすい。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 255,
+        "G-B": 0,
+        "G-C": 572,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.674,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "8810d90e21971f299fade591291c0f630f2dbff0572225456ff0133d0e86af9a",
+      "opaquePixels": 319,
+      "colors": 7
+    },
+    {
+      "treasureId": "G017",
+      "sheet": "gold_stone_sheet",
+      "col": 6,
+      "row": 0,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "白雲母の薄片",
+      "description": "透明感のある薄い層を持つ雲母。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 253,
+        "G-B": 0,
+        "G-C": 568,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.654,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "fd786b9df19fdf67947ed466da0b151f56bff9d84883c9dc87d329cc365e1b9f",
+      "opaquePixels": 384,
+      "colors": 8
+    },
+    {
+      "treasureId": "G019",
+      "sheet": "gold_stone_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "角閃石の粒",
+      "description": "細長い結晶を作る鉱物群の粒。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 222,
+        "G-B": 0,
+        "G-C": 558,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.448,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "5baca7597f178ff1af18cd20efe8d8a521643c5c0f26163e3f74d03ecc21ba99",
+      "opaquePixels": 194,
+      "colors": 8
+    },
+    {
+      "treasureId": "G020",
+      "sheet": "gold_stone_sheet",
+      "col": 1,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "普通輝石の粒",
+      "description": "柱状になりやすい造岩鉱物。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 243,
+        "G-B": 0,
+        "G-C": 536,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.53,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "21e797bdfc95a90b854d9ab6730110d11cfbcb4a7ea4972869b2793c6efdfdd8",
+      "opaquePixels": 320,
+      "colors": 7
+    },
+    {
+      "treasureId": "G024",
+      "sheet": "gold_stone_sheet",
+      "col": 5,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "C",
+      "available": true,
+      "name": "緑泥石の集合片",
+      "description": "薄片が集まった柔らかい鉱物片。",
+      "material": "mineral",
+      "kind": "鉱物",
+      "locations": [
+        "G-A",
+        "G-C"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 233,
+        "G-B": 0,
+        "G-C": 574,
+        "G-D": 0
+      },
+      "earlyWeightedPerPlot": 2.546,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "ff42825cfe84c9abb3b9f64842f7c79ff6ad6f4679be85eb284b4fa34ea202c5",
+      "opaquePixels": 456,
+      "colors": 8
+    },
+    {
+      "treasureId": "G062",
+      "sheet": "gold_stone_sheet",
+      "col": 7,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "碧玉の礫",
+      "description": "不透明で緻密な石英質の礫。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 227,
+        "G-B": 347,
+        "G-C": 0,
+        "G-D": 361
+      },
+      "earlyWeightedPerPlot": 3.111,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "4c3453176208d5592c07dcfba480b6b4f23507d31b8543fc671effa50ff2e27f",
+      "opaquePixels": 341,
+      "colors": 7
+    },
+    {
+      "treasureId": "G063",
+      "sheet": "gold_stone_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "燧石の礫",
+      "description": "貝殻状の割れ口を持つ緻密な石。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 237,
+        "G-B": 371,
+        "G-C": 0,
+        "G-D": 309
+      },
+      "earlyWeightedPerPlot": 3.215,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "e40a90dc3a9d96e8c313cbdf917abf67f45f460e55cdf862e7c3f42367d1bac3",
+      "opaquePixels": 457,
+      "colors": 10
+    },
+    {
+      "treasureId": "G064",
+      "sheet": "gold_stone_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "チャートの礫",
+      "description": "主に微細な石英からできた堆積岩。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 247,
+        "G-B": 357,
+        "G-C": 0,
+        "G-D": 337
+      },
+      "earlyWeightedPerPlot": 3.247,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "aa1183d06ddc65723f050cbc1d541249151591042515985ff1724d1f5100f968",
+      "opaquePixels": 382,
+      "colors": 6
+    },
+    {
+      "treasureId": "G065",
+      "sheet": "gold_stone_sheet",
+      "col": 2,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "黒曜石の破片",
+      "description": "火山ガラスの割れ片。角を傷めず回収する。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 238,
+        "G-B": 325,
+        "G-C": 0,
+        "G-D": 332
+      },
+      "earlyWeightedPerPlot": 3.06,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "108439ba9843f5e42e786ab5a075a8918db7961e2cbd79d78b3fe910a2c38b93",
+      "opaquePixels": 165,
+      "colors": 8
+    },
+    {
+      "treasureId": "G066",
+      "sheet": "gold_stone_sheet",
+      "col": 3,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "軽石の礫",
+      "description": "気泡が多く比重の小さい火山由来の石。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 240,
+        "G-B": 358,
+        "G-C": 0,
+        "G-D": 334
+      },
+      "earlyWeightedPerPlot": 3.206,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "36c9e0cb289f9f7492adf0afca4f026f2f5c5ba7221c08ed42325f949fc2f7b6",
+      "opaquePixels": 458,
+      "colors": 9
+    },
+    {
+      "treasureId": "G069",
+      "sheet": "gold_stone_sheet",
+      "col": 6,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "花崗岩の礫",
+      "description": "石英や長石などの粒が見える深成岩。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 239,
+        "G-B": 372,
+        "G-C": 0,
+        "G-D": 344
+      },
+      "earlyWeightedPerPlot": 3.266,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "b5bb0d68a6567810302b88d51c70e41f67d17741c12d8447c9f443e6377085a6",
+      "opaquePixels": 471,
+      "colors": 10
+    },
+    {
+      "treasureId": "G072",
+      "sheet": "gold_stone_sheet",
+      "col": 1,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "片麻岩の礫",
+      "description": "鉱物が帯状に並ぶ変成岩。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 212,
+        "G-B": 366,
+        "G-C": 0,
+        "G-D": 315
+      },
+      "earlyWeightedPerPlot": 3.051,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "f763f542ca6bb8dde8c10719e8e22e46905229b79f1d0b9c7f9da853cc9be2bc",
+      "opaquePixels": 430,
+      "colors": 9
+    },
+    {
+      "treasureId": "G075",
+      "sheet": "gold_stone_sheet",
+      "col": 4,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "C",
+      "available": true,
+      "name": "礫岩の小片",
+      "description": "丸い礫を含む堆積岩の一部。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 210,
+        "G-B": 328,
+        "G-C": 0,
+        "G-D": 304
+      },
+      "earlyWeightedPerPlot": 2.876,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "cd4f120efc4523c60964f2c93a0b467937e37a696d2f4764ccffd8a509d9b178",
+      "opaquePixels": 470,
+      "colors": 12
+    },
+    {
+      "treasureId": "G081",
+      "sheet": "gold_stone_sheet",
+      "col": 2,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "U",
+      "available": true,
+      "name": "石英脈を含む角礫",
+      "description": "割れ目を埋めた白い脈が残る。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 208,
+        "G-B": 501,
+        "G-C": 0,
+        "G-D": 204
+      },
+      "earlyWeightedPerPlot": 3.456,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "ee50296b6e0d75c8aaf7c50450e6912f66117b54468073a7a522d5e9c74f9a8b",
+      "opaquePixels": 472,
+      "colors": 10
+    },
+    {
+      "treasureId": "G082",
+      "sheet": "gold_stone_sheet",
+      "col": 3,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "U",
+      "available": true,
+      "name": "長石を含むペグマタイト片",
+      "description": "大きな鉱物粒を持つ火成岩の一部。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 180,
+        "G-B": 485,
+        "G-C": 0,
+        "G-D": 155
+      },
+      "earlyWeightedPerPlot": 3.175,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "cfbac588c94dd369dc9c7ea9e44eb2611b4bd261400a2350a2c93de41b5bff6c",
+      "opaquePixels": 537,
+      "colors": 10
+    },
+    {
+      "treasureId": "G083",
+      "sheet": "gold_stone_sheet",
+      "col": 4,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "岩石・共生標本",
+      "rarity": "U",
+      "available": true,
+      "name": "石英と黄鉄鉱の共生標本",
+      "description": "異なる鉱物が接して成長した標本。",
+      "material": "rock",
+      "kind": "岩石・共生標本",
+      "locations": [
+        "G-A",
+        "G-B",
+        "G-D"
+      ],
+      "depth": [
+        0,
+        0
+      ],
+      "conditions": "対応する地質の砂利を採取し比重選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "G-A": 185,
+        "G-B": 501,
+        "G-C": 0,
+        "G-D": 171
+      },
+      "earlyWeightedPerPlot": 3.285,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "a4afd07d5000a2a3f3776cb1ab679550ddd941a3d8ca107581f0f5eaebc0c415",
+      "opaquePixels": 452,
+      "colors": 11
+    },
+    {
+      "treasureId": "R014",
+      "sheet": "river_metal_sheet",
+      "col": 6,
+      "row": 0,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "蝶ナット",
+      "description": "指で回すための羽根が付いている。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 85,
+        "R-B": 81,
+        "R-C": 405,
+        "R-D": 1266
+      },
+      "earlyWeightedPerPlot": 2.91,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "145976387287c05cb863fb2a67196a21d094e5fda7fc2fd6845f62de770cc234",
+      "opaquePixels": 221,
+      "colors": 11
+    },
+    {
+      "treasureId": "R015",
+      "sheet": "river_metal_sheet",
+      "col": 7,
+      "row": 0,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "割りピン",
+      "description": "軸の抜け止めに使う二股の金具。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 79,
+        "R-B": 77,
+        "R-C": 447,
+        "R-D": 1236
+      },
+      "earlyWeightedPerPlot": 2.912,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "5c0c58e957c49adb36fd99d6970731bcd4cf82ec6fbcb93c133441d3a8d87891",
+      "opaquePixels": 138,
+      "colors": 12
+    },
+    {
+      "treasureId": "R016",
+      "sheet": "river_metal_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "平座金",
+      "description": "中央に穴がある薄い円盤。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 98,
+        "R-B": 97,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.976,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "b4fd5cde36834cbb33c05579ac3d0d1bbd54cb2821c56f31d5985be55e6321ea",
+      "opaquePixels": 338,
+      "colors": 10
+    },
+    {
+      "treasureId": "R017",
+      "sheet": "river_metal_sheet",
+      "col": 1,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "ばね座金",
+      "description": "切れ目を持つ緩み止め部品。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 71,
+        "R-B": 67,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.694,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "1cff248432cc86a1d26dc97d5157bb76d1fa80202e8d31c1dd71f53575147c7a",
+      "opaquePixels": 345,
+      "colors": 12
+    },
+    {
+      "treasureId": "R019",
+      "sheet": "river_metal_sheet",
+      "col": 3,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "U字ボルト",
+      "description": "二本のねじ部を持つ曲がった鋼材。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 93,
+        "R-B": 71,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.842,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "28d7a4a76a829958eec66a88350750302ed7b8323d3d71801106a27baa63d07d",
+      "opaquePixels": 255,
+      "colors": 10
+    },
+    {
+      "treasureId": "R020",
+      "sheet": "river_metal_sheet",
+      "col": 4,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "リベット",
+      "description": "丸い頭を持つ接合部品。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 79,
+        "R-B": 82,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.802,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "415761a7e6544bb279238d8a5bac24744a057f6d822d7b2bdd4b0ebe1e33e175",
+      "opaquePixels": 311,
+      "colors": 11
+    },
+    {
+      "treasureId": "R021",
+      "sheet": "river_metal_sheet",
+      "col": 5,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "ホースバンド",
+      "description": "輪状の締付け金具。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 94,
+        "R-B": 80,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.884,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "8fb9d567c0b2e48e887a65923629a5837a33bb1ea53e120deaf655d226b02ce4",
+      "opaquePixels": 277,
+      "colors": 12
+    },
+    {
+      "treasureId": "R022",
+      "sheet": "river_metal_sheet",
+      "col": 6,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "金属製アンカー鋲",
+      "description": "固定に使う小さな埋込部品。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 93,
+        "R-B": 89,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.914,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "ecfb616a787d22d4176dd826efbc03c0593db4eef391b83f096a97c21c39e256",
+      "opaquePixels": 281,
+      "colors": 12
+    },
+    {
+      "treasureId": "R023",
+      "sheet": "river_metal_sheet",
+      "col": 7,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "歯付き座金",
+      "description": "周囲に細かい歯のある座金。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 75,
+        "R-B": 82,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.778,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "ad5d47d8590f24431d1fd7841c76a402a6067ab96a66f6c97be9e4a465d94781",
+      "opaquePixels": 268,
+      "colors": 12
+    },
+    {
+      "treasureId": "R024",
+      "sheet": "river_metal_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "締結部品",
+      "rarity": "C",
+      "available": true,
+      "name": "鋼製ヒンジピン",
+      "description": "蝶番の回転軸として使う棒。",
+      "material": "iron",
+      "kind": "締結部品",
+      "locations": [
+        "R-A",
+        "R-B"
+      ],
+      "depth": [
+        10,
+        80
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 83,
+        "R-B": 77,
+        "R-C": 0,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.806,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "3acacb9e22be19abf8b438c565d461484584a6b507276057f5bc729c12d254c2",
+      "opaquePixels": 114,
+      "colors": 10
+    },
+    {
+      "treasureId": "R026",
+      "sheet": "river_tool_sheet",
+      "col": 5,
+      "row": 0,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "ラジオペンチ",
+      "description": "細長い先端のある工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 105,
+        "R-B": 74,
+        "R-C": 87,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.1,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "8d5421230f3687ade0a3d8963755b5f29f33e03848d4daad24eccd1a4f84d040",
+      "opaquePixels": 159,
+      "colors": 11
+    },
+    {
+      "treasureId": "R028",
+      "sheet": "river_tool_sheet",
+      "col": 7,
+      "row": 0,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "六角ソケット",
+      "description": "穴のある筒状の工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 82,
+        "R-B": 103,
+        "R-C": 85,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.074,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "e7e6fd9cb07155be47319b371de10cef77807d5c0561410c973f6edfb3351f9d",
+      "opaquePixels": 486,
+      "colors": 10
+    },
+    {
+      "treasureId": "R029",
+      "sheet": "river_tool_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "ラチェットハンドル",
+      "description": "回転方向を切り替える整備工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 70,
+        "R-B": 41,
+        "R-C": 38,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.66,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "b985a35e3a336d4f943861cbad0e38f265b9292b5e7d0105940a998d40c8cab4",
+      "opaquePixels": 174,
+      "colors": 12
+    },
+    {
+      "treasureId": "R030",
+      "sheet": "river_tool_sheet",
+      "col": 1,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "鉄製ハンマーの頭",
+      "description": "柄の抜けた重い頭部。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 80,
+        "R-B": 39,
+        "R-C": 35,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.706,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "791c1d50e46a2f498f4600a34359203378777e21ad14f64818243608ee5f70da",
+      "opaquePixels": 237,
+      "colors": 10
+    },
+    {
+      "treasureId": "R032",
+      "sheet": "river_tool_sheet",
+      "col": 3,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "金切り鋸の枠",
+      "description": "弓の形をした工具の外枠。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 85,
+        "R-B": 77,
+        "R-C": 71,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.96,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "06eebb2b1f4307596cfd75a46038828823de4a843c960fb90e5473c8b94f39ef",
+      "opaquePixels": 104,
+      "colors": 10
+    },
+    {
+      "treasureId": "R033",
+      "sheet": "river_tool_sheet",
+      "col": 4,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "タガネ",
+      "description": "先端を平たくした切断工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 92,
+        "R-B": 75,
+        "R-C": 96,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.044,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "26f90be855b64e564a8a54901cff59e4c188d9c967c2ed774199cd6c93a27a97",
+      "opaquePixels": 190,
+      "colors": 11
+    },
+    {
+      "treasureId": "R034",
+      "sheet": "river_tool_sheet",
+      "col": 5,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "ポンチ",
+      "description": "位置決めの印を付ける鋼製工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 88,
+        "R-B": 86,
+        "R-C": 86,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.044,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "848438b52b269e6944240b8f1ef0610c984f0adbf0e91d300b15b39cc444e62d",
+      "opaquePixels": 131,
+      "colors": 12
+    },
+    {
+      "treasureId": "R035",
+      "sheet": "river_tool_sheet",
+      "col": 6,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "パイプレンチの顎",
+      "description": "歯のあるつかみ部。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 85,
+        "R-B": 35,
+        "R-C": 41,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 0.732,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "76c967e68e207b18ce33f73477dbfde1ab48d1e4cb1077935de674b488092677",
+      "opaquePixels": 287,
+      "colors": 12
+    },
+    {
+      "treasureId": "R037",
+      "sheet": "river_tool_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "工具用エクステンションバー",
+      "description": "ソケットを延長する棒。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 97,
+        "R-B": 85,
+        "R-C": 83,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.088,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "c81e5ec944d97c7f2441db04d00283809b9f3ab9c52d0623c2d3f31c6761a9db",
+      "opaquePixels": 116,
+      "colors": 9
+    },
+    {
+      "treasureId": "R038",
+      "sheet": "river_tool_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "差し金",
+      "description": "直角を測る薄い鋼製定規。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "R-A",
+        "R-B",
+        "R-C"
+      ],
+      "depth": [
+        20,
+        180
+      ],
+      "conditions": "指定対象をつかみ、距離・重量・障害物を満たす",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "R-A": 89,
+        "R-B": 94,
+        "R-C": 108,
+        "R-D": 0
+      },
+      "earlyWeightedPerPlot": 1.126,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "efc4992551235e8f01aa9ab498970c49712b30fac2f55c12303d14bf0bdaf5d3",
+      "opaquePixels": 182,
+      "colors": 12
     }
   ]
 }
