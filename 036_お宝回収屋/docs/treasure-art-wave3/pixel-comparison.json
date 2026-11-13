@@ -1,0 +1,749 @@
+{
+  "version": "1.0.0-rc.1",
+  "comparison": "exact decoded RGBA bytes for all 360 cells",
+  "changedCells": 20,
+  "pendingTargets": 40,
+  "unchangedOutsideTargets": 300,
+  "nonTargetChangedPixels": 0,
+  "prior54Unchanged": true,
+  "protectedFilesUnchanged": 91,
+  "completed": {
+    "B": 20,
+    "R": 0,
+    "G": 0
+  },
+  "items": [
+    {
+      "treasureId": "B003",
+      "sheet": "beach_daily_sheet",
+      "col": 2,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "釣り用のおもり",
+      "description": "砂に沈んだ小さな金属のおもり。",
+      "material": "metal",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        0,
+        600
+      ],
+      "conditions": "登録エリアの既存探索・回収条件",
+      "spawnWeight": 65,
+      "appearanceCounts": {
+        "B-A": 219,
+        "B-B": 483,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 3.246,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "5c0f6463a21f90dbe280b2d113b502ecedde942a128f8a4bbd6a01c13f4b1dd9",
+      "opaquePixels": 206,
+      "colors": 9
+    },
+    {
+      "treasureId": "B053",
+      "sheet": "beach_daily_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "釣り用スイベル",
+      "description": "糸のよじれを防ぐ小型の連結部。",
+      "material": "iron",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 121,
+        "B-B": 143,
+        "B-C": 0,
+        "B-D": 77
+      },
+      "earlyWeightedPerPlot": 1.375,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "e5ad6c43adb6a69952e605c6040a5d5614795d6270bea7475e69436f03dfcdac",
+      "opaquePixels": 212,
+      "colors": 10
+    },
+    {
+      "treasureId": "B054",
+      "sheet": "beach_daily_sheet",
+      "col": 1,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "ルアーの金属リップ",
+      "description": "水の抵抗を受ける薄い板状の部品。",
+      "material": "iron",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 115,
+        "B-B": 151,
+        "B-C": 0,
+        "B-D": 79
+      },
+      "earlyWeightedPerPlot": 1.373,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "9767729c716a20be19de37d9caf75b7e219637cae2a8030c1a1cc8b1494b5aed",
+      "opaquePixels": 273,
+      "colors": 11
+    },
+    {
+      "treasureId": "B056",
+      "sheet": "beach_daily_sheet",
+      "col": 3,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "真鍮のサルカン",
+      "description": "回転する接続金具。非鉄反応を示す。",
+      "material": "brass",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 125,
+        "B-B": 147,
+        "B-C": 0,
+        "B-D": 50
+      },
+      "earlyWeightedPerPlot": 1.388,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "9066b488e6d085b58819284c14ba367cdb12dcef059a798791ba0766fd6bc2a7",
+      "opaquePixels": 186,
+      "colors": 7
+    },
+    {
+      "treasureId": "B057",
+      "sheet": "beach_daily_sheet",
+      "col": 4,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "釣り竿のガイド環",
+      "description": "糸を通す小さな輪。広い砂を探す。",
+      "material": "iron",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 132,
+        "B-B": 130,
+        "B-C": 0,
+        "B-D": 74
+      },
+      "earlyWeightedPerPlot": 1.386,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "d75361c9f25c2c9b7c91e8648aa1218073967ddaa1f6d9f1efe1a285d7ab5eaa",
+      "opaquePixels": 198,
+      "colors": 12
+    },
+    {
+      "treasureId": "B058",
+      "sheet": "beach_daily_sheet",
+      "col": 5,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": false,
+      "name": "網の補修針",
+      "description": "網目を編む細長い道具。",
+      "material": "iron",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 119,
+        "B-B": 148,
+        "B-C": 0,
+        "B-D": 72
+      },
+      "earlyWeightedPerPlot": 1.378,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "0e5ebb8c1a39d57ec784bffe2f9908f4256effbd26203be10a9341c7b369fb68",
+      "opaquePixels": 78,
+      "colors": 10
+    },
+    {
+      "treasureId": "B061",
+      "sheet": "beach_daily_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "U",
+      "available": false,
+      "name": "リールのドラグ座金",
+      "description": "薄い円盤状の調整部品。",
+      "material": "iron",
+      "kind": "釣り具",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        15,
+        180
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 78,
+        "B-B": 79,
+        "B-C": 0,
+        "B-D": 34
+      },
+      "earlyWeightedPerPlot": 0.818,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "4ca333b14909bdd0ddefd0b1eee5c36cd3d77a26b0f475058a0fa45cdf893fec",
+      "opaquePixels": 362,
+      "colors": 8
+    },
+    {
+      "treasureId": "B063",
+      "sheet": "beach_daily_sheet",
+      "col": 2,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "C",
+      "available": false,
+      "name": "小さな六角レンチ",
+      "description": "曲げた鋼棒の整備工具。",
+      "material": "iron",
+      "kind": "工具",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "depth": [
+        35,
+        450
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 185,
+        "B-B": 0,
+        "B-C": 738,
+        "B-D": 693
+      },
+      "earlyWeightedPerPlot": 3.279,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "277145e3f254e71a5d90c7d5e76a6e12ee3870c6ca750a6f52538d0d59445679",
+      "opaquePixels": 126,
+      "colors": 11
+    },
+    {
+      "treasureId": "B073",
+      "sheet": "beach_daily_sheet",
+      "col": 4,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": false,
+      "name": "栓抜き",
+      "description": "輪郭が残った金属製の生活道具。",
+      "material": "metal",
+      "kind": "日用品",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "depth": [
+        10,
+        280
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 120,
+        "B-B": 137,
+        "B-C": 0,
+        "B-D": 72
+      },
+      "earlyWeightedPerPlot": 1.34,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "72fb04a9f2c909a3991fdddb061091789446844f46c56d8de45f34fe51196ee7",
+      "opaquePixels": 158,
+      "colors": 11
+    },
+    {
+      "treasureId": "B015",
+      "sheet": "beach_nature_sheet",
+      "col": 2,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "巻貝の蓋",
+      "description": "螺旋の跡が残る小さな蓋。細目のふるいで見分ける。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 119,
+        "B-B": 132,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.242,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "0abe2c1ddaf11b0db486a01ee0a54d1da4b6cae358fad1ab4f13d345e11df9c4",
+      "opaquePixels": 440,
+      "colors": 11
+    },
+    {
+      "treasureId": "B016",
+      "sheet": "beach_nature_sheet",
+      "col": 3,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "ウニの殻",
+      "description": "棘が抜けた軽い殻。強く掘ると欠けやすい。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 138,
+        "B-B": 117,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.296,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "42a9cd4ce075ee8008de94a825826aac79ddd980b7f4f002f45df347084965de",
+      "opaquePixels": 470,
+      "colors": 8
+    },
+    {
+      "treasureId": "B017",
+      "sheet": "beach_nature_sheet",
+      "col": 4,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "タコノマクラの殻",
+      "description": "平たい殻に花模様が残る。浅い砂を広く探す。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 110,
+        "B-B": 149,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.256,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "cf3226f8e74c96d8d7eaef742b08fc3c9ba93f0617c2469923eec0d911b1792e",
+      "opaquePixels": 489,
+      "colors": 11
+    },
+    {
+      "treasureId": "B018",
+      "sheet": "beach_nature_sheet",
+      "col": 5,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "イカの甲",
+      "description": "白く軽い多孔質の漂着物。流木の近くに溜まる。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 135,
+        "B-B": 136,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.354,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "cb8fbf796eae6227416db3f42a28caa9b4f72c1c4f81557f016fe60cf0c1c33a",
+      "opaquePixels": 186,
+      "colors": 9
+    },
+    {
+      "treasureId": "B019",
+      "sheet": "beach_nature_sheet",
+      "col": 6,
+      "row": 0,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "穿孔された貝殻",
+      "description": "生物が開けた小孔が観察できる標本。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 114,
+        "B-B": 139,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.24,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "ecba35ad6db998755997dfdf55630596d2ab6960e54e71b3a8a3e4bbbecad8f6",
+      "opaquePixels": 464,
+      "colors": 11
+    },
+    {
+      "treasureId": "B021",
+      "sheet": "beach_nature_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "軽石の漂着片",
+      "description": "小さな気泡が多い軽量な石。潮の境目に集まる。",
+      "material": "rock",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 140,
+        "B-B": 123,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.332,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "14bc508d76d5209037d20fbd792e42a9d7ddba4a1ba54d285d58eea60658ecd5",
+      "opaquePixels": 385,
+      "colors": 10
+    },
+    {
+      "treasureId": "B024",
+      "sheet": "beach_nature_sheet",
+      "col": 3,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "自然物",
+      "rarity": "C",
+      "available": false,
+      "name": "フジツボの付いた小石",
+      "description": "付着した殻と石を一緒に観察できる。",
+      "material": "shell",
+      "kind": "自然物",
+      "locations": [
+        "B-A",
+        "B-B"
+      ],
+      "depth": [
+        5,
+        80
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 131,
+        "B-B": 151,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyWeightedPerPlot": 1.39,
+      "reason": "序盤A/Bの出現とC/U頻度を優先し、輪郭・材質の比較対象を選定",
+      "rgbaSHA256": "d96dd8f110026fcecbaad445c141e3c5139cc050299a6da6f7dcf3550a6719cd",
+      "opaquePixels": 471,
+      "colors": 11
+    },
+    {
+      "treasureId": "B046",
+      "sheet": "beach_valuable_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "硬貨・メダル",
+      "rarity": "U",
+      "available": false,
+      "name": "穴あき銅銭",
+      "description": "中央の穴に固い砂が詰まった古い銭。",
+      "material": "copper",
+      "kind": "硬貨・メダル",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "depth": [
+        25,
+        580
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 79,
+        "B-B": 0,
+        "B-C": 107,
+        "B-D": 156
+      },
+      "earlyWeightedPerPlot": 0.844,
+      "reason": "序盤B-Aの円盤・硬貨類を形で比較",
+      "rgbaSHA256": "406a2eb8d05d338b8a89fdff39ed92cec9bd9d86f3148161c400d0ddbfc8c758",
+      "opaquePixels": 482,
+      "colors": 9
+    },
+    {
+      "treasureId": "B047",
+      "sheet": "beach_valuable_sheet",
+      "col": 2,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "硬貨・メダル",
+      "rarity": "U",
+      "available": false,
+      "name": "アルミ製記念コイン",
+      "description": "軽い記念品。広域探知で候補を拾う。",
+      "material": "aluminum",
+      "kind": "硬貨・メダル",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "depth": [
+        25,
+        580
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 89,
+        "B-B": 0,
+        "B-C": 111,
+        "B-D": 157
+      },
+      "earlyWeightedPerPlot": 0.913,
+      "reason": "序盤B-Aの円盤・硬貨類を形で比較",
+      "rgbaSHA256": "e0aabbaa34b61fd64b820e2889e62c2852c39cba5c3163b941f9936196418416",
+      "opaquePixels": 509,
+      "colors": 8
+    },
+    {
+      "treasureId": "B048",
+      "sheet": "beach_valuable_sheet",
+      "col": 3,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "硬貨・メダル",
+      "rarity": "R",
+      "available": false,
+      "name": "真鍮の乗船トークン",
+      "description": "船の意匠が刻まれた小円盤。",
+      "material": "brass",
+      "kind": "硬貨・メダル",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "depth": [
+        25,
+        580
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 117,
+        "B-B": 0,
+        "B-C": 34,
+        "B-D": 47
+      },
+      "earlyWeightedPerPlot": 0.817,
+      "reason": "序盤B-Aの円盤・硬貨類を形で比較",
+      "rgbaSHA256": "8570e9472cccb7ea51c59225fc8693a8ac6e2d807766c4fde90956ca7da59cb4",
+      "opaquePixels": 509,
+      "colors": 7
+    },
+    {
+      "treasureId": "B050",
+      "sheet": "beach_valuable_sheet",
+      "col": 5,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "硬貨・メダル",
+      "rarity": "U",
+      "available": false,
+      "name": "銅製の商店札",
+      "description": "商店の名が刻まれた代用貨幣。",
+      "material": "copper",
+      "kind": "硬貨・メダル",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "depth": [
+        25,
+        580
+      ],
+      "conditions": "対応する海岸の砂を掘削・選別",
+      "spawnWeight": 1,
+      "appearanceCounts": {
+        "B-A": 89,
+        "B-B": 0,
+        "B-C": 115,
+        "B-D": 158
+      },
+      "earlyWeightedPerPlot": 0.922,
+      "reason": "序盤B-Aの円盤・硬貨類を形で比較",
+      "rgbaSHA256": "2e704ddaa6c21064ad47d2c259233ddcc7fbea1643fc25d407ff88477bcf3b5f",
+      "opaquePixels": 590,
+      "colors": 8
+    }
+  ]
+}

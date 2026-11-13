@@ -1,6 +1,7 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
+const output=process.env.SPRITE_ART_OUTPUT??'docs';
 const results=[],base=process.env.BASE_URL??'http://localhost:5176/';
 for(const channel of ['chrome','msedge']){
  const browser=await chromium.launch({channel,headless:true});
@@ -39,8 +40,8 @@ for(const channel of ['chrome','msedge']){
     }
     return {occupied,blank,rendered:stage.querySelectorAll('.treasure-sprite').length};
    });
-   assert.deepEqual(atlas,{occupied:54,blank:306,rendered:54});
-   if(channel==='chrome'&&width===390)await page.screenshot({path:'docs/treasure-sprites-prototypes.png'});
+   assert.deepEqual(atlas,{occupied:114,blank:246,rendered:114});
+   if(channel==='chrome'&&width===390)await page.screenshot({path:output+'/treasure-sprites-prototypes.png'});
    await page.evaluate(()=>document.querySelector('#sprite-test-stage').remove());
    await page.evaluate(async()=>{
     const {createState}=await import('/src/engine.ts'),{treasures}=await import('/src/data.ts');
@@ -56,15 +57,15 @@ for(const channel of ['chrome','msedge']){
    await page.locator('[data-book-detail="R009"]').click();assert.equal(await page.locator('#book-detail .treasure-sprite').count(),1);
    await page.locator('#book-field').selectOption('G');
    await page.locator('[data-book-detail="G001"]').click();assert.equal(await page.locator('#book-detail .treasure-sprite').count(),1);
-   if(channel==='chrome'&&width===390)await page.screenshot({path:'docs/treasure-sprites-book.png'});
+   if(channel==='chrome'&&width===390)await page.screenshot({path:output+'/treasure-sprites-book.png'});
    await page.locator('#close').click();
    await page.evaluate(async()=>{
     const {createState}=await import('/src/engine.ts'),s=createState(733);
-    s.explorationAreas[0].items=['B001','R004','G003','B003'].map((id,i)=>({uid:'sprite-wash-'+i,id,x:40+i*60,y:180,depth:80,initialQuality:.9,quality:.9,qualityFinalized:true,state:'stored',tool:'hand'}));
+    s.explorationAreas[0].items=['B001','R004','G003','B008'].map((id,i)=>({uid:'sprite-wash-'+i,id,x:40+i*60,y:180,depth:80,initialQuality:.9,quality:.9,qualityFinalized:true,state:'stored',tool:'hand'}));
     Object.assign(window.__finders.getState(),s);window.__finders.refresh();
    });
    const washes=[];
-   for(const [i,id] of ['B001','R004','G003','B003'].entries()){
+   for(const [i,id] of ['B001','R004','G003','B008'].entries()){
     if(i===0)await page.locator('#wash').click();
     const visual=page.locator('.wash-card .treasure-visual');
     assert.equal(await visual.getAttribute('data-treasure-id'),id);
@@ -81,7 +82,7 @@ for(const channel of ['chrome','msedge']){
     const fn=await page.evaluate(()=>window.__finders.getState().currentFN);
     await page.locator('#clean').dispatchEvent('click');assert.equal(await page.evaluate(()=>window.__finders.getState().currentFN),fn);
     washes.push({id,fn,art:i<3?'sprite':'SVG'});
-    if(i===2&&channel==='chrome'&&width===390)await page.screenshot({path:'docs/treasure-sprites-washed.png'});
+    if(i===2&&channel==='chrome'&&width===390)await page.screenshot({path:output+'/treasure-sprites-washed.png'});
     if(i<3)await page.locator('#next-find').click();
    }
    await page.locator('#skip-clean').click();
@@ -113,5 +114,5 @@ for(const channel of ['chrome','msedge']){
   }
  }finally{await browser.close();}
 }
-writeFileSync('docs/treasure-sprite-browser-results.json',JSON.stringify(results,null,2)+'\n');
+writeFileSync(output+'/treasure-sprite-browser-results.json',JSON.stringify(results,null,2)+'\n');
 console.log(JSON.stringify({cases:results.length,pass:true}));

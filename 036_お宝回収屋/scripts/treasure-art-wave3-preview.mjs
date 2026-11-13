@@ -6,7 +6,7 @@ const require=createRequire(import.meta.url),{PNG}=require('../node_modules/play
 const field=process.argv[2]??'B',targets=JSON.parse(readFileSync('artwork/treasure-wave3/targets.json','utf8'));
 const mapping=JSON.parse(readFileSync('src/treasure-sprite-map.json','utf8'));
 const ids=targets.filter(e=>e.field===field).map(e=>e.treasureId);
-const references={B:['B001','B007','B046','B047','B048','B050'],R:['R004','R025','R026','R028','R029','R035'],G:['G003','G049','G007','G098','G008','G088']}[field];
+const references={B:['B001','B007','B046','B047','B048','B050'],R:['R004','R025','R026','R028','R029','R035'],G:['G003','G049','G007','G098','G008','G088','G013','G014','G015','G016','G017','G024']}[field];
 function tile(id,silhouette=false){
  const e=mapping.find(e=>e.treasureId===id),sheet=PNG.sync.read(readFileSync('src/assets/treasures/sheets/'+e.sheet+'.png')),png=new PNG({width:32,height:32});
  for(let y=0;y<32;y++)sheet.data.copy(png.data,y*128,((e.row*32+y)*256+e.col*32)*4,((e.row*32+y)*256+e.col*32+32)*4);

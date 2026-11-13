@@ -19,12 +19,12 @@ test('all 300 treasures have unique, valid genre sheet cells and matching master
   const cell=e.sheet+':'+e.col+':'+e.row;assert.ok(!cells.has(cell));cells.add(cell);
  }
 });
-test('nine sheets reserve 300 cells with 60 spare and 54 prototypes evenly across fields',()=>{
+test('nine sheets reserve 300 cells with 60 spare and 114 dedicated sprites evenly across fields',()=>{
  const all=Object.values(treasureSpriteMap);
  assert.equal(SHEET_NAMES.length,9);assert.equal(9*40-all.length,60);
- for(const name of SHEET_NAMES){const entries=all.filter(e=>e.sheet===name);assert.ok(entries.length<=40);assert.equal(entries.filter(e=>e.available).length,6);}
- for(const field of ['B','R','G'])assert.equal(all.filter(e=>e.field===field&&e.available).length,18);
- assert.equal(all.filter(e=>!e.available).length,246);
+ for(const name of SHEET_NAMES){const entries=all.filter(e=>e.sheet===name);assert.ok(entries.length<=40);assert.ok(entries.filter(e=>e.available).length>=6);}
+ for(const field of ['B','R','G'])assert.equal(all.filter(e=>e.field===field&&e.available).length,38);
+ assert.equal(all.filter(e=>!e.available).length,186);
 });
 test('rarity never changes the 32px source cell size',()=>{
  for(const rarity of ['C','U','R','SR','J']){
@@ -32,7 +32,7 @@ test('rarity never changes the 32px source cell size',()=>{
   assert.ok(entries.length);assert.ok(entries.every(e=>e.size===32));
  }
 });
-test('available prototype resolves a full sheet URL and cell offset metadata',()=>{
+test('available dedicated sprite resolves a full sheet URL and cell offset metadata',()=>{
  const e=treasureSpriteMap.B001;
  const resolved=resolveTreasureSprite('B001',treasureSpriteMap,{[e.sheet]:'/atlas.png'},new Set());
  assert.ok(resolved);assert.equal(resolved.url,'/atlas.png');assert.equal(resolved.width,256);assert.equal(resolved.height,160);

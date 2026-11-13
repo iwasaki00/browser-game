@@ -14,6 +14,7 @@ assert.equal(expected.length,60);assert.equal(new Set(expected).size,60);
 for(const id of expected)assert.ok(priorMap.some(e=>e.treasureId===id&&!e.available));
 const hash=b=>createHash('sha256').update(b).digest('hex'),json=(f,v)=>writeFileSync(f,JSON.stringify(v,null,2)+'\n');
 const palettes={
+ barnacle:['303b48','52606a','75818a','9ea59f','b9b9a5','f0e0c1','fff1d6','c1a883','998367','725e4e','51453c'],
  steel:['202b40','334258','4d5d76','64768e','7e91a8','9dafc0','becdd5','e4e9e4','faf9e9','694c40','98634b','bb8562'],
  silver:['292c3b','444957','626976','818a97','a0acb6','c1cbd2','e3e6e4','faf9ed','6e665b','9d9481','c1bba4'],
  rust:['362c29','55352c','754332','965636','b9703f','d99558','edbb7b','42494e','677577','9ca6a0','d8d8bd','523e35'],
