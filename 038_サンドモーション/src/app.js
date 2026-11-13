@@ -1,5 +1,7 @@
 import { SandEngine } from './engine.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
+import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
+import { canvasPoint } from './input.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('sand'), context = canvas.getContext('2d');
@@ -61,6 +63,11 @@ function updateStats() {
 }
 
 function frame(time) {
+  if (tilt.paused) {
+    // Never accumulate time during rotation; keep drawing the preserved image.
+    previousTime = 0; accumulator = 0;
+    draw(); requestAnimationFrame(frame); return;
+  }
   if (!previousTime) previousTime = time;
   accumulator += Math.min(time - previousTime, STEP * MAX_STEPS);
   previousTime = time;
@@ -81,9 +88,7 @@ function frame(time) {
 }
 
 function point(event) {
-  const rect = canvas.getBoundingClientRect();
-  return { x: (event.clientX - rect.left) / rect.width * engine.width,
-    y: (event.clientY - rect.top) / rect.height * engine.height, time: event.timeStamp };
+  return canvasPoint(event, canvas, engine);
 }
 
 function brush(from, to, moving) {
@@ -97,13 +102,13 @@ function brush(from, to, moving) {
 }
 
 canvas.addEventListener('pointerdown', event => {
-  if (pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  if (tilt.paused || pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
   event.preventDefault(); canvas.setPointerCapture(event.pointerId);
   const p = point(event); pointer = { ...p, id: event.pointerId };
   brush(p, p, false);
 });
 canvas.addEventListener('pointermove', event => {
-  if (!pointer || event.pointerId !== pointer.id) return;
+  if (tilt.paused || !pointer || event.pointerId !== pointer.id) return;
   event.preventDefault();
   const p = point(event); brush(pointer, p, true); pointer = { ...p, id: event.pointerId };
 });
@@ -120,10 +125,54 @@ $('reset').addEventListener('click', () => {
 });
 const directionNames = { '0,1': '下', '0,-1': '上', '-1,0': '左', '1,0': '右',
   '-1,-1': '左上', '1,-1': '右上', '-1,1': '左下', '1,1': '右下' };
+function applyGravity(x, y) {
+  // Sensor events may arrive at 60 Hz. Only a direction change needs to wake
+  // grains or rewrite the gravity controls/diagnostics.
+  if (engine.gravity.x === x && engine.gravity.y === y) return;
+  engine.setGravity(x, y);
+  document.querySelectorAll('[data-g]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === `${x},${y}`)));
+  $('gravity-label').textContent = `${directionNames[`${x},${y}`]}向きに流れる`; updateStats();
+}
+const environment = {
+  get isSecureContext() { return window.isSecureContext; },
+  get DeviceOrientationEvent() { return window.DeviceOrientationEvent; },
+  now: () => performance.now(), hidden: () => document.hidden,
+  mobile: () => isMobileDevice(navigator),
+  landscape: () => isLandscapeDisplay({ type: screen.orientation?.type, angle: screen.orientation?.angle,
+    legacyAngle: window.orientation, width: window.innerWidth, height: window.innerHeight }),
+  addEventListener: (...args) => window.addEventListener(...args),
+  removeEventListener: (...args) => window.removeEventListener(...args),
+  setInterval: (...args) => window.setInterval(...args), clearInterval: id => window.clearInterval(id)
+};
+const tilt = new TiltController(environment, {
+  onGravity: applyGravity,
+  onState: state => {
+    const paused = state.paused;
+    $('tilt-start').textContent = state.starting ? 'センサーを確認中…' : '傾きで操作';
+    $('tilt-start').disabled = state.starting || state.mode === 'tilt';
+    $('tilt-start').setAttribute('aria-pressed', String(state.mode === 'tilt'));
+    $('calibrate').disabled = state.mode !== 'tilt' || paused;
+    $('input-mode').textContent = state.mode === 'tilt' ? '傾き' : '手動';
+    $('tilt-status').textContent = state.reason;
+    $('rotation-pause').hidden = !paused;
+    $('rotation-title').textContent = state.pauseReason === 'landscape' ? 'iPhoneを縦に戻してください' : '傾きが安定するのを待っています…';
+    $('stage').classList.toggle('paused', paused);
+    for (const id of ['collapse', 'reset', 'sample', 'quality', 'image-file']) $(id).disabled = paused;
+    // Cancel the old touch path. The next pointer uses the latest Canvas rect.
+    if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
+    pointer = null; previousTime = 0; accumulator = 0;
+    frames = 0; fpsStart = performance.now();
+  }
+});
+$('tilt-start').addEventListener('click', () => { void tilt.start(); });
+$('calibrate').addEventListener('click', () => {
+  if (!tilt.calibrate()) $('tilt-status').textContent = '新しい傾きの値を待ってから、もう一度基準を合わせてください。';
+});
+for (const name of ['resize', 'orientationchange']) window.addEventListener(name, () => { tilt.updateDisplay(); fitCanvas(); });
+screen.orientation?.addEventListener('change', () => { tilt.updateDisplay(); fitCanvas(); });
 document.querySelectorAll('[data-g]').forEach(button => button.addEventListener('click', () => {
-  const [x, y] = button.dataset.g.split(',').map(Number); engine.setGravity(x, y);
-  document.querySelectorAll('[data-g]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
-  $('gravity-label').textContent = `${directionNames[button.dataset.g]}向きに流れる`; updateStats();
+  tilt.manual();
+  const [x, y] = button.dataset.g.split(',').map(Number); applyGravity(x, y);
 }));
 $('quality').addEventListener('change', () => {
   try { loadSource(); message('品質を変更し、画像を初期状態に戻しました。'); }
@@ -145,6 +194,7 @@ $('image-file').addEventListener('change', async event => {
   try {
     const image = await decodeImage(file);
     if (token !== loadToken) return;
+    if (tilt.paused) { message('回転による一時停止中のため画像を変更しませんでした。縦に戻して選び直してください。'); return; }
     // Convert before assigning the new source to keep failed imports transactional.
     const particles = convertImage(image, engine.width, engine.height);
     if (!particles.length) throw new Error('不透明なピクセルがありません。別の画像を選択してください。');
