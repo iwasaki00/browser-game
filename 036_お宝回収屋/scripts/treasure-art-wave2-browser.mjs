@@ -38,7 +38,7 @@ for(const channel of ['chrome','msedge']){
      const pageIDs=fieldIDs.slice(offset,offset+12);
      assert.equal(await p.locator('#book-list .book-entry').count(),pageIDs.length);
      for(const id of pageIDs)await checkImage(p.locator('#book-list img[data-treasure-fallback="'+id+'"]'),id);
-     if(channel==='chrome'&&width===390){await p.locator('#book-list').evaluate(e=>e.scrollIntoView({block:'start'}));await p.screenshot({path:output+'/book-'+field+'-'+(offset/12+1)+'.png'});}
+     if(channel==='chrome'&&width===390){await p.locator('#book-list').evaluate(e=>{e.scrollIntoView({block:'start'});const sheet=e.closest('.sheet');sheet.scrollTop-=sheet.querySelector('.sheet-head').offsetHeight+8;});await p.screenshot({path:output+'/book-'+field+'-'+(offset/12+1)+'.png'});}
      for(const id of pageIDs){await p.locator('[data-book-detail="'+id+'"]').click();await checkImage(p.locator('#book-detail img'),id);assert.match(await p.locator('#book-detail h3').textContent(),new RegExp(treasure(id).name));}
      if(offset+12<fieldIDs.length)await p.locator('#book-next').click();
     }

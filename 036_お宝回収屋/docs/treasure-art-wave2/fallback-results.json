@@ -1,0 +1,24 @@
+[
+  {
+    "channel": "chrome",
+    "unmadeIDs": [
+      "B003",
+      "R014",
+      "G015"
+    ],
+    "svgFallback": true,
+    "washReward": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "unmadeIDs": [
+      "B003",
+      "R014",
+      "G015"
+    ],
+    "svgFallback": true,
+    "washReward": true,
+    "errors": []
+  }
+]
