@@ -338,6 +338,174 @@
         28,
         28
       ]
+    },
+    {
+      "id": "G002",
+      "field": "G",
+      "sourceFile": "exec-0d27c71c-9846-4354-8a5a-ebbb1bf856ed.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: Loose IRON SAND grains: EIGHT to TEN tiny irregular angular black magnetite grains loosely scattered in a compact asymmetrical group, with transparent gaps between EVERY grain. Steel-gray glints on upper-left faces, nearly black blue charcoal shadows. A few grains larger than others, no single big rock, no smooth pebble, no gold or sparkle. Entire group designed at logical 18x16 pixels.",
+      "description": "Loose IRON SAND grains: EIGHT to TEN tiny irregular angular black magnetite grains loosely scattered in a compact asymmetrical group, with transparent gaps between EVERY grain. Steel-gray glints on upper-left faces, nearly black blue charcoal shadows. A few grains larger than others, no single big rock, no smooth pebble, no gold or sparkle. Entire group designed at logical 18x16 pixels.",
+      "palette": "blackstone",
+      "maxBounds": [
+        18,
+        16
+      ]
+    },
+    {
+      "id": "G004",
+      "field": "G",
+      "sourceFile": "exec-5ba8254f-eb9d-4af4-9de3-8febc25506da.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: One small smoothly water-worn PEBBLE, rounded asymmetrical oval with a shallow flattened side. Muted warm rose-brown and slate-gray marbled bands curl around the surface, one slim cream curved vein. Broad upper-left light, darker lower rim reveals rounded thickness. Natural attractive patterned specimen, not a gemstone, not a sharp crystal. No glossy white sparkle.",
+      "description": "One small smoothly water-worn PEBBLE, rounded asymmetrical oval with a shallow flattened side. Muted warm rose-brown and slate-gray marbled bands curl around the surface, one slim cream curved vein. Broad upper-left light, darker lower rim reveals rounded thickness. Natural attractive patterned specimen, not a gemstone, not a sharp crystal. No glossy white sparkle.",
+      "palette": "pebble",
+      "maxBounds": [
+        24,
+        22
+      ]
+    },
+    {
+      "id": "G005",
+      "field": "G",
+      "sourceFile": "exec-a79d0769-66e9-4d6d-8411-fc589ae0324f.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: A broken AGATE fragment shaped as an irregular wedge. Main cut face reveals FOUR concentric curved BANDS in cream, warm rust-orange and muted gray-blue. Rough brown rind visible along one broken edge, small notch in outline, distinct top and side thickness. Not a round pebble or faceted gem. Strong readable banded face at 32px.",
+      "description": "A broken AGATE fragment shaped as an irregular wedge. Main cut face reveals FOUR concentric curved BANDS in cream, warm rust-orange and muted gray-blue. Rough brown rind visible along one broken edge, small notch in outline, distinct top and side thickness. Not a round pebble or faceted gem. Strong readable banded face at 32px.",
+      "palette": "agate",
+      "maxBounds": [
+        26,
+        24
+      ]
+    },
+    {
+      "id": "G006",
+      "field": "G",
+      "sourceFile": "exec-68a87403-34e2-49de-bac4-062162b305f1.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: ONE SINGLE small clear QUARTZ CRYSTAL point, slender hexagonal prism with pointed pyramidal termination tilted slightly to right. Three long planar faces in pale cool gray, icy white upper-left highlight and blue-gray shaded right face. Slight irregular broken base. NO cluster, no rock matrix, no sparkle or aura. Transparent surrounding background; prism body itself visible and opaque. Preserve slender shape.",
+      "description": "ONE SINGLE small clear QUARTZ CRYSTAL point, slender hexagonal prism with pointed pyramidal termination tilted slightly to right. Three long planar faces in pale cool gray, icy white upper-left highlight and blue-gray shaded right face. Slight irregular broken base. NO cluster, no rock matrix, no sparkle or aura. Transparent surrounding background; prism body itself visible and opaque. Preserve slender shape.",
+      "palette": "quartz",
+      "maxBounds": [
+        16,
+        26
+      ]
+    },
+    {
+      "id": "G008",
+      "field": "G",
+      "sourceFile": "exec-58d137c0-f8d9-4263-9773-20d4077e6c0a.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: ONE thin natural GOLD FLAKE, irregular broad flat ragged outline with one small crease folding an edge upward. Wide thin plate, subtly crumpled surface, bright pale yellow upper-left edge and dark ochre thin lower edge. Clearly FLAT and much wider than thick, not rounded nugget and not a scatter of grains. Low horizontal silhouette, design subject 20x14 logical pixels.",
+      "description": "ONE thin natural GOLD FLAKE, irregular broad flat ragged outline with one small crease folding an edge upward. Wide thin plate, subtly crumpled surface, bright pale yellow upper-left edge and dark ochre thin lower edge. Clearly FLAT and much wider than thick, not rounded nugget and not a scatter of grains. Low horizontal silhouette, design subject 20x14 logical pixels.",
+      "palette": "gold",
+      "maxBounds": [
+        20,
+        14
+      ]
+    },
+    {
+      "id": "G009",
+      "field": "G",
+      "sourceFile": "exec-68b9174c-5f43-4626-9b41-179f757eb845.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: ONE SMALL NATURAL GOLD NUGGET, compact teardrop-like irregular rounded shape, two modest little bumps at shoulder, tapered lower end. Thick rounded metal volume and a small shallow pit, warm ochre shadows and pale gold upper-left reflection. Not a cube or crystal, not a flat flake. Small simple sample occupying only about 16x18 logical pixels, centered with generous transparent margin.",
+      "description": "ONE SMALL NATURAL GOLD NUGGET, compact teardrop-like irregular rounded shape, two modest little bumps at shoulder, tapered lower end. Thick rounded metal volume and a small shallow pit, warm ochre shadows and pale gold upper-left reflection. Not a cube or crystal, not a flat flake. Small simple sample occupying only about 16x18 logical pixels, centered with generous transparent margin.",
+      "palette": "gold",
+      "maxBounds": [
+        16,
+        18
+      ]
+    },
+    {
+      "id": "G010",
+      "field": "G",
+      "sourceFile": "exec-c5a18781-48c1-409f-83e5-6bb900465065.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: A QUARTZ MINERAL SPECIMEN: a compact cluster of FOUR clear pointed hexagonal quartz crystals of different heights growing from one small gray rock matrix. Tall main crystal at left-middle, three shorter distinct points beside it, shared rough base. Clear planar faces pale cool gray and icy white with darker blue-gray edges. No glitter, magic or glow. Distinguish cluster from a single small crystal and irregular quartz shard.",
+      "description": "A QUARTZ MINERAL SPECIMEN: a compact cluster of FOUR clear pointed hexagonal quartz crystals of different heights growing from one small gray rock matrix. Tall main crystal at left-middle, three shorter distinct points beside it, shared rough base. Clear planar faces pale cool gray and icy white with darker blue-gray edges. No glitter, magic or glow. Distinguish cluster from a single small crystal and irregular quartz shard.",
+      "palette": "quartz",
+      "maxBounds": [
+        27,
+        28
+      ]
+    },
+    {
+      "id": "G011",
+      "field": "G",
+      "sourceFile": "exec-5bef6ee8-49cb-49c2-95d0-d9d642b206de.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: ONE MEDIUM NATURAL GOLD NUGGET, an asymmetrical THREE-LOBED knobbly solid mass with a shallow concave notch between lobes. Rounded irregular bumps of unequal size, one small dark natural pit, visible thick lower side. Warm golden metal, pale upper-left highlights, ochre creases. NOT angular pyrite, not a thin flake, no detached grains. More branching and lobed than a small teardrop nugget, less massive than the largest nugget.",
+      "description": "ONE MEDIUM NATURAL GOLD NUGGET, an asymmetrical THREE-LOBED knobbly solid mass with a shallow concave notch between lobes. Rounded irregular bumps of unequal size, one small dark natural pit, visible thick lower side. Warm golden metal, pale upper-left highlights, ochre creases. NOT angular pyrite, not a thin flake, no detached grains. More branching and lobed than a small teardrop nugget, less massive than the largest nugget.",
+      "palette": "gold",
+      "maxBounds": [
+        23,
+        23
+      ]
+    },
+    {
+      "id": "G013",
+      "field": "G",
+      "sourceFile": "exec-a3ddeab6-1b45-4cfd-807e-b934a3cefbfe.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: An ORTHOCLASE FELDSPAR cleavage fragment, pale SALMON-PINK tabular block, roughly rectangular with a broken stepped corner. Two prominent cleavage planes meet at nearly RIGHT ANGLES, broad flat face with a few parallel fine steps, darker pink sidewall. Not a pointed crystal, not a metallic cube or round pebble. Opaque softly mineral surface, pale upper-left plane, dark dusty plum outline.",
+      "description": "An ORTHOCLASE FELDSPAR cleavage fragment, pale SALMON-PINK tabular block, roughly rectangular with a broken stepped corner. Two prominent cleavage planes meet at nearly RIGHT ANGLES, broad flat face with a few parallel fine steps, darker pink sidewall. Not a pointed crystal, not a metallic cube or round pebble. Opaque softly mineral surface, pale upper-left plane, dark dusty plum outline.",
+      "palette": "pinkstone",
+      "maxBounds": [
+        26,
+        24
+      ]
+    },
+    {
+      "id": "G014",
+      "field": "G",
+      "sourceFile": "exec-67b59f24-c731-41cc-9c18-7c42c579ecad.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: One MICROCLINE FELDSPAR grain, a small pale desaturated green block with an offset broken corner and two broad cleavage faces. On the large plane, suggest a subtle crossed TWINNING grid with just a few straight dark-green pixel lines. Sharply angular tabular shape, cream-green upper-left plane and darker cool green side. Not a rounded green serpentine pebble and not a gemstone jewel. No sparkle.",
+      "description": "One MICROCLINE FELDSPAR grain, a small pale desaturated green block with an offset broken corner and two broad cleavage faces. On the large plane, suggest a subtle crossed TWINNING grid with just a few straight dark-green pixel lines. Sharply angular tabular shape, cream-green upper-left plane and darker cool green side. Not a rounded green serpentine pebble and not a gemstone jewel. No sparkle.",
+      "palette": "greenstone",
+      "maxBounds": [
+        24,
+        25
+      ]
+    },
+    {
+      "id": "G025",
+      "field": "G",
+      "sourceFile": "exec-ba43e8a3-190d-441f-b196-f269b50cdbed.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: A CALCITE cleavage fragment, a squat pale honey-cream RHOMBOHEDRON, visibly slanted parallelogram faces. Oblique corner angles clearly NOT ninety degrees, flat translucent-looking cleavage planes indicated by pale ivory and muted gray-beige bands. Strong sloping top edge and offset bottom edge, visible side thickness. Not a pointed quartz crystal and not a square feldspar block. Opaque readable body on transparent background.",
+      "description": "A CALCITE cleavage fragment, a squat pale honey-cream RHOMBOHEDRON, visibly slanted parallelogram faces. Oblique corner angles clearly NOT ninety degrees, flat translucent-looking cleavage planes indicated by pale ivory and muted gray-beige bands. Strong sloping top edge and offset bottom edge, visible side thickness. Not a pointed quartz crystal and not a square feldspar block. Opaque readable body on transparent background.",
+      "palette": "shell",
+      "maxBounds": [
+        25,
+        25
+      ]
+    },
+    {
+      "id": "G060",
+      "field": "G",
+      "sourceFile": "exec-b62c68e4-797e-4e1a-9bce-eee0c3c4869e.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: One SERPENTINE mineral aggregate fragment, irregular low knobbly green mass with gently rounded broken lobes. Dark forest-green and muted olive-green waxy surfaces crossed by ONE or TWO pale curving cream-green veins. Granular rounded outline, no straight crystal points and NO fibrous needles. Clearly a natural rough aggregate rather than smooth oval pebble, angled cleavage block or polished gemstone.",
+      "description": "One SERPENTINE mineral aggregate fragment, irregular low knobbly green mass with gently rounded broken lobes. Dark forest-green and muted olive-green waxy surfaces crossed by ONE or TWO pale curving cream-green veins. Granular rounded outline, no straight crystal points and NO fibrous needles. Clearly a natural rough aggregate rather than smooth oval pebble, angled cleavage block or polished gemstone.",
+      "palette": "greenstone",
+      "maxBounds": [
+        26,
+        24
+      ]
+    },
+    {
+      "id": "G061",
+      "field": "G",
+      "sourceFile": "exec-cf6e6330-c3ec-4b14-8f3b-82f8b44543fd.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: A CHALCEDONY VEIN rock fragment: angular small dark gray-brown host-rock chunk, crossed diagonally by one broad winding MILKY PALE-BLUE WHITE CHALCEDONY vein. Two visibly different materials: rough brown-gray host along both sides, smooth translucent-looking pale band with curved irregular boundary through center. Broken stepped outline and visible side thickness. Not a uniformly white quartz shard or all-over banded agate, no pointed crystals.",
+      "description": "A CHALCEDONY VEIN rock fragment: angular small dark gray-brown host-rock chunk, crossed diagonally by one broad winding MILKY PALE-BLUE WHITE CHALCEDONY vein. Two visibly different materials: rough brown-gray host along both sides, smooth translucent-looking pale band with curved irregular boundary through center. Broken stepped outline and visible side thickness. Not a uniformly white quartz shard or all-over banded agate, no pointed crystals.",
+      "palette": "agate",
+      "maxBounds": [
+        26,
+        25
+      ]
+    },
+    {
+      "id": "G084",
+      "field": "G",
+      "sourceFile": "exec-044600f7-bdb3-47f4-91f3-4e077f550e5c.png",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated inventory sprite for THE FINDERS 32x32 pixel art treasure hunting game. Newly draw the specified real object, NOT SVG conversion and NOT a generic category icon. Match a slightly detailed 16-bit retro RPG set: realistic recognizable proportions, material-specific dark colored outlines instead of pure black, limited palette about 8-14 colors, crisp square pixel clusters, stepped edges, no antialiasing or soft gradients. Light consistently from UPPER LEFT, slight top-down three-quarter view showing thickness. Design on a logical32x32 grid enlarged into big square pixel blocks for delivery. Leave2 logical pixels TRUE TRANSPARENT margin on every edge, maximum subject28x28, retain narrow proportions of long objects. Holes that go all the way through the object are transparent. Prioritize silhouette over surface detail; identifiable at32px even without name or color. NO text, logos, lettering, numerals, labels, watermark, scenery, background, cast shadow, frame, glowing outline or sparkles. One object only, centered.  Subject: A cohesive CLUMP OF BLACK SAND containing magnetite, low irregular mound made of many tightly touching angular charcoal grains. Jagged granular outline with a small protruding lobe, tiny steel-gray reflective facets scattered across rough face. All grains form ONE connected clump, NOT a loose scatter of grains, NOT smooth solid pebble, no gold. Strong dark shape with upper-left gray glints, design subject27x23 logical pixels.",
+      "description": "A cohesive CLUMP OF BLACK SAND containing magnetite, low irregular mound made of many tightly touching angular charcoal grains. Jagged granular outline with a small protruding lobe, tiny steel-gray reflective facets scattered across rough face. All grains form ONE connected clump, NOT a loose scatter of grains, NOT smooth solid pebble, no gold. Strong dark shape with upper-left gray glints, design subject27x23 logical pixels.",
+      "palette": "blackstone",
+      "maxBounds": [
+        27,
+        23
+      ]
     }
   ]
 }

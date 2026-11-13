@@ -3,6 +3,17 @@
 
   const games = [
     {
+      number: "038",
+      title: "SAND MOTION / サンドモーション",
+      genre: "Physics / Creative",
+      description: "写真やイラストを色付きの砂に変える実験室。触れて崩し、なぞって押し流し、8方向の重力で砂の動きを楽しもう。画像は端末内だけで処理します。",
+      href: "./038_サンドモーション/index.html",
+      icon: "./038_サンドモーション/icon.svg",
+      alt: "山と夕日の風景が色付きの砂粒となって崩れるアイコン",
+      cta: "砂の実験室を開く",
+      ariaLabel: "SAND MOTION サンドモーションを開く"
+    },
+    {
       number: "037",
       title: "ちょっとカクレロン",
       genre: "Creative / Photo",

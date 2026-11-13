@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="384" viewBox="0 0 384 384">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#193654"/><stop offset="1" stop-color="#88b7b7"/></linearGradient>
+    <pattern id="grain" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="8" height="8" rx="1" fill="#e9bb85"/></pattern>
+  </defs>
+  <rect width="384" height="384" rx="64" fill="#14191c"/>
+  <rect x="48" y="45" width="288" height="190" rx="8" fill="url(#sky)"/>
+  <circle cx="270" cy="95" r="27" fill="#ffe1a0"/>
+  <path d="M48 206 135 89 228 208 278 152 336 206V235H48Z" fill="#708c91"/>
+  <path d="m110 123 25-34 30 38-29-12-10 13Z" fill="#d8ded0"/>
+  <path d="m48 235 137-103 123 103Z" fill="#355d68"/>
+  <path d="M48 221 153 205 260 235H48Z" fill="#d49a71"/>
+  <path d="M48 220H336V246H300V269H264V291H216V279H168V255H108V243H48Z" fill="url(#grain)"/>
+  <path d="m48 327 90-22 68-26 78 27 52 21v12H48Z" fill="url(#grain)"/>
+  <g fill="#88b7b7"><rect x="74" y="263" width="8" height="8"/><rect x="110" y="287" width="8" height="8"/><rect x="290" y="281" width="8" height="8"/></g>
+</svg>
