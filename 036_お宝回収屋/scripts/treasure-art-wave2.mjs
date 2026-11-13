@@ -1,0 +1,48 @@
+import {readFileSync,writeFileSync,mkdirSync,readdirSync,copyFileSync,existsSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url),{PNG}=require('../node_modules/playwright-core/lib/utilsBundle.js');
+const folder='artwork/treasure-wave2',sheets='src/assets/treasures/sheets',out='docs/treasure-art-wave2';
+const config=JSON.parse(readFileSync(folder+'/generation.json','utf8')),targets=JSON.parse(readFileSync(folder+'/targets.json','utf8'));
+const mapping=JSON.parse(readFileSync('src/treasure-sprite-map.json','utf8')),expected=targets.map(e=>e.treasureId);
+const wave1=JSON.parse(readFileSync('artwork/treasure-wave1/generation.json','utf8')).items.map(e=>e.id);
+assert.equal(expected.length,42);assert.equal(new Set(expected).size,42);
+assert.deepEqual(mapping.filter(e=>e.available&&!wave1.includes(e.treasureId)).map(e=>e.treasureId).sort(),[...expected].sort());
+const hash=b=>createHash('sha256').update(b).digest('hex'),json=(f,v)=>writeFileSync(f,JSON.stringify(v,null,2)+'\n');
+const palettes={
+ steel:['202b40','334258','4d5d76','64768e','7e91a8','9dafc0','becdd5','e4e9e4','faf9e9','694c40','98634b','bb8562'],
+ silver:['292c3b','444957','626976','818a97','a0acb6','c1cbd2','e3e6e4','faf9ed','6e665b','9d9481','c1bba4'],
+ rust:['362c29','55352c','754332','965636','b9703f','d99558','edbb7b','42494e','677577','9ca6a0','d8d8bd','523e35'],
+ pink:['654651','906372','b78598','d3a0b4','e9b7c6','f7cfda','ffe5e7','fff2e8','957a70','c1aa92','e3d2b9'],
+ shell:['4f392c','785638','a17347','bd9464','d3b68e','e9cfab','f5e3c5','fff4dd','9b704c','d3a474','fffaf0'],
+ coral:['594d43','7c6b59','9e8c75','b8a68b','d1bea0','e9d6b7','f6e8d1','fff8e7','9c8369','c7ad8a'],
+ glass:['193f3e','285954','39746a','509082','6ca999','89c2ae','afe0cc','d7f3dd','f2fff0','376963','71988a','abc2a4'],
+ blueglass:['17384f','285571','3e7795','589ab6','7db8d1','a5d8e9','d0f0f3','efffff','324659','627c90','9faeb7'],
+ copper:['452a25','67382d','8a4932','ab5d39','c97544','e79858','f4bb7b','ffe2ab','856446','ac8760','d7b487'],
+ gold:['4f351d','745020','9b681f','bb8529','d8a334','edbd48','f8d56b','ffe69a','fff3c6','cc8c23','e7ab29','fff8de'],
+ brass:['3c3c25','62603a','8b7c43','b19b53','d1ba6d','e7d49a','fff0bf','72745a','a1a189','c4c3a5'],
+ toolbox:['1e3339','2a4b50','38646a','4e7c80','78a09f','a0b8b0','364052','5d6875','89939a','bbc0b9','eae8d5','fff2d2','6e493a','9b654b','b9825d'],
+ quartz:['435b58','637976','819590','a2b2aa','bac8bd','d0d8cf','e4e8df','f3f3e9','fffdf3','9abdc8','d5eaf0'],
+ pebble:['403b4a','60556a','8a7086','b48c99','d8b5b4','f1d8ce','81786d','aaa18a','d1c9b1','f1ecd7','af8871'],
+ agate:['4b3840','765143','a37658','c59973','e4be99','f4debb','fff2d9','738f91','a2c0be','d5e4d4','8b7976'],
+ pinkstone:['51434b','79616d','a47f88','c79d9f','e1bcba','f2d9ce','fff0e0','8a8278','b4ad9b','d6d1bd'],
+ greenstone:['293e37','3b5848','587859','78986a','9fb380','c7d0a1','e6e7c4','f6f1d7','5b786e','87a89c','b6cab2'],
+ blackstone:['222c32','35434a','4a5c61','647a7e','849799','a9b8b4','d3dad0','eeeede','3d3533','63534a','947859']
+};
+function protectedFiles(){const r=[];function walk(d){for(const e of readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name).replaceAll(path.sep,'/');if(e.isDirectory())walk(p);else if(!p.endsWith('.png'))r.push(p);}}walk('src');return [...r,'package.json','package-lock.json','index.html','vite.config.ts'];}
+function snapshot(){if(existsSync(folder+'/baseline.json'))return;mkdirSync(folder+'/before',{recursive:true});const files=readdirSync(sheets).filter(f=>f.endsWith('.png')).sort();assert.equal(files.length,9);for(const f of files)copyFileSync(sheets+'/'+f,folder+'/before/'+f);json(folder+'/baseline.json',{sheets:files,protected:Object.fromEntries(protectedFiles().map(f=>[f,hash(readFileSync(f))]))});}
+function fromSource(file,item){const image=PNG.sync.read(readFileSync(file));let x0=image.width,y0=image.height,x1=-1,y1=-1;for(let y=0;y<image.height;y++)for(let x=0;x<image.width;x++)if(image.data[(y*image.width+x)*4+3]>=128){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}assert.ok(x1>x0&&y1>y0);
+ const width=x1-x0+1,height=y1-y0+1,scale=Math.min(item.maxBounds[0]/width,item.maxBounds[1]/height),w=Math.max(1,Math.round(width*scale)),h=Math.max(1,Math.round(height*scale)),left=Math.floor((32-w)/2),top=Math.floor((32-h)/2),palette=palettes[item.palette];assert.ok(palette);
+ const rgb=palette.map(c=>[0,2,4].map(i=>parseInt(c.slice(i,i+2),16))),rows=Array.from({length:32},()=>Array(32).fill('.'));
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){const sx=Math.min(x1,x0+Math.floor((x+.5)*width/w)),sy=Math.min(y1,y0+Math.floor((y+.5)*height/h)),i=(sy*image.width+sx)*4;if(image.data[i+3]<128)continue;let best=0,distance=Infinity;for(let k=0;k<rgb.length;k++){const d=rgb[k].reduce((s,v,j)=>s+(v-image.data[i+j])**2,0);if(d<distance){distance=d;best=k;}}rows[top+y][left+x]=best.toString(16);}
+ return {id:item.id,palette,rows:rows.map(r=>r.join('')),sourceSHA256:hash(readFileSync(file)),sourceBounds:{x:x0,y:y0,width,height},pixelBounds:{x:left,y:top,width:w,height:h}};
+}
+function pixels(){return existsSync(folder+'/pixels.json')?JSON.parse(readFileSync(folder+'/pixels.json','utf8')):[];}
+function bufferFor(item){const b=Buffer.alloc(4096);item.rows.forEach((row,y)=>[...row].forEach((c,x)=>{if(c==='.')return;const color=item.palette[parseInt(c,16)],i=(y*32+x)*4;for(let k=0;k<3;k++)b[i+k]=parseInt(color.slice(k*2,k*2+2),16);b[i+3]=255;}));return b;}
+function cell(p,col,row){const b=Buffer.alloc(4096);for(let y=0;y<32;y++)p.data.copy(b,y*128,((row*32+y)*256+col*32)*4,((row*32+y)*256+col*32+32)*4);return b;}
+function apply(field){const items=pixels().filter(e=>!field||e.id[0]===field),groups=new Map();for(const item of items){assert.ok(expected.includes(item.id));const c=mapping.find(e=>e.treasureId===item.id);if(!groups.has(c.sheet))groups.set(c.sheet,[]);groups.get(c.sheet).push({item,c});}for(const [name,list] of groups){const f=sheets+'/'+name+'.png',png=PNG.sync.read(readFileSync(f));assert.equal(png.width,256);assert.equal(png.height,160);for(const {item,c} of list){const b=bufferFor(item);for(let y=0;y<32;y++)b.copy(png.data,((c.row*32+y)*256+c.col*32)*4,y*128,(y+1)*128);}writeFileSync(f,PNG.sync.write(png));}return verify();}
+function verify(){const base=JSON.parse(readFileSync(folder+'/baseline.json','utf8')),data=pixels(),details=[];for(const [f,h] of Object.entries(base.protected))assert.equal(hash(readFileSync(f)),h,'protected source changed '+f);let changed=0,unchanged=0,pending=0;for(const f of base.sheets){const a=PNG.sync.read(readFileSync(folder+'/before/'+f)),b=PNG.sync.read(readFileSync(sheets+'/'+f));assert.equal(b.width,256);assert.equal(b.height,160);for(let row=0;row<5;row++)for(let col=0;col<8;col++){const e=targets.find(e=>e.sheet+'.png'===f&&e.col===col&&e.row===row),old=cell(a,col,row),current=cell(b,col,row);if(!e){assert.ok(old.equals(current),'outside target changed '+f+' '+col+','+row);unchanged++;continue;}const p=data.find(p=>p.id===e.treasureId);if(!p){assert.ok(old.equals(current),'pending target changed '+e.treasureId);pending++;continue;}assert.ok(!old.equals(current));assert.ok(current.equals(bufferFor(p)));let opaque=0;const colors=new Set();for(let y=0;y<32;y++)for(let x=0;x<32;x++){const i=(y*32+x)*4;assert.ok(current[i+3]===0||current[i+3]===255);if(current[i+3]){assert.ok(x>=2&&x<30&&y>=2&&y<30);opaque++;colors.add(current.subarray(i,i+3).toString('hex'));}}assert.ok(opaque>5&&colors.size<=16);changed++;details.push({...e,rgbaSHA256:hash(current),opaquePixels:opaque,colors:colors.size});}}
+ assert.equal(unchanged,318);assert.equal(changed+pending,42);const result={version:JSON.parse(readFileSync('package.json','utf8')).version,comparison:'exact decoded RGBA bytes for all 360 cells',changedCells:changed,pendingTargets:pending,unchangedOutsideTargets:unchanged,nonTargetChangedPixels:0,wave1Unchanged:true,protectedFilesUnchanged:Object.keys(base.protected).length,completed:Object.fromEntries(['B','R','G'].map(f=>[f,details.filter(e=>e.field===f).length])),items:details};mkdirSync(out,{recursive:true});json(out+'/pixel-comparison.json',result);console.log({changed,pending,unchanged,nonTargetChangedPixels:0});return result;}
+const mode=process.argv[2];if(mode==='import'){const field=process.argv[3],dir=process.argv[4];assert.ok(['B','R','G'].includes(field)&&dir);snapshot();const entries=config.items.filter(e=>e.field===field);assert.equal(entries.length,14);const old=pixels().filter(e=>e.id[0]!==field),added=entries.map(e=>fromSource(path.join(dir,e.sourceFile),e));json(folder+'/pixels.json',[...old,...added].sort((a,b)=>expected.indexOf(a.id)-expected.indexOf(b.id)));apply(field);}else if(mode==='apply')apply(process.argv[3]);else if(mode==='verify')verify();else throw Error('Use import <B/R/G> <generated directory>, apply [field], verify');
