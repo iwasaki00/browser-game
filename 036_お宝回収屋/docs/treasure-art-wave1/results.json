@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-11-13",
+  "targetIDs": [
+    "B001",
+    "B007",
+    "B011",
+    "B012",
+    "R002",
+    "R004",
+    "R005",
+    "R007",
+    "G001",
+    "G003",
+    "G007",
+    "G012"
+  ],
+  "substitutions": [],
+  "dedicatedArt": 12,
+  "remainingPrototypePNG": 42,
+  "svgFallback": 246,
+  "modifiedSheets": 7,
+  "totalSheets": 9,
+  "cell": [
+    32,
+    32
+  ],
+  "sheet": [
+    256,
+    160
+  ],
+  "changedCells": 12,
+  "unchangedCells": 348,
+  "nonTargetChangedPixels": 0,
+  "protectedFilesUnchanged": 92,
+  "gameVersionChanged": false,
+  "saveChanged": false,
+  "layoutChanged": false,
+  "unitTests": {
+    "total": 665,
+    "pass": 665,
+    "fail": 0
+  },
+  "browserCases": 8,
+  "productionCases": 4,
+  "build": "PASS",
+  "fineGoldSeparateGrains": 5,
+  "iPhoneSafari": "not tested on physical device",
+  "tool": "Built-in image_gen"
+}

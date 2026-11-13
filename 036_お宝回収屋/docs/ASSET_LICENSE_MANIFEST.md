@@ -1,5 +1,12 @@
 # Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
 
+## 専用ドット絵 第1弾の制作由来
+
+B001/B007/B011/B012、R002/R004/R005/R007、G001/G003/G007/G012の12件を、内蔵image_genを使って各品ごとに新規制作しました。既存SVGの変換ではありません。特定の既存作品・外部画像は参照していません。32×32への透過・パレット仕上げ後、既存7シート内の12セルへ配置しました。制作プロンプトはartwork/treasure-wave1/generation.json、最終ドットデータはpixels.json、由来と照合結果は[TREASURE_ART_WAVE1](TREASURE_ART_WAVE1.md)。
+
+現在のPNG表示54件の内訳は専用12件＋SVG由来の仮絵42件、SVGフォールバックは246件です。以下の基盤導入時とRC監査時の記録は、それぞれ当時の状態を示します。
+
+
 ## 画像基盤追加時の補足（2026-11-13）
 
 以下の棚卸し表と「PNG実画像0」は、スプライト追加前のRC監査時点の記録です。現行ソースにはsrc/assets/treasures/sheets/の透過PNGが9枚追加され、既存仮SVG由来の54件の試作セルを含みます。今回Codexが既存コードをCanvasでラスタライズ・配置して作成したもので、外部画像の新規取得はありません。生成コードはtreasure-sprite-map.ts/json、treasure-sprites.cssと表示処理の変更です。元SVGそのものの由来調査と、今回の変換作業を区別してください。

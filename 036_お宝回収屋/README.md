@@ -44,7 +44,7 @@ http://127.0.0.1:4176/を開きます。今回、GitHub Pages等への公開は�
 
 Windows Chrome/Edgeと320/375/390/430pxの自動試験を実施。iPhone Safariはユーザーから0.9.2の実機受入OKとの申告を記録しました。詳細測定値/ログ未提供、Codexの実機直接操作は未実施です。WebKit自動試験は実行環境未導入のため未実施。
 
-**公開判定はCONDITIONALです。** RCの作成・技術受入は完了しましたが、ゲーム固有素材・コード・データの配布許諾が未確定です。お宝画像は9枚の32×32セルシートへ対応し、54件を既存SVG由来の試作PNGで表示、残り246件はSVG仮表示です。300種類の専用絵は未完成です。[画像管理と制作手順](docs/TREASURE_SPRITE_PLAN.md)。ゲームバランスとセーブ形式は変更していません。
+**公開判定はCONDITIONALです。** RCの作成・技術受入は完了しましたが、ゲーム固有素材・コード・データの配布許諾が未確定です。お宝画像は9枚の32×32セルシートへ対応し、54件をPNG表示（専用ドット絵12件・既存SVG由来の仮絵42件）、残り246件はSVG仮表示です。専用絵の第1弾は[12点の制作結果](docs/TREASURE_ART_WAVE1.md)を参照。300種類の専用絵は未完成です。[画像管理と制作手順](docs/TREASURE_SPRITE_PLAN.md)。ゲームバランスとセーブ形式は変更していません。
 
 [プレイヤー向けリリースノート](docs/RELEASE_NOTES_1.0.0.md) / [総合受入](docs/FINAL_ACCEPTANCE_1.0.0.md) / [素材許諾](docs/ASSET_LICENSE_MANIFEST.md) / [配布監査](docs/RELEASE_PACKAGE_AUDIT.md) / [公開判断](docs/RELEASE_DECISION_1.0.0.md) / [28項目最終報告](docs/FINAL_REPORT_1.0.0-rc.1.md)。
 

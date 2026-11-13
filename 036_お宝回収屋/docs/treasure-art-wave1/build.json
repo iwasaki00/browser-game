@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-11-13",
+  "files": [
+    {
+      "path": "assets/beach_daily_sheet-p2BczeN3.png",
+      "bytes": 4804,
+      "sha256": "43b264a2c44e66c5da91aab615cafab3a2876f1a0b1b23fdc7dfedba4c497b81"
+    },
+    {
+      "path": "assets/beach_nature_sheet-BybF4ZAH.png",
+      "bytes": 3638,
+      "sha256": "4c8720610efa0eabedbfed588aab848730dcfb2d0f659d393d53a48a85e1cbe2"
+    },
+    {
+      "path": "assets/beach_valuable_sheet-CbTquvrB.png",
+      "bytes": 6082,
+      "sha256": "884a4c45b4d018f62f953e42db88fcf2b8acf106fa07127908f4a2f258ceba43"
+    },
+    {
+      "path": "assets/gold_mineral_sheet-CzsnkQQS.png",
+      "bytes": 4778,
+      "sha256": "8bf4d9d3673f22918ef72ffff52326696510aa8c98bbdc2e0aaf8b1d21b2ce07"
+    },
+    {
+      "path": "assets/gold_rare_sheet-MdwVQFrW.png",
+      "bytes": 4120,
+      "sha256": "7ff57fb330eec37aa0fd49107b145af082df71f7e06f5195c4103abb6f8155ff"
+    },
+    {
+      "path": "assets/gold_stone_sheet-BiihpWjw.png",
+      "bytes": 4973,
+      "sha256": "15ad55559118c49d190a875efe60bcb920720b4e2202c10ce7bbf769ea4b8a7d"
+    },
+    {
+      "path": "assets/index-D1fPzTKU.js",
+      "bytes": 448061,
+      "sha256": "32e7c85451abf1a2f214143e7b7e8ca5f64bc1c30ec63d3645d84fbd41b3e75a"
+    },
+    {
+      "path": "assets/index-DfuCxiXz.css",
+      "bytes": 27351,
+      "sha256": "da134f9a02ccbc0b6294d0b54026b8687b9fc02b9c0daa9c2db4a8b102b0cf3a"
+    },
+    {
+      "path": "assets/river_metal_sheet-D3dTkjGx.png",
+      "bytes": 3841,
+      "sha256": "519373d1566cecf4eb8b57c7f25ca0618d0f8adad50c7a5db047ab9af26b74a3"
+    },
+    {
+      "path": "assets/river_rare_sheet-CwJfUIDH.png",
+      "bytes": 3641,
+      "sha256": "e1d7ad118f9d45eb2db27993f1c0147b5f7bfd686fdeea61016aaeda2b541e60"
+    },
+    {
+      "path": "assets/river_tool_sheet-yrlzGgxf.png",
+      "bytes": 3497,
+      "sha256": "c819ede6c0e37aa7676991b321f0dfe07ecd3c31e0d0187c01c65e9817dd56fa"
+    },
+    {
+      "path": "index.html",
+      "bytes": 602,
+      "sha256": "8bacb3a5a3a8d494bd4443894863d64a35fa4bbe7b0dba0778d7b177d0bec780"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "bytes": 1486,
+      "sha256": "64e7ee04ad902e11711e19058843aa7fd2cac51d67eb9623e19374bdaee2d216"
+    }
+  ]
+}

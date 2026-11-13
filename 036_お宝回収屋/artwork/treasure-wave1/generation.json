@@ -1,0 +1,116 @@
+{
+  "feature": "TREASURE ART — WAVE 1",
+  "tool": "Built-in image_gen",
+  "cellSize": 32,
+  "light": "upper-left",
+  "items": [
+    {
+      "id": "B001",
+      "sourceFile": "exec-987ac824-d388-4743-977d-e50e0c93d5ed.png",
+      "prompt": "Use case: stylized-concept. Asset type: production inventory sprite for a 32x32 pixel art retro treasure hunting game. Draw ONE metal bottle crown cap, B001. Dedicated freshly drawn sprite, not a resized vector. Subject: top visible with crimped serrated corrugated skirt, short thick sidewall, clearly recognisable toothed crown cap silhouette, dull pale silvery green-gray steel with a few reddish brown rust flecks. No logo or embossed text. Style shared across set: slightly detailed 16-bit retro RPG inventory pixel art, realistic recognisable object proportions, limited material-specific palette about 8-12 colors, dark material-colored outlines not pure black, crisp square pixel clusters and stepped edges, no antialiasing or gradients, light from upper left, slight view down onto object. Draw at a logical 32x32 pixel resolution enlarged as exact square pixel blocks for delivery, with about 2 logical pixels transparent margin all round. Occupied silhouette about 25x22 logical pixels, centered. The image must be a SINGLE isolated item on TRUE TRANSPARENT background. No scenery, ground shadows, frame, rarity glow, letters, numbers, label, watermark or extra objects.",
+      "maxBounds": [
+        28,
+        24
+      ]
+    },
+    {
+      "id": "B007",
+      "sourceFile": "exec-afd068f1-f1db-4cf0-a2f8-60e9bc0e959b.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: Commemorative medal: a solid round bronze disc in a slight elliptical top view, raised double rim, clearly visible 2-pixel thick darker lower right edge, simple embossed tiny star (no writing), polished upper left rim, subdued patina in recesses. Smooth ROUND unbroken outer rim unlike a serrated bottle cap. No hanging loop.",
+      "maxBounds": [
+        26,
+        26
+      ]
+    },
+    {
+      "id": "B011",
+      "sourceFile": "exec-b7ce68b8-e43d-4936-a9bb-278eac11f182.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: Gold finger ring: a plain solid gold wedding band tilted in three-quarter view, a LARGE clearly transparent oval center hole, thick curved band showing inner wall and polished warm gold reflection at upper left. No jewel or diamond, no engraving. Distinct open ring silhouette rather than a coin or cap.",
+      "maxBounds": [
+        26,
+        26
+      ]
+    },
+    {
+      "id": "B012",
+      "sourceFile": "exec-39f38a8a-a69b-4eb2-b860-8d3b3cc78d4b.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: a waterproof wristwatch for a tiny THIRTY-TWO pixel inventory icon. CRITICAL PROPORTION: the circular WATCH CASE and BLUE DIAL are LARGE, about 14 by 14 logical pixels in the very CENTER of the32x32 sprite. The full watch is only28 pixels tall; use SHORT visible navy rubber strap pieces about6 pixels wide and6 pixels long above and below the central case. The case must be TWICE AS WIDE as the strap. Do NOT create very long dangling belt lengths. Make the large blue dial and two clearly WHITE hands recognisable at32px, set hands to10:10. Silver steel bezel about1 logical pixel thick, strong upper-left highlights, dark navy dial distinct from mid-blue strap. NO NUMERALS, no text, no brand. One little buckle on short top strap, one strap hole below. Dark bluish outlines, bright face contrast. Slight top-down view, full item fits inside28x28 with2px transparent margin. Keep the rest of the set's slightly detailed16-bit retro pixel art style, preserve TRUE TRANSPARENT background.",
+      "maxBounds": [
+        28,
+        28
+      ]
+    },
+    {
+      "id": "R002",
+      "sourceFile": "exec-d42f1611-8dd3-4fa7-babf-4a82e0e2588d.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: Iron hex-head bolt, one diagonal fastener from upper left to lower right. Large clearly SIX-SIDED HEXAGON head at upper-left with top facet, short cylindrical shank and 5 bold thread ridges toward lower-right. Blue-gray steel edge reflections at upper-left with just a few small reddish-brown rust patches, outline dark blue-gray. No nut, no screwdriver slot, no additional objects.",
+      "maxBounds": [
+        27,
+        27
+      ]
+    },
+    {
+      "id": "R004",
+      "sourceFile": "exec-aa98129a-dfdc-46f7-a0a3-ca0566c56d71.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: An old open-ended steel spanner, a single elongated narrow diagonal wrench from lower-left handle to upper-right open jaw. Clearly open U-shaped wrench mouth with transparent gap between the two opposing jaws, no closed ring at either end. Slim straight steel handle with a small dark shallow inset and a few tiny rust patches. Gray-blue metal, upper-left silver edge reflections. Preserve the functional open mouth and narrow handle.",
+      "maxBounds": [
+        28,
+        28
+      ]
+    },
+    {
+      "id": "R005",
+      "sourceFile": "exec-f4e3473d-a7af-4ba6-a2fb-c3a25498aae6.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: A short iron chain made of exactly THREE visibly interlocked oval links placed diagonally from upper-left to lower-right. Every link has a clearly TRANSPARENT open center and is visibly distinct; alternate front and side orientation to show interlocking overlap. Thick but not bulky blue-gray iron with upper-left silver edge glints and only a few rusty reddish-brown pixels. Do not draw solid iron blobs or an entire pile of chain.",
+      "maxBounds": [
+        26,
+        28
+      ]
+    },
+    {
+      "id": "R007",
+      "sourceFile": "exec-ab02f69f-aac1-4960-8963-54fd1e7fd196.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: A compact vintage iron toolbox, rectangular low horizontal box in slight top view. Dark desaturated blue-green painted steel, slightly lighter top lid, very clear dark horizontal LID SEAM, one central clasp. U-shaped metal carrying HANDLE on top with visibly transparent hole beneath. Small chips exposing steel and sparse red-brown rust at corners. No tools sticking out, no logos or words.",
+      "maxBounds": [
+        28,
+        24
+      ]
+    },
+    {
+      "id": "G001",
+      "sourceFile": "exec-5e1fccb4-d9a2-4141-b5b4-491cc1953978.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: A small broken quartz shard, a rough irregular asymmetrical whitish translucent rock with several large flat fracture faces. Milky white and cool pale gray-green palette; irregular chipped polygon silhouette, bright upper-left white fracture plane and muted cool shaded right face. NOT a regular faceted cut jewel, NOT a symmetrical pointed crystal. No sparkle or glow.",
+      "maxBounds": [
+        26,
+        28
+      ]
+    },
+    {
+      "id": "G003",
+      "sourceFile": "exec-635aca1d-495a-40ea-97c6-d16a6fabdbd2.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: A small iron pyrite crystal grain: a compact angular cluster of two intergrown CUBIC crystals. Strong straight edges and square geometric faces, brassy pale ochre metal rather than orange gold, distinctly dark cool olive-brown side face. Upper-left cream metallic plane and thin straight reflection on edges. Clearly rigid angular block silhouette, not round gold nugget, no scattered dust or sparkle.",
+      "maxBounds": [
+        26,
+        26
+      ]
+    },
+    {
+      "id": "G007",
+      "sourceFile": "exec-86b9df5c-10b6-4e59-8b39-a5387e7c3741.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: Fine alluvial gold: exactly FIVE TINY separate irregular gold flakes/grains arranged in a small loose close cluster, transparent gaps separating ALL five grains. Each grain only around 2x3 or 3x4 logical pixels, thin uneven flake shapes, varying orientations. Occupied cluster about 16x14 of the logical32 grid, smaller than a nugget. A restrained warm pale gold/ochre palette, upper-left light flecks. No BIG central lump, no rocks, no connected mass, no glow or star-shaped sparkles.",
+      "maxBounds": [
+        18,
+        16
+      ]
+    },
+    {
+      "id": "G012",
+      "sourceFile": "exec-3dc7c940-f050-4d2f-9258-4f19a3f4a5b6.png",
+      "prompt": "Use case: stylized-concept. Asset type: dedicated inventory sprite for a 32x32 pixel art treasure hunting game. Draw ONE isolated object as described below, freshly drawn, not vector conversion. Shared art direction: slightly detailed 16-bit retro RPG inventory pixel art, recognisable realistic object proportions, limited material-specific palette 8-12 colors, dark material-colored outlines instead of pure black, crisp square pixel clusters and stepped edges, no antialiasing/soft gradients. Lighting upper LEFT; view slightly down from above with a little visible thickness. A logical 32x32 grid enlarged as large square blocks for delivery. About 2 logical pixels transparent margin all around; object fits within 28x28 logical pixels, narrower proportions for long items. TRUE transparent background with meaningful holes transparent too. NO text, logos, numerals, letters, watermark, scenery, ground shadow, frame, glowing halo, rarity effects or additional objects. Silhouette first, material second, details last. Subject: One large natural alluvial gold nugget, compact but thick irregular lumpy rounded mass with several softly rounded protrusions and small concave notches. Organic knobbly rounded silhouette, broad warm rich yellow gold face lit from upper-left, darker ochre lower-right side showing substantial thickness, a few bright cream gold glints. No cubic crystal facets, no straight-edged geometric prism, no separate dust or star sparkles. Clearly distinct shape from blocky pyrite and from a cluster of tiny gold flakes.",
+      "maxBounds": [
+        26,
+        26
+      ]
+    }
+  ]
+}
