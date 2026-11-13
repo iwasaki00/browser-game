@@ -1,0 +1,254 @@
+[
+  {
+    "channel": "chrome",
+    "width": 320,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "failure": "network",
+    "allAffectedFallback": true,
+    "futureFallback": true,
+    "otherSheetUnaffected": true,
+    "washRewardSave": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "failure": "dimensions",
+    "allAffectedFallback": true,
+    "futureFallback": true,
+    "otherSheetUnaffected": true,
+    "washRewardSave": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 390,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 1280,
+    "atlas": {
+      "occupied": 54,
+      "blank": 306,
+      "rendered": 54
+    },
+    "washes": [
+      {
+        "id": "B001",
+        "fn": 12,
+        "art": "sprite"
+      },
+      {
+        "id": "R004",
+        "fn": 77,
+        "art": "sprite"
+      },
+      {
+        "id": "G003",
+        "fn": 95,
+        "art": "sprite"
+      },
+      {
+        "id": "B003",
+        "fn": 130,
+        "art": "SVG"
+      }
+    ],
+    "collection": true,
+    "details": true,
+    "unknownSilhouette": true,
+    "saveReload": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "failure": "network",
+    "allAffectedFallback": true,
+    "futureFallback": true,
+    "otherSheetUnaffected": true,
+    "washRewardSave": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "failure": "dimensions",
+    "allAffectedFallback": true,
+    "futureFallback": true,
+    "otherSheetUnaffected": true,
+    "washRewardSave": true,
+    "errors": []
+  }
+]

@@ -1,3 +1,9 @@
+# TREASURE SPRITE SHEET FOUNDATION（Version変更なし）
+
+自動665/665（既存647＋追加18）、新しい表示試験10ケース、既存7ブラウザ回帰、本番4ケースが成功。9シート・300割当・54試作とSVGフォールバックを検証。iPhone Safari実機は今回未確認。初回タイムアウトと試験データ補正を含む詳細は[TREASURE_SPRITE_RESULTS](TREASURE_SPRITE_RESULTS.md)と[検証サマリー](treasure-sprite-summary.json)を参照。
+
+---
+
 # Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
 
 647/647、ブラウザ7/7、保存12状態、不正JSON、複数タブ、10画面構成、本番2ブラウザ、preview/配下パス4ケース、300種、未実装77道具、6ライン24ゲーム時間を確認。iPhoneはユーザー申告OK、WebKit未導入。

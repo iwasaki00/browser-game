@@ -1,0 +1,73 @@
+{
+  "version": "1.0.0-rc.1",
+  "feature": "TREASURE SPRITE SHEET FOUNDATION",
+  "date": "2026-11-13",
+  "base": "./",
+  "files": [
+    {
+      "path": "assets/beach_daily_sheet-BOwZp7Q9.png",
+      "bytes": 4720,
+      "sha256": "299e833086622cd0c9bdb903854848012fd7b094209c9af0fc830fec8a5646b2"
+    },
+    {
+      "path": "assets/beach_nature_sheet-BybF4ZAH.png",
+      "bytes": 3638,
+      "sha256": "4c8720610efa0eabedbfed588aab848730dcfb2d0f659d393d53a48a85e1cbe2"
+    },
+    {
+      "path": "assets/beach_valuable_sheet-yoXMu6y4.png",
+      "bytes": 4963,
+      "sha256": "c695f61de9d6a507c8f8cfda8d84d8520f338118b62a83a6dea522719ce02216"
+    },
+    {
+      "path": "assets/gold_mineral_sheet-B8rqSiWj.png",
+      "bytes": 3840,
+      "sha256": "f9e3614be46106452bdf32784053cf78bf723b4299323bcb662fd6ebca202784"
+    },
+    {
+      "path": "assets/gold_rare_sheet-DrOh-mrv.png",
+      "bytes": 3111,
+      "sha256": "891013c35064bfc318419d463ef09c967bd102006bfde1dc04e1199168c6200a"
+    },
+    {
+      "path": "assets/gold_stone_sheet-CXqhXyea.png",
+      "bytes": 3877,
+      "sha256": "825b7d409016a0d5bf6298acd3c810fdc750358c8a909ac8c5064882c719ee8e"
+    },
+    {
+      "path": "assets/index-CU4fs_yC.js",
+      "bytes": 448061,
+      "sha256": "9dcc7a41c268e8d6cec4e19c322ac713cbf925e8076a0ec6808ce2719918177f"
+    },
+    {
+      "path": "assets/index-DfuCxiXz.css",
+      "bytes": 27351,
+      "sha256": "da134f9a02ccbc0b6294d0b54026b8687b9fc02b9c0daa9c2db4a8b102b0cf3a"
+    },
+    {
+      "path": "assets/river_metal_sheet-DLRAEIiU.png",
+      "bytes": 4588,
+      "sha256": "be5dc2a8f49e4c407f6792e761ea0457537336c174a97a0a69d71b968a090796"
+    },
+    {
+      "path": "assets/river_rare_sheet-CwJfUIDH.png",
+      "bytes": 3641,
+      "sha256": "e1d7ad118f9d45eb2db27993f1c0147b5f7bfd686fdeea61016aaeda2b541e60"
+    },
+    {
+      "path": "assets/river_tool_sheet-0eKN9g4-.png",
+      "bytes": 4009,
+      "sha256": "f309a835501545b4059c207a58b591edfcc56cc0bc8114f0c0a2304524ba9d55"
+    },
+    {
+      "path": "index.html",
+      "bytes": 602,
+      "sha256": "03394ebfaddafd4d7d2212f6feacc4ae1920673ee15aee015b0d15df95dbb39d"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "bytes": 1486,
+      "sha256": "64e7ee04ad902e11711e19058843aa7fd2cac51d67eb9623e19374bdaee2d216"
+    }
+  ]
+}

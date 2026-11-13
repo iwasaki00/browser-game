@@ -1,0 +1,46 @@
+[
+  {
+    "channel": "chrome",
+    "simulatedMissingSheet": false,
+    "sheetsRequested": 9,
+    "relativePath": true,
+    "washReward": true,
+    "collection54": true,
+    "debugAbsent": true,
+    "save": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "simulatedMissingSheet": true,
+    "sheetsRequested": 9,
+    "relativePath": true,
+    "washReward": true,
+    "collection54": true,
+    "debugAbsent": true,
+    "save": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "simulatedMissingSheet": false,
+    "sheetsRequested": 9,
+    "relativePath": true,
+    "washReward": true,
+    "collection54": true,
+    "debugAbsent": true,
+    "save": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "simulatedMissingSheet": true,
+    "sheetsRequested": 9,
+    "relativePath": true,
+    "washReward": true,
+    "collection54": true,
+    "debugAbsent": true,
+    "save": true,
+    "errors": []
+  }
+]

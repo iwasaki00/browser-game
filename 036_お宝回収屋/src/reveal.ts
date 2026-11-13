@@ -1,9 +1,9 @@
 import {firstEvent,effects} from './experience';
-import {treasureImage} from './treasure-assets';
+import {treasureSprite,markTreasureSheetFailed} from './treasure-assets';
 import {treasure,income} from './data';
 import {reward,type State,type Find} from './engine';
-export function treasureShape(id:string,fallback=false){
- const image=treasureImage(id);if(image&&!fallback)return `<img src="${image}" data-treasure-fallback="${id}" alt="">`;let shape='';const kind=treasure(id)?.kind??'';
+export function treasureFallbackSVG(id:string){
+ let shape='';const kind=treasure(id)?.kind??'';
  if(id==='B012'||treasure(id)?.name.includes('時計'))shape='<rect x="43" y="7" width="34" height="106" rx="9" fill="#697f73"/><circle cx="60" cy="60" r="27" fill="#e2c87e"/><circle cx="60" cy="60" r="21" fill="#f0eee0"/><path d="M60 44v17l12 7" stroke="#405957" stroke-width="4"/>';
  else if(id==='B011'||id==='B009')shape='<circle cx="60" cy="65" r="29" fill="none" stroke="#dcb95b" stroke-width="13"/><path d="M46 36l14-18 14 18-14 12z" fill="#e9edc0"/>';
  else if(['B007','B010'].includes(id))shape='<circle cx="60" cy="60" r="36" fill="#bc9a51" stroke="#e7d17e" stroke-width="5"/><circle cx="60" cy="60" r="27" fill="none" stroke="#e6ce82" stroke-width="2"/><path d="M60 37l7 15 17 2-12 12 3 17-15-8-15 8 3-17-12-12 17-2z" fill="#e3c775"/>';
@@ -23,6 +23,13 @@ export function treasureShape(id:string,fallback=false){
  else if(kind.includes('重量')||kind==='容器')shape='<rect x="23" y="30" width="74" height="66" rx="7" fill="#7b9184"/><path d="M23 50h74M48 43v18h24V43" stroke="#c6bc95" fill="none" stroke-width="5"/>';
  else shape='<ellipse cx="60" cy="66" rx="25" ry="35" fill="#a5aaa1"/><circle cx="60" cy="34" r="7" fill="none" stroke="#d2d5c8" stroke-width="5"/>';
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" aria-hidden="true">${shape}</svg>`;
+}
+const esc=(v:unknown)=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('\x22','&quot;');
+export function treasureShape(id:string,fallback=false){const sprite=!fallback?treasureSprite(id):undefined;const rarity=treasure(id)?.rarity??'C';const art=sprite?`<span class="treasure-sprite" data-sheet="${sprite.sheet}"><img class="treasure-sheet-image" src="${esc(sprite.url)}" width="${sprite.width}" height="${sprite.height}" style="width:${sprite.width}px;height:${sprite.height}px;left:-${sprite.col*32}px;top:-${sprite.row*32}px" data-treasure-fallback="${esc(id)}" data-treasure-sheet="${sprite.sheet}" alt="" decoding="async"></span>`:treasureFallbackSVG(id);return `<span class="treasure-visual" data-treasure-id="${esc(id)}" data-rarity="${rarity}" aria-hidden="true">${art}</span>`;}
+export function treasureSilhouette(){return '<span class="treasure-visual treasure-unfound" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 24l-2-9L12 5l11 4 4 13-10 6z" fill="#9ca59c"/><path d="M12 11l8 11M9 18l13-4" stroke="#bfc6bd" stroke-width="2"/></svg></span>';}
+export function installTreasureImageFallback(root:Document){
+ const handler=(event:Event)=>{const image=event.target;if(!(image instanceof HTMLImageElement)||!image.dataset.treasureFallback)return;const sheet=image.dataset.treasureSheet;if(event.type==='load'&&(!sheet||image.naturalWidth===256&&image.naturalHeight===160))return;if(sheet)markTreasureSheetFailed(sheet);const images=sheet?Array.from(root.querySelectorAll<HTMLImageElement>('img[data-treasure-sheet]')).filter(el=>el.dataset.treasureSheet===sheet):[image];for(const img of images){const frame=img.closest('.treasure-visual');if(frame)frame.outerHTML=treasureShape(img.dataset.treasureFallback!,true);else img.outerHTML=treasureShape(img.dataset.treasureFallback!,true);}};
+ root.addEventListener('error',handler,true);root.addEventListener('load',handler,true);return()=>{root.removeEventListener('error',handler,true);root.removeEventListener('load',handler,true);};
 }
 export interface RevealCallbacks {settled:(fn:number,isNew:boolean)=>void;next:()=>void;close:()=>void;}
 export function mountReveal(root:HTMLElement,s:State,f:Find,callbacks:RevealCallbacks){

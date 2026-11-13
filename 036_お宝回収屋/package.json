@@ -59,7 +59,9 @@
     "test:rc-production": "node scripts/rc-test.mjs production",
     "test:rc-preview": "node scripts/rc-preview.mjs",
     "test:rc-stress": "node scripts/rc-test.mjs stress",
-    "audit:rc-build": "tsc --noEmit && node scripts/rc-build.mjs"
+    "audit:rc-build": "tsc --noEmit && node scripts/rc-build.mjs",
+    "assets:prototype": "node scripts/build-prototype-sheets.mjs",
+    "test:sprites-browser": "node scripts/treasure-sprite-browser-test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

@@ -1,3 +1,9 @@
+## 画像管理の追加仕様（TREASURE SPRITE SHEET FOUNDATION）
+
+お宝300件の描画は9ジャンルの透過PNGシートへ対応。1セル32×32、8列×5行、各40枠。300件の固定割当と54件の試作セルを管理し、246件は既存SVGで表示します。FN、出現率、回収判定、洗浄報酬、保存形式は変更しません。詳細は[TREASURE_SPRITE_PLAN](TREASURE_SPRITE_PLAN.md)を参照。
+
+---
+
 # Version 0.9.0 — GAME EXPERIENCE REFINEMENT
 
 道具126マスター/46使用可能、設備3種、300お宝、12エリア、6ラインを維持。ID・価格・FN報酬・生成確率の変更なし。新規追加は保存用の experience（version=1、guide、legacy、operations、events最大11、recentBook最大12）と settings.effects（full/light/off）。各イベントは順序、ゲーム秒、操作数、FN、所持道具、分野、累計回収数、掘削作業秒を保持。ログは外部送信しません。

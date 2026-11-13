@@ -1,3 +1,9 @@
+## 画像管理の追加仕様（TREASURE SPRITE SHEET FOUNDATION）
+
+お宝300件の描画は9ジャンルの透過PNGシートへ対応。1セル32×32、8列×5行、各40枠。300件の固定割当と54件の試作セルを管理し、246件は既存SVGで表示します。FN、出現率、回収判定、洗浄報酬、保存形式は変更しません。詳細は[TREASURE_SPRITE_PLAN](TREASURE_SPRITE_PLAN.md)を参照。
+
+---
+
 # Version 1.0.0-rc.1 — FINAL ACCEPTANCE & RELEASE CANDIDATE
 
 既存3分野/12エリア/300種/46道具/3設備/6ライン/Lv1–3/4枠を維持。新規区画は10層600、旧区画の深度は互換維持。今回ゲーム処理変更なし。

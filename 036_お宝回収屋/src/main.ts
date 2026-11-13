@@ -28,10 +28,11 @@ import {mountGoldWorkbench} from './gold-ui';
 import {equipmentCategory,rememberEquipment} from './equipment';
 import {measureSeconds} from './measure';
 import './style.css';
+import './treasure-sprites.css';
 import {areaId,isRiver,areaUnlocked,riverCapabilities,riverStart,riverPull,riverWork,riverRetool,riverSuggestion,riverTick,RIVER_TOOLS} from './river';
 import {renderRiver} from './river-view';
 import {logEvent} from './events';
-import {treasureShape,mountReveal} from './reveal';
+import {mountReveal,installTreasureImageFallback} from './reveal';
 import {sandRemaining,toolReport} from './tool-value';
 import {handReaction} from './feedback';
 import {project,unproject,onSurface,renderSurface,toolIcon,toolCursor} from './surface';
@@ -134,7 +135,7 @@ $('#goal-open').onclick=()=>{const goal=nextGoal(state,active);show('次の目�
 document.addEventListener('click',e=>{if((e.target as Element)?.closest('button'))uxAction(state);},true);
 document.addEventListener('pointerdown',e=>{if(e.isPrimary&&(e.target as Element)?.closest('canvas'))uxAction(state);},true);
 document.addEventListener('change',()=>uxAction(state),true);
-document.addEventListener('error',e=>{const el=e.target;if(el instanceof HTMLImageElement&&el.dataset.treasureFallback)el.outerHTML=treasureShape(el.dataset.treasureFallback,true);},true);
+installTreasureImageFallback(document);
 
 function openSaveTools(){show('セーブ保護・バックアップ','');$('#overlay').classList.add('save-overlay');disposeBackup=mountBackup($('#sheet-body'),()=>state,scope,!loadFailed,async candidate=>{const wasRunning=running;running=false;stopPointer();sessionClock.reset();try{if(!session.owns()&&!await session.acquire())throw Error('別のタブが進行中です。そちらを閉じてから復元してください');const restored=await restoreBackup(candidate,scope);state=restored;loadFailed=false;saveError=saveNotice(scope);close();refresh(state);select(state.riverSession?.tool??state.selectedTools?.[equipmentCategory(state)]??'hand',true);updateHUD();$('#title').hidden=false;$<HTMLButtonElement>('#start').disabled=false;$('#start').textContent='復元したセーブを再開 →';$('#load-note').textContent='復元完了：'+state.currentFN.toLocaleString()+' FN。設備は停止状態です。';}catch(e){running=wasRunning&&session.owns();sessionClock.reset();throw e;}});}
 $('#title-save-tools').onclick=openSaveTools;
