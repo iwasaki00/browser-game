@@ -1,15 +1,15 @@
 {
   "version": "1.0.0-rc.1",
   "comparison": "exact decoded RGBA bytes for all 360 cells",
-  "changedCells": 45,
-  "pendingTargets": 21,
+  "changedCells": 66,
+  "pendingTargets": 0,
   "unchangedOutsideTargets": 294,
   "nonTargetChangedPixels": 0,
   "previousCompletedUnchanged": true,
   "protectedFilesUnchanged": 91,
   "completed": {
     "B": 22,
-    "R": 1,
+    "R": 22,
     "G": 22
   },
   "items": [
@@ -1360,6 +1360,643 @@
       "rgbaSHA256": "b6fa687c780c34467c89121de677f9c838ed100245893a122e5d4ed4098adf18",
       "opaquePixels": 197,
       "colors": 9
+    },
+    {
+      "treasureId": "R045",
+      "sheet": "river_metal_sheet",
+      "col": 7,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "自転車部品",
+      "rarity": "U",
+      "available": true,
+      "name": "自転車の荷台脚",
+      "description": "曲がった支持部品。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 46,
+        "R-C": 35,
+        "R-D": 0
+      },
+      "earlyScore": 0.254,
+      "rgbaSHA256": "44162bad3fd08ba1327fe5e959a04ecd29bde0b80b14e3798b9e16c949eeb01d",
+      "opaquePixels": 223,
+      "colors": 9
+    },
+    {
+      "treasureId": "R046",
+      "sheet": "river_metal_sheet",
+      "col": 0,
+      "row": 3,
+      "size": 32,
+      "field": "R",
+      "category": "自転車部品",
+      "rarity": "U",
+      "available": true,
+      "name": "変速機のケージ",
+      "description": "鎖を支える薄い枠。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 45,
+        "R-C": 38,
+        "R-D": 0
+      },
+      "earlyScore": 0.256,
+      "rgbaSHA256": "c2d4e20102a65ad3718f176ccdd6c8b3243fa83fc1cc5af7a13429c738fc6951",
+      "opaquePixels": 204,
+      "colors": 9
+    },
+    {
+      "treasureId": "R048",
+      "sheet": "river_metal_sheet",
+      "col": 2,
+      "row": 3,
+      "size": 32,
+      "field": "R",
+      "category": "自転車部品",
+      "rarity": "U",
+      "available": true,
+      "name": "サドルのレール",
+      "description": "座面を支える二本の鋼棒。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 40,
+        "R-C": 33,
+        "R-D": 0
+      },
+      "earlyScore": 0.226,
+      "rgbaSHA256": "c79ffbf745fdc58da2339970932e5740359e71df4ead2dff1eb2be53e9297742",
+      "opaquePixels": 127,
+      "colors": 9
+    },
+    {
+      "treasureId": "R050",
+      "sheet": "river_metal_sheet",
+      "col": 4,
+      "row": 3,
+      "size": 32,
+      "field": "R",
+      "category": "自転車部品",
+      "rarity": "R",
+      "available": true,
+      "name": "チェーンテンショナー",
+      "description": "鎖の張りを調整する機構。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 41,
+        "R-C": 15,
+        "R-D": 0
+      },
+      "earlyScore": 0.194,
+      "rgbaSHA256": "a7eba35d8768912ccdbb666733e21b539e7b6736654241728a6f536bb6034bf3",
+      "opaquePixels": 304,
+      "colors": 12
+    },
+    {
+      "treasureId": "R070",
+      "sheet": "river_metal_sheet",
+      "col": 6,
+      "row": 3,
+      "size": 32,
+      "field": "R",
+      "category": "真鍮部品",
+      "rarity": "R",
+      "available": true,
+      "name": "真鍮製圧力計の枠",
+      "description": "計器の円形ケース。磁石では回収できない。",
+      "material": "brass",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 38,
+        "R-C": 23,
+        "R-D": 22
+      },
+      "earlyScore": 0.22,
+      "rgbaSHA256": "bcd6948003edf1a8b78bf48bb588d3430db9bc8632c2cf0ba9333f6d6586f8f0",
+      "opaquePixels": 395,
+      "colors": 7
+    },
+    {
+      "treasureId": "R071",
+      "sheet": "river_metal_sheet",
+      "col": 7,
+      "row": 3,
+      "size": 32,
+      "field": "R",
+      "category": "真鍮部品",
+      "rarity": "R",
+      "available": true,
+      "name": "真鍮製船窓の留め金",
+      "description": "開閉部を固定する金具。",
+      "material": "brass",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 28,
+        "R-C": 11,
+        "R-D": 18
+      },
+      "earlyScore": 0.152,
+      "rgbaSHA256": "531650f129e508eed8f909bd25c5274cad912bf38b623b8fa3d987767f61d6e2",
+      "opaquePixels": 466,
+      "colors": 7
+    },
+    {
+      "treasureId": "R073",
+      "sheet": "river_metal_sheet",
+      "col": 1,
+      "row": 4,
+      "size": 32,
+      "field": "R",
+      "category": "真鍮部品",
+      "rarity": "R",
+      "available": true,
+      "name": "真鍮製歯車",
+      "description": "黄色い合金の精密部品。",
+      "material": "brass",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 34,
+        "R-C": 16,
+        "R-D": 25
+      },
+      "earlyScore": 0.193,
+      "rgbaSHA256": "f66a72b741c1e9b235fff8c8184d66b9bd79f92affe6d4e37699759d7a53ef4b",
+      "opaquePixels": 480,
+      "colors": 7
+    },
+    {
+      "treasureId": "R077",
+      "sheet": "river_metal_sheet",
+      "col": 5,
+      "row": 4,
+      "size": 32,
+      "field": "R",
+      "category": "真鍮部品",
+      "rarity": "R",
+      "available": true,
+      "name": "真鍮製ポンプ羽根",
+      "description": "曲面を持つ非磁性の回転部品。",
+      "material": "brass",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 26,
+        "R-C": 10,
+        "R-D": 22
+      },
+      "earlyScore": 0.146,
+      "rgbaSHA256": "7fa55b2b3906f128d51526778efac2ff96a43d24890231b8b71c5e18138a8243",
+      "opaquePixels": 481,
+      "colors": 7
+    },
+    {
+      "treasureId": "R078",
+      "sheet": "river_metal_sheet",
+      "col": 6,
+      "row": 4,
+      "size": 32,
+      "field": "R",
+      "category": "真鍮部品",
+      "rarity": "R",
+      "available": true,
+      "name": "真鍮製銘板",
+      "description": "機械の情報が残る依頼回収品。",
+      "material": "brass",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 34,
+        "R-C": 21,
+        "R-D": 14
+      },
+      "earlyScore": 0.192,
+      "rgbaSHA256": "2b62ad0fa4ce7501926ffd78d3e820bdaf7907690233147b752b32d465afe497",
+      "opaquePixels": 282,
+      "colors": 7
+    },
+    {
+      "treasureId": "R090",
+      "sheet": "river_rare_sheet",
+      "col": 6,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "U",
+      "available": true,
+      "name": "鉄製係留環",
+      "description": "岸に固定されていた厚い輪。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 34,
+        "R-D": 73
+      },
+      "earlyScore": 0.141,
+      "rgbaSHA256": "ca659eec72c84d3a0723782e0fbce069decfb71a669d2458c4bd1daa8fc588a6",
+      "opaquePixels": 387,
+      "colors": 10
+    },
+    {
+      "treasureId": "R091",
+      "sheet": "river_rare_sheet",
+      "col": 7,
+      "row": 1,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "R",
+      "available": true,
+      "name": "鋳鉄製ポンプケース",
+      "description": "空洞に泥が溜まる重い部品。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 17,
+        "R-D": 18
+      },
+      "earlyScore": 0.052,
+      "rgbaSHA256": "197f8ad8d2da69599502273a14d311c7fa139b6ef2558e7e4c90319ce29d27c1",
+      "opaquePixels": 429,
+      "colors": 5
+    },
+    {
+      "treasureId": "R092",
+      "sheet": "river_rare_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "R",
+      "available": true,
+      "name": "鎖付きの鋼製ブロック",
+      "description": "絡んだ鎖を外して回収する。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 16,
+        "R-D": 20
+      },
+      "earlyScore": 0.052,
+      "rgbaSHA256": "67fee74a299ddc6feb086517d4a246a9d69f742fc42262faa57565199accef9d",
+      "opaquePixels": 378,
+      "colors": 9
+    },
+    {
+      "treasureId": "R093",
+      "sheet": "river_rare_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "R",
+      "available": true,
+      "name": "小型の歯車箱",
+      "description": "複数の機構を収納する鉄製ケース。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 12,
+        "R-D": 18
+      },
+      "earlyScore": 0.042,
+      "rgbaSHA256": "d1ba2ee003bceb186e8882dee81f191eb25ae021b6aa9432ae773566aceddf43",
+      "opaquePixels": 509,
+      "colors": 10
+    },
+    {
+      "treasureId": "R094",
+      "sheet": "river_rare_sheet",
+      "col": 2,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "R",
+      "available": true,
+      "name": "産業用軸受の外輪",
+      "description": "厚い環状の鋼製部品。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 17,
+        "R-D": 15
+      },
+      "earlyScore": 0.049,
+      "rgbaSHA256": "0de51fb964a50c12788216abe24f323d5ee598d2f95e97cbdafd60f0afef236f",
+      "opaquePixels": 395,
+      "colors": 9
+    },
+    {
+      "treasureId": "R095",
+      "sheet": "river_rare_sheet",
+      "col": 3,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "R",
+      "available": true,
+      "name": "鋼製ラックギア",
+      "description": "直線状に歯が並ぶ機械部品。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 12,
+        "R-D": 11
+      },
+      "earlyScore": 0.035,
+      "rgbaSHA256": "7f3c6f5300bf537a902c58445326ecb2ecc3018727d0076e4ecef58de4ad8bc8",
+      "opaquePixels": 188,
+      "colors": 9
+    },
+    {
+      "treasureId": "R096",
+      "sheet": "river_rare_sheet",
+      "col": 4,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "鋳鉄製滑車車輪",
+      "description": "溝のある重い円盤。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 14,
+        "R-D": 13
+      },
+      "earlyScore": 0.041,
+      "rgbaSHA256": "43118093c3d52ba8c03beae103d45a1e006756a27de4e5877d7fd5bd1845e676",
+      "opaquePixels": 488,
+      "colors": 12
+    },
+    {
+      "treasureId": "R097",
+      "sheet": "river_rare_sheet",
+      "col": 5,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "船用レバーの基部",
+      "description": "依頼契約で回収する機械部品。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 11,
+        "R-D": 12
+      },
+      "earlyScore": 0.034,
+      "rgbaSHA256": "98e9602ad78379aeb8053344ca783a39af326fd36970770b6598246a1a7cff96",
+      "opaquePixels": 276,
+      "colors": 12
+    },
+    {
+      "treasureId": "R098",
+      "sheet": "river_rare_sheet",
+      "col": 6,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "密閉された記録保管筒",
+      "description": "開封せず依頼窓口に引き渡す。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 10,
+        "R-D": 11
+      },
+      "earlyScore": 0.031,
+      "rgbaSHA256": "57ed6ca5a84617b97436c62ac6db7683368a14ca09ff2fb3d3ab0a9030153ea7",
+      "opaquePixels": 357,
+      "colors": 11
+    },
+    {
+      "treasureId": "R099",
+      "sheet": "river_rare_sheet",
+      "col": 7,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "重量・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "古い計測装置の筐体",
+      "description": "識別番号を調べる契約回収品。",
+      "material": "iron",
+      "locations": [
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 0,
+        "R-C": 4,
+        "R-D": 7
+      },
+      "earlyScore": 0.015,
+      "rgbaSHA256": "a8d1d30a7a370eb65377e157d137a456b3137dfac746ed985e75f24dfd98751d",
+      "opaquePixels": 451,
+      "colors": 11
+    },
+    {
+      "treasureId": "R067",
+      "sheet": "river_tool_sheet",
+      "col": 2,
+      "row": 4,
+      "size": 32,
+      "field": "R",
+      "category": "容器",
+      "rarity": "R",
+      "available": true,
+      "name": "錆びた貯金箱",
+      "description": "投入口が残る小型の箱。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 30,
+        "R-C": 19,
+        "R-D": 27
+      },
+      "earlyScore": 0.185,
+      "rgbaSHA256": "bbf4e4e45b6eb01cc8be8b47c78d81778773ef0f850dd162f2d817c36551b097",
+      "opaquePixels": 565,
+      "colors": 12
+    },
+    {
+      "treasureId": "R068",
+      "sheet": "river_tool_sheet",
+      "col": 3,
+      "row": 4,
+      "size": 32,
+      "field": "R",
+      "category": "容器",
+      "rarity": "R",
+      "available": true,
+      "name": "施錠された小型書類箱",
+      "description": "所有者照会の対象となる依頼品。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C",
+        "R-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 34,
+        "R-C": 21,
+        "R-D": 19
+      },
+      "earlyScore": 0.197,
+      "rgbaSHA256": "94e118a18b7d2aade0b3f9a83415ae81ac798a5f80dd4312138b5263b4b786a0",
+      "opaquePixels": 409,
+      "colors": 12
     }
   ]
 }

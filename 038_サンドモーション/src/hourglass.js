@@ -13,7 +13,10 @@ export function hourglassGeometry(width, height) {
     const i = y * width + x;
     if (walls[i] && (!walls[i - 1] || !walls[i + 1] || !walls[i - width] || !walls[i + width])) outline[i] = 1;
   }
-  return { walls, outline, neckWidth: Math.floor(neckHalf) * 2, cap };
+  const middle = Math.floor(cy) * width;
+  let neckWidth = 0;
+  for (let x = 0; x < width; x++) if (!walls[middle + x]) neckWidth++;
+  return { walls, outline, neckWidth, cap };
 }
 
 export function hourglassPlacement(imageWidth, imageHeight, width, height) {

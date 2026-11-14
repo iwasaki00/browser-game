@@ -12,7 +12,7 @@ const summary={version:json('package.json').version,newSprites:186,totalSprites:
 fs.writeFileSync(dir+'/verification-summary.json',JSON.stringify(summary,null,2)+'\n');
 const text=String.raw`# TREASURE ART FINAL — 全300点 専用ドット絵
 
-確認日: 2026-11-14。ゲームVersion: ${summary.version}（変更なし）。
+確認日: 2026-11-15。ゲームVersion: ${summary.version}（変更なし）。
 
 ## 最終集計
 
@@ -52,7 +52,7 @@ ID・正式名称・分野・シート・0始まりの列/行・ロットの全3
 - [compare-R.png](treasure-art-final/compare-R.png): R016/R017、R004/R025、ペンチ類、チャック・歯車類。
 - [compare-G.png](treasure-art-final/compare-G.png): G007/G098、薄片・丸粒・ナゲット、黄鉄鉱・黄銅鉱・方鉛鉱、雲母類。
 
-既存R016/R017はどちらも円環状で、原寸では厚み・切れ目の差が小さく、名称なしの識別には注意が必要です。R004/R025は工具の口と調整部を見て区別する組です。G007/G098はともに散粒で、粒数・大きさ・密集度が主な違いです。今回は既存セルを保持しました。第三者による品名を隠した識別試験は未実施です。
+既存R016/R017はどちらも円環状で、原寸では厚み・切れ目の差が小さく、名称なしの識別には注意が必要です。R004/R025は工具の口と調整部を見て区別する組です。G007/G098はともに散粒で、粒数・大きさ・密集度が主な違いです。今回は既存セルを保持しました。B017/B023は薄い円盤状の輪郭と放射模様が近く、原寸での識別差は控えめです。既存B017は変更していません。第三者による品名を隠した識別試験は未実施です。
 
 比較画像フォルダー（エクスプローラーへ貼り付け）:
 

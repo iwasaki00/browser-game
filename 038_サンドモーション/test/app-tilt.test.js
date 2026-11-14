@@ -13,14 +13,18 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     setAttribute(name, value) { this.attributes[name] = value; }
     click() { if (!this.disabled) this.dispatchEvent(new Event('click')); }
   }
-  let conversions = 0;
+  let conversions = 0, failConversionAt = 0, decodeFailure = false;
   class Canvas extends Element {
     constructor() {
       super(); this.width = 180; this.height = 300; this.capture = null;
       this.rect = { left: 10, top: 20, width: 180, height: 300 };
       this.context = {
         createLinearGradient: () => ({ addColorStop() {} }), fillRect() {}, beginPath() {}, arc() {}, fill() {}, moveTo() {}, lineTo() {}, closePath() {}, drawImage() {},
-        getImageData: (x, y, w, h) => { conversions++; return { data: new Uint8ClampedArray(w * h * 4).fill(255) }; },
+        getImageData: (x, y, w, h) => {
+          conversions++;
+          if (conversions === failConversionAt) throw new Error('fixture raster failure');
+          return { data: new Uint8ClampedArray(w * h * 4).fill(255) };
+        },
         createImageData: (w, h) => ({ data: new Uint8ClampedArray(w * h * 4) }),
         putImageData: image => { this.rendered = image.data.slice(); }
       };
@@ -47,7 +51,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     innerWidth: 375, innerHeight: 800, setInterval: () => 1, clearInterval() {} });
   const replacements = { document, window, screen: { orientation }, navigator: { userAgent: 'iPhone' },
     performance: { now: () => now }, ResizeObserver: class { observe() {} }, requestAnimationFrame: fn => { frame = fn; },
-    Image: class { constructor() { this.naturalWidth = this.naturalHeight = 100; } async decode() {} } };
+    Image: class { constructor() { this.naturalWidth = this.naturalHeight = 100; } async decode() { if (decodeFailure) throw new Error(); } } };
   const originals = new Map(Object.keys(replacements).map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   for (const [name, value] of Object.entries(replacements)) Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
   const sensor = (roll = 0) => {
@@ -112,7 +116,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     get('quality').value = 'high'; get('quality').dispatchEvent(new Event('change'));
     assert.equal(canvas.width, 270); assert.equal(canvas.height, 450);
     assert.equal(get('counts').textContent, '39,440 / 0');
-    assert.equal(conversions, previousConversions + 1); assert.deepEqual(canvas.style, cssSize);
+    assert.equal(conversions, previousConversions + 2); assert.deepEqual(canvas.style, cssSize);
     const highInitial = canvas.rendered.slice();
     get('collapse').click(); for (let i = 0; i < 60; i++) tick();
     assert.equal(get('counts').textContent, '0 / 39,440');
@@ -176,6 +180,85 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     orientation.type = 'landscape-primary'; orientation.angle = 90; orientation.dispatchEvent(new Event('change'));
     get('reset').click(); assert.equal(canvas.attributes['data-reassembling'], 'false');
     assert.deepEqual(canvas.rendered, sampleAgain); assert.equal(get('counts').textContent, '17,670 / 0');
+    // v0.4.0: hidden modes, including a return animation, never advance.
+    arrows.find(b => b.dataset.g === '0,1').click();
+    orientation.type = 'portrait-primary'; orientation.angle = 0;
+    get('quality').value = 'standard'; get('quality').dispatchEvent(new Event('change'));
+    get('sample').click();
+    const freeInitial = canvas.rendered.slice();
+    get('collapse').click(); for (let i = 0; i < 20; i++) tick();
+    get('reassemble').click(); tick(300); get('info').click();
+    const freeReturning = canvas.rendered.slice(), progress = get('reassembly-progress').textContent;
+    get('mode-hourglass').click();
+    assert.equal(get('counts').textContent, '3,996 / 0');
+    assert.equal(get('reassemble').hidden, true); assert.equal(get('flip').disabled, true);
+    const hourglassInitial = canvas.rendered.slice();
+    pointer('pointerdown', 125, 115); pointer('pointerup', 125, 115); tick(1000);
+    assert.deepEqual(canvas.rendered, hourglassInitial);
+    get('tilt-start').click(); await Promise.resolve(); tick(6000);
+    get('hourglass-left').click(); assert.equal(get('input-mode').textContent, '手動');
+    assert.equal(get('gravity').textContent, '-1, 1');
+    get('hourglass-straight').click(); get('collapse').click();
+    assert.equal(get('flip').disabled, false);
+    for (let i = 0; i < 30; i++) tick();
+    const hourglassFlowing = canvas.rendered.slice();
+    assert.notDeepEqual(hourglassFlowing, hourglassInitial);
+    // A failed image must also preserve the hidden, partially completed return.
+    decodeFailure = true;
+    get('image-file').files = [new File(['bad'], 'hidden-return-failure.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve));
+    decodeFailure = false; assert.deepEqual(canvas.rendered, hourglassFlowing);
+    get('mode-free').click();
+    assert.deepEqual(canvas.rendered, freeReturning); assert.equal(get('reassembly-progress').textContent, progress);
+    tick(); tick(1200); assert.deepEqual(canvas.rendered, freeInitial);
+    get('mode-hourglass').click(); assert.deepEqual(canvas.rendered, hourglassFlowing);
+    get('flip').click(); assert.notDeepEqual(canvas.rendered, hourglassFlowing);
+    get('flip').click(); assert.deepEqual(canvas.rendered, hourglassFlowing);
+    assert.equal(get('total').textContent, '3,996');
+
+    // Cancel, decode failure, or failure converting the SECOND mode commits nothing.
+    get('image-file').files = []; get('image-file').dispatchEvent(new Event('change'));
+    assert.deepEqual(canvas.rendered, hourglassFlowing);
+    decodeFailure = true;
+    get('image-file').files = [new File(['bad'], 'broken.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve));
+    assert.deepEqual(canvas.rendered, hourglassFlowing); decodeFailure = false;
+    failConversionAt = conversions + 2;
+    get('quality').value = 'high'; get('quality').dispatchEvent(new Event('change'));
+    assert.equal(get('quality').value, 'standard'); assert.deepEqual(canvas.rendered, hourglassFlowing);
+    get('mode-free').click(); assert.deepEqual(canvas.rendered, freeInitial);
+    get('mode-hourglass').click(); assert.deepEqual(canvas.rendered, hourglassFlowing);
+
+    // The same rotation guard freezes hourglass physics and rejects flip/flow.
+    get('tilt-start').click(); await Promise.resolve(); sensor(0);
+    for (let i = 0; i < 30; i++) sensor(35);
+    assert.equal(get('gravity').textContent, '1, 1');
+    orientation.type = 'landscape-primary'; orientation.angle = 90; orientation.dispatchEvent(new Event('change'));
+    const beforeRotateConversions = conversions;
+    for (let i = 0; i < 10; i++) { sensor(0); tick(100); }
+    get('flip').dispatchEvent(new Event('click')); get('collapse').dispatchEvent(new Event('click'));
+    assert.deepEqual(canvas.rendered, hourglassFlowing);
+    orientation.type = 'portrait-primary'; orientation.angle = 0; orientation.dispatchEvent(new Event('change'));
+    for (let i = 0; i < 30; i++) sensor(0);
+    assert.equal(get('rotation-pause').hidden, true); assert.equal(conversions, beforeRotateConversions);
+    tick(); assert.deepEqual(canvas.rendered, hourglassFlowing);
+    tick(60); assert.notDeepEqual(canvas.rendered, hourglassFlowing);
+    get('hourglass-straight').click(); get('reset').click();
+    assert.deepEqual(canvas.rendered, hourglassInitial); assert.equal(get('flip').disabled, true);
+    get('mode-free').click(); assert.deepEqual(canvas.rendered, freeInitial);
+
+    // Quality/source success replaces BOTH modes, including the hidden one.
+    get('collapse').click(); tick(100); get('mode-hourglass').click(); get('collapse').click(); tick(100);
+    get('quality').value = 'high'; get('quality').dispatchEvent(new Event('change'));
+    assert.equal(get('counts').textContent, '8,991 / 0'); assert.equal(get('flip').disabled, true);
+    get('mode-free').click(); assert.equal(get('counts').textContent, '39,440 / 0');
+    assert.deepEqual(canvas.rendered, highInitial);
+    get('image-file').files = [new File(['fixture'], 'both-modes.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve));
+    assert.equal(get('source-name').textContent, 'both-modes.png');
+    get('mode-hourglass').click(); assert.equal(get('counts').textContent, '9,025 / 0');
+    get('sample').click(); assert.equal(get('counts').textContent, '8,991 / 0');
+    get('mode-free').click(); assert.equal(get('counts').textContent, '39,440 / 0');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

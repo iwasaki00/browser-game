@@ -40,7 +40,7 @@ for(const channel of ['chrome','msedge']){
     }
     return {occupied,blank,rendered:stage.querySelectorAll('.treasure-sprite').length};
    });
-   assert.deepEqual(atlas,{occupied:114,blank:246,rendered:114});
+   assert.deepEqual(atlas,{occupied:300,blank:60,rendered:300});
    if(channel==='chrome'&&width===390)await page.screenshot({path:output+'/treasure-sprites-prototypes.png'});
    await page.evaluate(()=>document.querySelector('#sprite-test-stage').remove());
    await page.evaluate(async()=>{
@@ -69,8 +69,7 @@ for(const channel of ['chrome','msedge']){
     if(i===0)await page.locator('#wash').click();
     const visual=page.locator('.wash-card .treasure-visual');
     assert.equal(await visual.getAttribute('data-treasure-id'),id);
-    if(i<3)assert.equal(await visual.locator('.treasure-sprite').count(),1);
-    else assert.equal(await visual.locator('svg').count(),1);
+    assert.equal(await visual.locator('.treasure-sprite').count(),1);assert.equal(await visual.locator('svg').count(),0);
     const artBefore=await visual.innerHTML();
     assert.equal(await page.locator('.dirt-layer').evaluate(e=>+getComputedStyle(e).opacity),1);
     const frame=await page.locator('.wash-display').boundingBox();
@@ -81,7 +80,7 @@ for(const channel of ['chrome','msedge']){
     assert.deepEqual(await page.locator('.wash-display').boundingBox(),frame);
     const fn=await page.evaluate(()=>window.__finders.getState().currentFN);
     await page.locator('#clean').dispatchEvent('click');assert.equal(await page.evaluate(()=>window.__finders.getState().currentFN),fn);
-    washes.push({id,fn,art:i<3?'sprite':'SVG'});
+    washes.push({id,fn,art:'sprite'});
     if(i===2&&channel==='chrome'&&width===390)await page.screenshot({path:output+'/treasure-sprites-washed.png'});
     if(i<3)await page.locator('#next-find').click();
    }

@@ -2692,7 +2692,7 @@
     "field": "R",
     "category": "自転車部品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R046",
@@ -2703,7 +2703,7 @@
     "field": "R",
     "category": "自転車部品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R047",
@@ -2725,7 +2725,7 @@
     "field": "R",
     "category": "自転車部品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R049",
@@ -2747,7 +2747,7 @@
     "field": "R",
     "category": "自転車部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R051",
@@ -2934,7 +2934,7 @@
     "field": "R",
     "category": "容器",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R068",
@@ -2945,7 +2945,7 @@
     "field": "R",
     "category": "容器",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R069",
@@ -2967,7 +2967,7 @@
     "field": "R",
     "category": "真鍮部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R071",
@@ -2978,7 +2978,7 @@
     "field": "R",
     "category": "真鍮部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R072",
@@ -3000,7 +3000,7 @@
     "field": "R",
     "category": "真鍮部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R074",
@@ -3044,7 +3044,7 @@
     "field": "R",
     "category": "真鍮部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R078",
@@ -3055,7 +3055,7 @@
     "field": "R",
     "category": "真鍮部品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R079",
@@ -3187,7 +3187,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R091",
@@ -3198,7 +3198,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R092",
@@ -3209,7 +3209,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R093",
@@ -3220,7 +3220,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R094",
@@ -3231,7 +3231,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R095",
@@ -3242,7 +3242,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R096",
@@ -3253,7 +3253,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R097",
@@ -3264,7 +3264,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R098",
@@ -3275,7 +3275,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R099",
@@ -3286,7 +3286,7 @@
     "field": "R",
     "category": "重量・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R100",

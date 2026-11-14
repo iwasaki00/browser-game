@@ -9,6 +9,7 @@
     "benchmark": "node scripts/benchmark.mjs",
     "qa": "node scripts/qa-serve.mjs",
     "reference": "node scripts/quality-reference.mjs",
-    "benchmark:reassembly": "node scripts/benchmark-reassembly.mjs"
+    "benchmark:reassembly": "node scripts/benchmark-reassembly.mjs",
+    "reference:hourglass": "node scripts/hourglass-reference.mjs"
   }
 }

@@ -19,12 +19,12 @@ test('all 300 treasures have unique, valid genre sheet cells and matching master
   const cell=e.sheet+':'+e.col+':'+e.row;assert.ok(!cells.has(cell));cells.add(cell);
  }
 });
-test('nine sheets reserve 300 cells with 60 spare and 114 dedicated sprites evenly across fields',()=>{
+test('nine sheets reserve 300 cells with 60 spare and 300 dedicated sprites evenly across fields',()=>{
  const all=Object.values(treasureSpriteMap);
  assert.equal(SHEET_NAMES.length,9);assert.equal(9*40-all.length,60);
  for(const name of SHEET_NAMES){const entries=all.filter(e=>e.sheet===name);assert.ok(entries.length<=40);assert.ok(entries.filter(e=>e.available).length>=6);}
- for(const field of ['B','R','G'])assert.equal(all.filter(e=>e.field===field&&e.available).length,38);
- assert.equal(all.filter(e=>!e.available).length,186);
+ for(const field of ['B','R','G'])assert.equal(all.filter(e=>e.field===field&&e.available).length,100);
+ assert.equal(all.filter(e=>!e.available).length,0);
 });
 test('rarity never changes the 32px source cell size',()=>{
  for(const rarity of ['C','U','R','SR','J']){
@@ -36,12 +36,13 @@ test('available dedicated sprite resolves a full sheet URL and cell offset metad
  const e=treasureSpriteMap.B001;
  const resolved=resolveTreasureSprite('B001',treasureSpriteMap,{[e.sheet]:'/atlas.png'},new Set());
  assert.ok(resolved);assert.equal(resolved.url,'/atlas.png');assert.equal(resolved.width,256);assert.equal(resolved.height,160);
+ const urls=Object.fromEntries(SHEET_NAMES.map(name=>[name,'/'+name+'.png']));for(const t of treasures){const cell=resolveTreasureSprite(t.id,treasureSpriteMap,urls);assert.ok(cell,'missing dedicated sprite '+t.id);assert.equal(cell.treasureId,t.id);assert.equal(cell.col,treasureSpriteMap[t.id].col);assert.equal(cell.row,treasureSpriteMap[t.id].row);}
  assert.equal(resolved.col,e.col);assert.equal(resolved.row,e.row);
 });
 test('unpainted, unknown, missing sheet and failed sheet entries fall back',()=>{
  const urls=Object.fromEntries(SHEET_NAMES.map(s=>[s,'/'+s+'.png']));
- const planned=Object.values(treasureSpriteMap).find(e=>!e.available)!;
- assert.equal(resolveTreasureSprite(planned.treasureId,treasureSpriteMap,urls),undefined);
+ const planned={...treasureSpriteMap.B001,available:false};
+ assert.equal(resolveTreasureSprite(planned.treasureId,{...treasureSpriteMap,B001:planned},urls),undefined);
  assert.equal(resolveTreasureSprite('unknown',treasureSpriteMap,urls),undefined);
  assert.equal(resolveTreasureSprite('B001',treasureSpriteMap,{}),undefined);
  assert.equal(resolveTreasureSprite('B001',treasureSpriteMap,urls,new Set([treasureSpriteMap.B001.sheet])),undefined);

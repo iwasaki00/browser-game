@@ -1,8 +1,8 @@
 {
   "version": "1.0.0-rc.1",
-  "updated": "2026-11-14T11:03:36.784Z",
-  "completed": 165,
-  "pending": 21,
+  "updated": "2026-11-14T17:14:58.852Z",
+  "completed": 186,
+  "pending": 0,
   "lots": {
     "4": {
       "completed": 60,
@@ -13,7 +13,7 @@
       "total": 60
     },
     "6": {
-      "completed": 45,
+      "completed": 66,
       "total": 66
     }
   },
@@ -3684,7 +3684,7 @@
       "field": "R",
       "category": "自転車部品",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "自転車の荷台脚",
       "description": "曲がった支持部品。",
       "material": "iron",
@@ -3692,7 +3692,7 @@
         "R-B",
         "R-C"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -3711,7 +3711,7 @@
       "field": "R",
       "category": "自転車部品",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "変速機のケージ",
       "description": "鎖を支える薄い枠。",
       "material": "iron",
@@ -3719,7 +3719,7 @@
         "R-B",
         "R-C"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -3765,7 +3765,7 @@
       "field": "R",
       "category": "自転車部品",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "サドルのレール",
       "description": "座面を支える二本の鋼棒。",
       "material": "iron",
@@ -3773,7 +3773,7 @@
         "R-B",
         "R-C"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -3819,7 +3819,7 @@
       "field": "R",
       "category": "自転車部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "チェーンテンショナー",
       "description": "鎖の張りを調整する機構。",
       "material": "iron",
@@ -3827,7 +3827,7 @@
         "R-B",
         "R-C"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4258,7 +4258,7 @@
       "field": "R",
       "category": "容器",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "錆びた貯金箱",
       "description": "投入口が残る小型の箱。",
       "material": "iron",
@@ -4267,7 +4267,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4286,7 +4286,7 @@
       "field": "R",
       "category": "容器",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "施錠された小型書類箱",
       "description": "所有者照会の対象となる依頼品。",
       "material": "iron",
@@ -4295,7 +4295,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4342,7 +4342,7 @@
       "field": "R",
       "category": "真鍮部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮製圧力計の枠",
       "description": "計器の円形ケース。磁石では回収できない。",
       "material": "brass",
@@ -4351,7 +4351,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4370,7 +4370,7 @@
       "field": "R",
       "category": "真鍮部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮製船窓の留め金",
       "description": "開閉部を固定する金具。",
       "material": "brass",
@@ -4379,7 +4379,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4426,7 +4426,7 @@
       "field": "R",
       "category": "真鍮部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮製歯車",
       "description": "黄色い合金の精密部品。",
       "material": "brass",
@@ -4435,7 +4435,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4538,7 +4538,7 @@
       "field": "R",
       "category": "真鍮部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮製ポンプ羽根",
       "description": "曲面を持つ非磁性の回転部品。",
       "material": "brass",
@@ -4547,7 +4547,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4566,7 +4566,7 @@
       "field": "R",
       "category": "真鍮部品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "真鍮製銘板",
       "description": "機械の情報が残る依頼回収品。",
       "material": "brass",
@@ -4575,7 +4575,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4846,7 +4846,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "鉄製係留環",
       "description": "岸に固定されていた厚い輪。",
       "material": "iron",
@@ -4854,7 +4854,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4873,7 +4873,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "鋳鉄製ポンプケース",
       "description": "空洞に泥が溜まる重い部品。",
       "material": "iron",
@@ -4881,7 +4881,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4900,7 +4900,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "鎖付きの鋼製ブロック",
       "description": "絡んだ鎖を外して回収する。",
       "material": "iron",
@@ -4908,7 +4908,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4927,7 +4927,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "小型の歯車箱",
       "description": "複数の機構を収納する鉄製ケース。",
       "material": "iron",
@@ -4935,7 +4935,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4954,7 +4954,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "産業用軸受の外輪",
       "description": "厚い環状の鋼製部品。",
       "material": "iron",
@@ -4962,7 +4962,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -4981,7 +4981,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "鋼製ラックギア",
       "description": "直線状に歯が並ぶ機械部品。",
       "material": "iron",
@@ -4989,7 +4989,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -5008,7 +5008,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "鋳鉄製滑車車輪",
       "description": "溝のある重い円盤。",
       "material": "iron",
@@ -5016,7 +5016,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -5035,7 +5035,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "船用レバーの基部",
       "description": "依頼契約で回収する機械部品。",
       "material": "iron",
@@ -5043,7 +5043,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -5062,7 +5062,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "密閉された記録保管筒",
       "description": "開封せず依頼窓口に引き渡す。",
       "material": "iron",
@@ -5070,7 +5070,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,
@@ -5089,7 +5089,7 @@
       "field": "R",
       "category": "重量・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "古い計測装置の筐体",
       "description": "識別番号を調べる契約回収品。",
       "material": "iron",
@@ -5097,7 +5097,7 @@
         "R-C",
         "R-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,

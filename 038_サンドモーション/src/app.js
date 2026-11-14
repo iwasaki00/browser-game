@@ -90,6 +90,7 @@ function draw() {
 function updateStats() {
   $('total').textContent = engine.count.toLocaleString();
   $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
+  $('hourglass-remaining').setAttribute('data-settled', String(mode === 'hourglass' && engine.started && engine.active.every(v => !v)));
   $('counts').textContent = `${engine.fixedCount.toLocaleString()} / ${(engine.count - engine.fixedCount).toLocaleString()}`;
   $('gravity').textContent = `${engine.gravity.x}, ${engine.gravity.y}`;
   $('reassembly-progress').textContent = reassembly?.active ? `${Math.round(reassembly.elapsedMs / reassembly.durationMs * 100)}%` : '待機';
@@ -166,7 +167,7 @@ $('reset').addEventListener('click', () => {
   reassembly.cancel(); endPointer(); previousTime = 0;
   engine.reset(); accumulator = 0; updateStats(); draw();
   syncControls();
-  $('state-label').textContent = '触れると、ほどける。';
+  $('state-label').textContent = mode === 'hourglass' ? '砂を流して、色の積もり方を見てみよう。' : '触れると、ほどける。';
 });
 $('reassemble').addEventListener('click', () => {
   if (mode !== 'free' || tilt.paused || reassembly.active) return;
