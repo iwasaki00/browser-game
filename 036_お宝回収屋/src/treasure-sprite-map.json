@@ -558,7 +558,7 @@
     "field": "B",
     "category": "硬貨・メダル",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B052",
@@ -646,7 +646,7 @@
     "field": "B",
     "category": "釣り具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B060",
@@ -657,7 +657,7 @@
     "field": "B",
     "category": "釣り具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B061",
@@ -701,7 +701,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B065",
@@ -712,7 +712,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B066",
@@ -723,7 +723,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B067",
@@ -734,7 +734,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B068",
@@ -745,7 +745,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B069",
@@ -767,7 +767,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B071",
@@ -778,7 +778,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B072",
@@ -789,7 +789,7 @@
     "field": "B",
     "category": "工具",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B073",
@@ -811,7 +811,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B075",
@@ -822,7 +822,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B076",
@@ -833,7 +833,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B077",
@@ -855,7 +855,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B079",
@@ -877,7 +877,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B081",
@@ -888,7 +888,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B082",
@@ -899,7 +899,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "C",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B083",
@@ -910,7 +910,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B084",
@@ -921,7 +921,7 @@
     "field": "B",
     "category": "日用品",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B085",

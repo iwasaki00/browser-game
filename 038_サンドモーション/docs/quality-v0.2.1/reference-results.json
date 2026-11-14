@@ -1,0 +1,30 @@
+{
+  "version": "0.2.1",
+  "at": "2026-11-14T00:23:15.452Z",
+  "renderer": "Windows System.Drawing reference, actual sampleImage commands; not a browser screenshot",
+  "runtime": "v25.9.0",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "collapseBrowserFps": null,
+  "measurements": [
+    {
+      "quality": "standard",
+      "grid": "180x300",
+      "count": 17670,
+      "physicsHz": 59.99999999999999,
+      "collapsePhysicsCpuMs": 631.14,
+      "swipePhysicsCpuMs": 441.32,
+      "countConserved": true,
+      "resetExact": true
+    },
+    {
+      "quality": "high",
+      "grid": "270x450",
+      "count": 39440,
+      "physicsHz": 90,
+      "collapsePhysicsCpuMs": 2026.09,
+      "swipePhysicsCpuMs": 1289.81,
+      "countConserved": true,
+      "resetExact": true
+    }
+  ]
+}

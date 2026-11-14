@@ -1,0 +1,16 @@
+{
+  "complete": false,
+  "newIntegrated": 20,
+  "priorDedicatedPreserved": 114,
+  "sparePreserved": 60,
+  "protectedRGBAExact": 174,
+  "nonTargetChangedPixels": 0,
+  "available": 134,
+  "pending": 166,
+  "protectedRuntimeFiles": 91,
+  "fields": {
+    "B": 58,
+    "R": 38,
+    "G": 38
+  }
+}

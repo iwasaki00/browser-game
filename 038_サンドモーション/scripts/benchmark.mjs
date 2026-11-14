@@ -3,7 +3,7 @@ import os from 'node:os';
 import { SandEngine } from '../src/engine.js';
 console.log(JSON.stringify({ runtime: process.version, platform: `${os.platform()} ${os.arch()}`, cpu: os.cpus()[0]?.model,
   note: 'Node.js physics only; excludes Canvas/rendering. Not iPhone FPS.' }));
-for (const [width, height] of [[120, 200], [180, 300]]) {
+for (const [width, height] of [[120, 200], [180, 300], [270, 450]]) {
   const e = new SandEngine(width, height);
   const particles = [];
   const w = Math.round(width * 0.86), h = Math.round(w * 440 / 600);

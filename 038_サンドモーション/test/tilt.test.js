@@ -96,13 +96,39 @@ test('permission denied or error preserves manual gravity and cleans listeners',
   }
 });
 
-test('missing/null values time out; active stream loss also returns to manual', async () => {
+test('first-sample wait lasts beyond 5 seconds; null and flat samples never become baseline', async () => {
   const r = rig(); await r.controller.start(); r.raw({ beta: null, gamma: null });
-  r.advance(TILT.sensorTimeoutMs); assert.equal(r.controller.mode, 'manual');
-  assert.match(r.controller.reason, /受信できません/); assert.equal(r.listeners.size, 0); assert.equal(r.timers.size, 0);
-  await r.controller.start(); r.emit(0); assert.equal(r.controller.mode, 'tilt');
-  r.advance(TILT.sensorTimeoutMs); assert.equal(r.controller.mode, 'manual');
-  assert.equal(r.listeners.size, 0);
+  r.raw({ beta: 0, gamma: 0 });
+  r.advance(6000); assert.equal(r.controller.mode, 'manual'); assert.equal(r.controller.starting, true);
+  assert.match(r.controller.reason, /端末を傾けてください/);
+  assert.equal(r.listeners.size, 1); assert.equal(r.controller.mapper.baseline, null);
+  assert.deepEqual(r.gravities, []); // The app's previous manual gravity is untouched.
+  const event = new Event('deviceorientation'); Object.assign(event, { beta: 0, gamma: -35 });
+  assert.equal(event.isTrusted, false); r.raw(event);
+  assert.equal(r.controller.mode, 'tilt'); assert.deepEqual(r.gravities.at(-1), [0, 1]);
+  const next = new Event('deviceorientation'); Object.assign(next, { beta: 0, gamma: 35 });
+  for (let i = 0; i < 50; i++) { r.advance(20); r.raw(next); }
+  assert.notDeepEqual(r.gravities.at(-1), [0, 1]);
+});
+
+test('manual arrow cancellation during first-sample wait removes the listener', async () => {
+  const r = rig(); await r.controller.start(); r.advance(10000); r.controller.manual();
+  assert.equal(r.listeners.size, 0); assert.equal(r.timers.size, 0);
+  assert.equal(r.controller.starting, false); r.emit(35); assert.equal(r.controller.mode, 'manual');
+});
+
+test('active tilt: repeated unchanged samples for 6 seconds still allow reversing', async () => {
+  const r = rig(); await r.controller.start(); r.emit(0); r.hold(35);
+  assert.deepEqual(r.gravities.at(-1), [1, 0]);
+  for (let i = 0; i < 60; i++) { r.emit(35, 100); r.advance(0); }
+  r.hold(-35); assert.equal(r.controller.mode, 'tilt'); assert.deepEqual(r.gravities.at(-1), [-1, 0]);
+});
+
+test('active tilt: a 6-second event gap still triggers the separate stream-loss fallback', async () => {
+  const r = rig(); await r.controller.start(); r.emit(0); r.hold(35);
+  r.advance(6000); assert.equal(r.controller.mode, 'manual'); assert.equal(r.listeners.size, 0);
+  assert.match(r.controller.reason, /受信できません/);
+  const previous = r.gravities.at(-1); r.hold(-35); assert.deepEqual(r.gravities.at(-1), previous);
 });
 
 test('manual return removes sensor handlers and ignores late permission resolution', async () => {

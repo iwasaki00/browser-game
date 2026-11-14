@@ -2,6 +2,7 @@ import { SandEngine } from './engine.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
 import { canvasPoint } from './input.js';
+import { QUALITIES, simulationTiming } from './quality.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('sand'), context = canvas.getContext('2d');
@@ -9,7 +10,8 @@ let engine, pixels, source = sampleImage(), sourceName = 'サンプル：山と�
 let pointer = null, loadToken = 0;
 let accumulator = 0, previousTime = 0, frames = 0, fpsStart = 0;
 let physicsTime = 0, measuredSteps = 0;
-const STEP = 1000 / 60, MAX_STEPS = 4;
+const MAX_FRAME_MS = 1000 / 60 * 4;
+let timing = simulationTiming(180);
 
 function message(text, error = false) {
   $('message').textContent = text;
@@ -17,14 +19,15 @@ function message(text, error = false) {
 }
 
 function loadSource() {
-  const light = $('quality').value === 'light';
-  const next = new SandEngine(light ? 120 : 180, light ? 200 : 300);
+  const { width, height } = QUALITIES[$('quality').value] || QUALITIES.standard;
+  const next = new SandEngine(width, height);
   next.load(convertImage(source, next.width, next.height));
   // Keep the selected gravity across image/quality changes.
   if (engine) next.setGravity(engine.gravity.x, engine.gravity.y);
   // Gravity changes wake free grains; a freshly imported image stays fixed/asleep.
   next.active.fill(0);
   engine = next;
+  timing = simulationTiming(engine.width);
   canvas.width = engine.width; canvas.height = engine.height;
   pixels = context.createImageData(engine.width, engine.height);
   $('source-name').textContent = sourceName;
@@ -69,13 +72,13 @@ function frame(time) {
     draw(); requestAnimationFrame(frame); return;
   }
   if (!previousTime) previousTime = time;
-  accumulator += Math.min(time - previousTime, STEP * MAX_STEPS);
+  accumulator += Math.min(time - previousTime, MAX_FRAME_MS);
   previousTime = time;
   let steps = 0;
-  while (accumulator >= STEP && steps < MAX_STEPS) {
+  while (accumulator >= timing.stepMs && steps < timing.maxSteps) {
     const start = performance.now(); engine.step();
     physicsTime += performance.now() - start; measuredSteps++;
-    accumulator -= STEP; steps++;
+    accumulator -= timing.stepMs; steps++;
   }
   draw(); frames++;
   if (time - fpsStart >= 750) {
@@ -93,7 +96,7 @@ function point(event) {
 
 function brush(from, to, moving) {
   const dt = Math.max(8, to.time - from.time);
-  const factor = moving ? 12 / dt : 0;
+  const factor = moving ? 12 / dt / timing.motionScale : 0;
   // Brush size is expressed in standard-grid cells, consistent across quality.
   engine.brushSegment(from.x, from.y, to.x, to.y,
     Number($('radius').value) * engine.width / 180,
@@ -148,7 +151,7 @@ const tilt = new TiltController(environment, {
   onGravity: applyGravity,
   onState: state => {
     const paused = state.paused;
-    $('tilt-start').textContent = state.starting ? 'センサーを確認中…' : '傾きで操作';
+    $('tilt-start').textContent = state.starting ? (state.listening ? '受信待ち…' : 'センサーを確認中…') : '傾きで操作';
     $('tilt-start').disabled = state.starting || state.mode === 'tilt';
     $('tilt-start').setAttribute('aria-pressed', String(state.mode === 'tilt'));
     $('calibrate').disabled = state.mode !== 'tilt' || paused;

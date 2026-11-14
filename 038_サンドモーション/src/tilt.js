@@ -107,7 +107,7 @@ export class TiltController {
       this.mapper = new TiltMapper(this.parameters);
       this.lastRoll = null; this.lastReceived = this.env.now();
       this.clearStability();
-      this.reason = '有効な傾きを待っています。端末を縦に起こして持ってください。';
+      this.reason = '端末を傾けてください。有効な値を待っています（矢印で手動に戻せます）。';
       this.listening = true;
       this.env.addEventListener('deviceorientation', this.listener);
       this.watchdog = this.env.setInterval(() => this.checkTimeout(), this.parameters.watchdogMs);
@@ -117,6 +117,9 @@ export class TiltController {
     }
   }
   checkTimeout() {
+    // The first usable sample may only be emitted when the user moves a device
+    // or an emulator control. Keep the listener until explicitly cancelled.
+    if (this.starting) return;
     if (this.env.hidden()) { this.lastReceived = this.env.now(); return; }
     if (this.env.now() - this.lastReceived >= this.parameters.sensorTimeoutMs) {
       this.manual('有効な傾きの値を受信できません。端末を縦に起こして再試行してください。手動で操作できます。');

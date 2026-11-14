@@ -64,7 +64,11 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     await import('../src/app.js');
     const canvas = get('sand'), initial = canvas.rendered.slice();
     assert.equal(get('counts').textContent, '17,670 / 0');
-    get('tilt-start').click(); await Promise.resolve(); sensor();
+    arrows.find(b => b.dataset.g === '-1,0').click();
+    get('tilt-start').click(); await Promise.resolve(); tick(6000);
+    assert.equal(get('gravity').textContent, '-1, 0'); assert.equal(get('input-mode').textContent, '手動');
+    assert.match(get('tilt-status').textContent, /端末を傾けてください/);
+    sensor();
     for (let i = 0; i < 50; i++) { sensor(35); tick(); }
     assert.equal(get('input-mode').textContent, '傾き');
     assert.deepEqual(canvas.rendered, initial); // Tilt does not collapse the photo.
@@ -101,6 +105,18 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     assert.equal(get('input-mode').textContent, '手動'); assert.equal(get('rotation-pause').hidden, true);
     assert.equal(get('gravity').textContent, '-1, 0');
     sensor(40); assert.equal(get('gravity').textContent, '-1, 0');
+    arrows.find(b => b.dataset.g === '0,1').click(); get('reset').click();
+    const cssSize = { ...canvas.style }, previousConversions = conversions;
+    get('quality').value = 'high'; get('quality').dispatchEvent(new Event('change'));
+    assert.equal(canvas.width, 270); assert.equal(canvas.height, 450);
+    assert.equal(get('counts').textContent, '39,440 / 0');
+    assert.equal(conversions, previousConversions + 1); assert.deepEqual(canvas.style, cssSize);
+    const highInitial = canvas.rendered.slice();
+    get('collapse').click(); for (let i = 0; i < 60; i++) tick();
+    assert.equal(get('counts').textContent, '0 / 39,440');
+    assert.notDeepEqual(canvas.rendered, highInitial);
+    get('reset').click(); assert.deepEqual(canvas.rendered, highInitial);
+    assert.equal(get('total').textContent, '39,440');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

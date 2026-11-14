@@ -1,0 +1,887 @@
+{
+  "feature": "TREASURE ART WAVE 4",
+  "tool": "Built-in image_gen",
+  "cellSize": 32,
+  "items": [
+    {
+      "id": "B051",
+      "field": "B",
+      "name": "打刻ずれの記念メダル",
+      "description": "模様がずれた製造上の特徴を持つ。",
+      "material": "copper",
+      "palette": "copper",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Copper commemorative medal with visibly OFF-CENTER large embossed sun disc, uneven wide rim on one side; round thick disk, not a bottle cap.",
+      "sourceFile": "exec-0427311c-04ae-4dfb-ad13-886af86d2c6d.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-0427311c-04ae-4dfb-ad13-886af86d2c6d.png"
+    },
+    {
+      "id": "B059",
+      "field": "B",
+      "name": "金属製ウキの芯",
+      "description": "浮具の中心に入っていた軸。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Metal fishing float CORE: thin straight steel spindle with a small bulbous central shoulder and tapered ends, no outer float.",
+      "sourceFile": "exec-7261ca57-a2be-4229-b434-f4b0fbbbab6c.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-7261ca57-a2be-4229-b434-f4b0fbbbab6c.png"
+    },
+    {
+      "id": "B060",
+      "field": "B",
+      "name": "仕掛け巻きの金具",
+      "description": "糸をまとめる枠の一部。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing rig winder METAL FRAME fragment: narrow U-like rectangular open wire loop with two inward hooked tips; transparent center.",
+      "sourceFile": "exec-ab7471dc-bc8d-41c3-b149-4d9f20431e91.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-ab7471dc-bc8d-41c3-b149-4d9f20431e91.png"
+    },
+    {
+      "id": "B064",
+      "field": "B",
+      "name": "精密ドライバーの軸",
+      "description": "細い先端を持つ小型工具の一部。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Precision screwdriver SHAFT only: slim steel rod, flattened tiny blade at one end and wider hexagonal socket tang at other; no handle.",
+      "sourceFile": "exec-c3e736ef-5423-414e-94f9-012b12d2ddcb.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-c3e736ef-5423-414e-94f9-012b12d2ddcb.png"
+    },
+    {
+      "id": "B065",
+      "field": "B",
+      "name": "折りたたみ定規の金具",
+      "description": "連結部分だけが残った測定具。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Folding ruler HINGE hardware: two short flat riveted metal leaves meeting at a rounded joint, angle open, no measuring labels.",
+      "sourceFile": "exec-32b6e4df-d6e1-451a-b902-8d06b556ae80.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-32b6e4df-d6e1-451a-b902-8d06b556ae80.png"
+    },
+    {
+      "id": "B066",
+      "field": "B",
+      "name": "銅製の測量鋲",
+      "description": "地面の目印に使われた小さな鋲。",
+      "material": "copper",
+      "palette": "copper",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: COPPER survey nail: broad flat domed head with single deep central CROSS groove, short pointed stem viewed obliquely showing both head and shank.",
+      "sourceFile": "exec-47639fe8-dca0-4535-9101-1db82fe14e9e.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-47639fe8-dca0-4535-9101-1db82fe14e9e.png"
+    },
+    {
+      "id": "B067",
+      "field": "B",
+      "name": "真鍮の調整ねじ",
+      "description": "細いねじ山を持つ機械部品。",
+      "material": "brass",
+      "palette": "brass",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: BRASS adjustment screw: knurled broad thumb head with screwdriver slit, short finely threaded shaft, clearly yellow metal.",
+      "sourceFile": "exec-0c287dfc-401d-45b6-8385-dc2bcae97390.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-0c287dfc-401d-45b6-8385-dc2bcae97390.png"
+    },
+    {
+      "id": "B068",
+      "field": "B",
+      "name": "ニッパーの片刃",
+      "description": "工具の片側だけが漂着したもの。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: One HALF JAW of diagonal cutting nippers: stout wedge-shaped cutting beak, pivot hole, short curved broken tang; not complete pliers.",
+      "sourceFile": "exec-e8dd7c1e-158f-4e1c-bb5a-e64ea5b54519.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-e8dd7c1e-158f-4e1c-bb5a-e64ea5b54519.png"
+    },
+    {
+      "id": "B070",
+      "field": "B",
+      "name": "帆布用ハトメ打ち具",
+      "description": "穴の縁を留めるための工具。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Canvas eyelet setting punch: short stout steel tool with flat striking top, cylindrical grip and projecting tapered stepped tip.",
+      "sourceFile": "exec-4761c0ae-2d1e-487f-8c52-8c06a3edd791.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-4761c0ae-2d1e-487f-8c52-8c06a3edd791.png"
+    },
+    {
+      "id": "B071",
+      "field": "B",
+      "name": "ステンレスのピンセット",
+      "description": "細い先端のある非磁性の回収候補。",
+      "material": "stainless",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Stainless tweezers: TWO narrow tapering spring arms forming long V gap, polished silver, tips nearly touching.",
+      "sourceFile": "exec-26981518-777a-4cae-815c-344ebc8ee688.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-26981518-777a-4cae-815c-344ebc8ee688.png"
+    },
+    {
+      "id": "B072",
+      "field": "B",
+      "name": "小型プーラーの爪",
+      "description": "部品を引き抜く工具の爪。",
+      "material": "iron",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Small gear puller CLAW alone: angular hooked forged steel arm with two mounting holes and sharp inward gripping foot.",
+      "sourceFile": "exec-9ccbc7be-c86e-4b18-9504-842c646caf9d.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-9ccbc7be-c86e-4b18-9504-842c646caf9d.png"
+    },
+    {
+      "id": "B074",
+      "field": "B",
+      "name": "鈴の片割れ",
+      "description": "音を出す空洞の半分が残ったもの。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: HALF of a small spherical jingle bell: bronze open hemispherical shell, jagged broken rim, elongated slit, hollow dark interior.",
+      "sourceFile": "exec-34d84992-6139-458f-a603-4f5d947bee6d.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-34d84992-6139-458f-a603-4f5d947bee6d.png"
+    },
+    {
+      "id": "B075",
+      "field": "B",
+      "name": "弁当箱の留め金",
+      "description": "薄い板を曲げた開閉部。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Lunch box latch: thin folded steel clasp with over-center curved tongue and small hinge knuckles; compact rectangle.",
+      "sourceFile": "exec-c0400cc9-c0ed-4726-b029-e54b395b1070.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-c0400cc9-c0ed-4726-b029-e54b395b1070.png"
+    },
+    {
+      "id": "B076",
+      "field": "B",
+      "name": "傘の石突き",
+      "description": "傘の先端を保護する小さな部品。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Umbrella FERRULE: short tapered conical metal end cap with a hollow circular opening at wide end, pointed closed tip.",
+      "sourceFile": "exec-663c6f91-15a9-49a3-9520-bc2df4b07bdf.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-663c6f91-15a9-49a3-9520-bc2df4b07bdf.png"
+    },
+    {
+      "id": "B078",
+      "field": "B",
+      "name": "靴ひもの金属飾り",
+      "description": "細い筒に模様が付いた小物。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Shoelace metal ornament/aglet: slim long hollow silver tube with flared decorative collar and simple bold chevron groove, no cord.",
+      "sourceFile": "exec-0d5f3b43-f657-4bc9-a7bf-4ee79f910ccc.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-0d5f3b43-f657-4bc9-a7bf-4ee79f910ccc.png"
+    },
+    {
+      "id": "B080",
+      "field": "B",
+      "name": "船名入りの鍵札",
+      "description": "文字の残る金属札。契約窓口へ引き渡す。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Ship key identification TAG: brass elongated rectangular plaque with clipped corners and big round keyring hole; shallow abstract groove, no letters.",
+      "sourceFile": "exec-32f212f0-b3ab-45c9-acc2-5109caf75fb6.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-32f212f0-b3ab-45c9-acc2-5109caf75fb6.png"
+    },
+    {
+      "id": "B081",
+      "field": "B",
+      "name": "懐炉の蓋",
+      "description": "通気孔が並ぶ薄い金属板。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Pocket handwarmer LID: rounded rectangular thin silver metal dome with TWO rows of large oval ventilation holes, no body.",
+      "sourceFile": "exec-acd31ff0-0707-46ab-bdf6-a8a52cbe9bb0.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-acd31ff0-0707-46ab-bdf6-a8a52cbe9bb0.png"
+    },
+    {
+      "id": "B082",
+      "field": "B",
+      "name": "旅行鞄の留め具",
+      "description": "ばね式の小さな閉鎖部。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Travel suitcase fastener: stout silver rounded rectangular spring hasp with pivot and raised locking tongue, no whole suitcase.",
+      "sourceFile": "exec-41d09c5a-9eab-4d4c-bc6e-0b1603d6839d.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-41d09c5a-9eab-4d4c-bc6e-0b1603d6839d.png"
+    },
+    {
+      "id": "B083",
+      "field": "B",
+      "name": "笛のマウスピース",
+      "description": "小型の真鍮製部品。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Brass whistle MOUTHPIECE alone: short flattened tubular beak with broad rectangular blowing slot and round attachment neck.",
+      "sourceFile": "exec-b7bd8dfe-9acf-4ed2-9fcf-f5e190d74dd0.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-b7bd8dfe-9acf-4ed2-9fcf-f5e190d74dd0.png"
+    },
+    {
+      "id": "B084",
+      "field": "B",
+      "name": "手回しオルゴールの歯車",
+      "description": "小さな歯を持つ精密部品。",
+      "material": "metal",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "completed",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Hand-crank music box gear: small thin steel cogwheel with many clean teeth, off-center secondary tiny pin and central square axle hole.",
+      "sourceFile": "exec-0cda7827-992e-43be-ab7b-413a09f62af0.png",
+      "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-0cda7827-992e-43be-ab7b-413a09f62af0.png"
+    },
+    {
+      "id": "G018",
+      "field": "G",
+      "name": "金雲母の小片",
+      "description": "雲母の仲間で薄い板に剥がれる。",
+      "material": "mineral",
+      "palette": "brass",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Small phlogopite golden MICA flake: translucent honey-bronze thin layered sheet with irregular roughly hexagonal outline and clearly stepped peeled edges, pearly flat faces, not metallic gold. Master name: 金雲母の小片. 雲母の仲間で薄い板に剥がれる。"
+    },
+    {
+      "id": "G021",
+      "field": "G",
+      "name": "かんらん石の粒",
+      "description": "丸く磨耗した粒状の造岩鉱物。",
+      "material": "mineral",
+      "palette": "greenstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Olivine grain: one small translucent olive-green rounded angular crystal pebble, compact faceted squat shape with glassy pale upper-left facets. Master name: かんらん石の粒. 丸く磨耗した粒状の造岩鉱物。"
+    },
+    {
+      "id": "G022",
+      "field": "G",
+      "name": "ざくろ石の粒",
+      "description": "比重の高い粒が濃縮物に残る。",
+      "material": "mineral",
+      "palette": "jasper",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Garnet grain: one deep red-brown compact many-sided equant crystal, strongly angular polygon silhouette and large trapezoid facets; not smooth bead. Master name: ざくろ石の粒. 比重の高い粒が濃縮物に残る。"
+    },
+    {
+      "id": "G026",
+      "field": "G",
+      "name": "苦灰石の小結晶",
+      "description": "炭酸塩鉱物の菱形結晶。",
+      "material": "mineral",
+      "palette": "shell",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Dolomite small crystal: pale warm cream RHOMBOHEDRON cluster of two offset slanted box crystals, sharp oblique planes and faint pink inner shade. Master name: 苦灰石の小結晶. 炭酸塩鉱物の菱形結晶。"
+    },
+    {
+      "id": "G027",
+      "field": "G",
+      "name": "蛍石の割れ片",
+      "description": "平らな割れ面が組み合わさる鉱物。",
+      "material": "mineral",
+      "palette": "pebble",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fluorite cleavage fragment: pale violet translucent irregular OCTAHEDRAL fragment, triangular flat faces, crisp diagonal cleavage edges, no quartz hexagonal point. Master name: 蛍石の割れ片. 平らな割れ面が組み合わさる鉱物。"
+    },
+    {
+      "id": "G035",
+      "field": "G",
+      "name": "ルチルの針状片",
+      "description": "酸化チタンの細い結晶。",
+      "material": "mineral",
+      "palette": "copper",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Rutile needle fragment: ONE slim dark reddish-brown striated crystal needle with a short forked side needle and sharp point; long narrow silhouette, not rounded pebble. Master name: ルチルの針状片. 酸化チタンの細い結晶。"
+    },
+    {
+      "id": "G036",
+      "field": "G",
+      "name": "チタン鉄鉱の粒",
+      "description": "黒砂に混じる重い酸化鉱物。",
+      "material": "mineral",
+      "palette": "blackstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Ilmenite grain: flat black iron-gray tabular crystal with broad hexagonal plate-like face, silvery muted edge reflections and blunt sides. Master name: チタン鉄鉱の粒. 黒砂に混じる重い酸化鉱物。"
+    },
+    {
+      "id": "G037",
+      "field": "G",
+      "name": "赤鉄鉱の粒",
+      "description": "鉄の酸化鉱物。磁鉄鉱とは磁性が異なる。",
+      "material": "mineral",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Hematite grain: dense steel-gray metallic kidney-shaped cluster of three rounded lobes, bright hard planar glints and subtle dark red-brown underside. Master name: 赤鉄鉱の粒. 鉄の酸化鉱物。磁鉄鉱とは磁性が異なる。"
+    },
+    {
+      "id": "G038",
+      "field": "G",
+      "name": "褐鉄鉱の集合粒",
+      "description": "鉄の水酸化物などが集まった粒。単独鉱物名ではない。",
+      "material": "mineral",
+      "palette": "rust",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Limonite aggregate grain: ochre yellow-brown earthy porous knobby cluster with uneven scalloped contour and dark cavities, no sparkle or metallic silver. Master name: 褐鉄鉱の集合粒. 鉄の水酸化物などが集まった粒。単独鉱物名ではない。"
+    },
+    {
+      "id": "G067",
+      "field": "G",
+      "name": "玄武岩の礫",
+      "description": "細かな結晶からなる火山岩の礫。",
+      "material": "rock",
+      "palette": "blackstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Basalt pebble: dark charcoal-gray compact rounded trapezoid with tiny sparse pale mineral specks and two small vesicle pits, dense fine texture. Master name: 玄武岩の礫. 細かな結晶からなる火山岩の礫。"
+    },
+    {
+      "id": "G068",
+      "field": "G",
+      "name": "安山岩の礫",
+      "description": "斑晶が見えることのある火山岩。",
+      "material": "rock",
+      "palette": "stone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Andesite pebble: medium-gray irregular rounded triangle with several large white lath-shaped phenocryst dashes in fine dark groundmass, unlike coarse granite. Master name: 安山岩の礫. 斑晶が見えることのある火山岩。"
+    },
+    {
+      "id": "G070",
+      "field": "G",
+      "name": "閃緑岩の礫",
+      "description": "粗い鉱物粒が組み合わさる深成岩。",
+      "material": "rock",
+      "palette": "stone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Diorite pebble: angular squarish rock with coarse high-contrast black and white interlocking salt-and-pepper crystal patches, no pink feldspar. Master name: 閃緑岩の礫. 粗い鉱物粒が組み合わさる深成岩。"
+    },
+    {
+      "id": "G071",
+      "field": "G",
+      "name": "斑れい岩の礫",
+      "description": "暗色鉱物を多く含む深成岩。",
+      "material": "rock",
+      "palette": "blackstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Gabbro pebble: bulky dark rock with coarse broad charcoal and olive-gray interlocking crystal patches, low white content, uneven pentagonal outline. Master name: 斑れい岩の礫. 暗色鉱物を多く含む深成岩。"
+    },
+    {
+      "id": "G073",
+      "field": "G",
+      "name": "結晶片岩の礫",
+      "description": "鉱物の並びによる片理を持つ変成岩。",
+      "material": "rock",
+      "palette": "quartz",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Crystalline schist pebble: flattened elongated slab with strongly PARALLEL wavy silvery mica layers and jagged split thin edges, tilted diagonal. Master name: 結晶片岩の礫. 鉱物の並びによる片理を持つ変成岩。"
+    },
+    {
+      "id": "G074",
+      "field": "G",
+      "name": "砂岩の礫",
+      "description": "砂粒が固まった堆積岩。",
+      "material": "rock",
+      "palette": "shell",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Sandstone pebble: warm tan rounded block with visible coarse sand grains and two subtle straight sediment layers, matte granular face, no crystals. Master name: 砂岩の礫. 砂粒が固まった堆積岩。"
+    },
+    {
+      "id": "G076",
+      "field": "G",
+      "name": "珪岩の礫",
+      "description": "石英質の硬い変成岩。",
+      "material": "rock",
+      "palette": "pale",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Quartzite pebble: dense white-cream angular wedge, sugary tightly interlocked sparkly grains and hard clean fracture, no long quartz crystal points. Master name: 珪岩の礫. 石英質の硬い変成岩。"
+    },
+    {
+      "id": "G077",
+      "field": "G",
+      "name": "角礫岩の小片",
+      "description": "角張った岩片を含む岩石。",
+      "material": "rock",
+      "palette": "conglomerate",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Breccia rock chip: angular brown block containing clearly ANGULAR polygon fragments in dark finer matrix, strong jagged silhouette, unlike rounded conglomerate pebbles. Master name: 角礫岩の小片. 角張った岩片を含む岩石。"
+    },
+    {
+      "id": "G078",
+      "field": "G",
+      "name": "石灰岩の礫",
+      "description": "主に炭酸カルシウムからできた岩石。",
+      "material": "rock",
+      "palette": "pale",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Limestone pebble: pale gray-beige rounded kidney-shaped stone, matte smooth face, subtle curved fossil-shell cross-section and small shallow pits. Master name: 石灰岩の礫. 主に炭酸カルシウムからできた岩石。"
+    },
+    {
+      "id": "G079",
+      "field": "G",
+      "name": "ホルンフェルスの小片",
+      "description": "熱の影響で緻密になった変成岩。",
+      "material": "rock",
+      "palette": "blackstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Hornfels chip: dense charcoal-brown sharp splintered angular slab with crisp conchoidal break and subtle mottled fine texture; not glassy black obsidian spike. Master name: ホルンフェルスの小片. 熱の影響で緻密になった変成岩。"
+    },
+    {
+      "id": "G080",
+      "field": "G",
+      "name": "蛇紋岩の礫",
+      "description": "蛇紋石鉱物を多く含む岩石。",
+      "material": "rock",
+      "palette": "greenstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Serpentinite pebble: rounded triangular deep green rock with light pale serpentine winding veins and waxy curved faces, not parallel layers. Master name: 蛇紋岩の礫. 蛇紋石鉱物を多く含む岩石。"
+    },
+    {
+      "id": "R018",
+      "field": "R",
+      "name": "アイボルト",
+      "description": "輪の付いた吊り金具。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Single eye bolt: large upright circular eye on a short threaded straight shank, show true open central hole; not a flat washer. Master name: アイボルト. 輪の付いた吊り金具。"
+    },
+    {
+      "id": "R027",
+      "field": "R",
+      "name": "万力のハンドル",
+      "description": "両端に止めが付いた鋼棒。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Vise sliding T-handle alone: long cylindrical steel crossbar with two enlarged round end stops, central short perpendicular sliding collar; no whole vise. Master name: 万力のハンドル. 両端に止めが付いた鋼棒。"
+    },
+    {
+      "id": "R031",
+      "field": "R",
+      "name": "小型のバール",
+      "description": "曲がった先端を持つ引抜き工具。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Small crowbar: long narrow hexagonal steel bar with sharply curved hooked end and flattened split nail-pulling claw at opposite end. Master name: 小型のバール. 曲がった先端を持つ引抜き工具。"
+    },
+    {
+      "id": "R036",
+      "field": "R",
+      "name": "ドリルチャック",
+      "description": "回転工具の先端を固定する部分。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Drill chuck without drill: squat dark steel cylinder with knurled grip band, THREE visible triangular jaws forming small central opening, short tapered rear shaft. Master name: ドリルチャック. 回転工具の先端を固定する部分。"
+    },
+    {
+      "id": "R051",
+      "field": "R",
+      "name": "ルアーの連結環",
+      "description": "複数の輪がつながった釣り具部品。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing lure connection rings: THREE small split steel rings interlocked into a short angular chain, distinct transparent holes, no lure or hook. Master name: ルアーの連結環. 複数の輪がつながった釣り具部品。"
+    },
+    {
+      "id": "R052",
+      "field": "R",
+      "name": "リールのハンドル軸",
+      "description": "水中で錆びた回転軸。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing reel handle spindle: short bent crank shaft with square mounting end and one rounded mounting boss, no grip or reel body. Master name: リールのハンドル軸. 水中で錆びた回転軸。"
+    },
+    {
+      "id": "R053",
+      "field": "R",
+      "name": "竿立ての先端",
+      "description": "岸へ差す細い金属部品。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing rod rest ground spike tip: slim steel spike with forked Y cradle at broad top and pointed stake bottom, no rod. Master name: 竿立ての先端. 岸へ差す細い金属部品。"
+    },
+    {
+      "id": "R054",
+      "field": "R",
+      "name": "投げ釣りの天秤",
+      "description": "枝分かれした仕掛け金具。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Surf fishing wire balance rig: slim bent steel wire branching into three arms with tiny eyes at ends; unmistakable wide asymmetric T shape. Master name: 投げ釣りの天秤. 枝分かれした仕掛け金具。"
+    },
+    {
+      "id": "R055",
+      "field": "R",
+      "name": "魚籠の留め具",
+      "description": "容器を閉じる小さなばね。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing creel spring clasp: small bent wire spring fastener with loop hinge and hooked closing tongue, oval opening, no basket. Master name: 魚籠の留め具. 容器を閉じる小さなばね。"
+    },
+    {
+      "id": "R058",
+      "field": "R",
+      "name": "網枠のジョイント",
+      "description": "枠を組み立てる接続部。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Fishing net frame joint: short T-shaped steel coupler with three visible open round tube sockets and one tightening knob. Master name: 網枠のジョイント. 枠を組み立てる接続部。"
+    },
+    {
+      "id": "R061",
+      "field": "R",
+      "name": "鋼製計量カップ",
+      "description": "持ち手の付いた小型容器。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Small steel measuring cup: open cylindrical cup with straight sides, curved handle at side, visible dark oval interior and reflective rolled rim; no markings. Master name: 鋼製計量カップ. 持ち手の付いた小型容器。"
+    },
+    {
+      "id": "R062",
+      "field": "R",
+      "name": "鉄製弁当箱",
+      "description": "薄い板の容器。泥が内部に溜まる。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Iron lunch box: low rounded rectangular metal container, fitted lid seam and single side clasp, no carry handle. Master name: 鉄製弁当箱. 薄い板の容器。泥が内部に溜まる。"
+    },
+    {
+      "id": "R063",
+      "field": "R",
+      "name": "鉄製筆箱",
+      "description": "細長い蓋付きのケース。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Steel pencil case: very elongated narrow rectangular hinged tin case, rounded corners, lid seam and tiny front clasp, no markings. Master name: 鉄製筆箱. 細長い蓋付きのケース。"
+    },
+    {
+      "id": "R065",
+      "field": "R",
+      "name": "工具袋の鉄枠",
+      "description": "布が失われた収納具の金具。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Tool bag iron FRAME only: rectangular open supporting rim with hinged arched carry handle and two short corner posts, fabric absent; transparent hollow center. Master name: 工具袋の鉄枠. 布が失われた収納具の金具。"
+    },
+    {
+      "id": "R066",
+      "field": "R",
+      "name": "鉄製小物トレー",
+      "description": "平たい作業用の受け皿。",
+      "material": "iron",
+      "palette": "steel",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Small iron parts tray: wide shallow rectangular pan with raised rolled edges and rounded corners, fully visible empty bottom, no lid or handle. Master name: 鉄製小物トレー. 平たい作業用の受け皿。"
+    },
+    {
+      "id": "R080",
+      "field": "R",
+      "name": "アルミ製リールスプール",
+      "description": "糸を巻く軽量な筒。",
+      "material": "aluminum",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Aluminum fishing reel SPOOL: lightweight short cylinder with TWO broad perforated circular flanges, narrow central axle hole and recessed line groove. Master name: アルミ製リールスプール. 糸を巻く軽量な筒。"
+    },
+    {
+      "id": "R082",
+      "field": "R",
+      "name": "銅管のコイル",
+      "description": "柔らかい管が巻かれたもの。",
+      "material": "copper",
+      "palette": "copper",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Copper pipe coil: thick hollow tube curled into two loose spiral turns, one pipe end visibly open, warm copper highlights, no wire-thin chain. Master name: 銅管のコイル. 柔らかい管が巻かれたもの。"
+    },
+    {
+      "id": "R085",
+      "field": "R",
+      "name": "石製の文鎮",
+      "description": "つかんで引き上げる非金属の回収品。",
+      "material": "stone",
+      "palette": "blackstone",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Stone paperweight: smoothly polished elongated dark gray rectangular block with softly rounded chamfered corners and flat top, no numbers or letters. Master name: 石製の文鎮. つかんで引き上げる非金属の回収品。"
+    },
+    {
+      "id": "R086",
+      "field": "R",
+      "name": "ガラス製インク瓶",
+      "description": "口の小さな古い容器。",
+      "material": "glass",
+      "palette": "blueglass",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Old glass ink bottle: squat faceted square blue-green translucent glass body, narrow open neck with thick circular lip, no stopper or label. Master name: ガラス製インク瓶. 口の小さな古い容器。"
+    },
+    {
+      "id": "R087",
+      "field": "R",
+      "name": "ステンレス製定規",
+      "description": "目盛りを残す非磁性の板。",
+      "material": "stainless",
+      "palette": "silver",
+      "maxBounds": [
+        28,
+        28
+      ],
+      "status": "pending",
+      "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: Stainless steel ruler: long narrow flat metal strip with straight edges, short dark tick grooves along one edge and circular hanging hole, no numbers. Master name: ステンレス製定規. 目盛りを残す非磁性の板。"
+    }
+  ]
+}

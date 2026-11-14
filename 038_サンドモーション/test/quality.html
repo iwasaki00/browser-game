@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAND MOTION v0.2.1 品質比較</title>
+<style>body{font:14px/1.7 system-ui;background:#14191c;color:#e9e9df;margin:24px}button{padding:12px 20px;font:inherit}pre{white-space:pre-wrap}iframe{width:420px;height:900px;border:1px solid #52605c}#layout{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}#comparison{max-width:100%;height:auto}#status{color:#e9bb85}</style>
+<h1>SAND MOTION v0.2.1 品質比較</h1>
+<p>同じサンプルを実アプリで順番に実行します。標準・高精細の初期Canvas、一斉崩壊2秒、合成スワイプ2秒、リセットを比較します。タブを前面に保ってください。</p>
+<button id="run">比較を実行して記録</button>
+<p id="status" role="status">未実行（保存は npm run qa のローカルサーバーで利用できます）</p>
+<div id="layout"><iframe id="app" src="../index.html" title="実アプリ"></iframe><div><canvas id="comparison" width="600" height="550"></canvas><pre id="results"></pre></div></div>
+<script type="module" src="./quality-browser.js"></script>
+</html>

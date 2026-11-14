@@ -1,0 +1,1640 @@
+[
+  {
+    "treasureId": "B022",
+    "sheet": "beach_nature_sheet",
+    "col": 1,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "自然物",
+    "rarity": "U",
+    "available": false,
+    "name": "珪化木の漂着片",
+    "description": "木目の形を残した石質の漂着物。",
+    "material": "rock",
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 68,
+      "B-B": 73,
+      "B-C": 0,
+      "B-D": 0
+    },
+    "earlyScore": 0.7
+  },
+  {
+    "treasureId": "B023",
+    "sheet": "beach_nature_sheet",
+    "col": 2,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "自然物",
+    "rarity": "U",
+    "available": false,
+    "name": "カシパンの殻",
+    "description": "薄い円盤状の殻。精密回収で縁を守る。",
+    "material": "shell",
+    "locations": [
+      "B-A",
+      "B-B"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 71,
+      "B-B": 65,
+      "B-C": 0,
+      "B-D": 0
+    },
+    "earlyScore": 0.686
+  },
+  {
+    "treasureId": "B027",
+    "sheet": "beach_nature_sheet",
+    "col": 6,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "ガラス・陶片",
+    "rarity": "C",
+    "available": false,
+    "name": "陶器の取っ手",
+    "description": "曲線だけが残った生活陶器の一部。",
+    "material": "ceramic",
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 118,
+      "B-C": 0,
+      "B-D": 76
+    },
+    "earlyScore": 0.548
+  },
+  {
+    "treasureId": "B028",
+    "sheet": "beach_nature_sheet",
+    "col": 7,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "ガラス・陶片",
+    "rarity": "C",
+    "available": false,
+    "name": "陶製のおはじき",
+    "description": "小さな円形の遊び道具。砂に紛れやすい。",
+    "material": "ceramic",
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 132,
+      "B-C": 0,
+      "B-D": 74
+    },
+    "earlyScore": 0.602
+  },
+  {
+    "treasureId": "B029",
+    "sheet": "beach_nature_sheet",
+    "col": 0,
+    "row": 2,
+    "size": 32,
+    "field": "B",
+    "category": "ガラス・陶片",
+    "rarity": "C",
+    "available": false,
+    "name": "碍子の破片",
+    "description": "溝のある白い陶製部品。漂着物の下に隠れる。",
+    "material": "ceramic",
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 130,
+      "B-C": 0,
+      "B-D": 58
+    },
+    "earlyScore": 0.578
+  },
+  {
+    "treasureId": "B031",
+    "sheet": "beach_nature_sheet",
+    "col": 2,
+    "row": 2,
+    "size": 32,
+    "field": "B",
+    "category": "ガラス・陶片",
+    "rarity": "C",
+    "available": false,
+    "name": "模様のあるタイル片",
+    "description": "焼き付けた模様が残る建材片。",
+    "material": "ceramic",
+    "locations": [
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 141,
+      "B-C": 0,
+      "B-D": 82
+    },
+    "earlyScore": 0.646
+  },
+  {
+    "treasureId": "B034",
+    "sheet": "beach_valuable_sheet",
+    "col": 5,
+    "row": 0,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮のカフスボタン",
+    "description": "衣服を留める対の片方。金属探知に反応する。",
+    "material": "brass",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 80,
+      "B-C": 102,
+      "B-D": 0
+    },
+    "earlyScore": 0.524
+  },
+  {
+    "treasureId": "B035",
+    "sheet": "beach_valuable_sheet",
+    "col": 6,
+    "row": 0,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "ペンダントの空枠",
+    "description": "石が外れた装飾枠。変形させず回収する。",
+    "material": "silver",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 95,
+      "B-C": 89,
+      "B-D": 0
+    },
+    "earlyScore": 0.558
+  },
+  {
+    "treasureId": "B037",
+    "sheet": "beach_valuable_sheet",
+    "col": 0,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "銅製の髪留め",
+    "description": "薄く曲がった装身具。岩間に挟まりやすい。",
+    "material": "copper",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 101,
+      "B-C": 92,
+      "B-D": 0
+    },
+    "earlyScore": 0.588
+  },
+  {
+    "treasureId": "B038",
+    "sheet": "beach_valuable_sheet",
+    "col": 1,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "錫製ブローチ",
+    "description": "柔らかい金属の小さな飾り。",
+    "material": "silver",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 77,
+      "B-C": 118,
+      "B-D": 0
+    },
+    "earlyScore": 0.544
+  },
+  {
+    "treasureId": "B040",
+    "sheet": "beach_valuable_sheet",
+    "col": 3,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "真珠風ビーズの留め具",
+    "description": "留め具と人工ビーズが残った小物。",
+    "material": "silver",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 68,
+      "B-C": 85,
+      "B-D": 0
+    },
+    "earlyScore": 0.442
+  },
+  {
+    "treasureId": "B041",
+    "sheet": "beach_valuable_sheet",
+    "col": 4,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "R",
+    "available": false,
+    "name": "七宝のピンバッジ",
+    "description": "金属の縁に焼き付けた釉薬が残る。",
+    "material": "silver",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 71,
+      "B-C": 33,
+      "B-D": 0
+    },
+    "earlyScore": 0.35
+  },
+  {
+    "treasureId": "B043",
+    "sheet": "beach_valuable_sheet",
+    "col": 6,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "装飾品",
+    "rarity": "U",
+    "available": false,
+    "name": "時計の巻き芯",
+    "description": "小さな軸とつまみ。細目選別で回収する。",
+    "material": "silver",
+    "locations": [
+      "B-B",
+      "B-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 0,
+      "B-B": 84,
+      "B-C": 80,
+      "B-D": 0
+    },
+    "earlyScore": 0.496
+  },
+  {
+    "treasureId": "B049",
+    "sheet": "beach_valuable_sheet",
+    "col": 4,
+    "row": 2,
+    "size": 32,
+    "field": "B",
+    "category": "硬貨・メダル",
+    "rarity": "R",
+    "available": false,
+    "name": "銀製記念章",
+    "description": "記念の文字が残る円形の依頼回収品。",
+    "material": "silver",
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 98,
+      "B-B": 0,
+      "B-C": 35,
+      "B-D": 46
+    },
+    "earlyScore": 0.704
+  },
+  {
+    "treasureId": "B052",
+    "sheet": "beach_valuable_sheet",
+    "col": 7,
+    "row": 2,
+    "size": 32,
+    "field": "B",
+    "category": "硬貨・メダル",
+    "rarity": "SR",
+    "available": false,
+    "name": "古い船舶通行章",
+    "description": "深い砂に眠る許可章。深層探知と掘削を使う。",
+    "material": "copper",
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 52,
+      "B-B": 0,
+      "B-C": 10,
+      "B-D": 11
+    },
+    "earlyScore": 0.343
+  },
+  {
+    "treasureId": "B055",
+    "sheet": "beach_daily_sheet",
+    "col": 2,
+    "row": 1,
+    "size": 32,
+    "field": "B",
+    "category": "釣り具",
+    "rarity": "U",
+    "available": false,
+    "name": "リールの糸巻き軸",
+    "description": "細い溝が残る回転部の軸。",
+    "material": "iron",
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 66,
+      "B-B": 54,
+      "B-C": 0,
+      "B-D": 27
+    },
+    "earlyScore": 0.639
+  },
+  {
+    "treasureId": "B062",
+    "sheet": "beach_daily_sheet",
+    "col": 1,
+    "row": 2,
+    "size": 32,
+    "field": "B",
+    "category": "釣り具",
+    "rarity": "U",
+    "available": false,
+    "name": "銛先の留めピン",
+    "description": "抜け止めの小さな金属棒。",
+    "material": "iron",
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 52,
+      "B-B": 60,
+      "B-C": 0,
+      "B-D": 31
+    },
+    "earlyScore": 0.583
+  },
+  {
+    "treasureId": "B069",
+    "sheet": "beach_daily_sheet",
+    "col": 0,
+    "row": 3,
+    "size": 32,
+    "field": "B",
+    "category": "工具",
+    "rarity": "U",
+    "available": false,
+    "name": "小型の水平器枠",
+    "description": "気泡管を支えていた金属の枠。",
+    "material": "iron",
+    "locations": [
+      "B-A",
+      "B-C",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 62,
+      "B-B": 0,
+      "B-C": 87,
+      "B-D": 145
+    },
+    "earlyScore": 0.691
+  },
+  {
+    "treasureId": "B077",
+    "sheet": "beach_daily_sheet",
+    "col": 0,
+    "row": 4,
+    "size": 32,
+    "field": "B",
+    "category": "日用品",
+    "rarity": "U",
+    "available": false,
+    "name": "革鞄のバックル",
+    "description": "帯を通す四角い金具。",
+    "material": "metal",
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 51,
+      "B-B": 63,
+      "B-C": 0,
+      "B-D": 25
+    },
+    "earlyScore": 0.583
+  },
+  {
+    "treasureId": "B079",
+    "sheet": "beach_daily_sheet",
+    "col": 2,
+    "row": 4,
+    "size": 32,
+    "field": "B",
+    "category": "日用品",
+    "rarity": "U",
+    "available": false,
+    "name": "自転車ベルの椀",
+    "description": "丸い音響部分。漂着物の下に溜まる。",
+    "material": "metal",
+    "locations": [
+      "B-A",
+      "B-B",
+      "B-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "B-A": 48,
+      "B-B": 64,
+      "B-C": 0,
+      "B-D": 17
+    },
+    "earlyScore": 0.561
+  },
+  {
+    "treasureId": "G023",
+    "sheet": "gold_stone_sheet",
+    "col": 4,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "緑簾石の結晶片",
+    "description": "溝のある柱状結晶の一部。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 195,
+      "G-B": 0,
+      "G-C": 114,
+      "G-D": 0
+    },
+    "earlyScore": 1.398
+  },
+  {
+    "treasureId": "G028",
+    "sheet": "gold_mineral_sheet",
+    "col": 7,
+    "row": 0,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "燐灰石の粒",
+    "description": "六角柱を作ることのある鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 186,
+      "G-B": 0,
+      "G-C": 121,
+      "G-D": 0
+    },
+    "earlyScore": 1.358
+  },
+  {
+    "treasureId": "G029",
+    "sheet": "gold_mineral_sheet",
+    "col": 0,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "トパーズの転石片",
+    "description": "硬い鉱物の磨耗した破片。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 197,
+      "G-B": 0,
+      "G-C": 54,
+      "G-D": 0
+    },
+    "earlyScore": 1.29
+  },
+  {
+    "treasureId": "G030",
+    "sheet": "gold_mineral_sheet",
+    "col": 1,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "電気石の柱状片",
+    "description": "柱に細い縦筋を持つ鉱物片。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 187,
+      "G-B": 0,
+      "G-C": 132,
+      "G-D": 0
+    },
+    "earlyScore": 1.386
+  },
+  {
+    "treasureId": "G031",
+    "sheet": "gold_mineral_sheet",
+    "col": 2,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "藍晶石の板状片",
+    "description": "細長い板の形をした鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 205,
+      "G-B": 0,
+      "G-C": 40,
+      "G-D": 0
+    },
+    "earlyScore": 1.31
+  },
+  {
+    "treasureId": "G032",
+    "sheet": "gold_mineral_sheet",
+    "col": 3,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "珪線石の繊維状集合",
+    "description": "細い結晶が集まった標本。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 187,
+      "G-B": 0,
+      "G-C": 39,
+      "G-D": 0
+    },
+    "earlyScore": 1.2
+  },
+  {
+    "treasureId": "G033",
+    "sheet": "gold_mineral_sheet",
+    "col": 4,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "紅柱石の柱状片",
+    "description": "角柱形を残す変成鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 204,
+      "G-B": 0,
+      "G-C": 49,
+      "G-D": 0
+    },
+    "earlyScore": 1.322
+  },
+  {
+    "treasureId": "G034",
+    "sheet": "gold_mineral_sheet",
+    "col": 5,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "十字石の結晶片",
+    "description": "交差する結晶が知られる鉱物の一部。",
+    "material": "mineral",
+    "locations": [
+      "G-A",
+      "G-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 192,
+      "G-B": 0,
+      "G-C": 45,
+      "G-D": 0
+    },
+    "earlyScore": 1.242
+  },
+  {
+    "treasureId": "G039",
+    "sheet": "gold_mineral_sheet",
+    "col": 2,
+    "row": 2,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "クロム鉄鉱の粒",
+    "description": "黒く重い酸化鉱物の粒。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 141,
+      "G-D": 184
+    },
+    "earlyScore": 0.466
+  },
+  {
+    "treasureId": "G040",
+    "sheet": "gold_mineral_sheet",
+    "col": 3,
+    "row": 2,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "R",
+    "available": false,
+    "name": "錫石の粒",
+    "description": "スズの酸化鉱物。重い粒として濃縮される。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 56,
+      "G-D": 59
+    },
+    "earlyScore": 0.171
+  },
+  {
+    "treasureId": "G044",
+    "sheet": "gold_mineral_sheet",
+    "col": 7,
+    "row": 2,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "重晶石の板状片",
+    "description": "見かけより重い硫酸塩鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 129,
+      "G-D": 188
+    },
+    "earlyScore": 0.446
+  },
+  {
+    "treasureId": "G046",
+    "sheet": "gold_mineral_sheet",
+    "col": 1,
+    "row": 3,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "菱鉄鉱の粒",
+    "description": "鉄を含む炭酸塩鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 108,
+      "G-D": 187
+    },
+    "earlyScore": 0.403
+  },
+  {
+    "treasureId": "G050",
+    "sheet": "gold_mineral_sheet",
+    "col": 5,
+    "row": 3,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "斑銅鉱の小片",
+    "description": "表面の変色を伴うことのある銅鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 120,
+      "G-D": 168
+    },
+    "earlyScore": 0.408
+  },
+  {
+    "treasureId": "G051",
+    "sheet": "gold_mineral_sheet",
+    "col": 6,
+    "row": 3,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "磁硫鉄鉱の粒",
+    "description": "磁性を示すことがある鉄の硫化鉱物。",
+    "material": "pyrrhotite",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 115,
+      "G-D": 188
+    },
+    "earlyScore": 0.418
+  },
+  {
+    "treasureId": "G052",
+    "sheet": "gold_mineral_sheet",
+    "col": 7,
+    "row": 3,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "方鉛鉱の粒",
+    "description": "直角の割れ面を持つ重い硫化鉱物。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 131,
+      "G-D": 169
+    },
+    "earlyScore": 0.431
+  },
+  {
+    "treasureId": "G053",
+    "sheet": "gold_mineral_sheet",
+    "col": 0,
+    "row": 4,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "閃亜鉛鉱の小片",
+    "description": "亜鉛の硫化鉱物。割れ面に光沢がある。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 128,
+      "G-D": 187
+    },
+    "earlyScore": 0.443
+  },
+  {
+    "treasureId": "G054",
+    "sheet": "gold_mineral_sheet",
+    "col": 1,
+    "row": 4,
+    "size": 32,
+    "field": "G",
+    "category": "鉱物",
+    "rarity": "U",
+    "available": false,
+    "name": "孔雀石の付着片",
+    "description": "銅鉱物が母岩の表面に付着した標本。",
+    "material": "mineral",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 127,
+      "G-D": 162
+    },
+    "earlyScore": 0.416
+  },
+  {
+    "treasureId": "G089",
+    "sheet": "gold_rare_sheet",
+    "col": 2,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "天然金",
+    "rarity": "U",
+    "available": false,
+    "name": "鱗片状砂金",
+    "description": "薄く広がった粒。精密回収が必要。",
+    "material": "gold",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 123,
+      "G-D": 160
+    },
+    "earlyScore": 0.406
+  },
+  {
+    "treasureId": "G091",
+    "sheet": "gold_rare_sheet",
+    "col": 4,
+    "row": 1,
+    "size": 32,
+    "field": "G",
+    "category": "天然金",
+    "rarity": "U",
+    "available": false,
+    "name": "丸みのある砂金",
+    "description": "運搬中に縁が磨耗した粒。",
+    "material": "gold",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 109,
+      "G-D": 169
+    },
+    "earlyScore": 0.387
+  },
+  {
+    "treasureId": "G097",
+    "sheet": "gold_rare_sheet",
+    "col": 2,
+    "row": 2,
+    "size": 32,
+    "field": "G",
+    "category": "天然金",
+    "rarity": "U",
+    "available": false,
+    "name": "重鉱物に挟まった砂金",
+    "description": "黒砂を分けると見つかる微粒。",
+    "material": "gold",
+    "locations": [
+      "G-C",
+      "G-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "G-A": 0,
+      "G-B": 0,
+      "G-C": 121,
+      "G-D": 164
+    },
+    "earlyScore": 0.406
+  },
+  {
+    "treasureId": "R040",
+    "sheet": "river_metal_sheet",
+    "col": 2,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "U",
+    "available": false,
+    "name": "自転車のチェーンリング",
+    "description": "歯の付いた環状の部品。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 54,
+      "R-C": 31,
+      "R-D": 0
+    },
+    "earlyScore": 0.278
+  },
+  {
+    "treasureId": "R041",
+    "sheet": "river_metal_sheet",
+    "col": 3,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "ハブ軸",
+    "description": "車輪中心の細い回転軸。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 78,
+      "R-C": 95,
+      "R-D": 0
+    },
+    "earlyScore": 0.502
+  },
+  {
+    "treasureId": "R042",
+    "sheet": "river_metal_sheet",
+    "col": 4,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "自転車のブレーキアーム",
+    "description": "制動機構の短い腕。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 82,
+      "R-C": 90,
+      "R-D": 0
+    },
+    "earlyScore": 0.508
+  },
+  {
+    "treasureId": "R043",
+    "sheet": "river_metal_sheet",
+    "col": 5,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "自転車のペダル軸",
+    "description": "踏み面を支える鋼製軸。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 75,
+      "R-C": 92,
+      "R-D": 0
+    },
+    "earlyScore": 0.484
+  },
+  {
+    "treasureId": "R044",
+    "sheet": "river_metal_sheet",
+    "col": 6,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "スポークの束",
+    "description": "細長い鋼線が障害物に絡んでいる。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 84,
+      "R-C": 86,
+      "R-D": 0
+    },
+    "earlyScore": 0.508
+  },
+  {
+    "treasureId": "R047",
+    "sheet": "river_metal_sheet",
+    "col": 1,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "自転車のベル台座",
+    "description": "ハンドルへ固定する金具。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 76,
+      "R-C": 97,
+      "R-D": 0
+    },
+    "earlyScore": 0.498
+  },
+  {
+    "treasureId": "R049",
+    "sheet": "river_metal_sheet",
+    "col": 3,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "自転車部品",
+    "rarity": "C",
+    "available": false,
+    "name": "自転車の泥除けステー",
+    "description": "薄い支持棒。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 82,
+      "R-C": 98,
+      "R-D": 0
+    },
+    "earlyScore": 0.524
+  },
+  {
+    "treasureId": "R056",
+    "sheet": "river_tool_sheet",
+    "col": 7,
+    "row": 2,
+    "size": 32,
+    "field": "R",
+    "category": "釣り具",
+    "rarity": "U",
+    "available": false,
+    "name": "釣り用プライヤー",
+    "description": "仕掛けを扱う細い工具。",
+    "material": "iron",
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 78,
+      "R-B": 0,
+      "R-C": 25,
+      "R-D": 0
+    },
+    "earlyScore": 0.518
+  },
+  {
+    "treasureId": "R057",
+    "sheet": "river_tool_sheet",
+    "col": 0,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "釣り具",
+    "rarity": "U",
+    "available": false,
+    "name": "リールの歯車",
+    "description": "精密な歯を持つ部品。",
+    "material": "iron",
+    "locations": [
+      "R-A",
+      "R-C"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 71,
+      "R-B": 0,
+      "R-C": 43,
+      "R-D": 0
+    },
+    "earlyScore": 0.512
+  },
+  {
+    "treasureId": "R060",
+    "sheet": "river_tool_sheet",
+    "col": 3,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "容器",
+    "rarity": "U",
+    "available": false,
+    "name": "鉄製油差し",
+    "description": "細い注ぎ口を持つ容器。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 45,
+      "R-C": 34,
+      "R-D": 82
+    },
+    "earlyScore": 0.33
+  },
+  {
+    "treasureId": "R064",
+    "sheet": "river_tool_sheet",
+    "col": 7,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "容器",
+    "rarity": "U",
+    "available": false,
+    "name": "鋼製薬品缶の空容器",
+    "description": "蓋を閉じた回収対象。開けずに引き渡す。",
+    "material": "iron",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 46,
+      "R-C": 34,
+      "R-D": 80
+    },
+    "earlyScore": 0.332
+  },
+  {
+    "treasureId": "R069",
+    "sheet": "river_metal_sheet",
+    "col": 5,
+    "row": 3,
+    "size": 32,
+    "field": "R",
+    "category": "真鍮部品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮製エルボ継手",
+    "description": "管を直角につなぐ非磁性の部品。",
+    "material": "brass",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 33,
+      "R-C": 34,
+      "R-D": 72
+    },
+    "earlyScore": 0.272
+  },
+  {
+    "treasureId": "R072",
+    "sheet": "river_metal_sheet",
+    "col": 0,
+    "row": 4,
+    "size": 32,
+    "field": "R",
+    "category": "真鍮部品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮製ホース口金",
+    "description": "管の先端に付ける接続部。",
+    "material": "brass",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 45,
+      "R-C": 43,
+      "R-D": 79
+    },
+    "earlyScore": 0.345
+  },
+  {
+    "treasureId": "R074",
+    "sheet": "river_metal_sheet",
+    "col": 2,
+    "row": 4,
+    "size": 32,
+    "field": "R",
+    "category": "真鍮部品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮製南京錠の本体",
+    "description": "持主照会に回す小型の錠。",
+    "material": "brass",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 36,
+      "R-C": 42,
+      "R-D": 68
+    },
+    "earlyScore": 0.296
+  },
+  {
+    "treasureId": "R075",
+    "sheet": "river_metal_sheet",
+    "col": 3,
+    "row": 4,
+    "size": 32,
+    "field": "R",
+    "category": "真鍮部品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮製散水ノズル",
+    "description": "先に細い穴がある管部品。",
+    "material": "brass",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 41,
+      "R-C": 28,
+      "R-D": 81
+    },
+    "earlyScore": 0.301
+  },
+  {
+    "treasureId": "R076",
+    "sheet": "river_metal_sheet",
+    "col": 4,
+    "row": 4,
+    "size": 32,
+    "field": "R",
+    "category": "真鍮部品",
+    "rarity": "U",
+    "available": false,
+    "name": "真鍮製ボビン",
+    "description": "糸や線を巻く小さな筒。",
+    "material": "brass",
+    "locations": [
+      "R-B",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 0,
+      "R-B": 41,
+      "R-C": 26,
+      "R-D": 62
+    },
+    "earlyScore": 0.278
+  },
+  {
+    "treasureId": "R081",
+    "sheet": "river_rare_sheet",
+    "col": 5,
+    "row": 0,
+    "size": 32,
+    "field": "R",
+    "category": "非磁性回収物",
+    "rarity": "U",
+    "available": false,
+    "name": "ステンレス製カラビナ",
+    "description": "非磁性材の接続具。フックで引く。",
+    "material": "stainless",
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 70,
+      "R-B": 0,
+      "R-C": 34,
+      "R-D": 69
+    },
+    "earlyScore": 0.557
+  },
+  {
+    "treasureId": "R083",
+    "sheet": "river_rare_sheet",
+    "col": 7,
+    "row": 0,
+    "size": 32,
+    "field": "R",
+    "category": "非磁性回収物",
+    "rarity": "R",
+    "available": false,
+    "name": "アルミ製羽根車",
+    "description": "軽い回転部品。障害物に挟まる。",
+    "material": "aluminum",
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 83,
+      "R-B": 0,
+      "R-C": 15,
+      "R-D": 20
+    },
+    "earlyScore": 0.548
+  },
+  {
+    "treasureId": "R084",
+    "sheet": "river_rare_sheet",
+    "col": 0,
+    "row": 1,
+    "size": 32,
+    "field": "R",
+    "category": "非磁性回収物",
+    "rarity": "U",
+    "available": false,
+    "name": "陶製の小瓶",
+    "description": "泥に埋まった割れやすい容器。",
+    "material": "ceramic",
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 68,
+      "R-B": 0,
+      "R-C": 33,
+      "R-D": 72
+    },
+    "earlyScore": 0.546
+  },
+  {
+    "treasureId": "R088",
+    "sheet": "river_rare_sheet",
+    "col": 4,
+    "row": 1,
+    "size": 32,
+    "field": "R",
+    "category": "非磁性回収物",
+    "rarity": "R",
+    "available": false,
+    "name": "銅製の小鐘",
+    "description": "内部に泥の詰まった非磁性の依頼品。",
+    "material": "copper",
+    "locations": [
+      "R-A",
+      "R-C",
+      "R-D"
+    ],
+    "status": "pending",
+    "lot": 5,
+    "appearanceCounts": {
+      "R-A": 72,
+      "R-B": 0,
+      "R-C": 13,
+      "R-D": 18
+    },
+    "earlyScore": 0.476
+  }
+]

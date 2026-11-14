@@ -86,6 +86,8 @@ document.getElementById('run').addEventListener('click', async event => {
   await test('T12 品質切替と画像再生成', () => {
     get('quality').value = 'light'; get('quality').dispatchEvent(new iframe.contentWindow.Event('change'));
     check(total() === 7828 && get('sand').width === 120, '軽量化失敗');
+    get('quality').value = 'high'; get('quality').dispatchEvent(new iframe.contentWindow.Event('change'));
+    check(total() === 39440 && get('sand').width === 270 && get('sand').height === 450, '高精細化失敗');
     get('quality').value = 'standard'; get('quality').dispatchEvent(new iframe.contentWindow.Event('change'));
     check(total() === 17670 && get('sand').width === 180, '標準への復帰失敗');
   });

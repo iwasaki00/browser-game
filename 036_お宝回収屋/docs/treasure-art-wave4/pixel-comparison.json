@@ -1,0 +1,637 @@
+{
+  "version": "1.0.0-rc.1",
+  "comparison": "exact decoded RGBA bytes for all 360 cells",
+  "changedCells": 20,
+  "pendingTargets": 40,
+  "unchangedOutsideTargets": 300,
+  "nonTargetChangedPixels": 0,
+  "previousCompletedUnchanged": true,
+  "protectedFilesUnchanged": 91,
+  "completed": {
+    "B": 20,
+    "R": 0,
+    "G": 0
+  },
+  "items": [
+    {
+      "treasureId": "B059",
+      "sheet": "beach_daily_sheet",
+      "col": 6,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": true,
+      "name": "金属製ウキの芯",
+      "description": "浮具の中心に入っていた軸。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 128,
+        "B-B": 127,
+        "B-C": 0,
+        "B-D": 69
+      },
+      "earlyScore": 1.345,
+      "rgbaSHA256": "849063dce720b7e91fe8c8521cd700c6be20b40cd4e416c98ea495bf4af744aa",
+      "opaquePixels": 58,
+      "colors": 7
+    },
+    {
+      "treasureId": "B060",
+      "sheet": "beach_daily_sheet",
+      "col": 7,
+      "row": 1,
+      "size": 32,
+      "field": "B",
+      "category": "釣り具",
+      "rarity": "C",
+      "available": true,
+      "name": "仕掛け巻きの金具",
+      "description": "糸をまとめる枠の一部。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 151,
+        "B-B": 115,
+        "B-C": 0,
+        "B-D": 60
+      },
+      "earlyScore": 1.426,
+      "rgbaSHA256": "309d5475c68821ad6664334ed3d328a67efe086967eb1ff78acc1e035263ea22",
+      "opaquePixels": 154,
+      "colors": 8
+    },
+    {
+      "treasureId": "B064",
+      "sheet": "beach_daily_sheet",
+      "col": 3,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "精密ドライバーの軸",
+      "description": "細い先端を持つ小型工具の一部。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 229,
+        "B-B": 0,
+        "B-C": 792,
+        "B-D": 700
+      },
+      "earlyScore": 3.658,
+      "rgbaSHA256": "4b819ff8eb3f0ea8c9ad8af774bc410133435a7889a6f5a20c01c6e8a61eec67",
+      "opaquePixels": 90,
+      "colors": 7
+    },
+    {
+      "treasureId": "B065",
+      "sheet": "beach_daily_sheet",
+      "col": 4,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "折りたたみ定規の金具",
+      "description": "連結部分だけが残った測定具。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 219,
+        "B-B": 0,
+        "B-C": 847,
+        "B-D": 672
+      },
+      "earlyScore": 3.68,
+      "rgbaSHA256": "9f6d5f49f7c339c3b0a0839a792103aac853988507f0bc9649489297ba0ca954",
+      "opaquePixels": 338,
+      "colors": 7
+    },
+    {
+      "treasureId": "B066",
+      "sheet": "beach_daily_sheet",
+      "col": 5,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "銅製の測量鋲",
+      "description": "地面の目印に使われた小さな鋲。",
+      "material": "copper",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 88,
+        "B-B": 0,
+        "B-C": 102,
+        "B-D": 166
+      },
+      "earlyScore": 0.898,
+      "rgbaSHA256": "26e1e3adeb7c696de0bbc43cf0d446749a1ec331f98bfc95d313e24f9d1b897e",
+      "opaquePixels": 374,
+      "colors": 8
+    },
+    {
+      "treasureId": "B067",
+      "sheet": "beach_daily_sheet",
+      "col": 6,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "真鍮の調整ねじ",
+      "description": "細いねじ山を持つ機械部品。",
+      "material": "brass",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 98,
+        "B-B": 0,
+        "B-C": 105,
+        "B-D": 152
+      },
+      "earlyScore": 0.95,
+      "rgbaSHA256": "9f225b3f50b6511dfd4719f6db982eea62e6b1159a99fc95dbcdeb4280563766",
+      "opaquePixels": 437,
+      "colors": 7
+    },
+    {
+      "treasureId": "B068",
+      "sheet": "beach_daily_sheet",
+      "col": 7,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "ニッパーの片刃",
+      "description": "工具の片側だけが漂着したもの。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 202,
+        "B-B": 0,
+        "B-C": 737,
+        "B-D": 637
+      },
+      "earlyScore": 3.323,
+      "rgbaSHA256": "fb126052a94f06fc2ecc1be8898e92b36179cb36d85b714ec89d745b270d9a46",
+      "opaquePixels": 317,
+      "colors": 10
+    },
+    {
+      "treasureId": "B070",
+      "sheet": "beach_daily_sheet",
+      "col": 1,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "C",
+      "available": true,
+      "name": "帆布用ハトメ打ち具",
+      "description": "穴の縁を留めるための工具。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 166,
+        "B-B": 0,
+        "B-C": 776,
+        "B-D": 660
+      },
+      "earlyScore": 3.208,
+      "rgbaSHA256": "d755f929255ed9acb85b50421db4e00bd50b3b7d6588174eb2d66b50d85c30f6",
+      "opaquePixels": 245,
+      "colors": 8
+    },
+    {
+      "treasureId": "B071",
+      "sheet": "beach_daily_sheet",
+      "col": 2,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "ステンレスのピンセット",
+      "description": "細い先端のある非磁性の回収候補。",
+      "material": "stainless",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 101,
+        "B-B": 0,
+        "B-C": 114,
+        "B-D": 165
+      },
+      "earlyScore": 0.999,
+      "rgbaSHA256": "42e11365c9160c71d91fee2a67d532b83cbc546accdaff9b8fa633a2af79bce1",
+      "opaquePixels": 165,
+      "colors": 8
+    },
+    {
+      "treasureId": "B072",
+      "sheet": "beach_daily_sheet",
+      "col": 3,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "工具",
+      "rarity": "U",
+      "available": true,
+      "name": "小型プーラーの爪",
+      "description": "部品を引き抜く工具の爪。",
+      "material": "iron",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 92,
+        "B-B": 0,
+        "B-C": 107,
+        "B-D": 153
+      },
+      "earlyScore": 0.919,
+      "rgbaSHA256": "c4ec902b005c919d2e0c4456ec83a36d21d9fc9b2e932d46d8f5d8575be2fe0c",
+      "opaquePixels": 225,
+      "colors": 8
+    },
+    {
+      "treasureId": "B074",
+      "sheet": "beach_daily_sheet",
+      "col": 5,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "鈴の片割れ",
+      "description": "音を出す空洞の半分が残ったもの。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 120,
+        "B-B": 123,
+        "B-C": 0,
+        "B-D": 60
+      },
+      "earlyScore": 1.272,
+      "rgbaSHA256": "88343039eb24308951d5d5aa5e48cd4378da9ecb20917cc0d0ea9e685de342b8",
+      "opaquePixels": 483,
+      "colors": 7
+    },
+    {
+      "treasureId": "B075",
+      "sheet": "beach_daily_sheet",
+      "col": 6,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "弁当箱の留め金",
+      "description": "薄い板を曲げた開閉部。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 123,
+        "B-B": 134,
+        "B-C": 0,
+        "B-D": 64
+      },
+      "earlyScore": 1.338,
+      "rgbaSHA256": "f46792989b6d284432b0322517b95db5ae2cb0a9a443c7bbdee812a0f52446b0",
+      "opaquePixels": 364,
+      "colors": 9
+    },
+    {
+      "treasureId": "B076",
+      "sheet": "beach_daily_sheet",
+      "col": 7,
+      "row": 3,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "傘の石突き",
+      "description": "傘の先端を保護する小さな部品。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 133,
+        "B-B": 119,
+        "B-C": 0,
+        "B-D": 70
+      },
+      "earlyScore": 1.344,
+      "rgbaSHA256": "d0d9371885d382102838afdbb4e6865ac10e68f29c02bde54b2bc0df5ab95de8",
+      "opaquePixels": 366,
+      "colors": 10
+    },
+    {
+      "treasureId": "B078",
+      "sheet": "beach_daily_sheet",
+      "col": 1,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "靴ひもの金属飾り",
+      "description": "細い筒に模様が付いた小物。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 126,
+        "B-B": 137,
+        "B-C": 0,
+        "B-D": 63
+      },
+      "earlyScore": 1.367,
+      "rgbaSHA256": "fb89b28d4293ca9d3507adf5d38ee2fd16d11e4d6da7206db2d5b480ef593ccb",
+      "opaquePixels": 219,
+      "colors": 9
+    },
+    {
+      "treasureId": "B080",
+      "sheet": "beach_daily_sheet",
+      "col": 3,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "U",
+      "available": true,
+      "name": "船名入りの鍵札",
+      "description": "文字の残る金属札。契約窓口へ引き渡す。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 73,
+        "B-B": 66,
+        "B-C": 0,
+        "B-D": 28
+      },
+      "earlyScore": 0.73,
+      "rgbaSHA256": "6adad4cd386adbaad2efbd78bb3cfabd3950a9f00fe70d54f0c5854b8a3a0068",
+      "opaquePixels": 301,
+      "colors": 7
+    },
+    {
+      "treasureId": "B081",
+      "sheet": "beach_daily_sheet",
+      "col": 4,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "懐炉の蓋",
+      "description": "通気孔が並ぶ薄い金属板。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 119,
+        "B-B": 112,
+        "B-C": 0,
+        "B-D": 62
+      },
+      "earlyScore": 1.224,
+      "rgbaSHA256": "160ccc0aad0d8c12b6a0d393c36df4b2ca12d70abbe2fe93a95f2c753387ad4b",
+      "opaquePixels": 326,
+      "colors": 9
+    },
+    {
+      "treasureId": "B082",
+      "sheet": "beach_daily_sheet",
+      "col": 5,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "C",
+      "available": true,
+      "name": "旅行鞄の留め具",
+      "description": "ばね式の小さな閉鎖部。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 125,
+        "B-B": 140,
+        "B-C": 0,
+        "B-D": 81
+      },
+      "earlyScore": 1.391,
+      "rgbaSHA256": "4a93e47b7e7e5f2a4ff0201bd7cf8b3dcf023e11a6dfba82cb6ca4a76ebd4e3b",
+      "opaquePixels": 456,
+      "colors": 10
+    },
+    {
+      "treasureId": "B083",
+      "sheet": "beach_daily_sheet",
+      "col": 6,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "U",
+      "available": true,
+      "name": "笛のマウスピース",
+      "description": "小型の真鍮製部品。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 75,
+        "B-B": 62,
+        "B-C": 0,
+        "B-D": 20
+      },
+      "earlyScore": 0.718,
+      "rgbaSHA256": "90de177224b4d7c2099c391846b7fb82b76c95cf43595333e30dbf57138fbe9e",
+      "opaquePixels": 337,
+      "colors": 7
+    },
+    {
+      "treasureId": "B084",
+      "sheet": "beach_daily_sheet",
+      "col": 7,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "日用品",
+      "rarity": "R",
+      "available": true,
+      "name": "手回しオルゴールの歯車",
+      "description": "小さな歯を持つ精密部品。",
+      "material": "metal",
+      "locations": [
+        "B-A",
+        "B-B",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 76,
+        "B-B": 72,
+        "B-C": 0,
+        "B-D": 17
+      },
+      "earlyScore": 0.761,
+      "rgbaSHA256": "7476f3727b510248d0a57bdfeb2ad166503bcddf9288b1f2b31c377aa1a160f7",
+      "opaquePixels": 553,
+      "colors": 9
+    },
+    {
+      "treasureId": "B051",
+      "sheet": "beach_valuable_sheet",
+      "col": 6,
+      "row": 2,
+      "size": 32,
+      "field": "B",
+      "category": "硬貨・メダル",
+      "rarity": "R",
+      "available": true,
+      "name": "打刻ずれの記念メダル",
+      "description": "模様がずれた製造上の特徴を持つ。",
+      "material": "copper",
+      "locations": [
+        "B-A",
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 4,
+      "appearanceCounts": {
+        "B-A": 114,
+        "B-B": 0,
+        "B-C": 34,
+        "B-D": 53
+      },
+      "earlyScore": 0.805,
+      "rgbaSHA256": "e4585fda1f0191649a0b181ee9146f2b73ca8c7359bfe7a2dec48514c3a08c22",
+      "opaquePixels": 593,
+      "colors": 9
+    }
+  ]
+}
