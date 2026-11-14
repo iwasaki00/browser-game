@@ -13,7 +13,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     setAttribute(name, value) { this.attributes[name] = value; }
     click() { if (!this.disabled) this.dispatchEvent(new Event('click')); }
   }
-  let conversions = 0, failConversionAt = 0, decodeFailure = false;
+  let conversions = 0, failConversionAt = 0, decodeFailure = false, imageWidth = 100, imageHeight = 100;
   class Canvas extends Element {
     constructor() {
       super(); this.width = 180; this.height = 300; this.capture = null;
@@ -51,7 +51,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     innerWidth: 375, innerHeight: 800, setInterval: () => 1, clearInterval() {} });
   const replacements = { document, window, screen: { orientation }, navigator: { userAgent: 'iPhone' },
     performance: { now: () => now }, ResizeObserver: class { observe() {} }, requestAnimationFrame: fn => { frame = fn; },
-    Image: class { constructor() { this.naturalWidth = this.naturalHeight = 100; } async decode() { if (decodeFailure) throw new Error(); } } };
+    Image: class { constructor() { this.naturalWidth = imageWidth; this.naturalHeight = imageHeight; } async decode() { if (decodeFailure) throw new Error(); } } };
   const originals = new Map(Object.keys(replacements).map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   for (const [name, value] of Object.entries(replacements)) Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
   const sensor = (roll = 0) => {
@@ -259,6 +259,99 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     get('mode-hourglass').click(); assert.equal(get('counts').textContent, '9,025 / 0');
     get('sample').click(); assert.equal(get('counts').textContent, '8,991 / 0');
     get('mode-free').click(); assert.equal(get('counts').textContent, '39,440 / 0');
+    // v0.4.1 panels pause the actual state; close/cancel never regenerate it.
+    get('quality').value = 'standard'; get('quality').dispatchEvent(new Event('change')); get('sample').click();
+    const panelInitial = canvas.rendered.slice();
+    const beforeSettings = conversions;
+    get('settings-open').click(); assert.equal(get('settings-panel').hidden, false); assert.equal(get('app').inert, true);
+    tick(2000); get('settings-close').click(); assert.equal(get('app').inert, false);
+    assert.equal(conversions, beforeSettings); assert.deepEqual(canvas.rendered, panelInitial);
+    get('gravity-open').click(); arrows.find(b => b.dataset.g === '-1,0').click();
+    assert.equal(get('gravity-open').textContent, '重力 ←');
+    get('gravity-close').click(); arrows.find(b => b.dataset.g === '0,1').click();
+
+    imageWidth = 600; imageHeight = 1000;
+    get('image-file').files = [new File(['portrait'], 'portrait.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve));
+    assert.equal(get('total').textContent, '26,460'); // 126x210, up from v0.4.0's 99x165.
+    const portraitInitial = canvas.rendered.slice();
+    get('collapse').click(); for (let i = 0; i < 20; i++) tick();
+    get('reassemble').click(); tick(350); get('info').click();
+    const returningPortrait = canvas.rendered.slice(), returningProgress = get('reassembly-progress').textContent;
+    get('size-open').click(); assert.equal(get('photo-size').value, 70);
+    get('photo-size').value = '80'; get('photo-size').dispatchEvent(new Event('input'));
+    assert.equal(get('size-warning').hidden, false);
+    const preview80 = canvas.rendered.slice(); assert.notDeepEqual(preview80, returningPortrait);
+    tick(6000); get('info').click();
+    assert.equal(get('total').textContent, '26,460'); assert.equal(get('reassembly-progress').textContent, returningProgress);
+    get('size-close').click(); assert.deepEqual(canvas.rendered, returningPortrait);
+    get('size-open').click(); assert.equal(get('photo-size').value, 70);
+    get('size-apply').click(); assert.deepEqual(canvas.rendered, returningPortrait);
+    assert.equal(canvas.attributes['data-reassembling'], 'true');
+
+    // Applying hourglass size doesn't replace or advance the hidden free return.
+    get('mode-hourglass').click(); assert.equal(get('total').textContent, '4,018');
+    get('size-open').click(); assert.equal(get('photo-size').value, 100);
+    get('photo-size').value = '60'; get('photo-size').dispatchEvent(new Event('input'));
+    assert.equal(get('size-warning').hidden, true); get('size-apply').click();
+    assert.equal(get('counts').textContent, '1,421 / 0');
+    get('collapse').click(); for (let i = 0; i < 20; i++) tick();
+    const smallHourglass = canvas.rendered.slice();
+    get('mode-free').click(); assert.deepEqual(canvas.rendered, returningPortrait);
+    assert.equal(get('reassembly-progress').textContent, returningProgress);
+    tick(); tick(1200); assert.deepEqual(canvas.rendered, portraitInitial);
+    get('collapse').click(); for (let i = 0; i < 20; i++) tick();
+    get('size-open').click(); get('photo-size').value = '80'; get('photo-size').dispatchEvent(new Event('input'));
+    const beforeApply = conversions;
+    get('size-apply').click(); assert.equal(conversions, beforeApply + 1);
+    assert.equal(get('counts').textContent, '34,560 / 0');
+    const largePortrait = canvas.rendered.slice();
+    get('mode-hourglass').click(); assert.deepEqual(canvas.rendered, smallHourglass);
+    get('size-open').click(); assert.equal(get('photo-size').value, 60); get('size-close').click();
+    get('mode-free').click(); assert.deepEqual(canvas.rendered, largePortrait);
+    get('collapse').click(); tick(); tick(60);
+    const movingLarge = canvas.rendered.slice();
+    get('size-open').click(); assert.equal(get('photo-size').value, 80);
+    const unchangedConversions = conversions; get('size-apply').click();
+    assert.equal(conversions, unchangedConversions); assert.deepEqual(canvas.rendered, movingLarge);
+    assert.equal(get('counts').textContent, '0 / 34,560');
+
+    // Failed apply preserves the real grid and retained size.
+    get('size-open').click(); get('photo-size').value = '75'; get('photo-size').dispatchEvent(new Event('input'));
+    failConversionAt = conversions + 1; get('size-apply').click();
+    assert.equal(get('size-panel').hidden, false); assert.equal(get('total').textContent, '34,560');
+    get('size-close').click(); assert.deepEqual(canvas.rendered, movingLarge);
+    get('size-open').click(); assert.equal(get('photo-size').value, 80); get('size-close').click();
+
+    // Resizing the presentation does not convert a source or reset/advance grains.
+    const beforeViewport = conversions;
+    for (const [w, h] of [[390, 712], [375, 535], [390, 844], [375, 667]]) {
+      get('stage').clientWidth = w - 24; get('stage').clientHeight = h - 210;
+      window.innerWidth = w; window.innerHeight = h; window.dispatchEvent(new Event('resize'));
+      assert.deepEqual(canvas.rendered, movingLarge); assert.equal(conversions, beforeViewport);
+      assert.equal(canvas.width, 180); assert.equal(canvas.height, 300);
+    }
+    get('reset').click(); assert.deepEqual(canvas.rendered, largePortrait);
+    get('collapse').click(); tick(); tick(100); get('reassemble').click(); tick(1500);
+    assert.deepEqual(canvas.rendered, largePortrait);
+    get('quality').value = 'high'; get('quality').dispatchEvent(new Event('change'));
+    assert.equal(get('counts').textContent, '77,760 / 0');
+    get('mode-hourglass').click(); assert.equal(get('counts').textContent, '3,212 / 0');
+    get('size-open').click(); assert.equal(get('photo-size').value, 60); get('size-close').click();
+    get('mode-free').click(); get('size-open').click(); assert.equal(get('photo-size').value, 80); get('size-close').click();
+    // Width-bound photos can change the retained percentage without resetting
+    // an identical raster. Escape is cancellation, too.
+    get('sample').click(); get('collapse').click(); tick(); tick(60);
+    const widthBound = canvas.rendered.slice();
+    get('size-open').click(); get('photo-size').value = '70'; get('photo-size').dispatchEvent(new Event('input'));
+    const widthBoundConversions = conversions; assert.equal(get('size-warning').hidden, true);
+    get('size-apply').click(); assert.equal(conversions, widthBoundConversions);
+    assert.deepEqual(canvas.rendered, widthBound); assert.equal(get('counts').textContent, '0 / 39,440');
+    get('size-open').click(); assert.equal(get('photo-size').value, 70);
+    get('photo-size').value = '30'; get('photo-size').dispatchEvent(new Event('input'));
+    const escape = new Event('keydown', { cancelable: true }); Object.assign(escape, { key: 'Escape' });
+    document.dispatchEvent(escape); assert.equal(get('size-panel').hidden, true);
+    assert.deepEqual(canvas.rendered, widthBound);
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

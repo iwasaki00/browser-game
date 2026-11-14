@@ -23,7 +23,7 @@ test('T01/T02: RGBA conversion preserves color, position, alpha and aspect ratio
   assert.equal(e.fixedCount, 2);
   for (const [w, h] of [[600, 440], [400, 2000], [2000, 100], [1, 1]]) {
     const p = imagePlacement(w, h, 180, 300);
-    assert.ok(p.height <= 165 && p.width <= 155);
+    assert.ok(p.height <= 210 && p.width <= 155);
     assert.ok(p.x >= 0 && p.y + p.height < 300);
     assert.ok(Math.abs(p.width - w * p.height / h) <= Math.max(1, w / h));
   }

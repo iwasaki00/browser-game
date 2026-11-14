@@ -19,11 +19,12 @@ export function hourglassGeometry(width, height) {
   return { walls, outline, neckWidth, cap };
 }
 
-export function hourglassPlacement(imageWidth, imageHeight, width, height) {
+export function hourglassPlacement(imageWidth, imageHeight, width, height, size = 1) {
   // Bound the solid image area, not just chamber area: the receiving pile needs
   // clearance below the neck even when all pixels are opaque and fall centrally.
   let scale = Math.min(width * 0.48 / imageWidth, height * 0.30 / imageHeight,
-    Math.sqrt(width * height * 0.075 / (imageWidth * imageHeight)));
+    Math.sqrt(width * height * 0.075 / (imageWidth * imageHeight))) *
+      (Number.isFinite(size) ? Math.max(0.40, Math.min(1, size)) : 1);
   const { walls } = hourglassGeometry(width, height), y = Math.ceil(height * 0.08);
   for (;;) {
     const w = Math.max(1, Math.floor(imageWidth * scale)), h = Math.max(1, Math.floor(imageHeight * scale));

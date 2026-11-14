@@ -49,7 +49,7 @@ ID・正式名称・分野・シート・0始まりの列/行・ロットの全3
 紛らわしい品に絞り、ID・正式名称・原寸32px・4倍拡大・原寸シルエットを掲載しました。既存品には「既存・変更なし」の印を付けています。
 
 - [compare-B.png](treasure-art-final/compare-B.png): キャップ・メダル・コイン類、細い軸類、薄い貝殻。縁、穴、刻印位置、厚み、突出部を比較できます。
-- [compare-R.png](treasure-art-final/compare-R.png): R016/R017、R004/R025、ペンチ類、チャック・歯車類。
+- [compare-R.png](treasure-art-final/compare-R.png): R016/R017、R004/R025と類似工具、ソケット・チャック類。
 - [compare-G.png](treasure-art-final/compare-G.png): G007/G098、薄片・丸粒・ナゲット、黄鉄鉱・黄銅鉱・方鉛鉱、雲母類。
 
 既存R016/R017はどちらも円環状で、原寸では厚み・切れ目の差が小さく、名称なしの識別には注意が必要です。R004/R025は工具の口と調整部を見て区別する組です。G007/G098はともに散粒で、粒数・大きさ・密集度が主な違いです。今回は既存セルを保持しました。B017/B023は薄い円盤状の輪郭と放射模様が近く、原寸での識別差は控えめです。既存B017は変更していません。第三者による品名を隠した識別試験は未実施です。
@@ -75,7 +75,7 @@ ID・正式名称・分野・シート・0始まりの列/行・ロットの全3
 
 本番の画像失敗試験では、対象シートの40品だけSVGへ代替し、他260品は専用画像のまま表示されます。通常時の300点表示とは分けて確認しました。詳細は [verification-summary.json](treasure-art-final/verification-summary.json)、各ロットのbrowser-results.json、最終フォルダーのproduction-results.json・treasure-sprite-browser-results.json・各ログに保存しています。全ての過去の分野別ブラウザ試験を再実行したという意味ではありません。
 
-最終代表の画像: detail-B100.png/dirty-B100.png/washed-B100.png、detail-R094.png/dirty-R094.png/washed-R094.png、detail-G093.png/dirty-G093.png/washed-G093.png。図鑑のページ別一覧も同フォルダーに保存しました。
+最終代表の画像: detail-B100.png/dirty-B100.png/washed-B100.png、detail-R094.png/dirty-R094.png/washed-R094.png、detail-G093.png/dirty-G093.png/washed-G093.png。代表品の一覧画像はbook-B100.png・book-R094.png・book-G093.pngです。全ページの一覧も同フォルダーに保存しました。
 
 ## iPhone Safari実機の未確認と手順
 

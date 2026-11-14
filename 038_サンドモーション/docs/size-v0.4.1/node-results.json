@@ -1,0 +1,216 @@
+{
+  "version": "0.4.1",
+  "at": "2026-11-14T17:48:58.936Z",
+  "runtime": "v25.9.0",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "platform": "win32 x64",
+  "browserVerified": false,
+  "iphoneVerified": false,
+  "browserFps": null,
+  "portraitComparison": [
+    {
+      "grid": "180x300",
+      "source": "600x1000 opaque portrait",
+      "previous": {
+        "width": 99,
+        "height": 165
+      },
+      "current": {
+        "width": 126,
+        "height": 210,
+        "x": 27,
+        "y": 24
+      },
+      "heightRatio": 1.2727,
+      "note": "Grid dimensions; also CSS px when canvas displays at its native grid dimensions. Not iPhone measurements."
+    },
+    {
+      "grid": "270x450",
+      "source": "600x1000 opaque portrait",
+      "previous": {
+        "width": 149,
+        "height": 248
+      },
+      "current": {
+        "width": 189,
+        "height": 315,
+        "x": 40,
+        "y": 36
+      },
+      "heightRatio": 1.2702,
+      "note": "Grid dimensions; also CSS px when canvas displays at its native grid dimensions. Not iPhone measurements."
+    }
+  ],
+  "measurements": [
+    {
+      "mode": "free",
+      "grid": "180x300",
+      "source": "620x960 opaque",
+      "size": 80,
+      "layout": {
+        "width": 155,
+        "height": 240,
+        "x": 12,
+        "y": 24
+      },
+      "count": 37200,
+      "browserFps": null,
+      "reassemblyExact": true,
+      "physicsAndChecksCpuMs": 311.02,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 37200
+    },
+    {
+      "mode": "hourglass",
+      "grid": "180x300",
+      "source": "750x540 opaque",
+      "size": 100,
+      "layout": {
+        "x": 52,
+        "y": 24,
+        "width": 75,
+        "height": 54
+      },
+      "count": 4050,
+      "browserFps": null,
+      "flowSteps": 1955,
+      "simulatedMidlineSeconds": 32.58,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 504.31,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 4050
+    },
+    {
+      "mode": "hourglass",
+      "grid": "180x300",
+      "source": "600x1000 opaque",
+      "size": 100,
+      "layout": {
+        "x": 65,
+        "y": 24,
+        "width": 49,
+        "height": 82
+      },
+      "count": 4018,
+      "browserFps": null,
+      "flowSteps": 1629,
+      "simulatedMidlineSeconds": 27.15,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 487.82,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 4018
+    },
+    {
+      "mode": "hourglass",
+      "grid": "180x300",
+      "source": "1000x1000 opaque",
+      "size": 100,
+      "layout": {
+        "x": 58,
+        "y": 24,
+        "width": 63,
+        "height": 63
+      },
+      "count": 3969,
+      "browserFps": null,
+      "flowSteps": 1763,
+      "simulatedMidlineSeconds": 29.38,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 471.45,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 3969
+    },
+    {
+      "mode": "free",
+      "grid": "270x450",
+      "source": "620x960 opaque",
+      "size": 80,
+      "layout": {
+        "width": 232,
+        "height": 360,
+        "x": 19,
+        "y": 36
+      },
+      "count": 83520,
+      "browserFps": null,
+      "reassemblyExact": true,
+      "physicsAndChecksCpuMs": 841.14,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 83520
+    },
+    {
+      "mode": "hourglass",
+      "grid": "270x450",
+      "source": "750x540 opaque",
+      "size": 100,
+      "layout": {
+        "x": 79,
+        "y": 36,
+        "width": 112,
+        "height": 81
+      },
+      "count": 9072,
+      "browserFps": null,
+      "flowSteps": 4070,
+      "simulatedMidlineSeconds": 45.22,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 1957.64,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 9072
+    },
+    {
+      "mode": "hourglass",
+      "grid": "270x450",
+      "source": "600x1000 opaque",
+      "size": 100,
+      "layout": {
+        "x": 98,
+        "y": 36,
+        "width": 73,
+        "height": 123
+      },
+      "count": 8979,
+      "browserFps": null,
+      "flowSteps": 3279,
+      "simulatedMidlineSeconds": 36.43,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 1943.75,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 8979
+    },
+    {
+      "mode": "hourglass",
+      "grid": "270x450",
+      "source": "1000x1000 opaque",
+      "size": 100,
+      "layout": {
+        "x": 87,
+        "y": 36,
+        "width": 95,
+        "height": 95
+      },
+      "count": 9025,
+      "browserFps": null,
+      "flowSteps": 3905,
+      "simulatedMidlineSeconds": 43.39,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 2405.55,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 9025
+    }
+  ]
+}

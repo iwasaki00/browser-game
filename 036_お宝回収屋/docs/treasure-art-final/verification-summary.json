@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0-rc.1",
+  "newSprites": 186,
+  "totalSprites": 300,
+  "fields": {
+    "B": 100,
+    "R": 100,
+    "G": 100
+  },
+  "lotSizes": [
+    60,
+    60,
+    66
+  ],
+  "lotOutsideRGBA": [
+    300,
+    300,
+    294
+  ],
+  "finalProtectedRGBA": 174,
+  "prior114Unchanged": true,
+  "spare60Unchanged": true,
+  "unitPass": 665,
+  "unitFail": 0,
+  "lotBrowserPass": 24,
+  "legacyBrowserPass": 10,
+  "productionPass": 4,
+  "normalProductionSVG": 0,
+  "build": "PASS",
+  "iPhoneSafari": "NOT TESTED",
+  "WebKit": "NOT TESTED"
+}

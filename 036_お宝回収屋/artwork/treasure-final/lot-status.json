@@ -34,7 +34,20 @@
     "status": "verified"
   },
   "6": {
-    "completed": 0,
-    "status": "pending"
+    "completed": 66,
+    "fields": {
+      "B": 22,
+      "R": 22,
+      "G": 22
+    },
+    "cumulative": 300,
+    "outsideRGBAExact": 294,
+    "browserCases": 8,
+    "visualReviewed": [
+      "B",
+      "R",
+      "G"
+    ],
+    "status": "verified"
   }
 }

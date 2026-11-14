@@ -12,13 +12,13 @@ const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, origin).pathname);
-    if (req.method === 'POST' && ['/__qa/report', '/__qa/reassembly', '/__qa/hourglass'].includes(pathname)) {
+    if (req.method === 'POST' && ['/__qa/report', '/__qa/reassembly', '/__qa/hourglass', '/__qa/layout'].includes(pathname)) {
       if (req.headers.origin !== origin || !req.headers['content-type']?.startsWith('application/json')) { res.writeHead(403); res.end(); return; }
       const chunks = []; let length = 0;
       for await (const chunk of req) { length += chunk.length; if (length > 4_000_000) throw new Error('QA payload too large'); chunks.push(chunk); }
       const { images, ...report } = JSON.parse(Buffer.concat(chunks).toString('utf8'));
       const hourglass = pathname === '/__qa/hourglass';
-      const directory = hourglass ? path.join(root, 'docs', 'hourglass-v0.4.0') : pathname === '/__qa/reassembly' ? path.join(root, 'docs', 'reassembly-v0.3.0') : out;
+      const directory = pathname === '/__qa/layout' ? path.join(root, 'docs', 'size-v0.4.1') : hourglass ? path.join(root, 'docs', 'hourglass-v0.4.0') : pathname === '/__qa/reassembly' ? path.join(root, 'docs', 'reassembly-v0.3.0') : out;
       const imageNames = hourglass ? ['standard', 'high'].flatMap(quality =>
         ['sample', 'dense-portrait', 'bands-straight', 'bands-tilted'].flatMap(source =>
           ['initial', 'complete'].map(state => `browser-${source}-${state}-${quality}`))) :

@@ -1,6 +1,7 @@
-// Fit within 55% of the fixed simulation height, preserving aspect ratio.
-export function imagePlacement(width, height, gridWidth, gridHeight) {
-  const scale = Math.min(gridWidth * 0.86 / width, gridHeight * 0.55 / height);
+// Height target, with a width constraint and at least 12% landing space below.
+export function imagePlacement(width, height, gridWidth, gridHeight, heightFraction = 0.70) {
+  const fraction = Number.isFinite(heightFraction) ? Math.max(0.30, Math.min(0.80, heightFraction)) : 0.70;
+  const scale = Math.min(gridWidth * 0.86 / width, gridHeight * fraction / height);
   const w = Math.max(1, Math.round(width * scale));
   const h = Math.max(1, Math.round(height * scale));
   return { width: w, height: h, x: Math.floor((gridWidth - w) / 2), y: Math.floor(gridHeight * 0.08) };

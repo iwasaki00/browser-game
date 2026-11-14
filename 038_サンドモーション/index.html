@@ -4,52 +4,95 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#14191c">
-  <meta name="description" content="写真を砂に変えて、触れて、崩す。ブラウザだけで動く2D砂の実験室。">
-  <title>SAND MOTION v0.4.0 — HOURGLASS</title>
+  <meta name="description" content="写真を砂に変えて、触れて、崩す。フリーと砂時計で遊ぶ2D砂の実験室。">
+  <title>SAND MOTION v0.4.1</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <main class="app">
-    <header>
-      <div class="brand"><span class="mark" aria-hidden="true">▧</span><div><h1>SAND MOTION <small>v0.4.0</small></h1><p>HOURGLASS</p></div></div>
-      <button id="info" class="icon-button" aria-label="診断情報" aria-expanded="false" aria-controls="diagnostics">⌁</button>
-    </header>
-    <div class="mode-switch" role="group" aria-label="遊び方"><button id="mode-free" aria-pressed="true">フリー</button><button id="mode-hourglass" aria-pressed="false">砂時計</button><span>砂を流して、色を重ねる。</span></div>
-    <p class="mode-warning" id="source-warning">画像・サンプル・品質を変更すると、フリーと砂時計の両方を初期状態から作り直します。モードの切り替えでは配置を保ちます。</p>
-    <section class="workspace" aria-label="砂の実験室">
-      <div class="stage" id="stage">
-        <div class="stage-top"><span><i></i> LIVE EXPERIMENT</span><span id="grid-label">180 × 300</span></div>
-        <canvas id="sand" width="180" height="300" aria-label="砂の操作領域。タップで部分崩壊、ドラッグで砂を押します。"></canvas>
-        <div class="stage-bottom"><span id="state-label">触れると、ほどける。</span><span>01 / SAND</span></div>
-        <div id="rotation-pause" role="status" aria-live="polite" hidden><strong id="rotation-title">iPhoneを縦に戻してください</strong><span>砂の状態を保ったまま一時停止しています。</span></div>
+  <main class="app" id="app">
+    <header class="topbar">
+      <h1>SAND MOTION <small>v0.4.1</small></h1>
+      <button id="settings-open" aria-haspopup="dialog" aria-controls="settings-panel">設定</button>
+      <div class="mode-switch" role="group" aria-label="遊び方">
+        <button id="mode-free" aria-pressed="true">フリー</button><button id="mode-hourglass" aria-pressed="false">砂時計</button>
       </div>
-      <aside class="controls">
-        <div class="intro"><span class="eyebrow">A LITTLE ORDER. A LITTLE CHAOS.</span><h2>一枚の景色を、<br>ひと粒ずつ。</h2><p>写真に触れて、砂に変える。<br>なぞって、崩して、流してみよう。</p></div>
-        <div class="section-label"><span>01</span> IMAGE / 画像</div>
-        <label class="upload" for="image-file" aria-describedby="source-warning"><span aria-hidden="true">＋</span> 画像を選ぶ <small>JPG / PNG / WEBP</small></label>
-        <input id="image-file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="file-input">
-        <div class="source-row"><span id="source-name">サンプル：山と砂丘</span><button id="sample">サンプルに戻す</button></div>
-        <div class="action-row"><button id="collapse" class="primary">一斉崩壊 <span aria-hidden="true">↓</span></button><button id="reset" class="secondary"><span aria-hidden="true">↺</span> リセット</button></div>
-        <button id="flip" class="return-button" hidden disabled>ひっくり返す ↕</button>
-        <button id="reassemble" class="return-button">砂を戻す <span aria-hidden="true">↟</span></button>
-        <div class="gravity-section"><div><div class="section-label"><span>02</span> GRAVITY / 重力</div><p id="gravity-label">下向きに流れる</p></div><div id="free-gravity" class="compass" role="group" aria-label="重力方向">
-          <button data-g="-1,-1" aria-label="左上向き" aria-pressed="false">↖</button><button data-g="0,-1" aria-label="上向き" aria-pressed="false">↑</button><button data-g="1,-1" aria-label="右上向き" aria-pressed="false">↗</button>
-          <button data-g="-1,0" aria-label="左向き" aria-pressed="false">←</button><span aria-hidden="true">✦</span><button data-g="1,0" aria-label="右向き" aria-pressed="false">→</button>
-          <button data-g="-1,1" aria-label="左下向き" aria-pressed="false">↙</button><button data-g="0,1" aria-label="下向き" aria-pressed="true">↓</button><button data-g="1,1" aria-label="右下向き" aria-pressed="false">↘</button>
-        </div><div id="hourglass-gravity" class="hourglass-gravity" role="group" aria-label="砂時計の重力" hidden><button id="hourglass-left" aria-pressed="false">左寄せ ↙</button><button id="hourglass-straight" aria-pressed="true">まっすぐ ↓</button><button id="hourglass-right" aria-pressed="false">右寄せ ↘</button></div></div>
-        <div class="tilt-controls" aria-label="傾き操作">
-          <div class="tilt-buttons"><button id="tilt-start" aria-pressed="false">傾きで操作</button><button id="calibrate" disabled>基準を合わせる</button><span id="input-mode">手動</span></div>
-          <p class="tilt-hint">縦画面のまま遊ぶには、iPhoneのコントロールセンターで「画面縦向きのロック」をオンにしてください。</p>
-          <p id="tilt-status" role="status" aria-live="polite">手動で操作しています。</p>
-        </div>
-        <details class="settings"><summary>実験の設定 <span>＋</span></summary><div class="settings-body"><label for="quality">粒子の品質</label><p id="quality-warning">品質を変えると、両モードの画像を初期状態から作り直します。高精細は処理負荷が増えます。</p><select id="quality" aria-describedby="quality-warning"><option value="standard">標準 · 180 × 300</option><option value="light">軽量 · 120 × 200</option><option value="high">高精細 · 270 × 450</option></select><label for="radius">ブラシの大きさ <output id="radius-output">12</output></label><input id="radius" type="range" min="4" max="28" value="12"></div></details>
-        <details id="return-settings" class="settings return-settings"><summary>戻す動きの設定 <span>＋</span></summary><div class="settings-body"><label for="return-duration">復元時間 <output id="return-duration-output">1.5秒</output></label><input id="return-duration" type="range" min="0.6" max="3" step="0.1" value="1.5"><label for="return-arc">軌道の強さ <output id="return-arc-output">0.06</output></label><input id="return-arc" type="range" min="0" max="0.16" step="0.01" value="0.06"></div></details>
-        <div id="diagnostics" hidden><div class="section-label">DIAGNOSTICS / 診断</div><dl><dt>FPS</dt><dd id="fps">—</dd><dt>総粒子数</dt><dd id="total">—</dd><dt>固定 / 自由</dt><dd id="counts">—</dd><dt>重力 (x, y)</dt><dd id="gravity">0, 1</dd><dt>グリッド</dt><dd id="grid">180 × 300</dd><dt>物理更新 / step</dt><dd id="physics-ms">—</dd><dt>上側の粒 / 穴幅</dt><dd id="hourglass-remaining">—</dd><dt>復元の進捗</dt><dd id="reassembly-progress">待機</dd></dl></div>
-        <p id="message" role="status" aria-live="polite">画像は端末内だけで処理されます。</p>
-      </aside>
+    </header>
+    <section class="stage" id="stage" aria-label="砂のキャンバス">
+      <canvas id="sand" width="180" height="300" aria-label="タップで部分崩壊、ドラッグで砂を押します。"></canvas>
+      <div id="rotation-pause" role="status" aria-live="polite" hidden>
+        <strong id="rotation-title">iPhoneを縦に戻してください</strong><span>砂の状態を保って一時停止しています。</span>
+      </div>
     </section>
-    <footer><span>TOUCH · RELEASE · EXPLORE</span><span>2D GRID SIMULATION <i>●</i> LOCAL ONLY</span></footer>
+    <section id="size-panel" class="size-panel" role="region" aria-labelledby="size-title" hidden>
+      <div class="panel-heading"><h2 id="size-title">写真のサイズ</h2><button id="size-close">キャンセル</button></div>
+      <label for="photo-size">サイズ <output id="size-output">70%</output></label>
+      <input id="photo-size" type="range" min="30" max="80" step="1" value="70" aria-describedby="size-hint size-warning">
+      <p id="size-hint"></p><p id="size-preview-count"></p>
+      <p id="size-warning" class="warning" hidden>このモードの砂が初期状態に戻ります</p>
+      <p id="size-message" class="notice" role="status" hidden></p>
+      <button id="size-apply" class="primary">適用</button>
+    </section>
+    <footer class="toolbar">
+      <p id="message" class="notice" role="status" aria-live="polite" hidden></p>
+      <div class="action-row">
+        <button id="collapse" class="primary">一斉崩壊</button>
+        <button id="reassemble">砂を戻す</button><button id="flip" hidden disabled>ひっくり返す</button>
+        <button id="reset">リセット</button>
+      </div>
+      <div class="tool-row">
+        <button id="image-open" aria-haspopup="dialog" aria-controls="image-panel">画像</button>
+        <button id="size-open" aria-expanded="false" aria-controls="size-panel">サイズ</button>
+        <button id="gravity-open" aria-haspopup="dialog" aria-controls="gravity-panel">重力 ↓</button>
+      </div>
+    </footer>
   </main>
+  <div id="panel-layer" class="panel-layer" hidden>
+    <section id="image-panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="image-title" hidden>
+      <div class="panel-heading"><h2 id="image-title">画像</h2><button id="image-close">閉じる</button></div>
+      <div class="panel-body">
+        <p id="source-warning" class="warning">画像やサンプルを変更すると、フリーと砂時計の両方を初期状態から作り直します。</p>
+        <label class="upload" for="image-file">写真を選ぶ</label>
+        <input id="image-file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="source-warning">
+        <p id="source-name">サンプル：山と砂丘</p><button id="sample">サンプルに戻す</button>
+        <p>画像は端末内だけで処理されます。</p><p id="image-message" class="notice" role="status" hidden></p>
+      </div>
+    </section>
+    <section id="gravity-panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="gravity-title" hidden>
+      <div class="panel-heading"><h2 id="gravity-title">重力</h2><button id="gravity-close">閉じる</button></div>
+      <div class="panel-body">
+        <p id="gravity-label">下向きに流れる</p>
+        <div id="free-gravity" class="compass" role="group" aria-label="重力方向">
+          <button data-g="-1,-1" aria-label="左上" aria-pressed="false">↖</button><button data-g="0,-1" aria-label="上" aria-pressed="false">↑</button><button data-g="1,-1" aria-label="右上" aria-pressed="false">↗</button>
+          <button data-g="-1,0" aria-label="左" aria-pressed="false">←</button><span aria-hidden="true">·</span><button data-g="1,0" aria-label="右" aria-pressed="false">→</button>
+          <button data-g="-1,1" aria-label="左下" aria-pressed="false">↙</button><button data-g="0,1" aria-label="下" aria-pressed="true">↓</button><button data-g="1,1" aria-label="右下" aria-pressed="false">↘</button>
+        </div>
+        <div id="hourglass-gravity" class="hourglass-gravity" role="group" aria-label="砂時計の重力" hidden>
+          <button id="hourglass-left" aria-pressed="false">左寄せ ↙</button><button id="hourglass-straight" aria-pressed="true">まっすぐ ↓</button><button id="hourglass-right" aria-pressed="false">右寄せ ↘</button>
+        </div>
+        <div class="tilt-buttons"><button id="tilt-start" aria-pressed="false">傾きで操作</button><button id="calibrate" disabled>基準を合わせる</button><span id="input-mode">手動</span></div>
+        <p class="tilt-hint">縦画面のまま遊ぶには、iPhoneのコントロールセンターで「画面縦向きのロック」をオンにしてください。</p>
+        <p id="tilt-status" role="status" aria-live="polite">手動で操作しています。</p><p id="gravity-message" class="notice" role="status" hidden></p>
+      </div>
+    </section>
+    <section id="settings-panel" class="panel settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+      <div class="panel-heading"><h2 id="settings-title">設定</h2><button id="settings-close">閉じる</button></div>
+      <div class="panel-body settings-body">
+        <label for="quality">粒子品質</label><p id="quality-warning" class="warning">品質を変更すると、両モードの砂を初期状態から作り直します。高精細は処理負荷が増えます。</p>
+        <select id="quality" aria-describedby="quality-warning"><option value="standard">標準 180×300</option><option value="light">軽量 120×200</option><option value="high">高精細 270×450</option></select>
+        <label for="radius">ブラシの大きさ <output id="radius-output">12</output></label><input id="radius" type="range" min="4" max="28" value="12">
+        <div id="return-settings" class="settings-body">
+          <label for="return-duration">復元時間 <output id="return-duration-output">1.5秒</output></label><input id="return-duration" type="range" min="0.6" max="3" step="0.1" value="1.5">
+          <label for="return-arc">軌道の強さ <output id="return-arc-output">0.06</output></label><input id="return-arc" type="range" min="0" max="0.16" step="0.01" value="0.06">
+        </div>
+        <button id="info" aria-expanded="false" aria-controls="diagnostics">診断情報</button>
+        <div id="diagnostics" hidden><dl>
+          <dt>FPS</dt><dd id="fps">—</dd><dt>総粒子数</dt><dd id="total">—</dd><dt>固定 / 自由</dt><dd id="counts">—</dd><dt>重力 (x, y)</dt><dd id="gravity">0, 1</dd><dt>グリッド</dt><dd id="grid">180 × 300</dd><dt>物理更新 / step</dt><dd id="physics-ms">—</dd><dt>上側の粒 / 穴幅</dt><dd id="hourglass-remaining">—</dd><dt>復元の進捗</dt><dd id="reassembly-progress">待機</dd>
+        </dl></div>
+        <span id="grid-label" hidden></span><span id="state-label" hidden></span>
+        <p id="settings-message" class="notice" role="status" hidden></p>
+      </div>
+    </section>
+  </div>
   <script type="module" src="./src/app.js"></script>
 </body>
 </html>
