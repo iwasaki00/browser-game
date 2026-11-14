@@ -1,0 +1,33 @@
+{
+  "version": "0.3.0",
+  "runtime": "v25.9.0",
+  "platform": "win32 x64",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "description": "Node interpolation CPU only; not browser FPS. Fixed 60Hz animation timestamps, no Canvas.",
+  "measurements": [
+    {
+      "quality": "standard",
+      "grid": "180x300",
+      "count": 17670,
+      "configuredDurationMs": 1500,
+      "logicalElapsedMs": 1500,
+      "averageCpuMsPerAdvance": 0.743,
+      "p95CpuMs": 1.08,
+      "exactPositions": true,
+      "fixedCount": 17670,
+      "browserFps": null
+    },
+    {
+      "quality": "high",
+      "grid": "270x450",
+      "count": 39440,
+      "configuredDurationMs": 1500,
+      "logicalElapsedMs": 1500,
+      "averageCpuMsPerAdvance": 1.485,
+      "p95CpuMs": 1.942,
+      "exactPositions": true,
+      "fixedCount": 39440,
+      "browserFps": null
+    }
+  ]
+}

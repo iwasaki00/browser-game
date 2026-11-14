@@ -14,6 +14,7 @@ assert.equal(priorIDs.length,114+(wave-4)*60);assert.equal(expected.length,wave=
 for(const id of expected)assert.ok(priorMap.some(e=>e.treasureId===id&&!e.available));
 const hash=b=>createHash('sha256').update(b).digest('hex'),json=(f,v)=>writeFileSync(f,JSON.stringify(v,null,2)+'\n');
 const palettes={
+ ceramic:["354950","48666b","397c86","63aab0","9ccfc8","dbe7d3","fff3dc","e1caa6","ba9d79","8c6852","ab6046","d58b60"],
  pale:["424a54","6e7680","9da2a7","c2c5c4","deded8","f4f1e7","fffbed","b0a894","d3cbb7"],
  biotite:["302a2b","49372d","63503b","846a4b","a28a63","c4ac7c","e5d2a2","3c3e42","656764","98998c"],
  jasper:["48313a","704334","95543b","b66a43","cf8e5c","e3b481","f1d2a1","663c35","af6b55","d99b71"],
@@ -59,7 +60,7 @@ function verify(){const base=JSON.parse(readFileSync(folder+'/baseline.json','ut
  assert.equal(unchanged,360-expected.length);assert.equal(changed+pending,expected.length);const result={version:JSON.parse(readFileSync('package.json','utf8')).version,comparison:'exact decoded RGBA bytes for all 360 cells',changedCells:changed,pendingTargets:pending,unchangedOutsideTargets:unchanged,nonTargetChangedPixels:0,previousCompletedUnchanged:true,protectedFilesUnchanged:Object.keys(base.protected).length,completed:Object.fromEntries(['B','R','G'].map(f=>[f,details.filter(e=>e.field===f).length])),items:details};mkdirSync(out,{recursive:true});json(out+'/pixel-comparison.json',result);console.log({changed,pending,unchanged,nonTargetChangedPixels:0});return result;}
 function progress(){
  const plan=JSON.parse(readFileSync('artwork/treasure-final/plan.json','utf8')),mapNow=JSON.parse(readFileSync('src/treasure-sprite-map.json','utf8'));
- const records=plan.filter(e=>e.lot!=='prior').map(e=>({...e,status:mapNow.find(m=>m.treasureId===e.treasureId).available?'integrated':'pending'}));
+ const records=plan.filter(e=>e.lot!=='prior').map(e=>({...e,available:mapNow.find(m=>m.treasureId===e.treasureId).available,status:mapNow.find(m=>m.treasureId===e.treasureId).available?'integrated':'pending'}));
  json('artwork/treasure-final/progress.json',{version:JSON.parse(readFileSync('package.json','utf8')).version,updated:new Date().toISOString(),completed:records.filter(e=>e.status==='integrated').length,pending:records.filter(e=>e.status==='pending').length,lots:Object.fromEntries([4,5,6].map(n=>[n,{completed:records.filter(e=>e.lot===n&&e.status==='integrated').length,total:n===6?66:60}])),records});
  const lines=['# TREASURE ART FINAL — 作業進捗','','本資料は制作途中の再開用記録です。完了報告ではありません。','', '既存114点を保持し、第4〜6弾で186点を制作します。Version・仕様・セーブ・図鑑レイアウトは変更しません。','', '| ロット | 組み込み済み | 対象 |','|---|---:|---:|',...[4,5,6].map(n=>'| 第'+n+'弾 | '+records.filter(e=>e.lot===n&&e.status==='integrated').length+' | '+(n===6?66:60)+' |'),'','ID・正式名称・シート・座標・ロットの全件一覧: [TREASURE_ART_FINAL_TARGETS.md](TREASURE_ART_FINAL_TARGETS.md)','','個別の完了ID・残りID: [progress.json](../artwork/treasure-final/progress.json)','','iPhone Safari実機は未確認です。commit・push・公開は行っていません。',''];
  writeFileSync('docs/TREASURE_ART_FINAL.md',lines.join('\n'));
@@ -69,5 +70,5 @@ if(mode==='ingest'){
  const id=process.argv[4],file=process.argv[5],item=config.items.find(e=>e.id===id);assert.ok(item&&file);snapshot();
  const old=pixels().filter(e=>e.id!==id);const entry=fromSource(file,item);json(folder+'/pixels.json',[...old,entry].sort((a,b)=>expected.indexOf(a.id)-expected.indexOf(b.id)));
  item.sourceFile=path.basename(file);item.sourcePath=file;item.status='completed';json(folder+'/generation.json',config);
- apply(id[0]);exportSprites();progress();
-}else if(mode==='apply'){snapshot();apply();exportSprites();}else if(mode==='verify')verify();else if(mode==='snapshot')snapshot();else if(mode==='progress')progress();else throw Error('Use <4/5/6> ingest <id> <file>, apply, verify, snapshot');
+ apply(id[0]);exportSprites();progress();if(existsSync('artwork/treasure-final/current-job.json')){const job=JSON.parse(readFileSync('artwork/treasure-final/current-job.json','utf8'));if(job.wave===wave&&job.id===id)json('artwork/treasure-final/current-job.json',{...job,status:'integrated',sourcePath:file});}
+}else if(mode==='apply'){snapshot();apply();exportSprites();}else if(mode==='verify')verify();else if(mode==='snapshot')snapshot();else if(mode==='begin'){const id=process.argv[4];assert.ok(expected.includes(id));const rawDir='C:/Users/shish/.codex/generated_images/01a19278-145a-72a0-af53-b7b7db73a7ae';json('artwork/treasure-final/current-job.json',{wave,id,status:'generating',started:new Date().toISOString(),rawDir,beforeFiles:readdirSync(rawDir),prompt:config.items.find(e=>e.id===id).prompt});console.log('Recorded active generation',wave,id);}else if(mode==='progress')progress();else throw Error('Use <4/5/6> ingest <id> <file>, apply, verify, snapshot');

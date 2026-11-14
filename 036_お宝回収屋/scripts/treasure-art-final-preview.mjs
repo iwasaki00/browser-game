@@ -6,7 +6,7 @@ const require=createRequire(import.meta.url),{PNG}=require('../node_modules/play
 const field=process.argv[2]??'B',targets=[];
 const original=JSON.parse(readFileSync('artwork/treasure-final/map-before.json','utf8'));
 const mapping=JSON.parse(readFileSync('src/treasure-sprite-map.json','utf8'));
-const groups={B:[['B001','B007','B046','B047','B049','B051'],['B043','B055','B059','B064'],['B036','B079','B086','B088']],R:[['R016','R017'],['R004','R025','R026','R056'],['R028','R036','R073','R096']],G:[['G007','G098','G089','G090','G091','G100'],['G003','G049','G052'],['G016','G017','G018']]};
+const groups={B:[['B001','B007','B046','B047','B049','B051'],['B043','B055','B059','B064'],['B017','B023']],R:[['R016','R017'],['R004','R025','R026','R056'],['R028','R036']],G:[['G007','G098','G089','G090','G091','G100'],['G003','G049','G052'],['G016','G017','G018']]};
 const ids=groups[field].flat();
 const references=[];
 function tile(id,silhouette=false){

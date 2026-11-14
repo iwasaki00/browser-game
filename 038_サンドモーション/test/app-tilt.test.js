@@ -34,6 +34,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
   const elements = new Map();
   const get = id => { if (!elements.has(id)) elements.set(id, id === 'sand' ? new Canvas() : new Element()); return elements.get(id); };
   get('quality').value = 'standard'; get('radius').value = '12'; get('diagnostics').hidden = true;
+  get('return-duration').value = '1.5'; get('return-arc').value = '0.06';
   const arrows = ['-1,-1', '0,-1', '1,-1', '-1,0', '1,0', '-1,1', '0,1', '1,1'].map(value => {
     const button = new Element(); button.dataset.g = value; return button;
   });
@@ -45,7 +46,8 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
   Object.assign(window, { isSecureContext: true, DeviceOrientationEvent: { requestPermission: () => Promise.resolve('granted') },
     innerWidth: 375, innerHeight: 800, setInterval: () => 1, clearInterval() {} });
   const replacements = { document, window, screen: { orientation }, navigator: { userAgent: 'iPhone' },
-    performance: { now: () => now }, ResizeObserver: class { observe() {} }, requestAnimationFrame: fn => { frame = fn; } };
+    performance: { now: () => now }, ResizeObserver: class { observe() {} }, requestAnimationFrame: fn => { frame = fn; },
+    Image: class { constructor() { this.naturalWidth = this.naturalHeight = 100; } async decode() {} } };
   const originals = new Map(Object.keys(replacements).map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
   for (const [name, value] of Object.entries(replacements)) Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
   const sensor = (roll = 0) => {
@@ -81,7 +83,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     orientation.dispatchEvent(new Event('change'));
     const frozen = canvas.rendered.slice(), conversionCount = conversions;
     assert.equal(get('rotation-pause').hidden, false); assert.match(get('rotation-title').textContent, /縦に戻し/);
-    assert.equal(get('reset').disabled, true);
+    assert.equal(get('reset').disabled, false); // v0.3.0 reset is always available.
     pointer('pointerdown', 100, 100); pointer('pointermove', 150, 130); pointer('pointerup', 150, 130);
     for (let i = 0; i < 100; i++) { sensor(-35); tick(); }
     get('info').click();
@@ -117,6 +119,63 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     assert.notDeepEqual(canvas.rendered, highInitial);
     get('reset').click(); assert.deepEqual(canvas.rendered, highInitial);
     assert.equal(get('total').textContent, '39,440');
+
+    get('reassemble').click(); assert.equal(canvas.attributes['data-reassembling'], 'false');
+    for (const quality of ['standard', 'high']) {
+      get('quality').value = quality; get('quality').dispatchEvent(new Event('change'));
+      const original = canvas.rendered.slice(), count = get('total').textContent;
+      get('collapse').click(); for (let i = 0; i < 20; i++) tick();
+      get('reassemble').click(); tick(300);
+      assert.equal(canvas.attributes['data-reassembling'], 'true'); assert.equal(get('collapse').disabled, true);
+      const moving = canvas.rendered.slice(); assert.notDeepEqual(moving, original);
+      // Forced duplicate events must be ignored even without the disabled UI.
+      get('reassemble').dispatchEvent(new Event('click')); get('collapse').dispatchEvent(new Event('click'));
+      pointer('pointerdown', 125, 115); pointer('pointerup', 125, 115);
+      tick(1200); assert.equal(canvas.attributes['data-reassembling'], 'false');
+      assert.deepEqual(canvas.rendered, original); assert.equal(get('total').textContent, count);
+      assert.equal(get('counts').textContent, `${count} / 0`);
+      // Reset halfway through, then touch: a stale animation must not reset again.
+      get('collapse').click(); tick(200); get('reassemble').click(); tick(300); get('reset').click();
+      assert.deepEqual(canvas.rendered, original);
+      pointer('pointerdown', 125, 115); pointer('pointerup', 125, 115); tick(2000); get('info').click();
+      assert.notEqual(get('counts').textContent, `${count} / 0`);
+    }
+    get('reset').click(); get('collapse').click(); tick(200); get('reassemble').click(); tick(300);
+    get('quality').value = 'standard'; get('quality').dispatchEvent(new Event('change'));
+    const standardAgain = canvas.rendered.slice(); tick(2000);
+    assert.equal(canvas.attributes['data-reassembling'], 'false'); assert.deepEqual(canvas.rendered, standardAgain);
+    assert.equal(get('counts').textContent, '17,670 / 0');
+    get('collapse').click(); tick(200); get('reassemble').click(); tick(300); get('sample').click();
+    const sampleAgain = canvas.rendered.slice(); tick(2000); assert.deepEqual(canvas.rendered, sampleAgain);
+    // Actual async image-file handler must cancel and replace the old return.
+    get('collapse').click(); tick(200); get('reassemble').click(); tick(300);
+    get('image-file').files = [new File(['fixture'], 'new-picture.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change'));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(canvas.attributes['data-reassembling'], 'false');
+    assert.equal(get('source-name').textContent, 'new-picture.png'); assert.equal(get('total').textContent, '24,025');
+    const newImage = canvas.rendered.slice(); tick(2000); assert.deepEqual(canvas.rendered, newImage);
+    // A tilt-mode landscape freezes the same interpolated frame, not just physics.
+    orientation.type = 'portrait-primary'; orientation.angle = 0; orientation.dispatchEvent(new Event('change'));
+    get('sample').click(); get('tilt-start').click(); await Promise.resolve(); sensor(0);
+    get('collapse').click(); for (let i = 0; i < 20; i++) tick(); get('reassemble').click(); tick(350);
+    assert.equal(canvas.attributes['data-reassembling'], 'true');
+    get('info').click(); assert.equal(get('reassembly-progress').textContent, '23%');
+    orientation.type = 'landscape-primary'; orientation.angle = 90; orientation.dispatchEvent(new Event('change'));
+    const pausedReturn = canvas.rendered.slice();
+    for (let i = 0; i < 10; i++) { sensor(0); tick(100); }
+    assert.deepEqual(canvas.rendered, pausedReturn); assert.equal(get('reset').disabled, false);
+    orientation.type = 'portrait-primary'; orientation.angle = 0; orientation.dispatchEvent(new Event('change'));
+    for (let i = 0; i < 30; i++) sensor(0);
+    assert.equal(get('rotation-pause').hidden, true);
+    tick(20); assert.deepEqual(canvas.rendered, pausedReturn); // First resumed frame has zero dt.
+    tick(100); get('info').click(); assert.equal(get('reassembly-progress').textContent, '30%'); assert.notDeepEqual(canvas.rendered, pausedReturn);
+    tick(1050); assert.equal(canvas.attributes['data-reassembling'], 'false');
+    assert.deepEqual(canvas.rendered, sampleAgain); assert.equal(get('counts').textContent, '17,670 / 0');
+    get('collapse').click(); tick(200); get('reassemble').click(); tick(300);
+    orientation.type = 'landscape-primary'; orientation.angle = 90; orientation.dispatchEvent(new Event('change'));
+    get('reset').click(); assert.equal(canvas.attributes['data-reassembling'], 'false');
+    assert.deepEqual(canvas.rendered, sampleAgain); assert.equal(get('counts').textContent, '17,670 / 0');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

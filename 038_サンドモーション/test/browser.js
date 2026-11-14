@@ -76,6 +76,14 @@ document.getElementById('run').addEventListener('click', async event => {
     }
     doc.querySelector('[data-g="0,1"]').click();
   });
+  await test('復元アニメーションで初期画像に正確に戻る', async () => {
+    get('reset').click(); const canvas = get('sand'), initial = canvas.toDataURL();
+    get('collapse').click(); await delay(400); get('reassemble').click();
+    check(canvas.dataset.reassembling === 'true', '復元が開始しない');
+    await delay(1800);
+    check(canvas.dataset.reassembling === 'false', '復元が完了しない');
+    check(canvas.toDataURL() === initial && get('counts').textContent === '17,670 / 0', '復元結果が不一致');
+  });
   await test('リサイズしても粒子を初期化しない', async () => {
     get('collapse').click(); const before = total();
     iframe.style.width = '375px'; await delay(200);

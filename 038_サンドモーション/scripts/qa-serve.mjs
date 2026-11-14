@@ -12,20 +12,22 @@ const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, origin).pathname);
-    if (req.method === 'POST' && pathname === '/__qa/report') {
+    if (req.method === 'POST' && ['/__qa/report', '/__qa/reassembly'].includes(pathname)) {
       if (req.headers.origin !== origin || !req.headers['content-type']?.startsWith('application/json')) { res.writeHead(403); res.end(); return; }
       const chunks = []; let length = 0;
       for await (const chunk of req) { length += chunk.length; if (length > 4_000_000) throw new Error('QA payload too large'); chunks.push(chunk); }
       const { images, ...report } = JSON.parse(Buffer.concat(chunks).toString('utf8'));
-      await mkdir(out, { recursive: true });
-      for (const name of names) {
+      const directory = pathname === '/__qa/reassembly' ? path.join(root, 'docs', 'reassembly-v0.3.0') : out;
+      const imageNames = pathname === '/__qa/reassembly' ? ['mid-standard', 'mid-high', 'complete-standard', 'complete-high'] : names;
+      await mkdir(directory, { recursive: true });
+      for (const name of imageNames) {
         const uri = images?.[name];
         if (typeof uri === 'string' && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(uri))
-          await writeFile(path.join(out, `${name}.png`), Buffer.from(uri.split(',')[1], 'base64'));
+          await writeFile(path.join(directory, `${name}.png`), Buffer.from(uri.split(',')[1], 'base64'));
       }
-      await writeFile(path.join(out, 'browser-results.json'), JSON.stringify({ ...report,
+      await writeFile(path.join(directory, 'browser-results.json'), JSON.stringify({ ...report,
         host: { cpu: os.cpus()[0]?.model, platform: `${os.platform()} ${os.arch()}` } }, null, 2) + '\n');
-      console.log(`QA report saved: ${out}`); res.writeHead(200); res.end('saved'); return;
+      console.log(`QA report saved: ${directory}`); res.writeHead(200); res.end('saved'); return;
     }
     if (req.method !== 'GET') { res.writeHead(405); res.end(); return; }
     const file = path.resolve(root, '.' + (pathname === '/' ? '/test/quality.html' : pathname));

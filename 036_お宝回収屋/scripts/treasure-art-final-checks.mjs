@@ -1,0 +1,5 @@
+import fs from 'node:fs';import {spawnSync} from 'node:child_process';import assert from 'node:assert/strict';
+const mode=process.argv[2],commands={unit:{exe:'npm.cmd',args:['test'],shell:true,log:'unit-test.log'},build:{exe:'npm.cmd',args:['run','build'],shell:true,log:'build.log'},sprites:{exe:'npm.cmd',args:['run','test:sprites-browser'],shell:true,log:'legacy-browser-test.log'},production:{exe:process.execPath,args:['--import','tsx','scripts/treasure-art-final-production.mjs'],shell:false,log:'production-test.log'}};
+assert.ok(commands[mode]);assert.equal(JSON.parse(fs.readFileSync('src/treasure-sprite-map.json','utf8')).filter(e=>e.available).length,300,'Finish all dedicated sprites first');
+const job=commands[mode],r=spawnSync(job.exe,job.args,{shell:job.shell,encoding:'utf8',maxBuffer:32*1024*1024,env:{...process.env,SPRITE_ART_OUTPUT:'docs/treasure-art-final',BASE_URL:'http://127.0.0.1:5176/'}});
+const text=((r.stdout??'')+(r.stderr??'')).replaceAll('\r\n','\n');fs.writeFileSync('docs/treasure-art-final/'+job.log,text);console.log(mode,r.status===0?'PASS':'FAIL',text.slice(-700));if(r.error)console.error(r.error);process.exit(r.status??1);

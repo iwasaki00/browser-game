@@ -1,13 +1,14 @@
 {
   "name": "sand-motion",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node --test test/engine.test.js test/tilt.test.js test/app-tilt.test.js test/quality.test.js",
+    "test": "node --test test/engine.test.js test/tilt.test.js test/app-tilt.test.js test/quality.test.js test/reassembly.test.js",
     "benchmark": "node scripts/benchmark.mjs",
     "qa": "node scripts/qa-serve.mjs",
-    "reference": "node scripts/quality-reference.mjs"
+    "reference": "node scripts/quality-reference.mjs",
+    "benchmark:reassembly": "node scripts/benchmark-reassembly.mjs"
   }
 }

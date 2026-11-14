@@ -1,0 +1,19 @@
+{
+  "reason": "Original first attempt resembles the complete head of nippers. Redraw the new item as ONE isolated cutting half, leave existing114 unchanged.",
+  "prior": {
+    "id": "B068",
+    "field": "B",
+    "name": "ニッパーの片刃",
+    "description": "工具の片側だけが漂着したもの。",
+    "material": "iron",
+    "palette": "silver",
+    "maxBounds": [
+      28,
+      28
+    ],
+    "status": "completed",
+    "prompt": "Use case: stylized-concept. Asset type: ONE dedicated treasure inventory sprite for THE FINDERS retro pixel game. Newly draw this real object from scratch, not an SVG conversion or generic category symbol. Match a slightly detailed 16-bit RPG inventory set, recognizable real proportions, crisp square clusters and stepped edges, dark material-colored outlines, upper-left light and slightly overhead three-quarter view. Logical32x32 design enlarged in big pixels, limited8-14color palette, no antialiasing or blur. TRUE transparent background and through-holes. Center ONE specimen with2logical pixels margin, max28x28; keep long objects narrow. Prioritize silhouette, then material, then detail. No text, legible lettering, numbers, labels, scenery, cast shadow, border, glow, sparkles, dirt or mud. Subject: One HALF JAW of diagonal cutting nippers: stout wedge-shaped cutting beak, pivot hole, short curved broken tang; not complete pliers.",
+    "sourceFile": "exec-e8dd7c1e-158f-4e1c-bb5a-e64ea5b54519.png",
+    "sourcePath": "C:\\Users\\shish\\.codex\\generated_images\\01a19278-145a-72a0-af53-b7b7db73a7ae\\exec-e8dd7c1e-158f-4e1c-bb5a-e64ea5b54519.png"
+  }
+}

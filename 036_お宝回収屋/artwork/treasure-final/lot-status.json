@@ -1,0 +1,40 @@
+{
+  "4": {
+    "completed": 60,
+    "fields": {
+      "B": 20,
+      "R": 20,
+      "G": 20
+    },
+    "cumulative": 174,
+    "outsideRGBAExact": 300,
+    "browserCases": 8,
+    "visualReviewed": [
+      "B",
+      "R",
+      "G"
+    ],
+    "status": "verified"
+  },
+  "5": {
+    "completed": 60,
+    "fields": {
+      "B": 20,
+      "R": 20,
+      "G": 20
+    },
+    "cumulative": 234,
+    "outsideRGBAExact": 300,
+    "browserCases": 8,
+    "visualReviewed": [
+      "B",
+      "R",
+      "G"
+    ],
+    "status": "verified"
+  },
+  "6": {
+    "completed": 0,
+    "status": "pending"
+  }
+}

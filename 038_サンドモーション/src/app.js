@@ -3,6 +3,7 @@ import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
 import { canvasPoint } from './input.js';
 import { QUALITIES, simulationTiming } from './quality.js';
+import { Reassembly } from './reassembly.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('sand'), context = canvas.getContext('2d');
@@ -10,6 +11,7 @@ let engine, pixels, source = sampleImage(), sourceName = 'サンプル：山と�
 let pointer = null, loadToken = 0;
 let accumulator = 0, previousTime = 0, frames = 0, fpsStart = 0;
 let physicsTime = 0, measuredSteps = 0;
+let reassembly;
 const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
 
@@ -26,7 +28,9 @@ function loadSource() {
   if (engine) next.setGravity(engine.gravity.x, engine.gravity.y);
   // Gravity changes wake free grains; a freshly imported image stays fixed/asleep.
   next.active.fill(0);
+  endPointer(); reassembly?.cancel();
   engine = next;
+  reassembly = new Reassembly(engine);
   timing = simulationTiming(engine.width);
   canvas.width = engine.width; canvas.height = engine.height;
   pixels = context.createImageData(engine.width, engine.height);
@@ -35,7 +39,7 @@ function loadSource() {
   $('state-label').textContent = '触れると、ほどける。';
   accumulator = 0;
   pointer = null;
-  updateStats(); fitCanvas(); draw();
+  updateStats(); fitCanvas(); syncControls(); draw();
 }
 
 function fitCanvas() {
@@ -50,7 +54,9 @@ function fitCanvas() {
 function draw() {
   pixels.data.fill(0);
   for (let id = 0; id < engine.count; id++) {
-    const index = (engine.y[id] * engine.width + engine.x[id]) * 4, color = id * 4;
+    const x = reassembly.active ? Math.round(reassembly.drawX[id]) : engine.x[id];
+    const y = reassembly.active ? Math.round(reassembly.drawY[id]) : engine.y[id];
+    const index = (y * engine.width + x) * 4, color = id * 4;
     pixels.data[index] = engine.colors[color];
     pixels.data[index + 1] = engine.colors[color + 1];
     pixels.data[index + 2] = engine.colors[color + 2];
@@ -63,6 +69,7 @@ function updateStats() {
   $('total').textContent = engine.count.toLocaleString();
   $('counts').textContent = `${engine.fixedCount.toLocaleString()} / ${(engine.count - engine.fixedCount).toLocaleString()}`;
   $('gravity').textContent = `${engine.gravity.x}, ${engine.gravity.y}`;
+  $('reassembly-progress').textContent = reassembly?.active ? `${Math.round(reassembly.elapsedMs / reassembly.durationMs * 100)}%` : '待機';
 }
 
 function frame(time) {
@@ -72,13 +79,22 @@ function frame(time) {
     draw(); requestAnimationFrame(frame); return;
   }
   if (!previousTime) previousTime = time;
-  accumulator += Math.min(time - previousTime, MAX_FRAME_MS);
+  const delta = Math.max(0, time - previousTime);
   previousTime = time;
   let steps = 0;
-  while (accumulator >= timing.stepMs && steps < timing.maxSteps) {
-    const start = performance.now(); engine.step();
-    physicsTime += performance.now() - start; measuredSteps++;
-    accumulator -= timing.stepMs; steps++;
+  if (reassembly.active) {
+    accumulator = 0;
+    if (reassembly.advance(delta)) {
+      $('state-label').textContent = '元の景色に戻りました。触れて崩せます。';
+      updateStats(); syncControls();
+    }
+  } else {
+    accumulator += Math.min(delta, MAX_FRAME_MS);
+    while (accumulator >= timing.stepMs && steps < timing.maxSteps) {
+      const start = performance.now(); engine.step();
+      physicsTime += performance.now() - start; measuredSteps++;
+      accumulator -= timing.stepMs; steps++;
+    }
   }
   draw(); frames++;
   if (time - fpsStart >= 750) {
@@ -105,13 +121,13 @@ function brush(from, to, moving) {
 }
 
 canvas.addEventListener('pointerdown', event => {
-  if (tilt.paused || pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  if (tilt.paused || reassembly.active || pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
   event.preventDefault(); canvas.setPointerCapture(event.pointerId);
   const p = point(event); pointer = { ...p, id: event.pointerId };
   brush(p, p, false);
 });
 canvas.addEventListener('pointermove', event => {
-  if (tilt.paused || !pointer || event.pointerId !== pointer.id) return;
+  if (tilt.paused || reassembly.active || !pointer || event.pointerId !== pointer.id) return;
   event.preventDefault();
   const p = point(event); brush(pointer, p, true); pointer = { ...p, id: event.pointerId };
 });
@@ -120,12 +136,37 @@ for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.
 });
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 $('collapse').addEventListener('click', () => {
+  if (tilt.paused || reassembly.active) return;
   engine.releaseAll(); updateStats(); $('state-label').textContent = '景色が、砂に還る。';
 });
 $('reset').addEventListener('click', () => {
+  reassembly.cancel(); endPointer(); previousTime = 0;
   engine.reset(); accumulator = 0; updateStats(); draw();
+  syncControls();
   $('state-label').textContent = '触れると、ほどける。';
 });
+$('reassemble').addEventListener('click', () => {
+  if (tilt.paused || reassembly.active) return;
+  if (!reassembly.start({ durationMs: Number($('return-duration').value) * 1000,
+    arcStrength: Number($('return-arc').value) })) { message('画像は元の状態です。砂を崩してから戻せます。'); return; }
+  endPointer(); accumulator = 0; previousTime = performance.now();
+  frames = 0; fpsStart = previousTime; physicsTime = 0; measuredSteps = 0;
+  $('state-label').textContent = 'ひと粒ずつ、元の景色へ。';
+  syncControls(); updateStats();
+});
+function endPointer() {
+  if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
+  pointer = null;
+}
+function syncControls() {
+  const paused = tilt.paused, returning = reassembly?.active === true;
+  for (const id of ['sample', 'quality', 'image-file']) $(id).disabled = paused;
+  $('collapse').disabled = paused || returning;
+  $('reassemble').disabled = paused || returning;
+  $('reset').disabled = false;
+  $('return-duration').disabled = returning; $('return-arc').disabled = returning;
+  canvas.setAttribute('data-reassembling', String(returning));
+}
 const directionNames = { '0,1': '下', '0,-1': '上', '-1,0': '左', '1,0': '右',
   '-1,-1': '左上', '1,-1': '右上', '-1,1': '左下', '1,1': '右下' };
 function applyGravity(x, y) {
@@ -160,10 +201,9 @@ const tilt = new TiltController(environment, {
     $('rotation-pause').hidden = !paused;
     $('rotation-title').textContent = state.pauseReason === 'landscape' ? 'iPhoneを縦に戻してください' : '傾きが安定するのを待っています…';
     $('stage').classList.toggle('paused', paused);
-    for (const id of ['collapse', 'reset', 'sample', 'quality', 'image-file']) $(id).disabled = paused;
+    syncControls();
     // Cancel the old touch path. The next pointer uses the latest Canvas rect.
-    if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
-    pointer = null; previousTime = 0; accumulator = 0;
+    endPointer(); previousTime = 0; accumulator = 0;
     frames = 0; fpsStart = performance.now();
   }
 });
@@ -182,6 +222,9 @@ $('quality').addEventListener('change', () => {
   catch (error) { message(error.message, true); }
 });
 $('radius').addEventListener('input', () => { $('radius-output').value = $('radius').value; });
+for (const id of ['return-duration', 'return-arc']) $(id).addEventListener('input', () => {
+  $(`${id}-output`).value = id === 'return-duration' ? `${Number($(id).value).toFixed(1)}秒` : Number($(id).value).toFixed(2);
+});
 $('info').addEventListener('click', () => {
   const open = $('diagnostics').hidden;
   $('diagnostics').hidden = !open; $('info').setAttribute('aria-expanded', String(open)); updateStats();
@@ -192,6 +235,7 @@ $('sample').addEventListener('click', () => {
 });
 $('image-file').addEventListener('change', async event => {
   const file = event.target.files[0]; if (!file) return;
+  reassembly.cancel(); endPointer(); accumulator = 0; previousTime = 0; syncControls();
   const token = ++loadToken;
   message('画像を読み込んでいます…');
   try {
