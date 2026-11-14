@@ -1,6 +1,6 @@
 {
   "version": "0.4.1",
-  "at": "2026-11-14T17:48:58.936Z",
+  "at": "2026-11-14T17:58:58.907Z",
   "runtime": "v25.9.0",
   "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
   "platform": "win32 x64",
@@ -56,7 +56,7 @@
       "count": 37200,
       "browserFps": null,
       "reassemblyExact": true,
-      "physicsAndChecksCpuMs": 311.02,
+      "physicsAndChecksCpuMs": 231.37,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 37200
@@ -78,7 +78,7 @@
       "simulatedMidlineSeconds": 32.58,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 504.31,
+      "physicsAndChecksCpuMs": 485.81,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 4050
@@ -100,10 +100,32 @@
       "simulatedMidlineSeconds": 27.15,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 487.82,
+      "physicsAndChecksCpuMs": 427.03,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 4018
+    },
+    {
+      "mode": "hourglass",
+      "grid": "180x300",
+      "source": "680x1340 opaque",
+      "size": 100,
+      "layout": {
+        "x": 67,
+        "y": 24,
+        "width": 45,
+        "height": 89
+      },
+      "count": 4005,
+      "browserFps": null,
+      "flowSteps": 1621,
+      "simulatedMidlineSeconds": 27.02,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 469.35,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 4005
     },
     {
       "mode": "hourglass",
@@ -122,7 +144,7 @@
       "simulatedMidlineSeconds": 29.38,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 471.45,
+      "physicsAndChecksCpuMs": 522.17,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 3969
@@ -141,7 +163,7 @@
       "count": 83520,
       "browserFps": null,
       "reassemblyExact": true,
-      "physicsAndChecksCpuMs": 841.14,
+      "physicsAndChecksCpuMs": 884.28,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 83520
@@ -163,7 +185,7 @@
       "simulatedMidlineSeconds": 45.22,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 1957.64,
+      "physicsAndChecksCpuMs": 1898.16,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 9072
@@ -185,10 +207,32 @@
       "simulatedMidlineSeconds": 36.43,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 1943.75,
+      "physicsAndChecksCpuMs": 1691.43,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 8979
+    },
+    {
+      "mode": "hourglass",
+      "grid": "270x450",
+      "source": "680x1340 opaque",
+      "size": 100,
+      "layout": {
+        "x": 101,
+        "y": 36,
+        "width": 68,
+        "height": 134
+      },
+      "count": 9112,
+      "browserFps": null,
+      "flowSteps": 3182,
+      "simulatedMidlineSeconds": 35.36,
+      "remainingUpper": 0,
+      "flipDrained": true,
+      "physicsAndChecksCpuMs": 1383.01,
+      "colorAndCountExact": true,
+      "resetExact": true,
+      "fixedCountAfterReset": 9112
     },
     {
       "mode": "hourglass",
@@ -207,7 +251,7 @@
       "simulatedMidlineSeconds": 43.39,
       "remainingUpper": 0,
       "flipDrained": true,
-      "physicsAndChecksCpuMs": 2405.55,
+      "physicsAndChecksCpuMs": 1572.75,
       "colorAndCountExact": true,
       "resetExact": true,
       "fixedCountAfterReset": 9025

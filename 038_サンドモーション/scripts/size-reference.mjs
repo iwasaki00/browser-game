@@ -23,7 +23,7 @@ for (const [width, height] of [[180, 300], [270, 450]]) {
     previous: old, current, heightRatio: +(current.height / old.height).toFixed(4),
     note: 'Grid dimensions; also CSS px when canvas displays at its native grid dimensions. Not iPhone measurements.' });
   for (const [mode, iw, ih, size] of [['free', 620, 960, 80], ['hourglass', 750, 540, 100],
-    ['hourglass', 600, 1000, 100], ['hourglass', 1000, 1000, 100]]) {
+    ['hourglass', 600, 1000, 100], ['hourglass', 680, 1340, 100], ['hourglass', 1000, 1000, 100]]) {
     const layout = sizePlacement({ width: iw, height: ih }, mode, width, height, size);
     const rgba = new Uint8ClampedArray(layout.width * layout.height * 4);
     for (let i = 0; i < rgba.length; i += 4) rgba.set([80, 140, 180, 255], i);

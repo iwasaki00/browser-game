@@ -40,7 +40,7 @@ test('resampling retains alpha; maximum dense free image is real additional grai
 
 for (const [width, height] of [[180, 300], [270, 450]]) {
   test(`${width}: maximum opaque hourglass sizes drain upright and after flipping`, () => {
-    for (const [iw, ih] of [[750, 540], [600, 1000], [1000, 1000]]) {
+    for (const [iw, ih] of [[750, 540], [600, 1000], [680, 1340], [1000, 1000]]) {
       const p = sizePlacement({ width: iw, height: ih }, 'hourglass', width, height, 100);
       const grains = particlesFromRGBA(new Uint8ClampedArray(p.width * p.height * 4).fill(255), p.width, p.height, p.x, p.y);
       const e = new HourglassEngine(width, height); e.load(grains);
