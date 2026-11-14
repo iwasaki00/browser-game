@@ -1,16 +1,16 @@
 {
   "version": "1.0.0-rc.1",
   "comparison": "exact decoded RGBA bytes for all 360 cells",
-  "changedCells": 15,
-  "pendingTargets": 51,
+  "changedCells": 45,
+  "pendingTargets": 21,
   "unchangedOutsideTargets": 294,
   "nonTargetChangedPixels": 0,
   "previousCompletedUnchanged": true,
   "protectedFilesUnchanged": 91,
   "completed": {
-    "B": 15,
-    "R": 0,
-    "G": 0
+    "B": 22,
+    "R": 1,
+    "G": 22
   },
   "items": [
     {
@@ -461,6 +461,905 @@
       "rgbaSHA256": "ca39c952b17c712eccf76493e265dc97f559c80c1594a200cd5d164aebcd02aa",
       "opaquePixels": 265,
       "colors": 7
+    },
+    {
+      "treasureId": "B094",
+      "sheet": "beach_valuable_sheet",
+      "col": 1,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "銀製コンパクトの蓋",
+      "description": "装飾を施した薄いケース部品。",
+      "material": "silver",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 12,
+        "B-D": 10
+      },
+      "earlyScore": 0.034,
+      "rgbaSHA256": "64ae714bd3ad2431ddd7dc621a0b317e0a38474c1444c616415c48472d9cb4af",
+      "opaquePixels": 585,
+      "colors": 11
+    },
+    {
+      "treasureId": "B095",
+      "sheet": "beach_valuable_sheet",
+      "col": 2,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "金製ネクタイピン",
+      "description": "先端が細い貴金属の依頼品。",
+      "material": "gold",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 8,
+        "B-D": 13
+      },
+      "earlyScore": 0.029,
+      "rgbaSHA256": "f8c964f9d76507058a8a48225a14abf4d2a848cc10bad3e4ee638fd151f75fce",
+      "opaquePixels": 145,
+      "colors": 12
+    },
+    {
+      "treasureId": "B096",
+      "sheet": "beach_valuable_sheet",
+      "col": 3,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "古い測量器の目盛板",
+      "description": "深層の固い砂から出る精密な板。",
+      "material": "metal",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 13,
+        "B-D": 16
+      },
+      "earlyScore": 0.042,
+      "rgbaSHA256": "62561948f6555698c9186e5318f83bb76be63ff229f45aae0551f185e8316370",
+      "opaquePixels": 380,
+      "colors": 7
+    },
+    {
+      "treasureId": "B097",
+      "sheet": "beach_valuable_sheet",
+      "col": 4,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "金細工のペンダント枠",
+      "description": "変形しやすい高価値の依頼品。",
+      "material": "metal",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 11,
+        "B-D": 11
+      },
+      "earlyScore": 0.033,
+      "rgbaSHA256": "8f76b57d082c1130eff9f8610dab1c638790f23ec897c4d8389352b1470825c7",
+      "opaquePixels": 142,
+      "colors": 11
+    },
+    {
+      "treasureId": "B098",
+      "sheet": "beach_valuable_sheet",
+      "col": 5,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "船用クロノメーターの歯車",
+      "description": "厚い砂層にある精密機構の一部。",
+      "material": "metal",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 9,
+        "B-D": 4
+      },
+      "earlyScore": 0.022,
+      "rgbaSHA256": "ab0f4de1e2f46811ba9ef046075ad41f70e731cc33f0f4e7cb7df342f9dc53b5",
+      "opaquePixels": 403,
+      "colors": 9
+    },
+    {
+      "treasureId": "B099",
+      "sheet": "beach_valuable_sheet",
+      "col": 6,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "SR",
+      "available": true,
+      "name": "銘入りの銀製ケース",
+      "description": "持主照会を行う契約回収品。",
+      "material": "silver",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 7,
+        "B-D": 13
+      },
+      "earlyScore": 0.027,
+      "rgbaSHA256": "0a9dc6cf30e25ab69a9ac89766ae997d66b8b0db72abd9e92e4b51be0be14886",
+      "opaquePixels": 306,
+      "colors": 10
+    },
+    {
+      "treasureId": "B100",
+      "sheet": "beach_valuable_sheet",
+      "col": 7,
+      "row": 4,
+      "size": 32,
+      "field": "B",
+      "category": "精密・契約品",
+      "rarity": "J",
+      "available": true,
+      "name": "金側の懐中時計",
+      "description": "依頼契約に基づいて引き渡す特別な回収品。",
+      "material": "gold",
+      "locations": [
+        "B-C",
+        "B-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "B-A": 0,
+        "B-B": 0,
+        "B-C": 0,
+        "B-D": 0
+      },
+      "earlyScore": 0,
+      "rgbaSHA256": "1cd8c98125d1c347aba7941dc1b3eea9ce89959ac29c3b1ffa1f87a99202fbe1",
+      "opaquePixels": 417,
+      "colors": 12
+    },
+    {
+      "treasureId": "G041",
+      "sheet": "gold_mineral_sheet",
+      "col": 4,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "ジルコンの粒",
+      "description": "小さくても比重の大きい鉱物粒。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 31,
+        "G-D": 63
+      },
+      "earlyScore": 0.125,
+      "rgbaSHA256": "5c830217a7827360751e5318eb69e9bade664ac92259e53842139eb10b2ba0e3",
+      "opaquePixels": 318,
+      "colors": 10
+    },
+    {
+      "treasureId": "G042",
+      "sheet": "gold_mineral_sheet",
+      "col": 5,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "モナズ石の粒",
+      "description": "重鉱物砂に少量混じるリン酸塩鉱物。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 34,
+        "G-D": 57
+      },
+      "earlyScore": 0.125,
+      "rgbaSHA256": "8f6e538d1e4ef3c11fec7d7d6ad0a56910a42f0d39573c515d02664124d29240",
+      "opaquePixels": 468,
+      "colors": 9
+    },
+    {
+      "treasureId": "G043",
+      "sheet": "gold_mineral_sheet",
+      "col": 6,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "灰重石の小片",
+      "description": "タングステンを含む比重の高い鉱物。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 43,
+        "G-D": 63
+      },
+      "earlyScore": 0.149,
+      "rgbaSHA256": "8e65b94358ec1770ae0f64c420757d4e0b9bb13aa83847345775db975eba76db",
+      "opaquePixels": 393,
+      "colors": 11
+    },
+    {
+      "treasureId": "G045",
+      "sheet": "gold_mineral_sheet",
+      "col": 0,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "天青石の小結晶",
+      "description": "硫酸塩鉱物の結晶片。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 32,
+        "G-D": 69
+      },
+      "earlyScore": 0.133,
+      "rgbaSHA256": "1ff0b23d5c81e640e982976244bf463d715e7b1965cf966751518bbe9d1130f9",
+      "opaquePixels": 327,
+      "colors": 9
+    },
+    {
+      "treasureId": "G047",
+      "sheet": "gold_mineral_sheet",
+      "col": 2,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "菱マンガン鉱の小片",
+      "description": "マンガンを含む炭酸塩鉱物。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 49,
+        "G-D": 42
+      },
+      "earlyScore": 0.14,
+      "rgbaSHA256": "c5aeae8e3995d0f5d36f576cd1520ad64d4b4895ecc0b9acc2fd67a9d9ccafb3",
+      "opaquePixels": 438,
+      "colors": 7
+    },
+    {
+      "treasureId": "G048",
+      "sheet": "gold_mineral_sheet",
+      "col": 3,
+      "row": 3,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "ロードナイトの転石片",
+      "description": "マンガンを含むケイ酸塩鉱物。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 47,
+        "G-D": 60
+      },
+      "earlyScore": 0.154,
+      "rgbaSHA256": "78270aa89c8813ae8605644040fa81fca1f3a022a1be42e776d525ba0b3d8ead",
+      "opaquePixels": 467,
+      "colors": 8
+    },
+    {
+      "treasureId": "G055",
+      "sheet": "gold_mineral_sheet",
+      "col": 2,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "藍銅鉱の付着片",
+      "description": "母岩に結晶が付いた銅鉱物標本。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 38,
+        "G-D": 46
+      },
+      "earlyScore": 0.122,
+      "rgbaSHA256": "2cfbd7a624aa5dd6f67fbe811f68bf3a6a06b735849a8ee666ae09a5c01e1254",
+      "opaquePixels": 464,
+      "colors": 10
+    },
+    {
+      "treasureId": "G056",
+      "sheet": "gold_mineral_sheet",
+      "col": 3,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "自然銅の粒",
+      "description": "金属銅が自然にできた粒。磁石には付かない。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 38,
+        "G-D": 58
+      },
+      "earlyScore": 0.134,
+      "rgbaSHA256": "0b130f62551fcf86d5b7e8b4f6a4a132ffb6cd952cf25ff1565fbb58e52aaeda",
+      "opaquePixels": 399,
+      "colors": 8
+    },
+    {
+      "treasureId": "G057",
+      "sheet": "gold_mineral_sheet",
+      "col": 4,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "SR",
+      "available": true,
+      "name": "自然銀の付着片",
+      "description": "母岩に銀が付いた珍しい標本。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 28,
+        "G-D": 22
+      },
+      "earlyScore": 0.078,
+      "rgbaSHA256": "75715014fddf17ad16b1f8958516b71e55b304418e28ed5b9131115031a4d0db",
+      "opaquePixels": 358,
+      "colors": 11
+    },
+    {
+      "treasureId": "G058",
+      "sheet": "gold_mineral_sheet",
+      "col": 5,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "コランダムの粒",
+      "description": "硬い酸化アルミニウムの鉱物粒。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 52,
+        "G-D": 58
+      },
+      "earlyScore": 0.162,
+      "rgbaSHA256": "ad2018a2da4a11b506e8562b83c9ee1d9d1a4cc7d83fd37250730238f69f0868",
+      "opaquePixels": 516,
+      "colors": 8
+    },
+    {
+      "treasureId": "G059",
+      "sheet": "gold_mineral_sheet",
+      "col": 6,
+      "row": 4,
+      "size": 32,
+      "field": "G",
+      "category": "鉱物",
+      "rarity": "R",
+      "available": true,
+      "name": "スピネルの粒",
+      "description": "八面体を作ることのある硬い鉱物。",
+      "material": "mineral",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 49,
+        "G-D": 53
+      },
+      "earlyScore": 0.151,
+      "rgbaSHA256": "e4c830047509c441ed3551487bccb8aed025cb6dd29ed14b1b22ab7de03c3346",
+      "opaquePixels": 374,
+      "colors": 9
+    },
+    {
+      "treasureId": "G085",
+      "sheet": "gold_rare_sheet",
+      "col": 6,
+      "row": 0,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "R",
+      "available": true,
+      "name": "石英脈付き自然金",
+      "description": "石英の脈に金が付いた産状を保つ。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 32,
+        "G-D": 80
+      },
+      "earlyScore": 0.144,
+      "rgbaSHA256": "a06c4fa162f3cc50692d7c0a3507b4e342e838f07b88a2097ec1f7058a99692f",
+      "opaquePixels": 544,
+      "colors": 11
+    },
+    {
+      "treasureId": "G086",
+      "sheet": "gold_rare_sheet",
+      "col": 7,
+      "row": 0,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "SR",
+      "available": true,
+      "name": "石英空洞の自然金",
+      "description": "母岩の小さな空洞に金が見える。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 25,
+        "G-D": 31
+      },
+      "earlyScore": 0.081,
+      "rgbaSHA256": "f82aa6c9a60a40bfee33292dac68a86b8fc4e32183cfd536571f23afd549b790",
+      "opaquePixels": 503,
+      "colors": 11
+    },
+    {
+      "treasureId": "G087",
+      "sheet": "gold_rare_sheet",
+      "col": 0,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "R",
+      "available": true,
+      "name": "鉄酸化物に付着した自然金",
+      "description": "風化した母岩に金が残る標本。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 50,
+        "G-D": 43
+      },
+      "earlyScore": 0.143,
+      "rgbaSHA256": "fad216b5c742a7bad268b0b7f7ae0e6785de9a861a29a74bc305c525e7d241af",
+      "opaquePixels": 494,
+      "colors": 6
+    },
+    {
+      "treasureId": "G090",
+      "sheet": "gold_rare_sheet",
+      "col": 3,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "R",
+      "available": true,
+      "name": "折り畳まれた砂金",
+      "description": "変形して層状になった金の粒。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 38,
+        "G-D": 62
+      },
+      "earlyScore": 0.138,
+      "rgbaSHA256": "03e14395615cce848010c2b7d2b6c59759469e344b003b351e230f3cd4874578",
+      "opaquePixels": 317,
+      "colors": 10
+    },
+    {
+      "treasureId": "G092",
+      "sheet": "gold_rare_sheet",
+      "col": 5,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "SR",
+      "available": true,
+      "name": "多孔質自然金",
+      "description": "小孔を持つ複雑な形の標本。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 23,
+        "G-D": 23
+      },
+      "earlyScore": 0.069,
+      "rgbaSHA256": "1ba8eb39b0e1774b7eed6c2c248c935f83deb3b630b4ebb770654926c08869fc",
+      "opaquePixels": 429,
+      "colors": 11
+    },
+    {
+      "treasureId": "G093",
+      "sheet": "gold_rare_sheet",
+      "col": 6,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "SR",
+      "available": true,
+      "name": "樹枝状自然金",
+      "description": "枝分かれした成長形を残す標本。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 29,
+        "G-D": 37
+      },
+      "earlyScore": 0.095,
+      "rgbaSHA256": "7c76da922b6d334dd485b2d7594dc58d26646acb1129c7231f7a272a92de80b6",
+      "opaquePixels": 199,
+      "colors": 8
+    },
+    {
+      "treasureId": "G094",
+      "sheet": "gold_rare_sheet",
+      "col": 7,
+      "row": 1,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "SR",
+      "available": true,
+      "name": "線状自然金",
+      "description": "細く伸びた金属の形を残す。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 22,
+        "G-D": 26
+      },
+      "earlyScore": 0.07,
+      "rgbaSHA256": "b49eb7990e80c01980cc4385a8b6c9a912e1d26c4f46e26fe2e1f914730b970b",
+      "opaquePixels": 107,
+      "colors": 9
+    },
+    {
+      "treasureId": "G095",
+      "sheet": "gold_rare_sheet",
+      "col": 0,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "SR",
+      "available": true,
+      "name": "結晶面のある自然金",
+      "description": "結晶の平面が見える珍しい標本。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 24,
+        "G-D": 26
+      },
+      "earlyScore": 0.074,
+      "rgbaSHA256": "9023ba1940590c7349046749df6f32cde526289f8483b054b06e034a729943b0",
+      "opaquePixels": 458,
+      "colors": 11
+    },
+    {
+      "treasureId": "G096",
+      "sheet": "gold_rare_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "R",
+      "available": true,
+      "name": "薄膜状自然金",
+      "description": "母岩に薄く付着した金。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 46,
+        "G-D": 59
+      },
+      "earlyScore": 0.151,
+      "rgbaSHA256": "83d309ae0542b7dd8dd2c44a01b9fc0a9366b33892a5436e5280c76975d2b282",
+      "opaquePixels": 262,
+      "colors": 10
+    },
+    {
+      "treasureId": "G099",
+      "sheet": "gold_rare_sheet",
+      "col": 4,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "R",
+      "available": true,
+      "name": "石英粒に付いた微小金",
+      "description": "小さな母岩から慎重に回収する。",
+      "material": "gold",
+      "locations": [
+        "G-C",
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 42,
+        "G-D": 57
+      },
+      "earlyScore": 0.141,
+      "rgbaSHA256": "eb6546d76514c0a1ce46f45237434e539ef9388e98098949c8785617f424d584",
+      "opaquePixels": 517,
+      "colors": 9
+    },
+    {
+      "treasureId": "G100",
+      "sheet": "gold_rare_sheet",
+      "col": 5,
+      "row": 2,
+      "size": 32,
+      "field": "G",
+      "category": "天然金",
+      "rarity": "J",
+      "available": true,
+      "name": "扁平な天然金ナゲット",
+      "description": "大きく平たい特別採取品。",
+      "material": "gold",
+      "locations": [
+        "G-D"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "G-A": 0,
+        "G-B": 0,
+        "G-C": 0,
+        "G-D": 0
+      },
+      "earlyScore": 0,
+      "rgbaSHA256": "d1640d806aca7ef704d1e87452350f09e2de78ab970bf57e0db72f1d3bc84c45",
+      "opaquePixels": 335,
+      "colors": 8
+    },
+    {
+      "treasureId": "R039",
+      "sheet": "river_metal_sheet",
+      "col": 1,
+      "row": 2,
+      "size": 32,
+      "field": "R",
+      "category": "自転車部品",
+      "rarity": "U",
+      "available": true,
+      "name": "自転車のクランク",
+      "description": "ペダルの力を伝える腕。",
+      "material": "iron",
+      "locations": [
+        "R-B",
+        "R-C"
+      ],
+      "status": "pending",
+      "lot": 6,
+      "appearanceCounts": {
+        "R-A": 0,
+        "R-B": 35,
+        "R-C": 42,
+        "R-D": 0
+      },
+      "earlyScore": 0.224,
+      "rgbaSHA256": "b6fa687c780c34467c89121de677f9c838ed100245893a122e5d4ed4098adf18",
+      "opaquePixels": 197,
+      "colors": 9
     }
   ]
 }

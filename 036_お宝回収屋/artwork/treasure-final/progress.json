@@ -1,8 +1,8 @@
 {
   "version": "1.0.0-rc.1",
-  "updated": "2026-11-14T10:47:55.369Z",
-  "completed": 135,
-  "pending": 51,
+  "updated": "2026-11-14T11:03:36.784Z",
+  "completed": 165,
+  "pending": 21,
   "lots": {
     "4": {
       "completed": 60,
@@ -13,7 +13,7 @@
       "total": 60
     },
     "6": {
-      "completed": 15,
+      "completed": 45,
       "total": 66
     }
   },
@@ -1538,7 +1538,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "銀製コンパクトの蓋",
       "description": "装飾を施した薄いケース部品。",
       "material": "silver",
@@ -1546,7 +1546,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1565,7 +1565,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "金製ネクタイピン",
       "description": "先端が細い貴金属の依頼品。",
       "material": "gold",
@@ -1573,7 +1573,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1592,7 +1592,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "古い測量器の目盛板",
       "description": "深層の固い砂から出る精密な板。",
       "material": "metal",
@@ -1600,7 +1600,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1619,7 +1619,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "金細工のペンダント枠",
       "description": "変形しやすい高価値の依頼品。",
       "material": "metal",
@@ -1627,7 +1627,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1646,7 +1646,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "船用クロノメーターの歯車",
       "description": "厚い砂層にある精密機構の一部。",
       "material": "metal",
@@ -1654,7 +1654,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1673,7 +1673,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "銘入りの銀製ケース",
       "description": "持主照会を行う契約回収品。",
       "material": "silver",
@@ -1681,7 +1681,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -1700,7 +1700,7 @@
       "field": "B",
       "category": "精密・契約品",
       "rarity": "J",
-      "available": false,
+      "available": true,
       "name": "金側の懐中時計",
       "description": "依頼契約に基づいて引き渡す特別な回収品。",
       "material": "gold",
@@ -1708,7 +1708,7 @@
         "B-C",
         "B-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "B-A": 0,
@@ -2240,7 +2240,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "ジルコンの粒",
       "description": "小さくても比重の大きい鉱物粒。",
       "material": "mineral",
@@ -2248,7 +2248,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2267,7 +2267,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "モナズ石の粒",
       "description": "重鉱物砂に少量混じるリン酸塩鉱物。",
       "material": "mineral",
@@ -2275,7 +2275,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2294,7 +2294,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "灰重石の小片",
       "description": "タングステンを含む比重の高い鉱物。",
       "material": "mineral",
@@ -2302,7 +2302,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2348,7 +2348,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "天青石の小結晶",
       "description": "硫酸塩鉱物の結晶片。",
       "material": "mineral",
@@ -2356,7 +2356,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2402,7 +2402,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "菱マンガン鉱の小片",
       "description": "マンガンを含む炭酸塩鉱物。",
       "material": "mineral",
@@ -2410,7 +2410,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2429,7 +2429,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "ロードナイトの転石片",
       "description": "マンガンを含むケイ酸塩鉱物。",
       "material": "mineral",
@@ -2437,7 +2437,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2591,7 +2591,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "藍銅鉱の付着片",
       "description": "母岩に結晶が付いた銅鉱物標本。",
       "material": "mineral",
@@ -2599,7 +2599,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2618,7 +2618,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "自然銅の粒",
       "description": "金属銅が自然にできた粒。磁石には付かない。",
       "material": "mineral",
@@ -2626,7 +2626,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2645,7 +2645,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "自然銀の付着片",
       "description": "母岩に銀が付いた珍しい標本。",
       "material": "mineral",
@@ -2653,7 +2653,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2672,7 +2672,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "コランダムの粒",
       "description": "硬い酸化アルミニウムの鉱物粒。",
       "material": "mineral",
@@ -2680,7 +2680,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -2699,7 +2699,7 @@
       "field": "G",
       "category": "鉱物",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "スピネルの粒",
       "description": "八面体を作ることのある硬い鉱物。",
       "material": "mineral",
@@ -2707,7 +2707,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3034,7 +3034,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "石英脈付き自然金",
       "description": "石英の脈に金が付いた産状を保つ。",
       "material": "gold",
@@ -3042,7 +3042,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3061,7 +3061,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "石英空洞の自然金",
       "description": "母岩の小さな空洞に金が見える。",
       "material": "gold",
@@ -3069,7 +3069,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3088,7 +3088,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "鉄酸化物に付着した自然金",
       "description": "風化した母岩に金が残る標本。",
       "material": "gold",
@@ -3096,7 +3096,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3142,7 +3142,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "折り畳まれた砂金",
       "description": "変形して層状になった金の粒。",
       "material": "gold",
@@ -3150,7 +3150,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3196,7 +3196,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "多孔質自然金",
       "description": "小孔を持つ複雑な形の標本。",
       "material": "gold",
@@ -3204,7 +3204,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3223,7 +3223,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "樹枝状自然金",
       "description": "枝分かれした成長形を残す標本。",
       "material": "gold",
@@ -3231,7 +3231,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3250,7 +3250,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "線状自然金",
       "description": "細く伸びた金属の形を残す。",
       "material": "gold",
@@ -3258,7 +3258,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3277,7 +3277,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "SR",
-      "available": false,
+      "available": true,
       "name": "結晶面のある自然金",
       "description": "結晶の平面が見える珍しい標本。",
       "material": "gold",
@@ -3285,7 +3285,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3304,7 +3304,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "薄膜状自然金",
       "description": "母岩に薄く付着した金。",
       "material": "gold",
@@ -3312,7 +3312,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3358,7 +3358,7 @@
       "field": "G",
       "category": "天然金",
       "rarity": "R",
-      "available": false,
+      "available": true,
       "name": "石英粒に付いた微小金",
       "description": "小さな母岩から慎重に回収する。",
       "material": "gold",
@@ -3366,7 +3366,7 @@
         "G-C",
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3385,14 +3385,14 @@
       "field": "G",
       "category": "天然金",
       "rarity": "J",
-      "available": false,
+      "available": true,
       "name": "扁平な天然金ナゲット",
       "description": "大きく平たい特別採取品。",
       "material": "gold",
       "locations": [
         "G-D"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "G-A": 0,
@@ -3522,7 +3522,7 @@
       "field": "R",
       "category": "自転車部品",
       "rarity": "U",
-      "available": false,
+      "available": true,
       "name": "自転車のクランク",
       "description": "ペダルの力を伝える腕。",
       "material": "iron",
@@ -3530,7 +3530,7 @@
         "R-B",
         "R-C"
       ],
-      "status": "pending",
+      "status": "integrated",
       "lot": 6,
       "appearanceCounts": {
         "R-A": 0,

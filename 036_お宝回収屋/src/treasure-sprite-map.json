@@ -1031,7 +1031,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B095",
@@ -1042,7 +1042,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B096",
@@ -1053,7 +1053,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B097",
@@ -1064,7 +1064,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B098",
@@ -1075,7 +1075,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B099",
@@ -1086,7 +1086,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "B100",
@@ -1097,7 +1097,7 @@
     "field": "B",
     "category": "精密・契約品",
     "rarity": "J",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G001",
@@ -1548,7 +1548,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G042",
@@ -1559,7 +1559,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G043",
@@ -1570,7 +1570,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G044",
@@ -1592,7 +1592,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G046",
@@ -1614,7 +1614,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G048",
@@ -1625,7 +1625,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G049",
@@ -1702,7 +1702,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G056",
@@ -1713,7 +1713,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G057",
@@ -1724,7 +1724,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G058",
@@ -1735,7 +1735,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G059",
@@ -1746,7 +1746,7 @@
     "field": "G",
     "category": "鉱物",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G060",
@@ -2032,7 +2032,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G086",
@@ -2043,7 +2043,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G087",
@@ -2054,7 +2054,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G088",
@@ -2087,7 +2087,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G091",
@@ -2109,7 +2109,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G093",
@@ -2120,7 +2120,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G094",
@@ -2131,7 +2131,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G095",
@@ -2142,7 +2142,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "SR",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G096",
@@ -2153,7 +2153,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G097",
@@ -2186,7 +2186,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "R",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "G100",
@@ -2197,7 +2197,7 @@
     "field": "G",
     "category": "天然金",
     "rarity": "J",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R001",
@@ -2626,7 +2626,7 @@
     "field": "R",
     "category": "自転車部品",
     "rarity": "U",
-    "available": false
+    "available": true
   },
   {
     "treasureId": "R040",

@@ -1,3 +1,4 @@
+import { HourglassEngine, hourglassPlacement } from './hourglass.js';
 import { SandEngine } from './engine.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
@@ -11,7 +12,8 @@ let engine, pixels, source = sampleImage(), sourceName = 'サンプル：山と�
 let pointer = null, loadToken = 0;
 let accumulator = 0, previousTime = 0, frames = 0, fpsStart = 0;
 let physicsTime = 0, measuredSteps = 0;
-let reassembly;
+let reassembly, modes, mode = 'free', quality = 'standard';
+const sensorGravity = { x: 0, y: 1 };
 const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
 
@@ -20,25 +22,39 @@ function message(text, error = false) {
   $('message').classList.toggle('error', error);
 }
 
-function loadSource() {
-  const { width, height } = QUALITIES[$('quality').value] || QUALITIES.standard;
-  const next = new SandEngine(width, height);
-  next.load(convertImage(source, next.width, next.height));
-  // Keep the selected gravity across image/quality changes.
-  if (engine) next.setGravity(engine.gravity.x, engine.gravity.y);
-  // Gravity changes wake free grains; a freshly imported image stays fixed/asleep.
-  next.active.fill(0);
-  endPointer(); reassembly?.cancel();
-  engine = next;
-  reassembly = new Reassembly(engine);
+function loadSource(nextSource = source, nextName = sourceName) {
+  const nextQuality = $('quality').value || 'standard';
+  const { width, height } = QUALITIES[nextQuality] || QUALITIES.standard;
+  const free = new SandEngine(width, height), hourglass = new HourglassEngine(width, height);
+  free.load(convertImage(nextSource, width, height));
+  hourglass.load(convertImage(nextSource, width, height, hourglassPlacement(
+    nextSource.naturalWidth || nextSource.width, nextSource.naturalHeight || nextSource.height, width, height)));
+  if (!free.count || !hourglass.count) throw new Error('不透明なピクセルがありません。別の画像を選択してください。');
+  if (modes) {
+    free.setGravity(modes.free.engine.gravity.x, modes.free.engine.gravity.y);
+    hourglass.setGravity(modes.hourglass.engine.gravity.x, 1);
+  }
+  free.active.fill(0); hourglass.active.fill(0);
+  // Commit only after BOTH imports succeed; cancelled/failed loads keep both states.
+  endPointer(); modes?.free.reassembly.cancel();
+  modes = { free: { engine: free, reassembly: new Reassembly(free) },
+    hourglass: { engine: hourglass, reassembly: new Reassembly(hourglass) } };
+  source = nextSource; sourceName = nextName; quality = nextQuality;
+  $('source-name').textContent = sourceName;
+  activateMode(mode);
+}
+
+function activateMode(nextMode) {
+  endPointer(); mode = nextMode;
+  ({ engine, reassembly } = modes[mode]);
   timing = simulationTiming(engine.width);
   canvas.width = engine.width; canvas.height = engine.height;
   pixels = context.createImageData(engine.width, engine.height);
-  $('source-name').textContent = sourceName;
-  $('grid-label').textContent = $('grid').textContent = `${engine.width} × ${engine.height}`;
-  $('state-label').textContent = '触れると、ほどける。';
-  accumulator = 0;
-  pointer = null;
+  $('grid-label').textContent = $('grid').textContent = engine.width + ' × ' + engine.height;
+  $('state-label').textContent = mode === 'free' ? '触れると、ほどける。' : '砂を流して、色の積もり方を見てみよう。';
+  accumulator = 0; previousTime = 0; frames = 0; fpsStart = performance.now();
+  physicsTime = 0; measuredSteps = 0;
+  if (tilt.mode === 'tilt') applyGravity(sensorGravity.x, sensorGravity.y);
   updateStats(); fitCanvas(); syncControls(); draw();
 }
 
@@ -53,6 +69,12 @@ function fitCanvas() {
 
 function draw() {
   pixels.data.fill(0);
+  if (mode === 'hourglass') for (let cell = 0; cell < engine.grid.length; cell++) {
+    if (!engine.container.walls[cell]) continue;
+    const i = cell * 4, edge = engine.container.outline[cell];
+    pixels.data[i] = edge ? 129 : 20; pixels.data[i + 1] = edge ? 157 : 25;
+    pixels.data[i + 2] = edge ? 149 : 28; pixels.data[i + 3] = 255;
+  }
   for (let id = 0; id < engine.count; id++) {
     const x = reassembly.active ? Math.round(reassembly.drawX[id]) : engine.x[id];
     const y = reassembly.active ? Math.round(reassembly.drawY[id]) : engine.y[id];
@@ -67,6 +89,7 @@ function draw() {
 
 function updateStats() {
   $('total').textContent = engine.count.toLocaleString();
+  $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
   $('counts').textContent = `${engine.fixedCount.toLocaleString()} / ${(engine.count - engine.fixedCount).toLocaleString()}`;
   $('gravity').textContent = `${engine.gravity.x}, ${engine.gravity.y}`;
   $('reassembly-progress').textContent = reassembly?.active ? `${Math.round(reassembly.elapsedMs / reassembly.durationMs * 100)}%` : '待機';
@@ -121,13 +144,13 @@ function brush(from, to, moving) {
 }
 
 canvas.addEventListener('pointerdown', event => {
-  if (tilt.paused || reassembly.active || pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  if (mode !== 'free' || tilt.paused || reassembly.active || pointer || (event.pointerType === 'mouse' && event.button !== 0)) return;
   event.preventDefault(); canvas.setPointerCapture(event.pointerId);
   const p = point(event); pointer = { ...p, id: event.pointerId };
   brush(p, p, false);
 });
 canvas.addEventListener('pointermove', event => {
-  if (tilt.paused || reassembly.active || !pointer || event.pointerId !== pointer.id) return;
+  if (mode !== 'free' || tilt.paused || reassembly.active || !pointer || event.pointerId !== pointer.id) return;
   event.preventDefault();
   const p = point(event); brush(pointer, p, true); pointer = { ...p, id: event.pointerId };
 });
@@ -137,7 +160,7 @@ for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 $('collapse').addEventListener('click', () => {
   if (tilt.paused || reassembly.active) return;
-  engine.releaseAll(); updateStats(); $('state-label').textContent = '景色が、砂に還る。';
+  engine.releaseAll(); updateStats(); syncControls(); $('state-label').textContent = '景色が、砂に還る。';
 });
 $('reset').addEventListener('click', () => {
   reassembly.cancel(); endPointer(); previousTime = 0;
@@ -146,7 +169,7 @@ $('reset').addEventListener('click', () => {
   $('state-label').textContent = '触れると、ほどける。';
 });
 $('reassemble').addEventListener('click', () => {
-  if (tilt.paused || reassembly.active) return;
+  if (mode !== 'free' || tilt.paused || reassembly.active) return;
   if (!reassembly.start({ durationMs: Number($('return-duration').value) * 1000,
     arcStrength: Number($('return-arc').value) })) { message('画像は元の状態です。砂を崩してから戻せます。'); return; }
   endPointer(); accumulator = 0; previousTime = performance.now();
@@ -159,7 +182,17 @@ function endPointer() {
   pointer = null;
 }
 function syncControls() {
-  const paused = tilt.paused, returning = reassembly?.active === true;
+  const paused = tilt.paused, returning = reassembly?.active === true, hourglass = mode === 'hourglass';
+  $('mode-free').setAttribute('aria-pressed', String(!hourglass));
+  $('mode-hourglass').setAttribute('aria-pressed', String(hourglass));
+  $('free-gravity').hidden = hourglass; $('hourglass-gravity').hidden = !hourglass;
+  $('reassemble').hidden = hourglass; $('return-settings').hidden = hourglass;
+  $('flip').hidden = !hourglass; $('flip').disabled = paused || !engine?.started;
+  $('collapse').textContent = hourglass ? '砂を流す' : '一斉崩壊';
+  canvas.setAttribute('aria-label', hourglass ? '砂時計の砂。砂を流すボタンで開始します。' : '砂の操作領域。タップで部分崩壊、ドラッグで砂を押します。');
+  document.querySelectorAll('[data-g]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === engine.gravity.x + ',' + engine.gravity.y)));
+  for (const [id, x] of [['left', -1], ['straight', 0], ['right', 1]]) $('hourglass-' + id).setAttribute('aria-pressed', String(hourglass && engine.gravity.x === x));
+  $('gravity-label').textContent = hourglass ? ['左寄せ', 'まっすぐ', '右寄せ'][engine.gravity.x + 1] : directionNames[engine.gravity.x + ',' + engine.gravity.y] + '向きに流れる';
   for (const id of ['sample', 'quality', 'image-file']) $(id).disabled = paused;
   $('collapse').disabled = paused || returning;
   $('reassemble').disabled = paused || returning;
@@ -170,12 +203,13 @@ function syncControls() {
 const directionNames = { '0,1': '下', '0,-1': '上', '-1,0': '左', '1,0': '右',
   '-1,-1': '左上', '1,-1': '右上', '-1,1': '左下', '1,1': '右下' };
 function applyGravity(x, y) {
+  if (mode === 'hourglass') { x = Math.sign(x); y = 1; }
   // Sensor events may arrive at 60 Hz. Only a direction change needs to wake
   // grains or rewrite the gravity controls/diagnostics.
   if (engine.gravity.x === x && engine.gravity.y === y) return;
   engine.setGravity(x, y);
   document.querySelectorAll('[data-g]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === `${x},${y}`)));
-  $('gravity-label').textContent = `${directionNames[`${x},${y}`]}向きに流れる`; updateStats();
+  syncControls(); updateStats();
 }
 const environment = {
   get isSecureContext() { return window.isSecureContext; },
@@ -189,7 +223,7 @@ const environment = {
   setInterval: (...args) => window.setInterval(...args), clearInterval: id => window.clearInterval(id)
 };
 const tilt = new TiltController(environment, {
-  onGravity: applyGravity,
+  onGravity: (x, y) => { sensorGravity.x = x; sensorGravity.y = y; applyGravity(x, y); },
   onState: state => {
     const paused = state.paused;
     $('tilt-start').textContent = state.starting ? (state.listening ? '受信待ち…' : 'センサーを確認中…') : '傾きで操作';
@@ -217,9 +251,20 @@ document.querySelectorAll('[data-g]').forEach(button => button.addEventListener(
   tilt.manual();
   const [x, y] = button.dataset.g.split(',').map(Number); applyGravity(x, y);
 }));
+for (const name of ['free', 'hourglass']) $('mode-' + name).addEventListener('click', () => activateMode(name));
+for (const [name, x] of [['left', -1], ['straight', 0], ['right', 1]]) $('hourglass-' + name).addEventListener('click', () => {
+  if (mode !== 'hourglass') return;
+  tilt.manual(); applyGravity(x, 1);
+});
+$('flip').addEventListener('click', () => {
+  if (mode !== 'hourglass' || tilt.paused || !engine.flip()) return;
+  endPointer(); accumulator = 0; previousTime = 0;
+  updateStats(); draw(); syncControls();
+  $('state-label').textContent = 'ひっくり返しました。もう一度、下へ。';
+});
 $('quality').addEventListener('change', () => {
-  try { loadSource(); message('品質を変更し、画像を初期状態に戻しました。'); }
-  catch (error) { message(error.message, true); }
+  try { loadSource(); message('品質を変更し、両モードを初期状態に戻しました。'); }
+  catch (error) { $('quality').value = quality; message(error.message, true); }
 });
 $('radius').addEventListener('input', () => { $('radius-output').value = $('radius').value; });
 for (const id of ['return-duration', 'return-arc']) $(id).addEventListener('input', () => {
@@ -230,23 +275,20 @@ $('info').addEventListener('click', () => {
   $('diagnostics').hidden = !open; $('info').setAttribute('aria-expanded', String(open)); updateStats();
 });
 $('sample').addEventListener('click', () => {
-  loadToken++; source = sampleImage(); sourceName = 'サンプル：山と砂丘'; loadSource();
+  loadToken++; loadSource(sampleImage(), 'サンプル：山と砂丘');
   message('サンプル画像に戻しました。');
 });
 $('image-file').addEventListener('change', async event => {
   const file = event.target.files[0]; if (!file) return;
-  reassembly.cancel(); endPointer(); accumulator = 0; previousTime = 0; syncControls();
   const token = ++loadToken;
   message('画像を読み込んでいます…');
   try {
     const image = await decodeImage(file);
     if (token !== loadToken) return;
     if (tilt.paused) { message('回転による一時停止中のため画像を変更しませんでした。縦に戻して選び直してください。'); return; }
-    // Convert before assigning the new source to keep failed imports transactional.
-    const particles = convertImage(image, engine.width, engine.height);
-    if (!particles.length) throw new Error('不透明なピクセルがありません。別の画像を選択してください。');
-    source = image; sourceName = file.name; loadSource();
-    message('画像を読み込みました。触れて崩してみましょう。');
+    loadSource(image, file.name);
+
+    message('画像を読み込み、両モードを初期状態に戻しました。');
   } catch (error) { if (token === loadToken) message(error.message, true); }
   finally { event.target.value = ''; }
 });

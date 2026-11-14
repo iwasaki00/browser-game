@@ -8,7 +8,7 @@
 |---|---:|---:|
 | 第4弾 | 60 | 60 |
 | 第5弾 | 60 | 60 |
-| 第6弾 | 15 | 66 |
+| 第6弾 | 45 | 66 |
 
 ID・正式名称・シート・座標・ロットの全件一覧: [TREASURE_ART_FINAL_TARGETS.md](TREASURE_ART_FINAL_TARGETS.md)
 

@@ -51,8 +51,8 @@ export async function decodeImage(file) {
   finally { URL.revokeObjectURL(url); }
 }
 
-export function convertImage(source, gridWidth, gridHeight) {
-  const layout = imagePlacement(source.naturalWidth || source.width, source.naturalHeight || source.height, gridWidth, gridHeight);
+export function convertImage(source, gridWidth, gridHeight, layout = imagePlacement(
+  source.naturalWidth || source.width, source.naturalHeight || source.height, gridWidth, gridHeight)) {
   const canvas = document.createElement('canvas');
   canvas.width = layout.width; canvas.height = layout.height;
   const c = canvas.getContext('2d', { willReadFrequently: true });
