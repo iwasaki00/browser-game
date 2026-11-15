@@ -61,9 +61,9 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     window.dispatchEvent(event);
   };
   const tick = (ms = 20) => { now += ms; frame(now); };
-  const pointer = (type, x, y) => {
+  const pointer = (type, x, y, kind = 'touch') => {
     const event = new Event(type, { cancelable: true });
-    Object.assign(event, { clientX: x, clientY: y, pointerId: 1, pointerType: 'touch', button: 0 });
+    Object.assign(event, { clientX: x, clientY: y, pointerId: 1, pointerType: kind, button: 0 });
     get('sand').dispatchEvent(event);
   };
   try {
@@ -352,6 +352,100 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     const escape = new Event('keydown', { cancelable: true }); Object.assign(escape, { key: 'Escape' });
     document.dispatchEvent(escape); assert.equal(get('size-panel').hidden, true);
     assert.deepEqual(canvas.rendered, widthBound);
+    // v0.5.0: execute real tool/pointer/reset/return handlers at both qualities.
+    const selectTool = name => { get('tools-open').click(); get('tool-' + name).click(); };
+    const stroke = (ax, ay, bx, by, kind = 'touch') => {
+      const r = canvas.rect, px = x => r.left + x / canvas.width * r.width, py = y => r.top + y / canvas.height * r.height;
+      pointer('pointerdown', px(ax), py(ay), kind); pointer('pointermove', px(bx), py(by), kind); pointer('pointerup', px(bx), py(by), kind);
+    };
+    const renderedMask = () => {
+      const out = new Uint8Array(canvas.width * canvas.height), data = canvas.rendered;
+      for (let i = 0; i < out.length; i++) out[i] = data[i * 4] === 178 && data[i * 4 + 1] === 191 && data[i * 4 + 2] === 184 ? 1 : 0;
+      return out;
+    };
+    const renderedSand = () => {
+      const out = new Uint8Array(canvas.width * canvas.height), data = canvas.rendered;
+      for (let i = 0; i < out.length; i++) out[i] = data[i * 4] === 255 && data[i * 4 + 1] === 255 && data[i * 4 + 2] === 255 ? 1 : 0;
+      return out;
+    };
+    const wallCount = () => Number(get('wall-count').textContent.replaceAll(',', ''));
+    for (const quality of ['standard', 'high']) {
+      get('quality').value = quality; get('quality').dispatchEvent(new Event('change')); get('sample').click();
+      canvas.rect = { left: 12, top: 25, width: 180, height: 300 };
+      const w = canvas.width, h = canvas.height, count = get('total').textContent, originalSand = renderedSand();
+      assert.equal(get('tools-open').hidden, false); assert.equal(get('tool-sand').attributes['aria-pressed'], 'true');
+      selectTool('draw'); assert.equal(get('tools-panel').hidden, true); assert.equal(get('tools-open').textContent, '壁を描く');
+      stroke(w * .1, h * .72, w * .9, h * .72, quality === 'high' ? 'mouse' : 'touch');
+      assert.ok(wallCount() > 0); assert.equal(get('counts').textContent, `${count} / 0`);
+      assert.deepEqual(renderedSand(), originalSand);
+      const firstWalls = renderedMask(), firstCount = wallCount();
+      assert.equal(firstWalls.reduce((a, b) => a + b, 0), firstCount);
+      // Drawing inside the intact opaque photo must neither make walls nor brush sand.
+      stroke(w * .3, h * .2, w * .7, h * .2); assert.equal(wallCount(), firstCount);
+      assert.deepEqual(renderedSand(), originalSand);
+      selectTool('erase'); stroke(w / 2, h * .72, w / 2, h * .72);
+      assert.ok(wallCount() < firstCount && wallCount() > 0); assert.deepEqual(renderedSand(), originalSand);
+      const cutWalls = renderedMask(), cutCount = wallCount();
+      get('reset').click(); assert.deepEqual(renderedMask(), cutWalls); assert.equal(wallCount(), cutCount);
+
+      get('image-open').click(); assert.equal(get('image-walls-warning').hidden, false); get('image-close').click();
+      get('settings-open').click(); assert.equal(get('quality-walls-warning').hidden, false); get('settings-close').click();
+      selectTool('sand'); stroke(w / 2, h * .2, w / 2, h * .2);
+      assert.notEqual(get('counts').textContent, `${count} / 0`);
+      get('reassemble').click(); assert.equal(canvas.attributes['data-reassembling'], 'true');
+      assert.equal(get('tools-open').disabled, true);
+      const duringReturn = wallCount();
+      get('tool-erase').dispatchEvent(new Event('click')); get('walls-clear').dispatchEvent(new Event('click'));
+      stroke(0, h * .72, w - 1, h * .72); assert.equal(wallCount(), duringReturn);
+      get('reset').click(); assert.deepEqual(renderedMask(), cutWalls);
+
+      // Build a wall in vacated original cells; only those exact overlaps vanish.
+      get('collapse').click(); for (let i = 0; i < 130; i++) tick();
+      selectTool('draw'); stroke(w * .4, Math.floor(h * .08), w * .6, Math.floor(h * .08));
+      const beforeReturn = renderedMask(), beforeReturnCount = wallCount(), expected = beforeReturn.slice();
+      for (let i = 0; i < expected.length; i++) if (originalSand[i]) expected[i] = 0;
+      assert.ok(expected.reduce((a, b) => a + b, 0) < beforeReturnCount);
+      get('reassemble').click(); tick(500); assert.equal(wallCount(), beforeReturnCount);
+      stroke(0, h * .72, w - 1, h * .72); assert.equal(wallCount(), beforeReturnCount);
+      tick(1000); assert.deepEqual(renderedMask(), expected); assert.deepEqual(renderedSand(), originalSand);
+      assert.equal(get('message').textContent, '画像と重なる壁を取り除きました');
+      tick(3600); assert.equal(get('message').hidden, true);
+      const retained = renderedMask(), retainedCount = wallCount(), freeImage = canvas.rendered.slice();
+      get('mode-hourglass').click(); assert.equal(get('tools-open').hidden, true);
+      get('tools-open').dispatchEvent(new Event('click')); assert.equal(get('tools-panel').hidden, true);
+      get('size-open').click(); get('photo-size').value = '75'; get('photo-size').dispatchEvent(new Event('input')); get('size-apply').click();
+      get('mode-free').click(); assert.equal(get('tools-open').hidden, false);
+      assert.deepEqual(canvas.rendered, freeImage); assert.equal(wallCount(), retainedCount);
+      get('size-open').click(); get('photo-size').value = '30'; get('photo-size').dispatchEvent(new Event('input'));
+      assert.match(get('size-warning').textContent, /壁も初期化/); get('size-close').click();
+      assert.deepEqual(renderedMask(), retained);
+      get('size-open').click(); get('size-apply').click(); assert.deepEqual(renderedMask(), retained);
+      get('image-file').files = []; get('image-file').dispatchEvent(new Event('change')); assert.deepEqual(renderedMask(), retained);
+      decodeFailure = true; get('image-file').files = [new File(['bad'], 'paths-broken.png', { type: 'image/png' })];
+      get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve)); decodeFailure = false;
+      assert.deepEqual(renderedMask(), retained); assert.equal(wallCount(), retainedCount);
+      // Keep the next quality's initial tool assertion independent of this iteration.
+      selectTool('sand');
+    }
+    const beforeFailedQuality = renderedMask(); failConversionAt = conversions + 2;
+    get('quality').value = 'standard'; get('quality').dispatchEvent(new Event('change'));
+    assert.equal(get('quality').value, 'high'); assert.deepEqual(renderedMask(), beforeFailedQuality);
+    get('tools-open').click(); get('walls-clear').click(); assert.equal(wallCount(), 0);
+    assert.equal(get('walls-clear').disabled, true); get('tools-close').click();
+    selectTool('draw'); stroke(0, canvas.height * .85, canvas.width - 1, canvas.height * .85);
+    assert.ok(wallCount() > 0);
+    get('quality').value = 'standard'; get('quality').dispatchEvent(new Event('change')); assert.equal(wallCount(), 0);
+    stroke(0, 240, 179, 240); assert.ok(wallCount() > 0); get('sample').click(); assert.equal(wallCount(), 0);
+    stroke(0, 240, 179, 240); assert.ok(wallCount() > 0);
+    imageWidth = 600; imageHeight = 1000;
+    get('image-file').files = [new File(['ok'], 'paths-new.png', { type: 'image/png' })];
+    get('image-file').dispatchEvent(new Event('change')); await new Promise(resolve => setImmediate(resolve)); assert.equal(wallCount(), 0);
+    stroke(0, 280, 179, 280); const sizeWalls = renderedMask(); assert.ok(wallCount() > 0);
+    get('size-open').click(); get('photo-size').value = '80'; get('photo-size').dispatchEvent(new Event('input'));
+    assert.equal(get('size-warning').hidden, false); failConversionAt = conversions + 1;
+    get('size-apply').click(); get('size-close').click(); assert.deepEqual(renderedMask(), sizeWalls);
+    get('size-open').click(); get('photo-size').value = '80'; get('photo-size').dispatchEvent(new Event('input')); get('size-apply').click();
+    assert.equal(wallCount(), 0); assert.equal(get('counts').textContent, '34,560 / 0');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];
