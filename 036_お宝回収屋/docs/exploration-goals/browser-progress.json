@@ -1,0 +1,82 @@
+[
+  {
+    "channel": "chrome",
+    "width": 320,
+    "mode": "normal",
+    "fields": 3,
+    "ordinaryRecovery": true,
+    "goalReload": true,
+    "replaceClear": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "normal",
+    "fields": 3,
+    "ordinaryRecovery": true,
+    "goalReload": true,
+    "replaceClear": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "normal",
+    "fields": 3,
+    "ordinaryRecovery": true,
+    "goalReload": true,
+    "replaceClear": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "mode": "debug",
+    "bootIsolation": true,
+    "viewed": 300,
+    "details": 300,
+    "readOnly": true,
+    "searchNameID": true,
+    "instantFields": 3,
+    "normalStoresUntouched": true,
+    "reload": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "mode": "production",
+    "debugURLIgnored": true,
+    "hiddenEntryDisabled": true,
+    "namesAndSpritesHidden": true
+  },
+  {
+    "channel": "msedge",
+    "width": 390,
+    "mode": "normal",
+    "fields": 3,
+    "ordinaryRecovery": true,
+    "goalReload": true,
+    "replaceClear": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "mode": "debug",
+    "bootIsolation": true,
+    "viewed": 300,
+    "details": 300,
+    "readOnly": true,
+    "searchNameID": true,
+    "instantFields": 3,
+    "normalStoresUntouched": true,
+    "reload": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "mode": "production",
+    "debugURLIgnored": true,
+    "hiddenEntryDisabled": true,
+    "namesAndSpritesHidden": true
+  }
+]

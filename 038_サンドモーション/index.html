@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#14191c">
   <meta name="description" content="写真を砂に変えて、触れて、崩す。フリーと砂時計で遊ぶ2D砂の実験室。">
-  <title>SAND MOTION v0.4.1</title>
+  <title>SAND MOTION v0.5.0 — SAND PATHS</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <main class="app" id="app">
     <header class="topbar">
-      <h1>SAND MOTION <small>v0.4.1</small></h1>
+      <h1>SAND MOTION <small>v0.5.0</small></h1>
       <button id="settings-open" aria-haspopup="dialog" aria-controls="settings-panel">設定</button>
       <div class="mode-switch" role="group" aria-label="遊び方">
         <button id="mode-free" aria-pressed="true">フリー</button><button id="mode-hourglass" aria-pressed="false">砂時計</button>
@@ -39,10 +39,11 @@
         <button id="reassemble">砂を戻す</button><button id="flip" hidden disabled>ひっくり返す</button>
         <button id="reset">リセット</button>
       </div>
-      <div class="tool-row">
+      <div class="tool-row" id="tool-row" data-tools="true">
         <button id="image-open" aria-haspopup="dialog" aria-controls="image-panel">画像</button>
         <button id="size-open" aria-expanded="false" aria-controls="size-panel">サイズ</button>
         <button id="gravity-open" aria-haspopup="dialog" aria-controls="gravity-panel">重力 ↓</button>
+        <button id="tools-open" aria-haspopup="dialog" aria-controls="tools-panel" aria-label="道具：砂を触る">道具：砂</button>
       </div>
     </footer>
   </main>
@@ -51,10 +52,24 @@
       <div class="panel-heading"><h2 id="image-title">画像</h2><button id="image-close">閉じる</button></div>
       <div class="panel-body">
         <p id="source-warning" class="warning">画像やサンプルを変更すると、フリーと砂時計の両方を初期状態から作り直します。</p>
+        <p id="image-walls-warning" class="warning" hidden>フリーに描いた壁も初期化されます。</p>
         <label class="upload" for="image-file">写真を選ぶ</label>
         <input id="image-file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="source-warning">
         <p id="source-name">サンプル：山と砂丘</p><button id="sample">サンプルに戻す</button>
         <p>画像は端末内だけで処理されます。</p><p id="image-message" class="notice" role="status" hidden></p>
+      </div>
+    </section>
+    <section id="tools-panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="tools-title" hidden>
+      <div class="panel-heading"><h2 id="tools-title">道具</h2><button id="tools-close">閉じる</button></div>
+      <div class="panel-body">
+        <div class="path-tools" role="group" aria-label="キャンバスの道具">
+          <button id="tool-sand" aria-pressed="true">砂を触る</button>
+          <button id="tool-draw" aria-pressed="false">壁を描く</button>
+          <button id="tool-erase" aria-pressed="false">壁を消す</button>
+        </div>
+        <p>壁は砂のない場所に描けます。壁の道具では写真を崩したり砂を押したりしません。</p>
+        <button id="walls-clear">壁をすべて消す</button>
+        <p id="tools-message" class="notice" role="status" hidden></p>
       </div>
     </section>
     <section id="gravity-panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="gravity-title" hidden>
@@ -78,6 +93,7 @@
       <div class="panel-heading"><h2 id="settings-title">設定</h2><button id="settings-close">閉じる</button></div>
       <div class="panel-body settings-body">
         <label for="quality">粒子品質</label><p id="quality-warning" class="warning">品質を変更すると、両モードの砂を初期状態から作り直します。高精細は処理負荷が増えます。</p>
+        <p id="quality-walls-warning" class="warning" hidden>フリーに描いた壁も初期化されます。</p>
         <select id="quality" aria-describedby="quality-warning"><option value="standard">標準 180×300</option><option value="light">軽量 120×200</option><option value="high">高精細 270×450</option></select>
         <label for="radius">ブラシの大きさ <output id="radius-output">12</output></label><input id="radius" type="range" min="4" max="28" value="12">
         <div id="return-settings" class="settings-body">
@@ -87,6 +103,7 @@
         <button id="info" aria-expanded="false" aria-controls="diagnostics">診断情報</button>
         <div id="diagnostics" hidden><dl>
           <dt>FPS</dt><dd id="fps">—</dd><dt>総粒子数</dt><dd id="total">—</dd><dt>固定 / 自由</dt><dd id="counts">—</dd><dt>重力 (x, y)</dt><dd id="gravity">0, 1</dd><dt>グリッド</dt><dd id="grid">180 × 300</dd><dt>物理更新 / step</dt><dd id="physics-ms">—</dd><dt>上側の粒 / 穴幅</dt><dd id="hourglass-remaining">—</dd><dt>復元の進捗</dt><dd id="reassembly-progress">待機</dd>
+          <dt>描いた壁のセル数</dt><dd id="wall-count">0</dd>
         </dl></div>
         <span id="grid-label" hidden></span><span id="state-label" hidden></span>
         <p id="settings-message" class="notice" role="status" hidden></p>

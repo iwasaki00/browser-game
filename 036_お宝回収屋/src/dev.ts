@@ -1,3 +1,4 @@
+import {mountTreasureCheck} from './dev-treasure-check';
 import {mountAutomationLab} from './dev-automation';
 import {fieldScenarios,applyFieldScenario,compareFieldScenario} from './dev-field';
 import {mountRouteLab} from './dev-route-ui';
@@ -15,7 +16,7 @@ import {areaId,isRiver,riverCheck,riverCapabilities,metrics} from './river';
 import {project} from './surface';
 import {setMoney,setStats,grant,equip,spawn,scenarios,applyScenario,debugSnapshot,bounded} from './dev-actions';
 import {logEvent} from './events';
-interface Context {get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;active:()=>string;speed:(n:number)=>void;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
+interface Context {wash:()=>void;get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;active:()=>string;speed:(n:number)=>void;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
 const escape=(x:unknown)=>String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const pre=(x:unknown)=>`<pre>${escape(JSON.stringify(x,null,2))}</pre>`;
 const input=(id:string,label:string,value:number,min=0,max=1e9)=>`<label>${label}<input id="${id}" type="number" min="${min}" max="${max}" value="${value}"></label>`;
@@ -31,7 +32,7 @@ export function openDebugLab(c:Context){
  c.overlay(ctx=>drawOverlay(ctx,c.get(),c.active()));
  const tabs=['状態','道具','お宝','探索','シナリオ','収益','保存・ログ','河原'];
  const render=()=>{
-  disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;const s=c.get();c.show('DEBUG LAB / テスト専用セーブ',`<section id="debug-lab"><p class="lab-note">通常プレイは退避済み。変更は finders-debug-v1 に保存します。</p><div class="lab-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" aria-selected="${tab===i}" data-tab="${i}">${t}</button>`).join('')}</div><div id="lab-body"></div><button id="lab-exit">通常プレイへ戻る</button></section>`);
+  disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;const s=c.get();c.show('DEBUG LAB / テスト専用セーブ',`<section id="debug-lab"><p class="lab-note">DEBUG / finders-debug-v1 / normal saves are separate.</p><div class="lab-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" aria-selected="${tab===i}" data-tab="${i}">${t}</button>`).join('')}</div><div id="lab-body"></div><button id="lab-exit">通常プレイへ戻る</button></section>`);
   document.querySelector('.sheet')!.classList.add('debug-sheet');const body=document.getElementById('lab-body')!;
   const el=<T extends HTMLElement=HTMLInputElement>(id:string)=>document.getElementById(id) as T;
   const num=(id:string)=>Number((el(id) as HTMLInputElement).value);
@@ -45,6 +46,7 @@ export function openDebugLab(c:Context){
    action('lab-grant',()=>{if(!grant(s,(el('lab-tool') as HTMLSelectElement).value))alert('マスター確認のみ。動作未実装の道具は付与・装備しません。');});action('lab-grant-all',()=>tools.filter(t=>t.implementationStatus==='available').forEach(t=>grant(s,t.id)));action('lab-equip',()=>{const id=(el('lab-tool') as HTMLSelectElement).value;if(equip(s,id))c.select(id);});action('lab-unlock',()=>{s.unlockedTools=[...new Set([...s.unlockedTools,...tools.filter(t=>t.implementationStatus==='available').map(t=>t.id)])];});
   mountBeachCompare(body);disposeRoutes=mountRouteLab(body);
   }else if(tab===2){body.innerHTML=`<div class="lab-form"><select id="lab-item">${options(treasures)}</select>${input('lab-x','横位置',180,0,359)}${input('lab-y','前後位置',245,0,279)}${input('lab-depth','深さ',20,0,plotDepthScale(plot(s)))}${input('lab-weight','重量kg',.12,.01,10000)}${input('lab-quality','品質',1,.01,2)}<label>レア度<select id="lab-rarity">${['C','U','R','SR','J'].map(r=>`<option>${r}</option>`).join('')}</select></label><label><input type="checkbox" id="lab-magnetic" checked>磁性あり</label><label>回収状態<select id="lab-find-state">${['buried','batch','stored','paid'].map(r=>`<option>${r}</option>`).join('')}</select></label><button id="lab-spawn">指定お宝を出現</button><button id="dev-jackpot">腕時計を出現（回帰試験）</button></div>`;
+   mountTreasureCheck(body,s,c.changed,c.wash);
    el('lab-item').onchange=()=>{const t=treasure((el('lab-item') as HTMLSelectElement).value);(el('lab-weight') as HTMLInputElement).value=String(t.weight);(el('lab-magnetic') as HTMLInputElement).checked=t.magnetic;(el('lab-rarity') as HTMLSelectElement).value=t.rarity;};
    action('lab-spawn',()=>spawn(s,(el('lab-item') as HTMLSelectElement).value,{x:num('lab-x'),y:num('lab-y'),depth:num('lab-depth'),weight:num('lab-weight'),quality:num('lab-quality'),magnetic:(el('lab-magnetic') as HTMLInputElement).checked,rarity:(el('lab-rarity') as HTMLSelectElement).value,state:(el('lab-find-state') as HTMLSelectElement).value as 'buried'}));action('dev-jackpot',()=>spawn(s,'B012',{x:180,y:150,depth:20}));
   }else if(tab===3){body.innerHTML=`<h3>可視化</h3>${Object.keys(flags).map(n=>`<label class="toggle"><input type="checkbox" data-flag="${n}" ${flags[n]?'checked':''}>${n}</label>`).join('')}${pre({area:areaId(s),plot:plot(s).id,seed:plot(s).seed,session:s.riverSession})}<button data-lab-area="B-A">砂浜テスト</button><button data-lab-area="R-A">浅瀬テスト</button><button data-lab-area="R-B">石だまりテスト</button><button data-lab-area="G-A">河原表面テスト</button><button data-lab-area="G-B">砂州テスト</button>`;

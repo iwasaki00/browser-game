@@ -1,5 +1,5 @@
 import { HourglassEngine } from './hourglass.js';
-import { SandEngine } from './engine.js';
+import { PathEngine } from './paths.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
 import { canvasPoint } from './input.js';
@@ -16,18 +16,21 @@ let physicsTime = 0, measuredSteps = 0;
 let reassembly, modes, mode = 'free', quality = 'standard';
 const sizes = { free: SIZES.free.initial, hourglass: SIZES.hourglass.initial };
 let panel = null, preview = null, draftSize = null, panelOpener = null, tiltHintShown = false;
+let tool = 'sand', wallNoticeUntil = 0;
+const toolNames = { sand: '砂を触る', draw: '壁を描く', erase: '壁を消す' };
 const sensorGravity = { x: 0, y: 1 };
 const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
 
 function message(text, error = false) {
+  wallNoticeUntil = 0;
   const target = $(panel ? `${panel}-message` : 'message');
   target.textContent = text; target.hidden = !text;
   target.classList.toggle('error', error);
 }
 
 function makeMode(name, image, width, height, size = sizes[name]) {
-  const next = name === 'free' ? new SandEngine(width, height) : new HourglassEngine(width, height);
+  const next = name === 'free' ? new PathEngine(width, height) : new HourglassEngine(width, height);
   next.load(convertImage(image, width, height, sizePlacement(image, name, width, height, size)));
   if (!next.count) throw new Error('不透明なピクセルがありません。別の画像やサイズを選択してください。');
   const old = modes?.[name];
@@ -74,6 +77,11 @@ function fitCanvas() {
 }
 
 function paintWalls(data) {
+  if (mode === 'free' && engine.wallCount) for (let cell = 0; cell < engine.walls.length; cell++) {
+    if (!engine.walls[cell]) continue;
+    const i = cell * 4;
+    data[i] = 178; data[i + 1] = 191; data[i + 2] = 184; data[i + 3] = 255;
+  }
   if (mode === 'hourglass') for (let cell = 0; cell < engine.grid.length; cell++) {
     if (!engine.container.walls[cell]) continue;
     const i = cell * 4, edge = engine.container.outline[cell];
@@ -98,6 +106,7 @@ function draw() {
 }
 
 function updateStats() {
+  $('wall-count').textContent = mode === 'free' ? engine.wallCount.toLocaleString() : '—';
   $('total').textContent = engine.count.toLocaleString();
   $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
   $('hourglass-remaining').setAttribute('data-settled', String(mode === 'hourglass' && engine.started && engine.active.every(v => !v)));
@@ -107,6 +116,9 @@ function updateStats() {
 }
 
 function frame(time) {
+  if (wallNoticeUntil && time >= wallNoticeUntil) {
+    wallNoticeUntil = 0; $('message').hidden = true;
+  }
   if (tilt.paused || panel) {
     // Never accumulate time during rotation; keep drawing the preserved image.
     previousTime = 0; accumulator = 0;
@@ -119,6 +131,7 @@ function frame(time) {
   if (reassembly.active) {
     accumulator = 0;
     if (reassembly.advance(delta)) {
+      notifyRemovedWalls();
       $('state-label').textContent = '元の景色に戻りました。触れて崩せます。';
       updateStats(); syncControls();
     }
@@ -145,6 +158,10 @@ function point(event) {
 }
 
 function brush(from, to, moving) {
+  if (tool !== 'sand') {
+    engine.editWallSegment(from.x, from.y, to.x, to.y, tool === 'erase');
+    updateStats(); syncControls(); draw(); return;
+  }
   const dt = Math.max(8, to.time - from.time);
   const factor = moving ? 12 / dt / timing.motionScale : 0;
   // Brush size is expressed in standard-grid cells, consistent across quality.
@@ -166,7 +183,9 @@ canvas.addEventListener('pointermove', event => {
   const p = point(event); brush(pointer, p, true); pointer = { ...p, id: event.pointerId };
 });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(name, event => {
-  if (pointer?.id === event.pointerId) pointer = null;
+  if (pointer?.id !== event.pointerId) return;
+  if (name === 'pointerup' && tool !== 'sand' && mode === 'free' && !panel && !tilt.paused && !reassembly.active) brush(pointer, point(event), true);
+  pointer = null;
 });
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 $('collapse').addEventListener('click', () => {
@@ -177,6 +196,7 @@ $('reset').addEventListener('click', () => {
   closePanel();
   reassembly.cancel(); endPointer(); previousTime = 0;
   engine.reset(); accumulator = 0; updateStats(); draw();
+  notifyRemovedWalls();
   syncControls();
   $('state-label').textContent = mode === 'hourglass' ? '砂を流して、色の積もり方を見てみよう。' : '触れると、ほどける。';
 });
@@ -193,6 +213,11 @@ function endPointer() {
   if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
   pointer = null;
 }
+function notifyRemovedWalls() {
+  if (mode !== 'free' || !engine.removedOnReset) return;
+  message('画像と重なる壁を取り除きました');
+  wallNoticeUntil = performance.now() + 3500;
+}
 function syncControls() {
   const paused = tilt.paused, returning = reassembly?.active === true, hourglass = mode === 'hourglass';
   $('mode-free').setAttribute('aria-pressed', String(!hourglass));
@@ -206,6 +231,18 @@ function syncControls() {
   for (const [id, x] of [['left', -1], ['straight', 0], ['right', 1]]) $('hourglass-' + id).setAttribute('aria-pressed', String(hourglass && engine.gravity.x === x));
   $('gravity-label').textContent = hourglass ? ['左寄せ', 'まっすぐ', '右寄せ'][engine.gravity.x + 1] : directionNames[engine.gravity.x + ',' + engine.gravity.y] + '向きに流れる';
   $('gravity-open').textContent = `重力 ${directionArrows[engine.gravity.x + ',' + engine.gravity.y]}`;
+  $('tools-open').hidden = hourglass; $('tools-open').disabled = paused || returning;
+  $('tools-open').textContent = tool === 'sand' ? '道具：砂' : toolNames[tool];
+  $('tools-open').setAttribute('aria-label', `道具：${toolNames[tool]}`);
+  $('tool-row').setAttribute('data-tools', String(!hourglass));
+  for (const name of ['sand', 'draw', 'erase']) {
+    $('tool-' + name).setAttribute('aria-pressed', String(tool === name));
+    $('tool-' + name).disabled = hourglass || paused || returning;
+  }
+  const hasWalls = (modes?.free.engine.wallCount || 0) > 0;
+  $('walls-clear').disabled = hourglass || paused || returning || !hasWalls;
+  $('image-walls-warning').hidden = !hasWalls;
+  $('quality-walls-warning').hidden = !hasWalls;
   for (const id of ['sample', 'quality', 'image-file']) $(id).disabled = paused;
   $('collapse').disabled = paused || returning || Boolean(panel);
   $('reassemble').disabled = paused || returning || Boolean(panel);
@@ -230,8 +267,10 @@ function refreshPreview() {
   $('size-output').textContent = `${draftSize}%`;
   const layout = sizePlacement(source, mode, engine.width, engine.height, draftSize);
   const current = sizePlacement(source, mode, engine.width, engine.height, sizes[mode]);
+  const clearsWalls = mode === 'free' && engine.wallCount > 0;
+  $('size-warning').textContent = clearsWalls ? 'このモードの砂が初期状態に戻り、壁も初期化されます。' : 'このモードの砂が初期状態に戻ります';
   $('size-warning').hidden = samePlacement(layout, current) ||
-    (!engine.started && engine.fixedCount === engine.count && !reassembly.active);
+    (!clearsWalls && !engine.started && engine.fixedCount === engine.count && !reassembly.active);
   try {
     const grains = convertImage(source, engine.width, engine.height, layout);
     preview = context.createImageData(engine.width, engine.height);
@@ -273,10 +312,22 @@ function closePanel() {
   opener?.focus?.();
 }
 
-for (const name of ['image', 'size', 'gravity', 'settings']) {
-  $(name + '-open').addEventListener('click', event => openPanel(name, event.currentTarget));
+for (const name of ['image', 'size', 'gravity', 'settings', 'tools']) {
+  $(name + '-open').addEventListener('click', event => {
+    if (name === 'tools' && (mode !== 'free' || tilt.paused || reassembly.active)) return;
+    openPanel(name, event.currentTarget);
+  });
   $(name + '-close').addEventListener('click', closePanel);
 }
+for (const name of ['sand', 'draw', 'erase']) $('tool-' + name).addEventListener('click', () => {
+  if (mode !== 'free' || tilt.paused || reassembly.active) return;
+  endPointer(); tool = name; closePanel(); syncControls();
+});
+$('walls-clear').addEventListener('click', () => {
+  if (mode !== 'free' || tilt.paused || reassembly.active) return;
+  endPointer(); engine.clearWalls(); updateStats(); syncControls(); draw();
+  message('壁をすべて消しました。');
+});
 $('panel-layer').addEventListener('click', event => { if (event.target === $('panel-layer')) closePanel(); });
 document.addEventListener('keydown', event => {
   if (!panel) return;

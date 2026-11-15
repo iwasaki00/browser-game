@@ -11,3 +11,4 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 .topbar{grid-template-columns:minmax(0,1fr) auto}.topbar h1{min-width:0;white-space:normal;overflow-wrap:anywhere}
 @media(min-width:760px){.topbar{grid-template-columns:minmax(0,1fr) 15rem auto}}
+.tool-row[data-tools=true]{grid-template-columns:repeat(4,minmax(0,1fr))}.tool-row button{padding-inline:.3rem;font-size:.8rem}.path-tools{display:grid;gap:.6rem}

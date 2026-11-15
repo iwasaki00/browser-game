@@ -38,8 +38,9 @@ export function mountReveal(root:HTMLElement,s:State,f:Find,callbacks:RevealCall
  root.querySelector<HTMLElement>('.wash-card')!.dataset.rarity=rarity;
  root.querySelector<HTMLElement>('.wash-card')!.dataset.effects=effects(s);
  const el=<T extends HTMLElement=HTMLElement>(q:string)=>root.querySelector<T>(q)!;const card=el('.wash-card');
- function finish(){if(!live||phase==='done')return;clearTimeout(timer);firstEvent(s,'wash');phase='done';const isNew=!s.discoveredTreasures[f.id],fn=reward(s,uid);card.dataset.phase='done';card.classList.remove('washing');if(rarity==='J')card.classList.add('jackpot');else if(['R','SR'].includes(rarity))card.classList.add('rare-reveal');
+ function finish(){if(!live||phase==='done')return;clearTimeout(timer);firstEvent(s,'wash');phase='done';const isNew=!s.discoveredTreasures[f.id],goalMatch=isNew&&s.explorationGoal?.target===f.id,fn=reward(s,uid);card.dataset.phase='done';card.classList.remove('washing');if(rarity==='J')card.classList.add('jackpot');else if(['R','SR'].includes(rarity))card.classList.add('rare-reveal');
   el('#reveal-status').textContent=rarity==='J'?'JACKPOT / 特別依頼達成':isNew?'新発見 / 図鑑登録':'回収完了';
+  if(goalMatch&&s.explorationGoal?.completed.includes(f.id)){const note=document.createElement('span');note.className='exploration-achieved';note.textContent='探索目標を達成';el('#reveal-status').append(note);}
   el('.wash-display').setAttribute('aria-label',t.name);el('#reveal-name').textContent=`${t.name} / ${rarity}`;el('#reveal-description').textContent=t.description;
   el('#reveal-quality').textContent=`品質 ${Math.round(f.quality*100)}% ・ 評価 ${Math.round(t.baseValueFN*f.quality).toLocaleString()} FN`;
   el('#reveal-reward').textContent=`＋ ${fn.toLocaleString()} FN${t.contractOnly?' / 依頼返却':' / 回収報酬'}`;

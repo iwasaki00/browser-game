@@ -1,0 +1,13 @@
+.exploration-goal{display:block;width:100%;padding:8px 12px;border:1px solid #a7b6a3;border-radius:8px;background:#edf0df;color:#294b42;text-align:left;font:inherit;font-size:12px;line-height:1.5;touch-action:manipulation;margin:4px 0 8px}
+.exploration-goal[hidden],#debug-save-banner[hidden]{display:none}
+#exploration-goals{margin:12px 0;padding:12px;border:1px solid #c7cbb5;border-radius:8px}
+#exploration-goals summary{cursor:pointer;min-height:36px}
+.exploration-choices{display:grid;gap:12px;margin-top:12px}
+.exploration-choice{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;padding:10px;background:#edf0e0;border-radius:8px}
+.exploration-choice p{font-size:12px;line-height:1.6;margin:6px 0}
+.exploration-choice button{min-height:44px;width:100%;white-space:normal}
+.exploration-achieved{display:block;margin-top:5px;color:#286647;font-weight:bold}
+#debug-save-banner{padding:8px 12px;background:#f3d58e;color:#41331e;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+#debug-save-banner button{min-height:44px}
+#lab-catalog .book-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+#lab-quick-result{white-space:normal;overflow-wrap:anywhere}
