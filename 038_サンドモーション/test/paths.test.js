@@ -54,8 +54,10 @@ for (const [width, height] of [[180, 300], [270, 450]]) {
     }
     // A 2x2 solid corner must reject its diagonal even at a seam.
     const corner = new PathEngine(width, height); corner.load([grain(10, 10)]);
-    corner.editWallSegment(11, 10, 11, 10); // occupied grain cell is skipped
+    corner.walls[10 * width + 11] = 1; corner.walls[11 * width + 10] = 1; corner.wallCount = 2;
+    assert.equal(corner.isEmpty(11, 11), true);
     assert.equal(corner.move(0, 1, 1), false);
+    corner.assertIntegrity();
   });
 
   test(`${width}: edits skip fixed/moving particles, preserve colors and positions; clear wakes supports`, () => {
@@ -101,8 +103,8 @@ for (const [width, height] of [[180, 300], [270, 450]]) {
 test('wall-free PathEngine is bit-for-bit equivalent to the original free simulation', () => {
   const a = new PathEngine(180, 300), b = new SandEngine(180, 300), input = particles(180, 300);
   a.load(input); b.load(input); a.releaseAll(); b.releaseAll();
-  const dirs = [[0, 1], [-1, 1], [1, 0], [0, -1], [1, 1]];
-  for (let i = 0; i < 300; i++) {
+  const dirs = [[0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1]];
+  for (let i = 0; i < 480; i++) {
     if (i % 60 === 0) for (const e of [a, b]) {
       e.setGravity(...dirs[i / 60]); e.brushSegment(30, 50, 120, 100, 12, 4, -2);
     }

@@ -390,7 +390,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
 
       get('image-open').click(); assert.equal(get('image-walls-warning').hidden, false); get('image-close').click();
       get('settings-open').click(); assert.equal(get('quality-walls-warning').hidden, false); get('settings-close').click();
-      selectTool('sand'); stroke(w / 2, h * .2, w / 2, h * .2);
+      selectTool('sand'); stroke(w / 2, h * .2, w / 2, h * .2); get('info').click();
       assert.notEqual(get('counts').textContent, `${count} / 0`);
       get('reassemble').click(); assert.equal(canvas.attributes['data-reassembling'], 'true');
       assert.equal(get('tools-open').disabled, true);
@@ -446,6 +446,11 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     get('size-apply').click(); get('size-close').click(); assert.deepEqual(renderedMask(), sizeWalls);
     get('size-open').click(); get('photo-size').value = '80'; get('photo-size').dispatchEvent(new Event('input')); get('size-apply').click();
     assert.equal(wallCount(), 0); assert.equal(get('counts').textContent, '34,560 / 0');
+    const resetOrigins = renderedSand(); get('collapse').click(); for (let i = 0; i < 130; i++) tick();
+    stroke(70, 24, 110, 24); const resetExpected = renderedMask();
+    for (let i = 0; i < resetExpected.length; i++) if (resetOrigins[i]) resetExpected[i] = 0;
+    get('reset').click(); assert.deepEqual(renderedMask(), resetExpected);
+    assert.equal(get('message').textContent, '画像と重なる壁を取り除きました');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

@@ -23,6 +23,7 @@ const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
 
 function message(text, error = false) {
+  if (wallNoticeUntil) $('message').hidden = true;
   wallNoticeUntil = 0;
   const target = $(panel ? `${panel}-message` : 'message');
   target.textContent = text; target.hidden = !text;
@@ -159,8 +160,11 @@ function point(event) {
 
 function brush(from, to, moving) {
   if (tool !== 'sand') {
-    engine.editWallSegment(from.x, from.y, to.x, to.y, tool === 'erase');
-    updateStats(); syncControls(); draw(); return;
+    const before = engine.wallCount;
+    if (!engine.editWallSegment(from.x, from.y, to.x, to.y, tool === 'erase')) return;
+    updateStats();
+    if (Boolean(before) !== Boolean(engine.wallCount)) syncControls();
+    draw(); return;
   }
   const dt = Math.max(8, to.time - from.time);
   const factor = moving ? 12 / dt / timing.motionScale : 0;

@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "existing-entry",
+    "tabs": 8,
+    "unfinishedSaveReload": true,
+    "normalGoalPreserved": true,
+    "exitRestoresNormal": true,
+    "errors": []
+  },
+  {
+    "kind": "device-https-helper",
+    "mode": "normal",
+    "port": 4187,
+    "pcChromeHTTPS": true,
+    "errors": [],
+    "iPhoneSafari": "USER_CONFIRMATION_PENDING"
+  },
+  {
+    "kind": "device-https-helper",
+    "mode": "debug",
+    "port": 4188,
+    "pcChromeHTTPS": true,
+    "errors": [],
+    "iPhoneSafari": "USER_CONFIRMATION_PENDING"
+  }
+]

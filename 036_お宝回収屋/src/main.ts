@@ -110,7 +110,7 @@ async function changeSaveScope(next:SaveScope){
  if(!await persist())throw Error('現在の保存を確認してください');
  const previousScope=scope,prior=state;running=false;stopPointer();sessionClock.reset();await session.release();
  scope=next;session=new GameSession(saveKey(scope),sessionLost);configureSaveSession(()=>session.owns(),session.owner);
- try{if(!await session.acquire())throw Error('別のタブがこの保存領域を使用中です');state=await load(scope)??(next==='debug'?structuredClone(prior):normalState??createState());if(next==='debug')normalState=prior;else normalState=null;}
+ try{if(!await session.acquire())throw Error('別のタブがこの保存領域を使用中です');state=await load(scope)??(next==='debug'?structuredClone(prior):normalState??createState());if(next==='debug')normalState=prior;else normalState=null;const url=new URL(location.href);if(next==='debug')url.searchParams.set('debug','1');else url.searchParams.delete('debug');history.replaceState(null,'',url);}
  catch(e){await session.release();scope=previousScope;state=prior;session=new GameSession(saveKey(scope),sessionLost);configureSaveSession(()=>session.owns(),session.owner);await session.acquire();throw e;}
  finally{running=session.owns();previous=performance.now();}
 }

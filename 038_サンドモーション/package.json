@@ -11,6 +11,7 @@
     "reference": "node scripts/quality-reference.mjs",
     "benchmark:reassembly": "node scripts/benchmark-reassembly.mjs",
     "reference:hourglass": "node scripts/hourglass-reference.mjs",
-    "reference:size": "node scripts/size-reference.mjs"
+    "reference:size": "node scripts/size-reference.mjs",
+    "reference:paths": "node scripts/paths-reference.mjs"
   }
 }

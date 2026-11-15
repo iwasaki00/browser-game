@@ -1,0 +1,52 @@
+{
+  "version": "0.5.0",
+  "at": "2026-11-15T02:40:55.282Z",
+  "runtime": "v25.9.0",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "platform": "win32 x64",
+  "tools": {
+    "wallRadius": 2,
+    "eraseRadius": 5
+  },
+  "browserVerified": false,
+  "iphoneVerified": false,
+  "browserFps": null,
+  "measurements": [
+    {
+      "quality": "standard",
+      "grid": "180x300",
+      "particles": 648,
+      "initialWallCount": 900,
+      "heldBelow": 0,
+      "erasedWallCells": 47,
+      "awakeAfterErase": 11,
+      "droppedBelow": 402,
+      "removedOverlaps": 108,
+      "retainedWallsAfterReturn": 938,
+      "colorsAndCountExact": true,
+      "returnExact": true,
+      "physicsAndChecksCpuMs": 56.28,
+      "browserFps": null,
+      "slopeParticles": 100,
+      "slopeBelowEnd": 100
+    },
+    {
+      "quality": "high",
+      "grid": "270x450",
+      "particles": 1458,
+      "initialWallCount": 1890,
+      "heldBelow": 0,
+      "erasedWallCells": 101,
+      "awakeAfterErase": 15,
+      "droppedBelow": 893,
+      "removedOverlaps": 216,
+      "retainedWallsAfterReturn": 1980,
+      "colorsAndCountExact": true,
+      "returnExact": true,
+      "physicsAndChecksCpuMs": 103.87,
+      "browserFps": null,
+      "slopeParticles": 100,
+      "slopeBelowEnd": 100
+    }
+  ]
+}
