@@ -1,5 +1,5 @@
 import {VERSION} from './data';
-import {automationFixture,supplyAutomation,drainAutomation} from './dev-automation';
+import {automationFixture,supplyAutomation,drainAutomation} from './dev-automation-state';
 import {auto,setMachineRunning,type MachineId} from './automation';
 import {addPlot,plot,type State} from './engine';
 import {createLine,configureLine,setLineRunning,lineTick,lineReport,lineMachine,type Field} from './lines';

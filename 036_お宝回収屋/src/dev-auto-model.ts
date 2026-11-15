@@ -1,4 +1,4 @@
-import {automationFixture,collectAutomationSand} from './dev-automation';
+import {automationFixture,collectAutomationSand} from './dev-automation-state';
 import {plot,stored,reward,sortSand,tick,type State} from './engine';
 import {collectGravel,beginGoldWork,goldMotion,goldTick,availableGrains,collectGrain} from './gold';
 import {riverStart,riverPull,riverCapabilities} from './river';

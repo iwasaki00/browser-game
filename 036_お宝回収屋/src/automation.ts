@@ -1,3 +1,5 @@
+import {STATIC_DEBUG} from './build-mode';
+import {canSpend,spend,moneyLabel} from './money';
 import {firstEvent} from './experience';
 import {facility,machinePerformance} from './facilities';
 import {lineBuffer,type LineKey,type StageId} from './lines';
@@ -28,8 +30,8 @@ export const machineName=(id:MachineId)=>tool(id)!.name;
 // The feeder's compact shaker takes 3 seconds per normal work unit. Hand shaking remains faster.
 export const autoScreenSeconds=3;
 export function requirement(s:State,id:MachineId){const d=definition(id);return d.requires.every(group=>group.some(t=>s.ownedTools.includes(t)));}
-export function machineUnlocked(s:State,id:MachineId){return id==='B301'?s.sandSampled||recoveryCount(s)>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
-export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||s.currentFN<tool(id)!.priceFN)return false;s.currentFN-=tool(id)!.priceFN;auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};firstEvent(s,'machine');logEvent(s,'設備購入',id);return true;}
+export function machineUnlocked(s:State,id:MachineId){if(STATIC_DEBUG)return true;return id==='B301'?s.sandSampled||recoveryCount(s)>=8||Object.entries(s.discoveredTreasures).filter(([id])=>id.startsWith('B')).reduce((n,[,v])=>n+v.count,0)>=8:id==='R301'?s.unlockedTools.includes('R104'):s.unlockedTools.includes('G102');}
+export function purchaseMachine(s:State,id:MachineId){if(!machines.some(m=>m.id===id)||auto(s).machines[id]||!machineUnlocked(s,id)||!requirement(s,id)||!canSpend(s,tool(id)!.priceFN))return false;spend(s,tool(id)!.priceFN);auto(s).machines[id]={id,running:false,status:'停止中',reason:'材料を投入して開始',processed:0,uptime:0,elapsed:0,stopped:0,found:0,input:0,fn:0};firstEvent(s,'machine');logEvent(s,'設備購入',id);return true;}
 export function setMachineRunning(s:State,id:MachineId,running:boolean){const m=auto(s).machines[id];if(!m)return false;m.running=running;const line=s.lines?.[definition(id).field];if(line)line.running=running;m.status=running?'材料待ち':'停止中';m.reason=running?'登録された作業を待っています':'進捗を保持して一時停止';return true;}
 export const liveJobs=(s:State,id?:MachineId)=>auto(s).jobs.filter(j=>j.state!=='done'&&(!id||j.machine===id));
 export const allAutoFinds=(s:State)=>[...plot(s).items,...s.retainedFinds];

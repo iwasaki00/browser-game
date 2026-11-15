@@ -1,3 +1,4 @@
+import {canSpend,spend,moneyLabel} from './money';
 import {registerExplorationGoal,type ExplorationGoal} from './exploration-goals';
 import {freshExperience,firstEvent,type Experience} from './experience';
 import {advanceDepth,digProfiles} from './digging';
@@ -71,8 +72,8 @@ export function throughput(ids:string[]) { return Math.min(...Object.values(capa
 export const combos=(ids:string[])=>combinations.filter(c=>c.tools.every(t=>ids.includes(t)));
 export function buy(s:State,id:string) {
  const t=tool(id);refresh(s);
- if(!t||t.implementationStatus!=='available'||!s.unlockedTools.includes(id)||s.ownedTools.includes(id)||s.currentFN<t.priceFN)return false;
- const before=rate(s).normal;s.currentFN-=t.priceFN;s.ownedTools.push(id);assignPurchased(s,id);
+ if(!t||t.implementationStatus!=='available'||!s.unlockedTools.includes(id)||s.ownedTools.includes(id)||!canSpend(s,t.priceFN))return false;
+ const before=rate(s).normal;spend(s,t.priceFN);s.ownedTools.push(id);assignPurchased(s,id);
  s.equippedTools=s.quickSlots.filter(x=>x&&x!=='hand');s.purchases.push({id,time:s.playTime,before,predicted:throughput(s.equippedTools)});firstEvent(s,'purchase');logEvent(s,'道具購入',id);return true;
 }
 export const MAX_DEPTH=280;

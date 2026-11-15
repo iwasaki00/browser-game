@@ -1,3 +1,4 @@
+import {STATIC_DEBUG,DEBUG_AVAILABLE} from './build-mode';
 import {mountTreasureCheck} from './dev-treasure-check';
 import {mountAutomationLab} from './dev-automation';
 import {fieldScenarios,applyFieldScenario,compareFieldScenario} from './dev-field';
@@ -11,7 +12,7 @@ import {goldPipeline,isGold} from './gold';
 import './dev.css';
 import {tools,treasures,treasure,CONFIG} from './data';
 import {createState,plot,addPlot,rate,combos,maxStamina,depthAt,exposure,type State} from './engine';
-import {save,load} from './save';
+import {save,load,saveKey} from './save';
 import {areaId,isRiver,riverCheck,riverCapabilities,metrics} from './river';
 import {project} from './surface';
 import {setMoney,setStats,grant,equip,spawn,scenarios,applyScenario,debugSnapshot,bounded} from './dev-actions';
@@ -20,19 +21,19 @@ interface Context {wash:()=>void;get:()=>State;replace:(s:State)=>void;changed:(
 const escape=(x:unknown)=>String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const pre=(x:unknown)=>`<pre>${escape(JSON.stringify(x,null,2))}</pre>`;
 const input=(id:string,label:string,value:number,min=0,max=1e9)=>`<label>${label}<input id="${id}" type="number" min="${min}" max="${max}" value="${value}"></label>`;
-const options=(rows:{id:string;name:string}[])=>rows.map(t=>`<option value="${t.id}">${t.id} / ${t.name}</option>`).join('');
+const options=(rows:{id:string;name:string}[])=>rows.map(t=>`<option value="${t.id}">${t.id} / ${t.name}${STATIC_DEBUG&&tools.some(x=>x.id===t.id&&x.implementationStatus==='catalogOnly')&&!['B301','R301','G304'].includes(t.id)?' / 未実装・閲覧のみ':''}</option>`).join('');
 let labSpeed=1;
 let tab=0,restore:State|null=null;let disposeRoutes:(()=>void)|undefined;let disposeAuto:(()=>void)|undefined;
 const flags:Record<string,boolean>={区画:false,お宝:false,回収判定:false,深度:false,道具範囲:false,探知範囲:false,磁石範囲:false,ロープ範囲:false,座標:false};
 let pointer={x:0,y:0},hooked=false;
 export function openDebugLab(c:Context){
- if(!import.meta.env.DEV)return;
+ if(!DEBUG_AVAILABLE)return;
  c.speed(labSpeed);restore??=structuredClone(c.get());
  if(!hooked){hooked=true;window.addEventListener('error',e=>logEvent(c.get(),'エラー',e.message));window.addEventListener('unhandledrejection',e=>logEvent(c.get(),'エラー',String(e.reason)));document.addEventListener('pointermove',e=>{const r=document.querySelector('canvas')?.getBoundingClientRect();if(r)pointer={x:(e.clientX-r.left)/r.width*360,y:(e.clientY-r.top)/r.height*325};});}
  c.overlay(ctx=>drawOverlay(ctx,c.get(),c.active()));
  const tabs=['状態','道具','お宝','探索','シナリオ','収益','保存・ログ','河原'];
  const render=()=>{
-  disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;const s=c.get();c.show('DEBUG LAB / テスト専用セーブ',`<section id="debug-lab"><p class="lab-note">DEBUG / finders-debug-v1 / normal saves are separate.</p><div class="lab-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" aria-selected="${tab===i}" data-tab="${i}">${t}</button>`).join('')}</div><div id="lab-body"></div><button id="lab-exit">通常プレイへ戻る</button></section>`);
+  disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;const s=c.get();c.show('DEBUG LAB / テスト専用セーブ',`<section id="debug-lab"><p class="lab-note">DEBUG / ${saveKey('debug')} / 通常セーブとは別領域です。</p><div class="lab-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" aria-selected="${tab===i}" data-tab="${i}">${t}</button>`).join('')}</div><div id="lab-body"></div><button id="lab-exit">通常プレイへ戻る</button></section>`);
   document.querySelector('.sheet')!.classList.add('debug-sheet');const body=document.getElementById('lab-body')!;
   const el=<T extends HTMLElement=HTMLInputElement>(id:string)=>document.getElementById(id) as T;
   const num=(id:string)=>Number((el(id) as HTMLInputElement).value);
@@ -54,7 +55,7 @@ export function openDebugLab(c:Context){
   }else if(tab===4){body.innerHTML=`<button id="field-measure">12道具の購入前後を計測</button><pre id="field-measure-result"></pre><label>新道具の比較条件<select id="field-phase"><option value="after">購入後</option><option value="before">購入前</option></select></label><p>テスト区画を再生成し、道具・対象を準備します。通常セーブには影響しません。ロープは岸から対象へスワイプして投げます。</p>${[...scenarios,...goldScenarios,...beachScenarios,...fieldScenarios].map(x=>`<button class="plot-row" data-scenario="${x.id}">${x.name}<small>${x.tool}${'y' in x?' / 対象位置 180, '+x.y:' / 河原工程'}</small></button>`).join('')}`;el('field-measure').onclick=()=>{el('field-measure-result').textContent=JSON.stringify(fieldScenarios.map(v=>compareFieldScenario(v.id)),null,2);};document.querySelectorAll<HTMLButtonElement>('[data-scenario]').forEach(b=>b.onclick=()=>{if(!confirm('テスト区画をシナリオ用に再生成しますか？'))return;const result=b.dataset.scenario!.startsWith('F-TEST')?applyFieldScenario(s,b.dataset.scenario!,(el('field-phase') as HTMLSelectElement).value as 'before'|'after'):b.dataset.scenario!.startsWith('B-TEST')?applyBeachScenario(s,b.dataset.scenario!):b.dataset.scenario!.startsWith('G-TEST')?applyGoldScenario(s,b.dataset.scenario!):applyScenario(s,b.dataset.scenario!);c.select(result.tool);c.changed();render();});
   }else if(tab===5){const info=()=>{const s=c.get(),m=metrics(s),area:Record<string,number>={...s.rewardLedger?.archivedRevenue.area},item:Record<string,number>={...s.rewardLedger?.archivedRevenue.item};for(const r of s.revenueHistory){area[r.area??'B-A']=(area[r.area??'B-A']??0)+r.fn;item[r.item??'旧記録']=(item[r.item??'旧記録']??0)+r.fn;}return pre({FN:s.currentFN,累計FN:s.totalEarnedFN,直近FN毎分:rate(s),エリア別:area,お宝別:item,回収成功率:m.attempts?m.successes/m.attempts:0,道具使用回数:m.uses,平均操作回数:m.successes?m.operations/m.successes:0,失敗理由:m.failures,ボトルネック:m.bottleneck,共通操作計測:s.operationMetrics,特別採取地点:s.goldStats?.specialSites,ジャックポット:s.jackpotHistory});};body.innerHTML=info();const timer=window.setInterval(()=>{if(!body.isConnected||document.getElementById('overlay')?.hidden){clearInterval(timer);return;}body.innerHTML=info();},1000);
   }else if(tab===7){body.innerHTML='<h3>砂利・工程・回収率・取りこぼし・残存資源</h3>'+pre(goldDebugInfo(s));
-  }else{body.innerHTML=`${input('lab-seed','乱数シード',plot(s).seed,0,4294967295)}<button id="lab-regenerate">指定シードで区画再生成</button><button id="lab-snapshot">テスト状態を記録</button><button id="lab-restore">記録したテスト状態へ復元</button><button id="lab-reset">テストセーブ初期化</button><button id="lab-save">テスト状態を保存</button><button id="lab-load">テスト保存を読込</button><button id="lab-copy">デバッグ情報をコピー</button><h3>現在のセーブ</h3>${pre({key:'finders-debug-v1',FN:s.currentFN,lastSavedAt:s.lastSavedAt,plot:plot(s).id,items:plot(s).items,retained:s.retainedFinds})}<h3>直近100件のログ</h3>${pre(s.events??[])}`;
+  }else{body.innerHTML=`${input('lab-seed','乱数シード',plot(s).seed,0,4294967295)}<button id="lab-regenerate">指定シードで区画再生成</button><button id="lab-snapshot">テスト状態を記録</button><button id="lab-restore">記録したテスト状態へ復元</button><button id="lab-reset">テストセーブ初期化</button><button id="lab-save">テスト状態を保存</button><button id="lab-load">テスト保存を読込</button><button id="lab-copy">デバッグ情報をコピー</button><h3>現在のセーブ</h3>${pre({key:saveKey('debug'),FN:s.currentFN,lastSavedAt:s.lastSavedAt,plot:plot(s).id,items:plot(s).items,retained:s.retainedFinds})}<h3>直近100件のログ</h3>${pre(s.events??[])}`;
    action('lab-regenerate',()=>{if(confirm('現在のテスト区画を破棄して再生成しますか？'))addPlot(s,bounded(num('lab-seed'),0,4294967295),false,areaId(s));});action('lab-snapshot',()=>{restore=structuredClone(s);});action('lab-restore',()=>{if(restore&&confirm('テスト状態を記録時点へ戻しますか？'))c.replace(structuredClone(restore));});action('lab-reset',()=>{if(confirm('DEBUG LAB専用セーブだけを初期化しますか？ 通常セーブは維持します。'))c.replace(createState(42));});el('lab-save').onclick=async()=>{logEvent(s,'保存実行','debug');await save(s,'debug');render();};el('lab-load').onclick=async()=>{if(confirm('現在のテスト状態を保存済みデータへ戻しますか？')){const saved=await load('debug');if(saved)c.replace(saved);c.changed();render();}};el('lab-copy').onclick=async()=>{const json=JSON.stringify(debugSnapshot(c.get()),null,2);try{await navigator.clipboard.writeText(json);el('lab-copy').textContent='コピーしました';}catch{const text=document.createElement('textarea');text.value=json;body.prepend(text);text.select();document.execCommand('copy');}};
   }
  };render();

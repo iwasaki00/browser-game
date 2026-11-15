@@ -11,3 +11,5 @@
 #debug-save-banner button{min-height:44px}
 #lab-catalog .book-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
 #lab-quick-result{white-space:normal;overflow-wrap:anywhere}
+
+#debug-save-banner{flex-wrap:wrap}#debug-normal-page{min-height:44px;display:inline-flex;align-items:center;font-size:12px}#debug-title-badge{display:block;color:#76551d;margin-bottom:16px}
