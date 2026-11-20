@@ -135,5 +135,29 @@
     "bothResultsOnce": true,
     "progress3of3": true,
     "bookNavigation": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "height": 920,
+    "kind": "previews",
+    "patterns": 9,
+    "replaySpam": true,
+    "fnBookHistoryUnchanged": true,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "height": 920,
+    "kind": "settings-layout",
+    "offLightShort": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "kind": "reduced-motion",
+    "motionOmitted": true,
+    "progressUnchanged": true
   }
 ]
