@@ -17,7 +17,7 @@ let reassembly, modes, mode = 'free', quality = 'standard';
 const sizes = { free: SIZES.free.initial, hourglass: SIZES.hourglass.initial };
 let panel = null, preview = null, draftSize = null, panelOpener = null, tiltHintShown = false;
 let tool = 'sand', wallNoticeUntil = 0;
-const toolNames = { sand: '砂を触る', draw: '壁を描く', erase: '壁を消す' };
+const toolNames = { sand: '砂を触る', trace: 'なぞり砂', draw: '壁を描く', erase: '壁を消す' };
 const sensorGravity = { x: 0, y: 1 };
 const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
@@ -57,6 +57,7 @@ function loadSource(nextSource = source, nextName = sourceName) {
 function activateMode(nextMode) {
   endPointer(); mode = nextMode;
   ({ engine, reassembly } = modes[mode]);
+  if (mode === 'free' && tool === 'trace') engine.beginTrace();
   timing = simulationTiming(engine.width);
   canvas.width = engine.width; canvas.height = engine.height;
   pixels = context.createImageData(engine.width, engine.height);
@@ -112,7 +113,7 @@ function updateStats() {
   $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
   $('hourglass-remaining').setAttribute('data-settled', String(mode === 'hourglass' && engine.started && engine.active.every(v => !v)));
   $('counts').textContent = `${engine.fixedCount.toLocaleString()} / ${(engine.count - engine.fixedCount).toLocaleString()}`;
-  $('gravity').textContent = `${engine.gravity.x}, ${engine.gravity.y}`;
+  $('gravity').textContent = mode === 'free' && tool === 'trace' ? '重力なし' : `${engine.gravity.x}, ${engine.gravity.y}`;
   $('reassembly-progress').textContent = reassembly?.active ? `${Math.round(reassembly.elapsedMs / reassembly.durationMs * 100)}%` : '待機';
 }
 
@@ -132,6 +133,7 @@ function frame(time) {
   if (reassembly.active) {
     accumulator = 0;
     if (reassembly.advance(delta)) {
+      if (tool === 'trace') engine.beginTrace();
       notifyRemovedWalls();
       $('state-label').textContent = '元の景色に戻りました。触れて崩せます。';
       updateStats(); syncControls();
@@ -159,6 +161,12 @@ function point(event) {
 }
 
 function brush(from, to, moving) {
+  if (tool === 'trace') {
+    engine.beginTrace();
+    if (moving) engine.traceSegment(from.x, from.y, to.x, to.y,
+      Number($('radius').value) * engine.width / 180, Math.max(8, to.time - from.time));
+    updateStats(); draw(); return;
+  }
   if (tool !== 'sand') {
     const before = engine.wallCount;
     if (!engine.editWallSegment(from.x, from.y, to.x, to.y, tool === 'erase')) return;
@@ -193,6 +201,7 @@ for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.
 });
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 $('collapse').addEventListener('click', () => {
+  if (mode === 'free' && tool === 'trace') return;
   if (panel || tilt.paused || reassembly.active) return;
   engine.releaseAll(); updateStats(); syncControls(); $('state-label').textContent = '景色が、砂に還る。';
 });
@@ -200,6 +209,7 @@ $('reset').addEventListener('click', () => {
   closePanel();
   reassembly.cancel(); endPointer(); previousTime = 0;
   engine.reset(); accumulator = 0; updateStats(); draw();
+  if (mode === 'free' && tool === 'trace') engine.beginTrace();
   notifyRemovedWalls();
   syncControls();
   $('state-label').textContent = mode === 'hourglass' ? '砂を流して、色の積もり方を見てみよう。' : '触れると、ほどける。';
@@ -235,11 +245,15 @@ function syncControls() {
   for (const [id, x] of [['left', -1], ['straight', 0], ['right', 1]]) $('hourglass-' + id).setAttribute('aria-pressed', String(hourglass && engine.gravity.x === x));
   $('gravity-label').textContent = hourglass ? ['左寄せ', 'まっすぐ', '右寄せ'][engine.gravity.x + 1] : directionNames[engine.gravity.x + ',' + engine.gravity.y] + '向きに流れる';
   $('gravity-open').textContent = `重力 ${directionArrows[engine.gravity.x + ',' + engine.gravity.y]}`;
+  if (!hourglass && tool === 'trace') {
+    $('gravity-open').textContent = '重力なし';
+    $('gravity-label').textContent = 'なぞり砂：重力なし（通常の道具に戻すと重力操作に戻ります）';
+  }
   $('tools-open').hidden = hourglass; $('tools-open').disabled = paused || returning;
   $('tools-open').textContent = tool === 'sand' ? '道具：砂' : toolNames[tool];
   $('tools-open').setAttribute('aria-label', `道具：${toolNames[tool]}`);
   $('tool-row').setAttribute('data-tools', String(!hourglass));
-  for (const name of ['sand', 'draw', 'erase']) {
+  for (const name of ['sand', 'trace', 'draw', 'erase']) {
     $('tool-' + name).setAttribute('aria-pressed', String(tool === name));
     $('tool-' + name).disabled = hourglass || paused || returning;
   }
@@ -248,7 +262,7 @@ function syncControls() {
   $('image-walls-warning').hidden = !hasWalls;
   $('quality-walls-warning').hidden = !hasWalls;
   for (const id of ['sample', 'quality', 'image-file']) $(id).disabled = paused;
-  $('collapse').disabled = paused || returning || Boolean(panel);
+  $('collapse').disabled = paused || returning || Boolean(panel) || (!hourglass && tool === 'trace');
   $('reassemble').disabled = paused || returning || Boolean(panel);
   $('size-apply').disabled = paused || !preview;
   $('reset').disabled = false;
@@ -323,9 +337,14 @@ for (const name of ['image', 'size', 'gravity', 'settings', 'tools']) {
   });
   $(name + '-close').addEventListener('click', closePanel);
 }
-for (const name of ['sand', 'draw', 'erase']) $('tool-' + name).addEventListener('click', () => {
+for (const name of ['sand', 'trace', 'draw', 'erase']) $('tool-' + name).addEventListener('click', () => {
   if (mode !== 'free' || tilt.paused || reassembly.active) return;
-  endPointer(); tool = name; closePanel(); syncControls();
+  endPointer();
+  if (tool === 'trace' && name !== 'trace') engine.endTrace();
+  tool = name;
+  if (name === 'trace') engine.beginTrace();
+  accumulator = 0; previousTime = 0;
+  closePanel(); syncControls(); updateStats(); draw();
 });
 $('walls-clear').addEventListener('click', () => {
   if (mode !== 'free' || tilt.paused || reassembly.active) return;

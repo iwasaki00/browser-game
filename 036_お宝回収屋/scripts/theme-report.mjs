@@ -1,0 +1,9 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+const dir='docs/theme-collection',readLog=file=>{const b=fs.readFileSync(file);return b[0]===255&&b[1]===254?b.subarray(2).toString('utf16le'):b.toString('utf8');};
+const themes=JSON.parse(fs.readFileSync(dir+'/browser-results.json','utf8')),regression=JSON.parse(fs.readFileSync('docs/static-debug/browser-results.json','utf8')),integrity=JSON.parse(fs.readFileSync(dir+'/integrity.json','utf8'));
+assert.equal(themes.length,21);assert.equal(regression.length,10);
+assert.match(readLog('docs/theme-tests.log'),/tests 700/);assert.match(readLog('docs/theme-tests.log'),/pass 700/);assert.match(readLog('docs/theme-tests.log'),/fail 0/);
+for(const log of ['docs/theme-build.log','docs/theme-build-debug.log'])assert.match(readLog(log),/built in/);
+const screenshotNames=['B','R','G'].flatMap(field=>['before','after','wash-complete'].map(phase=>field+'-'+phase+'.png'));for(const name of screenshotNames)assert.ok(fs.statSync(dir+'/'+name).size>1000);
+const builds=Object.fromEntries(['dist','dist-debug'].map(folder=>[folder,fs.readdirSync(folder+'/assets').filter(n=>n.endsWith('.js')||n.endsWith('.css')).map(file=>({file,sha256:crypto.createHash('sha256').update(fs.readFileSync(folder+'/assets/'+file)).digest('hex')}))]));
+fs.writeFileSync(dir+'/verification.json',JSON.stringify({version:'1.0.0-rc.1',unit:{pass:700,fail:0,skipped:0},themeBrowserCases:themes.length,existingStaticBrowserCases:regression.length,viewports:[390,320,1280],bothBuildsPassed:true,normalSaveUnchanged:true,themeProgressNotSaved:true,integrity,screenshots:screenshotNames,builds,iPhoneSafariPhysical:'未確認・ユーザー確認待ち'},null,2)+'\n');console.log('PASS verification report: 700 unit tests, 21 theme cases, 10 existing static cases, both builds');

@@ -1,0 +1,110 @@
+[
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "normal",
+    "URLFlagsIgnored": true,
+    "hiddenUnknown": true,
+    "equipmentAndFNRestrictions": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "static-catalog",
+    "catalog": 300,
+    "details": 300,
+    "readOnly": true,
+    "immediateWashFields": 3,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "equipment-economy",
+    "toolsSelected": 46,
+    "fieldToolActions": [
+      "B101",
+      "R103",
+      "G101"
+    ],
+    "machinesProcessed": [
+      "B301",
+      "R301",
+      "G304"
+    ],
+    "paymentsAtZero": 15,
+    "finiteBackup": true,
+    "restore": true,
+    "unimplementedReadOnly": 77,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "static-reload",
+    "infiniteFN": true,
+    "normalStoresUnchanged": true,
+    "relativeAssets": true,
+    "noHorizontalOverflow": true,
+    "normalLinkSeparatePage": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "normal",
+    "URLFlagsIgnored": true,
+    "hiddenUnknown": true,
+    "equipmentAndFNRestrictions": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "static-catalog",
+    "catalog": 300,
+    "details": 300,
+    "readOnly": true,
+    "immediateWashFields": 3,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "static-reload",
+    "infiniteFN": true,
+    "normalStoresUnchanged": true,
+    "relativeAssets": true,
+    "noHorizontalOverflow": true,
+    "normalLinkSeparatePage": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "kind": "normal",
+    "URLFlagsIgnored": true,
+    "hiddenUnknown": true,
+    "equipmentAndFNRestrictions": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "kind": "static-catalog",
+    "catalog": 300,
+    "details": 300,
+    "readOnly": true,
+    "immediateWashFields": 3,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "kind": "static-reload",
+    "infiniteFN": true,
+    "normalStoresUnchanged": true,
+    "relativeAssets": true,
+    "noHorizontalOverflow": true,
+    "normalLinkSeparatePage": true,
+    "errors": []
+  }
+]

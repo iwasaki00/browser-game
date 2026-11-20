@@ -1,0 +1,10 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {execFileSync} from 'node:child_process';import assert from 'node:assert/strict';
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex'),root=path.basename(process.cwd());
+const sheets=fs.readdirSync('src/assets/treasures/sheets').filter(f=>f.endsWith('.png')).map(file=>{const rel='src/assets/treasures/sheets/'+file,current=fs.readFileSync(rel),prior=execFileSync('git',['show','HEAD:'+root+'/'+rel],{maxBuffer:1e7});assert.equal(hash(current),hash(prior));return {file,sha256:hash(current),unchanged:true};});assert.equal(sheets.length,9);
+const masters=['src/data.ts','src/master-source.json','src/treasure-expansion.json','src/treasure-sprite-map.json','src/engine.ts','src/save.ts'].map(rel=>{const current=fs.readFileSync(rel,'utf8').replaceAll('\r\n','\n'),prior=execFileSync('git',['show','HEAD:'+root+'/'+rel],{maxBuffer:2e7}).toString('utf8').replaceAll('\r\n','\n');assert.equal(hash(current),hash(prior),rel);return {file:rel,unchangedIgnoringCheckoutLineEndings:true};});
+const js=fs.readdirSync('dist/assets').filter(f=>f.endsWith('.js')),normal=js.map(f=>fs.readFileSync('dist/assets/'+f,'utf8')).join('\n');
+for(const token of ['lab-theme-prepare','finders-theme-fixture-item','lab-quick-recover','残り1点の状態を作る'])assert.ok(!normal.includes(token),token+' excluded from normal build');
+assert.ok(normal.includes('テーマ完成'));
+const edited=['src/collection-themes.ts','src/collection-themes-ui.ts','src/collection-themes.css','src/collection.ts','src/reveal.ts','src/main.ts','src/dev.ts','src/dev-treasure-check.ts','src/dev-theme-fixture.ts','tests/collection-themes.test.ts','scripts/theme-browser.mjs','scripts/theme-integrity.mjs'];
+for(const file of edited)assert.ok(!fs.readFileSync(file,'utf8').includes('\r'),file+' LF');
+fs.writeFileSync('docs/theme-collection/integrity.json',JSON.stringify({sheets,masters,normalDebugFixtureExcluded:true,normalJSFiles:js,editedTextLF:true},null,2)+'\n');console.log('PASS nine sprite sheets, masters, save/engine unchanged; production debug exclusion; LF');

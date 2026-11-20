@@ -1,0 +1,172 @@
+{
+  "version": "1.0.0-rc.1",
+  "unit": {
+    "pass": 700,
+    "fail": 0,
+    "skipped": 0
+  },
+  "themeBrowserCases": 21,
+  "existingStaticBrowserCases": 10,
+  "viewports": [
+    390,
+    320,
+    1280
+  ],
+  "bothBuildsPassed": true,
+  "normalSaveUnchanged": true,
+  "themeProgressNotSaved": true,
+  "integrity": {
+    "sheets": [
+      {
+        "file": "beach_daily_sheet.png",
+        "sha256": "a39bf6a77427dd205f3377fe44dddb0641f0eb20f053f4b7def8cc8470214486",
+        "unchanged": true
+      },
+      {
+        "file": "beach_nature_sheet.png",
+        "sha256": "b03001a2e91bc37cc1085e8d0063c2fac9f8a1350dac5a190e7f617c31337b2f",
+        "unchanged": true
+      },
+      {
+        "file": "beach_valuable_sheet.png",
+        "sha256": "bcc476283f25ffd9a5d719a835d169008a1158af62813fd7ee6668d03ae74244",
+        "unchanged": true
+      },
+      {
+        "file": "gold_mineral_sheet.png",
+        "sha256": "8e6abab1debb8127dbdaee12b7c775806724c1f3e3b0c23b076c6b441f112255",
+        "unchanged": true
+      },
+      {
+        "file": "gold_rare_sheet.png",
+        "sha256": "055a118a76656c128b1c8222ab46fe67c5a0c46cd3c0a272c4161c96d0ba04b1",
+        "unchanged": true
+      },
+      {
+        "file": "gold_stone_sheet.png",
+        "sha256": "6a4f6f304d815337bf292c689bdf5d02942fc339a78e5df883bc3abf117fc2ee",
+        "unchanged": true
+      },
+      {
+        "file": "river_metal_sheet.png",
+        "sha256": "e2eb4116eddacf7af0f08c8d8a1f25c91f6ba5c5f9968011d666510d903a61ce",
+        "unchanged": true
+      },
+      {
+        "file": "river_rare_sheet.png",
+        "sha256": "068ada7b81ef3e3c92eb1ea09ac1381b66a67e3258501cabcc980539e34f44c3",
+        "unchanged": true
+      },
+      {
+        "file": "river_tool_sheet.png",
+        "sha256": "c918bda602f908ec92ce43dbdbf70074c3c60bc6e169ec3e2e7e801ddc53fbf1",
+        "unchanged": true
+      }
+    ],
+    "masters": [
+      {
+        "file": "src/data.ts",
+        "unchangedIgnoringCheckoutLineEndings": true
+      },
+      {
+        "file": "src/master-source.json",
+        "unchangedIgnoringCheckoutLineEndings": true
+      },
+      {
+        "file": "src/treasure-expansion.json",
+        "unchangedIgnoringCheckoutLineEndings": true
+      },
+      {
+        "file": "src/treasure-sprite-map.json",
+        "unchangedIgnoringCheckoutLineEndings": true
+      },
+      {
+        "file": "src/engine.ts",
+        "unchangedIgnoringCheckoutLineEndings": true
+      },
+      {
+        "file": "src/save.ts",
+        "unchangedIgnoringCheckoutLineEndings": true
+      }
+    ],
+    "normalDebugFixtureExcluded": true,
+    "normalJSFiles": [
+      "index-Czc5TLeU.js"
+    ],
+    "editedTextLF": true
+  },
+  "screenshots": [
+    "B-before.png",
+    "B-after.png",
+    "B-wash-complete.png",
+    "R-before.png",
+    "R-after.png",
+    "R-wash-complete.png",
+    "G-before.png",
+    "G-after.png",
+    "G-wash-complete.png"
+  ],
+  "builds": {
+    "dist": [
+      {
+        "file": "index-BJjzTnkb.css",
+        "sha256": "a832d18e2e5152b239a1323e16463e42dce2bdb9b60eafc887f26d532300cab2"
+      },
+      {
+        "file": "index-Czc5TLeU.js",
+        "sha256": "1346f26d09c5042f21f03ff52d274b5fbc51285ea44f9fd6b2fb0a5f0dcc3378"
+      }
+    ],
+    "dist-debug": [
+      {
+        "file": "dev-advanced-worker-bQxqmRJi.js",
+        "sha256": "fb44db3b8c62c9c06622a5e525ad260a7c05c74da0690077b5beef55eddea21a"
+      },
+      {
+        "file": "dev-auto-worker-DyFZJ2nu.js",
+        "sha256": "de9e202251350fe5cdb69b78fcea3ec957b5e0a020588dfd4beba37bb2de8945"
+      },
+      {
+        "file": "dev-CvXogP6c.js",
+        "sha256": "0ded338fecbc4fab4fe189f23710a5369644decc75d7d5fa827926a58eef88d3"
+      },
+      {
+        "file": "dev-line-worker-DfPN5KcH.js",
+        "sha256": "b7822ce09e0c4c573f35c1d09edd59d953e2e40fa411c664a4cbb8360a10b809"
+      },
+      {
+        "file": "dev-qyKo3vbR.css",
+        "sha256": "e2feac6f885248fe217fd0514f235637e86012e015c1d428e0e5cf14bf186b66"
+      },
+      {
+        "file": "dev-route-worker-Bts53XbK.js",
+        "sha256": "29c370e6294c91679154a06c1cbca9359a321ed8b50d59ce620074cca9569cc4"
+      },
+      {
+        "file": "dev-ux-worker-DjyaCmmt.js",
+        "sha256": "c84a461ebf6dadc4dc1115c488c71e4f4cc2b8e06fd7d2e8cf39b242194ef1e2"
+      },
+      {
+        "file": "engine-DXwk5DvZ.js",
+        "sha256": "660d2bd644c748a22e0721a1554c365e624ff4a1cb871ff3c4e815764cd447fb"
+      },
+      {
+        "file": "growth-DtExLB0G.js",
+        "sha256": "f26cf184eba1fcce4909f85a6445164890b51f518e03ba34c4e7318da79a5b3c"
+      },
+      {
+        "file": "index-BJjzTnkb.css",
+        "sha256": "a832d18e2e5152b239a1323e16463e42dce2bdb9b60eafc887f26d532300cab2"
+      },
+      {
+        "file": "index-Ddeb1VZn.js",
+        "sha256": "b2bb84c108ab85bbcf569600e66007e8d11bfd057f5735da5ada85787608725e"
+      },
+      {
+        "file": "static-debug-state-Dew-1Si3.js",
+        "sha256": "fd9dc3d0b45ce509e3e01f824c57784adab6caf3be03f3b103f5b35cc94a1cb1"
+      }
+    ]
+  },
+  "iPhoneSafariPhysical": "未確認・ユーザー確認待ち"
+}

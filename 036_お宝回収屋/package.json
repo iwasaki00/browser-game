@@ -62,7 +62,8 @@
     "audit:rc-build": "tsc --noEmit && node scripts/rc-build.mjs",
     "assets:prototype": "node scripts/build-prototype-sheets.mjs",
     "test:sprites-browser": "node scripts/treasure-sprite-browser-test.mjs",
-    "build:debug": "tsc --noEmit && vite build --mode debug"
+    "build:debug": "tsc --noEmit && vite build --mode debug",
+    "preview:both": "node scripts/static-debug-server.mjs"
   },
   "devDependencies": {
     "playwright": "^1.64.1",

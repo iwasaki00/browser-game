@@ -13,3 +13,5 @@
 #lab-quick-result{white-space:normal;overflow-wrap:anywhere}
 
 #debug-save-banner{flex-wrap:wrap}#debug-normal-page{min-height:44px;display:inline-flex;align-items:center;font-size:12px}#debug-title-badge{display:block;color:#76551d;margin-bottom:16px}
+
+#static-debug-label{position:fixed;top:max(3px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:10000;pointer-events:none;padding:2px 8px;border-radius:4px;background:#f3d58e;color:#41331e;font:10px/1.5 system-ui;white-space:nowrap}

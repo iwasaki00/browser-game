@@ -451,6 +451,51 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     for (let i = 0; i < resetExpected.length; i++) if (resetOrigins[i]) resetExpected[i] = 0;
     get('reset').click(); assert.deepEqual(renderedMask(), resetExpected);
     assert.equal(get('message').textContent, '画像と重なる壁を取り除きました');
+    // Real app handlers: trace is a tool, not an image import or gravity reset.
+    for (const quality of ['standard', 'high']) {
+      selectTool('sand');
+      get('quality').value = quality; get('quality').dispatchEvent(new Event('change')); get('sample').click();
+      const w = canvas.width, h = canvas.height, count = get('total').textContent;
+      const original = canvas.rendered.slice();
+      selectTool('draw'); stroke(0, h * .9, w - 1, h * .9);
+      const walls = renderedMask();
+      selectTool('trace');
+      assert.equal(get('tools-panel').hidden, true);
+      assert.equal(get('tools-open').textContent, 'なぞり砂');
+      assert.equal(get('gravity-open').textContent, '重力なし');
+      assert.equal(get('collapse').disabled, true); assert.equal(get('reassemble').disabled, false);
+      const conversionsBeforeTrace = conversions;
+      stroke(w * .3, h * .3, w * .7, h * .3);
+      const groove = canvas.rendered.slice(); assert.notDeepEqual(groove, original);
+      assert.equal(get('total').textContent, count); assert.equal(conversions, conversionsBeforeTrace);
+      get('collapse').dispatchEvent(new Event('click'));
+      for (const button of arrows) button.click();
+      get('tilt-start').click(); await Promise.resolve();
+      for (let i = 0; i < 20; i++) { sensor(i < 10 ? -35 : 35); tick(); }
+      assert.equal(get('gravity-open').textContent, '重力なし');
+      assert.deepEqual(canvas.rendered, groove);
+      for (let i = 0; i < 300; i++) tick();
+      assert.deepEqual(canvas.rendered, groove);
+      assert.deepEqual(renderedMask(), walls);
+      get('size-open').click(); get('photo-size').value = '40'; get('photo-size').dispatchEvent(new Event('input'));
+      get('size-close').click(); assert.deepEqual(canvas.rendered, groove);
+      get('mode-hourglass').click(); assert.equal(get('tools-open').hidden, true);
+      get('collapse').click(); tick(); get('mode-free').click();
+      assert.deepEqual(canvas.rendered, groove);
+      get('reassemble').click(); tick(500); assert.equal(get('tools-open').disabled, true);
+      tick(1000); assert.equal(canvas.attributes['data-reassembling'], 'false');
+      assert.equal(get('counts').textContent, `${count} / 0`);
+      stroke(w * .3, h * .3, w * .7, h * .3); get('reset').click();
+      assert.equal(get('counts').textContent, `${count} / 0`);
+      stroke(w * .3, h * .3, w * .7, h * .3);
+      selectTool('sand'); assert.equal(get('collapse').disabled, false);
+      assert.notEqual(get('gravity-open').textContent, '重力なし');
+      assert.equal(renderedSand().reduce((sum, v) => sum + v, 0), Number(count.replaceAll(',', '')));
+      assert.deepEqual(renderedMask(), walls);
+      const packed = canvas.rendered.slice(); for (let i = 0; i < 10; i++) tick();
+      assert.notDeepEqual(canvas.rendered, packed);
+      assert.equal(get('total').textContent, count);
+    }
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

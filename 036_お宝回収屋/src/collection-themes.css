@@ -1,0 +1,9 @@
+#collection-themes{margin:12px 0;padding:10px;border:1px solid #446568;border-radius:8px;scroll-margin-top:95px}
+#collection-themes summary{cursor:pointer;min-height:44px;display:list-item;align-content:center;touch-action:manipulation}
+#collection-themes>details{border-top:1px solid #446568;padding:4px 0}
+.theme-items{display:grid;gap:8px}
+.theme-item{display:flex;align-items:center;gap:12px;padding:8px;min-width:0}
+.theme-item .item-icon{flex:0 0 48px}
+.theme-item strong{overflow-wrap:anywhere}
+.theme-item button{min-height:44px}
+.theme-completed{display:block;font-size:12px;font-weight:700;color:#286456;margin-top:4px}

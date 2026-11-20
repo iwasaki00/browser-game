@@ -1,0 +1,36 @@
+{
+  "version": "0.6.0",
+  "at": "2026-11-20T14:27:09.927Z",
+  "runtime": "v25.9.0",
+  "platform": "win32 x64",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "browserVerified": false,
+  "iphoneVerified": false,
+  "browserFps": null,
+  "measurements": [
+    {
+      "grid": "180x300",
+      "particles": 30240,
+      "emptyCentreCells": 65,
+      "temporaryExtraLayers": 2093,
+      "maxGrainsPerRimCell": 6,
+      "strokeCpuMs": 10.51,
+      "packingCpuMs": 19.75,
+      "gravityLeavesGrooveUnchanged": true,
+      "exactReturn": true,
+      "colorsAndCountPreserved": true
+    },
+    {
+      "grid": "270x450",
+      "particles": 68040,
+      "emptyCentreCells": 97,
+      "temporaryExtraLayers": 4900,
+      "maxGrainsPerRimCell": 7,
+      "strokeCpuMs": 1.03,
+      "packingCpuMs": 40.46,
+      "gravityLeavesGrooveUnchanged": true,
+      "exactReturn": true,
+      "colorsAndCountPreserved": true
+    }
+  ]
+}

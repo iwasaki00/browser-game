@@ -1,0 +1,209 @@
+[
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "normal",
+    "theme": "beach-forgotten",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "normal",
+    "theme": "river-tools",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "normal",
+    "theme": "natural-gold",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "debug",
+    "theme": "beach-forgotten",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "debug",
+    "theme": "river-tools",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "mode": "debug",
+    "theme": "natural-gold",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "layout": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "normal",
+    "theme": "beach-forgotten",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "normal",
+    "theme": "river-tools",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "normal",
+    "theme": "natural-gold",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "debug",
+    "theme": "beach-forgotten",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "debug",
+    "theme": "river-tools",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "mode": "debug",
+    "theme": "natural-gold",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "layout": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "normal",
+    "theme": "beach-forgotten",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "normal",
+    "theme": "river-tools",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "normal",
+    "theme": "natural-gold",
+    "oldPartial": true,
+    "washComplete": true,
+    "reloadComplete": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug",
+    "theme": "beach-forgotten",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug",
+    "theme": "river-tools",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug",
+    "theme": "natural-gold",
+    "viewed300ReadOnly": true,
+    "unwashedNotCounted": true,
+    "washComplete": true,
+    "reloadComplete": true,
+    "duplicateSilent": true,
+    "normalSaveUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "layout": true,
+    "errors": []
+  }
+]

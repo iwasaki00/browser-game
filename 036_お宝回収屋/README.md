@@ -50,7 +50,7 @@ Windows Chrome/Edgeと320/375/390/430pxの自動試験を実施。iPhone Safari�
 
 ## 開発検証
 
-npm.cmd test（684件）／npm.cmd run test:rc（7ブラウザ回帰）／node scripts/rc-test.mjs acceptance（保存・端末・本番等）／npm.cmd run test:rc-stress（24ゲーム時間）／npm.cmd run test:rc-preview（本番preview稼働中）／npm.cmd run audit:rc-build（ビルド台帳）。試験は使い捨てブラウザ環境で行い、通常プレイの保存を使用しません。DEBUG LABは開発版専用で、本番から除外されます。
+npm.cmd test（688件）／npm.cmd run test:rc（7ブラウザ回帰）／node scripts/rc-test.mjs acceptance（保存・端末・本番等）／npm.cmd run test:rc-stress（24ゲーム時間）／npm.cmd run test:rc-preview（本番preview稼働中）／npm.cmd run audit:rc-build（ビルド台帳）。試験は使い捨てブラウザ環境で行い、通常プレイの保存を使用しません。DEBUG LABは開発版専用で、本番から除外されます。
 
 配布候補の第三者表記はpublic/THIRD_PARTY_NOTICES.txtからdistへ同梱します。ツール一式やnode_modulesを配布する場合は、各依存のLICENSE/NOTICEの確認も必要です。過去の開発履歴は[CHANGELOG](docs/CHANGELOG.md)と[仕様](docs/GAME_SPEC.md)に保持しています。
 
@@ -59,3 +59,11 @@ npm.cmd test（684件）／npm.cmd run test:rc（7ブラウザ回帰）／node s
 ## 探索目標と素材確認
 
 「図鑑・記録」から未発見の候補9点を1点ずつ探索目標にできます。DEBUG LABの「お宝」タブでは300点の閲覧と未洗浄での即回収が可能です。開発版の `/?debug=1` は起動時からテスト専用セーブを使います。[対象9点・保存仕様・PC／iPhoneの起動と最短確認手順](docs/EXPLORATION_GOALS.md)。本番版ではデバッグ操作を使用できません。
+
+## 静的デバッグ専用版
+
+`npm.cmd run build` は通常の `dist/`、`npm.cmd run build:debug` は独立した `dist-debug/` を生成します。静的デバッグ版はViteなしで起動し、全300点の閲覧、実装済み46道具＋3設備、∞ FNを使えます。残り77件は未実装の閲覧対象です。専用セーブで通常版を保護します。`npm.cmd run preview:both` で同じオリジンの別パスから確認できます。[仕様・検証・配置後URL](docs/STATIC_DEBUG.md)。今回は未公開です。
+
+## 図鑑のテーマ収集
+
+「図鑑・記録」→「テーマ収集」で、砂浜の忘れ物・川底の工具・形の違う自然金の3テーマを確認できます。洗浄後の正式登録だけを数え、最後の1種類を登録したときに完成を表示します。DEBUG LABの「お宝」には残り1点の確認状態を作る操作を追加しました。[対象品・条件・最短確認・検証記録](docs/COLLECTION_THEMES.md)。

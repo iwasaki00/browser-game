@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "B101",
+    "name": "小型スコップ",
+    "field": "B",
+    "priceFN": 150,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B102",
+    "name": "熊手",
+    "field": "B",
+    "priceFN": 380,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B103",
+    "name": "大型スコップ",
+    "field": "B",
+    "priceFN": 900,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B104",
+    "name": "砂ふるい",
+    "field": "B",
+    "priceFN": 650,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B105",
+    "name": "大型砂用スコップ",
+    "field": "B",
+    "priceFN": 1250,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B106",
+    "name": "ブラシ",
+    "field": "B",
+    "priceFN": 110,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B107",
+    "name": "園芸用移植ごて",
+    "field": "B",
+    "priceFN": 230,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B108",
+    "name": "バケツ",
+    "field": "B",
+    "priceFN": 200,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B109",
+    "name": "回収トング",
+    "field": "B",
+    "priceFN": 320,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B110",
+    "name": "手押しカート",
+    "field": "B",
+    "priceFN": 1400,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B201",
+    "name": "入門金属探知機",
+    "field": "B",
+    "priceFN": 7800,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B202",
+    "name": "ピンポインター",
+    "field": "B",
+    "priceFN": 2800,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B203",
+    "name": "大型採砂スクープ",
+    "field": "B",
+    "priceFN": 2300,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B204",
+    "name": "防水金属探知機",
+    "field": "B",
+    "priceFN": 10500,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B205",
+    "name": "深度表示探知機",
+    "field": "B",
+    "priceFN": 9800,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B206",
+    "name": "金属識別探知機",
+    "field": "B",
+    "priceFN": 12000,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B207",
+    "name": "軽量大型熊手",
+    "field": "B",
+    "priceFN": 2600,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B208",
+    "name": "交換式ふるい",
+    "field": "B",
+    "priceFN": 2400,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B209",
+    "name": "高精度探知コイル",
+    "field": "B",
+    "priceFN": 7200,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B210",
+    "name": "探索位置記録端末",
+    "field": "B",
+    "priceFN": 3800,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B301",
+    "name": "電動ふるい",
+    "field": "B",
+    "priceFN": 25000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "使用可能（設備）"
+  },
+  {
+    "id": "B302",
+    "name": "電動砂吸引装置",
+    "field": "B",
+    "priceFN": 39000,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "B303",
+    "name": "電動運搬カート",
+    "field": "B",
+    "priceFN": 22000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B304",
+    "name": "振動式砂選別機",
+    "field": "B",
+    "priceFN": 45000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B305",
+    "name": "電動採砂機",
+    "field": "B",
+    "priceFN": 58000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B306",
+    "name": "探知機付き手押し台車",
+    "field": "B",
+    "priceFN": 49000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B307",
+    "name": "可搬式選別コンベア",
+    "field": "B",
+    "priceFN": 68000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B308",
+    "name": "電動砂用レーキ",
+    "field": "B",
+    "priceFN": 33000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B401",
+    "name": "自走式探査ローバー",
+    "field": "B",
+    "priceFN": 280000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B402",
+    "name": "自動採砂・ふるい機",
+    "field": "B",
+    "priceFN": 360000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B403",
+    "name": "金属分離ライン",
+    "field": "B",
+    "priceFN": 420000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B404",
+    "name": "自動洗浄ライン",
+    "field": "B",
+    "priceFN": 300000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B405",
+    "name": "複数探査機の同時運用",
+    "field": "B",
+    "priceFN": 950000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B406",
+    "name": "自動運搬システム",
+    "field": "B",
+    "priceFN": 680000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B407",
+    "name": "複数ライン連携設備",
+    "field": "B",
+    "priceFN": 1200000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B501",
+    "name": "探査ヒートマップ",
+    "field": "B",
+    "priceFN": 1800000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B502",
+    "name": "探索ルート最適化",
+    "field": "B",
+    "priceFN": 2500000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B503",
+    "name": "複数探査機の配車管理",
+    "field": "B",
+    "priceFN": 3300000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B504",
+    "name": "選別ライン改良キット",
+    "field": "B",
+    "priceFN": 1500000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B505",
+    "name": "バッテリー交換ステーション",
+    "field": "B",
+    "priceFN": 2100000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B506",
+    "name": "自動保守設備",
+    "field": "B",
+    "priceFN": 4200000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "B507",
+    "name": "大型探索拠点",
+    "field": "B",
+    "priceFN": 9000000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R101",
+    "name": "回収トング",
+    "field": "R",
+    "priceFN": 180,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R102",
+    "name": "伸縮回収棒",
+    "field": "R",
+    "priceFN": 320,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R103",
+    "name": "小型磁石",
+    "field": "R",
+    "priceFN": 520,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R104",
+    "name": "ロープ付き磁石",
+    "field": "R",
+    "priceFN": 900,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R105",
+    "name": "小型回収網",
+    "field": "R",
+    "priceFN": 260,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R106",
+    "name": "回収フック",
+    "field": "R",
+    "priceFN": 470,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R107",
+    "name": "泥用スコップ",
+    "field": "R",
+    "priceFN": 680,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R108",
+    "name": "回収バケツ",
+    "field": "R",
+    "priceFN": 240,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R109",
+    "name": "ハンドライト",
+    "field": "R",
+    "priceFN": 390,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R110",
+    "name": "ロープ巻取り器",
+    "field": "R",
+    "priceFN": 1800,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R201",
+    "name": "強力ネオジム磁石",
+    "field": "R",
+    "priceFN": 4500,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R202",
+    "name": "両面磁石",
+    "field": "R",
+    "priceFN": 5700,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R203",
+    "name": "大型回収フック",
+    "field": "R",
+    "priceFN": 2100,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R204",
+    "name": "小型水中カメラ",
+    "field": "R",
+    "priceFN": 6900,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R205",
+    "name": "伸縮式回収アーム",
+    "field": "R",
+    "priceFN": 3100,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R206",
+    "name": "滑車セット",
+    "field": "R",
+    "priceFN": 7200,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R207",
+    "name": "防水ライト",
+    "field": "R",
+    "priceFN": 2500,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R208",
+    "name": "水中観察スコープ",
+    "field": "R",
+    "priceFN": 3600,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R209",
+    "name": "水中用金属探知機",
+    "field": "R",
+    "priceFN": 11500,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R210",
+    "name": "引き上げ力測定器",
+    "field": "R",
+    "priceFN": 2900,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "R301",
+    "name": "電動ウインチ",
+    "field": "R",
+    "priceFN": 30000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "使用可能（設備）"
+  },
+  {
+    "id": "R302",
+    "name": "電動リール",
+    "field": "R",
+    "priceFN": 18000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R303",
+    "name": "小型電動クレーン",
+    "field": "R",
+    "priceFN": 72000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R304",
+    "name": "カメラ付き回収アーム",
+    "field": "R",
+    "priceFN": 60000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R305",
+    "name": "遠隔操作カメラ台車",
+    "field": "R",
+    "priceFN": 52000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R306",
+    "name": "バッテリー式回収アーム",
+    "field": "R",
+    "priceFN": 45000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R307",
+    "name": "回収物洗浄装置",
+    "field": "R",
+    "priceFN": 23000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R308",
+    "name": "巻上げ速度制御装置",
+    "field": "R",
+    "priceFN": 27000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R401",
+    "name": "定点自動巻上げ装置",
+    "field": "R",
+    "priceFN": 250000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R402",
+    "name": "遠隔操作式水中ロボット",
+    "field": "R",
+    "priceFN": 350000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R403",
+    "name": "自動回収クレーン",
+    "field": "R",
+    "priceFN": 550000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R404",
+    "name": "水中探査ドローン",
+    "field": "R",
+    "priceFN": 330000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R405",
+    "name": "自動仕分け設備",
+    "field": "R",
+    "priceFN": 420000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R406",
+    "name": "自動洗浄・乾燥設備",
+    "field": "R",
+    "priceFN": 310000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R407",
+    "name": "複数回収装置の集中管理",
+    "field": "R",
+    "priceFN": 1100000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R501",
+    "name": "水底地形マップ",
+    "field": "R",
+    "priceFN": 1900000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R502",
+    "name": "回収ルート最適化",
+    "field": "R",
+    "priceFN": 2400000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R503",
+    "name": "回収機の稼働管理",
+    "field": "R",
+    "priceFN": 2700000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R504",
+    "name": "仕分けライン最適化",
+    "field": "R",
+    "priceFN": 2000000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R505",
+    "name": "複数回収装置の統合制御",
+    "field": "R",
+    "priceFN": 3000000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R506",
+    "name": "装置保守ステーション",
+    "field": "R",
+    "priceFN": 3900000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "R507",
+    "name": "河川回収拠点",
+    "field": "R",
+    "priceFN": 10000000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G101",
+    "name": "小型スコップ",
+    "field": "G",
+    "priceFN": 150,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G102",
+    "name": "パンニング皿",
+    "field": "G",
+    "priceFN": 280,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G103",
+    "name": "ふるい",
+    "field": "G",
+    "priceFN": 600,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G104",
+    "name": "ピンセット",
+    "field": "G",
+    "priceFN": 170,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G105",
+    "name": "虫眼鏡",
+    "field": "G",
+    "priceFN": 300,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G106",
+    "name": "砂利用熊手",
+    "field": "G",
+    "priceFN": 390,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G107",
+    "name": "小瓶",
+    "field": "G",
+    "priceFN": 120,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G108",
+    "name": "大型バケツ",
+    "field": "G",
+    "priceFN": 350,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G109",
+    "name": "隙間かき出し棒",
+    "field": "G",
+    "priceFN": 450,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G110",
+    "name": "スポイト型吸引瓶",
+    "field": "G",
+    "priceFN": 950,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G201",
+    "name": "大型パンニング皿",
+    "field": "G",
+    "priceFN": 1900,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G202",
+    "name": "多段ふるい",
+    "field": "G",
+    "priceFN": 2500,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G203",
+    "name": "携帯型スルース",
+    "field": "G",
+    "priceFN": 6400,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G204",
+    "name": "吸引瓶セット",
+    "field": "G",
+    "priceFN": 2200,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G205",
+    "name": "砂鉄分離用磁石",
+    "field": "G",
+    "priceFN": 2700,
+    "masterStatus": "available",
+    "debugStatus": "使用可能（道具）"
+  },
+  {
+    "id": "G206",
+    "name": "岩の隙間用工具",
+    "field": "G",
+    "priceFN": 2300,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G207",
+    "name": "精密デジタル秤",
+    "field": "G",
+    "priceFN": 3200,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G208",
+    "name": "拡大ルーペ",
+    "field": "G",
+    "priceFN": 2400,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G209",
+    "name": "鉱物観察セット",
+    "field": "G",
+    "priceFN": 4200,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G210",
+    "name": "採取地点記録端末",
+    "field": "G",
+    "priceFN": 3800,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G301",
+    "name": "振動ふるい",
+    "field": "G",
+    "priceFN": 24000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G302",
+    "name": "ポンプ付きスルース",
+    "field": "G",
+    "priceFN": 34000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G303",
+    "name": "小型洗浄ドラム",
+    "field": "G",
+    "priceFN": 42000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G304",
+    "name": "電動砂利搬送機",
+    "field": "G",
+    "priceFN": 48000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "使用可能（設備）"
+  },
+  {
+    "id": "G305",
+    "name": "選鉱マット装置",
+    "field": "G",
+    "priceFN": 28000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G306",
+    "name": "循環水タンク",
+    "field": "G",
+    "priceFN": 18000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G307",
+    "name": "小型濃縮装置",
+    "field": "G",
+    "priceFN": 59000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G308",
+    "name": "振動テーブル",
+    "field": "G",
+    "priceFN": 70000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G401",
+    "name": "自動砂利供給機",
+    "field": "G",
+    "priceFN": 260000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G402",
+    "name": "大型選鉱機",
+    "field": "G",
+    "priceFN": 420000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G403",
+    "name": "回転式トロンメル",
+    "field": "G",
+    "priceFN": 350000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G404",
+    "name": "自動給水制御装置",
+    "field": "G",
+    "priceFN": 220000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G405",
+    "name": "多段式選鉱ライン",
+    "field": "G",
+    "priceFN": 700000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G406",
+    "name": "精密濃縮設備",
+    "field": "G",
+    "priceFN": 480000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G407",
+    "name": "自動乾燥・計量装置",
+    "field": "G",
+    "priceFN": 330000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G501",
+    "name": "砂金分布マップ",
+    "field": "G",
+    "priceFN": 1900000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G502",
+    "name": "採取ルート計画",
+    "field": "G",
+    "priceFN": 2400000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G503",
+    "name": "採取機の稼働管理",
+    "field": "G",
+    "priceFN": 3100000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G504",
+    "name": "ふるい目自動切替",
+    "field": "G",
+    "priceFN": 1700000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G505",
+    "name": "水循環システム改良",
+    "field": "G",
+    "priceFN": 2100000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G506",
+    "name": "摩耗監視装置",
+    "field": "G",
+    "priceFN": 3800000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  },
+  {
+    "id": "G507",
+    "name": "選鉱プラント管理棟",
+    "field": "G",
+    "priceFN": 9500000,
+    "masterStatus": "catalogOnly",
+    "debugStatus": "未実装・閲覧のみ"
+  }
+]
