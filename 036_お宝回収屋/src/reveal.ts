@@ -1,3 +1,4 @@
+import {playDiscovery} from './discovery-ui';
 import {themeSnapshot,newlyCompletedThemes} from './collection-themes';
 import {firstEvent,effects} from './experience';
 import {treasureSprite,markTreasureSheetFailed} from './treasure-assets';
@@ -32,23 +33,28 @@ export function installTreasureImageFallback(root:Document){
  const handler=(event:Event)=>{const image=event.target;if(!(image instanceof HTMLImageElement)||!image.dataset.treasureFallback)return;const sheet=image.dataset.treasureSheet;if(event.type==='load'&&(!sheet||image.naturalWidth===256&&image.naturalHeight===160))return;if(sheet)markTreasureSheetFailed(sheet);const images=sheet?Array.from(root.querySelectorAll<HTMLImageElement>('img[data-treasure-sheet]')).filter(el=>el.dataset.treasureSheet===sheet):[image];for(const img of images){const frame=img.closest('.treasure-visual');if(frame)frame.outerHTML=treasureShape(img.dataset.treasureFallback!,true);else img.outerHTML=treasureShape(img.dataset.treasureFallback!,true);}};
  root.addEventListener('error',handler,true);root.addEventListener('load',handler,true);return()=>{root.removeEventListener('error',handler,true);root.removeEventListener('load',handler,true);};
 }
-export interface RevealCallbacks {settled:(fn:number,isNew:boolean)=>void;next:()=>void;close:()=>void;}
+export function washCardMarkup(id:string){return `<section class="wash-card" data-phase="dirty"><div id="reveal-status" class="reveal-status" role="status" aria-live="polite" aria-atomic="true">発見物 / 未洗浄</div><div class="wash-display" role="group" aria-label="砂に覆われた回収品"><div class="treasure-art">${treasureShape(id)}</div><div class="dirt-layer"><i></i><i></i><i></i><span>?</span></div><div class="sand-fall" aria-hidden="true">· · ·</div></div><div class="wash-info"><h3 id="reveal-name">${id.startsWith('R')?'泥に覆われた回収品':id.startsWith('G')?'砂利から見つけた鉱物':'砂まみれの小物'}</h3><p id="reveal-description">汚れを落とすと、形が見えてきそう。</p></div><div class="wash-values"><span id="reveal-quality">品質・評価：未判明</span><strong id="reveal-reward">洗浄して確認</strong></div><div class="wash-actions"><button id="clean" class="primary">洗う</button><button id="next-find" class="primary" hidden>次へ</button><button id="skip-clean">スキップ</button></div></section>`;}
+export interface RevealCallbacks {settled:(fn:number,isNew:boolean)=>void;next:()=>void;close:()=>void;book?:(id:string)=>void;}
 export function mountReveal(root:HTMLElement,s:State,f:Find,callbacks:RevealCallbacks){
- let live=true,phase:'dirty'|'washing'|'done'='dirty',timer=0;const t=treasure(f.id),rarity=f.rarity??t.rarity,uid=f.uid;
- root.innerHTML=`<section class="wash-card" data-phase="dirty"><div id="reveal-status" class="reveal-status">発見物 / 未洗浄</div><div class="wash-display" role="img" aria-label="砂に覆われた回収品"><div class="treasure-art">${treasureShape(f.id)}</div><div class="dirt-layer"><i></i><i></i><i></i><span>?</span></div><div class="sand-fall" aria-hidden="true">· · ·</div></div><div class="wash-info"><h3 id="reveal-name">${f.id.startsWith('R')?'泥に覆われた回収品':f.id.startsWith('G')?'砂利から見つけた鉱物':'砂まみれの小物'}</h3><p id="reveal-description">汚れを落とすと、形が見えてきそう。</p></div><div class="wash-values"><span id="reveal-quality">品質・評価：未判明</span><strong id="reveal-reward">洗浄して確認</strong></div><div class="wash-actions"><button id="clean" class="primary">洗う</button><button id="next-find" class="primary" hidden>次へ</button><button id="skip-clean">スキップ</button></div></section>`;
+ let discovery:ReturnType<typeof playDiscovery>|undefined;let live=true,phase:'dirty'|'washing'|'done'='dirty',timer=0;const t=treasure(f.id),rarity=f.rarity??t.rarity,uid=f.uid;
+ root.innerHTML=washCardMarkup(f.id);
  root.querySelector<HTMLElement>('.wash-card')!.dataset.rarity=rarity;
  root.querySelector<HTMLElement>('.wash-card')!.dataset.effects=effects(s);
  const el=<T extends HTMLElement=HTMLElement>(q:string)=>root.querySelector<T>(q)!;const card=el('.wash-card');
- function finish(){if(!live||phase==='done')return;clearTimeout(timer);firstEvent(s,'wash');phase='done';const themesBefore=themeSnapshot(s),isNew=!s.discoveredTreasures[f.id],goalMatch=isNew&&s.explorationGoal?.target===f.id,fn=reward(s,uid);card.dataset.phase='done';card.classList.remove('washing');if(rarity==='J')card.classList.add('jackpot');else if(['R','SR'].includes(rarity))card.classList.add('rare-reveal');
-  el('#reveal-status').textContent=rarity==='J'?'JACKPOT / 特別依頼達成':isNew?'新発見 / 図鑑登録':'回収完了';
-  if(goalMatch&&s.explorationGoal?.completed.includes(f.id)){const note=document.createElement('span');note.className='exploration-achieved';note.textContent='探索目標を達成';el('#reveal-status').append(note);}
-  for(const theme of newlyCompletedThemes(themesBefore,s)){const note=document.createElement('span');note.className='theme-completed';note.textContent='テーマ完成 — '+theme.title;el('#reveal-status').append(note);}
-  el('.wash-display').setAttribute('aria-label',t.name);el('#reveal-name').textContent=`${t.name} / ${rarity}`;el('#reveal-description').textContent=t.description;
-  el('#reveal-quality').textContent=`品質 ${Math.round(f.quality*100)}% ・ 評価 ${Math.round(t.baseValueFN*f.quality).toLocaleString()} FN`;
-  el('#reveal-reward').textContent=`＋ ${fn.toLocaleString()} FN${t.contractOnly?' / 依頼返却':' / 回収報酬'}`;
-  el('#clean').hidden=true;el('#next-find').hidden=false;el('#skip-clean').textContent='閉じる';callbacks.settled(fn,isNew);
+ function finish(){
+  if(!live||phase==='done')return;clearTimeout(timer);firstEvent(s,'wash');phase='done';
+  const themesBefore=themeSnapshot(s),wasNew=!s.discoveredTreasures[f.id],goalMatch=wasNew&&s.explorationGoal?.target===f.id,fn=reward(s,uid);
+  const isNew=wasNew&&f.state==='paid'&&!!s.discoveredTreasures[f.id];
+  card.dataset.phase='done';card.classList.remove('washing');
+  el('.wash-display').setAttribute('aria-label',t.name);el('#reveal-name').textContent=t.name+' / '+rarity;el('#reveal-description').textContent=t.description;
+  el('#reveal-quality').textContent='品質 '+Math.round(f.quality*100)+'% ・ 評価 '+Math.round(t.baseValueFN*f.quality).toLocaleString()+' FN';
+  el('#reveal-reward').textContent='＋ '+fn.toLocaleString()+' FN'+(t.contractOnly?' / 依頼返却':' / 回収報酬');
+  el('#clean').hidden=true;el('#next-find').hidden=false;el('#skip-clean').textContent='閉じる';
+  const result={id:f.id,rarity,first:isNew,goal:!!(goalMatch&&s.explorationGoal?.completed.includes(f.id)),themes:newlyCompletedThemes(themesBefore,s).map(theme=>({id:theme.id,title:theme.title,found:theme.ids.length,total:theme.ids.length}))};
+  callbacks.settled(fn,isNew);
+  if(live)discovery=playDiscovery(card,result,{effects:effects(s),short:s.settings.short,book:callbacks.book});
  }
- el<HTMLButtonElement>('#clean').onclick=()=>{if(!live||phase!=='dirty')return;phase='washing';card.dataset.phase='washing';card.style.setProperty('--wash-time',s.settings.short?'350ms':'1400ms');card.classList.add('washing');el('#reveal-status').textContent='洗浄中…';el<HTMLButtonElement>('#clean').disabled=true;timer=window.setTimeout(finish,s.settings.short?350:1400);};
- el('#skip-clean').onclick=()=>phase==='done'?callbacks.close():finish();el('#next-find').onclick=callbacks.next;
- return ()=>{live=false;clearTimeout(timer);};
+ el<HTMLButtonElement>('#clean').onclick=()=>{if(!live||phase!=='dirty')return;phase='washing';card.dataset.phase='washing';const washMs=s.settings.short||window.matchMedia('(prefers-reduced-motion: reduce)').matches?350:1400;card.style.setProperty('--wash-time',washMs+'ms');card.classList.add('washing');el('#reveal-status').textContent='洗浄中…';el<HTMLButtonElement>('#clean').disabled=true;timer=window.setTimeout(finish,washMs);};
+ el('#skip-clean').onclick=()=>{if(live)phase==='done'?callbacks.close():finish();};el('#next-find').onclick=()=>{if(live&&phase==='done')callbacks.next();};
+ return ()=>{live=false;clearTimeout(timer);discovery?.dispose();};
 }

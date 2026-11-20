@@ -1,0 +1,1609 @@
+{
+  "tag": "after-v0.6.2",
+  "runtime": "v25.9.0",
+  "platform": "win32 x64",
+  "browserVerified": false,
+  "iphoneVerified": false,
+  "measurements": [
+    {
+      "grid": "180x300",
+      "stage": "initial",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-1",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-2",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-3",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-4",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-5",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-6",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-7",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-8",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-9",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-10",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-11",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-12",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-13",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-14",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-15",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-16",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-17",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-18",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-19",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-20",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-21",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-22",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-23",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-24",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-25",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-26",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-27",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-28",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-29",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-30",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-1",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-2",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-3",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-4",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-5",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-6",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-7",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-8",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-9",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-10",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-11",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-12",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-13",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-14",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-15",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-16",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-17",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-18",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-19",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-20",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-21",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-22",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-23",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-24",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-25",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-26",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-27",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-28",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-29",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-30",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-31",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-32",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-33",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-34",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-35",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-36",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-37",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-38",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-39",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-40",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-41",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-42",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-43",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-44",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-45",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-46",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-47",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-48",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-direction",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "initial",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-1",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-2",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-3",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-4",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-5",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-6",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-7",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-8",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-9",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-10",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-11",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-12",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-13",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-14",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-15",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-16",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-17",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-18",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-19",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-20",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-21",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-22",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-23",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-24",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-25",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-26",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-27",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-28",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-29",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-30",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-1",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-2",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-3",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-4",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-5",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-6",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-7",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-8",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-9",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-10",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-11",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-12",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-13",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-14",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-15",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-16",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-17",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-18",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-19",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-20",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-21",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-22",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-23",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-24",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-25",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-26",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-27",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-28",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-29",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-30",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-31",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-32",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-33",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-34",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-35",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-36",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-37",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-38",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-39",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-40",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-41",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-42",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-43",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-44",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-45",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-46",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-47",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-48",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-direction",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    }
+  ]
+}

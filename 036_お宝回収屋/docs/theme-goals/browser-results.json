@@ -228,5 +228,57 @@
     "bothResultsOnce": true,
     "reload": true,
     "hudChangeClear": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug-completion",
+    "theme": "beach-forgotten",
+    "view300ReadOnly": true,
+    "noSpoilersInTheme": true,
+    "unwashedNotComplete": true,
+    "bothResultsOnce": true,
+    "duplicateSilent": true,
+    "reload": true,
+    "normalStoresUnchanged": true,
+    "equipment46Facilities3": true,
+    "infiniteFN": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug-completion",
+    "theme": "river-tools",
+    "view300ReadOnly": true,
+    "noSpoilersInTheme": true,
+    "unwashedNotComplete": true,
+    "bothResultsOnce": true,
+    "duplicateSilent": true,
+    "reload": true,
+    "normalStoresUnchanged": true,
+    "equipment46Facilities3": true,
+    "infiniteFN": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "debug-completion",
+    "theme": "natural-gold",
+    "view300ReadOnly": true,
+    "noSpoilersInTheme": true,
+    "unwashedNotComplete": true,
+    "bothResultsOnce": true,
+    "duplicateSilent": true,
+    "reload": true,
+    "normalStoresUnchanged": true,
+    "equipment46Facilities3": true,
+    "infiniteFN": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "mode": "layout",
+    "noOverflow": true,
+    "errors": []
   }
 ]

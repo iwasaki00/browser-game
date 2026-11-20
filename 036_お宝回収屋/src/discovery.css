@@ -1,0 +1,33 @@
+.wash-card .discovery-new{display:inline-block;margin-left:8px;color:#77551a;font-size:11px;letter-spacing:.5px}
+.wash-card .wash-display{isolation:isolate;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.wash-card .treasure-art{position:relative;z-index:1}
+.wash-card:not([data-phase="done"]) .treasure-art{visibility:hidden}
+.wash-sheet .wash-card{grid-template-rows:minmax(24px,max-content) minmax(86px,1.2fr) minmax(var(--discovery-info-min,60px),1fr) 62px 48px}
+.wash-card[data-theme-complete="true"]{--discovery-info-min:78px}
+.wash-card .treasure-art .treasure-visual{--discovery-scale:4;transform:scale(var(--discovery-scale));image-rendering:pixelated}
+.wash-card[data-rarity="J"][data-phase="done"] .treasure-art .treasure-visual{--discovery-scale:5}
+.wash-card[data-first="true"][data-reveal-active="true"] .treasure-art .treasure-visual{animation:discovery-pop var(--discovery-time) ease-out both}
+.wash-card .discovery-skip,.wash-card #discovery-skip{position:absolute;z-index:3;right:2px;bottom:2px;width:64px;min-height:44px;padding:3px;font-size:11px;touch-action:manipulation}
+.wash-card .wash-display::before,.wash-card .wash-display::after{content:"";position:absolute;pointer-events:none;z-index:0;opacity:0}
+.wash-card[data-reveal-active="true"][data-rarity="R"] .wash-display::after,.wash-card[data-reveal-active="true"][data-rarity="SR"] .wash-display::after,.wash-card[data-reveal-active="true"][data-rarity="J"] .wash-display::after{inset:0;background:linear-gradient(115deg,transparent 20%,#fff9 45%,transparent 65%);animation:discovery-light var(--discovery-time) ease-out both}
+.wash-card[data-reveal-active="true"][data-rarity="SR"] .wash-display::before,.wash-card[data-reveal-active="true"][data-rarity="J"] .wash-display::before{width:170px;height:170px;border:2px solid #c8ad72;border-radius:50%;background:radial-gradient(circle,transparent 48%,#eee2ab77 60%,transparent 72%);animation:discovery-ring var(--discovery-time) ease-out both}
+.wash-card[data-reveal-active="true"][data-rarity="J"] .wash-display::before{border-color:#d8b654;background:repeating-conic-gradient(from 20deg,#ead28255 0deg 8deg,transparent 8deg 40deg);width:195px;height:195px}
+.wash-card .discovery-theme-result{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:6px;font-size:13px}
+.wash-card[data-discovery-stage="item"] .discovery-theme-result{visibility:hidden}
+.wash-card .discovery-theme-result button{min-height:44px;font-size:12px;padding:6px 10px;touch-action:manipulation}
+.wash-card[data-theme-complete="true"] .wash-info{min-height:78px}
+.wash-card[data-effects="light"] .wash-display::before,.wash-card[data-effects="light"] .wash-display::after,.wash-card[data-effects="off"] .wash-display::before,.wash-card[data-effects="off"] .wash-display::after{display:none}
+@keyframes discovery-pop{from{transform:scale(calc(var(--discovery-scale)*.82))}60%,to{transform:scale(var(--discovery-scale))}}
+@keyframes discovery-light{0%{opacity:0;transform:translateX(-60%)}40%{opacity:.65}to{opacity:0;transform:translateX(60%)}}
+@keyframes discovery-ring{0%{opacity:0;transform:scale(.7)}45%{opacity:.65}to{opacity:0;transform:scale(1)}}
+@media(max-height:650px){
+ .wash-sheet .wash-card{grid-template-rows:minmax(24px,max-content) minmax(104px,1fr) minmax(var(--discovery-info-min,50px),.8fr) 48px 44px;gap:5px;padding-top:4px}
+ .wash-card[data-theme-complete="true"]{--discovery-info-min:72px}
+ .wash-card[data-theme-complete="true"] .wash-info{min-height:72px}
+ .wash-card .treasure-art .treasure-visual,.wash-card[data-rarity="J"][data-phase="done"] .treasure-art .treasure-visual{--discovery-scale:3}
+ .wash-card .discovery-theme-result{margin-top:2px}
+ .wash-card[data-reveal-active="true"] .wash-display::before{max-width:104px;max-height:104px}
+}
+@media(prefers-reduced-motion:reduce){
+ .wash-card .treasure-art .treasure-visual,.wash-card .wash-display::before,.wash-card .wash-display::after,.wash-card .dirt-layer,.wash-card .sand-fall{animation:none!important}
+}

@@ -1,0 +1,89 @@
+{
+  "tag": "before-v0.6.1",
+  "runtime": "v25.9.0",
+  "platform": "win32 x64",
+  "browserVerified": false,
+  "iphoneVerified": false,
+  "measurements": [
+    {
+      "grid": "180x300",
+      "stage": "initial",
+      "particles": 30240,
+      "occupiedCells": 30240,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 30240,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-10",
+      "particles": 30240,
+      "occupiedCells": 28147,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 28147,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "same-30",
+      "particles": 30240,
+      "occupiedCells": 28147,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 28147,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "180x300",
+      "stage": "multi-direction",
+      "particles": 30240,
+      "occupiedCells": 5145,
+      "inBoundsDrawCalls": 30240,
+      "renderedPixels": 5145,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "initial",
+      "particles": 68040,
+      "occupiedCells": 68040,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 68040,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-10",
+      "particles": 68040,
+      "occupiedCells": 63140,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 63140,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "same-30",
+      "particles": 68040,
+      "occupiedCells": 63140,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 63140,
+      "outside": 0,
+      "colorsEqual": true
+    },
+    {
+      "grid": "270x450",
+      "stage": "multi-direction",
+      "particles": 68040,
+      "occupiedCells": 11322,
+      "inBoundsDrawCalls": 68040,
+      "renderedPixels": 11322,
+      "outside": 0,
+      "colorsEqual": true
+    }
+  ]
+}

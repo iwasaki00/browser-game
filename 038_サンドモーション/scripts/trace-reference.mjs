@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { PathEngine } from '../src/paths.js';
 import { Reassembly } from '../src/reassembly.js';
 
-const report = { version: '0.6.0', at: new Date().toISOString(), runtime: process.version,
+const report = { version: '0.6.2', at: new Date().toISOString(), runtime: process.version,
   platform: `${os.platform()} ${os.arch()}`, cpu: os.cpus()[0]?.model,
   browserVerified: false, iphoneVerified: false, browserFps: null, measurements: [] };
 for (const [width, height] of [[180, 300], [270, 450]]) {
@@ -35,6 +35,6 @@ for (const [width, height] of [[180, 300], [270, 450]]) {
     strokeCpuMs: +strokeCpuMs.toFixed(2), packingCpuMs: +packingCpuMs.toFixed(2),
     gravityLeavesGrooveUnchanged: true, exactReturn: true, colorsAndCountPreserved: true });
 }
-fs.mkdirSync('docs/trace-v0.6.0', { recursive: true });
-fs.writeFileSync('docs/trace-v0.6.0/node-results.json', JSON.stringify(report, null, 2) + '\n');
+fs.mkdirSync('docs/trace-visibility-v0.6.2', { recursive: true });
+fs.writeFileSync('docs/trace-visibility-v0.6.2/node-results.json', JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report, null, 2));

@@ -468,6 +468,20 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
       assert.equal(get('collapse').disabled, true); assert.equal(get('reassemble').disabled, false);
       const conversionsBeforeTrace = conversions;
       stroke(w * .3, h * .3, w * .7, h * .3);
+      const visibleCount = () => renderedSand().reduce((sum, value) => sum + value, 0);
+      const expectedVisible = Number(count.replaceAll(',', ''));
+      assert.equal(visibleCount(), expectedVisible);
+      for (let i = 1; i < 30; i++) {
+        stroke(w * .3, h * .3, w * .7, h * .3);
+        assert.equal(visibleCount(), expectedVisible);
+      }
+      for (let i = 0; i < 8; i++) {
+        const t = (i + 1) / 10;
+        stroke(w * .15, h * t, w * .85, h * (1 - t));
+        assert.equal(visibleCount(), expectedVisible);
+        stroke(w * t, h * .1, w * (1 - t), h * .85);
+        assert.equal(visibleCount(), expectedVisible);
+      }
       const groove = canvas.rendered.slice(); assert.notDeepEqual(groove, original);
       assert.equal(get('total').textContent, count); assert.equal(conversions, conversionsBeforeTrace);
       get('collapse').dispatchEvent(new Event('click'));

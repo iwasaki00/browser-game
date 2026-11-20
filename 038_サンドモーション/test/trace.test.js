@@ -11,6 +11,37 @@ function dense(w, h) {
   e.load(particles); return e;
 }
 for (const [w, h] of [[180, 300], [270, 450]]) {
+  test(`${w}: 10/30 repeats and full-area multidirectional tracing retain one visible pixel per particle at every stroke`, () => {
+    const e = dense(w, h), colors = e.colors.slice(), count = e.count;
+    const check = () => {
+      e.assertIntegrity(); assert.equal(e.count, count); assert.deepEqual(e.colors, colors);
+      assert.equal(e.grid.filter(Boolean).length, count);
+      const raster = new Uint8Array(w * h * 4);
+      for (let id = 0; id < count; id++) {
+        assert.equal(e.grid[e.y[id] * w + e.x[id]], id + 1);
+        assert.ok(e.x[id] >= 0 && e.x[id] < w && e.y[id] >= 0 && e.y[id] < h);
+        raster.set(e.colors.subarray(id * 4, id * 4 + 4), (e.y[id] * w + e.x[id]) * 4);
+      }
+      let visible = 0; for (let i = 3; i < raster.length; i += 4) if (raster[i]) visible++;
+      assert.equal(visible, count);
+    };
+    e.beginTrace(); check();
+    for (let i = 1; i <= 30; i++) {
+      e.traceSegment(w * .3, h * .45, w * .7, h * .45, 12 * w / 180, 800);
+      check();
+    }
+    for (let i = 0; i < 24; i++) {
+      const t = (i % 8 + 1) / 10;
+      e.traceSegment(w * .15, h * t, w * .85, h * (1 - t), 12 * w / 180, 30); check();
+      e.traceSegment(w * t, h * .1, w * (1 - t), h * .85, 12 * w / 180, 30); check();
+    }
+    const x = e.x.slice(), y = e.y.slice(); for (let i = 0; i < 300; i++) e.step();
+    assert.deepEqual(e.x, x); assert.deepEqual(e.y, y);
+    const ret = new Reassembly(e); assert.ok(ret.start()); ret.advance(1500);
+    assert.deepEqual(e.x, e.originX); assert.deepEqual(e.y, e.originY); assert.equal(e.fixedCount, count); check();
+    e.beginTrace(); e.traceSegment(w * .3, h * .45, w * .7, h * .45, 12 * w / 180, 800);
+    e.reset(); assert.deepEqual(e.x, e.originX); assert.deepEqual(e.y, e.originY); check();
+  });
   test(`${w}: entering trace cancels existing momentum and freezes running right/left/up gravity without reimport`, () => {
     for (const gravity of [[1, 0], [-1, 0], [0, -1]]) {
       const e = dense(w, h), colors = e.colors.slice();
@@ -65,7 +96,7 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     assert.deepEqual(e.colors, colors); assert.equal(e.fixedCount, count);
   });
 
-  test(`${w}: leaving trace packs all rim grains without crossing a sealed wall, then gravity resumes`, () => {
+  test(`${w}: tracing and leaving trace preserve a one-cell layout on each side of a sealed wall, then gravity resumes`, () => {
     const e = dense(w, h), colors = e.colors.slice(), count = e.count;
     // Add a full-height wall only after reserving an empty column.
     const mid = Math.floor(w / 2), particles = [];
@@ -97,6 +128,19 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     e.endTrace(); e.assertIntegrity();
   });
 }
+
+test('no vacancy in a sealed full chamber limits the push without hiding grains or editing walls', () => {
+  const e = new PathEngine(40, 40), particles = [];
+  for (let y = 1; y < 39; y++) for (let x = 1; x < 39; x++) particles.push({ x, y, color: [x, y, 100, 255] });
+  e.load(particles);
+  for (let i = 0; i < 40; i++) { e.walls[i] = e.walls[39 * 40 + i] = e.walls[i * 40] = e.walls[i * 40 + 39] = 1; }
+  e.wallCount = e.walls.reduce((sum, value) => sum + value, 0);
+  const x = e.x.slice(), y = e.y.slice(), colors = e.colors.slice(), walls = e.walls.slice();
+  e.beginTrace();
+  for (let i = 0; i < 30; i++) assert.equal(e.traceSegment(10, 20, 30, 20, 5, 20), 0);
+  assert.deepEqual(e.x, x); assert.deepEqual(e.y, y); assert.deepEqual(e.colors, colors); assert.deepEqual(e.walls, walls);
+  e.assertIntegrity(); assert.equal(e.grid.filter(Boolean).length, e.count);
+});
 
 test('fast strokes scatter forward more than slow strokes; invalid input preserves state', () => {
   const slow = dense(180, 300), fast = dense(180, 300);

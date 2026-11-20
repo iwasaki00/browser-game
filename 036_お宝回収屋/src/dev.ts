@@ -1,3 +1,5 @@
+import {mountDiscoveryLab,mountDiscoveryPreview} from './dev-discovery';
+import {effects} from './experience';
 import {STATIC_DEBUG,DEBUG_AVAILABLE} from './build-mode';
 import {mountTreasureCheck} from './dev-treasure-check';
 import {mountAutomationLab} from './dev-automation';
@@ -17,11 +19,12 @@ import {areaId,isRiver,riverCheck,riverCapabilities,metrics} from './river';
 import {project} from './surface';
 import {setMoney,setStats,grant,equip,spawn,scenarios,applyScenario,debugSnapshot,bounded} from './dev-actions';
 import {logEvent} from './events';
-interface Context {wash:()=>void;get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;active:()=>string;speed:(n:number)=>void;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
+interface Context {book:(id:string)=>void;wash:()=>void;get:()=>State;replace:(s:State)=>void;changed:()=>void;show:(title:string,html:string)=>void;select:(id:string)=>void;active:()=>string;speed:(n:number)=>void;overlay:(draw:(ctx:CanvasRenderingContext2D)=>void)=>void;exit:()=>void;}
 const escape=(x:unknown)=>String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const pre=(x:unknown)=>`<pre>${escape(JSON.stringify(x,null,2))}</pre>`;
 const input=(id:string,label:string,value:number,min=0,max=1e9)=>`<label>${label}<input id="${id}" type="number" min="${min}" max="${max}" value="${value}"></label>`;
 const options=(rows:{id:string;name:string}[])=>rows.map(t=>`<option value="${t.id}">${t.id} / ${t.name}${STATIC_DEBUG&&tools.some(x=>x.id===t.id&&x.implementationStatus==='catalogOnly')&&!['B301','R301','G304'].includes(t.id)?' / 未実装・閲覧のみ':''}</option>`).join('');
+let disposeDiscovery:(()=>void)|undefined;
 let labSpeed=1;
 let tab=0,restore:State|null=null;let disposeRoutes:(()=>void)|undefined;let disposeAuto:(()=>void)|undefined;
 const flags:Record<string,boolean>={区画:false,お宝:false,回収判定:false,深度:false,道具範囲:false,探知範囲:false,磁石範囲:false,ロープ範囲:false,座標:false};
@@ -48,6 +51,7 @@ export function openDebugLab(c:Context){
   mountBeachCompare(body);disposeRoutes=mountRouteLab(body);
   }else if(tab===2){body.innerHTML=`<div class="lab-form"><select id="lab-item">${options(treasures)}</select>${input('lab-x','横位置',180,0,359)}${input('lab-y','前後位置',245,0,279)}${input('lab-depth','深さ',20,0,plotDepthScale(plot(s)))}${input('lab-weight','重量kg',.12,.01,10000)}${input('lab-quality','品質',1,.01,2)}<label>レア度<select id="lab-rarity">${['C','U','R','SR','J'].map(r=>`<option>${r}</option>`).join('')}</select></label><label><input type="checkbox" id="lab-magnetic" checked>磁性あり</label><label>回収状態<select id="lab-find-state">${['buried','batch','stored','paid'].map(r=>`<option>${r}</option>`).join('')}</select></label><button id="lab-spawn">指定お宝を出現</button><button id="dev-jackpot">腕時計を出現（回帰試験）</button></div>`;
    mountTreasureCheck(body,s,c.changed,c.wash,next=>{c.replace(next);c.changed();render();});
+   mountDiscoveryLab(body,key=>{c.show('演出プレビュー / 登録・報酬なし','');document.querySelector('.sheet')!.classList.add('wash-sheet');disposeDiscovery=mountDiscoveryPreview(document.getElementById('sheet-body')!,key,{effects:effects(s),short:s.settings.short,book:c.book},render);});
    el('lab-item').onchange=()=>{const t=treasure((el('lab-item') as HTMLSelectElement).value);(el('lab-weight') as HTMLInputElement).value=String(t.weight);(el('lab-magnetic') as HTMLInputElement).checked=t.magnetic;(el('lab-rarity') as HTMLSelectElement).value=t.rarity;};
    action('lab-spawn',()=>spawn(s,(el('lab-item') as HTMLSelectElement).value,{x:num('lab-x'),y:num('lab-y'),depth:num('lab-depth'),weight:num('lab-weight'),quality:num('lab-quality'),magnetic:(el('lab-magnetic') as HTMLInputElement).checked,rarity:(el('lab-rarity') as HTMLSelectElement).value,state:(el('lab-find-state') as HTMLSelectElement).value as 'buried'}));action('dev-jackpot',()=>spawn(s,'B012',{x:180,y:150,depth:20}));
   }else if(tab===3){body.innerHTML=`<h3>可視化</h3>${Object.keys(flags).map(n=>`<label class="toggle"><input type="checkbox" data-flag="${n}" ${flags[n]?'checked':''}>${n}</label>`).join('')}${pre({area:areaId(s),plot:plot(s).id,seed:plot(s).seed,session:s.riverSession})}<button data-lab-area="B-A">砂浜テスト</button><button data-lab-area="R-A">浅瀬テスト</button><button data-lab-area="R-B">石だまりテスト</button><button data-lab-area="G-A">河原表面テスト</button><button data-lab-area="G-B">砂州テスト</button>`;
@@ -66,4 +70,4 @@ function drawOverlay(ctx:CanvasRenderingContext2D,s:State,active:string){ctx.sav
  const id=active,c=riverCapabilities(s,id);const ring=(radius:number,color:string)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.ellipse(pointer.x,pointer.y,radius,radius*.88,0,0,Math.PI*2);ctx.stroke();};
  if(flags.道具範囲)ring(beachProfiles[id]?.radius??15,'#ffff77');if(flags.探知範囲)ring(beachProfiles[id]?.range??95,'#77ffff');if(flags.磁石範囲)ring(c.radius,'#ff77ff');if(flags.ロープ範囲){const o=project(180,278);ctx.strokeStyle='#ffeeaa';ctx.beginPath();ctx.ellipse(o.x,o.y,c.reach,c.reach*.88,0,Math.PI,Math.PI*2);ctx.stroke();}if(flags.座標)ctx.fillText(`pointer:${pointer.x.toFixed(1)},${pointer.y.toFixed(1)}`,8,42);ctx.restore();}
 
-export function disposeDebugLab(){disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;}
+export function disposeDebugLab(){disposeDiscovery?.();disposeDiscovery=undefined;disposeRoutes?.();disposeRoutes=undefined;disposeAuto?.();disposeAuto=undefined;}

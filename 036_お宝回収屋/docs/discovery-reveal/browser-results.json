@@ -1,0 +1,139 @@
+[
+  {
+    "channel": "chrome",
+    "width": 390,
+    "height": 844,
+    "kind": "normal-rarities",
+    "rarities": 5,
+    "repeatC_SR_J": true,
+    "tapSkip": true,
+    "skipSpam": true,
+    "staleNextSpam": true,
+    "automaticEnd": true,
+    "hiddenVisibilitySimulation": true,
+    "fnExactlyOnce": true,
+    "spritesCrispAndClipped": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "height": 844,
+    "kind": "navigation-safety",
+    "washingCancelRetainsItem": true,
+    "skipDuringWashPaysOnce": true,
+    "reloadDoesNotReplay": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "height": 844,
+    "kind": "theme",
+    "bothResultsOnce": true,
+    "progress3of3": true,
+    "bookNavigation": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "height": 844,
+    "kind": "previews",
+    "patterns": 9,
+    "replaySpam": true,
+    "fnBookHistoryUnchanged": true,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "height": 844,
+    "kind": "settings-layout",
+    "offLightShort": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "height": 568,
+    "kind": "normal-rarities",
+    "rarities": 5,
+    "repeatC_SR_J": true,
+    "tapSkip": true,
+    "skipSpam": true,
+    "staleNextSpam": true,
+    "automaticEnd": true,
+    "hiddenVisibilitySimulation": true,
+    "fnExactlyOnce": true,
+    "spritesCrispAndClipped": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "height": 568,
+    "kind": "navigation-safety",
+    "washingCancelRetainsItem": true,
+    "skipDuringWashPaysOnce": true,
+    "reloadDoesNotReplay": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "height": 568,
+    "kind": "theme",
+    "bothResultsOnce": true,
+    "progress3of3": true,
+    "bookNavigation": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "height": 568,
+    "kind": "previews",
+    "patterns": 9,
+    "replaySpam": true,
+    "fnBookHistoryUnchanged": true,
+    "normalStoresUnchanged": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "height": 568,
+    "kind": "settings-layout",
+    "offLightShort": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "height": 920,
+    "kind": "normal-rarities",
+    "rarities": 5,
+    "repeatC_SR_J": true,
+    "tapSkip": true,
+    "skipSpam": true,
+    "staleNextSpam": true,
+    "automaticEnd": true,
+    "hiddenVisibilitySimulation": true,
+    "fnExactlyOnce": true,
+    "spritesCrispAndClipped": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "height": 920,
+    "kind": "navigation-safety",
+    "washingCancelRetainsItem": true,
+    "skipDuringWashPaysOnce": true,
+    "reloadDoesNotReplay": true
+  },
+  {
+    "channel": "chrome",
+    "width": 1280,
+    "height": 920,
+    "kind": "theme",
+    "bothResultsOnce": true,
+    "progress3of3": true,
+    "bookNavigation": true
+  }
+]

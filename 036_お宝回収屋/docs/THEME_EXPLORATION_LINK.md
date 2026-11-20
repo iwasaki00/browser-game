@@ -68,12 +68,24 @@ DEBUG版：
 自動テスト・ブラウザ・両ビルド・画像不変性の最終結果は `theme-goals/verification.json` を参照。
 
 - 自動テスト：`npm.cmd test`、722件成功（追加テストと16点への既存試験拡張を含む）。
-- 両ビルド：TypeScript検査・Viteビルド。
-- 連携ブラウザ：`node --import tsx scripts/theme-goals-browser.mjs`。通常とDEBUGを同一オリジンの別パスで確認。全9テーマ品の設定・切替・解除、旧保存目標、各分野の未洗浄状態と同時達成、HUD操作、閲覧300点、重複通知なし、保存分離を検証。
-- 既存DEBUG回帰：`node --import tsx scripts/static-debug-browser.mjs`。
+- 両ビルド：通常版・静的DEBUG版ともTypeScript検査・Viteビルド成功。
+- 連携ブラウザ：`node --import tsx scripts/theme-goals-browser.mjs`、24ケース成功。390×844 Chrome、320×568 Edge、1280×920 Chrome。通常とDEBUGを同一オリジンの別パスで確認。全9テーマ品の設定・切替・解除、旧保存目標、各分野の未洗浄状態と同時達成、HUD操作、閲覧300点、重複通知なし、保存分離、達成文言と絵の非重複を検証。
+- 既存DEBUG回帰：`node --import tsx scripts/static-debug-browser.mjs`、10ケース成功。46道具選択、3分野の実操作、3設備の稼働、残高0での15回の支出、有限数値のバックアップ・復元、通常保存の不変、全300点の一覧・詳細を確認。
 - 画像・データ不変確認：9シートのバイナリSHA-256、お宝マスター・経済・エンジン・保存処理の内容一致を確認（GitチェックアウトのLF/CRLF差は除く）。
 - 確認画像：`theme-goals/B-selected.png` / `B-both-completed.png`。川底はR、河原はG。
 
 iPhone Safari実機は未確認。Windowsから同じWi-Fiで確認する起動手順は [COLLECTION_THEMES.md](COLLECTION_THEMES.md) の4173／4174ポートの手順を利用できる。各分野の残り1点試験、HUDの開閉・目標変更・解除、二重達成表示、スクロール、再読み込みを実機で確認する。未確認を成功扱いにしない。
 
-変更対象：`src/exploration-goals.ts`、`src/exploration-goals-ui.ts`、`src/exploration-goals.css`、`src/collection-themes-ui.ts`、`src/collection-themes.css`、`src/collection.ts`、`src/main.ts`、`src/dev-treasure-check.ts`、目標関連テスト・ブラウザ試験・本資料とREADME。お宝300点の画像、採取・経済バランス、Version、セーブ形式は変更しない。commit・push・公開は行わない。
+## 変更ファイル一覧
+
+- 実装：`src/exploration-goals.ts`、`src/exploration-goals-ui.ts`、`src/exploration-goals.css`、`src/collection-themes-ui.ts`、`src/collection-themes.css`、`src/collection.ts`、`src/main.ts`、`src/dev-treasure-check.ts`。
+- テスト：`tests/exploration-goals.test.ts`、`tests/theme-goals.test.ts`、`scripts/exploration-goals-browser.mjs`、`scripts/theme-goals-browser.mjs`、`scripts/theme-goals-report.mjs`。
+- 説明書：`README.md`、`docs/EXPLORATION_GOALS.md`、`docs/COLLECTION_THEMES.md`、`docs/THEME_EXPLORATION_LINK.md`。
+- 検証記録：`docs/theme-goals/` のログ・JSON・6枚の確認画像。既存回帰の `docs/static-debug/` の実行結果も更新。
+- 再ビルド：`dist/` と `dist-debug/` のindex・JS・CSS。配布内のPNGは変更しない。
+
+## 制約・未確認
+
+目標は出現を保証する機能ではなく、選択しても出現・採取条件は変わらない。未解放場所の品も設定できるが、移動前に表示された解放条件を満たす必要がある。目標は常に1件で、達成後に次の目標を自動設定しない。iPhone Safari実機は未確認。
+
+お宝300点の画像、採取・経済バランス、Version、セーブ形式は変更しない。commit・push・公開は行わない。

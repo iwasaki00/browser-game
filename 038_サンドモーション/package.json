@@ -1,6 +1,6 @@
 {
   "name": "sand-motion",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,6 +13,7 @@
     "reference:hourglass": "node scripts/hourglass-reference.mjs",
     "reference:size": "node scripts/size-reference.mjs",
     "reference:paths": "node scripts/paths-reference.mjs",
-    "reference:trace": "node scripts/trace-reference.mjs"
+    "reference:trace": "node scripts/trace-reference.mjs",
+    "reference:trace-visibility": "node scripts/trace-visibility-reference.mjs"
   }
 }

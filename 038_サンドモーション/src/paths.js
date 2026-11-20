@@ -49,75 +49,57 @@ export class PathEngine extends SandEngine {
     const ux = dx / length, uy = dy / length, nx = -uy, ny = ux;
     const scale = this.width / 180;
     const scatter = scale * Math.min(2, Math.max(0, length / scale / Math.max(8, elapsedMs) - 0.2) * 2);
+    // Bounded straight push lanes. No empty destination means no movement.
+    const reach = Math.ceil(Math.max(this.width, this.height) * .5);
+    this.tracePath ??= new Int32Array(Math.max(this.width, this.height) * 2 + 2);
+    const inside = (x, y) => {
+      const t = Math.max(0, Math.min(length, (x - ax) * ux + (y - ay) * uy));
+      return (x - ax - t * ux) ** 2 + (y - ay - t * uy) ** 2 < radius ** 2;
+    };
     let changed = 0;
-    // A swept capsule, evaluated against each stable ID once per input segment.
-    // The rim may temporarily contain several grains; no IDs or colors are lost.
     for (let id = 0; id < this.count; id++) {
       const x = this.x[id], y = this.y[id];
-      const t = Math.max(0, Math.min(length, (x - ax) * ux + (y - ay) * uy));
-      const cx = ax + t * ux, cy = ay + t * uy;
-      if ((x - cx) ** 2 + (y - cy) ** 2 >= radius ** 2) continue;
-      const side = ((x - cx) * nx + (y - cy) * ny) || (id % 2 ? 1 : -1);
-      const sign = Math.sign(side);
-      const rim = radius + 1 + ((Math.imul(id + 1, 2654435761) >>> 0) % 1024) / 1024 * radius * .6;
-      const push = rim - Math.abs(side);
-      const tx = Math.round(x + nx * sign * push + ux * scatter);
-      const ty = Math.round(y + ny * sign * push + uy * scatter);
-      let px = x, py = y;
-      const steps = Math.max(Math.abs(tx - x), Math.abs(ty - y));
-      // Cardinal substeps keep every grain in its original wall-connected region.
-      for (let s = 1; s <= steps; s++) {
-        const qx = Math.round(x + (tx - x) * s / steps), qy = Math.round(y + (ty - y) * s / steps);
-        if (qx < 0 || qx >= this.width || qy < 0 || qy >= this.height) break;
-        if (this.walls[py * this.width + qx] || this.walls[qy * this.width + qx]) break;
-        px = qx; py = qy;
+      if (!inside(x, y)) continue;
+      const side = (x - ax) * nx + (y - ay) * ny;
+      const sign = Math.sign(side) || (id % 2 ? 1 : -1);
+      let rx = nx * sign + ux * scatter / (radius + 1);
+      let ry = ny * sign + uy * scatter / (radius + 1);
+      const norm = Math.hypot(rx, ry); rx /= norm; ry /= norm;
+      let px = x, py = y, used = 0, found = false, blocked = false;
+      for (let distance = 1; distance <= reach && !blocked && !found; distance++) {
+        const qx = Math.round(x + rx * distance), qy = Math.round(y + ry * distance);
+        // Cardinal substeps also test the corner cell on diagonal lanes.
+        for (let axis = 0; axis < 2; axis++) {
+          const tx = axis === 0 ? qx : px, ty = axis === 1 ? qy : py;
+          if (tx === px && ty === py) continue;
+          if (tx < 0 || tx >= this.width || ty < 0 || ty >= this.height || this.walls[ty * this.width + tx]) { blocked = true; break; }
+          px = tx; py = ty;
+          if (inside(px, py)) continue;
+          const cell = py * this.width + px;
+          this.tracePath[used++] = cell;
+          if (!this.grid[cell]) { found = true; break; }
+        }
       }
-      if (px === x && py === y) continue;
-      this.x[id] = px; this.y[id] = py;
+      if (!found) continue;
+      // Commit only a complete lane ending in a vacancy. Push the rim outwards,
+      // then insert this grain. Every grain remains in its own visible cell.
+      for (let i = used - 1; i > 0; i--) {
+        const cell = this.tracePath[i], moved = this.grid[this.tracePath[i - 1]] - 1;
+        this.grid[cell] = moved + 1;
+        this.x[moved] = cell % this.width; this.y[moved] = Math.floor(cell / this.width);
+        if (this.fixed[moved]) { this.fixed[moved] = 0; this.fixedCount--; }
+        this.active[moved] = 1; this.vx[moved] = 0; this.vy[moved] = 0;
+      }
+      const target = this.tracePath[0];
+      this.grid[y * this.width + x] = 0; this.grid[target] = id + 1;
+      this.x[id] = target % this.width; this.y[id] = Math.floor(target / this.width);
       if (this.fixed[id]) { this.fixed[id] = 0; this.fixedCount--; }
       this.active[id] = 1; changed++;
     }
-    this.rebuildTraceGrid();
     return changed;
   }
 
-  rebuildTraceGrid() {
-    this.grid.fill(0);
-    for (let id = 0; id < this.count; id++) this.grid[this.y[id] * this.width + this.x[id]] = id + 1;
-  }
-
   endTrace() {
-    if (!this.tracing) return;
-    const size = this.grid.length, queue = new Int32Array(size), parent = new Int32Array(size);
-    const seen = new Uint32Array(size); let stamp = 0;
-    // Move a vacancy back along a cardinal path, then insert the extra rim grain.
-    // Existing fixed grains are released only if this local packing displaces them.
-    for (let id = 0; id < this.count; id++) {
-      const start = this.y[id] * this.width + this.x[id];
-      if (this.grid[start] === id + 1) continue;
-      let head = 0, tail = 1, empty = -1;
-      queue[0] = start; seen[start] = ++stamp; parent[start] = -1;
-      while (head < tail && empty < 0) {
-        const cell = queue[head++], x = cell % this.width;
-        for (let direction = 0; direction < 4; direction++) {
-          const next = direction === 0 ? (x ? cell - 1 : -1) : direction === 1 ?
-            (x + 1 < this.width ? cell + 1 : -1) : direction === 2 ? cell - this.width : cell + this.width;
-          if (next < 0 || next >= size || this.walls[next] || seen[next] === stamp) continue;
-          seen[next] = stamp; parent[next] = cell;
-          if (!this.grid[next]) { empty = next; break; }
-          queue[tail++] = next;
-        }
-      }
-      if (empty < 0) throw new Error('なぞり砂を収める空きセルがありません。');
-      while (parent[empty] !== -1) {
-        const from = parent[empty], moved = this.grid[from] - 1;
-        this.grid[empty] = moved + 1;
-        this.x[moved] = empty % this.width; this.y[moved] = Math.floor(empty / this.width);
-        if (this.fixed[moved]) { this.fixed[moved] = 0; this.fixedCount--; }
-        this.active[moved] = 1; empty = from;
-      }
-      this.grid[start] = id + 1;
-    }
     this.tracing = false; this.vx.fill(0); this.vy.fill(0);
   }
 
@@ -160,12 +142,7 @@ export class PathEngine extends SandEngine {
   }
 
   assertIntegrity() {
-    if (!this.tracing) super.assertIntegrity();
-    else for (let id = 0; id < this.count; id++) {
-      const cell = this.y[id] * this.width + this.x[id];
-      if (this.x[id] < 0 || this.x[id] >= this.width || this.y[id] < 0 || this.y[id] >= this.height ||
-          this.walls[cell] || !this.grid[cell]) throw new Error('なぞり砂の不整合');
-    }
+    super.assertIntegrity();
     let walls = 0;
     for (let cell = 0; cell < this.walls.length; cell++) {
       if (!this.walls[cell]) continue;
