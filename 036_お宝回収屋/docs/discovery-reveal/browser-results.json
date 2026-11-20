@@ -159,5 +159,9 @@
     "kind": "reduced-motion",
     "motionOmitted": true,
     "progressUnchanged": true
+  },
+  {
+    "kind": "fallback",
+    "failedPNGUsesExistingSVG": true
   }
 ]
