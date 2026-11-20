@@ -9,7 +9,9 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
       super(); this.textContent = ''; this.value = ''; this.hidden = false; this.disabled = false;
       this.dataset = {}; this.attributes = {}; this.style = {}; this.clientWidth = 360; this.clientHeight = 600;
       this.classes = new Set(); this.classList = { toggle: (name, on) => on ? this.classes.add(name) : this.classes.delete(name) };
+      this.listeners = [];
     }
+    addEventListener(name, handler, options) { this.listeners.push({ name, options }); super.addEventListener(name, handler, options); }
     setAttribute(name, value) { this.attributes[name] = value; }
     click() { if (!this.disabled) this.dispatchEvent(new Event('click')); }
   }
@@ -496,6 +498,55 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
       assert.notDeepEqual(canvas.rendered, packed);
       assert.equal(get('total').textContent, count);
     }
+    for (const direction of ['1,0', '-1,0', '0,-1']) {
+      get('reset').click();
+      arrows.find(b => b.dataset.g === direction).click();
+      const previousGravity = get('gravity').textContent, image = canvas.rendered.slice(), imported = conversions;
+      selectTool('trace');
+      assert.equal(get('tool-trace').attributes['aria-pressed'], 'true');
+      assert.equal(get('tool-sand').attributes['aria-pressed'], 'false');
+      assert.deepEqual(canvas.rendered, image); assert.equal(conversions, imported);
+      get('gravity-open').click();
+      assert.equal(get('gravity-trace-notice').hidden, false);
+      assert.ok(arrows.every(b => b.disabled)); assert.equal(get('tilt-start').disabled, true);
+      // Even forced events must not overwrite the pre-trace gravity/input mode.
+      for (const b of arrows) b.dispatchEvent(new Event('click'));
+      get('tilt-start').dispatchEvent(new Event('click'));
+      assert.equal(get('input-mode').textContent, '手動'); get('gravity-close').click();
+      stroke(canvas.width * .3, canvas.height * .3, canvas.width * .7, canvas.height * .3);
+      const groove = canvas.rendered.slice();
+      for (let i = 0; i < 100; i++) tick();
+      assert.deepEqual(canvas.rendered, groove);
+      selectTool('sand');
+      assert.equal(get('tools-open').textContent, '砂を触る');
+      assert.equal(get('gravity').textContent, previousGravity);
+    }
+    get('reset').click(); get('tilt-start').click(); await Promise.resolve(); sensor();
+    selectTool('trace');
+    for (let i = 0; i < 20; i++) sensor(-35);
+    assert.equal(get('input-mode').textContent, '傾き');
+    selectTool('sand'); assert.equal(get('input-mode').textContent, '傾き');
+    assert.equal(get('gravity').textContent, '-1, 0');
+    arrows.find(b => b.dataset.g === '0,1').click(); get('reset').click(); selectTool('trace');
+    for (const name of ['touchstart', 'touchmove', 'touchend']) {
+      assert.equal(canvas.listeners.find(l => l.name === name).options.passive, false);
+      const event = new Event(name, { cancelable: true }); canvas.dispatchEvent(event);
+      assert.equal(event.defaultPrevented, true);
+      const panelEvent = new Event(name, { cancelable: true }); get('settings-panel').dispatchEvent(panelEvent);
+      assert.equal(panelEvent.defaultPrevented, false);
+    }
+    const doubleTap = new Event('dblclick', { cancelable: true }); canvas.dispatchEvent(doubleTap);
+    assert.equal(doubleTap.defaultPrevented, true);
+    pointer('pointerdown', 80, 100); pointer('pointermove', 100, 110);
+    pointer('pointercancel', 100, 110); assert.equal(canvas.capture, null);
+    const canceled = canvas.rendered.slice(); pointer('pointermove', 170, 160);
+    assert.deepEqual(canvas.rendered, canceled);
+    pointer('pointerdown', 80, 100);
+    // The OS supplies a pointerId on lostpointercapture.
+    const lost = new Event('lostpointercapture'); Object.assign(lost, { pointerId: 1 }); canvas.dispatchEvent(lost);
+    assert.equal(canvas.capture, null);
+    get('settings-open').click(); assert.equal(get('settings-panel').hidden, false);
+    get('settings-close').click(); assert.equal(get('settings-panel').hidden, true);
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

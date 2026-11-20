@@ -11,6 +11,24 @@ function dense(w, h) {
   e.load(particles); return e;
 }
 for (const [w, h] of [[180, 300], [270, 450]]) {
+  test(`${w}: entering trace cancels existing momentum and freezes running right/left/up gravity without reimport`, () => {
+    for (const gravity of [[1, 0], [-1, 0], [0, -1]]) {
+      const e = dense(w, h), colors = e.colors.slice();
+      e.setGravity(...gravity); e.releaseAll();
+      for (let i = 0; i < 8; i++) e.step();
+      assert.ok(e.vx.some(Boolean) || e.vy.some(Boolean));
+      const x = e.x.slice(), y = e.y.slice(), tick = e.tick, seed = e.seed;
+      e.beginTrace();
+      assert.ok(e.vx.every(v => v === 0)); assert.ok(e.vy.every(v => v === 0));
+      for (let i = 0; i < 400; i++) e.step();
+      assert.deepEqual(e.x, x); assert.deepEqual(e.y, y);
+      assert.equal(e.tick, tick); assert.equal(e.seed, seed); assert.deepEqual(e.colors, colors);
+      e.endTrace(); assert.deepEqual(e.gravity, { x: gravity[0], y: gravity[1] });
+      for (let i = 0; i < 8; i++) e.step();
+      assert.ok(e.x.some((px, id) => px !== x[id]) || e.y.some((py, id) => py !== y[id]));
+      e.assertIntegrity();
+    }
+  });
   test(`${w}: dense opaque centre has a continuous persistent groove, stationary input does nothing`, () => {
     const e = dense(w, h), colors = e.colors.slice(), count = e.count, untouched = 0;
     const home = [e.x[untouched], e.y[untouched]], r = 10 * w / 180;

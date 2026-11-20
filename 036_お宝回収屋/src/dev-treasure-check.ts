@@ -15,7 +15,7 @@ export function mountTreasureCheck(host:HTMLElement,s:State,changed:()=>void,was
  const el=<T extends HTMLElement=HTMLElement>(id:string)=>section.querySelector<T>('#'+id)!;
  const select=el<HTMLSelectElement>('lab-quick-item'),query=el<HTMLInputElement>('lab-quick-query');
  const filter=()=>{const q=query.value.trim().toLowerCase();select.replaceChildren(...treasures.filter(t=>(t.id+' '+t.name).toLowerCase().includes(q)).map(t=>new Option(t.id+' / '+t.name,t.id)));el<HTMLButtonElement>('lab-quick-recover').disabled=!select.options.length;};filter();query.oninput=filter;
- el('lab-catalog-toggle').onclick=()=>{const box=el('lab-catalog');box.hidden=!box.hidden;if(!box.hidden){box.replaceChildren();mountCollection(box,s,{revealAll:true});}el('lab-catalog-toggle').textContent=box.hidden?'全300点を表示':'閲覧表示を閉じる';};
+ el('lab-catalog-toggle').onclick=()=>{const box=el('lab-catalog');box.hidden=!box.hidden;if(!box.hidden){box.replaceChildren();mountCollection(box,s,{revealAll:true,goalChanged:changed});}el('lab-catalog-toggle').textContent=box.hidden?'全300点を表示':'閲覧表示を閉じる';};
  el('lab-quick-recover').onclick=()=>{try{const f=instantRecovery(s,select.value);changed();el('lab-quick-result').textContent=treasure(f.id).name+'を未洗浄で追加しました。図鑑登録・探索目標の達成は洗浄後です。';el('lab-quick-wash').hidden=false;}catch(e){el('lab-quick-result').textContent=String(e);}};
  el('lab-quick-wash').onclick=wash;
  if(replaceFixture){

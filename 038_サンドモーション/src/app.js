@@ -108,6 +108,10 @@ function draw() {
 }
 
 function updateStats() {
+  const viewport = window.visualViewport;
+  $('viewport-size').textContent = `${window.innerWidth} × ${window.innerHeight} / 表示 ${Math.round(viewport?.width ?? window.innerWidth)} × ${Math.round(viewport?.height ?? window.innerHeight)}`;
+  $('viewport-scale').textContent = `${(viewport?.scale ?? 1).toFixed(2)} / 左 ${Math.round(viewport?.offsetLeft ?? 0)}`;
+  $('page-width').textContent = document.documentElement ? `${document.documentElement.clientWidth} / ${document.documentElement.scrollWidth} / 横移動 ${Math.round(window.scrollX ?? 0)}` : '—';
   $('wall-count').textContent = mode === 'free' ? engine.wallCount.toLocaleString() : '—';
   $('total').textContent = engine.count.toLocaleString();
   $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
@@ -138,7 +142,7 @@ function frame(time) {
       $('state-label').textContent = '元の景色に戻りました。触れて崩せます。';
       updateStats(); syncControls();
     }
-  } else {
+  } else if (!(mode === 'free' && tool === 'trace')) {
     accumulator += Math.min(delta, MAX_FRAME_MS);
     while (accumulator >= timing.stepMs && steps < timing.maxSteps) {
       const start = performance.now(); engine.step();
@@ -196,9 +200,18 @@ canvas.addEventListener('pointermove', event => {
 });
 for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(name, event => {
   if (pointer?.id !== event.pointerId) return;
+  if (event.cancelable) event.preventDefault();
   if (name === 'pointerup' && tool !== 'sand' && mode === 'free' && !panel && !tilt.paused && !reassembly.active) brush(pointer, point(event), true);
-  pointer = null;
+  endPointer();
 });
+// Safari fallback is confined to the drawing surface. Never cancel panel touches.
+for (const name of ['touchstart', 'touchmove', 'touchend']) canvas.addEventListener(name, event => {
+  if (event.cancelable) event.preventDefault();
+  if (event.touches?.length > 1) endPointer();
+}, { passive: false });
+canvas.addEventListener('touchcancel', endPointer, { passive: true });
+canvas.addEventListener('dblclick', event => event.preventDefault());
+window.addEventListener('blur', endPointer);
 canvas.addEventListener('contextmenu', event => event.preventDefault());
 $('collapse').addEventListener('click', () => {
   if (mode === 'free' && tool === 'trace') return;
@@ -224,8 +237,9 @@ $('reassemble').addEventListener('click', () => {
   syncControls(); updateStats();
 });
 function endPointer() {
-  if (pointer && canvas.hasPointerCapture(pointer.id)) canvas.releasePointerCapture(pointer.id);
+  const id = pointer?.id;
   pointer = null;
+  if (id !== undefined && canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
 }
 function notifyRemovedWalls() {
   if (mode !== 'free' || !engine.removedOnReset) return;
@@ -234,6 +248,7 @@ function notifyRemovedWalls() {
 }
 function syncControls() {
   const paused = tilt.paused, returning = reassembly?.active === true, hourglass = mode === 'hourglass';
+  const tracing = !hourglass && tool === 'trace';
   $('mode-free').setAttribute('aria-pressed', String(!hourglass));
   $('mode-hourglass').setAttribute('aria-pressed', String(hourglass));
   $('free-gravity').hidden = hourglass; $('hourglass-gravity').hidden = !hourglass;
@@ -245,12 +260,16 @@ function syncControls() {
   for (const [id, x] of [['left', -1], ['straight', 0], ['right', 1]]) $('hourglass-' + id).setAttribute('aria-pressed', String(hourglass && engine.gravity.x === x));
   $('gravity-label').textContent = hourglass ? ['左寄せ', 'まっすぐ', '右寄せ'][engine.gravity.x + 1] : directionNames[engine.gravity.x + ',' + engine.gravity.y] + '向きに流れる';
   $('gravity-open').textContent = `重力 ${directionArrows[engine.gravity.x + ',' + engine.gravity.y]}`;
+  document.querySelectorAll('[data-g]').forEach(b => { b.disabled = tracing; });
+  $('tilt-start').disabled = tracing || tilt.starting || tilt.mode === 'tilt';
+  $('calibrate').disabled = tracing || tilt.mode !== 'tilt' || paused;
+  $('gravity-trace-notice').hidden = !tracing;
   if (!hourglass && tool === 'trace') {
     $('gravity-open').textContent = '重力なし';
     $('gravity-label').textContent = 'なぞり砂：重力なし（通常の道具に戻すと重力操作に戻ります）';
   }
   $('tools-open').hidden = hourglass; $('tools-open').disabled = paused || returning;
-  $('tools-open').textContent = tool === 'sand' ? '道具：砂' : toolNames[tool];
+  $('tools-open').textContent = toolNames[tool];
   $('tools-open').setAttribute('aria-label', `道具：${toolNames[tool]}`);
   $('tool-row').setAttribute('data-tools', String(!hourglass));
   for (const name of ['sand', 'trace', 'draw', 'erase']) {
@@ -343,6 +362,7 @@ for (const name of ['sand', 'trace', 'draw', 'erase']) $('tool-' + name).addEven
   if (tool === 'trace' && name !== 'trace') engine.endTrace();
   tool = name;
   if (name === 'trace') engine.beginTrace();
+  else if (tilt.mode === 'tilt') applyGravity(sensorGravity.x, sensorGravity.y);
   accumulator = 0; previousTime = 0;
   closePanel(); syncControls(); updateStats(); draw();
 });
@@ -378,6 +398,7 @@ $('size-apply').addEventListener('click', () => {
 });
 
 function applyGravity(x, y) {
+  if (mode === 'free' && tool === 'trace') return;
   if (mode === 'hourglass') { x = Math.sign(x); y = 1; }
   // Sensor events may arrive at 60 Hz. Only a direction change needs to wake
   // grains or rewrite the gravity controls/diagnostics.
@@ -417,6 +438,7 @@ const tilt = new TiltController(environment, {
   }
 });
 $('tilt-start').addEventListener('click', () => {
+  if (mode === 'free' && tool === 'trace') return;
   if (!tiltHintShown) {
     tiltHintShown = true;
     message('縦画面のまま遊ぶには、iPhoneのコントロールセンターで「画面縦向きのロック」をオンにしてください。');
@@ -425,11 +447,15 @@ $('tilt-start').addEventListener('click', () => {
   void tilt.start();
 });
 $('calibrate').addEventListener('click', () => {
+  if (mode === 'free' && tool === 'trace') return;
   if (!tilt.calibrate()) $('tilt-status').textContent = '新しい傾きの値を待ってから、もう一度基準を合わせてください。';
 });
 for (const name of ['resize', 'orientationchange']) window.addEventListener(name, () => { tilt.updateDisplay(); fitCanvas(); });
+window.visualViewport?.addEventListener('resize', () => { fitCanvas(); updateStats(); });
+window.visualViewport?.addEventListener('scroll', updateStats);
 screen.orientation?.addEventListener('change', () => { tilt.updateDisplay(); fitCanvas(); });
 document.querySelectorAll('[data-g]').forEach(button => button.addEventListener('click', () => {
+  if (mode === 'free' && tool === 'trace') return;
   tilt.manual();
   const [x, y] = button.dataset.g.split(',').map(Number); applyGravity(x, y);
 }));

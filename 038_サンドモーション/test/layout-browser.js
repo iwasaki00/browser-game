@@ -4,7 +4,7 @@ const assert = (ok, why) => { if (!ok) throw new Error(why); };
 
 document.getElementById('run').addEventListener('click', async event => {
   event.target.disabled = true;
-  const report = { version: '0.5.0', at: new Date().toISOString(), userAgent: navigator.userAgent,
+  const report = { version: '0.6.1', at: new Date().toISOString(), userAgent: navigator.userAgent,
     environment: 'Real browser iframe layouts; simulated 132px browser bars and 47/34px safe areas; no iPhone Safari UI', layouts: [], maximumSize: [] };
   try {
     const win = iframe.contentWindow, doc = iframe.contentDocument, get = id => doc.getElementById(id), canvas = get('sand');
@@ -25,6 +25,11 @@ document.getElementById('run').addEventListener('click', async event => {
         const ids = ['settings-open', 'mode-free', 'mode-hourglass', 'collapse', mode === 'free' ? 'reassemble' : 'flip', 'reset', 'image-open', 'size-open', 'gravity-open', ...(mode === 'free' ? ['tools-open'] : [])];
         assert(get('tools-open').hidden === (mode === 'hourglass'), '砂時計の道具表示が不正です。');
         const row = { width, fullHeight, viewportHeight: height, simulatedBars: bars, safeTop: 47, safeBottom: 34, rootFontPx: font, mode, buttons: [] };
+        row.viewport = { innerWidth: win.innerWidth, clientWidth: doc.documentElement.clientWidth,
+          scrollWidth: doc.documentElement.scrollWidth, scrollX: win.scrollX,
+          scale: win.visualViewport?.scale, offsetLeft: win.visualViewport?.offsetLeft };
+        assert(row.viewport.scrollWidth <= row.viewport.clientWidth + 1, '横方向の内容幅がはみ出しています。');
+        win.scrollTo(100, 0); await wait(20); assert(Math.abs(win.scrollX) < 1, '横スクロールが発生しました。');
         if (font === 16) {
           for (const id of ids) row.buttons.push(visibleHit(id));
           assert(doc.documentElement.scrollHeight <= height + 1, '通常の文字サイズでページスクロールが必要です。');
@@ -77,9 +82,9 @@ document.getElementById('run').addEventListener('click', async event => {
       get('reset').click(); assert(canvas.toDataURL() === initial, '最大サイズのリセット不一致');
       report.maximumSize.push({ quality, count, ...frames, resetExact: true });
     }
-    const response = await fetch('/__qa/paths-layout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(report) });
+    const response = await fetch('/__qa/trace-control-layout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(report) });
     assert(response.ok, '保存するには npm run qa を使用してください。');
-    status.textContent = '完了。docs/paths-v0.5.0/layout-browser-results.json に保存しました。'; output.textContent = JSON.stringify(report, null, 2);
+    status.textContent = '完了。docs/trace-control-v0.6.1/layout-browser-results.json に保存しました。'; output.textContent = JSON.stringify(report, null, 2);
   } catch (error) { status.textContent = `失敗: ${error.message}`; output.textContent += `\n${error.stack}`; }
   finally { event.target.disabled = false; }
 });

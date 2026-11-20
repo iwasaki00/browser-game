@@ -12,3 +12,11 @@
 .topbar{grid-template-columns:minmax(0,1fr) auto}.topbar h1{min-width:0;white-space:normal;overflow-wrap:anywhere}
 @media(min-width:760px){.topbar{grid-template-columns:minmax(0,1fr) 15rem auto}}
 .tool-row[data-tools=true]{grid-template-columns:repeat(4,minmax(0,1fr))}.tool-row button{padding-inline:.3rem;font-size:.8rem}.path-tools{display:grid;gap:.6rem}
+/* Keep horizontal overscroll local without disabling page zoom or vertical access. */
+html,body{width:100%;max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+@supports(overflow:clip){html,body{overflow-x:clip}}
+.app>*{min-width:0}.toolbar,.panel,.panel-body{min-width:0;max-width:100%}
+.panel{max-width:36rem}.panel-body{overflow-x:hidden;overflow-wrap:anywhere}
+.stage{padding-inline:.35rem;overscroll-behavior:none}
+.path-tools button[aria-pressed=true]{outline:2px solid var(--accent);outline-offset:2px;font-weight:700}
+.path-tools button[aria-pressed=true]::before{content:'✓ ';font-weight:700}

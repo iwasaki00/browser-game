@@ -7,3 +7,9 @@
 .theme-item strong{overflow-wrap:anywhere}
 .theme-item button{min-height:44px}
 .theme-completed{display:block;font-size:12px;font-weight:700;color:#286456;margin-top:4px}
+.theme-item>div:last-child{min-width:0;flex:1}
+.theme-item p{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.theme-item [data-theme-target]{width:100%;white-space:normal}
+.theme-searching{color:#286456}
+/* Both first-registration results must fit above the art inside the fixed modal. */
+.wash-sheet .wash-card{grid-template-rows:minmax(24px,max-content) minmax(86px,1.2fr) minmax(60px,1fr) 62px 48px}

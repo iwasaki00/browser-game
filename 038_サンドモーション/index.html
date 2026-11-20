@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#14191c">
   <meta name="description" content="写真を砂に変えて、触れて、崩す。フリーと砂時計で遊ぶ2D砂の実験室。">
-  <title>SAND MOTION v0.6.0 — なぞり砂</title>
+  <title>SAND MOTION v0.6.1 — TRACE CONTROL FIX</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <main class="app" id="app">
     <header class="topbar">
-      <h1>SAND MOTION <small>v0.6.0</small></h1>
+      <h1>SAND MOTION <small>v0.6.1</small></h1>
       <button id="settings-open" aria-haspopup="dialog" aria-controls="settings-panel">設定</button>
       <div class="mode-switch" role="group" aria-label="遊び方">
         <button id="mode-free" aria-pressed="true">フリー</button><button id="mode-hourglass" aria-pressed="false">砂時計</button>
@@ -43,7 +43,7 @@
         <button id="image-open" aria-haspopup="dialog" aria-controls="image-panel">画像</button>
         <button id="size-open" aria-expanded="false" aria-controls="size-panel">サイズ</button>
         <button id="gravity-open" aria-haspopup="dialog" aria-controls="gravity-panel">重力 ↓</button>
-        <button id="tools-open" aria-haspopup="dialog" aria-controls="tools-panel" aria-label="道具：砂を触る">道具：砂</button>
+        <button id="tools-open" aria-haspopup="dialog" aria-controls="tools-panel" aria-label="道具：砂を触る">砂を触る</button>
       </div>
     </footer>
   </main>
@@ -64,7 +64,7 @@
       <div class="panel-body">
         <div class="path-tools" role="group" aria-label="キャンバスの道具">
           <button id="tool-sand" aria-pressed="true">砂を触る</button>
-          <button id="tool-trace" aria-pressed="false">なぞり砂</button>
+          <button id="tool-trace" aria-pressed="false">なぞり砂（重力なし）</button>
           <button id="tool-draw" aria-pressed="false">壁を描く</button>
           <button id="tool-erase" aria-pressed="false">壁を消す</button>
         </div>
@@ -78,6 +78,7 @@
       <div class="panel-heading"><h2 id="gravity-title">重力</h2><button id="gravity-close">閉じる</button></div>
       <div class="panel-body">
         <p id="gravity-label">下向きに流れる</p>
+        <p id="gravity-trace-notice" class="notice warning" role="status" hidden>なぞり砂中は重力・傾き入力が無効です。「砂を触る」に戻すと以前の重力入力設定で再開します。</p>
         <div id="free-gravity" class="compass" role="group" aria-label="重力方向">
           <button data-g="-1,-1" aria-label="左上" aria-pressed="false">↖</button><button data-g="0,-1" aria-label="上" aria-pressed="false">↑</button><button data-g="1,-1" aria-label="右上" aria-pressed="false">↗</button>
           <button data-g="-1,0" aria-label="左" aria-pressed="false">←</button><span aria-hidden="true">·</span><button data-g="1,0" aria-label="右" aria-pressed="false">→</button>
@@ -106,6 +107,9 @@
         <div id="diagnostics" hidden><dl>
           <dt>FPS</dt><dd id="fps">—</dd><dt>総粒子数</dt><dd id="total">—</dd><dt>固定 / 自由</dt><dd id="counts">—</dd><dt>重力 (x, y)</dt><dd id="gravity">0, 1</dd><dt>グリッド</dt><dd id="grid">180 × 300</dd><dt>物理更新 / step</dt><dd id="physics-ms">—</dd><dt>上側の粒 / 穴幅</dt><dd id="hourglass-remaining">—</dd><dt>復元の進捗</dt><dd id="reassembly-progress">待機</dd>
           <dt>描いた壁のセル数</dt><dd id="wall-count">0</dd>
+          <dt>画面 / 表示領域</dt><dd id="viewport-size">—</dd>
+          <dt>拡大率 / 表示の左位置</dt><dd id="viewport-scale">—</dd>
+          <dt>ページ幅 / 内容幅 / 横移動</dt><dd id="page-width">—</dd>
         </dl></div>
         <span id="grid-label" hidden></span><span id="state-label" hidden></span>
         <p id="settings-message" class="notice" role="status" hidden></p>

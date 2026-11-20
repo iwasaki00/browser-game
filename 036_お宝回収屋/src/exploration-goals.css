@@ -1,5 +1,10 @@
 .exploration-goal{display:block;width:100%;padding:8px 12px;border:1px solid #a7b6a3;border-radius:8px;background:#edf0df;color:#294b42;text-align:left;font:inherit;font-size:12px;line-height:1.5;touch-action:manipulation;margin:4px 0 8px}
 .exploration-goal[hidden],#debug-save-banner[hidden]{display:none}
+.exploration-goal>summary{cursor:pointer;min-height:44px}
+.goal-heading,.goal-brief{display:block;overflow-wrap:anywhere}
+.goal-brief{font-size:11px;margin-top:3px}
+.goal-hud-detail p{font-size:12px;overflow-wrap:anywhere}
+.goal-hud-detail button{min-height:44px;margin:4px 6px 0 0}
 #exploration-goals{margin:12px 0;padding:12px;border:1px solid #c7cbb5;border-radius:8px}
 #exploration-goals summary{cursor:pointer;min-height:36px}
 .exploration-choices{display:grid;gap:12px;margin-top:12px}

@@ -8,6 +8,11 @@ export function mountExplorationGoals(host:HTMLElement,s:State,changed:()=>void)
  }).join('')+'</div>';
  box.querySelector<HTMLButtonElement>('#exploration-clear')!.onclick=()=>{setExplorationGoal(s,null);changed();render();};
  box.querySelectorAll<HTMLButtonElement>('[data-exploration-target]').forEach(b=>b.onclick=()=>{if(setExplorationGoal(s,b.dataset.explorationTarget!)){changed();render();}});
- }render();
+ }render();return render;
 }
-export function updateExplorationGoalHUD(host:HTMLElement,s:State){const id=s.explorationGoal?.target;host.hidden=!id;if(!id)return;const label='探索目標：'+explorationHeading(s,id)+' / '+explorationHint(s,id).summary;if(host.textContent!==label)host.textContent=label;}
+export function updateExplorationGoalHUD(host:HTMLElement,s:State){
+ const id=s.explorationGoal?.target;host.hidden=!id;if(!id){delete host.dataset.goal;return;}
+ if(host.dataset.goal!==id){host.dataset.goal=id;host.innerHTML='<summary><strong class="goal-heading"></strong><span class="goal-brief"></span></summary><div class="goal-hud-detail"><p class="goal-location"></p><p class="goal-required"></p><p class="goal-recommended"></p><button data-goal-change>目標変更</button><button data-goal-clear>解除</button></div>';}
+ const h=explorationHint(s,id),labels={'.goal-heading':'探索目標：'+explorationHeading(s,id),'.goal-brief':h.place+' / '+h.brief,'.goal-location':'推奨：'+h.location+' / '+h.place+'（'+h.status+'）','.goal-required':h.required,'.goal-recommended':h.recommended};
+ for(const [selector,text]of Object.entries(labels)){const el=host.querySelector(selector)!;if(el.textContent!==text)el.textContent=text;}
+}
