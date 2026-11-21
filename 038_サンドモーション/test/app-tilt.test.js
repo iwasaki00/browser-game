@@ -571,7 +571,9 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     get('mode-hourglass').click(); get('mode-free').click();
     assert.equal(get('trace-width').value, 'large'); assert.equal(get('trace-strength').value, 'strong');
     assert.deepEqual(canvas.rendered, beforeTraceSettings);
+    const toolBody = { scrollTop: 900 }; get('tools-panel').querySelector = () => toolBody;
     get('tools-open').click(); assert.equal(get('trace-quick-settings').hidden, false);
+    assert.equal(toolBody.scrollTop, 0);
     const beforeQuickSettings = canvas.rendered.slice(), quickCount = get('total').textContent;
     get('trace-force-weak').click();
     assert.equal(get('trace-strength').value, 'weak'); assert.equal(get('trace-force-weak').attributes['aria-pressed'], 'true');

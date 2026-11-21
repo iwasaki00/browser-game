@@ -1,5 +1,6 @@
 const frame=document.getElementById('app'),run=document.getElementById('run'),out=document.getElementById('results');
 frame.addEventListener('load',()=>{run.disabled=false;});
+if(frame.contentDocument?.readyState==='complete')run.disabled=false;
 run.addEventListener('click',async()=>{
   run.disabled=true;const results=[];
   const win=frame.contentWindow,doc=frame.contentDocument,get=id=>doc.getElementById(id);

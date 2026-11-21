@@ -354,6 +354,10 @@ function openPanel(name, opener) {
     refreshPreview(); $('photo-size').focus?.();
   } else { updateStats(); $(name + '-close').focus?.(); }
   syncControls(); fitCanvas();
+  if (name === 'tools' && mode === 'free' && tool === 'trace') {
+    const body = $('tools-panel').querySelector?.('.panel-body');
+    if (body) body.scrollTop = 0;
+  }
 }
 
 function closePanel() {

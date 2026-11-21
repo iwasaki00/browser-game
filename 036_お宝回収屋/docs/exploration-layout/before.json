@@ -1,0 +1,578 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "debug": false,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 161,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 568,
+    "screenHeight": 568
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "debug": false,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 161,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 568,
+    "screenHeight": 568
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "debug": false,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 161,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 189,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 568,
+    "screenHeight": 568
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "debug": true,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 250,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 683,
+    "screenHeight": 568
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "debug": true,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 250,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 678,
+    "screenHeight": 568
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "debug": true,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 250,
+      "width": 280,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 278,
+      "width": 278,
+      "height": 89
+    },
+    "canvasHeightPercent": 15.669014084507044,
+    "canvasAreaPercent": 13.612455985915492,
+    "fieldHeightPercent": 26.408450704225352,
+    "scaleX": 0.7722222222222223,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 683,
+    "screenHeight": 568
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": false,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 216.8125
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 216,
+      "width": 350,
+      "height": 290.8125
+    },
+    "viewport": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 216.8125
+    },
+    "canvasHeightPercent": 25.688684834123222,
+    "canvasAreaPercent": 22.922211082756107,
+    "fieldHeightPercent": 34.456457345971565,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.6671153846153847,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": false,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 218
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 216,
+      "width": 350,
+      "height": 292
+    },
+    "viewport": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 218
+    },
+    "canvasHeightPercent": 25.829383886255926,
+    "canvasAreaPercent": 23.047757929274518,
+    "fieldHeightPercent": 34.59715639810427,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.6707692307692308,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": false,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 216.8125
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 216,
+      "width": 350,
+      "height": 290.8125
+    },
+    "viewport": {
+      "x": 21,
+      "y": 249,
+      "width": 348,
+      "height": 216.8125
+    },
+    "canvasHeightPercent": 25.688684834123222,
+    "canvasAreaPercent": 22.922211082756107,
+    "fieldHeightPercent": 34.456457345971565,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.6671153846153847,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": true,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 328,
+      "width": 350,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "canvasHeightPercent": 9.004739336492891,
+    "canvasAreaPercent": 8.034998177178272,
+    "fieldHeightPercent": 17.77251184834123,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.23384615384615384,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": true,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 328,
+      "width": 350,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "canvasHeightPercent": 9.004739336492891,
+    "canvasAreaPercent": 8.034998177178272,
+    "fieldHeightPercent": 17.77251184834123,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.23384615384615384,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "debug": true,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "fieldBox": {
+      "x": 20,
+      "y": 328,
+      "width": 350,
+      "height": 150
+    },
+    "viewport": {
+      "x": 21,
+      "y": 361,
+      "width": 348,
+      "height": 76
+    },
+    "canvasHeightPercent": 9.004739336492891,
+    "canvasAreaPercent": 8.034998177178272,
+    "fieldHeightPercent": 17.77251184834123,
+    "scaleX": 0.9666666666666667,
+    "scaleY": 0.23384615384615384,
+    "documentHeight": 844,
+    "screenHeight": 844
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": false,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 161,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 563,
+    "screenHeight": 390
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": false,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 161,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 558,
+    "screenHeight": 390
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": false,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 161,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 189,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 563,
+    "screenHeight": 390
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": true,
+    "field": "B",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 221,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 654,
+    "screenHeight": 390
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": true,
+    "field": "R-rope",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 221,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 649,
+    "screenHeight": 390
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "debug": true,
+    "field": "G-gather",
+    "mode": "normal",
+    "canvas": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "fieldBox": {
+      "x": 135,
+      "y": 221,
+      "width": 574,
+      "height": 150
+    },
+    "viewport": {
+      "x": 136,
+      "y": 249,
+      "width": 572,
+      "height": 89
+    },
+    "canvasHeightPercent": 22.82051282051282,
+    "canvasAreaPercent": 15.466034755134281,
+    "fieldHeightPercent": 38.46153846153847,
+    "scaleX": 1.5888888888888888,
+    "scaleY": 0.27384615384615385,
+    "documentHeight": 654,
+    "screenHeight": 390
+  }
+]
