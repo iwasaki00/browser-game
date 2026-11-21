@@ -16,10 +16,13 @@ function buffers(e) {
 }
 
 function commit(e, id, cell, work) {
+  const oldX = e.x[id], oldY = e.y[id];
   e.x[id] = cell % e.width; e.y[id] = Math.floor(cell / e.width);
   if (e.fixed[id]) { e.fixed[id] = 0; e.fixedCount--; }
   e.active[id] = 1; e.vx[id] = 0; e.vy[id] = 0; work.moves[id]++;
   work.touched[id] = 1;
+  // Keep sleeping free neighbors eligible when ordinary gravity resumes.
+  e.wakeAround(oldX, oldY); e.wakeAround(e.x[id], e.y[id]);
 }
 
 // Display-only grain variation, only where trace has actually moved a grain.

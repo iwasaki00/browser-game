@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import os from 'node:os';
-import { PathEngine } from '../src/paths.js';
+// Historical v0.6.2 evidence uses its archived method, not the current app trace.
+import { PreviousTraceEngine as PathEngine } from './fixtures/trace-v0.6.2.mjs';
 
 const tag = process.argv[2] || 'after-v0.6.2';
 if (!['before-v0.6.1', 'after-v0.6.2'].includes(tag)) throw new Error('Unknown report tag');

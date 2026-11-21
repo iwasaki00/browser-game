@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import assert from 'node:assert/strict';
-import { PathEngine } from '../src/paths.js';
+// Keep this historical v0.6.2 command reproducible after the current trace evolves.
+import { PreviousTraceEngine as PathEngine } from './fixtures/trace-v0.6.2.mjs';
 import { Reassembly } from '../src/reassembly.js';
 
 const report = { version: '0.6.2', at: new Date().toISOString(), runtime: process.version,

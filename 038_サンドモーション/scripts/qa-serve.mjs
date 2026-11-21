@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const out = path.join(root, 'docs', 'quality-v0.2.1');
 const port = Number(process.env.QA_PORT || 5174), origin = `http://127.0.0.1:${port}`;
 const names = ['initial-standard', 'initial-high', 'initial-comparison', 'collapse-standard', 'collapse-high', 'swipe-standard', 'swipe-high'];
-const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.json': 'application/json' };
+const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.json': 'application/json' };
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, origin).pathname);

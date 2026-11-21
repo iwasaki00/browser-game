@@ -1,0 +1,1 @@
+import{X as a,G as n,M as t}from"./engine-CQ27cUVt.js";function s(i){for(const o of a.filter(e=>e.implementationStatus==="available"))i.ownedTools.includes(o.id)||i.ownedTools.push(o.id),i.unlockedTools.includes(o.id)||i.unlockedTools.push(o.id);for(const o of n)i.automation?.machines[o.id]||t(i,o.id)}export{s as prepareStaticDebug};

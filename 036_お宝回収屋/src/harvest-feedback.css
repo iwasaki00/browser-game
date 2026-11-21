@@ -1,0 +1,4 @@
+#pan-bowl .grain-capture-pulse{position:absolute;z-index:2;width:28px;height:28px;border:2px solid #fff2b6;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);animation:harvest-grain .45s ease-out both}
+#pan-bowl[data-harvest-motion="still"] .grain-capture-pulse{animation:none;opacity:.8}
+@keyframes harvest-grain{from{opacity:1;transform:translate(-50%,-50%) scale(.7)}to{opacity:0;transform:translate(-50%,-50%) scale(1.35)}}
+@media(prefers-reduced-motion:reduce){#pan-bowl .grain-capture-pulse{animation:none;opacity:.8}}

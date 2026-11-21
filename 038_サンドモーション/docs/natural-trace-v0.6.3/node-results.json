@@ -10,8 +10,8 @@
       "grid": "180x300",
       "version": "0.6.2",
       "defaultRadius": 12,
-      "cpuMedianMs": 0.23,
-      "cpuP95Ms": 3.259,
+      "cpuMedianMs": 0.264,
+      "cpuP95Ms": 3.402,
       "maxSingleStrokeDistance": 23,
       "snapshots": [
         {
@@ -32,7 +32,7 @@
           "outside": 0,
           "changed": 19950,
           "maxDistance": 23,
-          "distantChanges": 19221
+          "distantChanges": 19253
         },
         {
           "stroke": 10,
@@ -42,7 +42,7 @@
           "outside": 0,
           "changed": 19950,
           "maxDistance": 23,
-          "distantChanges": 19221
+          "distantChanges": 19253
         },
         {
           "stroke": 30,
@@ -52,7 +52,7 @@
           "outside": 0,
           "changed": 19950,
           "maxDistance": 23,
-          "distantChanges": 19221
+          "distantChanges": 19253
         }
       ]
     },
@@ -60,8 +60,8 @@
       "grid": "180x300",
       "version": "0.6.3",
       "defaultRadius": 3,
-      "cpuMedianMs": 0.135,
-      "cpuP95Ms": 0.536,
+      "cpuMedianMs": 0.232,
+      "cpuP95Ms": 0.627,
       "maxSingleStrokeDistance": 1,
       "snapshots": [
         {
@@ -110,8 +110,8 @@
       "grid": "270x450",
       "version": "0.6.2",
       "defaultRadius": 18,
-      "cpuMedianMs": 0.499,
-      "cpuP95Ms": 2.308,
+      "cpuMedianMs": 0.5,
+      "cpuP95Ms": 2.559,
       "maxSingleStrokeDistance": 35,
       "snapshots": [
         {
@@ -132,7 +132,7 @@
           "outside": 0,
           "changed": 45045,
           "maxDistance": 35,
-          "distantChanges": 43593
+          "distantChanges": 43641
         },
         {
           "stroke": 10,
@@ -142,7 +142,7 @@
           "outside": 0,
           "changed": 45045,
           "maxDistance": 35,
-          "distantChanges": 43593
+          "distantChanges": 43641
         },
         {
           "stroke": 30,
@@ -152,7 +152,7 @@
           "outside": 0,
           "changed": 45045,
           "maxDistance": 35,
-          "distantChanges": 43593
+          "distantChanges": 43641
         }
       ]
     },
@@ -160,8 +160,8 @@
       "grid": "270x450",
       "version": "0.6.3",
       "defaultRadius": 4.5,
-      "cpuMedianMs": 0.645,
-      "cpuP95Ms": 1.931,
+      "cpuMedianMs": 0.724,
+      "cpuP95Ms": 1.455,
       "maxSingleStrokeDistance": 2,
       "snapshots": [
         {
@@ -205,6 +205,296 @@
           "distantChanges": 0
         }
       ]
+    }
+  ],
+  "stress": [
+    {
+      "grid": "180x300",
+      "size": "small",
+      "force": "weak",
+      "cpuMedianMs": 0.582,
+      "cpuP95Ms": 0.726,
+      "maxWork": 17722,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1083,
+      "maxDistance": 12.81,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "small",
+      "force": "standard",
+      "cpuMedianMs": 0.73,
+      "cpuP95Ms": 1.33,
+      "maxWork": 22898,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1099,
+      "maxDistance": 13.89,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "small",
+      "force": "strong",
+      "cpuMedianMs": 0.59,
+      "cpuP95Ms": 0.831,
+      "maxWork": 26606,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1110,
+      "maxDistance": 14.21,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "medium",
+      "force": "weak",
+      "cpuMedianMs": 1.455,
+      "cpuP95Ms": 1.833,
+      "maxWork": 42430,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1831,
+      "maxDistance": 13.42,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "medium",
+      "force": "standard",
+      "cpuMedianMs": 1.298,
+      "cpuP95Ms": 1.784,
+      "maxWork": 50958,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1861,
+      "maxDistance": 13.42,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "medium",
+      "force": "strong",
+      "cpuMedianMs": 1.576,
+      "cpuP95Ms": 2.232,
+      "maxWork": 58306,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 1873,
+      "maxDistance": 14.32,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "large",
+      "force": "weak",
+      "cpuMedianMs": 2.443,
+      "cpuP95Ms": 4.026,
+      "maxWork": 96170,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 2951,
+      "maxDistance": 18,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "large",
+      "force": "standard",
+      "cpuMedianMs": 2.622,
+      "cpuP95Ms": 4.204,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 3016,
+      "maxDistance": 16.28,
+      "distantChanges": 0
+    },
+    {
+      "grid": "180x300",
+      "size": "large",
+      "force": "strong",
+      "cpuMedianMs": 3.508,
+      "cpuP95Ms": 4.438,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 30240,
+      "occupied": 30240,
+      "visible": 30240,
+      "outside": 0,
+      "changed": 3020,
+      "maxDistance": 17.2,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "small",
+      "force": "weak",
+      "cpuMedianMs": 1.59,
+      "cpuP95Ms": 2.922,
+      "maxWork": 98410,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 2394,
+      "maxDistance": 18.44,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "small",
+      "force": "standard",
+      "cpuMedianMs": 2.176,
+      "cpuP95Ms": 4.225,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 2410,
+      "maxDistance": 18.44,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "small",
+      "force": "strong",
+      "cpuMedianMs": 1.954,
+      "cpuP95Ms": 3.075,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 2352,
+      "maxDistance": 17.2,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "medium",
+      "force": "weak",
+      "cpuMedianMs": 2.316,
+      "cpuP95Ms": 3.128,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 3513,
+      "maxDistance": 14,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "medium",
+      "force": "standard",
+      "cpuMedianMs": 1.651,
+      "cpuP95Ms": 2.569,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 3288,
+      "maxDistance": 15.81,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "medium",
+      "force": "strong",
+      "cpuMedianMs": 1.586,
+      "cpuP95Ms": 2.168,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 3189,
+      "maxDistance": 15,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "large",
+      "force": "weak",
+      "cpuMedianMs": 1.672,
+      "cpuP95Ms": 2.486,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 4547,
+      "maxDistance": 15,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "large",
+      "force": "standard",
+      "cpuMedianMs": 1.606,
+      "cpuP95Ms": 2.189,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 4398,
+      "maxDistance": 13,
+      "distantChanges": 0
+    },
+    {
+      "grid": "270x450",
+      "size": "large",
+      "force": "strong",
+      "cpuMedianMs": 1.906,
+      "cpuP95Ms": 3.518,
+      "maxWork": 100000,
+      "buffersReused": true,
+      "particles": 68040,
+      "occupied": 68040,
+      "visible": 68040,
+      "outside": 0,
+      "changed": 4200,
+      "maxDistance": 13.42,
+      "distantChanges": 0
     }
   ]
 }

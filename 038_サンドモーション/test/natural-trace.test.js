@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PathEngine } from '../src/paths.js';
-import { TRACE, traceRadius } from '../src/trace.js';
+import { TRACE, traceRadius, traceShade } from '../src/trace.js';
 import { Reassembly } from '../src/reassembly.js';
 import { SandEngine } from '../src/engine.js';
 
@@ -37,6 +37,8 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     for (let id = 0; id < count; id++) {
       const outside = Math.abs(e.originY[id] - h * .45) > traceRadius(w) + scale || e.originX[id] < w * .3 - traceRadius(w) - scale || e.originX[id] > w * .7 + traceRadius(w) + scale;
       if (outside) { assert.equal(e.x[id], e.originX[id]); assert.equal(e.y[id], e.originY[id]); }
+      assert.ok(traceShade(e, id) >= .98 && traceShade(e, id) <= 1.02);
+      if (outside) assert.equal(traceShade(e, id), 1);
       assert.ok(Math.abs(e.x[id] - e.originX[id]) + Math.abs(e.y[id] - e.originY[id]) <= e.lastTraceStats.budget);
     }
   });
@@ -77,6 +79,13 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) particles.push({ x, y, color: [x % 255, y % 255, 140, 255] });
     e.load(particles); const colors = e.colors.slice(); e.beginTrace(); stroke(e);
     assert.ok(moved(e) > 0); assert.ok(e.lastTraceStats.cycles > 0); invariant(e, colors);
+    const caged = new PathEngine(w, h), cx = Math.floor(w / 2), cy = Math.floor(h / 2);
+    caged.load([{ x: cx, y: cy, color: [120, 150, 180, 255] }]);
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (dx || dy) {
+      caged.walls[(cy + dy) * w + cx + dx] = 1; caged.wallCount++;
+    }
+    caged.beginTrace(); assert.equal(caged.traceSegment(cx - 2, cy, cx + 2, cy, traceRadius(w), 20), 0);
+    assert.equal(caged.x[0], cx); assert.equal(caged.y[0], cy); invariant(caged, new Uint8ClampedArray([120,150,180,255]));
   });
   test(`${w} T08: wall contacts never cross, edit or hide grains`, () => {
     const e = fixture(w, h, true), colors = e.colors.slice();
@@ -110,7 +119,12 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     e.beginTrace(); stroke(e); e.reset(); invariant(e, colors); assert.deepEqual(e.x, e.originX); assert.deepEqual(e.y, e.originY);
   });
   test(`${w} T12: leaving tool preserves layout; original gravity resumes identically to SandEngine`, () => {
-    const e = fixture(w, h, true); e.beginTrace(); stroke(e);
+    const e = fixture(w, h, true); e.releaseAll(); e.active.fill(0); e.beginTrace(); stroke(e);
+    for(let id=0;id<e.count;id++)if(e.traceWork.touched[id])for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++) {
+      const x=e.x[id]+dx,y=e.y[id]+dy;
+      if(x<0||x>=w||y<0||y>=h)continue;
+      const neighbor=e.grid[y*w+x]-1;if(neighbor>=0)assert.equal(e.active[neighbor],1);
+    }
     const colors = e.colors.slice(), x = e.x.slice(), y = e.y.slice(); e.endTrace();
     assert.deepEqual(e.x, x); assert.deepEqual(e.y, y);
     const control = new SandEngine(w, h); control.load(Array.from(e.x, (px, id) => ({ x: px, y: e.y[id], color: [...e.colors.subarray(id * 4, id * 4 + 4)] })));

@@ -21,13 +21,15 @@ export function referenceStroke(e, previous = false) {
   return e.traceSegment(e.width * .3, e.height * .45, e.width * .7, e.height * .45,
     (previous ? 12 : 3) * e.width / 180, 800, 'standard');
 }
-export function referenceMetrics(e) {
+export function referenceMetrics(e, path = [.3,.45,.7,.45], affectedRadius = 4) {
   const rgba = naturalRaster(e); let visible = 0, changed = 0, outside = 0, maxDistance = 0, distantChanges = 0;
+  const ax=e.width*path[0], ay=e.height*path[1], dx=e.width*(path[2]-path[0]), dy=e.height*(path[3]-path[1]), length2=dx*dx+dy*dy;
   for (let i = 3; i < rgba.length; i += 4) if (rgba[i]) visible++;
   for (let id = 0; id < e.count; id++) {
     const d = Math.hypot(e.x[id] - e.originX[id], e.y[id] - e.originY[id]);
     maxDistance = Math.max(maxDistance, d); if (d) changed++;
-    if (d && (Math.abs(e.originY[id] - e.height * .45) > 4 * e.width / 180 || e.originX[id] < e.width * .3 - 4 * e.width / 180 || e.originX[id] > e.width * .7 + 4 * e.width / 180)) distantChanges++;
+    const t=length2?Math.max(0,Math.min(1,((e.originX[id]-ax)*dx+(e.originY[id]-ay)*dy)/length2)):0;
+    if (d && Math.hypot(e.originX[id]-ax-t*dx,e.originY[id]-ay-t*dy)>affectedRadius*e.width/180) distantChanges++;
     if (e.x[id] < 0 || e.x[id] >= e.width || e.y[id] < 0 || e.y[id] >= e.height) outside++;
   }
   return { particles: e.count, occupied: e.grid.filter(Boolean).length, visible, outside, changed, maxDistance: +maxDistance.toFixed(2), distantChanges };

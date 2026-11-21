@@ -563,7 +563,14 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     const lost = new Event('lostpointercapture'); Object.assign(lost, { pointerId: 1 }); canvas.dispatchEvent(lost);
     assert.equal(canvas.capture, null);
     get('settings-open').click(); assert.equal(get('settings-panel').hidden, false);
+    const beforeTraceSettings = canvas.rendered.slice(), traceSettingsCount = get('total').textContent;
+    get('trace-width').value = 'large'; get('trace-width').dispatchEvent(new Event('change'));
+    get('trace-strength').value = 'strong'; get('trace-strength').dispatchEvent(new Event('change'));
     get('settings-close').click(); assert.equal(get('settings-panel').hidden, true);
+    assert.deepEqual(canvas.rendered, beforeTraceSettings); assert.equal(get('total').textContent, traceSettingsCount);
+    get('mode-hourglass').click(); get('mode-free').click();
+    assert.equal(get('trace-width').value, 'large'); assert.equal(get('trace-strength').value, 'strong');
+    assert.deepEqual(canvas.rendered, beforeTraceSettings);
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];
