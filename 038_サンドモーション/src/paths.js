@@ -26,6 +26,7 @@ export class PathEngine extends SandEngine {
   reset() {
     this.tracing = false; this.traceSerial = 0;
     this.traceWork?.touched.fill(0);
+    this.traceWork?.dirty?.fill(0);
     this.removedOnReset = 0;
     for (let id = 0; this.wallCount && id < this.count; id++) {
       const cell = this.originY[id] * this.width + this.originX[id];
@@ -49,6 +50,10 @@ export class PathEngine extends SandEngine {
   }
 
   endTrace() {
+    const dirty = this.traceWork?.dirty;
+    if (dirty) for (let cell = 0; cell < dirty.length; cell++) if (dirty[cell]) {
+      this.wakeAround(cell % this.width, Math.floor(cell / this.width)); dirty[cell] = 0;
+    }
     this.tracing = false; this.vx.fill(0); this.vy.fill(0);
   }
 

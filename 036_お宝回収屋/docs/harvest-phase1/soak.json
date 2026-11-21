@@ -1,0 +1,12 @@
+{
+  "channel": "chrome",
+  "viewport": "390x844",
+  "continuousDragMs": 120090,
+  "moves": 1074,
+  "observedAddedPeak": 1,
+  "observedParticlesPeak": 5,
+  "canvasFXCap": 9,
+  "particlesCap": 70,
+  "handDepthLimitPreserved": true,
+  "errors": []
+}

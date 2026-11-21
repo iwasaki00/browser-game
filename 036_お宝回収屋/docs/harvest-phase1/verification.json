@@ -1,0 +1,121 @@
+{
+  "version": "1.0.0-rc.1",
+  "baselineCommit": "6b1e82b7f6cdba0db8c52413a651dcc9fee4a907",
+  "unit": {
+    "pass": 738,
+    "fail": 0
+  },
+  "browser": {
+    "harvest": 8,
+    "discovery": 17,
+    "legacyWash": 2,
+    "themeGoals": 24,
+    "staticDebug": 10,
+    "total": 61
+  },
+  "continuousDragSoak": {
+    "channel": "chrome",
+    "viewport": "390x844",
+    "continuousDragMs": 120090,
+    "moves": 1074,
+    "observedAddedPeak": 1,
+    "observedParticlesPeak": 5,
+    "canvasFXCap": 9,
+    "particlesCap": 70,
+    "handDepthLimitPreserved": true,
+    "errors": []
+  },
+  "viewports": [
+    "390x844 Chrome",
+    "320x568 Edge"
+  ],
+  "bothBuilds": true,
+  "normalComparisonUIExcluded": true,
+  "normalSaveUnchanged": true,
+  "saveFormatAndBalanceCoreUnchanged": true,
+  "editedTextLF": true,
+  "sheets": [
+    {
+      "file": "beach_daily_sheet.png",
+      "sha256": "a39bf6a77427dd205f3377fe44dddb0641f0eb20f053f4b7def8cc8470214486"
+    },
+    {
+      "file": "beach_nature_sheet.png",
+      "sha256": "b03001a2e91bc37cc1085e8d0063c2fac9f8a1350dac5a190e7f617c31337b2f"
+    },
+    {
+      "file": "beach_valuable_sheet.png",
+      "sha256": "bcc476283f25ffd9a5d719a835d169008a1158af62813fd7ee6668d03ae74244"
+    },
+    {
+      "file": "gold_mineral_sheet.png",
+      "sha256": "8e6abab1debb8127dbdaee12b7c775806724c1f3e3b0c23b076c6b441f112255"
+    },
+    {
+      "file": "gold_rare_sheet.png",
+      "sha256": "055a118a76656c128b1c8222ab46fe67c5a0c46cd3c0a272c4161c96d0ba04b1"
+    },
+    {
+      "file": "gold_stone_sheet.png",
+      "sha256": "6a4f6f304d815337bf292c689bdf5d02942fc339a78e5df883bc3abf117fc2ee"
+    },
+    {
+      "file": "river_metal_sheet.png",
+      "sha256": "e2eb4116eddacf7af0f08c8d8a1f25c91f6ba5c5f9968011d666510d903a61ce"
+    },
+    {
+      "file": "river_rare_sheet.png",
+      "sha256": "068ada7b81ef3e3c92eb1ea09ac1381b66a67e3258501cabcc980539e34f44c3"
+    },
+    {
+      "file": "river_tool_sheet.png",
+      "sha256": "c918bda602f908ec92ce43dbdbf70074c3c60bc6e169ec3e2e7e801ddc53fbf1"
+    }
+  ],
+  "preserved": [
+    "src/data.ts",
+    "src/master-source.json",
+    "src/treasure-expansion.json",
+    "src/treasure-sprite-map.json",
+    "src/treasure-assets.ts",
+    "src/engine.ts",
+    "src/save.ts",
+    "src/river.ts",
+    "src/gold.ts",
+    "src/digging.ts",
+    "src/dig-input.ts",
+    "src/world-generation.ts",
+    "src/world-rules.ts",
+    "src/field-tools.ts",
+    "src/beach-tools.ts",
+    "src/money.ts",
+    "src/build-mode.ts",
+    "src/exploration-goals.ts",
+    "src/collection-themes.ts",
+    "src/automation.ts",
+    "src/lines.ts",
+    "src/discovery.ts",
+    "src/discovery-ui.ts",
+    "src/discovery.css",
+    "index.html"
+  ],
+  "performanceSamples": 27,
+  "hiddenTabTest": "document.hidden/visibilitychange simulation",
+  "offscreenTest": "IntersectionObserver through scrolling",
+  "iPhoneSafariPhysical": "未確認",
+  "screenshots": [
+    "B-off.png",
+    "B-on.png",
+    "B-exposed.png",
+    "R-off.png",
+    "R-on.png",
+    "G-pan-off.png",
+    "G-pan-on.png",
+    "G-capture.png"
+  ],
+  "videos": [
+    "baseline/operations.webm",
+    "after/operations.webm"
+  ],
+  "invalidInitialMeasurement": "invalid-initial-* files are rejected: the alleged before build already contained the new code; never use them as results"
+}

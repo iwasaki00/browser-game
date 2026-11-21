@@ -106,7 +106,7 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     invariant(e, colors);
   });
   test(`${w} T10: width scales consistently; force changes response without regeneration`, () => {
-    assert.equal(traceRadius(w) / scale, 3); assert.equal(traceRadius(w, 'large') / scale, 8);
+    assert.equal(traceRadius(w) / scale, 5); assert.equal(traceRadius(w, 'small') / scale, 3); assert.equal(traceRadius(w, 'large') / scale, 8);
     const weak = fixture(w, h), strong = fixture(w, h); weak.beginTrace(); strong.beginTrace();
     stroke(weak, .3,.45,.7,.45,800,'small','weak'); stroke(strong,.3,.45,.7,.45,800,'small','strong');
     assert.ok(moved(strong) > moved(weak)); invariant(weak, weak.colors.slice()); invariant(strong, weak.colors);
@@ -119,7 +119,7 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     e.beginTrace(); stroke(e); e.reset(); invariant(e, colors); assert.deepEqual(e.x, e.originX); assert.deepEqual(e.y, e.originY);
   });
   test(`${w} T12: leaving tool preserves layout; original gravity resumes identically to SandEngine`, () => {
-    const e = fixture(w, h, true); e.releaseAll(); e.active.fill(0); e.beginTrace(); stroke(e);
+    const e = fixture(w, h, true); e.releaseAll(); e.active.fill(0); e.beginTrace(); stroke(e); e.endTrace();
     for(let id=0;id<e.count;id++)if(e.traceWork.touched[id])for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++) {
       const x=e.x[id]+dx,y=e.y[id]+dy;
       if(x<0||x>=w||y<0||y>=h)continue;

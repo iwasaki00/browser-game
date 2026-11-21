@@ -1,0 +1,100 @@
+[
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "beach",
+    "sameInitialUIDsAndState": true,
+    "actualContact": true,
+    "exposureOnce": true,
+    "unwashedNotRegistered": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "river",
+    "ropeProgressSynced": true,
+    "tools": [
+      "tongs",
+      "hook",
+      "magnet",
+      "rope"
+    ],
+    "successOnlyAfterRecovery": true,
+    "weightAndMagnetFailuresKeepTarget": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "gold",
+    "sameInitialStateAndResults": true,
+    "noPhantomRefill": true,
+    "captureOnlyOnSuccess": true,
+    "screenPanPrecisionSluiceAndGather": true
+  },
+  {
+    "channel": "chrome",
+    "width": 390,
+    "kind": "stress-visibility",
+    "holdSeconds": 10,
+    "rapidDrags": 30,
+    "FXCap": 9,
+    "particlesCap": 70,
+    "modalAndOffscreenDrawPaused": true,
+    "riverClockPreserved": true,
+    "hiddenSimulation": true,
+    "reducedMotion": true,
+    "normalSaveUnchanged": true,
+    "equipment46Facilities3": true,
+    "infiniteFN": true,
+    "errors": []
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "beach",
+    "sameInitialUIDsAndState": true,
+    "actualContact": true,
+    "exposureOnce": true,
+    "unwashedNotRegistered": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "river",
+    "ropeProgressSynced": true,
+    "tools": [
+      "tongs",
+      "hook",
+      "magnet",
+      "rope"
+    ],
+    "successOnlyAfterRecovery": true,
+    "weightAndMagnetFailuresKeepTarget": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "gold",
+    "sameInitialStateAndResults": true,
+    "noPhantomRefill": true,
+    "captureOnlyOnSuccess": true,
+    "screenPanPrecisionSluiceAndGather": true
+  },
+  {
+    "channel": "msedge",
+    "width": 320,
+    "kind": "stress-visibility",
+    "holdSeconds": 10,
+    "rapidDrags": 30,
+    "FXCap": 9,
+    "particlesCap": 70,
+    "modalAndOffscreenDrawPaused": true,
+    "riverClockPreserved": true,
+    "hiddenSimulation": true,
+    "reducedMotion": true,
+    "normalSaveUnchanged": true,
+    "equipment46Facilities3": true,
+    "infiniteFN": true,
+    "errors": []
+  }
+]

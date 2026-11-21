@@ -1,0 +1,92 @@
+[
+  {
+    "field": "B",
+    "variant": "before",
+    "meanRAFFPS": 59.43596684714868,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 1,
+    "meanCanvasDrawMs": 2.3107766768616,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 2
+  },
+  {
+    "field": "B",
+    "variant": "off",
+    "meanRAFFPS": 59.952291899309536,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": 2.3752729810086843,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "B",
+    "variant": "on",
+    "meanRAFFPS": 59.850145838541884,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": 2.3976138930734243,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 2
+  },
+  {
+    "field": "R-rope",
+    "variant": "before",
+    "meanRAFFPS": 59.94972044551176,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": 0.6153976044547931,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "R-rope",
+    "variant": "off",
+    "meanRAFFPS": 59.95006074366936,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": 0.6433480754167924,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "R-rope",
+    "variant": "on",
+    "meanRAFFPS": 59.9470385636734,
+    "meanP95FrameMs": 16.833333333333485,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": 0.6804030512012513,
+    "panTransformUpdates": 0,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "G-pan",
+    "variant": "before",
+    "meanRAFFPS": 58.95609164439592,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 1,
+    "meanCanvasDrawMs": null,
+    "panTransformUpdates": 329,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "G-pan",
+    "variant": "off",
+    "meanRAFFPS": 59.949166756395066,
+    "meanP95FrameMs": 16.833333333333485,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": null,
+    "panTransformUpdates": 66,
+    "peakAddedFX": 0
+  },
+  {
+    "field": "G-pan",
+    "variant": "on",
+    "meanRAFFPS": 59.9493416125754,
+    "meanP95FrameMs": 16.800000000000182,
+    "longFramesOver50ms": 0,
+    "meanCanvasDrawMs": null,
+    "panTransformUpdates": 328,
+    "peakAddedFX": 0
+  }
+]

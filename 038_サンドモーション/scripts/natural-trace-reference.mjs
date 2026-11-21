@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import assert from 'node:assert/strict';
-import { PathEngine } from '../src/paths.js';
+import { TraceV063Engine as PathEngine } from './fixtures/trace-v0.6.3.mjs';
 import { PreviousTraceEngine } from './fixtures/trace-v0.6.2.mjs';
 import { naturalFixture, naturalRaster, referenceStroke, referenceMetrics, referenceSheet } from '../test/natural-reference.js';
 import { png } from './reference-raster.mjs';
-import { TRACE, traceRadius } from '../src/trace.js';
+import { TRACE, traceRadius } from './fixtures/trace-v0.6.3.mjs';
 const out = 'docs/natural-trace-v0.6.3'; fs.mkdirSync(out, { recursive: true });
 const report = { version: '0.6.3', runtime: process.version, platform: `${os.platform()} ${os.arch()}`, cpu: os.cpus()[0]?.model,
   environment: 'Node CPU/raster reference; no browser FPS or iPhone claim', browserFps: null, measurements: [], stress: [] };

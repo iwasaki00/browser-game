@@ -465,7 +465,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
       const walls = renderedMask();
       selectTool('trace');
       assert.equal(get('tools-panel').hidden, true);
-      assert.equal(get('tools-open').textContent, 'なぞり砂');
+      assert.equal(get('tools-open').textContent, 'なぞり砂\n標準・中');
       assert.equal(get('gravity-open').textContent, '重力なし');
       assert.equal(get('collapse').disabled, true); assert.equal(get('reassemble').disabled, false);
       const conversionsBeforeTrace = conversions;
@@ -571,6 +571,19 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     get('mode-hourglass').click(); get('mode-free').click();
     assert.equal(get('trace-width').value, 'large'); assert.equal(get('trace-strength').value, 'strong');
     assert.deepEqual(canvas.rendered, beforeTraceSettings);
+    get('tools-open').click(); assert.equal(get('trace-quick-settings').hidden, false);
+    const beforeQuickSettings = canvas.rendered.slice(), quickCount = get('total').textContent;
+    get('trace-force-weak').click();
+    assert.equal(get('trace-strength').value, 'weak'); assert.equal(get('trace-force-weak').attributes['aria-pressed'], 'true');
+    assert.equal(get('tools-open').textContent, 'なぞり砂\n弱・太');
+    get('trace-size-small').click();
+    assert.equal(get('trace-width').value, 'small'); assert.equal(get('trace-size-small').attributes['aria-pressed'], 'true');
+    assert.equal(get('tools-open').textContent, 'なぞり砂\n弱・細');
+    assert.equal(get('tools-panel').hidden, false); assert.deepEqual(canvas.rendered, beforeQuickSettings);
+    assert.equal(get('total').textContent, quickCount); get('tools-close').click();
+    assert.deepEqual(canvas.rendered, beforeQuickSettings);
+    get('trace-force-standard').click(); get('trace-size-medium').click();
+    assert.equal(get('tools-open').textContent, 'なぞり砂\n標準・中');
   } finally {
     for (const [name, descriptor] of originals) {
       if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];

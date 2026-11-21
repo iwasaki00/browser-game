@@ -12,17 +12,18 @@ const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const server = http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, origin).pathname);
-    if (req.method === 'POST' && ['/__qa/report', '/__qa/reassembly', '/__qa/hourglass', '/__qa/layout', '/__qa/paths', '/__qa/paths-layout', '/__qa/trace-control-layout', '/__qa/natural-trace'].includes(pathname)) {
+    if (req.method === 'POST' && ['/__qa/report', '/__qa/reassembly', '/__qa/hourglass', '/__qa/layout', '/__qa/paths', '/__qa/paths-layout', '/__qa/trace-control-layout', '/__qa/natural-trace', '/__qa/flow-trace'].includes(pathname)) {
       if (req.headers.origin !== origin || !req.headers['content-type']?.startsWith('application/json')) { res.writeHead(403); res.end(); return; }
       const chunks = []; let length = 0;
       for await (const chunk of req) { length += chunk.length; if (length > 4_000_000) throw new Error('QA payload too large'); chunks.push(chunk); }
       const { images, ...report } = JSON.parse(Buffer.concat(chunks).toString('utf8'));
       const hourglass = pathname === '/__qa/hourglass';
       const paths = pathname === '/__qa/paths' || pathname === '/__qa/paths-layout';
+      const flow = pathname === '/__qa/flow-trace';
       const natural = pathname === '/__qa/natural-trace';
       const traceControl = pathname === '/__qa/trace-control-layout';
-      const directory = natural ? path.join(root, 'docs', 'natural-trace-v0.6.3') : traceControl ? path.join(root, 'docs', 'trace-control-v0.6.1') : paths ? path.join(root, 'docs', 'paths-v0.5.0') : pathname === '/__qa/layout' ? path.join(root, 'docs', 'size-v0.4.1') : hourglass ? path.join(root, 'docs', 'hourglass-v0.4.0') : pathname === '/__qa/reassembly' ? path.join(root, 'docs', 'reassembly-v0.3.0') : out;
-      const imageNames = natural ? ['standard','high'].flatMap(q=>[`browser-${q}-before`,`browser-${q}-after`,...[0,1,10,30].map(n=>`browser-app-${q}-${n}`)]) : paths || traceControl ? [] : hourglass ? ['standard', 'high'].flatMap(quality =>
+      const directory = flow ? path.join(root, 'docs', 'flow-trace-v0.6.4') : natural ? path.join(root, 'docs', 'natural-trace-v0.6.3') : traceControl ? path.join(root, 'docs', 'trace-control-v0.6.1') : paths ? path.join(root, 'docs', 'paths-v0.5.0') : pathname === '/__qa/layout' ? path.join(root, 'docs', 'size-v0.4.1') : hourglass ? path.join(root, 'docs', 'hourglass-v0.4.0') : pathname === '/__qa/reassembly' ? path.join(root, 'docs', 'reassembly-v0.3.0') : out;
+      const imageNames = natural || flow ? ['standard','high'].flatMap(q=>[`browser-${q}-before`,`browser-${q}-after`,...[0,1,10,30].map(n=>`browser-app-${q}-${n}`)]) : paths || traceControl ? [] : hourglass ? ['standard', 'high'].flatMap(quality =>
         ['sample', 'dense-portrait', 'bands-straight', 'bands-tilted'].flatMap(source =>
           ['initial', 'complete'].map(state => `browser-${source}-${state}-${quality}`))) :
         pathname === '/__qa/reassembly' ? ['mid-standard', 'mid-high', 'complete-standard', 'complete-high'] : names;

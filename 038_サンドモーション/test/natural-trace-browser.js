@@ -1,11 +1,11 @@
 import { PathEngine } from '../src/paths.js';
-import { PreviousTraceEngine } from '../scripts/fixtures/trace-v0.6.2.mjs';
+import { TraceV063Engine } from '../scripts/fixtures/trace-v0.6.3.mjs';
 import { naturalFixture, naturalRaster, referenceStroke, referenceMetrics, referenceSheet } from './natural-reference.js';
 const $ = id => document.getElementById(id), wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const assert = (value, why) => { if (!value) throw new Error(why); };
 $('run').addEventListener('click', async () => {
   $('run').disabled = true;
-  const report = { version: '0.6.3', userAgent: navigator.userAgent,
+  const report = { version: '0.6.4', userAgent: navigator.userAgent,
     environment: 'Real Canvas and app iframe, synthetic PointerEvents with capture adapter; no Safari/iPhone claim',
     references: [], app: [], layouts: [] }, images = {};
   const win = $('app').contentWindow, doc = $('app').contentDocument, get = id => doc.getElementById(id), canvas = get('sand');
@@ -29,16 +29,16 @@ $('run').addEventListener('click', async () => {
     for (const [quality,w,h] of [['standard',180,300],['high',270,450]]) {
       $('status').textContent = quality + '：比較描画';
       for (const previous of [true,false]) {
-        const engine = naturalFixture(previous ? PreviousTraceEngine : PathEngine,w,h), frames=[naturalRaster(engine)], samples=[{stroke:0,...referenceMetrics(engine)}], times=[];
+        const engine = naturalFixture(previous ? TraceV063Engine : PathEngine,w,h), frames=[naturalRaster(engine)], samples=[{stroke:0,...referenceMetrics(engine,undefined,previous?4:6)}], times=[];
         engine.beginTrace();
         for(let i=1;i<=30;i++) {
-          const start=performance.now(); referenceStroke(engine,previous); times.push(performance.now()-start); engine.assertIntegrity();
-          if([1,10,30].includes(i)){frames.push(naturalRaster(engine));samples.push({stroke:i,...referenceMetrics(engine)});}
+          const start=performance.now(); engine.traceSegment(w*.3,h*.45,w*.7,h*.45,(previous?3:5)*w/180,800,'standard'); times.push(performance.now()-start); engine.assertIntegrity();
+          if([1,10,30].includes(i)){frames.push(naturalRaster(engine));samples.push({stroke:i,...referenceMetrics(engine,undefined,previous?4:6)});}
         }
         const c=document.createElement('canvas');c.width=w*4;c.height=h;c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(referenceSheet(w,h,frames)),w*4,h),0,0);
-        const label=document.createElement('p');label.textContent=quality+(previous?' v0.6.2':' v0.6.3')+'：初期／1回／10回／30回';$('comparisons').append(label,c);
+        const label=document.createElement('p');label.textContent=quality+(previous?' v0.6.3':' v0.6.4')+'：初期／1回／10回／30回';$('comparisons').append(label,c);
         images[`browser-${quality}-${previous?'before':'after'}`]=c.toDataURL();times.sort((a,b)=>a-b);
-        report.references.push({quality,version:previous?'0.6.2':'0.6.3',cpuMedianMs:times[15],cpuP95Ms:times[28],samples});
+        report.references.push({quality,version:previous?'0.6.3':'0.6.4',cpuMedianMs:times[15],cpuP95Ms:times[28],samples});
       }
       $('status').textContent=quality+'：実アプリ入力';
       choose('sand');get('quality').value=quality;get('quality').dispatchEvent(new win.Event('change'));
@@ -57,8 +57,8 @@ $('run').addEventListener('click', async () => {
         await new Promise(resolve=>requestAnimationFrame(resolve));
       }
       const elapsedMs=performance.now()-start, still=canvas.toDataURL();await wait(250);assert(canvas.toDataURL()===still,'指離し後に移動');
-      get('settings-open').click();get('trace-width').value='large';get('trace-strength').value='strong';get('settings-close').click();
-      assert(canvas.toDataURL()===still,'設定で配置再生成');get('trace-width').value='small';get('trace-strength').value='standard';
+      get('tools-open').click();get('trace-size-large').click();get('trace-force-strong').click();get('tools-close').click();
+      assert(canvas.toDataURL()===still,'設定で配置再生成');get('tools-open').click();get('trace-size-medium').click();get('trace-force-standard').click();get('tools-close').click();
       get('mode-hourglass').click();assert(get('tools-open').hidden,'砂時計に道具');get('mode-free').click();assert(canvas.toDataURL()===still,'往復で状態変化');
       get('reassemble').click();const returning=performance.now();while(canvas.dataset.reassembling==='true'){assert(performance.now()-returning<6000,'復元timeout');await wait(30);}
       assert(canvas.toDataURL()===initial,'復元不一致');stroke();get('reset').click();assert(canvas.toDataURL()===initial,'リセット不一致');
@@ -74,7 +74,7 @@ $('run').addEventListener('click', async () => {
       report.layouts.push({width,height,buttonsVisible:true,settingsCloseVisible:true,scrollWidth:doc.documentElement.scrollWidth});
     }
     assert(!document.hidden,'前面タブで再実行');
-    const response=await fetch('/__qa/natural-trace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...report,images})});assert(response.ok,'結果保存失敗');
+    const response=await fetch('/__qa/flow-trace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...report,images})});assert(response.ok,'結果保存失敗');
     $('status').textContent='完了：実ブラウザ検証成功';$('results').textContent=JSON.stringify(report,null,2);
   }catch(error){$('status').textContent='失敗：'+error.message;$('results').textContent=error.stack;}
   finally{captureMethods.forEach((name,i)=>{canvas[name]=originals[i];});$('run').disabled=false;}

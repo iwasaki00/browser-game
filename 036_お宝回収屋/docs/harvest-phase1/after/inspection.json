@@ -1,0 +1,196 @@
+{
+  "note": "after representative operations; video capture enabled. Latency is pointerdown to first model update, not physical display latency.",
+  "rows": [
+    {
+      "field": "B",
+      "firstModelChangeMs": 33,
+      "maskMaximum": 0.05270399999999443
+    },
+    {
+      "field": "R",
+      "session": {
+        "tool": "R201",
+        "x": 180,
+        "y": 90.00004124983644,
+        "originX": 180,
+        "originY": 278,
+        "progress": 0.07302655498128674,
+        "phase": "reeling",
+        "elapsed": 1.0175,
+        "magnetic": true,
+        "operations": 0,
+        "uid": "lab:finder-2111:1795249381078:1",
+        "workSeconds": 0.4336000000000001
+      },
+      "originalTarget": {
+        "x": 180,
+        "y": 90,
+        "weight": 5,
+        "obstacle": false,
+        "id": "R006",
+        "uid": "lab:finder-2111:1795249381078:1",
+        "depth": 20,
+        "material": "iron",
+        "magnetic": true,
+        "quality": 1,
+        "initialQuality": 1,
+        "rarity": "U",
+        "areaId": "R-B",
+        "state": "buried",
+        "tool": "hand"
+      }
+    },
+    {
+      "field": "G-03",
+      "sandTransform": "translate(-50%, -50%) translate(0px, 0px) scale(0.17)",
+      "batch": {
+        "id": "G-A-93003-2:site-0:0.00000000",
+        "plotId": "G-A-93003-2",
+        "siteId": "site-0",
+        "x": 56.96854906063527,
+        "y": 42.25799800478853,
+        "amount": 24,
+        "coarse": 0.72,
+        "collectedTool": "G101",
+        "screened": 8,
+        "processed": 0,
+        "handProcessed": 0,
+        "contents": [
+          "lab:finder-2111:1795249382718:2",
+          "lab:finder-2111:1795249382718:3",
+          "lab:finder-2111:1795249382718:4"
+        ],
+        "separated": [
+          "lab:finder-2111:1795249382718:3"
+        ],
+        "recovered": [],
+        "losses": {},
+        "passes": 0
+      },
+      "shownGrains": 1
+    },
+    {
+      "field": "G-04",
+      "sandTransform": "translate(-50%, -50%) translate(0px, 0px) scale(0.76083)",
+      "work": {
+        "batchId": "G-B-93004-2:site-0:0.00000000",
+        "tool": "G102",
+        "setup": 0,
+        "prepared": false,
+        "fineFraction": 0,
+        "magneticFraction": 0,
+        "mode": "pan",
+        "start": 0,
+        "load": 4,
+        "work": 4.472189999999824,
+        "required": 15.52,
+        "rough": 0,
+        "strokes": 61,
+        "reprocess": false
+      },
+      "batch": {
+        "id": "G-B-93004-2:site-0:0.00000000",
+        "plotId": "G-B-93004-2",
+        "siteId": "site-0",
+        "x": 44.255099687259644,
+        "y": 44.49413797468878,
+        "amount": 24,
+        "coarse": 0.72,
+        "collectedTool": "G101",
+        "screened": 0,
+        "processed": 0,
+        "handProcessed": 0,
+        "contents": [
+          "lab:finder-2111:1795249384980:5",
+          "lab:finder-2111:1795249384980:6",
+          "lab:finder-2111:1795249384980:7"
+        ],
+        "separated": [],
+        "recovered": [],
+        "losses": {},
+        "passes": 0
+      },
+      "shownGrains": 0
+    },
+    {
+      "field": "G-06",
+      "sandTransform": "translate(-50%, -50%) translate(0px, 0px) scale(0.17)",
+      "batch": {
+        "id": "G-B-93006-2:site-0:0.00000000",
+        "plotId": "G-B-93006-2",
+        "siteId": "site-0",
+        "x": 56.020845856983215,
+        "y": 38.47180848475546,
+        "amount": 24,
+        "coarse": 0.72,
+        "collectedTool": "G101",
+        "screened": 0,
+        "processed": 24,
+        "handProcessed": 0,
+        "contents": [
+          "lab:finder-2111:1795249386796:8",
+          "lab:finder-2111:1795249386796:9",
+          "lab:finder-2111:1795249386797:10"
+        ],
+        "separated": [
+          "lab:finder-2111:1795249386796:8",
+          "lab:finder-2111:1795249386796:9",
+          "lab:finder-2111:1795249386797:10"
+        ],
+        "recovered": [
+          "lab:finder-2111:1795249386796:8"
+        ],
+        "losses": {
+          "lab:finder-2111:1795249386796:8": 0,
+          "lab:finder-2111:1795249386796:9": 0,
+          "lab:finder-2111:1795249386797:10": 0
+        },
+        "passes": 6
+      },
+      "shownGrains": 2
+    },
+    {
+      "field": "G-08",
+      "sandTransform": "translate(-50%, -50%) translate(0px, 0px) scale(1)",
+      "work": {
+        "batchId": "G-B-93008-2:site-0:0.00000000",
+        "tool": "G203",
+        "setup": 2.7989999999999995,
+        "prepared": false,
+        "fineFraction": 0,
+        "magneticFraction": 0,
+        "mode": "sluice",
+        "start": 0,
+        "load": 20,
+        "work": 0,
+        "required": 12.6,
+        "rough": 0,
+        "strokes": 0,
+        "reprocess": false
+      },
+      "batch": {
+        "id": "G-B-93008-2:site-0:0.00000000",
+        "plotId": "G-B-93008-2",
+        "siteId": "site-0",
+        "x": 49.54672332061455,
+        "y": 42.12734226020984,
+        "amount": 24,
+        "coarse": 0.72,
+        "collectedTool": "G101",
+        "screened": 0,
+        "processed": 0,
+        "handProcessed": 0,
+        "contents": [
+          "lab:finder-2111:1795249387614:11",
+          "lab:finder-2111:1795249387614:12",
+          "lab:finder-2111:1795249387614:13"
+        ],
+        "separated": [],
+        "recovered": [],
+        "losses": {},
+        "passes": 0
+      },
+      "shownGrains": 0
+    }
+  ]
+}

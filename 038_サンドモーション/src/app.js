@@ -3,7 +3,7 @@ import { PathEngine } from './paths.js';
 import { traceRadius, traceShade } from './trace.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
-import { canvasPoint } from './input.js';
+import { canvasPoint, canvasDisplaySize } from './input.js';
 import { QUALITIES, simulationTiming } from './quality.js';
 import { Reassembly } from './reassembly.js';
 import { SIZES, sizePlacement } from './size.js';
@@ -19,6 +19,8 @@ const sizes = { free: SIZES.free.initial, hourglass: SIZES.hourglass.initial };
 let panel = null, preview = null, draftSize = null, panelOpener = null, tiltHintShown = false;
 let tool = 'sand', wallNoticeUntil = 0;
 const toolNames = { sand: '砂を触る', trace: 'なぞり砂', draw: '壁を描く', erase: '壁を消す' };
+const traceStrengthNames = { weak: '弱', standard: '標準', strong: '強' };
+const traceWidthNames = { small: '細', medium: '中', large: '太' };
 const sensorGravity = { x: 0, y: 1 };
 const MAX_FRAME_MS = 1000 / 60 * 4;
 let timing = simulationTiming(180);
@@ -73,9 +75,9 @@ function activateMode(nextMode) {
 function fitCanvas() {
   if (!engine) return;
   const stage = $('stage');
-  const scale = Math.max(0, Math.min((stage.clientWidth - 12) / engine.width, (stage.clientHeight - 12) / engine.height));
-  canvas.style.width = `${engine.width * scale}px`;
-  canvas.style.height = `${engine.height * scale}px`;
+  const size = canvasDisplaySize(stage.clientWidth, stage.clientHeight, engine.width, engine.height);
+  canvas.style.width = `${size.width}px`;
+  canvas.style.height = `${size.height}px`;
   // Resize changes presentation only; the simulation grid is never rebuilt.
 }
 
@@ -114,6 +116,10 @@ function updateStats() {
   $('viewport-size').textContent = `${window.innerWidth} × ${window.innerHeight} / 表示 ${Math.round(viewport?.width ?? window.innerWidth)} × ${Math.round(viewport?.height ?? window.innerHeight)}`;
   $('viewport-scale').textContent = `${(viewport?.scale ?? 1).toFixed(2)} / 左 ${Math.round(viewport?.offsetLeft ?? 0)}`;
   $('page-width').textContent = document.documentElement ? `${document.documentElement.clientWidth} / ${document.documentElement.scrollWidth} / 横移動 ${Math.round(window.scrollX ?? 0)}` : '—';
+  const appBox = $('app').getBoundingClientRect?.(), canvasBox = canvas.getBoundingClientRect();
+  $('app-box').textContent = appBox ? `${Math.round(appBox.width)} × ${Math.round(appBox.height)} / 左 ${Math.round(appBox.left)}` : '—';
+  $('canvas-box').textContent = `${Math.round(canvasBox.width)} × ${Math.round(canvasBox.height)} / 左 ${Math.round(canvasBox.left)}`;
+  $('canvas-resolution').textContent = `${canvas.width} × ${canvas.height} / DPR ${window.devicePixelRatio ?? 1}`;
   $('wall-count').textContent = mode === 'free' ? engine.wallCount.toLocaleString() : '—';
   $('total').textContent = engine.count.toLocaleString();
   $('hourglass-remaining').textContent = mode === 'hourglass' ? engine.upperCount().toLocaleString() + ' / 穴 ' + engine.container.neckWidth + 'セル' : '—';
@@ -170,7 +176,7 @@ function brush(from, to, moving) {
   if (tool === 'trace') {
     engine.beginTrace();
     if (moving) engine.traceSegment(from.x, from.y, to.x, to.y,
-      traceRadius(engine.width, $('trace-width').value || 'small'), Math.max(8, to.time - from.time),
+      traceRadius(engine.width, $('trace-width').value || 'medium'), Math.max(8, to.time - from.time),
       $('trace-strength').value || 'standard');
     updateStats(); draw(); return;
   }
@@ -272,8 +278,18 @@ function syncControls() {
     $('gravity-label').textContent = 'なぞり砂：重力なし（通常の道具に戻すと重力操作に戻ります）';
   }
   $('tools-open').hidden = hourglass; $('tools-open').disabled = paused || returning;
-  $('tools-open').textContent = toolNames[tool];
-  $('tools-open').setAttribute('aria-label', `道具：${toolNames[tool]}`);
+  const strength = $('trace-strength').value || 'standard', width = $('trace-width').value || 'medium';
+  $('tools-open').textContent = tracing ? `${toolNames[tool]}\n${traceStrengthNames[strength]}・${traceWidthNames[width]}` : toolNames[tool];
+  $('tools-open').setAttribute('aria-label', tracing ? `道具：なぞり砂。強さ${traceStrengthNames[strength]}、太さ${traceWidthNames[width]}。調整を開く` : `道具：${toolNames[tool]}`);
+  $('trace-quick-settings').hidden = !tracing;
+  for (const name of ['weak','standard','strong']) {
+    $('trace-force-' + name).setAttribute('aria-pressed', String(strength === name));
+    $('trace-force-' + name).disabled = !tracing || paused || returning;
+  }
+  for (const name of ['small','medium','large']) {
+    $('trace-size-' + name).setAttribute('aria-pressed', String(width === name));
+    $('trace-size-' + name).disabled = !tracing || paused || returning;
+  }
   $('tool-row').setAttribute('data-tools', String(!hourglass));
   for (const name of ['sand', 'trace', 'draw', 'erase']) {
     $('tool-' + name).setAttribute('aria-pressed', String(tool === name));
@@ -369,6 +385,13 @@ for (const name of ['sand', 'trace', 'draw', 'erase']) $('tool-' + name).addEven
   accumulator = 0; previousTime = 0;
   closePanel(); syncControls(); updateStats(); draw();
 });
+for (const [kind, names] of [['strength',['weak','standard','strong']],['width',['small','medium','large']]]) {
+  for (const name of names) $('trace-' + (kind === 'strength' ? 'force-' : 'size-') + name).addEventListener('click', () => {
+    if (mode !== 'free' || tool !== 'trace' || tilt.paused || reassembly.active) return;
+    endPointer(); $('trace-' + kind).value = name; syncControls();
+  });
+  $('trace-' + kind).addEventListener('change', syncControls);
+}
 $('walls-clear').addEventListener('click', () => {
   if (mode !== 'free' || tilt.paused || reassembly.active) return;
   endPointer(); engine.clearWalls(); updateStats(); syncControls(); draw();

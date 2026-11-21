@@ -1,11 +1,11 @@
 {
   "name": "sand-motion",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node --test test/engine.test.js test/tilt.test.js test/app-tilt.test.js test/quality.test.js test/reassembly.test.js test/hourglass.test.js test/size.test.js test/paths.test.js test/trace.test.js test/natural-trace.test.js",
+    "test": "node --test test/engine.test.js test/tilt.test.js test/app-tilt.test.js test/quality.test.js test/reassembly.test.js test/hourglass.test.js test/size.test.js test/paths.test.js test/trace.test.js test/natural-trace.test.js test/flow-trace.test.js",
     "benchmark": "node scripts/benchmark.mjs",
     "qa": "node scripts/qa-serve.mjs",
     "reference": "node scripts/quality-reference.mjs",
@@ -15,6 +15,7 @@
     "reference:paths": "node scripts/paths-reference.mjs",
     "reference:trace": "node scripts/trace-reference.mjs",
     "reference:trace-visibility": "node scripts/trace-visibility-reference.mjs",
-    "reference:natural-trace": "node scripts/natural-trace-reference.mjs"
+    "reference:natural-trace": "node scripts/natural-trace-reference.mjs",
+    "reference:flow-trace": "node scripts/flow-trace-reference.mjs"
   }
 }

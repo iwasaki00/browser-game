@@ -159,7 +159,7 @@ $('#goal-open').onclick=()=>{const goal=nextGoal(state,active);show('次の目�
 
 document.addEventListener('click',e=>{if((e.target as Element)?.closest('button'))uxAction(state);},true);
 document.addEventListener('pointerdown',e=>{if(e.isPrimary&&(e.target as Element)?.closest('canvas'))uxAction(state);},true);
-document.addEventListener('change',()=>uxAction(state),true);
+document.addEventListener('change',e=>{if(!(e.target as Element)?.closest('[data-visual-only]'))uxAction(state);},true);
 installTreasureImageFallback(document);
 
 function openSaveTools(){show('セーブ保護・バックアップ','');$('#overlay').classList.add('save-overlay');disposeBackup=mountBackup($('#sheet-body'),()=>state,scope,!loadFailed,async candidate=>{const wasRunning=running;running=false;stopPointer();sessionClock.reset();try{if(!session.owns()&&!await session.acquire())throw Error('別のタブが進行中です。そちらを閉じてから復元してください');const restored=await restoreBackup(candidate,scope);state=restored;loadFailed=false;saveError=saveNotice(scope);close();refresh(state);select(state.riverSession?.tool??state.selectedTools?.[equipmentCategory(state)]??'hand',true);updateHUD();$('#title').hidden=false;$<HTMLButtonElement>('#start').disabled=false;$('#start').textContent='復元したセーブを再開 →';$('#load-note').textContent='復元完了：'+moneyLabel(state)+' FN。設備は停止状態です。';}catch(e){running=wasRunning&&session.owns();sessionClock.reset();throw e;}});}

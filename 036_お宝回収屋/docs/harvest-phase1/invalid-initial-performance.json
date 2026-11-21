@@ -1,0 +1,546 @@
+{
+  "baselineCommit": "5c1765504044e0d493e10dd1baef289469035167",
+  "conditions": "Chrome headless 390x844, no video, 3 counterbalanced rounds; identical fixed seed/tools/load. RAF cadence is not physical iPhone/display FPS. Canvas cost excludes GPU and, on workbench, new canvas drawing is intentionally paused.",
+  "rows": [
+    {
+      "round": 0,
+      "field": "B",
+      "variant": "before",
+      "observedRAFFPS": 59.335321425277456,
+      "frames": 193,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 1,
+      "meanCanvasDrawMs": 2.2097938122208585,
+      "p95CanvasDrawMs": 4.700000047683716,
+      "canvasDrawCount": 194,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.12640126984081543,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "B",
+      "variant": "off",
+      "observedRAFFPS": 59.95611459653243,
+      "frames": 194,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.467692308853834,
+      "p95CanvasDrawMs": 4.300000011920929,
+      "canvasDrawCount": 195,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.1261193650798189,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "B",
+      "variant": "on",
+      "observedRAFFPS": 59.953881629515756,
+      "frames": 195,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.5744897942153777,
+      "p95CanvasDrawMs": 4.600000023841858,
+      "canvasDrawCount": 196,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.12603555555419288,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "R-rope",
+      "variant": "before",
+      "observedRAFFPS": 59.9493760824193,
+      "frames": 135,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.6639705891994869,
+      "p95CanvasDrawMs": 1.199999988079071,
+      "canvasDrawCount": 136,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.3764673854927818,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "R-rope",
+      "variant": "off",
+      "observedRAFFPS": 59.95257482886671,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.543703704851645,
+      "p95CanvasDrawMs": 0.8999999761581421,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37363794332561,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "R-rope",
+      "variant": "on",
+      "observedRAFFPS": 59.949376082419285,
+      "frames": 135,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.5367647045675445,
+      "p95CanvasDrawMs": 1,
+      "canvasDrawCount": 136,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37365478524327184,
+        "processed": null
+      }
+    },
+    {
+      "round": 0,
+      "field": "G-pan",
+      "variant": "before",
+      "observedRAFFPS": 56.96794490264434,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 1,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 110,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 0,
+      "field": "G-pan",
+      "variant": "off",
+      "observedRAFFPS": 59.95257482886672,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 22,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 0,
+      "field": "G-pan",
+      "variant": "on",
+      "observedRAFFPS": 59.949892627057984,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 110,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 1,
+      "field": "B",
+      "variant": "on",
+      "observedRAFFPS": 59.950195222430594,
+      "frames": 195,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 1.9668367346938775,
+      "p95CanvasDrawMs": 4.100000023841858,
+      "canvasDrawCount": 196,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.1266907936512475,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "B",
+      "variant": "off",
+      "observedRAFFPS": 59.952408912512745,
+      "frames": 194,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 1.892820512331449,
+      "p95CanvasDrawMs": 3.399999976158142,
+      "canvasDrawCount": 195,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.12560126984081543,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "B",
+      "variant": "before",
+      "observedRAFFPS": 59.02606984751599,
+      "frames": 192,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.205699480568189,
+      "p95CanvasDrawMs": 4.5,
+      "canvasDrawCount": 193,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.12880888888798034,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "R-rope",
+      "variant": "on",
+      "observedRAFFPS": 59.94721066523508,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.7674074084670456,
+      "p95CanvasDrawMs": 1.199999988079071,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37367162716093383,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "R-rope",
+      "variant": "off",
+      "observedRAFFPS": 59.949892627057984,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.7303703709884927,
+      "p95CanvasDrawMs": 1.600000023841858,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37363794332560996,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "R-rope",
+      "variant": "before",
+      "observedRAFFPS": 59.949892627057984,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.5281481477949355,
+      "p95CanvasDrawMs": 1,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.3736211014079484,
+        "processed": null
+      }
+    },
+    {
+      "round": 1,
+      "field": "G-pan",
+      "variant": "on",
+      "observedRAFFPS": 59.9450128453599,
+      "frames": 133,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 109,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 1,
+      "field": "G-pan",
+      "variant": "off",
+      "observedRAFFPS": 59.94771477508339,
+      "frames": 133,
+      "p95FrameMs": 16.90000000000009,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 22,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 1,
+      "field": "G-pan",
+      "variant": "before",
+      "observedRAFFPS": 59.94721066523508,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 110,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 2,
+      "field": "B",
+      "variant": "off",
+      "observedRAFFPS": 59.94835218888342,
+      "frames": 195,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.765306121840769,
+      "p95CanvasDrawMs": 4.699999988079071,
+      "canvasDrawCount": 196,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.1258565079355994,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "B",
+      "variant": "before",
+      "observedRAFFPS": 59.946509268652584,
+      "frames": 195,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.516836737795752,
+      "p95CanvasDrawMs": 4,
+      "canvasDrawCount": 196,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.1260050793655332,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "B",
+      "variant": "on",
+      "observedRAFFPS": 59.646360663679296,
+      "frames": 197,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 2.6515151503110173,
+      "p95CanvasDrawMs": 4.399999976158142,
+      "canvasDrawCount": 198,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 2,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0.12607365079455876,
+        "riverProgress": null,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "R-rope",
+      "variant": "off",
+      "observedRAFFPS": 59.94771477508339,
+      "frames": 133,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.6559701504102394,
+      "p95CanvasDrawMs": 1.199999988079071,
+      "canvasDrawCount": 134,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37367162716093366,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "R-rope",
+      "variant": "before",
+      "observedRAFFPS": 59.949892627057984,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.6540740763699567,
+      "p95CanvasDrawMs": 1.100000023841858,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37362110140794835,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "R-rope",
+      "variant": "on",
+      "observedRAFFPS": 59.94452894336584,
+      "frames": 134,
+      "p95FrameMs": 16.90000000000009,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": 0.7370370405691641,
+      "p95CanvasDrawMs": 1.300000011920929,
+      "canvasDrawCount": 135,
+      "panTransformUpdates": 0,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": 0.37365478524327184,
+        "processed": null
+      }
+    },
+    {
+      "round": 2,
+      "field": "G-pan",
+      "variant": "off",
+      "observedRAFFPS": 59.94721066523508,
+      "frames": 134,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 22,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 2,
+      "field": "G-pan",
+      "variant": "before",
+      "observedRAFFPS": 59.953119365308325,
+      "frames": 133,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 109,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    },
+    {
+      "round": 2,
+      "field": "G-pan",
+      "variant": "on",
+      "observedRAFFPS": 59.953119365308325,
+      "frames": 133,
+      "p95FrameMs": 16.800000000000182,
+      "longFramesOver50ms": 0,
+      "meanCanvasDrawMs": null,
+      "p95CanvasDrawMs": null,
+      "canvasDrawCount": 0,
+      "panTransformUpdates": 109,
+      "peakAddedFX": 0,
+      "addedFXCap": 9,
+      "core": {
+        "maxMask": 0,
+        "riverProgress": null,
+        "processed": 0
+      }
+    }
+  ]
+}
