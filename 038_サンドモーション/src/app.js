@@ -1,5 +1,6 @@
 import { HourglassEngine } from './hourglass.js';
 import { PathEngine } from './paths.js';
+import { traceRadius, traceShade } from './trace.js';
 import { sampleImage, decodeImage, convertImage } from './image.js';
 import { TiltController, isMobileDevice, isLandscapeDisplay } from './tilt.js';
 import { canvasPoint } from './input.js';
@@ -99,9 +100,10 @@ function draw() {
     const x = reassembly.active ? Math.round(reassembly.drawX[id]) : engine.x[id];
     const y = reassembly.active ? Math.round(reassembly.drawY[id]) : engine.y[id];
     const index = (y * engine.width + x) * 4, color = id * 4;
-    pixels.data[index] = engine.colors[color];
-    pixels.data[index + 1] = engine.colors[color + 1];
-    pixels.data[index + 2] = engine.colors[color + 2];
+    const shade = mode === 'free' && tool === 'trace' && !reassembly.active ? traceShade(engine, id) : 1;
+    pixels.data[index] = engine.colors[color] * shade;
+    pixels.data[index + 1] = engine.colors[color + 1] * shade;
+    pixels.data[index + 2] = engine.colors[color + 2] * shade;
     pixels.data[index + 3] = engine.colors[color + 3];
   }
   context.putImageData(pixels, 0, 0);
@@ -168,7 +170,8 @@ function brush(from, to, moving) {
   if (tool === 'trace') {
     engine.beginTrace();
     if (moving) engine.traceSegment(from.x, from.y, to.x, to.y,
-      Number($('radius').value) * engine.width / 180, Math.max(8, to.time - from.time));
+      traceRadius(engine.width, $('trace-width').value || 'small'), Math.max(8, to.time - from.time),
+      $('trace-strength').value || 'standard');
     updateStats(); draw(); return;
   }
   if (tool !== 'sand') {

@@ -36,6 +36,7 @@ import {equipmentCategory,rememberEquipment} from './equipment';
 import {measureSeconds} from './measure';
 import './style.css';
 import './treasure-sprites.css';
+import './discovery.css';
 import {areaId,isRiver,areaUnlocked,riverCapabilities,riverStart,riverPull,riverWork,riverRetool,riverSuggestion,riverTick,RIVER_TOOLS} from './river';
 import {renderRiver} from './river-view';
 import {logEvent} from './events';
@@ -159,5 +160,3 @@ installTreasureImageFallback(document);
 
 function openSaveTools(){show('セーブ保護・バックアップ','');$('#overlay').classList.add('save-overlay');disposeBackup=mountBackup($('#sheet-body'),()=>state,scope,!loadFailed,async candidate=>{const wasRunning=running;running=false;stopPointer();sessionClock.reset();try{if(!session.owns()&&!await session.acquire())throw Error('別のタブが進行中です。そちらを閉じてから復元してください');const restored=await restoreBackup(candidate,scope);state=restored;loadFailed=false;saveError=saveNotice(scope);close();refresh(state);select(state.riverSession?.tool??state.selectedTools?.[equipmentCategory(state)]??'hand',true);updateHUD();$('#title').hidden=false;$<HTMLButtonElement>('#start').disabled=false;$('#start').textContent='復元したセーブを再開 →';$('#load-note').textContent='復元完了：'+moneyLabel(state)+' FN。設備は停止状態です。';}catch(e){running=wasRunning&&session.owns();sessionClock.reset();throw e;}});}
 $('#title-save-tools').onclick=openSaveTools;
-
-import './discovery.css';

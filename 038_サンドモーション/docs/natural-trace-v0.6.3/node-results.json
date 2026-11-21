@@ -1,0 +1,210 @@
+{
+  "version": "0.6.3",
+  "runtime": "v25.9.0",
+  "platform": "win32 x64",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "environment": "Node CPU/raster reference; no browser FPS or iPhone claim",
+  "browserFps": null,
+  "measurements": [
+    {
+      "grid": "180x300",
+      "version": "0.6.2",
+      "defaultRadius": 12,
+      "cpuMedianMs": 0.23,
+      "cpuP95Ms": 3.259,
+      "maxSingleStrokeDistance": 23,
+      "snapshots": [
+        {
+          "stroke": 0,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 0,
+          "maxDistance": 0,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 1,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 19950,
+          "maxDistance": 23,
+          "distantChanges": 19221
+        },
+        {
+          "stroke": 10,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 19950,
+          "maxDistance": 23,
+          "distantChanges": 19221
+        },
+        {
+          "stroke": 30,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 19950,
+          "maxDistance": 23,
+          "distantChanges": 19221
+        }
+      ]
+    },
+    {
+      "grid": "180x300",
+      "version": "0.6.3",
+      "defaultRadius": 3,
+      "cpuMedianMs": 0.135,
+      "cpuP95Ms": 0.536,
+      "maxSingleStrokeDistance": 1,
+      "snapshots": [
+        {
+          "stroke": 0,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 0,
+          "maxDistance": 0,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 1,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 172,
+          "maxDistance": 1,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 10,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 340,
+          "maxDistance": 6.08,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 30,
+          "particles": 30240,
+          "occupied": 30240,
+          "visible": 30240,
+          "outside": 0,
+          "changed": 366,
+          "maxDistance": 9.22,
+          "distantChanges": 0
+        }
+      ]
+    },
+    {
+      "grid": "270x450",
+      "version": "0.6.2",
+      "defaultRadius": 18,
+      "cpuMedianMs": 0.499,
+      "cpuP95Ms": 2.308,
+      "maxSingleStrokeDistance": 35,
+      "snapshots": [
+        {
+          "stroke": 0,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 0,
+          "maxDistance": 0,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 1,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 45045,
+          "maxDistance": 35,
+          "distantChanges": 43593
+        },
+        {
+          "stroke": 10,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 45045,
+          "maxDistance": 35,
+          "distantChanges": 43593
+        },
+        {
+          "stroke": 30,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 45045,
+          "maxDistance": 35,
+          "distantChanges": 43593
+        }
+      ]
+    },
+    {
+      "grid": "270x450",
+      "version": "0.6.3",
+      "defaultRadius": 4.5,
+      "cpuMedianMs": 0.645,
+      "cpuP95Ms": 1.931,
+      "maxSingleStrokeDistance": 2,
+      "snapshots": [
+        {
+          "stroke": 0,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 0,
+          "maxDistance": 0,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 1,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 485,
+          "maxDistance": 2,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 10,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 835,
+          "maxDistance": 8.06,
+          "distantChanges": 0
+        },
+        {
+          "stroke": 30,
+          "particles": 68040,
+          "occupied": 68040,
+          "visible": 68040,
+          "outside": 0,
+          "changed": 894,
+          "maxDistance": 14.32,
+          "distantChanges": 0
+        }
+      ]
+    }
+  ]
+}

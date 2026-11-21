@@ -60,14 +60,14 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
       e.assertIntegrity();
     }
   });
-  test(`${w}: dense opaque centre has a continuous persistent groove, stationary input does nothing`, () => {
+  test(`${w}: dense opaque centre shears locally without carving a solid empty stripe; stationary input does nothing`, () => {
     const e = dense(w, h), colors = e.colors.slice(), count = e.count, untouched = 0;
     const home = [e.x[untouched], e.y[untouched]], r = 10 * w / 180;
     e.beginTrace();
     assert.equal(e.traceSegment(w / 2, h / 2, w / 2, h / 2, r), 0);
     e.traceSegment(w * .3, h * .45, w * .7, h * .45, r, 800);
-    for (let x = Math.ceil(w * .32); x < w * .68; x++)
-      assert.equal(e.grid[Math.round(h * .45) * w + x], 0);
+    assert.ok(e.x.some((x,id) => x !== e.originX[id]) || e.y.some((y,id) => y !== e.originY[id]));
+    assert.equal(e.grid.filter(Boolean).length, e.count);
     const x = e.x.slice(), y = e.y.slice();
     for (const g of [[1, 0], [-1, 1], [0, -1]]) {
       e.setGravity(...g); for (let k = 0; k < 350; k++) e.step();
@@ -114,22 +114,26 @@ for (const [w, h] of [[180, 300], [270, 450]]) {
     assert.ok(e.fixedCount < e.count); assert.ok(e.vx.every(v => v === 0));
     const before = e.y.slice(); e.setGravity(0, 1);
     for (let k = 0; k < 60; k++) e.step();
+    e.releaseAll(); for (let k = 0; k < 60; k++) e.step();
     assert.notDeepEqual(e.y, before); e.assertIntegrity();
     assert.equal(colors.length, count * 4);
     assert.deepEqual(e.colors, wallColors); assert.equal(e.count, wallCount);
   });
 
-  test(`${w}: one fast diagonal sweep has no unintended gaps`, () => {
+  test(`${w}: one fast diagonal sweep affects dabs along the whole path without losing visible grains`, () => {
     const e = dense(w, h); e.beginTrace();
     const ax = w * .3, ay = h * .3, bx = w * .7, by = h * .65;
     e.traceSegment(ax, ay, bx, by, 10 * w / 180, 8);
-    for (let t = .05; t < .95; t += .01)
-      assert.equal(e.grid[Math.round(ay + (by - ay) * t) * w + Math.round(ax + (bx - ax) * t)], 0);
+    for (let t = .1; t < .9; t += .1) {
+      const cx = ax + (bx-ax)*t, cy = ay + (by-ay)*t;
+      assert.ok(e.x.some((x,id) => !e.fixed[id] && Math.hypot(x-cx,e.y[id]-cy) < 12*w/180));
+    }
+    assert.equal(e.grid.filter(Boolean).length, e.count);
     e.endTrace(); e.assertIntegrity();
   });
 }
 
-test('no vacancy in a sealed full chamber limits the push without hiding grains or editing walls', () => {
+test('no vacancy in a sealed full chamber limits motion to local shear without hiding grains or editing walls', () => {
   const e = new PathEngine(40, 40), particles = [];
   for (let y = 1; y < 39; y++) for (let x = 1; x < 39; x++) particles.push({ x, y, color: [x, y, 100, 255] });
   e.load(particles);
@@ -137,13 +141,15 @@ test('no vacancy in a sealed full chamber limits the push without hiding grains 
   e.wallCount = e.walls.reduce((sum, value) => sum + value, 0);
   const x = e.x.slice(), y = e.y.slice(), colors = e.colors.slice(), walls = e.walls.slice();
   e.beginTrace();
-  for (let i = 0; i < 30; i++) assert.equal(e.traceSegment(10, 20, 30, 20, 5, 20), 0);
-  assert.deepEqual(e.x, x); assert.deepEqual(e.y, y); assert.deepEqual(e.colors, colors); assert.deepEqual(e.walls, walls);
+  for (let i = 0; i < 30; i++) { e.traceSegment(10, 20, 30, 20, 5, 20); e.assertIntegrity(); }
+  assert.ok(e.x.some((px,id) => px !== x[id]) || e.y.some((py,id) => py !== y[id])); assert.deepEqual(e.colors, colors); assert.deepEqual(e.walls, walls);
   e.assertIntegrity(); assert.equal(e.grid.filter(Boolean).length, e.count);
 });
 
 test('fast strokes scatter forward more than slow strokes; invalid input preserves state', () => {
-  const slow = dense(180, 300), fast = dense(180, 300);
+  const slow = new PathEngine(180,300), fast = new PathEngine(180,300), grains=[];
+  for(let x=60;x<=100;x+=3) grains.push({x,y:100,color:[x,100,170,255]});
+  slow.load(grains); fast.load(grains);
   for (const e of [slow, fast]) e.beginTrace();
   slow.traceSegment(60, 100, 100, 100, 10, 1000);
   fast.traceSegment(60, 100, 100, 100, 10, 8);

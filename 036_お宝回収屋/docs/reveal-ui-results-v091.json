@@ -1,7 +1,7 @@
 [
   {
     "width": 320,
-    "animationOpacity": 0.644122,
+    "animationOpacity": 0.60602,
     "washSpam": "PASS",
     "backgroundLocked": "PASS",
     "stableModal": "PASS",
@@ -16,7 +16,7 @@
   },
   {
     "width": 390,
-    "animationOpacity": 0.631612,
+    "animationOpacity": 0.644102,
     "washSpam": "PASS",
     "backgroundLocked": "PASS",
     "stableModal": "PASS",

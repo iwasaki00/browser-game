@@ -25,7 +25,9 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
         getImageData: (x, y, w, h) => {
           conversions++;
           if (conversions === failConversionAt) throw new Error('fixture raster failure');
-          return { data: new Uint8ClampedArray(w * h * 4).fill(255) };
+          const data = new Uint8ClampedArray(w * h * 4).fill(255);
+          for (let i = 0; i < w * h; i++) { data[i * 4] = 70 + i % 150; data[i * 4 + 1] = 90 + Math.floor(i / w) % 140; }
+          return { data };
         },
         createImageData: (w, h) => ({ data: new Uint8ClampedArray(w * h * 4) }),
         putImageData: image => { this.rendered = image.data.slice(); }
@@ -367,7 +369,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
     };
     const renderedSand = () => {
       const out = new Uint8Array(canvas.width * canvas.height), data = canvas.rendered;
-      for (let i = 0; i < out.length; i++) out[i] = data[i * 4] === 255 && data[i * 4 + 1] === 255 && data[i * 4 + 2] === 255 ? 1 : 0;
+      for (let i = 0; i < out.length; i++) out[i] = data[i * 4 + 3] && !(data[i * 4] === 178 && data[i * 4 + 1] === 191 && data[i * 4 + 2] === 184) ? 1 : 0;
       return out;
     };
     const wallCount = () => Number(get('wall-count').textContent.replaceAll(',', ''));
@@ -508,6 +510,7 @@ test('app integration: rotation freezes rendering state and touch; portrait resu
       assert.notEqual(get('gravity-open').textContent, '重力なし');
       assert.equal(renderedSand().reduce((sum, v) => sum + v, 0), Number(count.replaceAll(',', '')));
       assert.deepEqual(renderedMask(), walls);
+      get('collapse').click();
       const packed = canvas.rendered.slice(); for (let i = 0; i < 10; i++) tick();
       assert.notDeepEqual(canvas.rendered, packed);
       assert.equal(get('total').textContent, count);

@@ -1,0 +1,214 @@
+{
+  "version": "1.0.0-rc.1",
+  "unit": {
+    "pass": 730,
+    "fail": 0
+  },
+  "browser": {
+    "discovery": 17,
+    "legacyWash": 2,
+    "themeGoals": 24,
+    "staticDebug": 10,
+    "total": 53
+  },
+  "viewports": [
+    "390x844 Chrome",
+    "320x568 Edge",
+    "1280x920 Chrome"
+  ],
+  "bothBuilds": true,
+  "readonlyPreviewPatterns": 9,
+  "normalSaveUnchanged": true,
+  "saveFormatAndEconomyUnchanged": true,
+  "hiddenTabTest": "visibilitychange/document.hidden simulation",
+  "iPhoneSafariPhysical": "未確認・ユーザー確認待ち",
+  "sheets": [
+    {
+      "file": "beach_daily_sheet.png",
+      "sha256": "a39bf6a77427dd205f3377fe44dddb0641f0eb20f053f4b7def8cc8470214486",
+      "unchanged": true
+    },
+    {
+      "file": "beach_nature_sheet.png",
+      "sha256": "b03001a2e91bc37cc1085e8d0063c2fac9f8a1350dac5a190e7f617c31337b2f",
+      "unchanged": true
+    },
+    {
+      "file": "beach_valuable_sheet.png",
+      "sha256": "bcc476283f25ffd9a5d719a835d169008a1158af62813fd7ee6668d03ae74244",
+      "unchanged": true
+    },
+    {
+      "file": "gold_mineral_sheet.png",
+      "sha256": "8e6abab1debb8127dbdaee12b7c775806724c1f3e3b0c23b076c6b441f112255",
+      "unchanged": true
+    },
+    {
+      "file": "gold_rare_sheet.png",
+      "sha256": "055a118a76656c128b1c8222ab46fe67c5a0c46cd3c0a272c4161c96d0ba04b1",
+      "unchanged": true
+    },
+    {
+      "file": "gold_stone_sheet.png",
+      "sha256": "6a4f6f304d815337bf292c689bdf5d02942fc339a78e5df883bc3abf117fc2ee",
+      "unchanged": true
+    },
+    {
+      "file": "river_metal_sheet.png",
+      "sha256": "e2eb4116eddacf7af0f08c8d8a1f25c91f6ba5c5f9968011d666510d903a61ce",
+      "unchanged": true
+    },
+    {
+      "file": "river_rare_sheet.png",
+      "sha256": "068ada7b81ef3e3c92eb1ea09ac1381b66a67e3258501cabcc980539e34f44c3",
+      "unchanged": true
+    },
+    {
+      "file": "river_tool_sheet.png",
+      "sha256": "c918bda602f908ec92ce43dbdbf70074c3c60bc6e169ec3e2e7e801ddc53fbf1",
+      "unchanged": true
+    }
+  ],
+  "preserved": [
+    {
+      "file": "src/data.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/master-source.json",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/treasure-expansion.json",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/treasure-sprite-map.json",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/treasure-assets.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/engine.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/save.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/river.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/gold.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/world-generation.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/world-rules.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/field-tools.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/beach-tools.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/money.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "src/build-mode.ts",
+      "unchangedIgnoringCheckoutLineEndings": true
+    },
+    {
+      "file": "index.html",
+      "unchangedIgnoringCheckoutLineEndings": true
+    }
+  ],
+  "existingSpriteRendererAndSVGFallbackPreserved": true,
+  "normalPreviewUIExcluded": true,
+  "editedTextLF": true,
+  "screenshots": [
+    "first-C.png",
+    "first-U.png",
+    "first-R.png",
+    "first-SR.png",
+    "first-J.png",
+    "theme-and-goal.png",
+    "preview-theme.png",
+    "preview-combined.png",
+    "reduced-motion.png"
+  ],
+  "builds": {
+    "dist": [
+      {
+        "file": "index-CehINVFr.css",
+        "sha256": "e86ae73716a01f73db378c2fa390f8f745f520c1a21314e171daa7235d00c20c"
+      },
+      {
+        "file": "index-COYgCUUZ.js",
+        "sha256": "8c02d333092559e6745b9912ab88726898417758c6a21985491471bba618e70d"
+      }
+    ],
+    "dist-debug": [
+      {
+        "file": "dev-advanced-worker-C6t7sHSI.js",
+        "sha256": "1d656efa439574188d3e7014f1873c761bca6ea4c58a40e6ec2093775c17d14a"
+      },
+      {
+        "file": "dev-auto-worker-DyFZJ2nu.js",
+        "sha256": "de9e202251350fe5cdb69b78fcea3ec957b5e0a020588dfd4beba37bb2de8945"
+      },
+      {
+        "file": "dev-DOOti0Bj.js",
+        "sha256": "309261d7d0b065bd83793f899c9a80e5541971837872129ac4cb217c47dbc701"
+      },
+      {
+        "file": "dev-line-worker-DfPN5KcH.js",
+        "sha256": "b7822ce09e0c4c573f35c1d09edd59d953e2e40fa411c664a4cbb8360a10b809"
+      },
+      {
+        "file": "dev-qyKo3vbR.css",
+        "sha256": "e2feac6f885248fe217fd0514f235637e86012e015c1d428e0e5cf14bf186b66"
+      },
+      {
+        "file": "dev-route-worker-Bts53XbK.js",
+        "sha256": "29c370e6294c91679154a06c1cbca9359a321ed8b50d59ce620074cca9569cc4"
+      },
+      {
+        "file": "dev-ux-worker-CeqCTh5u.js",
+        "sha256": "72e4b945127e7c7a8c75a489b327a34ae4efd308e3ec4989341c34483bcc7405"
+      },
+      {
+        "file": "engine-B1yIXMa-.js",
+        "sha256": "7ce6894007cade5d975e5bb3f17fac31d28d2fcd4071cfac036de57148cd5510"
+      },
+      {
+        "file": "growth-DTjfWm0f.js",
+        "sha256": "869de01235543f3a800d4f99d4eb7df2c3aa776a2767b34136c9c1ef524dd920"
+      },
+      {
+        "file": "index-CehINVFr.css",
+        "sha256": "e86ae73716a01f73db378c2fa390f8f745f520c1a21314e171daa7235d00c20c"
+      },
+      {
+        "file": "index-DJzk0JpB.js",
+        "sha256": "fc854d66972f1c3da0675c6ad93a51cb685c55a1045496676e577d12169d1511"
+      },
+      {
+        "file": "static-debug-state-DTnT4IUX.js",
+        "sha256": "8fb2dff35147545e2cfab032b92cd2826e832cd5bd25358c8c786dc8d25d040b"
+      }
+    ]
+  }
+}

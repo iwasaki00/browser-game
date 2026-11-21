@@ -15,6 +15,7 @@
 .wash-card .discovery-theme-result{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:6px;font-size:13px}
 .wash-card[data-discovery-stage="item"] .discovery-theme-result{visibility:hidden}
 .wash-card .discovery-theme-result button{min-height:44px;font-size:12px;padding:6px 10px;touch-action:manipulation}
+.wash-card[data-discovery="preview"] .wash-actions button{font-size:12px;padding:6px 8px}
 .wash-card[data-theme-complete="true"] .wash-info{min-height:78px}
 .wash-card[data-effects="light"] .wash-display::before,.wash-card[data-effects="light"] .wash-display::after,.wash-card[data-effects="off"] .wash-display::before,.wash-card[data-effects="off"] .wash-display::after{display:none}
 @keyframes discovery-pop{from{transform:scale(calc(var(--discovery-scale)*.82))}60%,to{transform:scale(var(--discovery-scale))}}
